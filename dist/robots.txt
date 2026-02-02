@@ -1,0 +1,36 @@
+# robots.txt for StayNeos
+# https://stayneos.com/robots.txt
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://stayneos.com/sitemap.xml
+
+# Crawl-delay for better server performance
+Crawl-delay: 1
+
+# Disallow admin and private routes
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /login
+Disallow: /register
+Disallow: /account/
+Disallow: /booking/
+
+# Allow search engines to crawl important pages
+Allow: /properties/
+Allow: /about
+Allow: /contact
+Allow: /services
+
+# Block specific bots that might cause issues
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Crawl-delay: 5
+
+User-agent: SemrushBot
+Crawl-delay: 5
