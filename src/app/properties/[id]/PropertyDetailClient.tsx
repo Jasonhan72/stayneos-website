@@ -315,7 +315,7 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
                 <div className="flex items-baseline justify-between mb-6">
                   <div className="flex items-baseline gap-1">
                     <span className="text-2xl font-bold text-gray-900">
-                      ¥{property.price.toLocaleString()}
+                      ${property.price.toLocaleString()} CAD
                     </span>
                     <span className="text-gray-500">/{property.priceUnit}</span>
                   </div>
@@ -406,37 +406,37 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
                       <>
                         <div className="flex justify-between">
                           <span className="text-gray-600 line-through">
-                            原价 ¥{property.price.toLocaleString()}
+                            原价 ${property.price.toLocaleString()} CAD
                           </span>
                         </div>
                         <div className="flex justify-between text-green-600">
                           <span className="underline">
-                            月租价 ¥{discountedPrice.toLocaleString()} x {nights}晚
+                            月租价 ${discountedPrice.toLocaleString()} CAD x {nights}晚
                           </span>
-                          <span>¥{totalPrice.toLocaleString()}</span>
+                          <span>${totalPrice.toLocaleString()} CAD</span>
                         </div>
                         <div className="flex justify-between text-green-600">
                           <span>月租优惠 ({property.monthlyDiscount}% off)</span>
-                          <span>-¥{((property.price - discountedPrice) * nights).toLocaleString()}</span>
+                          <span>-${((property.price - discountedPrice) * nights).toLocaleString()} CAD</span>
                         </div>
                       </>
                     ) : (
                       <div className="flex justify-between">
                         <span className="text-gray-600 underline">
-                          ¥{property.price.toLocaleString()} x {nights}晚
+                          ${property.price.toLocaleString()} CAD x {nights}晚
                         </span>
-                        <span>¥{totalPrice.toLocaleString()}</span>
+                        <span>${totalPrice.toLocaleString()} CAD</span>
                       </div>
                     )}
                     
                     <div className="flex justify-between">
                       <span className="text-gray-600 underline">服务费</span>
-                      <span>¥{serviceFee.toLocaleString()}</span>
+                      <span>${serviceFee.toLocaleString()} CAD</span>
                     </div>
                     
                     <div className="flex justify-between pt-3 border-t border-gray-100 font-semibold text-base">
                       <span>总价</span>
-                      <span>¥{finalPrice.toLocaleString()}</span>
+                      <span>${finalPrice.toLocaleString()} CAD</span>
                     </div>
                     {nights < (property.minNights || 0) && (
                       <p className="text-amber-600 text-xs mt-2">

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import { I18nProvider } from "@/lib/i18n";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -112,18 +113,19 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="zh-CN"
       className={`${inter.variable} ${playfair.variable}`}
       suppressHydrationWarning
     >
       <body className="font-sans antialiased">
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-gray-900 focus:rounded-lg focus:shadow-lg"
-        >
-          跳转到主要内容
-        </a>
-        {children}
+        <I18nProvider>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-gray-900 focus:rounded-lg focus:shadow-lg"
+          >
+            Skip to main content
+          </a>
+          {children}
+        </I18nProvider>
       </body>
     </html>
   );

@@ -6,11 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "wrangler pages deploy dist --project-name=stayneos"
   },
   "dependencies": {
     "lucide-react": "^0.563.0",
     "next": "^14.2.23",
+    "next-intl": "^4.8.2",
     "react": "^18",
     "react-dom": "^18"
   },

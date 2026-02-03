@@ -3,10 +3,13 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
+import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { t } = useI18n();
 
   // Close mobile menu on escape key
   useEffect(() => {
@@ -29,10 +32,10 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { href: "/", label: "首页" },
-    { href: "/properties", label: "房源" },
-    { href: "#services", label: "服务" },
-    { href: "#about", label: "关于我们" },
+    { href: "/", label: t('nav.home') },
+    { href: "/properties", label: t('nav.properties') },
+    { href: "#services", label: t('nav.services') },
+    { href: "#about", label: t('nav.about') },
   ];
 
   return (
@@ -76,8 +79,9 @@ export default function Navbar() {
               ))}
             </div>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons + Language */}
             <div className="hidden md:flex items-center gap-4">
+              <LanguageSwitcher isScrolled={isScrolled} />
               <Link
                 href="/login"
                 className={`text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 rounded ${
@@ -86,13 +90,13 @@ export default function Navbar() {
                     : "text-white/90 hover:text-white focus:ring-offset-transparent"
                 }`}
               >
-                登录
+                {t('nav.login')}
               </Link>
               <Link
                 href="/register"
                 className="px-4 py-2 bg-amber-500 text-white text-sm font-medium rounded-lg hover:bg-amber-600 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
               >
-                注册
+                {t('nav.register')}
               </Link>
               <Link
                 href="/dashboard"
@@ -102,7 +106,7 @@ export default function Navbar() {
                     : "text-white/90 hover:text-white focus:ring-offset-transparent"
                 }`}
               >
-                我的账户
+                {t('nav.account')}
               </Link>
             </div>
 
@@ -142,23 +146,26 @@ export default function Navbar() {
                 </Link>
               ))}
               <div className="border-t border-gray-100 mt-4 pt-4 space-y-3">
+                <div className="py-2">
+                  <LanguageSwitcher isScrolled={true} />
+                </div>
                 <Link
                   href="/dashboard"
                   className="block py-2 text-center text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 rounded"
                 >
-                  我的账户
+                  {t('nav.account')}
                 </Link>
                 <Link
                   href="/login"
                   className="block py-2 text-center text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 rounded"
                 >
-                  登录
+                  {t('nav.login')}
                 </Link>
                 <Link
                   href="/register"
                   className="block py-2 text-center bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
                 >
-                  注册
+                  {t('nav.register')}
                 </Link>
               </div>
             </div>

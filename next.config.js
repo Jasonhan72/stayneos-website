@@ -2,6 +2,8 @@
 const nextConfig = {
   // Image optimization
   images: {
+    // Disable image optimization for static export
+    unoptimized: true,
     // Allow images from external domains
     remotePatterns: [
       {

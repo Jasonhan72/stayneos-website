@@ -1,0 +1,96 @@
+{
+  "metadata": {
+    "title": "StayNeos | 高端行政公寓出租平台",
+    "description": "StayNeos是专为商务人士打造的高端行政公寓平台，提供优质房源、灵活租期、24小时管家服务。"
+  },
+  "nav": {
+    "home": "首页",
+    "properties": "房源",
+    "services": "服务",
+    "about": "关于我们",
+    "login": "登录",
+    "register": "注册",
+    "account": "我的账户"
+  },
+  "hero": {
+    "title": "尊享高端行政公寓",
+    "highlight": "开启品质生活",
+    "subtitle": "专为商务人士打造的高端行政公寓平台，提供优质的居住体验和贴心的管家服务"
+  },
+  "search": {
+    "location": "位置",
+    "selectLocation": "选择位置",
+    "date": "日期",
+    "selectDate": "选择日期",
+    "guests": "人数",
+    "guestCount": "{count} 位房客",
+    "search": "搜索"
+  },
+  "features": {
+    "title": "为什么选择 StayNeos",
+    "subtitle": "我们致力于为每一位客户提供卓越的居住体验，从房源筛选到入住服务，每一个细节都精心打磨",
+    "quality": "品质保障",
+    "qualityDesc": "严选高端房源，确保每一处细节都符合您的期望",
+    "flexible": "灵活租期",
+    "flexibleDesc": "支持短租、长租，灵活满足不同出行需求",
+    "service": "专业服务",
+    "serviceDesc": "24小时管家服务，让您的居住体验更加舒适",
+    "support": "全天候支持",
+    "supportDesc": "专业客服团队随时为您解决任何问题"
+  },
+  "properties": {
+    "title": "精选房源",
+    "subtitle": "精心挑选的高端行政公寓，每一处都是品质生活的体现",
+    "viewAll": "查看全部房源",
+    "featured": "精选",
+    "rating": "评分",
+    "reviews": "条评价",
+    "maxGuests": "最多 {count} 人",
+    "area": "{area}平方米",
+    "perNight": "/晚",
+    "minNights": "{count} 天起租",
+    "monthlyDiscount": "月租享 {percent}% 折扣",
+    "details": {
+      "title": "房源详情",
+      "amenities": "配套设施",
+      "description": "房源介绍",
+      "location": "房源位置",
+      "reviews": "用户评价",
+      "bookNow": "立即预订",
+      "price": "价格",
+      "serviceFee": "服务费",
+      "total": "总价",
+      "originalPrice": "原价",
+      "monthlyPrice": "月租价",
+      "monthlyDiscountLabel": "月租优惠 ({percent}% 折扣)",
+      "minNightsWarning": "最少需预订 {count} 天"
+    }
+  },
+  "cta": {
+    "title": "准备好开启您的品质生活了吗？",
+    "subtitle": "立即注册成为会员，享受专属优惠和个性化服务",
+    "explore": "开始探索",
+    "contact": "联系我们"
+  },
+  "footer": {
+    "about": "关于我们",
+    "company": "公司介绍",
+    "team": "团队成员",
+    "careers": "加入我们",
+    "customerService": "客户服务",
+    "help": "帮助中心",
+    "contact": "联系我们",
+    "faq": "常见问题",
+    "followUs": "关注我们",
+    "wechat": "微信公众号",
+    "weibo": "微博",
+    "xiaohongshu": "小红书",
+    "copyright": "© 2026 StayNeos. 保留所有权利。"
+  },
+  "language": {
+    "title": "语言",
+    "en": "English",
+    "fr": "Français",
+    "zh": "中文"
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "metadata": {
+    "title": "StayNeos | Premium Executive Apartment Rentals",
+    "description": "StayNeos is a premium executive apartment platform for business professionals, offering quality properties, flexible leases, and 24/7 concierge service."
+  },
+  "nav": {
+    "home": "Home",
+    "properties": "Properties",
+    "services": "Services",
+    "about": "About",
+    "login": "Login",
+    "register": "Register",
+    "account": "My Account"
+  },
+  "hero": {
+    "title": "Premium Executive Apartments",
+    "highlight": "Start Your Quality Life",
+    "subtitle": "A premium executive apartment platform for business professionals, offering exceptional living experiences and attentive concierge services"
+  },
+  "search": {
+    "location": "Location",
+    "selectLocation": "Select Location",
+    "date": "Dates",
+    "selectDate": "Select Dates",
+    "guests": "Guests",
+    "guestCount": "{count} Guests",
+    "search": "Search"
+  },
+  "features": {
+    "title": "Why Choose StayNeos",
+    "subtitle": "We are committed to providing exceptional living experiences for every client, from property selection to check-in service, every detail is carefully crafted",
+    "quality": "Quality Assurance",
+    "qualityDesc": "Carefully selected premium properties, ensuring every detail meets your expectations",
+    "flexible": "Flexible Lease",
+    "flexibleDesc": "Support short-term and long-term rentals, flexibly meeting different travel needs",
+    "service": "Professional Service",
+    "serviceDesc": "24/7 concierge service for a more comfortable living experience",
+    "support": "24/7 Support",
+    "supportDesc": "Professional customer service team ready to solve any issues"
+  },
+  "properties": {
+    "title": "Featured Properties",
+    "subtitle": "Carefully selected premium executive apartments, each one an embodiment of quality living",
+    "viewAll": "View All Properties",
+    "featured": "Featured",
+    "rating": "Rating",
+    "reviews": "reviews",
+    "maxGuests": "Max {count} guests",
+    "area": "{area}m²",
+    "perNight": "/night",
+    "minNights": "{count} nights minimum",
+    "monthlyDiscount": "{percent}% off for monthly stays",
+    "details": {
+      "title": "Property Details",
+      "amenities": "Amenities",
+      "description": "Description",
+      "location": "Location",
+      "reviews": "Reviews",
+      "bookNow": "Book Now",
+      "price": "Price",
+      "serviceFee": "Service Fee",
+      "total": "Total",
+      "originalPrice": "Original Price",
+      "monthlyPrice": "Monthly Price",
+      "monthlyDiscountLabel": "Monthly Discount ({percent}% off)",
+      "minNightsWarning": "Minimum {count} nights required"
+    }
+  },
+  "cta": {
+    "title": "Ready to Start Your Quality Life?",
+    "subtitle": "Register now as a member to enjoy exclusive discounts and personalized services",
+    "explore": "Start Exploring",
+    "contact": "Contact Us"
+  },
+  "footer": {
+    "about": "About Us",
+    "company": "Company",
+    "team": "Team",
+    "careers": "Careers",
+    "customerService": "Customer Service",
+    "help": "Help Center",
+    "contact": "Contact Us",
+    "faq": "FAQ",
+    "followUs": "Follow Us",
+    "wechat": "WeChat",
+    "weibo": "Weibo",
+    "xiaohongshu": "Xiaohongshu",
+    "copyright": "© 2026 StayNeos. All rights reserved."
+  },
+  "language": {
+    "title": "Language",
+    "en": "English",
+    "fr": "Français",
+    "zh": "中文"
+  }
+}

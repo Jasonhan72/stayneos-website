@@ -101,7 +101,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             <div className="flex items-baseline justify-between pt-3 border-t border-gray-100">
               <div className="flex items-baseline gap-1">
                 <span className="text-xl font-bold text-gray-900">
-                  ¥{property.price.toLocaleString()}
+                  ${property.price.toLocaleString()} CAD
                 </span>
                 <span className="text-sm text-gray-500">/{property.priceUnit}</span>
               </div>

@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# StayNeos Website
 
-## Getting Started
+StayNeos - Premium Executive Apartment Rentals in Toronto
 
-First, run the development server:
+## 🌐 Live Site
+- **Production**: https://stayneos.com
+- **Staging**: https://stayneos.pages.dev
 
+## 🚀 Deployment Strategy
+
+### Option 1: GitHub + Cloudflare Pages (Recommended)
+This repository is configured with GitHub Actions for automatic deployment to Cloudflare Pages.
+
+**Setup Steps:**
+1. Create a new repository on GitHub named `stayneos-website`
+2. Push this code to the repository
+3. Add `CLOUDFLARE_API_TOKEN` secret in GitHub repository settings
+4. Every push to `main` branch will automatically deploy
+
+### Option 2: Direct Cloudflare Pages
+Deploy directly via Wrangler CLI:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
+npx wrangler pages deploy dist --project-name=stayneos
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Tech Stack
+- Next.js 14 + TypeScript
+- Tailwind CSS
+- React Context (i18n)
+- Cloudflare Pages (Hosting)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🌍 Features
+- Multi-language support (EN/FR/ZH)
+- Static export for optimal performance
+- 17 optimized property images
+- 2 premium Toronto properties listed
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📝 Environment Variables
+```bash
+CLOUDFLARE_API_TOKEN=your_token_here
+```
 
-## Learn More
+## 🚀 Quick Start
+```bash
+# Install dependencies
+npm install
 
-To learn more about Next.js, take a look at the following resources:
+# Development
+npm run dev
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Build
+npm run build
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Deploy
+npm run deploy
+```
 
-## Deploy on Vercel
+## 📁 Project Structure
+```
+stayneos-web/
+├── .github/workflows/    # CI/CD automation
+├── messages/             # i18n translations
+├── public/images/        # Property photos
+├── src/
+│   ├── app/             # Next.js pages
+│   ├── components/      # React components
+│   └── lib/             # Utilities & i18n
+└── dist/                # Build output
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔑 API Tokens Required
+- Cloudflare API Token with `Cloudflare Pages:Edit` permission
+- Account ID: `84e5534ae694a084f23f58020bd73c7b`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📞 Contact
+- Email: hello.Stayneos@gmail.com
+- Website: https://stayneos.com

@@ -1,0 +1,96 @@
+{
+  "metadata": {
+    "title": "StayNeos | Locations d'Appartements Exécutifs Premium",
+    "description": "StayNeos est une plateforme d'appartements exécutifs premium pour professionnels, offrant des propriétés de qualité, des baux flexibles et un service de conciergerie 24h/24."
+  },
+  "nav": {
+    "home": "Accueil",
+    "properties": "Propriétés",
+    "services": "Services",
+    "about": "À Propos",
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "account": "Mon Compte"
+  },
+  "hero": {
+    "title": "Appartements Exécutifs Premium",
+    "highlight": "Commencez Votre Vie de Qualité",
+    "subtitle": "Une plateforme d'appartements exécutifs premium pour professionnels, offrant des expériences de vie exceptionnelles et des services de conciergerie attentifs"
+  },
+  "search": {
+    "location": "Emplacement",
+    "selectLocation": "Sélectionner l'emplacement",
+    "date": "Dates",
+    "selectDate": "Sélectionner les dates",
+    "guests": "Invités",
+    "guestCount": "{count} Invités",
+    "search": "Rechercher"
+  },
+  "features": {
+    "title": "Pourquoi Choisir StayNeos",
+    "subtitle": "Nous nous engageons à offrir des expériences de vie exceptionnelles à chaque client, de la sélection de la propriété au service d'enregistrement, chaque détail est soigneusement conçu",
+    "quality": "Assurance Qualité",
+    "qualityDesc": "Propriétés premium soigneusement sélectionnées, garantissant que chaque détail répond à vos attentes",
+    "flexible": "Bail Flexible",
+    "flexibleDesc": "Location courte et longue durée supportées, répondant flexiblement aux différents besoins de voyage",
+    "service": "Service Professionnel",
+    "serviceDesc": "Service de conciergerie 24h/24 pour une expérience de vie plus confortable",
+    "support": "Support 24h/24",
+    "supportDesc": "Équipe de service client professionnelle prête à résoudre tout problème"
+  },
+  "properties": {
+    "title": "Propriétés en Vedette",
+    "subtitle": "Appartements exécutifs premium soigneusement sélectionnés, chacun est une incarnation de la vie de qualité",
+    "viewAll": "Voir Toutes les Propriétés",
+    "featured": "En Vedette",
+    "rating": "Note",
+    "reviews": "avis",
+    "maxGuests": "Max {count} invités",
+    "area": "{area}m²",
+    "perNight": "/nuit",
+    "minNights": "{count} nuits minimum",
+    "monthlyDiscount": "{percent}% de réduction pour les séjours mensuels",
+    "details": {
+      "title": "Détails de la Propriété",
+      "amenities": "Équipements",
+      "description": "Description",
+      "location": "Emplacement",
+      "reviews": "Avis",
+      "bookNow": "Réserver Maintenant",
+      "price": "Prix",
+      "serviceFee": "Frais de Service",
+      "total": "Total",
+      "originalPrice": "Prix Original",
+      "monthlyPrice": "Prix Mensuel",
+      "monthlyDiscountLabel": "Réduction Mensuelle ({percent}% de réduction)",
+      "minNightsWarning": "Minimum {count} nuits requis"
+    }
+  },
+  "cta": {
+    "title": "Prêt à Commencer Votre Vie de Qualité?",
+    "subtitle": "Inscrivez-vous maintenant en tant que membre pour profiter de réductions exclusives et de services personnalisés",
+    "explore": "Commencer l'Exploration",
+    "contact": "Contactez-Nous"
+  },
+  "footer": {
+    "about": "À Propos de Nous",
+    "company": "Entreprise",
+    "team": "Équipe",
+    "careers": "Carrières",
+    "customerService": "Service Client",
+    "help": "Centre d'Aide",
+    "contact": "Contactez-Nous",
+    "faq": "FAQ",
+    "followUs": "Suivez-Nous",
+    "wechat": "WeChat",
+    "weibo": "Weibo",
+    "xiaohongshu": "Xiaohongshu",
+    "copyright": "© 2026 StayNeos. Tous droits réservés."
+  },
+  "language": {
+    "title": "Langue",
+    "en": "English",
+    "fr": "Français",
+    "zh": "中文"
+  }
+}
