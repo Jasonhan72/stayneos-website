@@ -1,0 +1,90 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 84e5534ae694a084f23f58020bd73c7b
+          projectName: stayneos
+          directory: dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  verify-deployment:
+    needs: build-and-deploy
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Wait for deployment
+        run: sleep 60
+
+      - name: Check website accessibility
+        run: |
+          echo "Checking stayneos.com..."
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://stayneos.com")
+          if [ "$HTTP_STATUS" = "200" ]; then
+            echo "✅ Website is accessible!"
+          else
+            echo "❌ Website returned HTTP $HTTP_STATUS"
+            exit 1
+          fi
+
+      - name: Check images
+        run: |
+          IMG_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://stayneos.com/images/cooper-55-dining.jpg")
+          if [ "$IMG_STATUS" = "200" ]; then
+            echo "✅ Images loading correctly!"
+          else
+            echo "⚠️ Images may have issues (HTTP $IMG_STATUS)"
+          fi
+
+      - name: Check response time
+        run: |
+          RESPONSE_TIME=$(curl -s -o /dev/null -w "%{time_total}" "https://stayneos.com")
+          echo "⏱️ Response time: ${RESPONSE_TIME}s"
+          
+          # Warn if response time is over 5 seconds
+          if (( $(echo "$RESPONSE_TIME > 5" | bc -l) )); then
+            echo "⚠️ Response time is slow (>5s)"
+          fi
+
+  notify:
+    needs: [build-and-deploy, verify-deployment]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Notify deployment status
+        run: |
+          if [ "${{ needs.build-and-deploy.result }}" = "success" ] && [ "${{ needs.verify-deployment.result }}" = "success" ]; then
+            echo "🎉 Deployment SUCCESSFUL!"
+            echo "Website: https://stayneos.com"
+          else
+            echo "❌ Deployment or verification FAILED!"
+            exit 1
+          fi
