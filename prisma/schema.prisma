@@ -1,0 +1,402 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 用户模型
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  phone         String?
+  avatar        String?
+  password      String?   // 用于邮箱密码登录（bcrypt加密）
+  role          UserRole  @default(GUEST)
+  
+  // 关系
+  accounts      Account[]
+  sessions      Session[]
+  bookings      Booking[]
+  reviews       Review[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// NextAuth 需要的模型
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// 房源模型
+model Property {
+  id            String         @id @default(cuid())
+  title         String
+  slug          String         @unique
+  description   String         @db.Text
+  shortDesc     String?        // 简短描述，用于列表展示
+  
+  // 位置信息
+  address       String
+  city          String
+  neighborhood  String
+  state         String?
+  country       String         @default("Canada")
+  postalCode    String?
+  latitude      Float
+  longitude     Float
+  
+  // 房型信息
+  propertyType  PropertyType   @default(APARTMENT)
+  bedrooms      Int
+  bathrooms     Float          // 支持 1.5 卫等
+  maxGuests     Int
+  area          Int            // 平方米
+  floor         Int?
+  
+  // 价格信息
+  basePrice       Decimal      @db.Decimal(10, 2)
+  currency        String       @default("CAD")
+  cleaningFee     Decimal?     @db.Decimal(10, 2)
+  serviceFee      Decimal?     @db.Decimal(10, 2)
+  monthlyDiscount Decimal?     @db.Decimal(5, 2)  // 折扣百分比
+  weeklyDiscount  Decimal?     @db.Decimal(5, 2)
+  minNights       Int          @default(28)
+  maxNights       Int?
+  
+  // 状态和标签
+  status          PropertyStatus @default(DRAFT)
+  isFeatured      Boolean        @default(false)
+  isInstantBook   Boolean        @default(false)
+  
+  // 关系
+  images          PropertyImage[]
+  amenities       PropertyAmenity[]
+  bookings        Booking[]
+  reviews         Review[]
+  availability    Availability[]
+  
+  // 统计
+  viewCount       Int            @default(0)
+  bookingCount    Int            @default(0)
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  
+  // 索引
+  @@index([city])
+  @@index([status])
+  @@index([isFeatured])
+  @@index([latitude, longitude])
+}
+
+// 房源图片
+model PropertyImage {
+  id          String   @id @default(cuid())
+  propertyId  String
+  url         String
+  alt         String?
+  caption     String?
+  order       Int      @default(0)
+  isPrimary   Boolean  @default(false)
+  
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  
+  @@index([propertyId])
+}
+
+// 设施分类
+model AmenityCategory {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  icon     String?   // Lucide icon name
+  order    Int       @default(0)
+  amenities Amenity[]
+}
+
+// 设施
+model Amenity {
+  id          String   @id @default(cuid())
+  name        String
+  icon        String?  // Lucide icon name
+  categoryId  String
+  
+  category    AmenityCategory @relation(fields: [categoryId], references: [id])
+  properties  PropertyAmenity[]
+  
+  @@unique([name, categoryId])
+}
+
+// 房源-设施关联
+model PropertyAmenity {
+  propertyId  String
+  amenityId   String
+  
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  amenity     Amenity  @relation(fields: [amenityId], references: [id], onDelete: Cascade)
+  
+  @@id([propertyId, amenityId])
+}
+
+// 可用性日历
+model Availability {
+  id          String   @id @default(cuid())
+  propertyId  String
+  date        DateTime
+  isAvailable Boolean  @default(true)
+  price       Decimal? @db.Decimal(10, 2)  // 特殊日期价格
+  
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  
+  @@unique([propertyId, date])
+  @@index([propertyId])
+}
+
+// 预订
+model Booking {
+  id            String        @id @default(cuid())
+  bookingNumber String        @unique @default(cuid())
+  
+  propertyId    String
+  userId        String
+  
+  // 日期
+  checkIn       DateTime
+  checkOut      DateTime
+  nights        Int
+  
+  // 客人
+  guests        Int
+  guestName     String?
+  guestEmail    String?
+  guestPhone    String?
+  
+  // 价格明细
+  basePrice     Decimal       @db.Decimal(10, 2)
+  cleaningFee   Decimal?      @db.Decimal(10, 2)
+  serviceFee    Decimal?      @db.Decimal(10, 2)
+  discount      Decimal?      @db.Decimal(10, 2)
+  discountRate  Decimal?      @db.Decimal(5, 2)  // 折扣率 (如 0.8 表示 20% off)
+  tax           Decimal?      @db.Decimal(10, 2)
+  totalPrice    Decimal       @db.Decimal(10, 2)
+  currency      String        @default("CAD")
+  
+  // 状态
+  status        BookingStatus @default(PENDING)
+  paymentStatus PaymentStatus @default(PENDING)
+  
+  // 特殊需求
+  specialRequests String?     @db.Text
+  
+  // 取消信息
+  cancelledAt   DateTime?
+  cancelReason  String?       @db.Text
+  
+  // Stripe 相关
+  stripePaymentIntentId String? @unique
+  
+  // 关系
+  property      Property      @relation(fields: [propertyId], references: [id])
+  user          User          @relation(fields: [userId], references: [id])
+  review        Review?
+  payments      Payment[]
+  
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  
+  @@index([userId])
+  @@index([propertyId])
+  @@index([status])
+  @@index([checkIn, checkOut])
+  @@index([stripePaymentIntentId])
+}
+
+// 支付记录
+model Payment {
+  id            String        @id @default(cuid())
+  
+  bookingId     String
+  booking       Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  // 支付金额
+  amount        Decimal       @db.Decimal(10, 2)
+  currency      String        @default("CAD")
+  
+  // Stripe 相关
+  stripePaymentIntentId String? @unique
+  stripeChargeId        String? @unique
+  stripeCustomerId      String?
+  
+  // 支付方式
+  paymentMethod   PaymentMethod @default(CREDIT_CARD)
+  cardBrand       String?       // visa, mastercard, etc.
+  cardLast4       String?       // 卡号后4位
+  
+  // 支付状态
+  status          PaymentRecordStatus @default(PENDING)
+  
+  // 时间戳
+  paidAt          DateTime?
+  failedAt        DateTime?
+  refundedAt      DateTime?
+  
+  // 退款信息
+  refundAmount    Decimal?      @db.Decimal(10, 2)
+  refundReason    String?       @db.Text
+  
+  // 错误信息
+  errorMessage    String?       @db.Text
+  
+  // 元数据
+  metadata        Json?         // 存储额外信息
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@index([bookingId])
+  @@index([status])
+  @@index([stripePaymentIntentId])
+}
+
+// 评价
+model Review {
+  id          String   @id @default(cuid())
+  
+  propertyId  String
+  userId      String
+  bookingId   String?  @unique
+  
+  // 评分
+  rating      Int      // 1-5 总体评分
+  cleanliness Int?     // 1-5
+  accuracy    Int?     // 1-5
+  location    Int?     // 1-5
+  checkIn     Int?     // 1-5
+  communication Int?   // 1-5
+  value       Int?     // 1-5
+  
+  comment     String   @db.Text
+  
+  // 关系
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id])
+  booking     Booking? @relation(fields: [bookingId], references: [id])
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([propertyId])
+  @@index([userId])
+}
+
+// 页面内容 (CMS)
+model PageContent {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  content   String   @db.Text
+  metaTitle String?
+  metaDesc  String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 枚举定义
+enum UserRole {
+  GUEST
+  HOST
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum PropertyType {
+  APARTMENT
+  CONDO
+  TOWNHOUSE
+  HOUSE
+  LOFT
+  STUDIO
+  PENTHOUSE
+}
+
+enum PropertyStatus {
+  DRAFT
+  PENDING_REVIEW
+  PUBLISHED
+  PAUSED
+  ARCHIVED
+}
+
+enum BookingStatus {
+  PENDING           // 待确认
+  CONFIRMED         // 已确认
+  CHECKED_IN        // 已入住
+  CHECKED_OUT       // 已退房
+  CANCELLED         // 已取消
+  NO_SHOW           // 未入住
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  BANK_TRANSFER
+  ALIPAY
+  WECHAT_PAY
+}
+
+enum PaymentRecordStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  DISPUTED
+}

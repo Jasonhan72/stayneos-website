@@ -1,0 +1,5 @@
+name = "stayneos"
+compatibility_date = "2026-02-06"
+
+[env.production]
+account_id = "84e5534ae694a084f23f58020bd73c7b"

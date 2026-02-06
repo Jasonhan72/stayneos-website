@@ -10,6 +10,7 @@ interface ModalProps {
   title?: string;
   description?: string;
   children: ReactNode;
+  footer?: ReactNode;
   size?: "sm" | "md" | "lg" | "xl" | "full";
   showCloseButton?: boolean;
   closeOnOverlayClick?: boolean;
@@ -21,6 +22,7 @@ export default function Modal({
   title,
   description,
   children,
+  footer,
   size = "md",
   showCloseButton = true,
   closeOnOverlayClick = true,
@@ -80,7 +82,7 @@ export default function Modal({
 
       {/* Modal */}
       <div
-        className={`relative w-full ${sizes[size]} bg-white rounded-2xl shadow-xl overflow-hidden z-10 max-h-[90vh] flex flex-col`}
+        className={`relative w-full ${sizes[size]} bg-white shadow-xl overflow-hidden z-10 max-h-[90vh] flex flex-col`}
         role="document"
       >
         {/* Header */}
@@ -99,7 +101,7 @@ export default function Modal({
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400"
+                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400"
                 aria-label="关闭对话框"
               >
                 <X size={20} aria-hidden="true" />
@@ -110,6 +112,13 @@ export default function Modal({
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">{children}</div>
+
+        {/* Footer */}
+        {footer && (
+          <div className="px-6 py-4 border-t border-gray-100 bg-gray-50">
+            {footer}
+          </div>
+        )}
       </div>
     </div>
   );

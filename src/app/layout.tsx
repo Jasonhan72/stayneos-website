@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { I18nProvider } from "@/lib/i18n";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -124,7 +126,9 @@ export default function RootLayout({
           >
             Skip to main content
           </a>
+          <Navbar />
           {children}
+          <Footer />
         </I18nProvider>
       </body>
     </html>

@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Static export for Cloudflare Pages
+  output: "export",
+  distDir: "dist",
+  trailingSlash: true,
+  
   // Image optimization
   images: {
     // Disable image optimization for static export

@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import { getPropertyById } from "@/lib/data";
+import DateRangePicker from "@/components/ui/DateRangePicker";
 import {
   Heart,
   Star,
@@ -340,30 +341,15 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
                 )}
 
                 <div className="border border-gray-300 rounded-lg overflow-hidden mb-4">
-                  {/* Dates */}
-                  <div className="grid grid-cols-2 border-b border-gray-300">
-                    <div className="p-3 border-r border-gray-300">
-                      <label className="block text-xs font-semibold text-gray-700 uppercase">
-                        入住日期
-                      </label>
-                      <input
-                        type="date"
-                        value={checkIn}
-                        onChange={(e) => setCheckIn(e.target.value)}
-                        className="w-full mt-1 text-sm focus:outline-none"
-                      />
-                    </div>
-                    <div className="p-3">
-                      <label className="block text-xs font-semibold text-gray-700 uppercase">
-                        退房日期
-                      </label>
-                      <input
-                        type="date"
-                        value={checkOut}
-                        onChange={(e) => setCheckOut(e.target.value)}
-                        className="w-full mt-1 text-sm focus:outline-none"
-                      />
-                    </div>
+                  {/* Dates - Airbnb Style */}
+                  <div className="border-b border-gray-300">
+                    <DateRangePicker
+                      checkIn={checkIn}
+                      checkOut={checkOut}
+                      onCheckInChange={setCheckIn}
+                      onCheckOutChange={setCheckOut}
+                      minNights={property.minNights || 1}
+                    />
                   </div>
 
                   {/* Guests */}
@@ -385,18 +371,22 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
                   </div>
                 </div>
 
-                <button
-                  className="w-full py-3 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 transition-colors mb-4"
-                  onClick={() => {
+                <Link
+                  href={checkIn && checkOut 
+                    ? `/booking/${property.id}?checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}`
+                    : `/booking/${property.id}`
+                  }
+                  className="block w-full py-3 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 transition-colors mb-4 text-center"
+                  onClick={(e) => {
                     if (!checkIn || !checkOut) {
+                      e.preventDefault();
                       alert("请选择入住和退房日期");
                       return;
                     }
-                    alert("预订功能开发中...");
                   }}
                 >
                   预订
-                </button>
+                </Link>
 
                 <p className="text-center text-sm text-gray-500 mb-6">您暂时不会被收费</p>
 
