@@ -343,6 +343,42 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
               </div>
             </div>
 
+            <Divider className="my-6" />
+
+            {/* Location Map */}
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold mb-4">房源位置</h2>
+              <div className="w-full h-[350px] bg-neutral-100 relative overflow-hidden rounded-lg">
+                {/* Google Maps Embed */}
+                <iframe
+                  src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2880!2d-79.4!3d43.7!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z${encodeURIComponent(property.location)}!5e0!3m2!1sen!2sca!4v1234567890`}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="absolute inset-0"
+                  title={`${property.title} Location`}
+                />
+                
+                {/* Map Info Card */}
+                <div className="absolute bottom-4 left-4 bg-white p-4 shadow-lg rounded-lg max-w-xs">
+                  <h4 className="font-semibold text-neutral-900 mb-1">{property.title}</h4>
+                  <p className="text-sm text-neutral-600">{property.location}</p>
+                  <a 
+                    href={`https://maps.google.com/?q=${encodeURIComponent(property.location)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-sm text-primary hover:text-primary-700 font-medium mt-2"
+                  >
+                    在 Google Maps 中打开
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </a>
+                </div>
+              </div>
+            </div>
+
             {/* Similar Properties */}
             {similarProperties.length > 0 && (
               <>

@@ -103,7 +103,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
               setEmail(e.target.value);
               if (errors.email) setErrors((prev) => ({ ...prev, email: "" }));
             }}
-            className={`form-input pl-12 ${errors.email ? "error" : ""}`}
+            className={`form-input !pl-12 ${errors.email ? "error" : ""}`}
             placeholder="请输入您的邮箱"
             disabled={isLoading}
           />
@@ -138,7 +138,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
               setPassword(e.target.value);
               if (errors.password) setErrors((prev) => ({ ...prev, password: "" }));
             }}
-            className={`form-input pl-12 pr-12 ${errors.password ? "error" : ""}`}
+            className={`form-input !pl-12 !pr-12 ${errors.password ? "error" : ""}`}
             placeholder="请输入您的密码"
             disabled={isLoading}
           />

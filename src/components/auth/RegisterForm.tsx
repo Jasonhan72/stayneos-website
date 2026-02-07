@@ -128,7 +128,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
               if (errors.name) setErrors((prev) => ({ ...prev, name: "" }));
             }}
             onBlur={() => validateForm("name")}
-            className={`form-input pl-12 ${errors.name ? "error" : ""}`}
+            className={`form-input !pl-12 ${errors.name ? "error" : ""}`}
             placeholder="请输入您的姓名"
             disabled={isLoading}
           />
@@ -156,7 +156,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
               if (errors.email) setErrors((prev) => ({ ...prev, email: "" }));
             }}
             onBlur={() => validateForm("email")}
-            className={`form-input pl-12 ${errors.email ? "error" : ""}`}
+            className={`form-input !pl-12 ${errors.email ? "error" : ""}`}
             placeholder="请输入您的邮箱"
             disabled={isLoading}
           />
@@ -184,7 +184,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
               if (errors.password) setErrors((prev) => ({ ...prev, password: "" }));
             }}
             onBlur={() => validateForm("password")}
-            className={`form-input pl-12 pr-12 ${errors.password ? "error" : ""}`}
+            className={`form-input !pl-12 !pr-12 ${errors.password ? "error" : ""}`}
             placeholder="请设置密码（至少6位，含字母和数字）"
             disabled={isLoading}
           />
@@ -226,7 +226,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
               if (errors.confirmPassword) setErrors((prev) => ({ ...prev, confirmPassword: "" }));
             }}
             onBlur={() => validateForm("confirmPassword")}
-            className={`form-input pl-12 pr-12 ${errors.confirmPassword ? "error" : ""}`}
+            className={`form-input !pl-12 !pr-12 ${errors.confirmPassword ? "error" : ""}`}
             placeholder="请再次输入密码"
             disabled={isLoading}
           />

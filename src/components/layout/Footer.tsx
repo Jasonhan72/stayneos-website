@@ -59,29 +59,34 @@ export default function Footer() {
               {/* Contact Info */}
               <div className="mt-6 space-y-3">
                 <a
-                  href="mailto:info@stayneos.com"
+                  href="mailto:hello@stayneos.com"
                   className="flex items-center gap-3 text-primary-100 hover:text-accent transition-colors duration-200 group"
                 >
                   <div className="w-10 h-10 rounded-lg bg-primary-700/50 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                     <Mail className="w-5 h-5" />
                   </div>
-                  <span>info@stayneos.com</span>
+                  <span>hello@stayneos.com</span>
                 </a>
                 <a
-                  href="tel:+1-234-567-8900"
+                  href="tel:+14165550123"
                   className="flex items-center gap-3 text-primary-100 hover:text-accent transition-colors duration-200 group"
                 >
                   <div className="w-10 h-10 rounded-lg bg-primary-700/50 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                     <Phone className="w-5 h-5" />
                   </div>
-                  <span>+1 (234) 567-8900</span>
+                  <span>+1 (416) 555-0123</span>
                 </a>
-                <div className="flex items-center gap-3 text-primary-100">
-                  <div className="w-10 h-10 rounded-lg bg-primary-700/50 flex items-center justify-center">
+                <a
+                  href="https://maps.google.com/?q=20+Upjohn+Rd+North+York+ON+M3B+2V9"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-primary-100 hover:text-accent transition-colors duration-200 group"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-primary-700/50 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                     <MapPin className="w-5 h-5" />
                   </div>
-                  <span>123 Main Street, Toronto, ON</span>
-                </div>
+                  <span>20 Upjohn Rd, North York, ON, M3B 2V9</span>
+                </a>
               </div>
             </div>
 
