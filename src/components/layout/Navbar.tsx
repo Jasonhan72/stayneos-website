@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Phone, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Button from "@/components/ui/Button";
+import { UserMenu } from "./UserMenu";
 
 interface NavbarProps {
   variant?: "light" | "dark" | "transparent";
@@ -54,18 +55,18 @@ export default function Navbar({ variant = "light", showContact = true }: Navbar
           <div className="max-w-7xl mx-auto flex items-center justify-between text-sm">
             <div className="flex items-center gap-6">
               <a 
-                href="tel:+1-234-567-8900" 
+                href="tel:+16478626518" 
                 className="flex items-center gap-2 hover:text-accent transition-colors duration-200"
               >
                 <Phone className="w-4 h-4" />
-                <span>+1 (234) 567-8900</span>
+                <span>+1 (647) 862-6518</span>
               </a>
               <a 
-                href="mailto:info@stayneos.com" 
+                href="mailto:hello@stayneos.com" 
                 className="flex items-center gap-2 hover:text-accent transition-colors duration-200"
               >
                 <Mail className="w-4 h-4" />
-                <span>info@stayneos.com</span>
+                <span>hello@stayneos.com</span>
               </a>
             </div>
             <div className="flex items-center gap-4">
@@ -124,8 +125,9 @@ export default function Navbar({ variant = "light", showContact = true }: Navbar
               ))}
             </div>
 
-            {/* CTA Button */}
+            {/* Right Side - User Menu + CTA */}
             <div className="hidden lg:flex items-center gap-4">
+              <UserMenu variant={currentVariant as "light" | "dark" | "transparent"} />
               <Button 
                 variant="primary" 
                 size="md"
@@ -176,7 +178,7 @@ export default function Navbar({ variant = "light", showContact = true }: Navbar
           className={cn(
             "lg:hidden absolute top-full left-0 right-0 bg-white shadow-xl transition-all duration-300 overflow-hidden",
             isMobileMenuOpen 
-              ? "max-h-[500px] opacity-100 border-t border-neutral-200" 
+              ? "max-h-[600px] opacity-100 border-t border-neutral-200" 
               : "max-h-0 opacity-0"
           )}
         >
@@ -198,14 +200,15 @@ export default function Navbar({ variant = "light", showContact = true }: Navbar
                 {link.label}
               </Link>
             ))}
+            
+            {/* Mobile User Menu */}
+            <div className="pt-4 mt-4 border-t border-neutral-200">
+              <div className="px-4 py-2">
+                <UserMenu variant="light" />
+              </div>
+            </div>
+
             <div className="pt-4 mt-4 border-t border-neutral-200 space-y-3">
-              <Link
-                href="/login"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-center py-3 text-neutral-700 font-medium hover:bg-neutral-50 rounded-lg transition-colors"
-              >
-                登录
-              </Link>
               <Link
                 href="/properties"
                 onClick={() => setIsMobileMenuOpen(false)}

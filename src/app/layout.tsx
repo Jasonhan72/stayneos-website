@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { I18nProvider } from "@/lib/i18n";
+import { AuthProvider } from "@/components/auth/AuthProvider";
+import { UserProvider } from "@/lib/context/UserContext";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
@@ -119,17 +121,21 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="font-sans antialiased">
-        <I18nProvider>
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-gray-900 focus:rounded-lg focus:shadow-lg"
-          >
-            Skip to main content
-          </a>
-          <Navbar />
-          {children}
-          <Footer />
-        </I18nProvider>
+        <AuthProvider>
+          <UserProvider>
+            <I18nProvider>
+              <a
+                href="#main-content"
+                className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-gray-900 focus:rounded-lg focus:shadow-lg"
+              >
+                Skip to main content
+              </a>
+              <Navbar />
+              {children}
+              <Footer />
+            </I18nProvider>
+          </UserProvider>
+        </AuthProvider>
       </body>
     </html>
   );

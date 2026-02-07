@@ -1,370 +1,413 @@
-// User Profile Page
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
+import { useUser } from '@/lib/context/UserContext';
+import AvatarUpload from '@/components/user/AvatarUpload';
+import Button from '@/components/ui/Button';
+import { Card, Container } from '@/components/ui';
 import { 
   User, 
   Mail, 
   Phone, 
-  MapPin, 
   Calendar,
   Shield,
-  CreditCard,
-  Bell,
-  ChevronRight,
-  Camera,
-  Check
+  ChevronLeft,
+  Check,
+  Flag,
+  AlertCircle
 } from 'lucide-react';
-import { Button, Container, Card } from '@/components/ui';
-import BackToHomeButton from '@/components/navigation/BackToHomeButton';
+import { cn } from '@/lib/utils';
 
-// Mock user data
-const mockUser = {
-  id: '1',
-  name: '张三',
-  email: 'zhangsan@example.com',
-  phone: '+1 (416) 123-4567',
-  avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200',
-  location: 'Toronto, ON',
-  joinDate: '2024-01-15',
-  verified: true,
-  memberLevel: '黄金会员',
-  totalBookings: 3,
-  totalNights: 45,
-};
-
-const menuItems = [
-  { 
-    icon: User, 
-    label: '个人信息', 
-    href: '/profile',
-    description: '管理您的基本资料和联系方式'
-  },
-  { 
-    icon: CreditCard, 
-    label: '支付方式', 
-    href: '/profile/payment',
-    description: '管理您的信用卡和支付方式'
-  },
-  { 
-    icon: Shield, 
-    label: '安全设置', 
-    href: '/profile/security',
-    description: '密码、双重认证等安全选项'
-  },
-  { 
-    icon: Bell, 
-    label: '通知偏好', 
-    href: '/profile/notifications',
-    description: '管理邮件和推送通知设置'
-  },
+// Country list for nationality dropdown
+const countries = [
+  'Canada',
+  'United States',
+  'China',
+  'United Kingdom',
+  'France',
+  'Germany',
+  'Australia',
+  'Japan',
+  'Singapore',
+  'Other'
 ];
 
 export default function ProfilePage() {
+  const { user, updateProfile, isLoading } = useUser();
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState(mockUser);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: user?.firstName || '',
+    lastName: user?.lastName || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
+    dateOfBirth: user?.dateOfBirth || '',
+    nationality: user?.nationality || '',
+    emergencyContactName: user?.emergencyContact?.name || '',
+    emergencyContactPhone: user?.emergencyContact?.phone || '',
+    emergencyContactRelationship: user?.emergencyContact?.relationship || '',
+  });
 
-  const handleSave = () => {
-    // Simulate API call
-    setTimeout(() => {
-      setIsEditing(false);
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
-    }, 500);
+  const handleChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
+
+  const handleSave = async () => {
+    await updateProfile({
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      phone: formData.phone,
+      dateOfBirth: formData.dateOfBirth,
+      nationality: formData.nationality,
+      emergencyContact: {
+        name: formData.emergencyContactName,
+        phone: formData.emergencyContactPhone,
+        relationship: formData.emergencyContactRelationship,
+      },
+    });
+    setIsEditing(false);
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 3000);
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      firstName: user?.firstName || '',
+      lastName: user?.lastName || '',
+      email: user?.email || '',
+      phone: user?.phone || '',
+      dateOfBirth: user?.dateOfBirth || '',
+      nationality: user?.nationality || '',
+      emergencyContactName: user?.emergencyContact?.name || '',
+      emergencyContactPhone: user?.emergencyContact?.phone || '',
+      emergencyContactRelationship: user?.emergencyContact?.relationship || '',
+    });
+    setIsEditing(false);
+  };
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-neutral-50 pt-24 pb-12">
+        <Container>
+          <div className="text-center">
+            <p className="text-neutral-600">Please log in to view your profile.</p>
+            <Link href="/login">
+              <Button className="mt-4">Log in</Button>
+            </Link>
+          </div>
+        </Container>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-neutral-50 pt-24 pb-12">
       <Container>
+        {/* Back Link */}
+        <Link 
+          href="/dashboard" 
+          className="inline-flex items-center gap-2 text-neutral-600 hover:text-neutral-900 mb-6"
+        >
+          <ChevronLeft size={20} />
+          <span>Back to Dashboard</span>
+        </Link>
+
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-neutral-900">个人中心</h1>
-          <p className="text-neutral-600 mt-2">管理您的账户信息和偏好设置</p>
+          <h1 className="text-3xl font-bold text-neutral-900">Personal details</h1>
+          <p className="text-neutral-600 mt-2">Manage your personal information and contact details</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Profile Photo */}
           <div className="lg:col-span-1">
-            <Card className="mb-6">
-              <div className="p-6 text-center">
-                <div className="relative w-24 h-24 mx-auto mb-4">
-                  <Image
-                    src={mockUser.avatar}
-                    alt={mockUser.name}
-                    fill
-                    className="object-cover"
-                  />
-                  <button className="absolute bottom-0 right-0 p-2 bg-primary text-white hover:bg-primary-700 transition-colors">
-                    <Camera size={14} />
-                  </button>
-                </div>
-                
-                <h2 className="text-xl font-semibold text-neutral-900">{mockUser.name}</h2>
-                <p className="text-sm text-neutral-500">{mockUser.email}</p>
-                
-                <div className="mt-4 inline-flex items-center gap-1 px-3 py-1 bg-accent/10 text-accent text-sm font-medium">
-                  <Shield size={14} />
-                  {mockUser.memberLevel}
-                </div>
+            <Card className="p-6 text-center">
+              <h3 className="text-lg font-semibold text-neutral-900 mb-6">Profile Photo</h3>
+              <div className="flex justify-center mb-4">
+                <AvatarUpload size="xl" />
               </div>
+              <p className="text-sm text-neutral-500">
+                Click on the photo to upload a new one
+              </p>
+              <p className="text-xs text-neutral-400 mt-2">
+                JPG, PNG or GIF. Max 5MB.
+              </p>
             </Card>
 
-            <Card>
-              <nav className="divide-y divide-neutral-200">
-                {menuItems.map((item) => {
-                  const Icon = item.icon;
-                  const isActive = item.href === '/profile';
-                  
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={`flex items-center gap-3 p-4 hover:bg-neutral-50 transition-colors ${
-                        isActive ? 'bg-primary/5 border-l-4 border-l-primary' : 'border-l-4 border-l-transparent'
-                      }`}
-                    >
-                      <Icon size={20} className={isActive ? 'text-primary' : 'text-neutral-400'} />
-                      <span className={`font-medium ${isActive ? 'text-primary' : 'text-neutral-700'}`}>
-                        {item.label}
-                      </span>
-                    </Link>
-                  );
-                })}
-              </nav>
+            {/* Member Info Card */}
+            <Card className="mt-6 p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                  <Shield className="text-accent" size={20} />
+                </div>
+                <div>
+                  <p className="text-sm text-neutral-500">Member since</p>
+                  <p className="font-medium text-neutral-900">{user.memberSince}</p>
+                </div>
+              </div>
+              <div className="pt-4 border-t border-neutral-200">
+                <p className="text-sm text-neutral-500">Member level</p>
+                <p className="font-semibold text-accent">{user.memberLevel}</p>
+              </div>
             </Card>
           </div>
 
-          {/* Main Content */}
-          <div className="lg:col-span-3 space-y-6">
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-primary/10 flex items-center justify-center">
-                    <Calendar className="text-primary" size={24} />
-                  </div>
-                  <div>
-                    <p className="text-sm text-neutral-500">总预订次数</p>
-                    <p className="text-2xl font-bold text-neutral-900">{mockUser.totalBookings}</p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-accent/10 flex items-center justify-center">
-                    <User className="text-accent" size={24} />
-                  </div>
-                  <div>
-                    <p className="text-sm text-neutral-500">累计入住天数</p>
-                    <p className="text-2xl font-bold text-neutral-900">{mockUser.totalNights}</p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-success/10 flex items-center justify-center">
-                    <Shield className="text-success" size={24} />
-                  </div>
-                  <div>
-                    <p className="text-sm text-neutral-500">会员等级</p>
-                    <p className="text-2xl font-bold text-neutral-900">{mockUser.memberLevel}</p>
-                  </div>
-                </div>
-              </Card>
-            </div>
-
-            {/* Profile Form */}
+          {/* Right Column - Form */}
+          <div className="lg:col-span-2">
             <Card>
+              {/* Card Header */}
               <div className="p-6 border-b border-neutral-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-lg font-semibold text-neutral-900">个人信息</h3>
-                    <p className="text-sm text-neutral-500 mt-1">更新您的基本资料</p>
+                    <h2 className="text-xl font-semibold text-neutral-900">Basic Information</h2>
+                    <p className="text-sm text-neutral-500 mt-1">Update your personal details</p>
                   </div>
-                  
                   {!isEditing ? (
                     <Button variant="outline" onClick={() => setIsEditing(true)}>
-                      编辑资料
+                      Edit
                     </Button>
                   ) : (
                     <div className="flex gap-2">
-                      <Button variant="ghost" onClick={() => setIsEditing(false)}>
-                        取消
+                      <Button variant="ghost" onClick={handleCancel}>
+                        Cancel
                       </Button>
-                      <Button onClick={handleSave}>
-                        保存更改
+                      <Button 
+                        onClick={handleSave} 
+                        isLoading={isLoading}
+                      >
+                        {isLoading ? 'Saving...' : <><Check size={18} /> Save</>}
                       </Button>
                     </div>
                   )}
                 </div>
               </div>
 
-              <div className="p-6">
-                {showSuccess && (
-                  <div className="mb-6 p-4 bg-success/10 border border-success/20 text-success flex items-center gap-2">
-                    <Check size={18} />
-                    <span>个人资料已成功更新！</span>
-                  </div>
-                )}
+              {/* Success Message */}
+              {showSuccess && (
+                <div className="mx-6 mt-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2 text-green-700">
+                  <Check size={18} />
+                  <span>Your profile has been updated successfully!</span>
+                </div>
+              )}
 
+              {/* Form Fields */}
+              <div className="p-6 space-y-6">
+                {/* Name Row */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-neutral-700 mb-2">
-                      姓名
+                      First Name
                     </label>
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
                       <input
                         type="text"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        value={formData.firstName}
+                        onChange={(e) => handleChange('firstName', e.target.value)}
                         disabled={!isEditing}
-                        className="w-full pl-10 pr-4 py-3 border border-neutral-300 bg-white disabled:bg-neutral-50 disabled:text-neutral-500 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                        className={cn(
+                          "w-full pl-10 pr-4 py-3 border rounded-lg transition-colors",
+                          isEditing 
+                            ? "border-neutral-300 focus:border-accent focus:ring-2 focus:ring-accent/20" 
+                            : "border-neutral-200 bg-neutral-50 text-neutral-500"
+                        )}
                       />
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-neutral-700 mb-2">
-                      邮箱地址
+                      Last Name
                     </label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
-                      <input
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        disabled={!isEditing}
-                        className="w-full pl-10 pr-4 py-3 border border-neutral-300 bg-white disabled:bg-neutral-50 disabled:text-neutral-500 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                      />
-                    </div>
-                    {mockUser.verified && (
-                      <div className="flex items-center gap-1 mt-2 text-success text-sm">
-                        <Check size={14} />
-                        <span>已验证</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-700 mb-2">
-                      联系电话
-                    </label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
-                      <input
-                        type="tel"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        disabled={!isEditing}
-                        className="w-full pl-10 pr-4 py-3 border border-neutral-300 bg-white disabled:bg-neutral-50 disabled:text-neutral-500 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-700 mb-2">
-                      所在城市
-                    </label>
-                    <div className="relative">
-                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
                       <input
                         type="text"
-                        value={formData.location}
-                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                        value={formData.lastName}
+                        onChange={(e) => handleChange('lastName', e.target.value)}
                         disabled={!isEditing}
-                        className="w-full pl-10 pr-4 py-3 border border-neutral-300 bg-white disabled:bg-neutral-50 disabled:text-neutral-500 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                        className={cn(
+                          "w-full pl-10 pr-4 py-3 border rounded-lg transition-colors",
+                          isEditing 
+                            ? "border-neutral-300 focus:border-accent focus:ring-2 focus:ring-accent/20" 
+                            : "border-neutral-200 bg-neutral-50 text-neutral-500"
+                        )}
                       />
                     </div>
                   </div>
                 </div>
-              </div>
-            </Card>
 
-            {/* Recent Bookings Preview */}
-            <Card>
-              <div className="p-6 border-b border-neutral-200">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold text-neutral-900">最近预订</h3>
-                    <p className="text-sm text-neutral-500 mt-1">查看您的预订历史</p>
+                {/* Email */}
+                <div>
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">
+                    Email Address
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
+                    <input
+                      type="email"
+                      value={formData.email}
+                      disabled
+                      className="w-full pl-10 pr-4 py-3 border border-neutral-200 bg-neutral-50 rounded-lg text-neutral-500"
+                    />
                   </div>
-                  <Link 
-                    href="/bookings"
-                    className="flex items-center gap-1 text-primary hover:text-primary-700 font-medium"
-                  >
-                    查看全部
-                    <ChevronRight size={16} />
-                  </Link>
+                  <p className="text-xs text-neutral-500 mt-1 flex items-center gap-1">
+                    <AlertCircle size={12} />
+                    Email cannot be changed. Contact support if needed.
+                  </p>
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">
+                    Phone Number
+                  </label>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
+                    <input
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => handleChange('phone', e.target.value)}
+                      disabled={!isEditing}
+                      placeholder="+1 (XXX) XXX-XXXX"
+                      className={cn(
+                        "w-full pl-10 pr-4 py-3 border rounded-lg transition-colors",
+                        isEditing 
+                          ? "border-neutral-300 focus:border-accent focus:ring-2 focus:ring-accent/20" 
+                          : "border-neutral-200 bg-neutral-50 text-neutral-500"
+                      )}
+                    />
+                  </div>
+                </div>
+
+                {/* Date of Birth & Nationality */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-700 mb-2">
+                      Date of Birth
+                    </label>
+                    <div className="relative">
+                      <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
+                      <input
+                        type="date"
+                        value={formData.dateOfBirth}
+                        onChange={(e) => handleChange('dateOfBirth', e.target.value)}
+                        disabled={!isEditing}
+                        className={cn(
+                          "w-full pl-10 pr-4 py-3 border rounded-lg transition-colors",
+                          isEditing 
+                            ? "border-neutral-300 focus:border-accent focus:ring-2 focus:ring-accent/20" 
+                            : "border-neutral-200 bg-neutral-50 text-neutral-500"
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-700 mb-2">
+                      Nationality
+                    </label>
+                    <div className="relative">
+                      <Flag className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
+                      <select
+                        value={formData.nationality}
+                        onChange={(e) => handleChange('nationality', e.target.value)}
+                        disabled={!isEditing}
+                        className={cn(
+                          "w-full pl-10 pr-4 py-3 border rounded-lg transition-colors appearance-none bg-white",
+                          isEditing 
+                            ? "border-neutral-300 focus:border-accent focus:ring-2 focus:ring-accent/20" 
+                            : "border-neutral-200 bg-neutral-50 text-neutral-500"
+                        )}
+                      >
+                        <option value="">Select nationality</option>
+                        {countries.map(country => (
+                          <option key={country} value={country}>{country}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="p-6">
-                <div className="space-y-4">
-                  {[
-                    {
-                      id: '1',
-                      property: 'Cooper St 豪华湖景公寓',
-                      checkIn: '2024-03-01',
-                      checkOut: '2024-03-31',
-                      status: 'upcoming',
-                      totalPrice: 17680,
-                    },
-                    {
-                      id: '2',
-                      property: 'Simcoe St 高层精品公寓',
-                      checkIn: '2024-01-15',
-                      checkOut: '2024-02-15',
-                      status: 'completed',
-                      totalPrice: 12150,
-                    },
-                  ].map((booking) => (
-                    <div 
-                      key={booking.id}
-                      className="flex items-center justify-between p-4 bg-neutral-50 border border-neutral-200"
-                    >
+              {/* Emergency Contact Section */}
+              <div className="border-t border-neutral-200">
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-1">Emergency Contact</h3>
+                  <p className="text-sm text-neutral-500 mb-6">
+                    Someone we can contact in case of emergency
+                  </p>
+
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <p className="font-medium text-neutral-900">{booking.property}</p>
-                        <p className="text-sm text-neutral-500 mt-1">
-                          {booking.checkIn} 至 {booking.checkOut}
-                        </p>
-                        <div className="flex items-center gap-2 mt-2">
-                          <span className={`px-2 py-1 text-xs font-medium ${
-                            booking.status === 'upcoming' 
-                              ? 'bg-primary/10 text-primary' 
-                              : 'bg-neutral-200 text-neutral-600'
-                          }`}>
-                            {booking.status === 'upcoming' ? '即将入住' : '已完成'}
-                          </span>
-                        </div>
+                        <label className="block text-sm font-medium text-neutral-700 mb-2">
+                          Contact Name
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.emergencyContactName}
+                          onChange={(e) => handleChange('emergencyContactName', e.target.value)}
+                          disabled={!isEditing}
+                          placeholder="Full name"
+                          className={cn(
+                            "w-full px-4 py-3 border rounded-lg transition-colors",
+                            isEditing 
+                              ? "border-neutral-300 focus:border-accent focus:ring-2 focus:ring-accent/20" 
+                              : "border-neutral-200 bg-neutral-50 text-neutral-500"
+                          )}
+                        />
                       </div>
-                      <div className="text-right">
-                        <p className="font-semibold text-neutral-900">
-                          ${booking.totalPrice.toLocaleString()} CAD
-                        </p>
-                        <Link 
-                          href={`/bookings/${booking.id}`}
-                          className="text-sm text-primary hover:text-primary-700 mt-1"
-                        >
-                          查看详情
-                        </Link>
+
+                      <div>
+                        <label className="block text-sm font-medium text-neutral-700 mb-2">
+                          Relationship
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.emergencyContactRelationship}
+                          onChange={(e) => handleChange('emergencyContactRelationship', e.target.value)}
+                          disabled={!isEditing}
+                          placeholder="e.g., Spouse, Parent, Friend"
+                          className={cn(
+                            "w-full px-4 py-3 border rounded-lg transition-colors",
+                            isEditing 
+                              ? "border-neutral-300 focus:border-accent focus:ring-2 focus:ring-accent/20" 
+                              : "border-neutral-200 bg-neutral-50 text-neutral-500"
+                          )}
+                        />
                       </div>
                     </div>
-                  ))}
+
+                    <div>
+                      <label className="block text-sm font-medium text-neutral-700 mb-2">
+                        Contact Phone
+                      </label>
+                      <div className="relative">
+                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
+                        <input
+                          type="tel"
+                          value={formData.emergencyContactPhone}
+                          onChange={(e) => handleChange('emergencyContactPhone', e.target.value)}
+                          disabled={!isEditing}
+                          placeholder="+1 (XXX) XXX-XXXX"
+                          className={cn(
+                            "w-full pl-10 pr-4 py-3 border rounded-lg transition-colors",
+                            isEditing 
+                              ? "border-neutral-300 focus:border-accent focus:ring-2 focus:ring-accent/20" 
+                              : "border-neutral-200 bg-neutral-50 text-neutral-500"
+                          )}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </Card>
           </div>
         </div>
       </Container>
-
-      {/* Back to Home Button */}
-      <BackToHomeButton />
     </main>
   );
 }

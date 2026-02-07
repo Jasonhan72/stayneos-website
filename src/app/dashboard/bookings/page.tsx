@@ -4,19 +4,19 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '@/components/layout/Navbar';
-import { Button, Modal } from '@/components/ui';
+import Button from '@/components/ui/Button';
+import { Modal } from '@/components/ui';
 import { 
   Calendar, 
   MapPin, 
-  CreditCard, 
   ChevronRight,
-  Clock,
   Check,
   X,
-  AlertCircle,
-  Loader2,
-  Home
+  Home,
+  ArrowRight,
+  Loader2
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface Booking {
   id: string;
@@ -29,7 +29,6 @@ interface Booking {
   currency: string;
   status: string;
   paymentStatus: string;
-  paidAmount: number;
   property: {
     id: string;
     title: string;
@@ -37,199 +36,321 @@ interface Booking {
     city: string;
     images: { url: string }[];
   };
-  review?: {
-    id: string;
-    rating: number;
-  } | null;
 }
 
-const statusConfig: Record<string, { label: string; color: string; icon: React.ComponentType<{ size?: number | string }> }> = {
+type TabType = 'upcoming' | 'current' | 'past' | 'cancelled';
+
+const tabs: { id: TabType; label: string }[] = [
+  { id: 'upcoming', label: 'Upcoming' },
+  { id: 'current', label: 'Current' },
+  { id: 'past', label: 'Past' },
+  { id: 'cancelled', label: 'Cancelled' },
+];
+
+const statusConfig: Record<string, { label: string; color: string; bgColor: string }> = {
   PENDING: {
-    label: '待确认',
-    color: 'bg-yellow-100 text-yellow-800',
-    icon: Clock,
+    label: 'Pending',
+    color: 'text-yellow-700',
+    bgColor: 'bg-yellow-100',
   },
   CONFIRMED: {
-    label: '已确认',
-    color: 'bg-green-100 text-green-800',
-    icon: Check,
+    label: 'Confirmed',
+    color: 'text-green-700',
+    bgColor: 'bg-green-100',
   },
   CHECKED_IN: {
-    label: '已入住',
-    color: 'bg-blue-100 text-blue-800',
-    icon: Home,
+    label: 'Checked in',
+    color: 'text-blue-700',
+    bgColor: 'bg-blue-100',
   },
   CHECKED_OUT: {
-    label: '已退房',
-    color: 'bg-gray-100 text-gray-800',
-    icon: Check,
+    label: 'Checked out',
+    color: 'text-gray-700',
+    bgColor: 'bg-gray-100',
   },
   CANCELLED: {
-    label: '已取消',
-    color: 'bg-red-100 text-red-800',
-    icon: X,
+    label: 'Cancelled',
+    color: 'text-red-700',
+    bgColor: 'bg-red-100',
   },
 };
 
-export default function DashboardBookingsPage() {
+// Mock data for different tabs
+const mockBookings: Record<TabType, Booking[]> = {
+  upcoming: [
+    {
+      id: 'booking-1',
+      bookingNumber: 'BK-2024-001',
+      checkIn: '2024-04-15',
+      checkOut: '2024-04-20',
+      nights: 5,
+      guests: 2,
+      totalPrice: 2500,
+      currency: 'CAD',
+      status: 'CONFIRMED',
+      paymentStatus: 'COMPLETED',
+      property: {
+        id: 'prop-1',
+        title: 'Luxury Downtown Condo',
+        address: '123 Bay Street',
+        city: 'Toronto',
+        images: [{ url: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800' }],
+      },
+    },
+    {
+      id: 'booking-2',
+      bookingNumber: 'BK-2024-002',
+      checkIn: '2024-05-10',
+      checkOut: '2024-05-15',
+      nights: 5,
+      guests: 4,
+      totalPrice: 3500,
+      currency: 'CAD',
+      status: 'PENDING',
+      paymentStatus: 'PENDING',
+      property: {
+        id: 'prop-2',
+        title: 'Waterfront Executive Suite',
+        address: '456 Harbourfront',
+        city: 'Toronto',
+        images: [{ url: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800' }],
+      },
+    },
+  ],
+  current: [
+    {
+      id: 'booking-3',
+      bookingNumber: 'BK-2024-003',
+      checkIn: '2024-02-01',
+      checkOut: '2024-02-28',
+      nights: 27,
+      guests: 2,
+      totalPrice: 12000,
+      currency: 'CAD',
+      status: 'CHECKED_IN',
+      paymentStatus: 'COMPLETED',
+      property: {
+        id: 'prop-3',
+        title: 'Modern Yorkville Apartment',
+        address: '789 Yonge Street',
+        city: 'Toronto',
+        images: [{ url: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800' }],
+      },
+    },
+  ],
+  past: [
+    {
+      id: 'booking-4',
+      bookingNumber: 'BK-2023-045',
+      checkIn: '2023-12-20',
+      checkOut: '2023-12-27',
+      nights: 7,
+      guests: 3,
+      totalPrice: 4200,
+      currency: 'CAD',
+      status: 'CHECKED_OUT',
+      paymentStatus: 'COMPLETED',
+      property: {
+        id: 'prop-4',
+        title: 'Cozy Midtown Studio',
+        address: '321 Eglinton Ave',
+        city: 'Toronto',
+        images: [{ url: 'https://images.unsplash.com/photo-1484154218962-a1c002085d2f?w=800' }],
+      },
+    },
+    {
+      id: 'booking-5',
+      bookingNumber: 'BK-2023-038',
+      checkIn: '2023-11-10',
+      checkOut: '2023-11-15',
+      nights: 5,
+      guests: 2,
+      totalPrice: 2800,
+      currency: 'CAD',
+      status: 'CHECKED_OUT',
+      paymentStatus: 'COMPLETED',
+      property: {
+        id: 'prop-5',
+        title: 'Stylish Entertainment District Loft',
+        address: '654 King Street W',
+        city: 'Toronto',
+        images: [{ url: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800' }],
+      },
+    },
+  ],
+  cancelled: [
+    {
+      id: 'booking-6',
+      bookingNumber: 'BK-2023-022',
+      checkIn: '2023-10-05',
+      checkOut: '2023-10-10',
+      nights: 5,
+      guests: 2,
+      totalPrice: 3000,
+      currency: 'CAD',
+      status: 'CANCELLED',
+      paymentStatus: 'REFUNDED',
+      property: {
+        id: 'prop-6',
+        title: 'Bright North York Apartment',
+        address: '987 Sheppard Ave',
+        city: 'Toronto',
+        images: [{ url: 'https://images.unsplash.com/photo-1460317442991-0ec209397118?w=800' }],
+      },
+    },
+  ],
+};
+
+export default function BookingsPage() {
+  const [activeTab, setActiveTab] = useState<TabType>('upcoming');
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [activeTab, setActiveTab] = useState('all');
-  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [showCancelModal, setShowCancelModal] = useState(false);
-  const [isCancelling, setIsCancelling] = useState(false);
-  const [cancelReason, setCancelReason] = useState('');
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
 
-  // 获取预订列表
+  // Simulate fetching bookings based on tab
   const fetchBookings = useCallback(async () => {
     setIsLoading(true);
-    try {
-      const response = await fetch(`/api/bookings?status=${activeTab}`);
-      const data = await response.json() as { error?: string; bookings: Booking[] };
-
-      if (!response.ok) {
-        throw new Error(data.error || '获取预订失败');
-      }
-
-      setBookings(data.bookings);
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : '获取预订失败';
-      setError(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+    setBookings(mockBookings[activeTab]);
+    setIsLoading(false);
   }, [activeTab]);
 
   useEffect(() => {
     fetchBookings();
   }, [fetchBookings]);
 
-  // 取消预订
-  const handleCancelBooking = async () => {
-    if (!selectedBooking) return;
-
-    setIsCancelling(true);
-    try {
-      const response = await fetch(`/api/bookings/${selectedBooking.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'cancel',
-          reason: cancelReason,
-        }),
-      });
-
-      const data = await response.json() as { error?: string };
-
-      if (!response.ok) {
-        throw new Error(data.error || '取消预订失败');
-      }
-
-      // 刷新列表
-      fetchBookings();
-      setShowCancelModal(false);
-      setSelectedBooking(null);
-      setCancelReason('');
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : '取消预订失败';
-      setError(errorMessage);
-    } finally {
-      setIsCancelling(false);
-    }
-  };
-
-  // 格式化日期
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('zh-CN', {
-      year: 'numeric',
+    return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
+      year: 'numeric',
     });
   };
 
-  // 获取状态标签
   const getStatusBadge = (status: string) => {
     const config = statusConfig[status] || statusConfig.PENDING;
-    const Icon = config.icon;
     return (
-      <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${config.color}`}>
-        <Icon size={14} />
+      <span className={cn("px-3 py-1 rounded-full text-xs font-medium", config.bgColor, config.color)}>
         {config.label}
       </span>
     );
   };
 
+  const handleCancelClick = (booking: Booking) => {
+    setSelectedBooking(booking);
+    setShowCancelModal(true);
+  };
+
+  const handleConfirmCancel = () => {
+    // Simulate cancellation
+    setBookings(prev => prev.filter(b => b.id !== selectedBooking?.id));
+    setShowCancelModal(false);
+    setSelectedBooking(null);
+  };
+
+  const emptyStateContent = {
+    upcoming: {
+      icon: Calendar,
+      title: 'No upcoming bookings',
+      description: 'You don\'t have any upcoming stays. Time to plan your next trip!',
+      cta: { text: 'Browse Properties', href: '/properties' },
+    },
+    current: {
+      icon: Home,
+      title: 'No current stays',
+      description: 'You\'re not checked in anywhere right now.',
+      cta: { text: 'Browse Properties', href: '/properties' },
+    },
+    past: {
+      icon: Check,
+      title: 'No past bookings',
+      description: 'You haven\'t completed any stays yet.',
+      cta: null,
+    },
+    cancelled: {
+      icon: X,
+      title: 'No cancelled bookings',
+      description: 'You don\'t have any cancelled reservations.',
+      cta: null,
+    },
+  };
+
   return (
-    <main className="min-h-screen bg-amber-50">
+    <main className="min-h-screen bg-neutral-50">
       <Navbar />
 
-      <div className="pt-20 pb-12">
+      <div className="pt-24 pb-12">
         <div className="container mx-auto px-4 max-w-6xl">
-          {/* 页面标题 */}
+          {/* Page Header */}
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">我的预订</h1>
-            <p className="text-gray-600 mt-1">管理您的预订和查看历史记录</p>
+            <h1 className="text-3xl font-bold text-neutral-900">My Bookings</h1>
+            <p className="text-neutral-600 mt-2">Manage your reservations and view your stay history</p>
           </div>
 
-          {/* 标签页 */}
-          <div className="flex gap-2 mb-6 border-b border-gray-200">
-            {[
-              { id: 'all', label: '全部' },
-              { id: 'upcoming', label: '即将入住' },
-              { id: 'active', label: '进行中' },
-              { id: 'completed', label: '已完成' },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-6 py-3 font-medium transition-colors relative ${
-                  activeTab === tab.id 
-                    ? 'text-amber-600' 
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                {tab.label}
-                {activeTab === tab.id && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-500" />
-                )}
-              </button>
-            ))}
-          </div>
-
-          {/* 错误提示 */}
-          {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center gap-2">
-              <AlertCircle size={20} />
-              <span>{error}</span>
+          {/* Tabs */}
+          <div className="border-b border-neutral-200 mb-8">
+            <div className="flex gap-1">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={cn(
+                    "px-6 py-4 font-medium text-sm transition-colors relative",
+                    activeTab === tab.id 
+                      ? "text-accent" 
+                      : "text-neutral-600 hover:text-neutral-900"
+                  )}
+                >
+                  {tab.label}
+                  {activeTab === tab.id && (
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent" />
+                  )}
+                </button>
+              ))}
             </div>
-          )}
+          </div>
 
-          {/* 加载状态 */}
+          {/* Loading State */}
           {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="animate-spin mr-2" size={24} />
-              <span>加载中...</span>
+            <div className="flex items-center justify-center py-16">
+              <Loader2 className="animate-spin mr-2 text-accent" size={24} />
+              <span className="text-neutral-600">Loading your bookings...</span>
             </div>
           ) : bookings.length === 0 ? (
-            <div className="bg-white rounded-xl p-12 text-center">
-              <Calendar size={48} className="text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">暂无预订</h3>
-              <p className="text-gray-500 mb-6">您还没有符合条件的预订记录</p>
-              <Link href="/properties">
-                <Button>浏览房源</Button>
-              </Link>
+            /* Empty State */
+            <div className="bg-white rounded-xl p-12 text-center border border-neutral-200">
+              {React.createElement(emptyStateContent[activeTab].icon, { 
+                size: 48, 
+                className: "text-neutral-300 mx-auto mb-4" 
+              })}
+              <h3 className="text-lg font-semibold text-neutral-900 mb-2">
+                {emptyStateContent[activeTab].title}
+              </h3>
+              <p className="text-neutral-500 mb-6 max-w-md mx-auto">
+                {emptyStateContent[activeTab].description}
+              </p>
+              {emptyStateContent[activeTab].cta && (
+                <Link href={emptyStateContent[activeTab].cta!.href}>
+                  <Button>
+                    {emptyStateContent[activeTab].cta!.text}
+                    <ArrowRight size={18} className="ml-2" />
+                  </Button>
+                </Link>
+              )}
             </div>
           ) : (
+            /* Bookings List */
             <div className="space-y-4">
               {bookings.map((booking) => (
                 <div 
                   key={booking.id} 
-                  className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
+                  className="bg-white rounded-xl border border-neutral-200 overflow-hidden hover:shadow-md transition-shadow"
                 >
-                  <div className="flex flex-col md:flex-row gap-6">
-                    {/* 房源图片 */}
-                    <div className="relative w-full md:w-48 h-32 rounded-lg overflow-hidden shrink-0">
+                  <div className="flex flex-col md:flex-row">
+                    {/* Property Image */}
+                    <div className="relative w-full md:w-64 h-48 md:h-auto shrink-0">
                       <Image
                         src={booking.property.images[0]?.url || '/images/placeholder.jpg'}
                         alt={booking.property.title}
@@ -238,88 +359,75 @@ export default function DashboardBookingsPage() {
                       />
                     </div>
 
-                    {/* 预订信息 */}
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <p className="text-sm text-gray-500">预订号: {booking.bookingNumber}</p>
+                    {/* Booking Details */}
+                    <div className="flex-1 p-6">
+                      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-xs text-neutral-500">
+                              Booking #{booking.bookingNumber}
+                            </span>
+                            {getStatusBadge(booking.status)}
+                          </div>
+
                           <Link 
                             href={`/properties/${booking.property.id}`}
-                            className="text-lg font-semibold text-gray-900 hover:text-amber-600 transition-colors"
+                            className="text-lg font-semibold text-neutral-900 hover:text-accent transition-colors"
                           >
                             {booking.property.title}
                           </Link>
-                        </div>
-                        {getStatusBadge(booking.status)}
-                      </div>
 
-                      <div className="flex items-center gap-1 text-gray-500 text-sm mb-4">
-                        <MapPin size={14} />
-                        <span>{booking.property.address}, {booking.property.city}</span>
-                      </div>
+                          <div className="flex items-center gap-1 text-neutral-500 text-sm mt-1">
+                            <MapPin size={14} />
+                            <span>{booking.property.address}, {booking.property.city}</span>
+                          </div>
 
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                        <div className="p-3 bg-gray-50 rounded-lg">
-                          <p className="text-xs text-gray-500">入住日期</p>
-                          <p className="font-medium text-gray-900">{formatDate(booking.checkIn)}</p>
-                        </div>
-                        <div className="p-3 bg-gray-50 rounded-lg">
-                          <p className="text-xs text-gray-500">退房日期</p>
-                          <p className="font-medium text-gray-900">{formatDate(booking.checkOut)}</p>
-                        </div>
-                        <div className="p-3 bg-gray-50 rounded-lg">
-                          <p className="text-xs text-gray-500">入住天数</p>
-                          <p className="font-medium text-gray-900">{booking.nights} 晚</p>
-                        </div>
-                        <div className="p-3 bg-gray-50 rounded-lg">
-                          <p className="text-xs text-gray-500">入住人数</p>
-                          <p className="font-medium text-gray-900">{booking.guests} 人</p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <div className="flex items-center gap-2">
-                            <CreditCard size={16} className="text-gray-400" />
-                            <span className="text-sm text-gray-600">
-                              {booking.paymentStatus === 'COMPLETED' ? '已支付' : '待支付'}
-                            </span>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                            <div className="p-3 bg-neutral-50 rounded-lg">
+                              <p className="text-xs text-neutral-500 mb-1">Check-in</p>
+                              <p className="font-medium text-neutral-900">{formatDate(booking.checkIn)}</p>
+                            </div>
+                            <div className="p-3 bg-neutral-50 rounded-lg">
+                              <p className="text-xs text-neutral-500 mb-1">Check-out</p>
+                              <p className="font-medium text-neutral-900">{formatDate(booking.checkOut)}</p>
+                            </div>
+                            <div className="p-3 bg-neutral-50 rounded-lg">
+                              <p className="text-xs text-neutral-500 mb-1">Nights</p>
+                              <p className="font-medium text-neutral-900">{booking.nights}</p>
+                            </div>
+                            <div className="p-3 bg-neutral-50 rounded-lg">
+                              <p className="text-xs text-neutral-500 mb-1">Guests</p>
+                              <p className="font-medium text-neutral-900">{booking.guests}</p>
+                            </div>
                           </div>
                         </div>
 
                         <div className="text-right">
-                          <p className="text-2xl font-bold text-gray-900">
-                            ${Number(booking.totalPrice).toLocaleString()} {booking.currency}
+                          <p className="text-2xl font-bold text-neutral-900">
+                            ${booking.totalPrice.toLocaleString()}
                           </p>
+                          <p className="text-sm text-neutral-500">{booking.currency}</p>
+                          <div className="mt-4 space-y-2">
+                            <Link href={`/dashboard/bookings/${booking.id}`}>
+                              <Button variant="outline" size="sm" fullWidth
+                                rightIcon={<ChevronRight size={14} />}
+                              >
+                                View Details
+                              </Button>
+                            </Link>
+                            
+                            {(booking.status === 'PENDING' || booking.status === 'CONFIRMED') && activeTab === 'upcoming' && (
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                fullWidth
+                                onClick={() => handleCancelClick(booking)}
+                              >
+                                Cancel
+                              </Button>
+                            )}
+                          </div>
                         </div>
-                      </div>
-
-                      <div className="flex gap-2 mt-4">
-                        <Link href={`/dashboard/bookings/${booking.id}`}>
-                          <Button variant="outline" size="sm">
-                            查看详情
-                            <ChevronRight size={14} className="ml-1" />
-                          </Button>
-                        </Link>
-
-                        {(booking.status === 'PENDING' || booking.status === 'CONFIRMED') && (
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => {
-                              setSelectedBooking(booking);
-                              setShowCancelModal(true);
-                            }}
-                          >
-                            取消预订
-                          </Button>
-                        )}
-
-                        {booking.status === 'CHECKED_OUT' && !booking.review && (
-                          <Button size="sm">
-                            写评价
-                          </Button>
-                        )}
                       </div>
                     </div>
                   </div>
@@ -330,15 +438,14 @@ export default function DashboardBookingsPage() {
         </div>
       </div>
 
-      {/* 取消预订弹窗 */}
+      {/* Cancel Modal */}
       <Modal
         isOpen={showCancelModal}
         onClose={() => {
           setShowCancelModal(false);
           setSelectedBooking(null);
-          setCancelReason('');
         }}
-        title="取消预订"
+        title="Cancel Booking"
         size="md"
         footer={
           <div className="flex justify-end gap-2">
@@ -347,46 +454,31 @@ export default function DashboardBookingsPage() {
               onClick={() => {
                 setShowCancelModal(false);
                 setSelectedBooking(null);
-                setCancelReason('');
               }}
             >
-              取消
+              Keep Booking
             </Button>
             <Button
               variant="danger"
-              onClick={handleCancelBooking}
-              isLoading={isCancelling}
+              onClick={handleConfirmCancel}
             >
-              确认取消
+              Cancel Booking
             </Button>
           </div>
         }
       >
         <div className="space-y-4">
-          <p className="text-gray-600">
-            您确定要取消预订 <span className="font-medium">{selectedBooking?.bookingNumber}</span> 吗？
+          <p className="text-neutral-600">
+            Are you sure you want to cancel booking <span className="font-medium">#{selectedBooking?.bookingNumber}</span>?
           </p>
           
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
-            <p className="font-medium mb-1">⚠️ 注意：</p>
-            <ul className="space-y-1">
-              <li>· 取消后无法恢复</li>
-              <li>· 退款将在 3-5 个工作日内退回原支付账户</li>
-              <li>· 部分预订可能适用取消费用</li>
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+            <p className="font-medium text-amber-800 mb-2">⚠️ Please note:</p>
+            <ul className="text-sm text-amber-700 space-y-1">
+              <li>• This action cannot be undone</li>
+              <li>• Refunds will be processed within 3-5 business days</li>
+              <li>• Cancellation fees may apply</li>
             </ul>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              取消原因（选填）
-            </label>
-            <textarea
-              value={cancelReason}
-              onChange={(e) => setCancelReason(e.target.value)}
-              placeholder="请告诉我们取消的原因..."
-              rows={3}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
-            />
           </div>
         </div>
       </Modal>
