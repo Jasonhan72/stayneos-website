@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useUser } from '@/lib/context/UserContext';
 import Button from '@/components/ui/Button';
@@ -33,16 +33,30 @@ const currencies = [
 export default function PreferencesPage() {
   const { user, updatePreferences, isLoading } = useUser();
   const [showSuccess, setShowSuccess] = useState(false);
-  
   const [preferences, setPreferences] = useState({
-    language: user?.preferences.language || 'en',
-    currency: user?.preferences.currency || 'CAD',
+    language: 'en',
+    currency: 'CAD',
     notifications: {
-      email: user?.preferences.notifications.email ?? true,
-      sms: user?.preferences.notifications.sms ?? true,
-      marketing: user?.preferences.notifications.marketing ?? false,
+      email: true,
+      sms: true,
+      marketing: false,
     },
   });
+
+  // Update preferences when user data loads
+  useEffect(() => {
+    if (user?.preferences) {
+      setPreferences({
+        language: user.preferences.language || 'en',
+        currency: user.preferences.currency || 'CAD',
+        notifications: {
+          email: user.preferences.notifications?.email ?? true,
+          sms: user.preferences.notifications?.sms ?? true,
+          marketing: user.preferences.notifications?.marketing ?? false,
+        },
+      });
+    }
+  }, [user]);
 
   const handleNotificationChange = (key: 'email' | 'sms' | 'marketing') => {
     setPreferences(prev => ({
@@ -55,17 +69,21 @@ export default function PreferencesPage() {
   };
 
   const handleSave = async () => {
-    await updatePreferences(preferences);
+    await updatePreferences({
+      language: preferences.language as 'en' | 'zh' | 'fr',
+      currency: preferences.currency as 'CAD' | 'USD' | 'EUR' | 'CNY',
+      notifications: preferences.notifications,
+    });
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
   };
 
   const hasChanges = 
-    preferences.language !== user?.preferences.language ||
-    preferences.currency !== user?.preferences.currency ||
-    preferences.notifications.email !== user?.preferences.notifications.email ||
-    preferences.notifications.sms !== user?.preferences.notifications.sms ||
-    preferences.notifications.marketing !== user?.preferences.notifications.marketing;
+    preferences.language !== user?.preferences?.language ||
+    preferences.currency !== user?.preferences?.currency ||
+    preferences.notifications.email !== user?.preferences?.notifications?.email ||
+    preferences.notifications.sms !== user?.preferences?.notifications?.sms ||
+    preferences.notifications.marketing !== user?.preferences?.notifications?.marketing;
 
   if (!user) {
     return (

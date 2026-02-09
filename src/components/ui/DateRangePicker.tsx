@@ -3,6 +3,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 interface DateRangePickerProps {
   checkIn: string;
@@ -32,8 +33,36 @@ const generateCalendarDays = (year: number, month: number) => {
   return days;
 };
 
-const monthNames = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
-const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+// Translations for months and weekdays
+const translations = {
+  zh: {
+    months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+    weekDays: ['日', '一', '二', '三', '四', '五', '六'],
+    checkIn: '入住日期',
+    checkOut: '退房日期',
+    selectDate: '选择日期',
+    clearDates: '清除日期',
+    done: '完成',
+  },
+  en: {
+    months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    weekDays: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+    checkIn: 'Check-in',
+    checkOut: 'Check-out',
+    selectDate: 'Select date',
+    clearDates: 'Clear dates',
+    done: 'Done',
+  },
+  fr: {
+    months: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
+    weekDays: ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'],
+    checkIn: 'Arrivée',
+    checkOut: 'Départ',
+    selectDate: 'Sélectionner',
+    clearDates: 'Effacer',
+    done: 'Terminé',
+  },
+};
 
 export function DateRangePicker({ 
   checkIn, 
@@ -42,11 +71,14 @@ export function DateRangePicker({
   onCheckOutChange,
   className = ''
 }: DateRangePickerProps) {
+  const { locale } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const [activeField, setActiveField] = useState<'checkIn' | 'checkOut' | null>(null);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const t = translations[locale] || translations.zh;
 
   // Close when clicking outside
   useEffect(() => {
@@ -167,9 +199,9 @@ export function DateRangePicker({
             setActiveField('checkIn');
           }}
         >
-          <div className="text-xs font-semibold text-neutral-900 uppercase tracking-wide">入住日期</div>
+          <div className="text-xs font-semibold text-neutral-900 uppercase tracking-wide">{t.checkIn}</div>
           <div className={`text-sm mt-1 ${checkIn ? 'text-neutral-900 font-medium' : 'text-neutral-400'}`}>
-            {checkIn ? new Date(checkIn).toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' }) : '选择日期'}
+            {checkIn ? new Date(checkIn).toLocaleDateString(locale === 'zh' ? 'zh-CN' : locale === 'fr' ? 'fr-FR' : 'en-US', { month: 'short', day: 'numeric' }) : t.selectDate}
           </div>
         </div>
 
@@ -185,9 +217,9 @@ export function DateRangePicker({
             }
           }}
         >
-          <div className="text-xs font-semibold text-neutral-900 uppercase tracking-wide">退房日期</div>
+          <div className="text-xs font-semibold text-neutral-900 uppercase tracking-wide">{t.checkOut}</div>
           <div className={`text-sm mt-1 ${checkOut ? 'text-neutral-900 font-medium' : 'text-neutral-400'}`}>
-            {checkOut ? new Date(checkOut).toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' }) : '选择日期'}
+            {checkOut ? new Date(checkOut).toLocaleDateString(locale === 'zh' ? 'zh-CN' : locale === 'fr' ? 'fr-FR' : 'en-US', { month: 'short', day: 'numeric' }) : t.selectDate}
           </div>
         </div>
 
@@ -217,7 +249,7 @@ export function DateRangePicker({
               <ChevronLeft size={20} />
             </button>
             <div className="text-sm font-semibold">
-              {currentYear}年{monthNames[currentMonth]}
+              {currentYear}{locale === 'zh' ? '年' : ''}{t.months[currentMonth]}
             </div>
             <button 
               onClick={nextMonth}
@@ -229,7 +261,7 @@ export function DateRangePicker({
 
           {/* Week Days */}
           <div className="grid grid-cols-7 gap-1 mb-2">
-            {weekDays.map(day => (
+            {t.weekDays.map(day => (
               <div key={day} className="text-center text-xs text-neutral-400 py-1">
                 {day}
               </div>
@@ -263,13 +295,13 @@ export function DateRangePicker({
               onClick={clearDates}
               className="text-sm underline text-neutral-600 hover:text-neutral-900"
             >
-              清除日期
+              {t.clearDates}
             </button>
             <button
               onClick={() => setIsOpen(false)}
               className="px-4 py-2 bg-neutral-900 text-white text-sm font-medium hover:bg-neutral-800"
             >
-              完成
+              {t.done}
             </button>
           </div>
         </div>

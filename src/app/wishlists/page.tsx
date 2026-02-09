@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import Navbar from '@/components/layout/Navbar';
 import Button from '@/components/ui/Button';
 import { Container } from '@/components/ui';
 import { 
@@ -102,9 +101,7 @@ export default function WishlistsPage() {
   if (wishlist.length === 0) {
     return (
       <main className="min-h-screen bg-neutral-50">
-        <Navbar />
-
-        <div className="pt-24 pb-12">
+        <div className="pt-20 pb-12">
           <Container>
             <div className="max-w-2xl mx-auto text-center">
               <div className="w-20 h-20 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -132,9 +129,7 @@ export default function WishlistsPage() {
 
   return (
     <main className="min-h-screen bg-neutral-50">
-      <Navbar />
-
-      <div className="pt-24 pb-12">
+      <div className="pt-20 pb-12">
         <Container>
           {/* Header */}
           <div className="mb-8">

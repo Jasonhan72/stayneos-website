@@ -1,14 +1,23 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Static export for Cloudflare Pages
-  output: "export",
-  distDir: "dist",
-  trailingSlash: true,
+  // ============================================
+  // Hybrid Export Mode
+  // Static + Dynamic SSR via Workers
+  // ============================================
+  
+  // Output standalone for OpenNext
+  output: 'standalone',
+  
+  // Experimental features
+  experimental: {
+    // Optimize package imports
+    optimizePackageImports: ["lucide-react"],
+  },
   
   // Image optimization
   images: {
-    // Disable image optimization for static export
-    unoptimized: true,
+    // Use Cloudflare Images or R2 for optimization
+    unoptimized: false,
     // Allow images from external domains
     remotePatterns: [
       {
@@ -20,6 +29,12 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "*.unsplash.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "*.cloudflare.com",
         port: "",
         pathname: "/**",
       },
@@ -36,12 +51,6 @@ const nextConfig = {
     // Content Security Policy for images
     contentSecurityPolicy:
       "default-src 'self'; script-src 'none'; sandbox;",
-  },
-
-  // Performance optimizations
-  experimental: {
-    // Optimize package imports
-    optimizePackageImports: ["lucide-react"],
   },
 
   // Compiler optimizations
@@ -126,10 +135,6 @@ const nextConfig = {
 
   // Compress responses
   compress: true,
-
-  // Static export for Cloudflare Pages
-  output: "export",
-  distDir: "dist",
 };
 
 module.exports = nextConfig;

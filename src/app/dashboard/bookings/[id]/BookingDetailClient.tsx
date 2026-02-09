@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import Navbar from '@/components/layout/Navbar';
 import { Button } from '@/components/ui';
 import { 
   ChevronLeft, 
@@ -154,7 +153,7 @@ export default function BookingDetailClient() {
   if (isLoading) {
     return (
       <main className="min-h-screen bg-amber-50">
-        <Navbar />
+        
         <div className="pt-20 pb-12">
           <div className="container mx-auto px-4 max-w-4xl">
             <div className="flex items-center justify-center py-12">
@@ -170,7 +169,7 @@ export default function BookingDetailClient() {
   if (error || !booking) {
     return (
       <main className="min-h-screen bg-amber-50">
-        <Navbar />
+        
         <div className="pt-20 pb-12">
           <div className="container mx-auto px-4 max-w-4xl">
             <div className="bg-white rounded-xl p-8 text-center">
@@ -192,7 +191,7 @@ export default function BookingDetailClient() {
 
   return (
     <main className="min-h-screen bg-amber-50">
-      <Navbar />
+      
 
       <div className="pt-20 pb-12">
         <div className="container mx-auto px-4 max-w-4xl">

@@ -10,7 +10,47 @@
     "about": "关于我们",
     "login": "登录",
     "register": "注册",
-    "account": "我的账户"
+    "account": "我的账户",
+    "signup": "注册",
+    "landlords": "房东服务",
+    "business": "企业服务",
+    "contact": "联系我们",
+    "bookings": "我的预订",
+    "personalDetails": "个人资料",
+    "preferences": "偏好设置",
+    "wishlists": "心愿单",
+    "logout": "退出登录"
+  },
+  "common": {
+    "or": "或",
+    "there": "您好",
+    "back": "返回",
+    "cancel": "取消",
+    "close": "关闭",
+    "print": "打印",
+    "download": "下载",
+    "submit": "提交",
+    "save": "保存",
+    "edit": "编辑",
+    "delete": "删除",
+    "search": "搜索",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "nights": "晚",
+    "night": "晚",
+    "guests": "人",
+    "guest": "人",
+    "people": "人",
+    "person": "人"
+  },
+  "greeting": {
+    "morning": "早上好",
+    "afternoon": "下午好",
+    "evening": "晚上好"
+  },
+  "currency": {
+    "title": "货币"
   },
   "hero": {
     "title": "尊享高端行政公寓",
@@ -72,25 +112,596 @@
     "explore": "开始探索",
     "contact": "联系我们"
   },
+  "howItWorks": {
+    "title": "简单三步，轻松入住",
+    "subtitle": "我们简化了整个流程，让您专注于享受居住体验"
+  },
+  "steps": {
+    "search": {
+      "title": "搜索房源",
+      "desc": "浏览我们的精选房源，按位置、价格、设施筛选"
+    },
+    "book": {
+      "title": "在线预订",
+      "desc": "选择入住日期，查看实时价格，一键完成预订"
+    },
+    "movein": {
+      "title": "拎包入住",
+      "desc": "专业管家迎接，设施齐全，即刻开始享受"
+    }
+  },
+  "segments": {
+    "title": "适合您的居住方案",
+    "subtitle": "无论商务出差、长期项目还是搬迁过渡，我们都有适合您的选择",
+    "business": {
+      "title": "商务出差",
+      "subtitle": "企业客户优惠",
+      "desc": "为商务人士提供便捷住宿方案，靠近金融区，交通便利",
+      "cta": "了解企业方案"
+    },
+    "longterm": {
+      "title": "长期居住",
+      "subtitle": "月租享8折",
+      "desc": "一个月以上享受优惠价格，适合长期项目或搬迁过渡",
+      "cta": "查看长租房源"
+    },
+    "relocation": {
+      "title": "搬迁过渡",
+      "subtitle": "灵活入住",
+      "desc": "搬家期间的理想选择，无需长期承诺，即刻入住",
+      "cta": "立即预订"
+    }
+  },
   "footer": {
     "about": "关于我们",
-    "company": "公司介绍",
-    "team": "团队成员",
-    "careers": "加入我们",
-    "customerService": "客户服务",
+    "team": "我们的团队",
+    "careers": "职业机会",
+    "news": "新闻中心",
+    "corporate": "企业住房",
+    "shortTerm": "短期租赁",
+    "longTerm": "长期租赁",
+    "propertyManagement": "物业管理",
     "help": "帮助中心",
-    "contact": "联系我们",
     "faq": "常见问题",
-    "followUs": "关注我们",
-    "wechat": "微信公众号",
-    "weibo": "微博",
-    "xiaohongshu": "小红书",
-    "copyright": "© 2026 StayNeos. 保留所有权利。"
+    "contact": "联系我们",
+    "privacy": "隐私政策",
+    "description": "为现代旅行者提供精心设计的住宿体验。无论是商务出行还是休闲度假，我们都能为您提供完美的居住空间。",
+    "companyTitle": "公司",
+    "servicesTitle": "服务",
+    "supportTitle": "支持",
+    "copyright": "© {year} StayNeos. 保留所有权利。"
   },
   "language": {
     "title": "语言",
     "en": "English",
     "fr": "Français",
     "zh": "中文"
+  },
+  "booking": {
+    "checkIn": "入住",
+    "checkOut": "退房",
+    "checkInDate": "入住日期",
+    "checkOutDate": "退房日期",
+    "selectCheckIn": "选择入住日期",
+    "selectCheckOut": "选择退房日期",
+    "selectDates": "选择日期",
+    "selectDatesAndGuests": "选择日期和人数",
+    "dates": "日期",
+    "guests": "人数",
+    "submitting": "提交中...",
+    "bookNow": "立即预订",
+    "selectDatesError": "请选择入住和退房日期",
+    "selectCheckInError": "请选择入住日期",
+    "selectCheckOutError": "请选择退房日期",
+    "checkOutAfterCheckIn": "退房日期必须晚于入住日期"
+  },
+  "contact": {
+    "title": "联系我们",
+    "subtitle": "与我们的团队取得联系",
+    "form": {
+      "name": "姓名",
+      "email": "邮箱",
+      "phone": "电话",
+      "message": "留言",
+      "send": "发送消息"
+    }
+  },
+  "bookings": {
+    "title": "我的预订",
+    "noBookings": "暂无预订",
+    "noBookingsDesc": "您还没有任何预订",
+    "bookingId": "预订编号",
+    "status": "状态",
+    "pending": "待处理",
+    "confirmed": "已确认",
+    "cancelled": "已取消",
+    "completed": "已完成",
+    "manageBookings": "管理您的预订和查看历史记录",
+    "subtitle": "管理您的预订和查看历史记录",
+    "allBookings": "全部预订",
+    "upcoming": "即将入住",
+    "current": "当前入住",
+    "all": "全部",
+    "checkIn": "入住日期",
+    "checkOut": "退房日期",
+    "nights": "入住天数",
+    "guests": "入住人数",
+    "totalPrice": "总价",
+    "bookingNumber": "预订号",
+    "property": "房源",
+    "viewDetails": "查看详情",
+    "contactHost": "联系房东",
+    "downloadVoucher": "下载凭证",
+    "writeReview": "写评价",
+    "retry": "重试",
+    "loading": "加载预订中...",
+    "errorLoading": "获取预订失败，请稍后重试",
+    "fetchError": "获取预订失败，请稍后重试",
+    "noUpcoming": "暂无即将入住的预订",
+    "noCurrent": "暂无当前入住",
+    "noPast": "暂无历史预订",
+    "noCancelled": "暂无取消的预订",
+    "browseProperties": "浏览房源",
+    "cancelBooking": "取消预订",
+    "keepBooking": "保留预订",
+    "cancelWarning": "此操作无法撤销。退款将在3-5个工作日内处理。可能会收取取消费用。",
+    "paid": "已支付",
+    "unpaid": "待支付",
+    "bookingDate": "预订日期",
+    "close": "关闭",
+    "print": "打印",
+    "download": "下载",
+    "submitting": "提交中...",
+    "submitReview": "提交评价",
+    "reviewPlaceholder": "分享您的入住体验...",
+    "rating": "评分",
+    "bookingDetails": "预订详情",
+    "priceBreakdown": "费用明细",
+    "costBreakdown": "费用明细",
+    "roomRate": "房价",
+    "basePrice": "房价",
+    "total": "总计",
+    "pleaseLogin": "请登录后查看您的预订",
+    "loginRequired": "请登录后查看您的预订",
+    "login": "登录",
+    "tabs": {
+      "all": "全部预订",
+      "upcoming": "即将入住",
+      "current": "当前入住",
+      "completed": "已完成"
+    }
+  },
+  "booking": {
+    "checkIn": "入住",
+    "checkOut": "退房",
+    "checkInDate": "入住日期",
+    "checkOutDate": "退房日期",
+    "selectCheckIn": "选择入住日期",
+    "selectCheckOut": "选择退房日期",
+    "selectDates": "选择日期",
+    "selectDatesAndGuests": "选择日期和人数",
+    "dates": "日期",
+    "guests": "人数",
+    "submitting": "提交中...",
+    "bookNow": "立即预订",
+    "selectDatesError": "请选择入住和退房日期",
+    "selectCheckInError": "请选择入住日期",
+    "selectCheckOutError": "请选择退房日期",
+    "checkOutAfterCheckIn": "退房日期必须晚于入住日期",
+    "step1": "选择日期",
+    "step2": "确认信息",
+    "step3": "完成支付",
+    "nextStep": "下一步",
+    "confirmAndPay": "确认并支付",
+    "returnToProperty": "返回房源详情",
+    "guestCount": "{count}位房客",
+    "minNights": "{count}天起租",
+    "monthlyDiscount": "月租享{percent}%折扣",
+    "selectDatesAndGuestsTitle": "选择日期和人数",
+    "confirmInfoTitle": "确认入住信息",
+    "securePaymentTitle": "安全支付",
+    "guestInfo": "入住人信息",
+    "name": "姓名",
+    "email": "邮箱",
+    "phone": "电话",
+    "specialRequests": "特殊需求",
+    "specialRequestsPlaceholder": "如有特殊需求请在此说明...",
+    "optional": "选填",
+    "loggedInAccount": "已登录账户",
+    "useAccountInfo": "将使用您的账户信息完成预订",
+    "editProfile": "如需修改信息，请前往个人资料",
+    "loadingPayment": "加载支付信息中...",
+    "securePayment": "安全支付保障",
+    "informationEncrypted": "信息已加密保护",
+    "priceSummary": "价格明细",
+    "originalPrice": "原价",
+    "monthlyPrice": "月租价",
+    "discount": "折扣",
+    "serviceFee": "服务费",
+    "cleaningFee": "清洁费",
+    "tax": "税费",
+    "taxHST": "税费 (13% HST)",
+    "total": "总价",
+    "nightsCount": "{count}晚",
+    "perNight": "/晚",
+    "propertyInfo": "房源信息",
+    "night": "晚",
+    "nights": "晚",
+    "createBookingError": "创建预订失败",
+    "createPaymentError": "创建支付失败",
+    "guestName": "入住人姓名",
+    "guestEmail": "电子邮箱",
+    "guestPhone": "联系电话",
+    "fillAllInfo": "请填写完整的入住人信息",
+    "bookingSuccess": "预订申请已提交！我们的客服人员将在24小时内与您联系确认。",
+    "ok": "确定",
+    "bookingSubmitted": "预订申请已提交",
+    "youWontBeCharged": "您暂时不会被收费"
+  },
+  "property": {
+    "details": "房源详情",
+    "amenities": "配套设施",
+    "description": "房源介绍",
+    "location": "房源位置",
+    "reviews": "用户评价",
+    "bookNow": "立即预订",
+    "price": "价格",
+    "serviceFee": "服务费",
+    "total": "总价",
+    "originalPrice": "原价",
+    "monthlyPrice": "月租价",
+    "monthlyDiscountLabel": "月租优惠 ({percent}%折扣)",
+    "minNightsWarning": "最少需预订 {count} 天",
+    "minNightsLabel": "{count}天起租",
+    "backToList": "返回列表",
+    "maxGuests": "最多 {count} 人",
+    "maxGuestsLabel": "最多入住",
+    "maxGuestsError": "入住人数需在 {min}-{max} 人之间",
+    "bedrooms": "{count} 室",
+    "bedroomsUnit": "室",
+    "bedroomsLabel": "卧室",
+    "bathrooms": "{count} 卫",
+    "bathroomsUnit": "卫",
+    "bathroomsLabel": "卫生间",
+    "area": "{area} 平方米",
+    "areaLabel": "面积",
+    "areaUnit": "平方米",
+    "perNight": "/晚",
+    "viewAllImages": "查看全部 {count} 张图片",
+    "image": "图片",
+    "of": "/",
+    "thumbnail": "缩略图",
+    "similarProperties": "相似房源推荐",
+    "viewDetails": "查看详情",
+    "yourName": "您的姓名",
+    "email": "电子邮箱",
+    "phone": "联系电话",
+    "emailAddress": "邮箱地址",
+    "phoneNumber": "联系电话",
+    "checkInOutDates": "入住 / 退房日期",
+    "guestCount": "入住人数",
+    "guestsUnit": "位房客",
+    "specialRequests": "特殊要求（选填）",
+    "specialRequestsOptional": "特殊要求（选填）",
+    "specialRequestsPlaceholder": "如有特殊要求，请在此说明...",
+    "submitting": "提交中...",
+    "monthlyDiscount": "月租享 {percent}% 优惠",
+    "minNights": "{count}天起租",
+    "rating": "评分",
+    "reviewCount": "{count} 条评价",
+    "bookingSuccessTitle": "预订申请已提交",
+    "bookingSuccessMessage": "您的预订申请已成功提交！我们的客服人员将在24小时内与您联系确认。",
+    "property": "房源",
+    "checkIn": "入住日期",
+    "checkOut": "退房日期",
+    "guests": "入住人数",
+    "bookedBy": "预订人",
+    "contactEmail": "联系邮箱",
+    "totalPrice": "总价",
+    "confirm": "确定",
+    "pleaseSelectCheckIn": "请选择入住日期",
+    "pleaseSelectCheckOut": "请选择退房日期",
+    "shareText": "查看这个精美房源",
+    "linkCopied": "链接已复制到剪贴板！",
+    "defaultDescription": "这套位于{location}的精美公寓，拥有{bedrooms}间宽敞舒适的卧室和{bathrooms}间现代化浴室。\n\n公寓总面积{area}平方米，最多可容纳{maxGuests}位客人入住。精心设计的空间布局，高品质的装修材料，为您提供舒适的居住体验。\n\n公寓位于市中心黄金地段，交通便利，周边配套设施完善。无论是商务出差还是家庭度假，都是您的理想选择。"
+  },
+  "dashboard": {
+    "title": "个人中心",
+    "welcome": "欢迎回来",
+    "memberSince": "会员自",
+    "settings": "设置",
+    "logout": "退出登录",
+    "myBookings": "我的预订",
+    "favorites": "收藏房源",
+    "profile": "个人信息",
+    "accountOverview": "账户概览",
+    "completedBookings": "已完成预订",
+    "upcomingStays": "即将入住",
+    "savedProperties": "收藏房源",
+    "browseProperties": "浏览房源",
+    "viewDetails": "查看详情",
+    "cancelBooking": "取消预订",
+    "writeReview": "写评价",
+    "bookAgain": "再次预订",
+    "noBookings": "暂无预订",
+    "noBookingsDesc": "您还没有任何预订记录",
+    "noFavorites": "暂无收藏",
+    "noFavoritesDesc": "您还没有收藏任何房源",
+    "personalInfo": "个人信息",
+    "save": "保存",
+    "edit": "编辑",
+    "name": "姓名",
+    "email": "邮箱",
+    "phone": "手机号",
+    "registrationDate": "注册时间",
+    "changeAvatar": "点击更换头像",
+    "accountSecurity": "账户安全",
+    "password": "登录密码",
+    "passwordSet": "已设置",
+    "phoneVerified": "手机验证",
+    "twoFactor": "双重验证",
+    "notEnabled": "未开启",
+    "modify": "修改",
+    "enable": "开启",
+    "updateSuccess": "个人信息已更新！"
+  },
+  "wishlist": {
+    "title": "我的心愿单",
+    "empty": "您的心愿单为空",
+    "emptyDesc": "开始浏览我们的房源并将您喜欢的房源收藏到这里。您可以随时比较并预订。",
+    "exploreProperties": "浏览房源",
+    "propertiesSaved": "已收藏 {count} 个房源",
+    "propertySaved": "已收藏 {count} 个房源",
+    "remove": "取消收藏",
+    "beds": "室",
+    "bed": "室",
+    "baths": "卫",
+    "bath": "卫",
+    "viewDetails": "查看详情",
+    "bookNow": "立即预订",
+    "browseMore": "浏览全部房源",
+    "lookingForMore": "寻找更多选择？"
+  },
+  "contact": {
+    "title": "联系我们",
+    "subtitle": "与我们的团队取得联系",
+    "contactInfo": "联系方式",
+    "sendMessage": "发送消息",
+    "form": {
+      "name": "姓名",
+      "email": "邮箱",
+      "phone": "电话",
+      "subject": "主题",
+      "message": "留言",
+      "send": "发送消息",
+      "namePlaceholder": "请输入您的姓名",
+      "emailPlaceholder": "请输入您的邮箱",
+      "phonePlaceholder": "请输入您的电话",
+      "messagePlaceholder": "请详细描述您的需求或问题...",
+      "subjectBooking": "预订咨询",
+      "subjectPartnership": "合作洽谈",
+      "subjectSupport": "技术支持",
+      "subjectOther": "其他",
+      "required": "必填项",
+      "minChars": "消息内容至少需要10个字符",
+      "privacyNote": "您的信息将被发送至 hello@stayneos.com，我们承诺保护您的隐私。"
+    },
+    "success": {
+      "title": "提交成功！",
+      "message": "感谢您的来信。我们已收到您的消息，将在 24 小时内与您联系。",
+      "sendNew": "发送新消息"
+    },
+    "email": "电子邮箱",
+    "address": "办公地址",
+    "phone": "联系电话",
+    "hours": "工作时间",
+    "responseTime": "我们通常在 24 小时内回复",
+    "visitUs": "欢迎预约参观",
+    "workHours": "周一至周五 9:00-18:00 EST",
+    "weekend": "周末及节假日休息",
+    "followUs": "关注我们",
+    "followDesc": "在社交媒体上关注我们，获取最新房源和优惠信息",
+    "faq": "常见问题",
+    "faqDesc": "查找常见问题的答案",
+    "viewAllFaq": "查看全部 FAQ",
+    "howToBook": "如何预订公寓？",
+    "minStay": "最短租期是多久？",
+    "depositRefund": "押金如何退还？",
+    "petPolicy": "可以带宠物入住吗？",
+    "emergency": {
+      "title": "需要紧急帮助？",
+      "desc": "如果您是已入住的租客，遇到紧急情况需要立即协助，请拨打我们的 24 小时紧急热线",
+      "call": "拨打紧急热线"
+    }
+  },
+  "status": {
+    "pending": "待确认",
+    "confirmed": "已确认",
+    "checkedIn": "已入住",
+    "checkedOut": "已退房",
+    "cancelled": "已取消"
+  },
+  "landlords": {
+    "hero": {
+      "title": "最大化您的租金收入",
+      "subtitle": "与 StayNeos 合作，从您的房产中赚取高达 30% 的额外收入。我们处理一切事务，让您享受被动收入。",
+      "cta": "发布房源"
+    },
+    "benefits": {
+      "title": "为什么选择与我们合作？",
+      "subtitle": "我们提供端到端的物业管理服务，帮助您轻松赚取更多收入。",
+      "income": {
+        "title": "更高租金收入",
+        "desc": "与传统长租相比，收入最高可增加 30%。我们的灵活定价优化确保最大回报。"
+      },
+      "protection": {
+        "title": "房产保护",
+        "desc": "全面的保险覆盖和押金保护您的房产。定期检查确保一切保持完美状态。"
+      },
+      "management": {
+        "title": "无忧管理",
+        "desc": "我们处理从营销到维护的所有事务。不再有深夜紧急电话或处理难缠租客。"
+      },
+      "support": {
+        "title": "24/7 房客支持",
+        "desc": "我们的专业团队处理所有房客沟通和支持，让您无需担心。"
+      },
+      "marketing": {
+        "title": "专业营销",
+        "desc": "高品质摄影、吸引人的房源描述和多平台推广确保您的房产获得最大曝光。"
+      },
+      "guests": {
+        "title": "优质房客",
+        "desc": "严格的房客筛选流程确保您的房产只租给经过验证的、负责任的房客。"
+      }
+    },
+    "howItWorks": {
+      "title": "如何运作",
+      "subtitle": "开始使用很简单。三个简单步骤开始赚取更多收入。"
+    },
+    "steps": {
+      "step1": {
+        "title": "发布房源",
+        "desc": "提交您的房产详情，我们将创建专业的房源列表。"
+      },
+      "step2": {
+        "title": "我们处理一切",
+        "desc": "从房客筛选到清洁，我们管理整个流程。"
+      },
+      "step3": {
+        "title": "获得收益",
+        "desc": "每月直接将款项支付到您的账户。就这么简单。"
+      }
+    },
+    "cta": {
+      "title": "准备好开始赚取更多收入了吗？",
+      "subtitle": "加入数百位信任 StayNeos 的房东行列。",
+      "button": "立即开始"
+    }
+  },
+  "corporate": {
+    "hero": {
+      "title": "企业住房解决方案",
+      "subtitle": "为您的业务需求提供优质带家具公寓。灵活的租期、黄金地段和为企业客户提供的专属支持。",
+      "ctaQuote": "获取报价",
+      "ctaBrowse": "浏览房源"
+    },
+    "solutions": {
+      "title": "满足各种需求的解决方案",
+      "subtitle": "从个人商务旅客到大型项目团队，我们有完美的住宿解决方案。",
+      "housing": {
+        "title": "企业住房",
+        "desc": "为调职员工和长期商务旅客提供的全套家具公寓。灵活的租期选择，从 1 个月到 1 年。"
+      },
+      "group": {
+        "title": "团体住宿",
+        "desc": "为项目团队、培训团体或会议参与者提供多套公寓。集中计费和专属账户管理。"
+      },
+      "mobility": {
+        "title": "全球流动",
+        "desc": "为国际外派员工提供无缝搬迁支持。我们处理从机场接送到当地向导的一切事宜。"
+      },
+      "executive": {
+        "title": "行政套房",
+        "desc": "为高管和贵宾提供的优质住宿。包含豪华装修和礼宾服务。"
+      }
+    },
+    "benefits": {
+      "terms": {
+        "title": "灵活租期",
+        "desc": "从 1 个月到 1 年"
+      },
+      "inclusive": {
+        "title": "全包服务",
+        "desc": "水电、WiFi、家政"
+      },
+      "location": {
+        "title": "黄金地段",
+        "desc": "多伦多市中心及 GTA"
+      },
+      "support": {
+        "title": "专属支持",
+        "desc": "24/7 礼宾服务"
+      }
+    },
+    "cta": {
+      "title": "准备好简化您的企业住房了吗？",
+      "subtitle": "联系我们的企业销售团队获取定制报价和专属账户管理。",
+      "button": "联系销售团队"
+    }
+  },
+  "contact": {
+    "pageTitle": "联系我们",
+    "pageSubtitle": "无论您有任何问题或需求，我们的团队随时准备为您提供帮助。请通过以下方式与我们取得联系。",
+    "infoTitle": "联系方式",
+    "formTitle": "发送消息",
+    "emailLabel": "电子邮箱",
+    "addressLabel": "办公地址",
+    "phoneLabel": "联系电话",
+    "hoursLabel": "工作时间",
+    "callAnytime": "工作时间随时拨打",
+    "form": {
+      "title": "联系我们",
+      "subtitle": "填写以下表单，我们会尽快回复",
+      "name": "姓名",
+      "email": "邮箱",
+      "phone": "电话",
+      "phoneOptional": "电话（选填）",
+      "subject": "主题",
+      "message": "消息内容",
+      "namePlaceholder": "请输入您的姓名",
+      "emailPlaceholder": "请输入您的邮箱",
+      "phonePlaceholder": "请输入您的电话",
+      "messagePlaceholder": "请详细描述您的需求或问题...",
+      "subjectBooking": "预订咨询",
+      "subjectPartnership": "合作洽谈",
+      "subjectSupport": "技术支持",
+      "subjectOther": "其他",
+      "required": "必填项",
+      "minChars": "消息内容至少需要10个字符",
+      "privacyNote": "您的信息将被发送至 hello@stayneos.com，我们承诺保护您的隐私。",
+      "send": "发送消息",
+      "errorName": "请输入您的姓名",
+      "errorEmail": "请输入您的邮箱",
+      "errorMessage": "请输入您的消息"
+    },
+    "success": {
+      "title": "提交成功！",
+      "message": "感谢您的来信。我们已收到您的消息，将在 24 小时内与您联系。",
+      "sendNew": "发送新消息"
+    },
+    "followUs": "关注我们",
+    "followDesc": "在社交媒体上关注我们，获取最新房源和优惠信息",
+    "faqTitle": "常见问题",
+    "faqHowToBook": "如何预订公寓？",
+    "faqMinStay": "最短租期是多久？",
+    "faqDeposit": "押金如何退还？",
+    "faqPets": "可以带宠物入住吗？",
+    "viewAllFaq": "查看全部 FAQ",
+    "openInMaps": "在 Google Maps 中打开",
+    "emergency": {
+      "title": "需要紧急帮助？",
+      "desc": "如果您是已入住的租客，遇到紧急情况需要立即协助，请拨打我们的 24 小时紧急热线"
+    }
+  },
+  "amenities": {
+    "WiFi": "WiFi",
+    "空调": "空调",
+    "洗衣机": "洗衣机",
+    "厨房": "厨房",
+    "湖景": "湖景",
+    "停车位": "停车位",
+    "24小时安保": "24小时安保",
+    "高层景观": "高层景观",
+    "浴缸": "浴缸"
+  },
+  "errors": {
+    "generic": "发生错误，请稍后重试",
+    "required": "此项为必填项",
+    "invalidEmail": "请输入有效的邮箱地址",
+    "invalidPhone": "请输入有效的电话号码",
+    "selectDates": "请选择日期",
+    "checkOutAfterCheckIn": "退房日期必须晚于入住日期",
+    "minNights": "最少需预订 {count} 天"
   }
 }

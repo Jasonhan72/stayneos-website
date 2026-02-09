@@ -10,7 +10,49 @@
     "about": "About",
     "login": "Login",
     "register": "Register",
-    "account": "My Account"
+    "account": "My Account",
+    "signup": "Sign Up",
+    "landlords": "For Landlords",
+    "business": "For Business",
+    "contact": "Contact Us",
+    "bookings": "My Bookings",
+    "personalDetails": "Personal Details",
+    "preferences": "Preferences",
+    "wishlists": "Wishlists",
+    "logout": "Log Out"
+  },
+  "common": {
+    "or": "or",
+    "there": "there",
+    "back": "Back",
+    "cancel": "Cancel",
+    "close": "Close",
+    "print": "Print",
+    "download": "Download",
+    "submit": "Submit",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "search": "Search",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "share": "Share",
+    "favorite": "Save",
+    "nights": "nights",
+    "night": "night",
+    "guests": "guests",
+    "guest": "guest",
+    "people": "people",
+    "person": "person"
+  },
+  "greeting": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  },
+  "currency": {
+    "title": "Currency"
   },
   "hero": {
     "title": "Premium Executive Apartments",
@@ -72,25 +114,606 @@
     "explore": "Start Exploring",
     "contact": "Contact Us"
   },
+  "howItWorks": {
+    "title": "Three Simple Steps to Check In",
+    "subtitle": "We've streamlined the entire process so you can focus on enjoying your stay"
+  },
+  "steps": {
+    "search": {
+      "title": "Search Properties",
+      "desc": "Browse our curated properties, filter by location, price, and amenities"
+    },
+    "book": {
+      "title": "Book Online",
+      "desc": "Select your dates, view real-time pricing, and complete your booking with one click"
+    },
+    "movein": {
+      "title": "Move In",
+      "desc": "Professional concierge welcome, fully equipped, start enjoying immediately"
+    }
+  },
+  "segments": {
+    "title": "Living Solutions for You",
+    "subtitle": "Whether for business travel, long-term projects, or relocation, we have options for you",
+    "business": {
+      "title": "Business Travel",
+      "subtitle": "Corporate Discounts",
+      "desc": "Convenient accommodation solutions for business professionals, near financial districts with easy transportation",
+      "cta": "Learn About Corporate Plans"
+    },
+    "longterm": {
+      "title": "Long-term Stay",
+      "subtitle": "20% Off Monthly",
+      "desc": "Enjoy discounted prices for stays over one month, ideal for long-term projects or relocation",
+      "cta": "View Long-term Properties"
+    },
+    "relocation": {
+      "title": "Relocation",
+      "subtitle": "Flexible Move-in",
+      "desc": "The ideal choice during your move, no long-term commitment required, move in immediately",
+      "cta": "Book Now"
+    }
+  },
   "footer": {
     "about": "About Us",
-    "company": "Company",
-    "team": "Team",
+    "team": "Our Team",
     "careers": "Careers",
-    "customerService": "Customer Service",
+    "news": "News",
+    "corporate": "Corporate Housing",
+    "shortTerm": "Short-term Rental",
+    "longTerm": "Long-term Rental",
+    "propertyManagement": "Property Management",
     "help": "Help Center",
-    "contact": "Contact Us",
     "faq": "FAQ",
-    "followUs": "Follow Us",
-    "wechat": "WeChat",
-    "weibo": "Weibo",
-    "xiaohongshu": "Xiaohongshu",
-    "copyright": "© 2026 StayNeos. All rights reserved."
+    "contact": "Contact Us",
+    "privacy": "Privacy Policy",
+    "description": "Carefully designed accommodation experiences for modern travelers. Whether for business or leisure, we provide the perfect living space.",
+    "companyTitle": "Company",
+    "servicesTitle": "Services",
+    "supportTitle": "Support",
+    "copyright": "© {year} StayNeos. All rights reserved."
   },
   "language": {
     "title": "Language",
     "en": "English",
     "fr": "Français",
     "zh": "中文"
+  },
+  "booking": {
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "checkInDate": "Check-in Date",
+    "checkOutDate": "Check-out Date",
+    "selectCheckIn": "Select check-in date",
+    "selectCheckOut": "Select check-out date",
+    "selectDates": "Select Dates",
+    "selectDatesAndGuests": "Select dates and guests",
+    "dates": "Dates",
+    "guests": "Guests",
+    "submitting": "Submitting...",
+    "bookNow": "Book Now",
+    "selectDatesError": "Please select check-in and check-out dates",
+    "selectCheckInError": "Please select check-in date",
+    "selectCheckOutError": "Please select check-out date",
+    "checkOutAfterCheckIn": "Check-out date must be after check-in date"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Get in touch with our team",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "message": "Message",
+      "send": "Send Message"
+    }
+  },
+  "bookings": {
+    "title": "My Bookings",
+    "noBookings": "No bookings found",
+    "noBookingsDesc": "You don't have any bookings yet",
+    "bookingId": "Booking ID",
+    "status": "Status",
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "cancelled": "Cancelled",
+    "completed": "Completed",
+    "manageBookings": "Manage your bookings and view your stay history",
+    "subtitle": "Manage your bookings and view your stay history",
+    "allBookings": "All Bookings",
+    "upcoming": "Upcoming",
+    "current": "Current",
+    "all": "All",
+    "checkIn": "Check-in Date",
+    "checkOut": "Check-out Date",
+    "nights": "Nights",
+    "guests": "Guests",
+    "totalPrice": "Total Price",
+    "bookingNumber": "Booking Number",
+    "property": "Property",
+    "viewDetails": "View Details",
+    "contactHost": "Contact Host",
+    "downloadVoucher": "Download Voucher",
+    "writeReview": "Write Review",
+    "retry": "Retry",
+    "loading": "Loading bookings...",
+    "errorLoading": "Failed to load bookings. Please try again.",
+    "fetchError": "Failed to load bookings. Please try again later.",
+    "noUpcoming": "No upcoming bookings",
+    "noCurrent": "No current stays",
+    "noPast": "No past bookings",
+    "noCancelled": "No cancelled bookings",
+    "browseProperties": "Browse Properties",
+    "cancelBooking": "Cancel Booking",
+    "keepBooking": "Keep Booking",
+    "cancelWarning": "This action cannot be undone. Refunds will be processed within 3-5 business days. Cancellation fees may apply.",
+    "paid": "Paid",
+    "unpaid": "Unpaid",
+    "bookingDate": "Booking Date",
+    "close": "Close",
+    "print": "Print",
+    "download": "Download",
+    "submitting": "Submitting...",
+    "submitReview": "Submit Review",
+    "reviewPlaceholder": "Share your stay experience...",
+    "rating": "Rating",
+    "bookingDetails": "Booking Details",
+    "priceBreakdown": "Price Breakdown",
+    "costBreakdown": "Cost Breakdown",
+    "roomRate": "Room Rate",
+    "basePrice": "Base Price",
+    "total": "Total",
+    "pleaseLogin": "Please log in to view your bookings",
+    "loginRequired": "Please log in to view your bookings",
+    "login": "Log In",
+    "tabs": {
+      "all": "All Bookings",
+      "upcoming": "Upcoming",
+      "current": "Current",
+      "completed": "Completed"
+    }
+  },
+  "booking": {
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "checkInDate": "Check-in Date",
+    "checkOutDate": "Check-out Date",
+    "selectCheckIn": "Select check-in date",
+    "selectCheckOut": "Select check-out date",
+    "selectDates": "Select Dates",
+    "selectDatesAndGuests": "Select dates and guests",
+    "dates": "Dates",
+    "guests": "Guests",
+    "submitting": "Submitting...",
+    "bookNow": "Book Now",
+    "selectDatesError": "Please select check-in and check-out dates",
+    "selectCheckInError": "Please select check-in date",
+    "selectCheckOutError": "Please select check-out date",
+    "checkOutAfterCheckIn": "Check-out date must be after check-in date",
+    "step1": "Select Dates",
+    "step2": "Confirm Info",
+    "step3": "Complete Payment",
+    "nextStep": "Next Step",
+    "confirmAndPay": "Confirm and Pay",
+    "returnToProperty": "Return to Property Details",
+    "guestCount": "{count} Guests",
+    "minNights": "{count} nights minimum",
+    "monthlyDiscount": "{percent}% monthly discount",
+    "selectDatesAndGuestsTitle": "Select Dates and Guests",
+    "confirmInfoTitle": "Confirm Information",
+    "securePaymentTitle": "Secure Payment",
+    "guestInfo": "Guest Information",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "specialRequests": "Special Requests",
+    "specialRequestsPlaceholder": "If you have any special requests, please describe them here...",
+    "optional": "Optional",
+    "loggedInAccount": "Logged in Account",
+    "useAccountInfo": "Your account information will be used to complete the booking",
+    "editProfile": "To modify information, please go to Profile",
+    "loadingPayment": "Loading payment information...",
+    "securePayment": "Secure Payment",
+    "informationEncrypted": "Your information is encrypted and protected",
+    "priceSummary": "Price Summary",
+    "originalPrice": "Original Price",
+    "monthlyPrice": "Monthly Price",
+    "discount": "Discount",
+    "serviceFee": "Service Fee",
+    "cleaningFee": "Cleaning Fee",
+    "tax": "Tax",
+    "taxHST": "Tax (13% HST)",
+    "total": "Total",
+    "nightsCount": "{count} nights",
+    "perNight": "/night",
+    "propertyInfo": "Property Information",
+    "night": "night",
+    "nights": "nights",
+    "createBookingError": "Failed to create booking",
+    "createPaymentError": "Failed to create payment",
+    "guestName": "Guest Name",
+    "guestEmail": "Guest Email",
+    "guestPhone": "Guest Phone",
+    "fillAllInfo": "Please fill in all guest information",
+    "bookingSuccess": "Booking request submitted successfully! Our customer service will contact you within 24 hours to confirm.",
+    "ok": "OK",
+    "bookingSubmitted": "Booking Application Submitted",
+    "youWontBeCharged": "You won't be charged yet"
+  },
+  "property": {
+    "details": "Property Details",
+    "amenities": "Amenities",
+    "description": "Description",
+    "location": "Location",
+    "reviews": "Reviews",
+    "bookNow": "Book Now",
+    "price": "Price",
+    "serviceFee": "Service Fee",
+    "total": "Total",
+    "originalPrice": "Original Price",
+    "monthlyPrice": "Monthly Price",
+    "monthlyDiscountLabel": "Monthly Discount ({percent}% off)",
+    "minNightsWarning": "Minimum {count} nights required",
+    "minNightsLabel": "{count} nights minimum",
+    "backToList": "Back to List",
+    "maxGuests": "Max {count} guests",
+    "maxGuestsLabel": "Max guests",
+    "maxGuestsValue": "Max {count} guests",
+    "maxGuestsError": "Guests must be between {min} and {max}",
+    "bedrooms": "{count} Bedrooms",
+    "bedroomsUnit": "BR",
+    "bedroomsLabel": "Bedrooms",
+    "bathrooms": "{count} Bathrooms",
+    "bathroomsUnit": "BA",
+    "bathroomsLabel": "Bathrooms",
+    "area": "{area} m²",
+    "areaLabel": "Area",
+    "areaUnit": "m²",
+    "perNight": "/night",
+    "viewAllImages": "View all {count} images",
+    "image": "Image",
+    "of": "of",
+    "thumbnail": "Thumbnail",
+    "similarProperties": "Similar Properties",
+    "viewDetails": "View Details",
+    "yourName": "Your Name",
+    "email": "Email",
+    "phone": "Phone",
+    "emailAddress": "Email Address",
+    "phoneNumber": "Phone Number",
+    "checkInOutDates": "Check-in / Check-out Dates",
+    "guestCount": "Guest Count",
+    "guestsUnit": "guests",
+    "specialRequests": "Special Requests (Optional)",
+    "specialRequestsOptional": "Special Requests (Optional)",
+    "specialRequestsPlaceholder": "If you have any special requests, please describe them here...",
+    "submitting": "Submitting...",
+    "monthlyDiscount": "{percent}% off monthly stays",
+    "minNights": "{count} nights minimum",
+    "rating": "Rating",
+    "reviewCount": "{count} reviews",
+    "bookingSuccessTitle": "Booking Request Submitted",
+    "bookingSuccessMessage": "Your booking request has been submitted successfully! Our customer service team will contact you within 24 hours to confirm.",
+    "property": "Property",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "guests": "Guests",
+    "bookedBy": "Booked by",
+    "contactEmail": "Contact Email",
+    "totalPrice": "Total Price",
+    "confirm": "Confirm",
+    "pleaseSelectCheckIn": "Please select check-in date",
+    "pleaseSelectCheckOut": "Please select check-out date",
+    "shareText": "Check out this property",
+    "linkCopied": "Link copied to clipboard!",
+    "defaultDescription": "This beautiful apartment in {location} features {bedrooms} spacious bedrooms and {bathrooms} modern bathrooms.\n\nThe apartment has a total area of {area} square meters and can accommodate up to {maxGuests} guests. The thoughtfully designed layout and high-quality finishes provide a comfortable living experience.\n\nLocated in a prime city center location with convenient transportation and complete surrounding facilities. Whether for business trips or family vacations, this is your ideal choice."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back",
+    "memberSince": "Member since",
+    "settings": "Settings",
+    "logout": "Log Out",
+    "myBookings": "My Bookings",
+    "favorites": "Favorites",
+    "profile": "Profile",
+    "accountOverview": "Account Overview",
+    "completedBookings": "Completed Bookings",
+    "upcomingStays": "Upcoming Stays",
+    "savedProperties": "Saved Properties",
+    "browseProperties": "Browse Properties",
+    "viewDetails": "View Details",
+    "cancelBooking": "Cancel Booking",
+    "writeReview": "Write Review",
+    "bookAgain": "Book Again",
+    "noBookings": "No bookings yet",
+    "noBookingsDesc": "You haven't made any bookings yet",
+    "noFavorites": "No favorites yet",
+    "noFavoritesDesc": "You haven't saved any properties yet",
+    "personalInfo": "Personal Information",
+    "save": "Save",
+    "edit": "Edit",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "registrationDate": "Registration Date",
+    "changeAvatar": "Click to change avatar",
+    "accountSecurity": "Account Security",
+    "password": "Password",
+    "passwordSet": "Set",
+    "phoneVerified": "Phone Verified",
+    "twoFactor": "Two-Factor Authentication",
+    "notEnabled": "Not Enabled",
+    "modify": "Modify",
+    "enable": "Enable",
+    "updateSuccess": "Profile updated successfully!"
+  },
+  "wishlist": {
+    "title": "My Wishlist",
+    "empty": "Your wishlist is empty",
+    "emptyDesc": "Start exploring our properties and save your favorites here. You'll be able to compare them and book when you're ready.",
+    "exploreProperties": "Explore Properties",
+    "propertiesSaved": "{count} properties saved",
+    "propertySaved": "{count} property saved",
+    "remove": "Remove from wishlist",
+    "beds": "beds",
+    "bed": "bed",
+    "baths": "baths",
+    "bath": "bath",
+    "viewDetails": "View Details",
+    "bookNow": "Book Now",
+    "browseMore": "Browse All Properties",
+    "lookingForMore": "Looking for more options?"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Get in touch with our team",
+    "contactInfo": "Contact Information",
+    "sendMessage": "Send Message",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "subject": "Subject",
+      "message": "Message",
+      "send": "Send Message",
+      "namePlaceholder": "Please enter your name",
+      "emailPlaceholder": "Please enter your email",
+      "phonePlaceholder": "Please enter your phone",
+      "messagePlaceholder": "Please describe your needs or questions...",
+      "subjectBooking": "Booking Inquiry",
+      "subjectPartnership": "Partnership",
+      "subjectSupport": "Technical Support",
+      "subjectOther": "Other",
+      "required": "Required",
+      "minChars": "Message must be at least 10 characters",
+      "privacyNote": "Your information will be sent to hello@stayneos.com. We promise to protect your privacy."
+    },
+    "success": {
+      "title": "Submitted Successfully!",
+      "message": "Thank you for your message. We have received it and will contact you within 24 hours.",
+      "sendNew": "Send New Message"
+    },
+    "email": "Email",
+    "address": "Address",
+    "phone": "Phone",
+    "hours": "Hours",
+    "responseTime": "We typically respond within 24 hours",
+    "visitUs": "Welcome to visit by appointment",
+    "workHours": "Monday to Friday 9:00-18:00 EST",
+    "weekend": "Weekends and holidays closed",
+    "followUs": "Follow Us",
+    "followDesc": "Follow us on social media for the latest properties and promotions",
+    "faq": "FAQ",
+    "faqDesc": "Find answers to common questions",
+    "viewAllFaq": "View All FAQ",
+    "howToBook": "How to book an apartment?",
+    "minStay": "What is the minimum stay?",
+    "depositRefund": "How is the deposit refunded?",
+    "petPolicy": "Are pets allowed?",
+    "emergency": {
+      "title": "Need Emergency Help?",
+      "desc": "If you are a current tenant and need immediate assistance, please call our 24/7 emergency hotline",
+      "call": "Call Emergency Hotline"
+    }
+  },
+  "status": {
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "checkedIn": "Checked In",
+    "checkedOut": "Checked Out",
+    "cancelled": "Cancelled"
+  },
+  "landlords": {
+    "hero": {
+      "title": "Maximize Your Rental Income",
+      "subtitle": "Partner with StayNeos and earn up to 30% more from your property. We handle everything while you enjoy passive income.",
+      "cta": "List Your Property"
+    },
+    "benefits": {
+      "title": "Why Partner With Us?",
+      "subtitle": "We provide end-to-end property management services that help you earn more with less stress.",
+      "income": {
+        "title": "Higher Rental Income",
+        "desc": "Earn up to 30% more compared to traditional long-term rentals. Our flexible pricing optimization ensures maximum returns."
+      },
+      "protection": {
+        "title": "Property Protection",
+        "desc": "Comprehensive insurance coverage and security deposits protect your property. Regular inspections ensure everything stays in perfect condition."
+      },
+      "management": {
+        "title": "Hassle-Free Management",
+        "desc": "We handle everything from marketing to maintenance. No more midnight emergency calls or dealing with difficult tenants."
+      },
+      "support": {
+        "title": "24/7 Guest Support",
+        "desc": "Our dedicated team handles all guest communications and support, so you don't have to worry about a thing."
+      },
+      "marketing": {
+        "title": "Professional Marketing",
+        "desc": "High-quality photography, compelling listings, and multi-platform promotion ensure maximum visibility for your property."
+      },
+      "guests": {
+        "title": "Quality Guests",
+        "desc": "Rigorous guest screening process ensures your property is rented to verified, responsible guests only."
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Getting started is easy. Three simple steps to start earning more."
+    },
+    "steps": {
+      "step1": {
+        "title": "List Your Property",
+        "desc": "Submit your property details and we'll create a professional listing."
+      },
+      "step2": {
+        "title": "We Handle Everything",
+        "desc": "From guest screening to cleaning, we manage the entire process."
+      },
+      "step3": {
+        "title": "Get Paid",
+        "desc": "Receive monthly payouts directly to your account. It's that simple."
+      }
+    },
+    "cta": {
+      "title": "Ready to Start Earning More?",
+      "subtitle": "Join hundreds of landlords who trust StayNeos with their properties.",
+      "button": "Get Started Today"
+    }
+  },
+  "corporate": {
+    "hero": {
+      "title": "Corporate Housing Solutions",
+      "subtitle": "Premium furnished apartments for your business needs. Flexible terms, prime locations, and dedicated support for corporate clients.",
+      "ctaQuote": "Request a Quote",
+      "ctaBrowse": "Browse Properties"
+    },
+    "solutions": {
+      "title": "Solutions for Every Need",
+      "subtitle": "From individual business travelers to large project teams, we have the perfect accommodation solution.",
+      "housing": {
+        "title": "Corporate Housing",
+        "desc": "Fully furnished apartments for relocating employees and long-term business travelers. Flexible lease terms from 1 month to 1 year."
+      },
+      "group": {
+        "title": "Group Accommodations",
+        "desc": "Multiple units for project teams, training groups, or conference attendees. Centralized billing and dedicated account management."
+      },
+      "mobility": {
+        "title": "Global Mobility",
+        "desc": "Seamless relocation support for international assignees. We handle everything from airport pickup to local orientation."
+      },
+      "executive": {
+        "title": "Executive Suites",
+        "desc": "Premium accommodations for C-suite executives and VIP guests. Luxury finishes and concierge services included."
+      }
+    },
+    "benefits": {
+      "terms": {
+        "title": "Flexible Terms",
+        "desc": "From 1 month to 1 year"
+      },
+      "inclusive": {
+        "title": "All Inclusive",
+        "desc": "Utilities, WiFi, housekeeping"
+      },
+      "location": {
+        "title": "Prime Locations",
+        "desc": "Downtown Toronto & GTA"
+      },
+      "support": {
+        "title": "Dedicated Support",
+        "desc": "24/7 concierge service"
+      }
+    },
+    "cta": {
+      "title": "Ready to streamline your corporate housing?",
+      "subtitle": "Contact our corporate sales team for custom quotes and dedicated account management.",
+      "button": "Contact Sales Team"
+    }
+  },
+  "contact": {
+    "pageTitle": "Contact Us",
+    "pageSubtitle": "Have questions or need assistance? Our team is here to help you. Get in touch with us through any of the channels below.",
+    "infoTitle": "Contact Information",
+    "formTitle": "Send Message",
+    "emailLabel": "Email",
+    "addressLabel": "Address",
+    "phoneLabel": "Phone",
+    "hoursLabel": "Hours",
+    "callAnytime": "Call anytime during work hours",
+    "form": {
+      "title": "Contact Us",
+      "subtitle": "Fill out the form below and we'll get back to you soon",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "phoneOptional": "Phone (Optional)",
+      "subject": "Subject",
+      "message": "Message",
+      "namePlaceholder": "Please enter your name",
+      "emailPlaceholder": "Please enter your email",
+      "phonePlaceholder": "Please enter your phone",
+      "messagePlaceholder": "Please describe your needs or questions...",
+      "subjectBooking": "Booking Inquiry",
+      "subjectPartnership": "Partnership",
+      "subjectSupport": "Technical Support",
+      "subjectOther": "Other",
+      "required": "Required",
+      "minChars": "Message must be at least 10 characters",
+      "privacyNote": "Your information will be sent to hello@stayneos.com. We promise to protect your privacy.",
+      "send": "Send Message",
+      "errorName": "Please enter your name",
+      "errorEmail": "Please enter your email",
+      "errorMessage": "Please enter your message"
+    },
+    "success": {
+      "title": "Submitted Successfully!",
+      "message": "Thank you for your message. We have received it and will contact you within 24 hours.",
+      "sendNew": "Send New Message"
+    },
+    "followUs": "Follow Us",
+    "followDesc": "Follow us on social media for the latest properties and promotions",
+    "faqTitle": "FAQ",
+    "faqHowToBook": "How to book an apartment?",
+    "faqMinStay": "What is the minimum stay?",
+    "faqDeposit": "How is the deposit refunded?",
+    "faqPets": "Are pets allowed?",
+    "viewAllFaq": "View All FAQ",
+    "openInMaps": "Open in Google Maps",
+    "emergency": {
+      "title": "Need Emergency Help?",
+      "desc": "If you are a current tenant and need immediate assistance, please call our 24/7 emergency hotline"
+    }
+  },
+  "amenities": {
+    "WiFi": "WiFi",
+    "空调": "Air Conditioning",
+    "洗衣机": "Washer",
+    "厨房": "Kitchen",
+    "湖景": "Lake View",
+    "停车位": "Parking",
+    "24小时安保": "24/7 Security",
+    "高层景观": "City View",
+    "浴缸": "Bathtub"
+  },
+  "common": {
+    "share": "Share",
+    "favorite": "Save",
+    "night": "night"
+  },
+  "property": {
+    "mapLoading": "Loading map...",
+    "selectDatesError": "Please select check-in and check-out dates"
+  },
+  "errors": {
+    "generic": "An error occurred. Please try again.",
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address",
+    "invalidPhone": "Please enter a valid phone number",
+    "selectDates": "Please select dates",
+    "checkOutAfterCheckIn": "Check-out must be after check-in",
+    "minNights": "Minimum {count} nights required"
   }
 }

@@ -28,8 +28,8 @@ import { mockProperties } from '@/lib/data';
 import dynamic from 'next/dynamic';
 import BackToHomeButton from '@/components/navigation/BackToHomeButton';
 
-// Dynamically import Mapbox component to avoid SSR issues
-const PropertyMap = dynamic(() => import('@/components/property/PropertyMap'), {
+// Dynamically import Google Maps component to avoid SSR issues
+const GooglePropertyMap = dynamic(() => import('@/components/property/GooglePropertyMap'), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full bg-neutral-100 flex items-center justify-center">
@@ -438,7 +438,7 @@ export default function PropertiesPage() {
               ))}
             </div>
             <div className="lg:col-span-2 h-[calc(100vh-300px)] min-h-[500px]">
-              <PropertyMap 
+              <GooglePropertyMap 
                 properties={filteredProperties}
                 selectedPropertyId={selectedPropertyId}
                 onPropertySelect={setSelectedPropertyId}

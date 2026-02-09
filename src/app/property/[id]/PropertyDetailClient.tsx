@@ -1,7 +1,7 @@
 // Property Detail Page - Blueground Style + Square UI
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { 
@@ -25,19 +25,39 @@ import {
 import { Button, Container, Card, Badge, Divider, Modal } from '@/components/ui';
 import DateRangePicker from '@/components/ui/DateRangePicker';
 import { getPropertyById, mockProperties } from '@/lib/data';
+import { getLocalizedTitle, getLocalizedDescription } from '@/components/property/PropertyCard';
 import { notFound } from 'next/navigation';
+import { useAuth } from '@/lib/UserContext';
+import { useI18n } from '@/lib/i18n';
 
 interface PropertyDetailClientProps {
   propertyId: string;
+  initialProperty?: ReturnType<typeof getPropertyById>;
+  initialLocale?: string;
 }
 
-export default function PropertyDetailClient({ propertyId }: PropertyDetailClientProps) {
-  const property = getPropertyById(propertyId);
+export default function PropertyDetailClient({ propertyId, initialProperty, initialLocale = 'en' }: PropertyDetailClientProps) {
+  // All hooks must be called before any conditional returns
+  const propertyFromStore = getPropertyById(propertyId);
+  // Use initialProperty from SSR if available, otherwise fall back to client-side data
+  const property = initialProperty || propertyFromStore;
+  const { user, isAuthenticated } = useAuth();
+  const { t, locale: contextLocale } = useI18n();
   
-  if (!property) {
-    notFound();
-  }
-
+  // Client hydration state
+  const [isMounted, setIsMounted] = useState(false);
+  
+  // Use initialLocale from SSR for hydration consistency, then sync with context
+  const [effectiveLocale, setEffectiveLocale] = useState(initialLocale);
+  
+  // Sync with context locale when it changes (user manual switch)
+  useEffect(() => {
+    if (contextLocale && contextLocale !== effectiveLocale) {
+      setEffectiveLocale(contextLocale);
+    }
+  }, [contextLocale]);
+  
+  // Image gallery state
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
@@ -53,6 +73,60 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showBookingSuccess, setShowBookingSuccess] = useState(false);
+  
+  // Mount detection
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  
+  // Auto-fill user data effect
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      setName(user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || '');
+      setEmail(user.email || '');
+      setPhone(user.phone || '');
+    }
+  }, [isAuthenticated, user]);
+  
+  // Get localized content - MUST be before conditional returns
+  const localizedTitle = useMemo(() => {
+    if (!property) return '';
+    return getLocalizedTitle(property, effectiveLocale);
+  }, [property, effectiveLocale]);
+  
+  const localizedDescription = useMemo(() => {
+    if (!property) return '';
+    return getLocalizedDescription(property, effectiveLocale);
+  }, [property, effectiveLocale]);
+
+  // Get similar properties - MUST be before conditional returns
+  const similarProperties = useMemo(() => {
+    if (!property) return [];
+    return mockProperties
+      .filter(p => p.id !== property.id)
+      .filter(p => 
+        p.location.includes(property.location.split(',')[1]?.trim() || '') ||
+        Math.abs(p.price - property.price) / property.price < 0.3
+      )
+      .slice(0, 3);
+  }, [property]);
+
+  // Conditional returns after all hooks
+  // FIX: Only check isMounted, not isLocaleLoading to prevent hydration issues
+  if (!isMounted) {
+    return (
+      <main className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-neutral-500">Loading...</p>
+        </div>
+      </main>
+    );
+  }
+  
+  if (!property) {
+    notFound();
+  }
 
   // Calculate nights and pricing
   const calculateNights = () => {
@@ -93,36 +167,38 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
     const newErrors: Record<string, string> = {};
     
     if (!checkIn) {
-      newErrors.checkIn = '请选择入住日期';
+      newErrors.checkIn = t('property.pleaseSelectCheckIn');
     }
     if (!checkOut) {
-      newErrors.checkOut = '请选择退房日期';
+      newErrors.checkOut = t('property.pleaseSelectCheckOut');
     }
     if (checkIn && checkOut) {
       const start = new Date(checkIn);
       const end = new Date(checkOut);
       if (end <= start) {
-        newErrors.checkOut = '退房日期必须晚于入住日期';
+        newErrors.checkOut = t('errors.checkOutAfterCheckIn');
       }
       if (property.minNights && nights < property.minNights) {
-        newErrors.checkOut = `最少需预订 ${property.minNights} 天`;
+        newErrors.checkOut = t('properties.details.minNightsWarning', { count: property.minNights });
       }
     }
-    if (!name.trim()) {
-      newErrors.name = '请输入您的姓名';
-    }
-    if (!email.trim()) {
-      newErrors.email = '请输入邮箱地址';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = '请输入有效的邮箱地址';
-    }
-    if (!phone.trim()) {
-      newErrors.phone = '请输入联系电话';
-    } else if (!/^[\d\s\-\+\(\)]+$/.test(phone)) {
-      newErrors.phone = '请输入有效的电话号码';
+    if (!isAuthenticated) {
+      if (!name.trim()) {
+        newErrors.name = t('errors.required');
+      }
+      if (!email.trim()) {
+        newErrors.email = t('errors.required');
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        newErrors.email = t('errors.invalidEmail');
+      }
+      if (!phone.trim()) {
+        newErrors.phone = t('errors.required');
+      } else if (!/^[\d\s\-\+\(\)]+$/.test(phone)) {
+        newErrors.phone = t('errors.invalidPhone');
+      }
     }
     if (guests < 1 || guests > property.maxGuests) {
-      newErrors.guests = `入住人数需在 1-${property.maxGuests} 人之间`;
+      newErrors.guests = t('property.maxGuestsError', { min: 1, max: property.maxGuests });
     }
     
     setErrors(newErrors);
@@ -137,46 +213,104 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
     
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setIsSubmitting(false);
-    setShowBookingSuccess(true);
+    try {
+      const finalGuestName = isAuthenticated 
+        ? (user?.name || `${user?.firstName || ''} ${user?.lastName || ''}`.trim()) 
+        : name;
+      const finalGuestEmail = isAuthenticated ? user?.email : email;
+      const finalGuestPhone = isAuthenticated ? (user?.phone || phone) : phone;
+      
+      const response = await fetch('/api/bookings/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          propertyId: property.id,
+          propertyTitle: localizedTitle,
+          checkIn,
+          checkOut,
+          nights,
+          guests,
+          basePrice: property.price,
+          discountRate: isMonthly ? (property.monthlyDiscount || 0) : 0,
+          discountAmount: isMonthly ? (property.price - discountedPrice) * nights : 0,
+          serviceFee,
+          totalPrice: finalPrice,
+          guestName: finalGuestName,
+          guestEmail: finalGuestEmail,
+          guestPhone: finalGuestPhone,
+          specialRequests,
+          userId: isAuthenticated ? user?.id : undefined,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || t('booking.createBookingError'));
+      }
+
+      setShowBookingSuccess(true);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : t('booking.createBookingError');
+      alert(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  // Get similar properties (same area or similar price)
-  const similarProperties = useMemo(() => {
-    return mockProperties
-      .filter(p => p.id !== property.id)
-      .filter(p => 
-        p.location.includes(property.location.split(',')[1]?.trim() || '') ||
-        Math.abs(p.price - property.price) / property.price < 0.3
-      )
-      .slice(0, 3);
-  }, [property]);
-
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-white" suppressHydrationWarning>
       {/* Navigation Bar */}
       <nav className="sticky top-0 z-40 bg-white border-b border-neutral-200">
         <Container>
           <div className="flex items-center justify-between h-16">
             <Link href="/properties" className="flex items-center text-neutral-600 hover:text-neutral-900">
               <ChevronLeft size={20} />
-              <span className="ml-1 hidden sm:inline">返回列表</span>
+              <span className="ml-1 hidden sm:inline">{t('properties.details.backToList')}</span>
             </Link>
             
             <div className="flex items-center gap-2">
-              <button 
+              <button
                 onClick={() => setIsLiked(!isLiked)}
                 className="p-2 hover:bg-neutral-100 transition-colors"
               >
-                <Heart 
-                  size={20} 
-                  className={isLiked ? 'fill-error text-error' : 'text-neutral-600'} 
+                <Heart
+                  size={20}
+                  className={isLiked ? 'fill-error text-error' : 'text-neutral-600'}
                 />
               </button>
-              <button className="p-2 hover:bg-neutral-100 transition-colors">
+              <button
+                onClick={async () => {
+                  const shareUrl = `${window.location.origin}/property/${propertyId}`;
+                  const shareData = {
+                    title: localizedTitle,
+                    text: `${t('property.shareText')}: ${localizedTitle} - ${property.location}`,
+                    url: shareUrl,
+                  };
+                  
+                  if (navigator.share) {
+                    try {
+                      await navigator.share(shareData);
+                    } catch {
+                      // User cancelled share, ignore
+                    }
+                  } else {
+                    try {
+                      await navigator.clipboard.writeText(shareUrl);
+                      alert(t('property.linkCopied'));
+                    } catch {
+                      const textArea = document.createElement('textarea');
+                      textArea.value = shareUrl;
+                      document.body.appendChild(textArea);
+                      textArea.select();
+                      document.execCommand('copy');
+                      document.body.removeChild(textArea);
+                      alert(t('property.linkCopied'));
+                    }
+                  }
+                }}
+                className="p-2 hover:bg-neutral-100 transition-colors"
+              >
                 <Share size={20} className="text-neutral-600" />
               </button>
             </div>
@@ -188,18 +322,16 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
       <div className="bg-neutral-100">
         <Container>
           <div className="py-4">
-            {/* Main Image */}
             <div className="relative aspect-[16/9] max-h-[60vh] bg-neutral-200 overflow-hidden cursor-pointer"
                  onClick={() => setShowGallery(true)}>
               <Image
                 src={property.images[currentImageIndex]}
-                alt={`${property.title} - 图片 ${currentImageIndex + 1}`}
+                alt={`${localizedTitle} - ${t('property.image')} ${currentImageIndex + 1}`}
                 fill
                 priority
                 className="object-cover"
               />
               
-              {/* Image Navigation */}
               <button 
                 onClick={(e) => { e.stopPropagation(); prevImage(); }}
                 className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/90 hover:bg-white transition-colors shadow-lg"
@@ -214,21 +346,18 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                 <ChevronRight size={24} />
               </button>
               
-              {/* Image Counter */}
               <div className="absolute bottom-4 right-4 px-4 py-2 bg-neutral-900/80 text-white text-sm">
                 {currentImageIndex + 1} / {property.images.length}
               </div>
               
-              {/* View All Button */}
-              <button 
+              <button
                 onClick={(e) => { e.stopPropagation(); setShowGallery(true); }}
                 className="absolute bottom-4 left-4 px-4 py-2 bg-white text-neutral-900 text-sm font-medium hover:bg-neutral-100 transition-colors"
               >
-                查看全部 {property.images.length} 张图片
+                {t('property.viewAllImages', { count: property.images.length })}
               </button>
             </div>
 
-            {/* Thumbnail Strip */}
             <div className="flex gap-2 mt-2 overflow-x-auto pb-2">
               {property.images.map((image, index) => (
                 <button
@@ -242,7 +371,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                 >
                   <Image
                     src={image}
-                    alt={`缩略图 ${index + 1}`}
+                    alt={`${t('property.thumbnail')} ${index + 1}`}
                     fill
                     className="object-cover"
                   />
@@ -258,16 +387,15 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Property Info */}
           <div className="lg:col-span-2">
-            {/* Header */}
             <div className="mb-6">
               <div className="flex items-start justify-between mb-2">
                 <h1 className="text-2xl md:text-3xl font-bold text-neutral-900">
-                  {property.title}
+                  {localizedTitle}
                 </h1>
                 <div className="flex items-center gap-1 shrink-0">
                   <Star size={18} className="text-accent fill-accent" />
                   <span className="font-medium">{property.rating}</span>
-                  <span className="text-neutral-400">({property.reviewCount} 评价)</span>
+                  <span className="text-neutral-400">({property.reviewCount} {t('properties.details.reviews')})</span>
                 </div>
               </div>
               
@@ -279,29 +407,28 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
 
             <Divider className="my-6" />
 
-            {/* Quick Info */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <div className="flex items-center gap-3 p-4 bg-neutral-50 border border-neutral-200">
                 <Users className="text-primary" size={24} />
                 <div>
-                  <div className="font-medium">{property.maxGuests} 人</div>
-                  <div className="text-sm text-neutral-500">最多入住</div>
+                  <div className="font-medium">{property.maxGuests} {t('common.people')}</div>
+                  <div className="text-sm text-neutral-500">{t('property.maxGuestsLabel')}</div>
                 </div>
               </div>
               
               <div className="flex items-center gap-3 p-4 bg-neutral-50 border border-neutral-200">
                 <Bed className="text-primary" size={24} />
                 <div>
-                  <div className="font-medium">{property.bedrooms} 室</div>
-                  <div className="text-sm text-neutral-500">卧室</div>
+                  <div className="font-medium">{property.bedrooms} {t('property.bedroomsUnit')}</div>
+                  <div className="text-sm text-neutral-500">{t('property.bedroomsLabel')}</div>
                 </div>
               </div>
               
               <div className="flex items-center gap-3 p-4 bg-neutral-50 border border-neutral-200">
                 <Bath className="text-primary" size={24} />
                 <div>
-                  <div className="font-medium">{property.bathrooms} 卫</div>
-                  <div className="text-sm text-neutral-500">卫生间</div>
+                  <div className="font-medium">{property.bathrooms} {t('property.bathroomsUnit')}</div>
+                  <div className="text-sm text-neutral-500">{t('property.bathroomsLabel')}</div>
                 </div>
               </div>
               
@@ -309,35 +436,29 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                 <Maximize className="text-primary" size={24} />
                 <div>
                   <div className="font-medium">{property.area} m²</div>
-                  <div className="text-sm text-neutral-500">面积</div>
+                  <div className="text-sm text-neutral-500">{t('property.areaLabel')}</div>
                 </div>
               </div>
             </div>
 
             <Divider className="my-6" />
 
-            {/* Description */}
             <div className="mb-6">
-              <h2 className="text-xl font-semibold mb-4">房源介绍</h2>
+              <h2 className="text-xl font-semibold mb-4">{t('properties.details.description')}</h2>
               <div className="text-neutral-600 whitespace-pre-line leading-relaxed">
-                {property.description || `这套位于${property.location}的精美公寓，拥有${property.bedrooms}间宽敞舒适的卧室和${property.bathrooms}间现代化浴室。
-
-公寓总面积${property.area}平方米，最多可容纳${property.maxGuests}位客人入住。精心设计的空间布局，高品质的装修材料，为您提供舒适的居住体验。
-
-公寓位于市中心黄金地段，交通便利，周边配套设施完善。无论是商务出差还是家庭度假，都是您的理想选择。`}
+                {localizedDescription || t('property.defaultDescription', { location: property.location, bedrooms: property.bedrooms, bathrooms: property.bathrooms, area: property.area, maxGuests: property.maxGuests })}
               </div>
             </div>
 
             <Divider className="my-6" />
 
-            {/* Amenities */}
             <div className="mb-6">
-              <h2 className="text-xl font-semibold mb-4">配套设施</h2>
+              <h2 className="text-xl font-semibold mb-4">{t('properties.details.amenities')}</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {property.amenities.map((item) => (
                   <div key={item} className="flex items-center gap-3 text-neutral-700 p-3 bg-neutral-50">
                     <Check size={18} className="text-success" />
-                    {item}
+                    {t(`amenities.${item}`) || item}
                   </div>
                 ))}
               </div>
@@ -345,13 +466,11 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
 
             <Divider className="my-6" />
 
-            {/* Location Map */}
             <div className="mb-6">
-              <h2 className="text-xl font-semibold mb-4">房源位置</h2>
+              <h2 className="text-xl font-semibold mb-4">{t('properties.details.location')}</h2>
               <div className="w-full h-[350px] bg-neutral-100 relative overflow-hidden rounded-lg">
-                {/* Google Maps Embed */}
                 <iframe
-                  src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2880!2d-79.4!3d43.7!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z${encodeURIComponent(property.location)}!5e0!3m2!1sen!2sca!4v1234567890`}
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(property.location)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -359,12 +478,11 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   className="absolute inset-0"
-                  title={`${property.title} Location`}
+                  title={`${localizedTitle} Location`}
                 />
                 
-                {/* Map Info Card */}
                 <div className="absolute bottom-4 left-4 bg-white p-4 shadow-lg rounded-lg max-w-xs">
-                  <h4 className="font-semibold text-neutral-900 mb-1">{property.title}</h4>
+                  <h4 className="font-semibold text-neutral-900 mb-1">{localizedTitle}</h4>
                   <p className="text-sm text-neutral-600">{property.location}</p>
                   <a 
                     href={`https://maps.google.com/?q=${encodeURIComponent(property.location)}`}
@@ -372,19 +490,18 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                     rel="noopener noreferrer"
                     className="inline-flex items-center text-sm text-primary hover:text-primary-700 font-medium mt-2"
                   >
-                    在 Google Maps 中打开
+                    {t('contact.openInMaps')}
                     <ChevronRight className="w-4 h-4 ml-1" />
                   </a>
                 </div>
               </div>
             </div>
 
-            {/* Similar Properties */}
             {similarProperties.length > 0 && (
               <>
                 <Divider className="my-6" />
                 <div className="mb-6">
-                  <h2 className="text-xl font-semibold mb-4">相似房源推荐</h2>
+                  <h2 className="text-xl font-semibold mb-4">{t('property.similarProperties')}</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {similarProperties.map((similarProperty) => (
                       <Link 
@@ -396,14 +513,14 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                           <div className="relative w-32 h-24 flex-shrink-0 overflow-hidden">
                             <Image
                               src={similarProperty.images[0]}
-                              alt={similarProperty.title}
+                              alt={getLocalizedTitle(similarProperty, effectiveLocale)}
                               fill
                               className="object-cover transition-transform group-hover:scale-105"
                             />
                           </div>
                           <div className="flex-1 min-w-0">
                             <h3 className="font-medium text-neutral-900 line-clamp-1 group-hover:text-primary transition-colors">
-                              {similarProperty.title}
+                              {getLocalizedTitle(similarProperty, effectiveLocale)}
                             </h3>
                             <p className="text-sm text-neutral-500 line-clamp-1 mt-1">
                               {similarProperty.location}
@@ -414,7 +531,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                               <span className="text-sm text-neutral-400">({similarProperty.reviewCount})</span>
                             </div>
                             <div className="mt-2 font-semibold text-neutral-900">
-                              ${similarProperty.price} <span className="text-sm font-normal text-neutral-500">/晚</span>
+                              ${similarProperty.price} <span className="text-sm font-normal text-neutral-500">{t('property.perNight')}</span>
                             </div>
                           </div>
                         </Card>
@@ -430,17 +547,16 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
           <div className="lg:col-span-1">
             <div className="sticky top-24">
               <Card className="p-6 border border-neutral-200">
-                {/* Price */}
                 <div className="flex items-baseline gap-1 mb-4">
                   <span className="text-3xl font-bold text-neutral-900">
                     ${property.price}
                   </span>
-                  <span className="text-neutral-500">CAD / 晚</span>
+                  <span className="text-neutral-500">CAD {t('property.perNight')}</span>
                 </div>
-                
+
                 {property.monthlyDiscount && property.monthlyDiscount > 0 && (
                   <Badge variant="primary" className="mb-4">
-                    月租享 {property.monthlyDiscount}% 优惠
+                    {t('property.monthlyDiscountLabel', { percent: property.monthlyDiscount })}
                   </Badge>
                 )}
 
@@ -448,17 +564,15 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                   <div className="mb-4 p-3 bg-amber-50 border border-amber-200 text-sm text-amber-800">
                     <div className="flex items-center gap-2">
                       <AlertCircle size={16} />
-                      <span className="font-medium">{property.minNights}天起租</span>
+                      <span className="font-medium">{t('property.minNightsLabel', { count: property.minNights })}</span>
                     </div>
                   </div>
                 )}
 
-                {/* Booking Form */}
                 <div className="space-y-4 mb-4">
-                  {/* Dates - Airbnb Style */}
                   <div>
                     <label className="block text-sm font-medium text-neutral-700 mb-1">
-                      入住 / 退房日期
+                      {t('property.checkInOutDates')}
                     </label>
                     <DateRangePicker
                       checkIn={checkIn}
@@ -474,10 +588,9 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                     )}
                   </div>
 
-                  {/* Guests */}
                   <div>
                     <label className="block text-sm font-medium text-neutral-700 mb-1">
-                      入住人数
+                      {t('property.guestCount')}
                     </label>
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={16} />
@@ -489,115 +602,118 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                         }`}
                       >
                         {Array.from({ length: property.maxGuests }, (_, i) => i + 1).map((num) => (
-                          <option key={num} value={num}>{num} 位房客</option>
+                          <option key={num} value={num}>{num} {t('property.guestsUnit')}</option>
                         ))}
                       </select>
                     </div>
                     {errors.guests && <p className="text-xs text-error mt-1">{errors.guests}</p>}
                   </div>
 
-                  {/* Name */}
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-700 mb-1">
-                      您的姓名
-                    </label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={16} />
-                      <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="请输入您的姓名"
-                        className={`w-full pl-9 pr-3 py-2.5 border text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary ${
-                          errors.name ? 'border-error' : 'border-neutral-300'
-                        }`}
-                      />
-                    </div>
-                    {errors.name && <p className="text-xs text-error mt-1">{errors.name}</p>}
-                  </div>
+                  {isAuthenticated === false && (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-neutral-700 mb-1">{t('property.yourName')}</label>
+                        <div className="relative">
+                          <User className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={16} />
+                          <input
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder={t('property.yourName')}
+                            className={`w-full pl-9 pr-3 py-2.5 border text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary ${
+                              errors.name ? 'border-error' : 'border-neutral-300'
+                            }`}
+                          />
+                        </div>
+                        {errors.name && <p className="text-xs text-error mt-1">{errors.name}</p>}
+                      </div>
 
-                  {/* Email */}
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-700 mb-1">
-                      邮箱地址
-                    </label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={16} />
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="your@email.com"
-                        className={`w-full pl-9 pr-3 py-2.5 border text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary ${
-                          errors.email ? 'border-error' : 'border-neutral-300'
-                        }`}
-                      />
-                    </div>
-                    {errors.email && <p className="text-xs text-error mt-1">{errors.email}</p>}
-                  </div>
+                      <div>
+                        <label className="block text-sm font-medium text-neutral-700 mb-1">{t('property.email')}</label>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={16} />
+                          <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="your@email.com"
+                            className={`w-full pl-9 pr-3 py-2.5 border text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary ${
+                              errors.email ? 'border-error' : 'border-neutral-300'
+                            }`}
+                          />
+                        </div>
+                        {errors.email && <p className="text-xs text-error mt-1">{errors.email}</p>}
+                      </div>
 
-                  {/* Phone */}
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-700 mb-1">
-                      联系电话
-                    </label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={16} />
-                      <input
-                        type="tel"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="+1 (xxx) xxx-xxxx"
-                        className={`w-full pl-9 pr-3 py-2.5 border text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary ${
-                          errors.phone ? 'border-error' : 'border-neutral-300'
-                        }`}
-                      />
+                      <div>
+                        <label className="block text-sm font-medium text-neutral-700 mb-1">{t('property.phone')}</label>
+                        <div className="relative">
+                          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={16} />
+                          <input
+                            type="tel"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            placeholder="+1 (xxx) xxx-xxxx"
+                            className={`w-full pl-9 pr-3 py-2.5 border text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary ${
+                              errors.phone ? 'border-error' : 'border-neutral-300'
+                            }`}
+                          />
+                        </div>
+                        {errors.phone && <p className="text-xs text-error mt-1">{errors.phone}</p>}
+                      </div>
+                    </>
+                  )}
+                  
+                  {isAuthenticated === true && user && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                          <User className="w-4 h-4 text-blue-600" />
+                        </div>
+                        <span className="font-medium text-neutral-900">{t('booking.loggedInAccount')}</span>
+                      </div>
+                      <p className="text-sm text-neutral-600">{user.name || user.email}</p>
                     </div>
-                    {errors.phone && <p className="text-xs text-error mt-1">{errors.phone}</p>}
-                  </div>
+                  )}
 
-                  {/* Special Requests */}
                   <div>
-                    <label className="block text-sm font-medium text-neutral-700 mb-1">
-                      特殊要求 <span className="text-neutral-400">(选填)</span>
-                    </label>
+                    <label className="block text-sm font-medium text-neutral-700 mb-1">{t('property.specialRequests')}</label>
                     <textarea
                       value={specialRequests}
                       onChange={(e) => setSpecialRequests(e.target.value)}
-                      placeholder="如有特殊要求，请在此说明..."
+                      placeholder={t('property.specialRequestsPlaceholder')}
                       rows={3}
                       className="w-full px-3 py-2.5 border border-neutral-300 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary resize-none"
                     />
                   </div>
                 </div>
 
-                {/* Price Breakdown */}
                 {nights > 0 && (
                   <div className="mb-4 p-4 bg-neutral-50 border border-neutral-200 text-sm">
                     <div className="space-y-2">
                       {isMonthly && property.monthlyDiscount ? (
                         <>
                           <div className="flex justify-between text-neutral-500">
-                            <span className="line-through">原价 ${property.price.toLocaleString()} CAD</span>
+                            <span className="line-through">{t('property.originalPrice')} ${property.price.toLocaleString()} CAD</span>
                           </div>
                           <div className="flex justify-between text-success">
-                            <span>月租价 ${discountedPrice.toLocaleString()} x {nights}晚</span>
+                            <span>{t('property.monthlyPrice')} ${discountedPrice.toLocaleString()} x {nights}{t('common.nights')}</span>
                             <span>${totalPrice.toLocaleString()} CAD</span>
                           </div>
                         </>
                       ) : (
                         <div className="flex justify-between">
-                          <span className="text-neutral-600">${property.price.toLocaleString()} x {nights}晚</span>
+                          <span className="text-neutral-600">${property.price.toLocaleString()} x {nights}{t('common.nights')}</span>
                           <span>${totalPrice.toLocaleString()} CAD</span>
                         </div>
                       )}
                       <div className="flex justify-between text-neutral-600">
-                        <span>服务费</span>
+                        <span>{t('property.serviceFee')}</span>
                         <span>${serviceFee.toLocaleString()} CAD</span>
                       </div>
                       <Divider className="my-2" />
                       <div className="flex justify-between font-semibold text-base">
-                        <span>总价</span>
+                        <span>{t('properties.details.total')}</span>
                         <span>${finalPrice.toLocaleString()} CAD</span>
                       </div>
                     </div>
@@ -610,11 +726,9 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                   isLoading={isSubmitting}
                   onClick={handleBooking}
                 >
-                  {isSubmitting ? '提交中...' : '立即预订'}
+                  {isSubmitting ? t('common.loading') : t('properties.details.bookNow')}
                 </Button>
-                <p className="text-center text-sm text-neutral-500 mt-3">
-                  您暂时不会被收费
-                </p>
+                <p className="text-center text-sm text-neutral-500 mt-3">{t('booking.youWontBeCharged')}</p>
               </Card>
             </div>
           </div>
@@ -625,7 +739,6 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
       {showGallery && (
         <div className="fixed inset-0 z-50 bg-neutral-900">
           <div className="h-full flex flex-col">
-            {/* Header */}
             <div className="flex items-center justify-between p-4 bg-neutral-900">
               <h3 className="text-white font-medium">
                 {currentImageIndex + 1} / {property.images.length}
@@ -638,11 +751,10 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
               </button>
             </div>
             
-            {/* Main Image */}
             <div className="flex-1 relative flex items-center justify-center">
               <Image
                 src={property.images[currentImageIndex]}
-                alt={`${property.title} - 图片 ${currentImageIndex + 1}`}
+                alt={`${localizedTitle} - ${t('property.image')} ${currentImageIndex + 1}`}
                 fill
                 className="object-contain"
               />
@@ -662,7 +774,6 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
               </button>
             </div>
             
-            {/* Thumbnails */}
             <div className="p-4 bg-neutral-900">
               <div className="flex gap-2 overflow-x-auto justify-center">
                 {property.images.map((image, index) => (
@@ -677,7 +788,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                   >
                     <Image
                       src={image}
-                      alt={`缩略图 ${index + 1}`}
+                      alt={`${t('property.thumbnail')} ${index + 1}`}
                       fill
                       className="object-cover"
                     />
@@ -693,10 +804,10 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
       <Modal
         isOpen={showBookingSuccess}
         onClose={() => setShowBookingSuccess(false)}
-        title="预订申请已提交"
+        title={t('property.bookingSuccessTitle')}
         footer={
           <Button onClick={() => setShowBookingSuccess(false)}>
-            确定
+            {t('common.ok')}
           </Button>
         }
       >
@@ -704,15 +815,19 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
           <div className="w-16 h-16 mx-auto mb-4 bg-success/10 flex items-center justify-center">
             <Check size={32} className="text-success" />
           </div>
-          <p className="text-neutral-600">
-            您的预订申请已成功提交！我们的客服人员将在24小时内与您联系确认。
-          </p>
+          <p className="text-neutral-600">{t('property.bookingSuccessMessage')}</p>
           <div className="mt-4 p-4 bg-neutral-50 text-left text-sm">
-            <p><strong>房源：</strong>{property.title}</p>
-            <p><strong>入住日期：</strong>{checkIn}</p>
-            <p><strong>退房日期：</strong>{checkOut}</p>
-            <p><strong>入住人数：</strong>{guests}人</p>
-            <p><strong>总价：</strong>${finalPrice.toLocaleString()} CAD</p>
+            <p><strong>{t('property.property')}</strong>{localizedTitle}</p>
+            <p><strong>{t('booking.checkIn')}</strong>{checkIn}</p>
+            <p><strong>{t('booking.checkOut')}</strong>{checkOut}</p>
+            <p><strong>{t('property.guests')}</strong>{guests}{t('common.people')}</p>
+            {isAuthenticated && user && (
+              <>
+                <p><strong>{t('property.bookedBy')}</strong>{user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim()}</p>
+                <p><strong>{t('property.contactEmail')}</strong>{user.email}</p>
+              </>
+            )}
+            <p><strong>{t('property.totalPrice')}</strong>${finalPrice.toLocaleString()} CAD</p>
           </div>
         </div>
       </Modal>

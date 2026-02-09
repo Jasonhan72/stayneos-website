@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useUser } from '@/lib/context/UserContext';
 import AvatarUpload from '@/components/user/AvatarUpload';
@@ -38,16 +38,33 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: user?.firstName || '',
-    lastName: user?.lastName || '',
-    email: user?.email || '',
-    phone: user?.phone || '',
-    dateOfBirth: user?.dateOfBirth || '',
-    nationality: user?.nationality || '',
-    emergencyContactName: user?.emergencyContact?.name || '',
-    emergencyContactPhone: user?.emergencyContact?.phone || '',
-    emergencyContactRelationship: user?.emergencyContact?.relationship || '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    dateOfBirth: '',
+    nationality: '',
+    emergencyContactName: '',
+    emergencyContactPhone: '',
+    emergencyContactRelationship: '',
   });
+
+  // Update form data when user loads
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        dateOfBirth: user.dateOfBirth || '',
+        nationality: user.nationality || '',
+        emergencyContactName: user.emergencyContact?.name || '',
+        emergencyContactPhone: user.emergencyContact?.phone || '',
+        emergencyContactRelationship: user.emergencyContact?.relationship || '',
+      });
+    }
+  }, [user]);
 
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));

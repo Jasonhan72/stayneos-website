@@ -10,7 +10,47 @@
     "about": "À Propos",
     "login": "Connexion",
     "register": "S'inscrire",
-    "account": "Mon Compte"
+    "account": "Mon Compte",
+    "signup": "S'inscrire",
+    "landlords": "Pour Propriétaires",
+    "business": "Pour Entreprises",
+    "contact": "Contactez-Nous",
+    "bookings": "Mes Réservations",
+    "personalDetails": "Détails Personnels",
+    "preferences": "Préférences",
+    "wishlists": "Favoris",
+    "logout": "Déconnexion"
+  },
+  "common": {
+    "or": "ou",
+    "there": "ami",
+    "back": "Retour",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "print": "Imprimer",
+    "download": "Télécharger",
+    "submit": "Soumettre",
+    "save": "Enregistrer",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "search": "Rechercher",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "nights": "nuits",
+    "night": "nuit",
+    "guests": "voyageurs",
+    "guest": "voyageur",
+    "people": "personnes",
+    "person": "personne"
+  },
+  "greeting": {
+    "morning": "Bonjour",
+    "afternoon": "Bon après-midi",
+    "evening": "Bonsoir"
+  },
+  "currency": {
+    "title": "Devise"
   },
   "hero": {
     "title": "Appartements Exécutifs Premium",
@@ -72,25 +112,596 @@
     "explore": "Commencer l'Exploration",
     "contact": "Contactez-Nous"
   },
+  "howItWorks": {
+    "title": "Trois Étapes Simples pour Emnénager",
+    "subtitle": "Nous avons simplifié tout le processus pour que vous puissiez vous concentrer sur votre séjour"
+  },
+  "steps": {
+    "search": {
+      "title": "Rechercher des Propriétés",
+      "desc": "Parcourez nos propriétés sélectionnées, filtrez par emplacement, prix et équipements"
+    },
+    "book": {
+      "title": "Réserver en Ligne",
+      "desc": "Sélectionnez vos dates, consultez les prix en temps réel et complétez votre réservation en un clic"
+    },
+    "movein": {
+      "title": "Emménager",
+      "desc": "Accueil par un concierge professionnel, entièrement équipé, commencez à profiter immédiatement"
+    }
+  },
+  "segments": {
+    "title": "Solutions d'Hébergement pour Vous",
+    "subtitle": "Que ce soit pour les déplacements d'affaires, les projets à long terme ou la relocation, nous avons des options pour vous",
+    "business": {
+      "title": "Déplacements d'Affaires",
+      "subtitle": "Remises Entreprises",
+      "desc": "Solutions d'hébergement pratiques pour les professionnels, près des quartiers financiers avec transport facile",
+      "cta": "En Savoir Plus sur les Plans Entreprise"
+    },
+    "longterm": {
+      "title": "Séjour Long Terme",
+      "subtitle": "20% de Remise Mensuelle",
+      "desc": "Profitez de prix réduits pour les séjours d'un mois ou plus, idéal pour les projets à long terme ou la relocation",
+      "cta": "Voir les Propriétés Long Terme"
+    },
+    "relocation": {
+      "title": "Relocation",
+      "subtitle": "Emménagement Flexible",
+      "desc": "Le choix idéal pendant votre déménagement, aucun engagement à long terme requis, emménagez immédiatement",
+      "cta": "Réserver Maintenant"
+    }
+  },
   "footer": {
-    "about": "À Propos de Nous",
-    "company": "Entreprise",
-    "team": "Équipe",
+    "about": "À Propos",
+    "team": "Notre Équipe",
     "careers": "Carrières",
-    "customerService": "Service Client",
+    "news": "Actualités",
+    "corporate": "Logement d'Entreprise",
+    "shortTerm": "Location Court Terme",
+    "longTerm": "Location Long Terme",
+    "propertyManagement": "Gestion Immobilière",
     "help": "Centre d'Aide",
-    "contact": "Contactez-Nous",
     "faq": "FAQ",
-    "followUs": "Suivez-Nous",
-    "wechat": "WeChat",
-    "weibo": "Weibo",
-    "xiaohongshu": "Xiaohongshu",
-    "copyright": "© 2026 StayNeos. Tous droits réservés."
+    "contact": "Contactez-Nous",
+    "privacy": "Politique de Confidentialité",
+    "description": "Des expériences d'hébergement soigneusement conçues pour les voyageurs modernes. Que ce soit pour affaires ou loisirs, nous vous offrons l'espace de vie parfait.",
+    "companyTitle": "Entreprise",
+    "servicesTitle": "Services",
+    "supportTitle": "Support",
+    "copyright": "© {year} StayNeos. Tous droits réservés."
   },
   "language": {
     "title": "Langue",
     "en": "English",
     "fr": "Français",
     "zh": "中文"
+  },
+  "booking": {
+    "checkIn": "Arrivée",
+    "checkOut": "Départ",
+    "checkInDate": "Date d'arrivée",
+    "checkOutDate": "Date de départ",
+    "selectCheckIn": "Sélectionner la date d'arrivée",
+    "selectCheckOut": "Sélectionner la date de départ",
+    "selectDates": "Sélectionner les dates",
+    "selectDatesAndGuests": "Sélectionner dates et voyageurs",
+    "dates": "Dates",
+    "guests": "Voyageurs",
+    "submitting": "Envoi en cours...",
+    "bookNow": "Réserver",
+    "selectDatesError": "Veuillez sélectionner les dates d'arrivée et de départ",
+    "selectCheckInError": "Veuillez sélectionner la date d'arrivée",
+    "selectCheckOutError": "Veuillez sélectionner la date de départ",
+    "checkOutAfterCheckIn": "La date de départ doit être après la date d'arrivée"
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "subtitle": "Contactez notre équipe",
+    "form": {
+      "name": "Nom",
+      "email": "Email",
+      "phone": "Téléphone",
+      "message": "Message",
+      "send": "Envoyer"
+    }
+  },
+  "bookings": {
+    "title": "Mes Réservations",
+    "noBookings": "Aucune réservation trouvée",
+    "noBookingsDesc": "Vous n'avez pas encore de réservations",
+    "bookingId": "N° de réservation",
+    "status": "Statut",
+    "pending": "En attente",
+    "confirmed": "Confirmée",
+    "cancelled": "Annulée",
+    "completed": "Terminée",
+    "manageBookings": "Gérez vos réservations et consultez votre historique",
+    "subtitle": "Gérez vos réservations et consultez votre historique",
+    "allBookings": "Toutes les réservations",
+    "upcoming": "À venir",
+    "current": "En cours",
+    "all": "Toutes",
+    "checkIn": "Date d'arrivée",
+    "checkOut": "Date de départ",
+    "nights": "Nuits",
+    "guests": "Voyageurs",
+    "totalPrice": "Prix total",
+    "bookingNumber": "N° de réservation",
+    "property": "Propriété",
+    "viewDetails": "Voir les détails",
+    "contactHost": "Contacter l'hôte",
+    "downloadVoucher": "Télécharger le voucher",
+    "writeReview": "Écrire un avis",
+    "retry": "Réessayer",
+    "loading": "Chargement des réservations...",
+    "errorLoading": "Échec du chargement des réservations. Veuillez réessayer.",
+    "fetchError": "Échec du chargement des réservations. Veuillez réessayer plus tard.",
+    "noUpcoming": "Aucune réservation à venir",
+    "noCurrent": "Aucun séjour en cours",
+    "noPast": "Aucune réservation passée",
+    "noCancelled": "Aucune réservation annulée",
+    "browseProperties": "Parcourir les propriétés",
+    "cancelBooking": "Annuler la réservation",
+    "keepBooking": "Conserver la réservation",
+    "cancelWarning": "Cette action ne peut pas être annulée. Les remboursements seront traités dans un délai de 3 à 5 jours ouvrables. Des frais d'annulation peuvent s'appliquer.",
+    "paid": "Payé",
+    "unpaid": "Non payé",
+    "bookingDate": "Date de réservation",
+    "close": "Fermer",
+    "print": "Imprimer",
+    "download": "Télécharger",
+    "submitting": "Envoi en cours...",
+    "submitReview": "Soumettre l'avis",
+    "reviewPlaceholder": "Partagez votre expérience de séjour...",
+    "rating": "Note",
+    "bookingDetails": "Détails de la réservation",
+    "priceBreakdown": "Détail des prix",
+    "costBreakdown": "Détail des coûts",
+    "roomRate": "Tarif de la chambre",
+    "basePrice": "Prix de base",
+    "total": "Total",
+    "pleaseLogin": "Veuillez vous connecter pour voir vos réservations",
+    "loginRequired": "Veuillez vous connecter pour voir vos réservations",
+    "login": "Connexion",
+    "tabs": {
+      "all": "Toutes les réservations",
+      "upcoming": "À venir",
+      "current": "En cours",
+      "completed": "Terminée"
+    }
+  },
+  "booking": {
+    "checkIn": "Arrivée",
+    "checkOut": "Départ",
+    "checkInDate": "Date d'arrivée",
+    "checkOutDate": "Date de départ",
+    "selectCheckIn": "Sélectionner la date d'arrivée",
+    "selectCheckOut": "Sélectionner la date de départ",
+    "selectDates": "Sélectionner les dates",
+    "selectDatesAndGuests": "Sélectionner dates et voyageurs",
+    "dates": "Dates",
+    "guests": "Voyageurs",
+    "submitting": "Envoi en cours...",
+    "bookNow": "Réserver",
+    "selectDatesError": "Veuillez sélectionner les dates d'arrivée et de départ",
+    "selectCheckInError": "Veuillez sélectionner la date d'arrivée",
+    "selectCheckOutError": "Veuillez sélectionner la date de départ",
+    "checkOutAfterCheckIn": "La date de départ doit être après la date d'arrivée",
+    "step1": "Sélectionner les dates",
+    "step2": "Confirmer les informations",
+    "step3": "Finaliser le paiement",
+    "nextStep": "Étape suivante",
+    "confirmAndPay": "Confirmer et payer",
+    "returnToProperty": "Retour aux détails de la propriété",
+    "guestCount": "{count} voyageurs",
+    "minNights": "{count} nuits minimum",
+    "monthlyDiscount": "{percent}% de réduction mensuelle",
+    "selectDatesAndGuestsTitle": "Sélectionner dates et voyageurs",
+    "confirmInfoTitle": "Confirmer les informations",
+    "securePaymentTitle": "Paiement sécurisé",
+    "guestInfo": "Informations du voyageur",
+    "name": "Nom",
+    "email": "Email",
+    "phone": "Téléphone",
+    "specialRequests": "Demandes spéciales",
+    "specialRequestsPlaceholder": "Si vous avez des demandes spéciales, veuillez les décrire ici...",
+    "optional": "Optionnel",
+    "loggedInAccount": "Compte connecté",
+    "useAccountInfo": "Les informations de votre compte seront utilisées pour compléter la réservation",
+    "editProfile": "Pour modifier les informations, veuillez accéder au profil",
+    "loadingPayment": "Chargement des informations de paiement...",
+    "securePayment": "Paiement sécurisé",
+    "informationEncrypted": "Vos informations sont cryptées et protégées",
+    "priceSummary": "Récapitulatif des prix",
+    "originalPrice": "Prix original",
+    "monthlyPrice": "Prix mensuel",
+    "discount": "Remise",
+    "serviceFee": "Frais de service",
+    "cleaningFee": "Frais de ménage",
+    "tax": "Taxes",
+    "taxHST": "Taxes (13% HST)",
+    "total": "Total",
+    "nightsCount": "{count} nuits",
+    "perNight": "/nuit",
+    "propertyInfo": "Informations sur la propriété",
+    "night": "nuit",
+    "nights": "nuits",
+    "createBookingError": "Échec de la création de la réservation",
+    "createPaymentError": "Échec de la création du paiement",
+    "guestName": "Nom du voyageur",
+    "guestEmail": "Email du voyageur",
+    "guestPhone": "Téléphone du voyageur",
+    "fillAllInfo": "Veuillez remplir toutes les informations du voyageur",
+    "bookingSuccess": "Demande de réservation soumise avec succès ! Notre service client vous contactera dans les 24 heures pour confirmation.",
+    "ok": "OK",
+    "bookingSubmitted": "Demande de réservation soumise",
+    "youWontBeCharged": "Vous ne serez pas encore facturé"
+  },
+  "property": {
+    "details": "Détails de la propriété",
+    "amenities": "Équipements",
+    "description": "Description",
+    "location": "Emplacement",
+    "reviews": "Avis",
+    "bookNow": "Réserver maintenant",
+    "price": "Prix",
+    "serviceFee": "Frais de service",
+    "total": "Total",
+    "originalPrice": "Prix original",
+    "monthlyPrice": "Prix mensuel",
+    "monthlyDiscountLabel": "Remise mensuelle ({percent}% de réduction)",
+    "minNightsWarning": "Minimum {count} nuits requis",
+    "minNightsLabel": "{count} nuits minimum",
+    "backToList": "Retour à la liste",
+    "maxGuests": "Max {count} voyageurs",
+    "maxGuestsLabel": "Max voyageurs",
+    "maxGuestsError": "Le nombre de voyageurs doit être entre {min} et {max}",
+    "bedrooms": "{count} chambres",
+    "bedroomsUnit": "ch",
+    "bedroomsLabel": "Chambres",
+    "bathrooms": "{count} salles de bain",
+    "bathroomsUnit": "sdb",
+    "bathroomsLabel": "Salles de bain",
+    "area": "{area} m²",
+    "areaLabel": "Surface",
+    "areaUnit": "m²",
+    "perNight": "/nuit",
+    "viewAllImages": "Voir toutes les {count} images",
+    "image": "Image",
+    "of": "sur",
+    "thumbnail": "Miniature",
+    "similarProperties": "Propriétés similaires",
+    "viewDetails": "Voir les détails",
+    "yourName": "Votre nom",
+    "email": "Email",
+    "phone": "Téléphone",
+    "emailAddress": "Adresse email",
+    "phoneNumber": "Numéro de téléphone",
+    "checkInOutDates": "Dates d'arrivée / départ",
+    "guestCount": "Nombre de voyageurs",
+    "guestsUnit": "voyageurs",
+    "specialRequests": "Demandes spéciales (Optionnel)",
+    "specialRequestsOptional": "Demandes spéciales (Optionnel)",
+    "specialRequestsPlaceholder": "Si vous avez des demandes spéciales, veuillez les décrire ici...",
+    "submitting": "Envoi en cours...",
+    "monthlyDiscount": "{percent}% de réduction pour les séjours mensuels",
+    "minNights": "{count} nuits minimum",
+    "rating": "Note",
+    "reviewCount": "{count} avis",
+    "bookingSuccessTitle": "Demande de réservation soumise",
+    "bookingSuccessMessage": "Votre demande de réservation a été soumise avec succès ! Notre équipe de service client vous contactera dans les 24 heures pour confirmation.",
+    "property": "Propriété",
+    "checkIn": "Arrivée",
+    "checkOut": "Départ",
+    "guests": "Voyageurs",
+    "bookedBy": "Réservé par",
+    "contactEmail": "Email de contact",
+    "totalPrice": "Prix total",
+    "confirm": "Confirmer",
+    "pleaseSelectCheckIn": "Veuillez sélectionner la date d'arrivée",
+    "pleaseSelectCheckOut": "Veuillez sélectionner la date de départ",
+    "shareText": "Découvrez cette propriété",
+    "linkCopied": "Lien copié dans le presse-papiers !",
+    "defaultDescription": "Ce bel appartement à {location} dispose de {bedrooms} chambres spacieuses et de {bathrooms} salles de bain modernes.\n\nL'appartement a une superficie totale de {area} m² et peut accueillir jusqu'à {maxGuests} voyageurs. La disposition soigneusement conçue et les finitions de haute qualité offrent une expérience de vie confortable.\n\nSitué dans un emplacement privilégié en centre-ville avec un transport commode et des installations complètes aux alentours. Que ce soit pour des voyages d'affaires ou des vacances en famille, c'est votre choix idéal."
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "welcome": "Bon retour",
+    "memberSince": "Membre depuis",
+    "settings": "Paramètres",
+    "logout": "Déconnexion",
+    "myBookings": "Mes réservations",
+    "favorites": "Favoris",
+    "profile": "Profil",
+    "accountOverview": "Aperçu du compte",
+    "completedBookings": "Réservations terminées",
+    "upcomingStays": "Séjours à venir",
+    "savedProperties": "Propriétés enregistrées",
+    "browseProperties": "Parcourir les propriétés",
+    "viewDetails": "Voir les détails",
+    "cancelBooking": "Annuler la réservation",
+    "writeReview": "Écrire un avis",
+    "bookAgain": "Réserver à nouveau",
+    "noBookings": "Aucune réservation",
+    "noBookingsDesc": "Vous n'avez pas encore fait de réservations",
+    "noFavorites": "Aucun favori",
+    "noFavoritesDesc": "Vous n'avez pas encore enregistré de propriétés",
+    "personalInfo": "Informations personnelles",
+    "save": "Enregistrer",
+    "edit": "Modifier",
+    "name": "Nom",
+    "email": "Email",
+    "phone": "Téléphone",
+    "registrationDate": "Date d'inscription",
+    "changeAvatar": "Cliquez pour changer l'avatar",
+    "accountSecurity": "Sécurité du compte",
+    "password": "Mot de passe",
+    "passwordSet": "Défini",
+    "phoneVerified": "Téléphone vérifié",
+    "twoFactor": "Authentification à deux facteurs",
+    "notEnabled": "Non activé",
+    "modify": "Modifier",
+    "enable": "Activer",
+    "updateSuccess": "Profil mis à jour avec succès !"
+  },
+  "wishlist": {
+    "title": "Ma liste de souhaits",
+    "empty": "Votre liste de souhaits est vide",
+    "emptyDesc": "Commencez à explorer nos propriétés et enregistrez vos favoris ici. Vous pourrez les comparer et les réserver quand vous serez prêt.",
+    "exploreProperties": "Explorer les propriétés",
+    "propertiesSaved": "{count} propriétés enregistrées",
+    "propertySaved": "{count} propriété enregistrée",
+    "remove": "Retirer des favoris",
+    "beds": "chambres",
+    "bed": "chambre",
+    "baths": "salles de bain",
+    "bath": "salle de bain",
+    "viewDetails": "Voir les détails",
+    "bookNow": "Réserver",
+    "browseMore": "Parcourir toutes les propriétés",
+    "lookingForMore": "Vous cherchez plus d'options ?"
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "subtitle": "Contactez notre équipe",
+    "contactInfo": "Coordonnées",
+    "sendMessage": "Envoyer un message",
+    "form": {
+      "name": "Nom",
+      "email": "Email",
+      "phone": "Téléphone",
+      "subject": "Sujet",
+      "message": "Message",
+      "send": "Envoyer",
+      "namePlaceholder": "Veuillez entrer votre nom",
+      "emailPlaceholder": "Veuillez entrer votre email",
+      "phonePlaceholder": "Veuillez entrer votre téléphone",
+      "messagePlaceholder": "Veuillez décrire vos besoins ou questions...",
+      "subjectBooking": "Demande de réservation",
+      "subjectPartnership": "Partenariat",
+      "subjectSupport": "Support technique",
+      "subjectOther": "Autre",
+      "required": "Requis",
+      "minChars": "Le message doit contenir au moins 10 caractères",
+      "privacyNote": "Vos informations seront envoyées à hello@stayneos.com. Nous nous engageons à protéger votre vie privée."
+    },
+    "success": {
+      "title": "Envoyé avec succès !",
+      "message": "Merci pour votre message. Nous l'avons bien reçu et vous contacterons dans les 24 heures.",
+      "sendNew": "Envoyer un nouveau message"
+    },
+    "email": "Email",
+    "address": "Adresse",
+    "phone": "Téléphone",
+    "hours": "Heures",
+    "responseTime": "Nous répondons généralement dans les 24 heures",
+    "visitUs": "Bienvenue sur rendez-vous",
+    "workHours": "Lundi au vendredi 9h00-18h00 EST",
+    "weekend": "Fermé les week-ends et jours fériés",
+    "followUs": "Suivez-nous",
+    "followDesc": "Suivez-nous sur les réseaux sociaux pour les dernières propriétés et promotions",
+    "faq": "FAQ",
+    "faqDesc": "Trouvez les réponses aux questions fréquentes",
+    "viewAllFaq": "Voir toute la FAQ",
+    "howToBook": "Comment réserver un appartement ?",
+    "minStay": "Quelle est la durée minimale de séjour ?",
+    "depositRefund": "Comment se fait le remboursement du dépôt ?",
+    "petPolicy": "Les animaux sont-ils acceptés ?",
+    "emergency": {
+      "title": "Besoin d'aide d'urgence ?",
+      "desc": "Si vous êtes un locataire actuel et avez besoin d'une assistance immédiate, veuillez appeler notre ligne d'urgence 24h/24",
+      "call": "Appeler la ligne d'urgence"
+    }
+  },
+  "status": {
+    "pending": "En attente",
+    "confirmed": "Confirmée",
+    "checkedIn": "Enregistré",
+    "checkedOut": "Départ effectué",
+    "cancelled": "Annulée"
+  },
+  "landlords": {
+    "hero": {
+      "title": "Maximisez Vos Revenus Locatifs",
+      "subtitle": "Partenariat avec StayNeos et gagnez jusqu'à 30% de plus sur votre propriété. Nous gérons tout pendant que vous profitez de revenus passifs.",
+      "cta": "Listez Votre Propriété"
+    },
+    "benefits": {
+      "title": "Pourquoi Faire Équipe Avec Nous?",
+      "subtitle": "Nous fournissons des services de gestion immobilière complets qui vous aident à gagner plus avec moins de stress.",
+      "income": {
+        "title": "Revenus Locatifs Supérieurs",
+        "desc": "Gagnez jusqu'à 30% de plus par rapport aux locations traditionnelles à long terme. Notre optimisation des prix flexibles assure des rendements maximaux."
+      },
+      "protection": {
+        "title": "Protection de Propriété",
+        "desc": "Une couverture d'assurance complète et des dépôts de garantie protègent votre propriété. Des inspections régulières assurent que tout reste en parfait état."
+      },
+      "management": {
+        "title": "Gestion Sans Souci",
+        "desc": "Nous gérons tout du marketing à la maintenance. Plus d'appels d'urgence à minuit ni de problèmes avec des locataires difficiles."
+      },
+      "support": {
+        "title": "Support Invités 24h/24",
+        "desc": "Notre équipe dédiée gère toutes les communications et le support des invités, vous n'avez donc pas à vous inquiéter."
+      },
+      "marketing": {
+        "title": "Marketing Professionnel",
+        "desc": "Photographie de haute qualité, annonces convaincantes et promotion multi-plateformes assurent une visibilité maximale pour votre propriété."
+      },
+      "guests": {
+        "title": "Invités de Qualité",
+        "desc": "Un processus rigoureux de sélection des invités assure que votre propriété est louée uniquement à des invités vérifiés et responsables."
+      }
+    },
+    "howItWorks": {
+      "title": "Comment Ça Marche",
+      "subtitle": "Commencer est facile. Trois étapes simples pour commencer à gagner plus."
+    },
+    "steps": {
+      "step1": {
+        "title": "Listez Votre Propriété",
+        "desc": "Soumettez les détails de votre propriété et nous créerons une annonce professionnelle."
+      },
+      "step2": {
+        "title": "Nous Gérons Tout",
+        "desc": "De la sélection des invités au nettoyage, nous gérons l'ensemble du processus."
+      },
+      "step3": {
+        "title": "Recevez Votre Paiement",
+        "desc": "Recevez des paiements mensuels directement sur votre compte. C'est aussi simple que ça."
+      }
+    },
+    "cta": {
+      "title": "Prêt À Commencer À Gagner Plus?",
+      "subtitle": "Rejoignez des centaines de propriétaires qui font confiance à StayNeos pour leurs propriétés.",
+      "button": "Commencez Aujourd'hui"
+    }
+  },
+  "corporate": {
+    "hero": {
+      "title": "Solutions de Logement d'Entreprise",
+      "subtitle": "Appartements meublés premium pour vos besoins professionnels. Conditions flexibles, emplacements privilégiés et support dédié pour les clients d'entreprise.",
+      "ctaQuote": "Demander un Devis",
+      "ctaBrowse": "Parcourir les Propriétés"
+    },
+    "solutions": {
+      "title": "Solutions Pour Chaque Besoin",
+      "subtitle": "Des voyageurs d'affaires individuels aux grandes équipes de projet, nous avons la solution d'hébergement parfaite.",
+      "housing": {
+        "title": "Logement d'Entreprise",
+        "desc": "Appartements entièrement meublés pour les employés en mutation et les voyageurs d'affaires à long terme. Conditions de bail flexibles de 1 mois à 1 an."
+      },
+      "group": {
+        "title": "Hébergements de Groupe",
+        "desc": "Plusieurs unités pour les équipes de projet, les groupes de formation ou les participants à des conférences. Facturation centralisée et gestion de compte dédiée."
+      },
+      "mobility": {
+        "title": "Mobilité Internationale",
+        "desc": "Support de réinstallation transparent pour les assignés internationaux. Nous gérons tout, de la prise en charge à l'aéroport à l'orientation locale."
+      },
+      "executive": {
+        "title": "Suites Exécutives",
+        "desc": "Hébergements premium pour les cadres dirigeants et les invités VIP. Finitions de luxe et services de conciergerie inclus."
+      }
+    },
+    "benefits": {
+      "terms": {
+        "title": "Conditions Flexibles",
+        "desc": "De 1 mois à 1 an"
+      },
+      "inclusive": {
+        "title": "Tout Inclus",
+        "desc": "Services publics, WiFi, ménage"
+      },
+      "location": {
+        "title": "Emplacements Privilégiés",
+        "desc": "Centre-ville de Toronto et GTA"
+      },
+      "support": {
+        "title": "Support Dédié",
+        "desc": "Service de conciergerie 24h/24"
+      }
+    },
+    "cta": {
+      "title": "Prêt À Simplifier Votre Logement d'Entreprise?",
+      "subtitle": "Contactez notre équipe commerciale pour des devis personnalisés et une gestion de compte dédiée.",
+      "button": "Contacter l'Équipe Commerciale"
+    }
+  },
+  "contact": {
+    "pageTitle": "Contactez-nous",
+    "pageSubtitle": "Vous avez des questions ou besoin d'aide? Notre équipe est là pour vous aider. Contactez-nous via l'un des canaux ci-dessous.",
+    "infoTitle": "Coordonnées",
+    "formTitle": "Envoyer un Message",
+    "emailLabel": "Email",
+    "addressLabel": "Adresse",
+    "phoneLabel": "Téléphone",
+    "hoursLabel": "Heures",
+    "callAnytime": "Appelez à tout moment pendant les heures de travail",
+    "form": {
+      "title": "Contactez-nous",
+      "subtitle": "Remplissez le formulaire ci-dessous et nous vous répondrons bientôt",
+      "name": "Nom",
+      "email": "Email",
+      "phone": "Téléphone",
+      "phoneOptional": "Téléphone (Optionnel)",
+      "subject": "Sujet",
+      "message": "Message",
+      "namePlaceholder": "Veuillez entrer votre nom",
+      "emailPlaceholder": "Veuillez entrer votre email",
+      "phonePlaceholder": "Veuillez entrer votre téléphone",
+      "messagePlaceholder": "Veuillez décrire vos besoins ou questions...",
+      "subjectBooking": "Demande de Réservation",
+      "subjectPartnership": "Partenariat",
+      "subjectSupport": "Support Technique",
+      "subjectOther": "Autre",
+      "required": "Requis",
+      "minChars": "Le message doit contenir au moins 10 caractères",
+      "privacyNote": "Vos informations seront envoyées à hello@stayneos.com. Nous nous engageons à protéger votre vie privée.",
+      "send": "Envoyer",
+      "errorName": "Veuillez entrer votre nom",
+      "errorEmail": "Veuillez entrer votre email",
+      "errorMessage": "Veuillez entrer votre message"
+    },
+    "success": {
+      "title": "Envoyé Avec Succès!",
+      "message": "Merci pour votre message. Nous l'avons bien reçu et vous contacterons dans les 24 heures.",
+      "sendNew": "Envoyer un Nouveau Message"
+    },
+    "followUs": "Suivez-nous",
+    "followDesc": "Suivez-nous sur les réseaux sociaux pour les dernières propriétés et promotions",
+    "faqTitle": "FAQ",
+    "faqHowToBook": "Comment réserver un appartement?",
+    "faqMinStay": "Quelle est la durée minimale de séjour?",
+    "faqDeposit": "Comment se fait le remboursement du dépôt?",
+    "faqPets": "Les animaux sont-ils acceptés?",
+    "viewAllFaq": "Voir Toute la FAQ",
+    "openInMaps": "Ouvrir dans Google Maps",
+    "emergency": {
+      "title": "Besoin d'Aide d'Urgence?",
+      "desc": "Si vous êtes un locataire actuel et avez besoin d'une assistance immédiate, veuillez appeler notre ligne d'urgence 24h/24"
+    }
+  },
+  "amenities": {
+    "WiFi": "WiFi",
+    "空调": "Climatisation",
+    "洗衣机": "Lave-linge",
+    "厨房": "Cuisine",
+    "湖景": "Vue sur le lac",
+    "停车位": "Parking",
+    "24小时安保": "Sécurité 24h/24",
+    "高层景观": "Vue sur la ville",
+    "浴缸": "Baignoire"
+  },
+  "errors": {
+    "generic": "Une erreur s'est produite. Veuillez réessayer.",
+    "required": "Ce champ est obligatoire",
+    "invalidEmail": "Veuillez entrer une adresse email valide",
+    "invalidPhone": "Veuillez entrer un numéro de téléphone valide",
+    "selectDates": "Veuillez sélectionner des dates",
+    "checkOutAfterCheckIn": "La date de départ doit être après la date d'arrivée",
+    "minNights": "Minimum {count} nuits requis"
   }
 }

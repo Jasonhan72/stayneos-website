@@ -5,9 +5,14 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:worker": "opennextjs-cloudflare",
+    "build:static": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "wrangler pages deploy dist --project-name=stayneos"
+    "deploy": "wrangler deploy",
+    "deploy:pages": "wrangler pages deploy dist --project-name=stayneos",
+    "preview": "wrangler dev",
+    "cf-typegen": "wrangler types"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
@@ -31,6 +36,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.16.3",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
@@ -40,6 +46,7 @@
     "eslint-config-next": "14.2.35",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.63.0"
   }
 }

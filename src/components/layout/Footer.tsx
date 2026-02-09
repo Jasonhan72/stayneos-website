@@ -3,28 +3,30 @@
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Phone, Mail, Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 export default function Footer() {
+  const { t } = useI18n();
   const currentYear = new Date().getFullYear();
 
   const footerLinks = {
     company: [
-      { label: "关于我们", href: "/about" },
-      { label: "我们的团队", href: "/team" },
-      { label: "职业机会", href: "/careers" },
-      { label: "新闻中心", href: "/news" },
+      { label: t("footer.about"), href: "/about" },
+      { label: t("footer.team"), href: "/team" },
+      { label: t("footer.careers"), href: "/careers" },
+      { label: t("footer.news"), href: "/news" },
     ],
     services: [
-      { label: "企业住房", href: "/corporate" },
-      { label: "短期租赁", href: "/short-term" },
-      { label: "长期租赁", href: "/long-term" },
-      { label: "物业管理", href: "/property-management" },
+      { label: t("footer.corporate"), href: "/corporate" },
+      { label: t("footer.shortTerm"), href: "/short-term" },
+      { label: t("footer.longTerm"), href: "/long-term" },
+      { label: t("footer.propertyManagement"), href: "/property-management" },
     ],
     support: [
-      { label: "帮助中心", href: "/help" },
-      { label: "常见问题", href: "/faq" },
-      { label: "联系我们", href: "/contact" },
-      { label: "隐私政策", href: "/privacy" },
+      { label: t("footer.help"), href: "/help" },
+      { label: t("footer.faq"), href: "/faq" },
+      { label: t("footer.contact"), href: "/contact" },
+      { label: t("footer.privacy"), href: "/privacy" },
     ],
   };
 
@@ -53,7 +55,7 @@ export default function Footer() {
                 />
               </Link>
               <p className="mt-4 text-primary-100 max-w-sm leading-relaxed text-sm md:text-base">
-                为现代旅行者提供精心设计的住宿体验。无论是商务出行还是休闲度假，我们都能为您提供完美的居住空间。
+                {t("footer.description")}
               </p>
               
               {/* Contact Info */}
@@ -68,13 +70,13 @@ export default function Footer() {
                   <span>hello@stayneos.com</span>
                 </a>
                 <a
-                  href="tel:+14165550123"
+                  href="tel:+16478626518"
                   className="flex items-center gap-3 text-primary-100 hover:text-accent transition-colors duration-200 group"
                 >
                   <div className="w-10 h-10 rounded-lg bg-primary-700/50 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                     <Phone className="w-5 h-5" />
                   </div>
-                  <span>+1 (416) 555-0123</span>
+                  <span>+1 (647) 862-6518</span>
                 </a>
                 <a
                   href="https://maps.google.com/?q=20+Upjohn+Rd+North+York+ON+M3B+2V9"
@@ -92,7 +94,7 @@ export default function Footer() {
 
             {/* Links Columns */}
             <div>
-              <h4 className="font-semibold text-base mb-4 md:mb-5 text-white">公司</h4>
+              <h4 className="font-semibold text-base mb-4 md:mb-5 text-white">{t("footer.companyTitle")}</h4>
               <ul className="space-y-3">
                 {footerLinks.company.map((link) => (
                   <li key={link.href}>
@@ -108,7 +110,7 @@ export default function Footer() {
             </div>
 
             <div>
-              <h4 className="font-semibold text-base mb-4 md:mb-5 text-white">服务</h4>
+              <h4 className="font-semibold text-base mb-4 md:mb-5 text-white">{t("footer.servicesTitle")}</h4>
               <ul className="space-y-3">
                 {footerLinks.services.map((link) => (
                   <li key={link.href}>
@@ -124,7 +126,7 @@ export default function Footer() {
             </div>
 
             <div>
-              <h4 className="font-semibold text-base mb-4 md:mb-5 text-white">支持</h4>
+              <h4 className="font-semibold text-base mb-4 md:mb-5 text-white">{t("footer.supportTitle")}</h4>
               <ul className="space-y-3">
                 {footerLinks.support.map((link) => (
                   <li key={link.href}>
@@ -147,7 +149,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="py-5 md:py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-sm text-primary-200 text-center sm:text-left">
-              © {currentYear} StayNeos. 保留所有权利。
+              {t("footer.copyright", { year: currentYear })}
             </p>
             
             {/* Social Links */}

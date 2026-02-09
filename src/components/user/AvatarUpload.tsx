@@ -32,7 +32,9 @@ export default function AvatarUpload({ size = 'lg', className }: AvatarUploadPro
   };
 
   const getInitials = (firstName: string, lastName: string) => {
-    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+    const first = firstName?.charAt(0) || '';
+    const last = lastName?.charAt(0) || '';
+    return `${first}${last}`.toUpperCase() || '?';
   };
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {

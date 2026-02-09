@@ -1,15 +1,13 @@
-// Property Detail Page - Server Component for Static Export
-import { mockProperties, getPropertyById } from "@/lib/data";
+// Property Detail Page - Dynamic Server Component
+import { getPropertyById } from "@/lib/data";
 import PropertyDetailClient from "./PropertyDetailClient";
-import BackToHomeButton from "@/components/navigation/BackToHomeButton";
 import { notFound } from "next/navigation";
+import { headers } from 'next/headers';
+import { getLocalizedTitle, getLocalizedDescription } from "@/components/property/PropertyCard";
 
-// Generate static params for all properties - required for static export
-export function generateStaticParams() {
-  return mockProperties.map((property) => ({
-    id: property.id,
-  }));
-}
+// Force dynamic rendering to support i18n based on user locale
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 interface PageProps {
   params: {
@@ -24,10 +22,22 @@ export default function PropertyDetailPage({ params }: PageProps) {
     notFound();
   }
   
+  // Get locale from middleware header (detects from cookie or browser Accept-Language)
+  const headersList = headers();
+  const locale = (headersList.get('x-locale') as 'en' | 'fr' | 'zh') || 'en';
+  
+  // Pre-localize property data for SSR to ensure hydration consistency
+  const localizedProperty = {
+    ...property,
+    title: getLocalizedTitle(property, locale),
+    description: getLocalizedDescription(property, locale),
+  };
+  
   return (
-    <>
-      <PropertyDetailClient propertyId={params.id} />
-      <BackToHomeButton />
-    </>
+    <PropertyDetailClient 
+      propertyId={params.id} 
+      initialProperty={localizedProperty}
+      initialLocale={locale}
+    />
   );
 }

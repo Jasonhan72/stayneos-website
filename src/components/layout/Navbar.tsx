@@ -3,19 +3,23 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Phone, Mail } from "lucide-react";
+import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Button from "@/components/ui/Button";
 import { UserMenu } from "./UserMenu";
+import { LanguageCurrencySelector } from "./LanguageCurrencySelector";
+import { MobileMenu } from "./MobileMenu";
+import { useAuth } from "@/lib/UserContext";
+import { useI18n } from "@/lib/i18n";
 
 interface NavbarProps {
   variant?: "light" | "dark" | "transparent";
-  showContact?: boolean;
 }
 
-export default function Navbar({ variant = "light", showContact = true }: NavbarProps) {
+export default function Navbar({ variant = "light" }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, isAuthenticated } = useAuth();
+  const { t } = useI18n();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,11 +30,11 @@ export default function Navbar({ variant = "light", showContact = true }: Navbar
   }, []);
 
   const navLinks = [
-    { href: "/", label: "首页" },
-    { href: "/properties", label: "房源" },
-    { href: "/services", label: "服务" },
-    { href: "/about", label: "关于我们" },
-    { href: "/contact", label: "联系我们" },
+    { href: "/", label: t("nav.home") },
+    { href: "/properties", label: t("nav.properties") },
+    { href: "/services", label: t("nav.services") },
+    { href: "/about", label: t("nav.about") },
+    { href: "/contact", label: t("nav.contact") },
   ];
 
   const bgStyles = {
@@ -49,45 +53,6 @@ export default function Navbar({ variant = "light", showContact = true }: Navbar
 
   return (
     <>
-      {/* Top Bar - Contact Info */}
-      {showContact && (
-        <div className="bg-primary text-white py-2.5 px-4 hidden md:block">
-          <div className="max-w-7xl mx-auto flex items-center justify-between text-sm">
-            <div className="flex items-center gap-6">
-              <a 
-                href="tel:+16478626518" 
-                className="flex items-center gap-2 hover:text-accent transition-colors duration-200"
-              >
-                <Phone className="w-4 h-4" />
-                <span>+1 (647) 862-6518</span>
-              </a>
-              <a 
-                href="mailto:hello@stayneos.com" 
-                className="flex items-center gap-2 hover:text-accent transition-colors duration-200"
-              >
-                <Mail className="w-4 h-4" />
-                <span>hello@stayneos.com</span>
-              </a>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link 
-                href="/login" 
-                className="hover:text-accent transition-colors duration-200"
-              >
-                登录
-              </Link>
-              <span className="text-primary-300">|</span>
-              <Link 
-                href="/register" 
-                className="hover:text-accent transition-colors duration-200"
-              >
-                注册
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Main Navigation */}
       <nav
         className={cn(
@@ -125,123 +90,67 @@ export default function Navbar({ variant = "light", showContact = true }: Navbar
               ))}
             </div>
 
-            {/* Right Side - User Menu + CTA */}
-            <div className="hidden lg:flex items-center gap-4">
+            {/* Desktop - Language/Currency + User Menu */}
+            <div className="hidden lg:flex items-center gap-2">
+              <LanguageCurrencySelector variant={currentVariant as "light" | "dark" | "transparent"} />
               <UserMenu variant={currentVariant as "light" | "dark" | "transparent"} />
-              <Button 
-                variant="primary" 
-                size="md"
-                onClick={() => window.location.href = "/properties"}
-              >
-                浏览房源
-              </Button>
             </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              type="button"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={cn(
-                "lg:hidden p-2.5 rounded-lg transition-colors duration-200",
-                "hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-accent",
-                textStyles[currentVariant]
+            {/* Mobile - User Avatar when logged in, Hamburger when logged out */}
+            <div className="lg:hidden flex items-center gap-2">
+              {isAuthenticated && user ? (
+                <button
+                  onClick={() => setIsMobileMenuOpen(true)}
+                  className="flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full hover:bg-black/5 transition-all"
+                >
+                  {user?.avatar || user?.image ? (
+                    <div className="w-9 h-9 rounded-full overflow-hidden bg-neutral-100">
+                      <Image
+                        src={user.avatar || user.image!}
+                        alt={user.name || "User"}
+                        width={36}
+                        height={36}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold bg-[#e3f2fd] text-[#1967d2]">
+                      {(() => {
+                        const name = user?.name || "";
+                        const email = user?.email || "";
+                        if (name) {
+                          const initials = name.split(" ").filter(n => n).map(n => n[0]).join("").toUpperCase();
+                          return initials.slice(0, 2) || "U";
+                        }
+                        if (email) {
+                          return email.substring(0, 2).toUpperCase();
+                        }
+                        return "U";
+                      })()}
+                    </div>
+                  )}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsMobileMenuOpen(true)}
+                  className={cn(
+                    "p-2 rounded-lg transition-colors duration-200",
+                    "hover:bg-neutral-100 focus:outline-none",
+                    textStyles[currentVariant]
+                  )}
+                  aria-label="打开菜单"
+                >
+                  <Menu className="w-6 h-6" />
+                </button>
               )}
-              aria-label={isMobileMenuOpen ? "关闭菜单" : "打开菜单"}
-              aria-expanded={isMobileMenuOpen}
-            >
-              <div className="relative w-6 h-6">
-                <span
-                  className={cn(
-                    "absolute left-0 block w-6 h-0.5 bg-current transition-all duration-300",
-                    isMobileMenuOpen ? "top-3 rotate-45" : "top-1"
-                  )}
-                />
-                <span
-                  className={cn(
-                    "absolute left-0 top-3 block w-6 h-0.5 bg-current transition-all duration-300",
-                    isMobileMenuOpen ? "opacity-0" : "opacity-100"
-                  )}
-                />
-                <span
-                  className={cn(
-                    "absolute left-0 block w-6 h-0.5 bg-current transition-all duration-300",
-                    isMobileMenuOpen ? "top-3 -rotate-45" : "top-5"
-                  )}
-                />
-              </div>
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        <div
-          className={cn(
-            "lg:hidden absolute top-full left-0 right-0 bg-white shadow-xl transition-all duration-300 overflow-hidden",
-            isMobileMenuOpen 
-              ? "max-h-[600px] opacity-100 border-t border-neutral-200" 
-              : "max-h-0 opacity-0"
-          )}
-        >
-          <div className="px-4 py-4 space-y-1">
-            {navLinks.map((link, index) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={cn(
-                  "block py-3 px-4 text-neutral-700 font-medium transition-all duration-200 rounded-lg",
-                  "hover:bg-accent/10 hover:text-primary hover:pl-6"
-                )}
-                style={{ 
-                  animationDelay: `${index * 50}ms`,
-                  animation: isMobileMenuOpen ? "slideInRight 0.3s ease-out forwards" : "none"
-                }}
-              >
-                {link.label}
-              </Link>
-            ))}
-            
-            {/* Mobile User Menu */}
-            <div className="pt-4 mt-4 border-t border-neutral-200">
-              <div className="px-4 py-2">
-                <UserMenu variant="light" />
-              </div>
-            </div>
-
-            <div className="pt-4 mt-4 border-t border-neutral-200 space-y-3">
-              <Link
-                href="/properties"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-center py-3.5 bg-accent text-primary font-semibold rounded-lg hover:bg-accent-600 transition-colors"
-              >
-                浏览房源
-              </Link>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
-      {isMobileMenuOpen && (
-        <div
-          className="lg:hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
-          onClick={() => setIsMobileMenuOpen(false)}
-          aria-hidden="true"
-        />
-      )}
-
-      <style jsx>{`
-        @keyframes slideInRight {
-          from {
-            opacity: 0;
-            transform: translateX(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-      `}</style>
+      {/* Mobile Menu Drawer */}
+      <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
     </>
   );
 }

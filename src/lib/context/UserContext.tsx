@@ -91,6 +91,27 @@ export function UserProvider({ children }: { children: ReactNode }) {
     loadUserFromStorage();
   }, []);
 
+  // Listen for storage changes (for login/logout across tabs)
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === USER_KEY) {
+        if (e.newValue) {
+          try {
+            const parsedUser = JSON.parse(e.newValue);
+            setUser(parsedUser);
+          } catch {
+            setUser(null);
+          }
+        } else {
+          setUser(null);
+        }
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
   // Sync with NextAuth session
   useEffect(() => {
     if (status === "authenticated" && session?.user) {
@@ -158,6 +179,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
           },
         };
         localStorage.setItem(USER_KEY, JSON.stringify(updated));
+        
+        // Trigger locale change if language was updated
+        if (prefs.language) {
+          window.dispatchEvent(new CustomEvent('localeChange'));
+          localStorage.setItem('preferred-locale', prefs.language);
+        }
+        
         return updated;
       });
       await new Promise(resolve => setTimeout(resolve, 300));
@@ -185,6 +213,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     setUser(null);
+    // Dispatch event to notify other components (like Navbar)
+    window.dispatchEvent(new CustomEvent("localStorageChange"));
     await signOut({ callbackUrl: "/" });
   }, []);
 

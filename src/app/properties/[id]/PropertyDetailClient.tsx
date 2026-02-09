@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import Navbar from "@/components/layout/Navbar";
 import { getPropertyById } from "@/lib/data";
+import { getLocalizedTitle, getLocalizedDescription } from "@/components/property/PropertyCard";
+import { useI18n } from "@/lib/i18n";
 import DateRangePicker from "@/components/ui/DateRangePicker";
 import {
   Heart,
@@ -57,36 +58,9 @@ const amenityIcons: Record<string, React.ElementType> = {
   湖景: Mountain,
 };
 
-// 模拟评价数据
-const mockReviews = [
-  {
-    id: 1,
-    user: "张先生",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100",
-    rating: 5,
-    date: "2024-01-15",
-    content: "非常棒的住宿体验！房间干净整洁，设施齐全，位置也很方便。管家服务非常贴心，下次还会选择这里。",
-  },
-  {
-    id: 2,
-    user: "李女士",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100",
-    rating: 5,
-    date: "2024-01-10",
-    content: "性价比很高，装修很有品味，床品也很舒适。厨房设备齐全，自己做饭很方便。",
-  },
-  {
-    id: 3,
-    user: "王先生",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100",
-    rating: 4,
-    date: "2024-01-05",
-    content: "整体体验不错，就是停车位有点紧张。不过位置真的很好，周边吃喝玩乐都很方便。",
-  },
-];
-
 export default function PropertyDetailClient({ params }: PropertyDetailPageProps) {
   const property = getPropertyById(params.id);
+  const { t, locale } = useI18n();
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(2);
@@ -95,6 +69,10 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
   if (!property) {
     notFound();
   }
+
+  // Get localized content
+  const localizedTitle = useMemo(() => getLocalizedTitle(property, locale), [property, locale]);
+  const localizedDescription = useMemo(() => getLocalizedDescription(property, locale), [property, locale]);
 
   const calculateNights = () => {
     if (!checkIn || !checkOut) return 0;
@@ -114,28 +92,59 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
 
   return (
     <main className="min-h-screen bg-amber-50">
-      <Navbar />
-
       <div className="pt-20 pb-12">
         <div className="container mx-auto px-4">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-            <Link href="/" className="hover:text-gray-900">首页</Link>
+            <Link href="/" className="hover:text-gray-900">{t('nav.home')}</Link>
             <ChevronRight size={14} />
-            <Link href="/properties" className="hover:text-gray-900">房源</Link>
+            <Link href="/properties" className="hover:text-gray-900">{t('nav.properties')}</Link>
             <ChevronRight size={14} />
-            <span className="text-gray-900 truncate">{property.title}</span>
+            <span className="text-gray-900 truncate">{localizedTitle}</span>
           </nav>
 
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-              {property.title}
+              {localizedTitle}
             </h1>
             <div className="flex items-center gap-4">
-              <button className="flex items-center gap-2 text-gray-600 hover:text-gray-900">
+              <button 
+                onClick={async () => {
+                  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+                  const shareData = {
+                    title: localizedTitle,
+                    text: `${t('property.shareText')}: ${localizedTitle} - ${property.location}`,
+                    url: shareUrl,
+                  };
+                  
+                  if (navigator.share) {
+                    try {
+                      await navigator.share(shareData);
+                    } catch {
+                      // 用户取消分享，不处理
+                    }
+                  } else {
+                    // 复制链接到剪贴板
+                    try {
+                      await navigator.clipboard.writeText(shareUrl);
+                      alert(t('property.linkCopied'));
+                    } catch {
+                      // 备用方案
+                      const textArea = document.createElement('textarea');
+                      textArea.value = shareUrl;
+                      document.body.appendChild(textArea);
+                      textArea.select();
+                      document.execCommand('copy');
+                      document.body.removeChild(textArea);
+                      alert(t('property.linkCopied'));
+                    }
+                  }
+                }}
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+              >
                 <Share2 size={18} />
-                <span className="text-sm font-medium">分享</span>
+                <span className="text-sm font-medium">{t('common.share')}</span>
               </button>
               <button
                 onClick={() => setIsFavorite(!isFavorite)}
@@ -145,7 +154,7 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
                   size={18}
                   className={isFavorite ? "fill-red-500 text-red-500" : ""}
                 />
-                <span className="text-sm font-medium">收藏</span>
+                <span className="text-sm font-medium">{t('common.favorite')}</span>
               </button>
             </div>
           </div>
@@ -155,7 +164,7 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
             <div className="relative aspect-[4/3] md:aspect-auto">
               <Image
                 src={property.images[0]}
-                alt={property.title}
+                alt={localizedTitle}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -167,7 +176,7 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
                 <div key={index} className="relative aspect-[4/3]">
                   <Image
                     src={image}
-                    alt={`${property.title} - ${index + 2}`}
+                    alt={`${localizedTitle} - ${index + 2}`}
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 50vw, 25vw"
@@ -185,7 +194,7 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                      {property.bedrooms}室{property.bathrooms}卫 · {property.area}m²
+                      {property.bedrooms}{t('property.bedroomsUnit')} {property.bathrooms}{t('property.bathroomsUnit')} · {property.area}m²
                     </h2>
                     <div className="flex items-center gap-1 text-gray-500">
                       <MapPin size={16} />
@@ -196,22 +205,22 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
                     <Star size={16} className="text-amber-600 fill-amber-600" />
                     <span className="font-semibold text-amber-800">{property.rating}</span>
                     <span className="text-amber-600">·</span>
-                    <span className="text-amber-800">{property.reviewCount}条评价</span>
+                    <span className="text-amber-800">{property.reviewCount}{t('properties.details.reviews')}</span>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-6 text-sm text-gray-600 pt-4 border-t border-gray-100">
                   <div className="flex items-center gap-2">
                     <Users size={18} />
-                    <span>最多{property.maxGuests}人</span>
+                    <span>{t('property.maxGuestsValue', { count: property.maxGuests })}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Bed size={18} />
-                    <span>{property.bedrooms}间卧室</span>
+                    <span>{property.bedrooms}{t('property.bedroomsLabel')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Bath size={18} />
-                    <span>{property.bathrooms}间浴室</span>
+                    <span>{property.bathrooms}{t('property.bathroomsLabel')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Maximize size={18} />
@@ -222,14 +231,14 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
 
               {/* Amenities */}
               <div className="bg-white rounded-xl p-6 shadow-sm">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">配套设施</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('properties.details.amenities')}</h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {property.amenities.map((amenity) => {
                     const Icon = amenityIcons[amenity] || Check;
                     return (
                       <div key={amenity} className="flex items-center gap-3">
                         <Icon size={20} className="text-gray-600" />
-                        <span className="text-gray-700">{amenity}</span>
+                        <span className="text-gray-700">{t(`amenities.${amenity}`) || amenity}</span>
                       </div>
                     );
                   })}
@@ -238,75 +247,22 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
 
               {/* Description */}
               <div className="bg-white rounded-xl p-6 shadow-sm">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">房源介绍</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('properties.details.description')}</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  这套位于{property.location}的精美公寓，拥有{property.bedrooms}间宽敞舒适的卧室和{property.bathrooms}间现代化浴室。
-                  公寓总面积{property.area}平方米，最多可容纳{property.maxGuests}位客人入住。
+                  {localizedDescription || t('property.defaultDescription', { location: property.location, bedrooms: property.bedrooms, bathrooms: property.bathrooms, area: property.area, maxGuests: property.maxGuests })}
                 </p>
-                {property.description && (
-                  <p className="text-gray-600 leading-relaxed mt-4">{property.description}</p>
-                )}
               </div>
 
               {/* Map Placeholder */}
               <div className="bg-white rounded-xl p-6 shadow-sm">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">房源位置</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('properties.details.location')}</h3>
                 <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
                   <div className="text-center">
                     <MapPin size={48} className="text-gray-400 mx-auto mb-2" />
                     <p className="text-gray-500">{property.location}</p>
-                    <p className="text-sm text-gray-400 mt-1">地图加载中...</p>
+                    <p className="text-sm text-gray-400 mt-1">{t('property.mapLoading')}</p>
                   </div>
                 </div>
-              </div>
-
-              {/* Reviews */}
-              <div className="bg-white rounded-xl p-6 shadow-sm">
-                <div className="flex items-center gap-2 mb-6">
-                  <Star size={24} className="text-amber-500 fill-amber-500" />
-                  <h3 className="text-xl font-semibold text-gray-900">
-                    {property.rating} · {property.reviewCount}条评价
-                  </h3>
-                </div>
-
-                <div className="space-y-6">
-                  {mockReviews.map((review) => (
-                    <div key={review.id} className="border-b border-gray-100 last:border-0 pb-6 last:pb-0">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="relative w-10 h-10 rounded-full overflow-hidden">
-                          <Image
-                            src={review.avatar}
-                            alt={review.user}
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-                        <div>
-                          <p className="font-medium text-gray-900">{review.user}</p>
-                          <p className="text-sm text-gray-500">{review.date}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-1 mb-2">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Star
-                            key={i}
-                            size={14}
-                            className={
-                              i < review.rating
-                                ? "text-amber-400 fill-amber-400"
-                                : "text-gray-300"
-                            }
-                          />
-                        ))}
-                      </div>
-                      <p className="text-gray-600">{review.content}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <button className="mt-6 px-6 py-3 border border-gray-900 text-gray-900 rounded-lg font-medium hover:bg-gray-50 transition-colors">
-                  查看全部评价
-                </button>
               </div>
             </div>
 
@@ -318,7 +274,7 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
                     <span className="text-2xl font-bold text-gray-900">
                       ${property.price.toLocaleString()} CAD
                     </span>
-                    <span className="text-gray-500">/{property.priceUnit}</span>
+                    <span className="text-gray-500">/{t('common.night')}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <Star size={16} className="text-amber-400 fill-amber-400" />
@@ -330,11 +286,11 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
                 {property.minNights && (
                   <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
                     <p className="text-sm text-amber-800 font-medium">
-                      🏠 {property.minNights}天起租
+                      🏠 {t('property.minNightsLabel', { count: property.minNights })}
                     </p>
                     {property.monthlyDiscount && (
                       <p className="text-sm text-amber-700 mt-1">
-                        月租享{property.monthlyDiscount}%折扣
+                        {t('property.monthlyDiscountLabel', { percent: property.monthlyDiscount })}
                       </p>
                     )}
                   </div>
@@ -355,7 +311,7 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
                   {/* Guests */}
                   <div className="p-3">
                     <label className="block text-xs font-semibold text-gray-700 uppercase">
-                      入住人数
+                      {t('property.guestCount')}
                     </label>
                     <select
                       value={guests}
@@ -364,7 +320,7 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
                     >
                       {Array.from({ length: property.maxGuests }).map((_, i) => (
                         <option key={i} value={i + 1}>
-                          {i + 1}位房客
+                          {i + 1} {t('property.guestsUnit')}
                         </option>
                       ))}
                     </select>
@@ -380,15 +336,15 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
                   onClick={(e) => {
                     if (!checkIn || !checkOut) {
                       e.preventDefault();
-                      alert("请选择入住和退房日期");
+                      alert(t('property.selectDatesError'));
                       return;
                     }
                   }}
                 >
-                  预订
+                  {t('properties.details.bookNow')}
                 </Link>
 
-                <p className="text-center text-sm text-gray-500 mb-6">您暂时不会被收费</p>
+                <p className="text-center text-sm text-gray-500 mb-6">{t('booking.youWontBeCharged')}</p>
 
                 {nights > 0 && (
                   <div className="space-y-3 text-sm border-t border-gray-100 pt-4">
@@ -396,43 +352,38 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
                       <>
                         <div className="flex justify-between">
                           <span className="text-gray-600 line-through">
-                            原价 ${property.price.toLocaleString()} CAD
+                            {t('property.originalPrice')} ${property.price.toLocaleString()} CAD
                           </span>
                         </div>
                         <div className="flex justify-between text-green-600">
                           <span className="underline">
-                            月租价 ${discountedPrice.toLocaleString()} CAD x {nights}晚
+                            {t('property.monthlyPrice')} ${discountedPrice.toLocaleString()} CAD x {nights}{t('common.nights')}
                           </span>
                           <span>${totalPrice.toLocaleString()} CAD</span>
                         </div>
                         <div className="flex justify-between text-green-600">
-                          <span>月租优惠 ({property.monthlyDiscount}% off)</span>
+                          <span>{t('property.monthlyDiscountLabel', { percent: property.monthlyDiscount })}</span>
                           <span>-${((property.price - discountedPrice) * nights).toLocaleString()} CAD</span>
                         </div>
                       </>
                     ) : (
                       <div className="flex justify-between">
                         <span className="text-gray-600 underline">
-                          ${property.price.toLocaleString()} CAD x {nights}晚
+                          ${property.price.toLocaleString()} CAD x {nights}{t('common.nights')}
                         </span>
                         <span>${totalPrice.toLocaleString()} CAD</span>
                       </div>
                     )}
                     
                     <div className="flex justify-between">
-                      <span className="text-gray-600 underline">服务费</span>
+                      <span className="text-gray-600 underline">{t('property.serviceFee')}</span>
                       <span>${serviceFee.toLocaleString()} CAD</span>
                     </div>
                     
                     <div className="flex justify-between pt-3 border-t border-gray-100 font-semibold text-base">
-                      <span>总价</span>
+                      <span>{t('properties.details.total')}</span>
                       <span>${finalPrice.toLocaleString()} CAD</span>
                     </div>
-                    {nights < (property.minNights || 0) && (
-                      <p className="text-amber-600 text-xs mt-2">
-                        * 最少需预订 {property.minNights} 天
-                      </p>
-                    )}
                   </div>
                 )}
               </div>

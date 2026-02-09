@@ -554,10 +554,11 @@ export const Avatar: React.FC<AvatarProps> = ({
   const initials = name
     ? name
         .split(' ')
-        .map((n) => n[0])
+        .filter((n) => n && n.length > 0)
+        .map((n) => n.charAt(0))
         .join('')
         .toUpperCase()
-        .slice(0, 2)
+        .slice(0, 2) || '?'
     : '?';
 
   return (

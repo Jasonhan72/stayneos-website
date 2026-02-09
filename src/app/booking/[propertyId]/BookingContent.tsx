@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import Navbar from '@/components/layout/Navbar';
 import DateRangePicker from '@/components/ui/DateRangePicker';
 import StripeProvider from '@/components/payment/StripeProvider';
 import PaymentForm from '@/components/payment/PaymentForm';
 import { Button, Input } from '@/components/ui';
 import { getPropertyById } from '@/lib/data';
 import { calculateBookingPrice, validateBookingDates } from '@/lib/booking';
+import { useAuth } from '@/lib/UserContext';
+import { useI18n } from '@/lib/i18n';
 import { 
   ChevronLeft, 
   MapPin, 
@@ -19,7 +20,8 @@ import {
   AlertCircle,
   Loader2,
   Shield,
-  Lock
+  Lock,
+  User
 } from 'lucide-react';
 
 export default function BookingContent() {
@@ -27,6 +29,8 @@ export default function BookingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const propertyId = params.propertyId as string;
+  const { user, isAuthenticated } = useAuth();
+  const { t } = useI18n();
   
   const property = getPropertyById(propertyId);
   
@@ -43,6 +47,15 @@ export default function BookingContent() {
   const [guestEmail, setGuestEmail] = useState('');
   const [guestPhone, setGuestPhone] = useState('');
   const [specialRequests, setSpecialRequests] = useState('');
+  
+  // 自动填充用户信息
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      setGuestName(user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || '');
+      setGuestEmail(user.email || '');
+      setGuestPhone(user.phone || '');
+    }
+  }, [isAuthenticated, user]);
   
   // 步骤状态
   const [currentStep, setCurrentStep] = useState(1);
@@ -78,17 +91,22 @@ export default function BookingContent() {
   // 处理创建预订
   const handleCreateBooking = async () => {
     if (!checkIn || !checkOut) {
-      setError('请选择入住和退房日期');
+      setError(t('booking.selectDatesError'));
       return;
     }
 
     if (!dateValidation.valid) {
-      setError(dateValidation.error || '日期选择无效');
+      setError(dateValidation.error || t('errors.selectDates'));
       return;
     }
 
-    if (!guestName || !guestEmail || !guestPhone) {
-      setError('请填写完整的入住人信息');
+    // 使用用户登录信息或表单信息
+    const finalGuestName = isAuthenticated ? (user?.name || `${user?.firstName || ''} ${user?.lastName || ''}`.trim()) : guestName;
+    const finalGuestEmail = isAuthenticated ? user?.email : guestEmail;
+    const finalGuestPhone = isAuthenticated ? (user?.phone || guestPhone) : guestPhone;
+
+    if (!finalGuestName || !finalGuestEmail || !finalGuestPhone) {
+      setError(t('booking.fillAllInfo'));
       return;
     }
 
@@ -96,25 +114,33 @@ export default function BookingContent() {
     setError('');
 
     try {
-      const response = await fetch('/api/bookings', {
+      const response = await fetch('/api/bookings/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           propertyId: property.id,
+          propertyTitle: property.title,
           checkIn,
           checkOut,
+          nights: priceCalc?.nights || 0,
           guests,
-          guestName,
-          guestEmail,
-          guestPhone,
+          guestName: finalGuestName,
+          guestEmail: finalGuestEmail,
+          guestPhone: finalGuestPhone,
+          basePrice: property.price,
+          discountRate: priceCalc?.discountPercentage || 0,
+          discountAmount: priceCalc?.discount || 0,
+          serviceFee: priceCalc?.serviceFee || 0,
+          totalPrice: priceCalc?.total || 0,
           specialRequests,
+          userId: isAuthenticated ? user?.id : undefined,
         }),
       });
 
       const data = await response.json() as { error?: string; booking: { id: string; bookingNumber: string } };
 
       if (!response.ok) {
-        throw new Error(data.error || '创建预订失败');
+        throw new Error(data.error || t('booking.createBookingError'));
       }
 
       setBookingId(data.booking.id);
@@ -143,12 +169,12 @@ export default function BookingContent() {
       const data = await response.json() as { error?: string; clientSecret: string };
 
       if (!response.ok) {
-        throw new Error(data.error || '创建支付失败');
+        throw new Error(data.error || t('booking.createPaymentError'));
       }
 
       setClientSecret(data.clientSecret);
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : '创建支付失败';
+      const errorMessage = err instanceof Error ? err.message : t('booking.createPaymentError');
       setError(errorMessage);
     }
   };
@@ -165,7 +191,7 @@ export default function BookingContent() {
 
   return (
     <main className="min-h-screen bg-amber-50">
-      <Navbar />
+      
       
       <div className="pt-20 pb-12">
         <div className="container mx-auto px-4 max-w-6xl">
@@ -175,7 +201,7 @@ export default function BookingContent() {
             className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6"
           >
             <ChevronLeft size={20} />
-            <span>返回房源详情</span>
+            <span>{t('booking.returnToProperty')}</span>
           </Link>
 
           {/* 步骤指示器 */}
@@ -203,9 +229,9 @@ export default function BookingContent() {
               ))}
             </div>
             <div className="flex justify-center gap-8 mt-2 text-sm text-gray-600">
-              <span>选择日期</span>
-              <span>确认信息</span>
-              <span>完成支付</span>
+              <span>{t('booking.step1')}</span>
+              <span>{t('booking.step2')}</span>
+              <span>{t('booking.step3')}</span>
             </div>
           </div>
 
@@ -215,12 +241,12 @@ export default function BookingContent() {
               {/* 步骤 1: 日期选择 */}
               {currentStep === 1 && (
                 <div className="bg-white rounded-xl p-6 shadow-sm">
-                  <h2 className="text-xl font-bold text-gray-900 mb-6">选择日期和人数</h2>
+                  <h2 className="text-xl font-bold text-gray-900 mb-6">{t('booking.selectDatesAndGuestsTitle')}</h2>
                   
                   <div className="space-y-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        入住日期 - 退房日期
+                        {t('booking.checkInDate')} - {t('booking.checkOutDate')}
                       </label>
                       <DateRangePicker
                         checkIn={checkIn}
@@ -239,9 +265,9 @@ export default function BookingContent() {
                       
                       {property.minNights && (
                         <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm">
-                          <span className="font-medium text-amber-800">📅 {property.minNights}天起租</span>
+                          <span className="font-medium text-amber-800">📅 {t('booking.minNights', { count: property.minNights })}</span>
                           {property.monthlyDiscount && (
-                            <span className="text-amber-700 ml-2">· 月租享{property.monthlyDiscount}%折扣</span>
+                            <span className="text-amber-700 ml-2">· {t('booking.monthlyDiscount', { percent: property.monthlyDiscount })}</span>
                           )}
                         </div>
                       )}
@@ -249,7 +275,7 @@ export default function BookingContent() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        入住人数
+                        {t('booking.guests')}
                       </label>
                       <select
                         value={guests}
@@ -258,7 +284,7 @@ export default function BookingContent() {
                       >
                         {Array.from({ length: property.maxGuests }).map((_, i) => (
                           <option key={i} value={i + 1}>
-                            {i + 1}位房客
+                            {t('booking.guestCount', { count: i + 1 })}
                           </option>
                         ))}
                       </select>
@@ -271,7 +297,7 @@ export default function BookingContent() {
                       disabled={!checkIn || !checkOut || !dateValidation.valid}
                       size="lg"
                     >
-                      下一步
+                      {t('booking.nextStep')}
                     </Button>
                   </div>
                 </div>
@@ -280,43 +306,72 @@ export default function BookingContent() {
               {/* 步骤 2: 信息确认 */}
               {currentStep === 2 && (
                 <div className="bg-white rounded-xl p-6 shadow-sm">
-                  <h2 className="text-xl font-bold text-gray-900 mb-6">确认入住信息</h2>
+                  <h2 className="text-xl font-bold text-gray-900 mb-6">{t('booking.confirmInfoTitle')}</h2>
                   
                   <div className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Input
-                        label="入住人姓名 *"
-                        value={guestName}
-                        onChange={(e) => setGuestName(e.target.value)}
-                        placeholder="请输入入住人姓名"
-                        required
-                      />
-                      <Input
-                        label="联系电话 *"
-                        value={guestPhone}
-                        onChange={(e) => setGuestPhone(e.target.value)}
-                        placeholder="请输入联系电话"
-                        required
-                      />
-                    </div>
+                    {/* 已登录用户 - 显示用户信息卡片 */}
+                    {isAuthenticated && user ? (
+                      <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                            <User className="w-6 h-6 text-blue-600" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-gray-900">{t('booking.loggedInAccount')}</h3>
+                            <p className="text-sm text-gray-500">{t('booking.useAccountInfo')}</p>
+                          </div>
+                        </div>
+                        <div className="space-y-2 text-sm">
+                          <p><span className="text-gray-500">{t('booking.name')}：</span>{guestName}</p>
+                          <p><span className="text-gray-500">{t('booking.email')}：</span>{guestEmail}</p>
+                          {guestPhone && <p><span className="text-gray-500">{t('booking.phone')}：</span>{guestPhone}</p>}
+                        </div>
+                        <div className="mt-4 pt-4 border-t border-blue-200">
+                          <Link href="/profile" className="text-blue-600 text-sm hover:underline">
+                            {t('booking.editProfile')} →
+                          </Link>
+                        </div>
+                      </div>
+                    ) : (
+                      /* 未登录用户 - 显示表单 */
+                      <>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <Input
+                            label={`${t('booking.guestName')} *`}
+                            value={guestName}
+                            onChange={(e) => setGuestName(e.target.value)}
+                            placeholder={t('booking.name')}
+                            required
+                          />
+                          <Input
+                            label={`${t('booking.guestPhone')} *`}
+                            value={guestPhone}
+                            onChange={(e) => setGuestPhone(e.target.value)}
+                            placeholder={t('booking.phone')}
+                            required
+                          />
+                        </div>
 
-                    <Input
-                      label="电子邮箱 *"
-                      type="email"
-                      value={guestEmail}
-                      onChange={(e) => setGuestEmail(e.target.value)}
-                      placeholder="请输入电子邮箱"
-                      required
-                    />
+                        <Input
+                          label={`${t('booking.guestEmail')} *`}
+                          type="email"
+                          value={guestEmail}
+                          onChange={(e) => setGuestEmail(e.target.value)}
+                          placeholder={t('booking.email')}
+                          required
+                        />
+                      </>
+                    )}
 
+                    {/* 特殊需求 - 所有用户都显示 */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        特殊需求（选填）
+                        {t('booking.specialRequests')}（{t('booking.optional')}）
                       </label>
                       <textarea
                         value={specialRequests}
                         onChange={(e) => setSpecialRequests(e.target.value)}
-                        placeholder="如有特殊需求请在此说明..."
+                        placeholder={t('booking.specialRequestsPlaceholder')}
                         rows={4}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
                       />
@@ -332,7 +387,7 @@ export default function BookingContent() {
 
                   <div className="mt-8 flex justify-between">
                     <Button variant="outline" onClick={() => setCurrentStep(1)}>
-                      返回修改
+                      {t('common.back')}
                     </Button>
                     <Button
                       onClick={handleCreateBooking}
@@ -340,7 +395,7 @@ export default function BookingContent() {
                       isLoading={isLoading}
                       size="lg"
                     >
-                      {isLoading ? '创建预订中...' : '确认并支付'}
+                      {isLoading ? t('booking.submitting') : t('booking.confirmAndPay')}
                     </Button>
                   </div>
                 </div>

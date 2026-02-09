@@ -3,7 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Navbar from "@/components/layout/Navbar";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { useAuth } from "@/lib/context/UserContext";
+import { UserAvatar } from "@/components/ui/UserAvatar";
 import { mockProperties } from "@/lib/data";
 import {
   User,
@@ -18,15 +20,6 @@ import {
   Edit3,
   Camera,
 } from "lucide-react";
-
-// 模拟用户数据
-const mockUser = {
-  name: "张先生",
-  email: "zhang@example.com",
-  phone: "138****8888",
-  avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200",
-  memberSince: "2024年1月",
-};
 
 // 模拟预订数据
 const mockBookings = [
@@ -50,37 +43,21 @@ const mockBookings = [
     status: "completed" as const,
     createdAt: "2024-01-20",
   },
-  {
-    id: "booking-3",
-    property: mockProperties[0],
-    checkIn: "2024-01-05",
-    checkOut: "2024-01-08",
-    guests: 4,
-    totalPrice: 6540,
-    status: "completed" as const,
-    createdAt: "2023-12-15",
-  },
-  {
-    id: "booking-4",
-    property: mockProperties[1],
-    checkIn: "2024-04-01",
-    checkOut: "2024-04-05",
-    guests: 3,
-    totalPrice: 4720,
-    status: "cancelled" as const,
-    createdAt: "2024-02-10",
-  },
 ];
 
 // 模拟收藏房源
 const mockFavorites = [mockProperties[0], mockProperties[1]];
 
-export default function DashboardPage() {
-  const [activeTab, setActiveTab] = useState<"bookings" | "favorites" | "profile">(
-    "bookings"
-  );
+function DashboardContent() {
+  const { user, logout } = useAuth();
+  const [activeTab, setActiveTab] = useState<"bookings" | "favorites" | "profile">("bookings");
   const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState(mockUser);
+  const [userData, setUserData] = useState({
+    name: user?.name || "",
+    email: user?.email || "",
+    phone: "",
+    memberSince: "2024年1月",
+  });
 
   const tabs = [
     { id: "bookings", label: "我的预订", icon: Calendar },
@@ -100,7 +77,11 @@ export default function DashboardPage() {
       cancelled: "已取消",
     };
     return (
-      <span className={`px-3 py-1 rounded-full text-xs font-medium ${styles[status as keyof typeof styles]}`}>
+      <span
+        className={`px-3 py-1 rounded-full text-xs font-medium ${
+          styles[status as keyof typeof styles]
+        }`}
+      >
         {labels[status as keyof typeof labels]}
       </span>
     );
@@ -112,29 +93,23 @@ export default function DashboardPage() {
   };
 
   return (
-    <main className="min-h-screen bg-amber-50">
-      <Navbar />
-
-      <div className="pt-20 pb-12">
+    <main className="min-h-screen bg-amber-50 pt-20">
+      <div className="pt-4 pb-12">
         <div className="container mx-auto px-4">
           {/* Header */}
           <div className="bg-white rounded-xl p-6 shadow-sm mb-6">
             <div className="flex flex-col md:flex-row md:items-center gap-6">
-              <div className="relative w-24 h-24 rounded-full overflow-hidden">
-                <Image
-                  src={userData.avatar}
-                  alt={userData.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
+              <UserAvatar
+                name={user?.name || ""}
+                image={user?.image || null}
+                size="xl"
+                className="shrink-0"
+              />
               <div className="flex-1">
                 <h1 className="text-2xl font-bold text-gray-900 mb-1">
-                  欢迎回来，{userData.name}
+                  欢迎回来，{(user?.name?.split(" ").filter(n => n)[0]) || user?.email?.split("@")[0] || "User"}
                 </h1>
-                <p className="text-gray-500">
-                  会员自 {userData.memberSince}
-                </p>
+                <p className="text-gray-500">会员自 {userData.memberSince}</p>
               </div>
               <div className="flex gap-3">
                 <button
@@ -144,13 +119,13 @@ export default function DashboardPage() {
                   <Settings size={18} />
                   设置
                 </button>
-                <Link
-                  href="/"
+                <button
+                  onClick={logout}
                   className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   <LogOut size={18} />
                   退出
-                </Link>
+                </button>
               </div>
             </div>
           </div>
@@ -165,7 +140,9 @@ export default function DashboardPage() {
                     return (
                       <button
                         key={tab.id}
-                        onClick={() => setActiveTab(tab.id as typeof activeTab)}
+                        onClick={() =>
+                          setActiveTab(tab.id as typeof activeTab)
+                        }
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
                           activeTab === tab.id
                             ? "bg-amber-100 text-amber-900"
@@ -182,11 +159,13 @@ export default function DashboardPage() {
 
               {/* Quick Stats */}
               <div className="bg-white rounded-xl shadow-sm mt-4 p-4">
-                <h3 className="text-sm font-semibold text-gray-900 mb-4">账户概览</h3>
+                <h3 className="text-sm font-semibold text-gray-900 mb-4">
+                  账户概览
+                </h3>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">已完成预订</span>
-                    <span className="font-semibold">2</span>
+                    <span className="font-semibold">1</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">即将入住</span>
@@ -287,11 +266,6 @@ export default function DashboardPage() {
                                   </button>
                                 </>
                               )}
-                              {booking.status === "cancelled" && (
-                                <button className="px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors">
-                                  重新预订
-                                </button>
-                              )}
                             </div>
                           </div>
                         </div>
@@ -300,7 +274,9 @@ export default function DashboardPage() {
                   ) : (
                     <div className="bg-white rounded-xl p-12 text-center">
                       <Calendar size={48} className="text-gray-300 mx-auto mb-4" />
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">暂无预订</h3>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">
+                        暂无预订
+                      </h3>
                       <p className="text-gray-500 mb-6">您还没有任何预订记录</p>
                       <Link
                         href="/properties"
@@ -349,7 +325,9 @@ export default function DashboardPage() {
                             </Link>
                             <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
                               <MapPin size={14} />
-                              <span className="truncate">{property.location}</span>
+                              <span className="truncate">
+                                {property.location}
+                              </span>
                             </div>
                             <div className="flex items-center justify-between mt-3">
                               <div className="flex items-center gap-1">
@@ -384,7 +362,9 @@ export default function DashboardPage() {
                   ) : (
                     <div className="bg-white rounded-xl p-12 text-center">
                       <Heart size={48} className="text-gray-300 mx-auto mb-4" />
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">暂无收藏</h3>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">
+                        暂无收藏
+                      </h3>
                       <p className="text-gray-500 mb-6">您还没有收藏任何房源</p>
                       <Link
                         href="/properties"
@@ -422,20 +402,21 @@ export default function DashboardPage() {
                   <div className="bg-white rounded-xl p-6 shadow-sm">
                     {/* Avatar */}
                     <div className="flex flex-col items-center mb-8">
-                      <div className="relative w-24 h-24 rounded-full overflow-hidden mb-4">
-                        <Image
-                          src={userData.avatar}
-                          alt={userData.name}
-                          fill
-                          className="object-cover"
+                      <div className="relative">
+                        <UserAvatar
+                          name={user?.name || null}
+                          image={user?.image || null}
+                          size="xl"
                         />
                         {isEditing && (
-                          <button className="absolute inset-0 bg-black/50 flex items-center justify-center text-white">
+                          <button className="absolute inset-0 bg-black/50 flex items-center justify-center text-white rounded-full">
                             <Camera size={24} />
                           </button>
                         )}
                       </div>
-                      <p className="text-sm text-gray-500">点击更换头像</p>
+                      {isEditing && (
+                        <p className="text-sm text-gray-500 mt-2">点击更换头像</p>
+                      )}
                     </div>
 
                     {/* Form Fields */}
@@ -525,7 +506,9 @@ export default function DashboardPage() {
                           </div>
                           <div>
                             <p className="font-medium text-gray-900">手机验证</p>
-                            <p className="text-sm text-gray-500">{userData.phone}</p>
+                            <p className="text-sm text-gray-500">
+                              {userData.phone || "未设置"}
+                            </p>
                           </div>
                         </div>
                         <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
@@ -556,5 +539,13 @@ export default function DashboardPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <ProtectedRoute>
+      <DashboardContent />
+    </ProtectedRoute>
   );
 }

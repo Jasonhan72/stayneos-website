@@ -4,105 +4,127 @@ import Image from "next/image";
 import { RegisterForm } from "@/components/auth/RegisterForm";
 
 export const metadata: Metadata = {
-  title: "注册 - StayNeos",
-  description: "创建您的 StayNeos 账号",
+  title: "Sign Up - StayNeos",
+  description: "Create your StayNeos account and start your luxury living journey",
 };
 
 export default function RegisterPage() {
   return (
     <div className="min-h-screen flex">
-      {/* Left side - Image background */}
-      <div className="hidden lg:flex lg:w-1/2 relative">
+      {/* Left side - Brand image/video section */}
+      <div className="hidden lg:flex lg:w-[55%] xl:w-1/2 relative overflow-hidden">
+        {/* Background Image */}
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center scale-105"
           style={{
             backgroundImage:
-              'url("https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1920&q=80")',
+              'url("https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=2000&q=80")',
           }}
         />
-        <div className="absolute inset-0 bg-primary/70" />
-        <div className="relative z-10 flex flex-col justify-center items-center text-white p-12">
-          <Link href="/" className="mb-6">
+        
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-primary/50" />
+        
+        {/* Content */}
+        <div className="relative z-10 flex flex-col justify-between h-full p-12 xl:p-16">
+          {/* Logo */}
+          <Link href="/" className="inline-block">
             <Image
               src="/logo.png"
               alt="StayNeos"
-              width={200}
-              height={70}
-              className="h-16 w-auto object-contain"
+              width={180}
+              height={60}
+              className="h-12 w-auto object-contain brightness-0 invert"
               priority
             />
           </Link>
-          <p className="text-lg text-white/90 text-center max-w-md leading-relaxed">
-            加入我们，开启您的奢华度假之旅
-          </p>
           
-          <div className="mt-12 w-full max-w-sm">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center text-primary font-bold text-xl">
-                  新
-                </div>
-                <div>
-                  <div className="font-semibold">新用户专享</div>
-                  <div className="text-sm text-white/80">首次预订享9折优惠</div>
-                </div>
+          {/* Brand Message */}
+          <div className="max-w-md">
+            <h1 className="text-4xl xl:text-5xl font-bold text-white mb-6 leading-tight">
+              Luxury living,
+              <br />
+              <span className="text-accent">made simple.</span>
+            </h1>
+            <p className="text-lg text-white/80 leading-relaxed">
+              Join thousands of professionals who have discovered the future of furnished rentals. 
+              Fully-equipped apartments, flexible terms, seamless experience.
+            </p>
+            
+            {/* Stats */}
+            <div className="flex gap-8 mt-10">
+              <div>
+                <div className="text-3xl font-bold text-accent">15K+</div>
+                <div className="text-sm text-white/70">Apartments</div>
               </div>
-              <p className="text-sm text-white/70">
-                注册即可获得新人礼包，包含首单折扣和优先预订特权
-              </p>
+              <div>
+                <div className="text-3xl font-bold text-accent">50+</div>
+                <div className="text-sm text-white/70">Cities</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-accent">30+</div>
+                <div className="text-sm text-white/70">Countries</div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Testimonial */}
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 max-w-md">
+            <p className="text-white/90 italic mb-4">
+              &ldquo;StayNeos made my relocation effortless. I moved into a beautiful, fully-furnished apartment within days.&rdquo;
+            </p>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-accent/30 flex items-center justify-center text-white font-semibold">
+                SM
+              </div>
+              <div>
+                <div className="text-white font-medium">Sarah Mitchell</div>
+                <div className="text-sm text-white/60">Product Manager, Google</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Right side - Form area */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 sm:p-8 lg:p-16 bg-neutral-50">
-        <div className="w-full max-w-md">
-          {/* Mobile Logo */}
-          <div className="lg:hidden flex justify-center mb-8">
-            <Link href="/">
-              <Image
-                src="/logo.png"
-                alt="StayNeos"
-                width={150}
-                height={50}
-                className="h-12 w-auto object-contain"
-                priority
-              />
-            </Link>
-          </div>
-          
-          <div className="text-center mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 mb-2">
-              创建账号
-            </h1>
-            <p className="text-neutral-600">
-              填写以下信息开始您的旅程
-            </p>
-          </div>
+      <div className="w-full lg:w-[45%] xl:w-1/2 flex flex-col bg-white">
+        {/* Mobile Logo */}
+        <div className="lg:hidden p-6 border-b border-neutral-100">
+          <Link href="/" className="inline-block">
+            <Image
+              src="/logo.png"
+              alt="StayNeos"
+              width={140}
+              height={48}
+              className="h-10 w-auto object-contain"
+              priority
+            />
+          </Link>
+        </div>
+        
+        {/* Form Container */}
+        <div className="flex-1 flex flex-col justify-center px-6 sm:px-10 lg:px-12 xl:px-16 py-8 lg:py-12 overflow-y-auto">
+          <div className="w-full max-w-md mx-auto">
+            {/* Header */}
+            <div className="mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-neutral-900 mb-2">
+                Create your account
+              </h2>
+              <p className="text-neutral-500">
+                Start your journey to seamless living
+              </p>
+            </div>
 
-          <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-neutral-200">
+            {/* Register Form */}
             <RegisterForm />
           </div>
-
-          <div className="mt-8 text-center">
-            <p className="text-sm text-neutral-500">
-              注册即表示您同意我们的{" "}
-              <Link
-                href="/terms"
-                className="text-primary hover:text-accent transition-colors"
-              >
-                服务条款
-              </Link>{" "}
-              和{" "}
-              <Link
-                href="/privacy"
-                className="text-primary hover:text-accent transition-colors"
-              >
-                隐私政策
-              </Link>
-            </p>
-          </div>
+        </div>
+        
+        {/* Footer */}
+        <div className="px-6 sm:px-10 lg:px-12 xl:px-16 py-4 border-t border-neutral-100">
+          <p className="text-xs text-neutral-400 text-center">
+            © {new Date().getFullYear()} StayNeos. All rights reserved.
+          </p>
         </div>
       </div>
     </div>

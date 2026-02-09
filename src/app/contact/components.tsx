@@ -18,9 +18,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, Input, TextArea, UIButton } from "@/components/ui";
+import { useI18n } from "@/lib/i18n";
 
 // 联系表单组件
 export function ContactForm() {
+  const { t } = useI18n();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -34,29 +36,29 @@ export function ContactForm() {
   const [isSuccess, setIsSuccess] = useState(false);
 
   const subjectOptions = [
-    { value: "booking", label: "预订咨询" },
-    { value: "partnership", label: "合作洽谈" },
-    { value: "support", label: "技术支持" },
-    { value: "other", label: "其他" },
+    { value: "booking", label: t("contact.form.subjectBooking") },
+    { value: "partnership", label: t("contact.form.subjectPartnership") },
+    { value: "support", label: t("contact.form.subjectSupport") },
+    { value: "other", label: t("contact.form.subjectOther") },
   ];
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
     
     if (!formData.name.trim()) {
-      newErrors.name = "请输入您的姓名";
+      newErrors.name = t("contact.form.errorName");
     }
     
     if (!formData.email.trim()) {
-      newErrors.email = "请输入您的邮箱";
+      newErrors.email = t("contact.form.errorEmail");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "请输入有效的邮箱地址";
+      newErrors.email = t("errors.invalidEmail");
     }
     
     if (!formData.message.trim()) {
-      newErrors.message = "请输入您的消息";
+      newErrors.message = t("contact.form.errorMessage");
     } else if (formData.message.length < 10) {
-      newErrors.message = "消息内容至少需要10个字符";
+      newErrors.message = t("contact.form.minChars");
     }
     
     setErrors(newErrors);
@@ -100,10 +102,10 @@ export function ContactForm() {
             <CheckCircle className="w-10 h-10 text-green-600" />
           </div>
           <h3 className="text-2xl font-semibold text-neutral-900 mb-4">
-            提交成功！
+            {t("contact.success.title")}
           </h3>
           <p className="text-neutral-600 mb-8 max-w-sm">
-            感谢您的来信。我们已收到您的消息，将在 24 小时内与您联系。
+            {t("contact.success.message")}
           </p>
           <UIButton 
             variant="primary"
@@ -118,7 +120,7 @@ export function ContactForm() {
               });
             }}
           >
-            发送新消息
+            {t("contact.success.sendNew")}
           </UIButton>
         </CardContent>
       </Card>
@@ -133,25 +135,25 @@ export function ContactForm() {
             <MessageSquare className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h3 className="text-xl font-semibold text-neutral-900">联系我们</h3>
-            <p className="text-sm text-neutral-500">填写以下表单，我们会尽快回复</p>
+            <h3 className="text-xl font-semibold text-neutral-900">{t("contact.form.title")}</h3>
+            <p className="text-sm text-neutral-500">{t("contact.form.subtitle")}</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Input
-              label="姓名 *"
-              placeholder="请输入您的姓名"
+              label={`${t("contact.form.name")} *`}
+              placeholder={t("contact.form.namePlaceholder")}
               value={formData.name}
               onChange={(e) => handleChange("name", e.target.value)}
               error={errors.name}
             />
             
             <Input
-              label="邮箱 *"
+              label={`${t("contact.form.email")} *`}
               type="email"
-              placeholder="请输入您的邮箱"
+              placeholder={t("contact.form.emailPlaceholder")}
               value={formData.email}
               onChange={(e) => handleChange("email", e.target.value)}
               error={errors.email}
@@ -161,11 +163,11 @@ export function ContactForm() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-neutral-700 mb-2">
-                电话（选填）
+                {t("contact.form.phoneOptional")}
               </label>
               <input
                 type="tel"
-                placeholder="请输入您的电话"
+                placeholder={t("contact.form.phonePlaceholder")}
                 value={formData.phone}
                 onChange={(e) => handleChange("phone", e.target.value)}
                 className="w-full px-4 py-3 border border-neutral-300 bg-white text-neutral-900 placeholder-neutral-400 transition-all duration-200 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
@@ -174,7 +176,7 @@ export function ContactForm() {
             
             <div>
               <label className="block text-sm font-medium text-neutral-700 mb-2">
-                主题 *
+                {`${t("contact.form.subject")} *`}
               </label>
               <select
                 value={formData.subject}
@@ -191,8 +193,8 @@ export function ContactForm() {
           </div>
 
           <TextArea
-            label="消息内容 *"
-            placeholder="请详细描述您的需求或问题..."
+            label={`${t("contact.form.message")} *`}
+            placeholder={t("contact.form.messagePlaceholder")}
             rows={6}
             value={formData.message}
             onChange={(e) => handleChange("message", e.target.value)}
@@ -200,7 +202,7 @@ export function ContactForm() {
           />
 
           <div className="flex items-center gap-2 text-sm text-neutral-500">
-            <span>* 为必填项</span>
+            <span>* {t("contact.form.required")}</span>
           </div>
 
           <UIButton
@@ -211,11 +213,11 @@ export function ContactForm() {
             className="w-full"
           >
             {!isSubmitting && <Send className="w-5 h-5 mr-2" />}
-            发送消息
+            {t("contact.form.send")}
           </UIButton>
 
           <p className="text-xs text-neutral-500 text-center">
-            您的信息将被发送至 hello@stayneos.com，我们承诺保护您的隐私。
+            {t("contact.form.privacyNote")}
           </p>
         </form>
       </CardContent>
@@ -225,34 +227,36 @@ export function ContactForm() {
 
 // 联系信息卡片
 export function ContactInfoCard() {
+  const { t } = useI18n();
+
   const contactItems = [
     {
       icon: Mail,
-      title: "电子邮箱",
+      title: t("contact.emailLabel"),
       content: "hello@stayneos.com",
       href: "mailto:hello@stayneos.com",
-      description: "我们通常在 24 小时内回复"
+      description: t("contact.responseTime")
     },
     {
       icon: MapPin,
-      title: "办公地址",
+      title: t("contact.addressLabel"),
       content: "20 Upjohn Rd, North York, ON, M3B 2V9",
       href: "https://maps.google.com/?q=20+Upjohn+Rd+North+York+ON+M3B+2V9",
-      description: "欢迎预约参观",
+      description: t("contact.visitUs"),
       external: true
     },
     {
       icon: Phone,
-      title: "联系电话",
-      content: "+1 (416) 555-0123",
-      href: "tel:+14165550123",
-      description: "工作时间随时拨打"
+      title: t("contact.phoneLabel"),
+      content: "+1 (647) 862-6518",
+      href: "tel:+16478626518",
+      description: t("contact.callAnytime")
     },
     {
       icon: Clock,
-      title: "工作时间",
-      content: "周一至周五 9:00-18:00 EST",
-      description: "周末及节假日休息"
+      title: t("contact.hoursLabel"),
+      content: t("contact.workHours"),
+      description: t("contact.weekend")
     }
   ];
 
@@ -297,6 +301,8 @@ export function ContactInfoCard() {
 
 // 社交媒体链接
 export function SocialLinks() {
+  const { t } = useI18n();
+
   const socials = [
     { icon: Facebook, label: "Facebook", href: "#" },
     { icon: Instagram, label: "Instagram", href: "#" },
@@ -308,10 +314,10 @@ export function SocialLinks() {
     <Card>
       <CardContent className="p-6">
         <h4 className="text-lg font-semibold text-neutral-900 mb-4">
-          关注我们
+          {t("contact.followUs")}
         </h4>
         <p className="text-sm text-neutral-600 mb-6">
-          在社交媒体上关注我们，获取最新房源和优惠信息
+          {t("contact.followDesc")}
         </p>
         <div className="flex items-center gap-3">
           {socials.map((social) => (
@@ -332,11 +338,13 @@ export function SocialLinks() {
 
 // FAQ 快速链接
 export function FAQQuickLinks() {
+  const { t } = useI18n();
+
   const faqs = [
-    { question: "如何预订公寓？", href: "/faq#booking" },
-    { question: "最短租期是多久？", href: "/faq#lease" },
-    { question: "押金如何退还？", href: "/faq#deposit" },
-    { question: "可以带宠物入住吗？", href: "/faq#pets" },
+    { question: t("contact.faqHowToBook"), href: "/faq#booking" },
+    { question: t("contact.faqMinStay"), href: "/faq#lease" },
+    { question: t("contact.faqDeposit"), href: "/faq#deposit" },
+    { question: t("contact.faqPets"), href: "/faq#pets" },
   ];
 
   return (
@@ -345,7 +353,7 @@ export function FAQQuickLinks() {
         <div className="flex items-center gap-3 mb-4">
           <HelpCircle className="w-5 h-5 text-accent" />
           <h4 className="text-lg font-semibold text-neutral-900">
-            常见问题
+            {t("contact.faqTitle")}
           </h4>
         </div>
         <ul className="space-y-3">
@@ -365,7 +373,7 @@ export function FAQQuickLinks() {
           href="/faq"
           className="inline-flex items-center text-sm text-primary hover:text-primary-700 font-medium mt-4"
         >
-          查看全部 FAQ
+          {t("contact.viewAllFaq")}
           <ChevronRight className="w-4 h-4 ml-1" />
         </Link>
       </CardContent>
@@ -375,6 +383,8 @@ export function FAQQuickLinks() {
 
 // 地图组件
 export function MapSection() {
+  const { t } = useI18n();
+
   return (
     <div className="w-full h-[400px] bg-neutral-100 relative overflow-hidden">
       {/* Google Maps 嵌入 */}
@@ -400,7 +410,7 @@ export function MapSection() {
           rel="noopener noreferrer"
           className="inline-flex items-center text-sm text-primary hover:text-primary-700 font-medium mt-2"
         >
-          在 Google Maps 中打开
+          {t("contact.openInMaps")}
           <ChevronRight className="w-4 h-4 ml-1" />
         </a>
       </div>

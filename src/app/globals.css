@@ -331,6 +331,20 @@ body {
     min-height: 48px;
   }
 
+  /* 带图标的输入框 */
+  .form-input.has-icon-left {
+    padding-left: 48px !important;
+  }
+
+  .form-input.has-icon-right {
+    padding-right: 48px !important;
+  }
+
+  .form-input.has-icon-left.has-icon-right {
+    padding-left: 48px !important;
+    padding-right: 48px !important;
+  }
+
   .form-input:hover {
     border-color: var(--neutral-300);
   }

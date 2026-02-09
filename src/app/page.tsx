@@ -24,9 +24,9 @@ export default function HomePage() {
   return (
     <main className="min-h-screen">
       <HeroSection />
+      <FeaturedPropertiesSection />
       <ValuePropositionSection />
       <MarketSegmentsSection />
-      <FeaturedPropertiesSection />
       <HowItWorksSection />
       <CTASection />
     </main>

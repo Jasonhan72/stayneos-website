@@ -1,5 +1,36 @@
 name = "stayneos"
 compatibility_date = "2026-02-06"
 
-[env.production]
-account_id = "84e5534ae694a084f23f58020bd73c7b"
+# ============================================
+# Pages Configuration (OpenNext + Workers)
+# ============================================
+pages_build_output_dir = ".open-next/assets"
+
+# Environment Variables
+[vars]
+RESEND_FROM_EMAIL = "hello@stayneos.com"
+
+# Secrets (set via wrangler secret put)
+# RESEND_API_KEY
+
+# ============================================
+# D1 Database
+# ============================================
+[[d1_databases]]
+binding = "DB"
+database_name = "stayneos-db"
+database_id = "f667afae-6f66-4e4a-960a-37096eabdf03"
+
+# ============================================
+# KV Namespace for Caching (optional, can add later)
+# ============================================
+# [[kv_namespaces]]
+# binding = "NEXT_CACHE_WORKERS_KV"
+# id = "your-kv-namespace-id"
+
+# ============================================
+# R2 Storage for Images (optional, can add later)
+# ============================================
+# [[r2_buckets]]
+# binding = "IMAGES"
+# bucket_name = "stayneos-images"

@@ -1,12 +1,13 @@
-"use client";
-
 import { Heart, Star, MapPin, Users, Maximize } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n";
 
 export interface Property {
   id: string;
-  title: string;
+  title: string;         // 默认英文
+  titleZh?: string;      // 中文
+  titleFr?: string;      // 法文
   location: string;
   price: number;
   priceUnit: string;
@@ -19,9 +20,37 @@ export interface Property {
   bathrooms: number;
   amenities: string[];
   featured?: boolean;
-  description?: string;
+  description?: string;  // 默认英文
+  descriptionZh?: string; // 中文
+  descriptionFr?: string; // 法文
   minNights?: number;
   monthlyDiscount?: number;
+}
+
+// Helper function to get localized title
+export function getLocalizedTitle(property: Property, locale: string): string {
+  switch (locale) {
+    case 'zh':
+      return property.titleZh || property.title;
+    case 'fr':
+      return property.titleFr || property.title;
+    case 'en':
+    default:
+      return property.title;
+  }
+}
+
+// Helper function to get localized description
+export function getLocalizedDescription(property: Property, locale: string): string | undefined {
+  switch (locale) {
+    case 'zh':
+      return property.descriptionZh || property.description;
+    case 'fr':
+      return property.descriptionFr || property.description;
+    case 'en':
+    default:
+      return property.description;
+  }
 }
 
 interface PropertyCardProps {
@@ -29,6 +58,9 @@ interface PropertyCardProps {
 }
 
 export default function PropertyCard({ property }: PropertyCardProps) {
+  const { locale, t } = useI18n();
+  const title = getLocalizedTitle(property, locale);
+  
   return (
     <article 
       className="group h-full" 
@@ -43,7 +75,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           <div className="relative aspect-[4/3] overflow-hidden">
             <Image
               src={property.images[0] || "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800"}
-              alt={`${property.title} - 主图`}
+              alt={`${title} - Main image`}
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-105"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -58,10 +90,9 @@ export default function PropertyCard({ property }: PropertyCardProps) {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                // TODO: Toggle favorite
               }}
               className="absolute top-3 right-3 p-2.5 rounded-full bg-white/95 backdrop-blur-sm hover:bg-white transition-all duration-200 shadow-md hover:shadow-lg hover:scale-110 focus:outline-none focus:ring-2 focus:ring-accent min-w-[44px] min-h-[44px] flex items-center justify-center"
-              aria-label={`收藏 ${property.title}`}
+              aria-label={`Favorite ${title}`}
               type="button"
             >
               <Heart size={20} className="text-neutral-500 hover:text-error transition-colors" aria-hidden="true" />
@@ -70,14 +101,14 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             {/* Featured Badge */}
             {property.featured && (
               <div className="absolute top-3 left-3 px-3 py-1.5 bg-accent text-primary text-xs font-bold rounded-full shadow-md">
-                精选
+                {t('properties.featured')}
               </div>
             )}
 
             {/* Monthly Discount Badge */}
             {property.monthlyDiscount && property.monthlyDiscount > 0 && (
               <div className="absolute bottom-3 left-3 px-3 py-1.5 bg-primary text-white text-xs font-semibold rounded-full shadow-md">
-                月租优惠 {property.monthlyDiscount}%
+                {t('property.monthlyDiscountLabel', { percent: property.monthlyDiscount })}
               </div>
             )}
           </div>
@@ -90,11 +121,11 @@ export default function PropertyCard({ property }: PropertyCardProps) {
                 id={`property-title-${property.id}`} 
                 className="font-semibold text-neutral-900 line-clamp-1 group-hover:text-primary transition-colors duration-200 text-lg"
               >
-                {property.title}
+                {title}
               </h3>
               <div 
                 className="flex items-center gap-1 shrink-0 bg-accent/10 px-2 py-1 rounded-full" 
-                aria-label={`评分 ${property.rating} 分`}
+                aria-label={`Rating ${property.rating}`}
               >
                 <Star size={14} className="text-accent fill-accent" aria-hidden="true" />
                 <span className="text-sm font-bold text-neutral-800">{property.rating}</span>
@@ -111,14 +142,14 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             <div className="flex items-center gap-4 text-neutral-500 text-sm mb-4">
               <div 
                 className="flex items-center gap-1.5" 
-                aria-label={`最多容纳 ${property.maxGuests} 人`}
+                aria-label={`Max ${property.maxGuests} guests`}
               >
                 <Users size={16} aria-hidden="true" />
-                <span>最多{property.maxGuests}人</span>
+                <span>{t('property.maxGuestsValue', { count: property.maxGuests })}</span>
               </div>
               <div 
                 className="flex items-center gap-1.5" 
-                aria-label={`面积 ${property.area} 平方米`}
+                aria-label={`Area ${property.area} m²`}
               >
                 <Maximize size={16} aria-hidden="true" />
                 <span>{property.area}m²</span>
@@ -131,13 +162,13 @@ export default function PropertyCard({ property }: PropertyCardProps) {
                 <span className="text-xl font-bold text-neutral-900">
                   ${property.price.toLocaleString()} CAD
                 </span>
-                <span className="text-sm text-neutral-500">/{property.priceUnit}</span>
+                <span className="text-sm text-neutral-500">/{t('common.night')}</span>
               </div>
               <span 
                 className="text-xs text-neutral-400" 
-                aria-label={`${property.reviewCount} 条评价`}
+                aria-label={`${property.reviewCount} ${t('properties.details.reviews')}`}
               >
-                {property.reviewCount}条评价
+                {property.reviewCount}{t('properties.details.reviews')}
               </span>
             </div>
           </div>
