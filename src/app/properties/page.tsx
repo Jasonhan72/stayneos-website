@@ -33,14 +33,14 @@ const GooglePropertyMap = dynamic(() => import('@/components/property/GoogleProp
   ssr: false,
   loading: () => (
     <div className="w-full h-full bg-neutral-100 flex items-center justify-center">
-      <div className="text-neutral-400">地图加载中...⏳</div>
+      <div className="text-neutral-400">Loading map...</div>
     </div>
   ),
 });
 
 // Filter options
 const priceRanges = [
-  { label: '全部价格', min: 0, max: Infinity },
+  { label: 'All Prices', min: 0, max: Infinity },
   { label: '$400-500', min: 400, max: 500 },
   { label: '$500-600', min: 500, max: 600 },
   { label: '$600-700', min: 600, max: 700 },
@@ -48,21 +48,21 @@ const priceRanges = [
 ];
 
 const bedroomOptions = [
-  { label: '全部', value: 'any' },
-  { label: '1室', value: '1' },
-  { label: '2室', value: '2' },
-  { label: '3室+', value: '3' },
+  { label: 'All', value: 'any' },
+  { label: '1 BR', value: '1' },
+  { label: '2 BR', value: '2' },
+  { label: '3+ BR', value: '3' },
 ];
 
 const amenitiesList = [
-  'WiFi', '厨房', '洗衣机', '空调', '健身房', '游泳池', '停车位', '管家服务'
+  'WiFi', 'Kitchen', 'Washer', 'Air Conditioning', 'Gym', 'Pool', 'Parking', 'Concierge'
 ];
 
 const sortOptions = [
-  { value: 'recommended', label: '推荐' },
-  { value: 'price-low', label: '价格从低到高' },
-  { value: 'price-high', label: '价格从高到低' },
-  { value: 'rating', label: '评分最高' },
+  { value: 'recommended', label: 'Recommended' },
+  { value: 'price-low', label: 'Price: Low to High' },
+  { value: 'price-high', label: 'Price: High to Low' },
+  { value: 'rating', label: 'Highest Rated' },
 ];
 
 // Pagination settings
@@ -193,16 +193,16 @@ export default function PropertiesPage() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold mb-2 text-neutral-900">
-                全部房源
+                All Properties
               </h1>
               <p className="text-neutral-600">
-                共 {filteredProperties.length} 套精选行政公寓
+                {filteredProperties.length} Premium Executive Apartments
               </p>
             </div>
             
             {/* View Mode Toggle */}
             <div className="flex items-center gap-2">
-              <span className="text-sm text-neutral-500 hidden sm:inline">视图模式:</span>
+              <span className="text-sm text-neutral-500 hidden sm:inline">View:</span>
               <div className="flex items-center border border-neutral-300">
                 <button
                   onClick={() => setViewMode('grid')}
@@ -254,7 +254,7 @@ export default function PropertiesPage() {
                   <Search size={20} />
                 </div>
                 <Input
-                  placeholder="搜索位置、房源名称..."
+                  placeholder="Search location, property name..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-12"
@@ -286,7 +286,7 @@ export default function PropertiesPage() {
                 className="relative"
               >
                 <SlidersHorizontal size={18} className="mr-2" />
-                筛选
+                Filter
                 {activeFiltersCount > 0 && (
                   <span className="absolute -top-2 -right-2 w-5 h-5 bg-accent text-white text-xs flex items-center justify-center">
                     {activeFiltersCount}
@@ -307,7 +307,7 @@ export default function PropertiesPage() {
                 {/* Price Range */}
                 <div>
                   <label className="block text-sm font-medium text-neutral-700 mb-3">
-                    价格范围 (CAD/晚)
+                    Price Range (CAD/night)
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {priceRanges.map((range) => (
@@ -329,7 +329,7 @@ export default function PropertiesPage() {
                 {/* Bedrooms */}
                 <div>
                   <label className="block text-sm font-medium text-neutral-700 mb-3">
-                    卧室数量
+                    Bedrooms
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {bedroomOptions.map((option) => (
@@ -351,7 +351,7 @@ export default function PropertiesPage() {
                 {/* Amenities */}
                 <div>
                   <label className="block text-sm font-medium text-neutral-700 mb-3">
-                    配套设施
+                    Amenities
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {amenitiesList.map((amenity) => (
@@ -374,10 +374,10 @@ export default function PropertiesPage() {
               {/* Filter Actions */}
               <div className="flex justify-end gap-3 mt-6 pt-6 border-t border-neutral-200">
                 <Button variant="ghost" onClick={clearFilters}>
-                  重置筛选
+                  Reset Filters
                 </Button>
                 <Button onClick={() => setIsFilterOpen(false)}>
-                  应用筛选
+                  Apply Filters
                 </Button>
               </div>
             </div>
@@ -390,10 +390,10 @@ export default function PropertiesPage() {
         {/* Results Toolbar */}
         <div className="flex items-center justify-between mb-6">
           <div className="text-sm text-neutral-600">
-            显示 <span className="font-medium text-neutral-900">{paginatedProperties.length}</span> 套房源
+            Showing <span className="font-medium text-neutral-900">{paginatedProperties.length}</span> properties
             {filteredProperties.length > 0 && (
               <>  
-                ，共 <span className="font-medium text-neutral-900">{filteredProperties.length}</span> 套
+                {' '}of <span className="font-medium text-neutral-900">{filteredProperties.length}</span> total
               </>
             )}
           </div>
@@ -401,7 +401,7 @@ export default function PropertiesPage() {
           <div className="flex items-center gap-4">
             {/* Sort */}
             <div className="flex items-center gap-2">
-              <span className="text-sm text-neutral-600 hidden sm:inline">排序:</span>
+              <span className="text-sm text-neutral-600 hidden sm:inline">Sort:</span>
               <div className="relative">
                 <select
                   value={sortBy}
@@ -468,13 +468,13 @@ export default function PropertiesPage() {
               <Search size={32} className="text-neutral-400" />
             </div>
             <h3 className="text-lg font-medium text-neutral-900 mb-2">
-              没有找到符合条件的房源
+              No properties found
             </h3>
             <p className="text-neutral-600 mb-4">
-              尝试调整筛选条件或搜索关键词
+              Try adjusting your filters or search terms
             </p>
             <Button variant="outline" onClick={clearFilters}>
-              清除筛选
+              Clear Filters
             </Button>
           </div>
         )}
@@ -543,7 +543,7 @@ function PropertyGridCard({
           />
           
           {property.featured && (
-            <Badge className="absolute top-3 left-3" variant="primary">精选</Badge>
+            <Badge className="absolute top-3 left-3" variant="primary">Featured</Badge>
           )}
           
           <button 
@@ -572,11 +572,11 @@ function PropertyGridCard({
           </div>
           
           <div className="flex items-center gap-3 text-neutral-500 text-sm mb-4">
-            <span>{property.bedrooms}室</span>
+            <span>{property.bedrooms} BR</span>
             <span>·</span>
-            <span>{property.area}m²</span>
+            <span>{property.area} sq ft</span>
             <span>·</span>
-            <span>最多{property.maxGuests}人</span>
+            <span>Max {property.maxGuests} guests</span>
           </div>
           
           <div className="flex items-baseline justify-between pt-3 border-t border-neutral-200">
@@ -586,7 +586,7 @@ function PropertyGridCard({
               </span>
               <span className="text-sm text-neutral-500">/{property.priceUnit}</span>
             </div>
-            <span className="text-xs text-neutral-400">{property.reviewCount} 条评价</span>
+            <span className="text-xs text-neutral-400">{property.reviewCount} reviews</span>
           </div>
         </div>
       </Link>
@@ -622,7 +622,7 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
           {property.featured && (
-            <Badge className="absolute top-3 left-3" variant="primary">精选</Badge>
+            <Badge className="absolute top-3 left-3" variant="primary">Featured</Badge>
           )}
           <button 
             className="absolute top-3 right-3 p-2 bg-white/90 hover:bg-white transition-colors"
@@ -653,19 +653,19 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
             <div className="flex items-center gap-4 text-sm text-neutral-600 mb-4">
               <div className="flex items-center gap-1">
                 <Bed size={14} />
-                <span>{property.bedrooms}室</span>
+                <span>{property.bedrooms} BR</span>
               </div>
               <div className="flex items-center gap-1">
                 <Bath size={14} />
-                <span>{property.bathrooms}卫</span>
+                <span>{property.bathrooms} BA</span>
               </div>
               <div className="flex items-center gap-1">
                 <Maximize size={14} />
-                <span>{property.area}m²</span>
+                <span>{property.area} sq ft</span>
               </div>
               <div className="flex items-center gap-1">
                 <Users size={14} />
-                <span>最多{property.maxGuests}人</span>
+                <span>Max {property.maxGuests} guests</span>
               </div>
             </div>
             
@@ -685,7 +685,7 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
               </span>
               <span className="text-neutral-500">CAD/{property.priceUnit}</span>
             </div>
-            <span className="text-sm text-neutral-400">{property.reviewCount} 条评价</span>
+            <span className="text-sm text-neutral-400">{property.reviewCount} reviews</span>
           </div>
         </div>
       </Link>

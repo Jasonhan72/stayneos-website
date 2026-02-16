@@ -181,7 +181,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-blue-600 font-medium">{t("nav.signup")}</span>
-                  <span className="text-neutral-400">{t("common.or")}</span>
+                  <span className="text-neutral-400">or</span>
                   <span className="text-blue-600 font-medium">{t("nav.login")}</span>
                 </div>
               </Link>

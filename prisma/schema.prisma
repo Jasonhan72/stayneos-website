@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // 用户模型
@@ -239,6 +240,7 @@ model Booking {
   user          User          @relation(fields: [userId], references: [id])
   review        Review?
   payments      Payment[]
+  cleaningTask  CleaningTask?
   
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
@@ -399,4 +401,75 @@ enum PaymentRecordStatus {
   FAILED
   REFUNDED
   DISPUTED
+}
+
+// 清洁任务模型
+model CleaningTask {
+  id          String          @id @default(cuid())
+  bookingId   String          @unique
+  booking     Booking         @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  // 清洁类型
+  type        CleaningType    @default(CHECKOUT_CLEANING)
+  
+  // 清洁状态
+  status      CleaningStatus  @default(SCHEDULED)
+  
+  // 预约时间
+  scheduledAt DateTime
+  
+  // 完成时间
+  completedAt DateTime?
+  
+  // 清洁人员
+  cleanerId   String?
+  cleanerName String?
+  
+  // 清洁备注
+  notes       String?         @db.Text
+  
+  // 照片记录
+  beforePhotos String[]       // 清洁前照片URL
+  afterPhotos  String[]       // 清洁后照片URL
+  
+  // 检查清单
+  checklist   Json?           // 存储检查项完成情况
+  
+  // 费用
+  cost        Decimal?        @db.Decimal(10, 2)
+  
+  // 优先级
+  priority    CleaningPriority @default(NORMAL)
+  
+  // 通知状态
+  notifiedAt  DateTime?
+  
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  
+  @@index([status])
+  @@index([scheduledAt])
+  @@index([cleanerId])
+}
+
+enum CleaningType {
+  CHECKOUT_CLEANING    // 退房清洁
+  DEEP_CLEANING        // 深度清洁
+  EMERGENCY_CLEANING   // 紧急清洁
+  MAINTENANCE_CLEANING // 维护清洁
+}
+
+enum CleaningStatus {
+  SCHEDULED     // 已安排
+  IN_PROGRESS   // 进行中
+  COMPLETED     // 已完成
+  CANCELLED     // 已取消
+  OVERDUE       // 逾期
+}
+
+enum CleaningPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
 }

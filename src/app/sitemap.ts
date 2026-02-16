@@ -2,7 +2,8 @@ import { MetadataRoute } from "next";
 import { mockProperties } from "@/lib/data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://stayneos.com";
+  // Use environment variable or fallback to production domain
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://stayneos.com";
 
   // Static pages
   const staticPages = [
@@ -19,13 +20,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/#services`,
+      url: `${baseUrl}/contact`,
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/#about`,
+      url: `${baseUrl}/landlords`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/corporate`,
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.7,
@@ -34,12 +41,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Dynamic property pages
   const propertyPages = mockProperties.map((property) => ({
-    url: `${baseUrl}/properties/${property.id}`,
+    url: `${baseUrl}/property/${property.id}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.8,
     images: property.images.map((image) => ({
-      url: image,
+      url: image.startsWith("http") ? image : `${baseUrl}${image}`,
       title: property.title,
       caption: `${property.title} - ${property.location}`,
     })),

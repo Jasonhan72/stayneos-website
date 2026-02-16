@@ -643,6 +643,8 @@
     "phoneLabel": "Phone",
     "hoursLabel": "Hours",
     "callAnytime": "Call anytime during work hours",
+    "workHours": "Monday to Friday 9:00-18:00 EST",
+    "weekend": "Closed on weekends and holidays",
     "form": {
       "title": "Contact Us",
       "subtitle": "Fill out the form below and we'll get back to you soon",
@@ -687,6 +689,11 @@
       "desc": "If you are a current tenant and need immediate assistance, please call our 24/7 emergency hotline"
     }
   },
+  "unit": {
+    "properties": "properties",
+    "property": "property",
+    "unit": "unit"
+  },
   "amenities": {
     "WiFi": "WiFi",
     "空调": "Air Conditioning",
@@ -714,6 +721,9 @@
     "invalidPhone": "Please enter a valid phone number",
     "selectDates": "Please select dates",
     "checkOutAfterCheckIn": "Check-out must be after check-in",
-    "minNights": "Minimum {count} nights required"
+    "minNights": "Minimum {count} nights required",
+    "pageNotFound": "Page Not Found",
+    "pageNotFoundDesc": "Sorry, the page you are looking for may have been removed, renamed, or is temporarily unavailable.",
+    "youMayBeLooking": "You might be looking for:"
   }
 }

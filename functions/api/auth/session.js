@@ -1,5 +1,20 @@
-// Cloudflare Pages Function - Session API with D1
+// Cloudflare Pages Function - Session API with D1 and CORS
 // 路径: /functions/api/auth/session.js
+
+// CORS headers
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Max-Age": "86400",
+};
+
+export async function onRequestOptions() {
+  return new Response(null, {
+    status: 204,
+    headers: corsHeaders,
+  });
+}
 
 export async function onRequestGet(context) {
   const { request, env } = context;
@@ -10,7 +25,13 @@ export async function onRequestGet(context) {
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return new Response(
         JSON.stringify({ message: "未登录", user: null }),
-        { status: 401, headers: { "Content-Type": "application/json" } }
+        { 
+          status: 401, 
+          headers: { 
+            "Content-Type": "application/json",
+            ...corsHeaders
+          } 
+        }
       );
     }
 
@@ -22,7 +43,13 @@ export async function onRequestGet(context) {
     if (!decoded) {
       return new Response(
         JSON.stringify({ message: "会话已过期", user: null }),
-        { status: 401, headers: { "Content-Type": "application/json" } }
+        { 
+          status: 401, 
+          headers: { 
+            "Content-Type": "application/json",
+            ...corsHeaders
+          } 
+        }
       );
     }
 
@@ -34,7 +61,13 @@ export async function onRequestGet(context) {
     if (!user) {
       return new Response(
         JSON.stringify({ message: "用户不存在", user: null }),
-        { status: 404, headers: { "Content-Type": "application/json" } }
+        { 
+          status: 404, 
+          headers: { 
+            "Content-Type": "application/json",
+            ...corsHeaders
+          } 
+        }
       );
     }
 
@@ -48,13 +81,25 @@ export async function onRequestGet(context) {
           createdAt: user.created_at,
         }
       }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
+      { 
+        status: 200, 
+        headers: { 
+          "Content-Type": "application/json",
+          ...corsHeaders
+        } 
+      }
     );
   } catch (error) {
     console.error("验证会话错误:", error);
     return new Response(
       JSON.stringify({ message: "会话已过期", user: null }),
-      { status: 401, headers: { "Content-Type": "application/json" } }
+      { 
+        status: 401, 
+        headers: { 
+          "Content-Type": "application/json",
+          ...corsHeaders
+        } 
+      }
     );
   }
 }

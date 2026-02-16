@@ -1,5 +1,20 @@
-// Cloudflare Pages Function - Login API with D1
+// Cloudflare Pages Function - Login API with D1 and CORS
 // 路径: /functions/api/auth/login.js
+
+// CORS headers
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Max-Age": "86400",
+};
+
+export async function onRequestOptions() {
+  return new Response(null, {
+    status: 204,
+    headers: corsHeaders,
+  });
+}
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -12,7 +27,13 @@ export async function onRequestPost(context) {
     if (!email || !password) {
       return new Response(
         JSON.stringify({ message: "请填写邮箱和密码" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
+        { 
+          status: 400, 
+          headers: { 
+            "Content-Type": "application/json",
+            ...corsHeaders
+          } 
+        }
       );
     }
 
@@ -24,7 +45,13 @@ export async function onRequestPost(context) {
     if (!user) {
       return new Response(
         JSON.stringify({ message: "邮箱或密码错误" }),
-        { status: 401, headers: { "Content-Type": "application/json" } }
+        { 
+          status: 401, 
+          headers: { 
+            "Content-Type": "application/json",
+            ...corsHeaders
+          } 
+        }
       );
     }
 
@@ -33,7 +60,13 @@ export async function onRequestPost(context) {
     if (hashedPassword !== user.password) {
       return new Response(
         JSON.stringify({ message: "邮箱或密码错误" }),
-        { status: 401, headers: { "Content-Type": "application/json" } }
+        { 
+          status: 401, 
+          headers: { 
+            "Content-Type": "application/json",
+            ...corsHeaders
+          } 
+        }
       );
     }
 
@@ -55,13 +88,25 @@ export async function onRequestPost(context) {
         },
         token,
       }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
+      { 
+        status: 200, 
+        headers: { 
+          "Content-Type": "application/json",
+          ...corsHeaders
+        } 
+      }
     );
   } catch (error) {
     console.error("登录错误:", error);
     return new Response(
       JSON.stringify({ message: "登录失败，请稍后重试" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
+      { 
+        status: 500, 
+        headers: { 
+          "Content-Type": "application/json",
+          ...corsHeaders
+        } 
+      }
     );
   }
 }

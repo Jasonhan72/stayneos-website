@@ -1,0 +1,3 @@
+# Redirect stayneos.com to www.stayneos.com
+https://stayneos.com/* https://www.stayneos.com/:splat 301!
+http://stayneos.com/* https://www.stayneos.com/:splat 301!

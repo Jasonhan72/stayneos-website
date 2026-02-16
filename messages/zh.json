@@ -640,6 +640,8 @@
     "phoneLabel": "联系电话",
     "hoursLabel": "工作时间",
     "callAnytime": "工作时间随时拨打",
+    "workHours": "周一至周五 9:00-18:00 EST",
+    "weekend": "周末及节假日休息",
     "form": {
       "title": "联系我们",
       "subtitle": "填写以下表单，我们会尽快回复",
@@ -684,6 +686,11 @@
       "desc": "如果您是已入住的租客，遇到紧急情况需要立即协助，请拨打我们的 24 小时紧急热线"
     }
   },
+  "unit": {
+    "properties": "房源",
+    "property": "房源",
+    "unit": "套"
+  },
   "amenities": {
     "WiFi": "WiFi",
     "空调": "空调",
@@ -702,6 +709,9 @@
     "invalidPhone": "请输入有效的电话号码",
     "selectDates": "请选择日期",
     "checkOutAfterCheckIn": "退房日期必须晚于入住日期",
-    "minNights": "最少需预订 {count} 天"
+    "minNights": "最少需预订 {count} 天",
+    "pageNotFound": "页面未找到",
+    "pageNotFoundDesc": "抱歉，您访问的页面可能已被移除、更名或暂时不可用。",
+    "youMayBeLooking": "您可能在寻找："
   }
 }

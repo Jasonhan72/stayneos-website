@@ -3,11 +3,6 @@
 import Link from "next/link";
 import { Home, Search, ArrowLeft } from "lucide-react";
 
-export const metadata = {
-  title: "页面未找到",
-  description: "抱歉，您访问的页面不存在",
-};
-
 export default function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -17,11 +12,11 @@ export default function NotFound() {
             404
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            页面未找到
+            Page Not Found
           </h1>
           <p className="text-gray-600 mb-8 max-w-md mx-auto">
-            抱歉，您访问的页面可能已被移除、更名或暂时不可用。
-            请检查网址是否正确，或尝试以下选项。
+            Sorry, the page you are looking for may have been removed, renamed, or is temporarily unavailable.
+            Please check the URL or try the options below.
           </p>
         </div>
 
@@ -31,14 +26,14 @@ export default function NotFound() {
             className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-amber-500 text-white rounded-lg font-medium hover:bg-amber-600 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
           >
             <Home className="w-4 h-4" aria-hidden="true" />
-            返回首页
+            Home
           </Link>
           <Link
             href="/properties"
             className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
           >
             <Search className="w-4 h-4" aria-hidden="true" />
-            浏览房源
+            Browse Properties
           </Link>
         </div>
 
@@ -47,13 +42,13 @@ export default function NotFound() {
           className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" aria-hidden="true" />
-          返回上一页
+          Back
         </button>
 
         {/* Help Section */}
         <div className="mt-12 pt-8 border-t border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            您可能在寻找：
+            You might be looking for:
           </h2>
           <ul className="space-y-2 text-gray-600">
             <li>
@@ -61,15 +56,15 @@ export default function NotFound() {
                 href="/properties"
                 className="text-blue-600 hover:text-blue-700 hover:underline"
               >
-                浏览所有房源
+                Browse all properties
               </Link>
             </li>
             <li>
               <Link
-                href="/#services"
+                href="/contact"
                 className="text-blue-600 hover:text-blue-700 hover:underline"
               >
-                了解我们的服务
+                Contact Us
               </Link>
             </li>
             <li>
@@ -77,7 +72,7 @@ export default function NotFound() {
                 href="mailto:support@stayneos.com"
                 className="text-blue-600 hover:text-blue-700 hover:underline"
               >
-                联系客服支持
+                Contact Support
               </a>
             </li>
           </ul>

@@ -1,5 +1,20 @@
-// Cloudflare Pages Function - Register API with D1
+// Cloudflare Pages Function - Register API with D1 and CORS
 // 路径: /functions/api/auth/register.js
+
+// CORS headers
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Max-Age": "86400",
+};
+
+export async function onRequestOptions() {
+  return new Response(null, {
+    status: 204,
+    headers: corsHeaders,
+  });
+}
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -12,7 +27,13 @@ export async function onRequestPost(context) {
     if (!name || !email || !password) {
       return new Response(
         JSON.stringify({ message: "请填写所有必填字段" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
+        { 
+          status: 400, 
+          headers: { 
+            "Content-Type": "application/json",
+            ...corsHeaders
+          } 
+        }
       );
     }
 
@@ -21,7 +42,13 @@ export async function onRequestPost(context) {
     if (!emailRegex.test(email)) {
       return new Response(
         JSON.stringify({ message: "请输入有效的邮箱地址" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
+        { 
+          status: 400, 
+          headers: { 
+            "Content-Type": "application/json",
+            ...corsHeaders
+          } 
+        }
       );
     }
 
@@ -29,7 +56,13 @@ export async function onRequestPost(context) {
     if (password.length < 6) {
       return new Response(
         JSON.stringify({ message: "密码至少需要6位字符" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
+        { 
+          status: 400, 
+          headers: { 
+            "Content-Type": "application/json",
+            ...corsHeaders
+          } 
+        }
       );
     }
 
@@ -41,7 +74,13 @@ export async function onRequestPost(context) {
     if (existingUser) {
       return new Response(
         JSON.stringify({ message: "该邮箱已被注册" }),
-        { status: 409, headers: { "Content-Type": "application/json" } }
+        { 
+          status: 409, 
+          headers: { 
+            "Content-Type": "application/json",
+            ...corsHeaders
+          } 
+        }
       );
     }
 
@@ -66,13 +105,25 @@ export async function onRequestPost(context) {
           createdAt: new Date().toISOString(),
         },
       }),
-      { status: 201, headers: { "Content-Type": "application/json" } }
+      { 
+        status: 201, 
+        headers: { 
+          "Content-Type": "application/json",
+          ...corsHeaders
+        } 
+      }
     );
   } catch (error) {
     console.error("注册错误:", error);
     return new Response(
       JSON.stringify({ message: "注册失败: " + error.message }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
+      { 
+        status: 500, 
+        headers: { 
+          "Content-Type": "application/json",
+          ...corsHeaders
+        } 
+      }
     );
   }
 }

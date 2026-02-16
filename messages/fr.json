@@ -640,6 +640,8 @@
     "phoneLabel": "Téléphone",
     "hoursLabel": "Heures",
     "callAnytime": "Appelez à tout moment pendant les heures de travail",
+    "workHours": "Lundi au vendredi 9h00-18h00 EST",
+    "weekend": "Fermé les week-ends et jours fériés",
     "form": {
       "title": "Contactez-nous",
       "subtitle": "Remplissez le formulaire ci-dessous et nous vous répondrons bientôt",
@@ -684,6 +686,11 @@
       "desc": "Si vous êtes un locataire actuel et avez besoin d'une assistance immédiate, veuillez appeler notre ligne d'urgence 24h/24"
     }
   },
+  "unit": {
+    "properties": "propriétés",
+    "property": "propriété",
+    "unit": "unité"
+  },
   "amenities": {
     "WiFi": "WiFi",
     "空调": "Climatisation",
@@ -702,6 +709,9 @@
     "invalidPhone": "Veuillez entrer un numéro de téléphone valide",
     "selectDates": "Veuillez sélectionner des dates",
     "checkOutAfterCheckIn": "La date de départ doit être après la date d'arrivée",
-    "minNights": "Minimum {count} nuits requis"
+    "minNights": "Minimum {count} nuits requis",
+    "pageNotFound": "Page Non Trouvée",
+    "pageNotFoundDesc": "Désolé, la page que vous recherchez a peut-être été supprimée, renommée ou est temporairement indisponible.",
+    "youMayBeLooking": "Vous cherchez peut-être :"
   }
 }

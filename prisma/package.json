@@ -1,0 +1,19 @@
+{
+  "name": "stayneos-db-migration",
+  "version": "1.0.0",
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:push": "prisma db push",
+    "db:pull": "prisma db pull",
+    "db:reset": "prisma migrate reset",
+    "db:studio": "prisma studio",
+    "db:seed": "tsx scripts/seed.ts",
+    "db:status": "prisma migrate status",
+    "db:format": "prisma format"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0"
+  }
+}

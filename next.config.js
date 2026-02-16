@@ -5,8 +5,9 @@ const nextConfig = {
   // Static + Dynamic SSR via Workers
   // ============================================
   
-  // Output standalone for OpenNext
-  output: 'standalone',
+  // Output export for static deployment
+  output: 'export',
+  distDir: 'dist',
   
   // Experimental features
   experimental: {
@@ -14,10 +15,9 @@ const nextConfig = {
     optimizePackageImports: ["lucide-react"],
   },
   
-  // Image optimization
+  // Image optimization - disabled for static export
   images: {
-    // Use Cloudflare Images or R2 for optimization
-    unoptimized: false,
+    unoptimized: true,
     // Allow images from external domains
     remotePatterns: [
       {

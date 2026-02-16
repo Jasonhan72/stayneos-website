@@ -1,5 +1,20 @@
-// Get User Bookings List API
+// Get User Bookings List API with CORS
 // 路径: /functions/api/bookings/list.js
+
+// CORS headers
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Max-Age": "86400",
+};
+
+export async function onRequestOptions() {
+  return new Response(null, {
+    status: 204,
+    headers: corsHeaders,
+  });
+}
 
 export async function onRequestGet(context) {
   const { request, env } = context;
@@ -41,14 +56,26 @@ export async function onRequestGet(context) {
         bookings: result.results || [],
         count: result.results?.length || 0,
       }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
+      { 
+        status: 200, 
+        headers: { 
+          "Content-Type": "application/json",
+          ...corsHeaders
+        } 
+      }
     );
     
   } catch (error) {
     console.error("获取预订列表错误:", error);
     return new Response(
       JSON.stringify({ message: "获取预订列表失败: " + error.message }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
+      { 
+        status: 500, 
+        headers: { 
+          "Content-Type": "application/json",
+          ...corsHeaders
+        } 
+      }
     );
   }
 }

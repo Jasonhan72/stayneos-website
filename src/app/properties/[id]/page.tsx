@@ -1,9 +1,5 @@
 import { mockProperties } from "@/lib/data";
 
-// Force dynamic rendering to support i18n based on user locale
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
 // Generate static params for all properties
 export async function generateStaticParams() {
   return mockProperties.map((property) => ({
