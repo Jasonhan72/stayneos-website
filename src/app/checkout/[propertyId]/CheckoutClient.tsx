@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { 
   ChevronLeft, 
-  ChevronRight,
   Star, 
   X,
   Plus,
@@ -14,6 +13,8 @@ import {
   Shield
 } from 'lucide-react';
 import { Container, Divider } from '@/components/ui';
+import { AirbnbCalendar } from '@/components/booking';
+import { BookingPriceCalculator, calculateBookingPrice } from '@/components/booking';
 import { getPropertyById } from '@/lib/data';
 import { getLocalizedTitle } from '@/components/property/PropertyCard';
 import { useI18n } from '@/lib/i18n';
@@ -21,212 +22,6 @@ import { useAuth } from '@/lib/UserContext';
 
 interface CheckoutClientProps {
   propertyId: string;
-}
-
-// Airbnb Style Range Calendar Component
-function RangeCalendar({ 
-  checkIn, 
-  checkOut, 
-  onSelectCheckIn, 
-  onSelectCheckOut,
-  onClose,
-  pricePerNight
-}: { 
-  checkIn: string; 
-  checkOut: string; 
-  onSelectCheckIn: (date: string) => void;
-  onSelectCheckOut: (date: string) => void;
-  onClose: () => void;
-  pricePerNight: number;
-}) {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-  const { t } = useI18n();
-  const monthNames = [
-    t('calendar.january') || 'January',
-    t('calendar.february') || 'February',
-    t('calendar.march') || 'March',
-    t('calendar.april') || 'April',
-    t('calendar.may') || 'May',
-    t('calendar.june') || 'June',
-    t('calendar.july') || 'July',
-    t('calendar.august') || 'August',
-    t('calendar.september') || 'September',
-    t('calendar.october') || 'October',
-    t('calendar.november') || 'November',
-    t('calendar.december') || 'December'
-  ];
-  const weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-  
-  const isDateDisabled = (year: number, month: number, day: number) => {
-    const date = new Date(year, month, day);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return date < today;
-  };
-
-  const getDateStatus = (year: number, month: number, day: number) => {
-    const dateStr = new Date(year, month, day).toISOString().split('T')[0];
-    const date = new Date(year, month, day);
-    const start = checkIn ? new Date(checkIn) : null;
-    const end = checkOut ? new Date(checkOut) : null;
-    
-    if (checkIn && dateStr === checkIn) return 'start';
-    if (checkOut && dateStr === checkOut) return 'end';
-    if (start && end && date > start && date < end) return 'between';
-    return 'none';
-  };
-  
-  const handleDateClick = (year: number, month: number, day: number) => {
-    const dateStr = new Date(year, month, day).toISOString().split('T')[0];
-    const clickedDate = new Date(year, month, day);
-    
-    if (!checkIn || (checkIn && checkOut)) {
-      onSelectCheckIn(dateStr);
-      onSelectCheckOut('');
-    } else {
-      const startDate = new Date(checkIn);
-      if (clickedDate <= startDate) {
-        onSelectCheckIn(dateStr);
-      } else {
-        onSelectCheckOut(dateStr);
-      }
-    }
-  };
-
-  const renderMonth = (monthOffset: number) => {
-    const displayMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + monthOffset, 1);
-    const year = displayMonth.getFullYear();
-    const month = displayMonth.getMonth();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const firstDayOfMonth = new Date(year, month, 1).getDay();
-    
-    return (
-      <div className="flex-1 min-w-[280px]">
-        <h3 className="font-semibold text-center mb-4">{monthNames[month]} {year}</h3>
-        <div className="grid grid-cols-7 gap-1 text-center text-sm mb-2">
-          {weekDays.map((day, i) => (
-            <div key={i} className="text-neutral-500 py-2 text-xs font-medium">{day}</div>
-          ))}
-        </div>
-        <div className="grid grid-cols-7 gap-y-1">
-          {Array.from({ length: firstDayOfMonth }).map((_, i) => (
-            <div key={`empty-${i}`} className="aspect-square" />
-          ))}
-          {Array.from({ length: daysInMonth }).map((_, i) => {
-            const day = i + 1;
-            const disabled = isDateDisabled(year, month, day);
-            const status = getDateStatus(year, month, day);
-            
-            const baseClasses = "aspect-square flex items-center justify-center text-sm relative";
-            const stateClasses = disabled 
-              ? "text-neutral-300 cursor-not-allowed line-through" 
-              : "cursor-pointer hover:bg-neutral-100";
-            
-            let bgClasses = "";
-            if (status === 'start' || status === 'end') {
-              bgClasses = "bg-black text-white rounded-full hover:bg-black";
-            } else if (status === 'between') {
-              bgClasses = "bg-neutral-100";
-            }
-            
-            const roundedClasses = 
-              status === 'start' ? "rounded-l-full" :
-              status === 'end' ? "rounded-r-full" :
-              status === 'between' ? "" : "rounded-full";
-            
-            return (
-              <button
-                key={day}
-                onClick={() => !disabled && handleDateClick(year, month, day)}
-                disabled={disabled}
-                className={`${baseClasses} ${stateClasses} ${bgClasses} ${roundedClasses}`}
-              >
-                {day}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
-
-  // Calculate nights and display text
-  const getSelectionDisplay = () => {
-    if (!checkIn) return { nights: 0, text: t('booking.selectCheckIn') || 'Select check-in date' };
-    if (!checkOut) {
-      const date = new Date(checkIn);
-      return { 
-        nights: 0, 
-        text: `${t('booking.checkIn') || 'Check-in'}: ${date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}` 
-      };
-    }
-    const start = new Date(checkIn);
-    const end = new Date(checkOut);
-    const nights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-    return {
-      nights,
-      text: `${nights} ${nights > 1 ? (t('common.nights') || 'nights') : (t('common.night') || 'night')}`,
-      range: `${start.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} - ${end.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}`
-    };
-  };
-
-  const selection = getSelectionDisplay();
-  // totalPrice used for future enhancements
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _totalPrice = selection.nights > 0 ? selection.nights * pricePerNight : 0;
-
-  return (
-    <div className="w-full">
-      {/* Selection info */}
-      <div className="mb-6">
-        <h2 className="text-2xl font-semibold">{selection.text}</h2>
-        {selection.range && <p className="text-neutral-600 mt-1">{selection.range}</p>}
-        {!checkOut && <p className="text-neutral-500 mt-1 text-sm">{t('booking.selectCheckOut') || 'Select check-out date'}</p>}
-      </div>
-      
-      {/* Navigation */}
-      <div className="flex items-center justify-between mb-4">
-        <button 
-          onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1))}
-          className="p-2 hover:bg-neutral-100 rounded-full"
-        >
-          <ChevronLeft size={20} />
-        </button>
-        <button 
-          onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1))}
-          className="p-2 hover:bg-neutral-100 rounded-full"
-        >
-          <ChevronRight size={20} />
-        </button>
-      </div>
-      
-      {/* Two months side by side */}
-      <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
-        {renderMonth(0)}
-        {renderMonth(1)}
-      </div>
-
-      {/* Bottom bar with price and Save */}
-      <div className="flex items-center justify-between mt-8 pt-4 border-t border-neutral-200">
-        <button 
-          onClick={() => {
-            onSelectCheckIn('');
-            onSelectCheckOut('');
-          }}
-          className="text-sm font-medium underline"
-        >
-          {t('common.clear') || 'Clear dates'}
-        </button>
-        <button
-          onClick={onClose}
-          disabled={!checkIn || !checkOut}
-          className="px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-neutral-800 disabled:bg-neutral-300 disabled:cursor-not-allowed transition-colors"
-        >
-          {t('common.save') || 'Save'}
-        </button>
-      </div>
-    </div>
-  );
 }
 
 export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
@@ -247,7 +42,6 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
   // Modals state
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showGuestPicker, setShowGuestPicker] = useState(false);
-  const [showPriceDetails, setShowPriceDetails] = useState(false);
 
   if (!property) {
     return (
@@ -264,50 +58,47 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
 
   const localizedTitle = getLocalizedTitle(property, locale);
 
-  // Calculate nights and pricing
-  const calculateNights = () => {
-    if (!checkIn || !checkOut) return 0;
-    const start = new Date(checkIn);
-    const end = new Date(checkOut);
-    const diff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-    return diff > 0 ? diff : 0;
-  };
+  // Calculate pricing with Airbnb style breakdown
+  const priceCalc = calculateBookingPrice({
+    basePrice: property.price,
+    checkIn,
+    checkOut,
+    monthlyDiscount: property.monthlyDiscount,
+    cleaningFee: property.cleaningFee || 80,
+    serviceFeeRate: 0.12,
+  });
 
-  const nights = calculateNights();
-  const isMonthly = nights >= 28;
-  const discountRate = isMonthly && property.monthlyDiscount ? (100 - property.monthlyDiscount) / 100 : 1;
-  const discountedPrice = Math.round(property.price * discountRate);
-  const subtotal = nights * discountedPrice;
-  const taxes = nights > 0 ? Math.round(subtotal * 0.13) : 0; // 13% HST for Canada
-  const finalPrice = subtotal + taxes;
-  
-  // Total guests (adults + children only, infants don't count toward max)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _totalGuests = adults + children;
+  const nights = priceCalc?.nights || 0;
+  const finalPrice = priceCalc?.total || 0;
 
   // Format date for display
   const formatDateRange = () => {
     if (!checkIn || !checkOut) return t('booking.selectDates') || 'Select dates';
     const start = new Date(checkIn);
     const end = new Date(checkOut);
-    return `${start.toLocaleDateString(locale === 'zh' ? 'zh-CN' : locale === 'fr' ? 'fr-FR' : 'en-US', { month: 'short', day: 'numeric' })} - ${end.toLocaleDateString(locale === 'zh' ? 'zh-CN' : locale === 'fr' ? 'fr-FR' : 'en-US', { month: 'short', day: 'numeric' })}, ${end.getFullYear()}`;
+    const formatter = new Intl.DateTimeFormat(
+      locale === 'zh' ? 'zh-CN' : locale === 'fr' ? 'fr-FR' : 'en-US', 
+      { month: 'short', day: 'numeric' }
+    );
+    return `${formatter.format(start)} - ${formatter.format(end)}, ${end.getFullYear()}`;
   };
 
   // Format single date
   const formatDate = (dateStr: string) => {
     if (!dateStr) return '';
     const date = new Date(dateStr);
-    return date.toLocaleDateString(locale === 'zh' ? 'zh-CN' : locale === 'fr' ? 'fr-FR' : 'en-US', { month: 'long', day: 'numeric' });
+    return date.toLocaleDateString(
+      locale === 'zh' ? 'zh-CN' : locale === 'fr' ? 'fr-FR' : 'en-US', 
+      { month: 'long', day: 'numeric' }
+    );
   };
 
-  // Get cancellation date (24 hours after booking or before check-in, whichever is earlier)
+  // Get cancellation date
   const getCancellationDeadline = () => {
     if (!checkIn) return '';
     const checkInDate = new Date(checkIn);
     const now = new Date();
     const twentyFourHoursFromNow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-    
-    // Show the earlier of: 24 hours from now or day before check-in
     const dayBeforeCheckIn = new Date(checkInDate);
     dayBeforeCheckIn.setDate(dayBeforeCheckIn.getDate() - 1);
     
@@ -315,7 +106,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
     return formatDate(deadline.toISOString().split('T')[0]);
   };
 
-  // Get user info for booking
+  // Get guest info for booking
   const getGuestInfo = () => {
     if (isAuthenticated && user) {
       return {
@@ -325,15 +116,10 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
         userId: user.id,
       };
     }
-    // Get from URL params if passed
-    const nameFromUrl = searchParams.get('name');
-    const emailFromUrl = searchParams.get('email');
-    const phoneFromUrl = searchParams.get('phone');
-    
     return {
-      guestName: nameFromUrl || 'Guest',
-      guestEmail: emailFromUrl || '',
-      guestPhone: phoneFromUrl || '',
+      guestName: searchParams.get('name') || 'Guest',
+      guestEmail: searchParams.get('email') || '',
+      guestPhone: searchParams.get('phone') || '',
       userId: undefined,
     };
   };
@@ -347,9 +133,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
 
     const guestInfo = getGuestInfo();
     
-    // Validate required info
     if (!guestInfo.guestName || !guestInfo.guestEmail) {
-      // Redirect to login or show guest info form
       router.push(`/login?redirect=/checkout/${propertyId}`);
       return;
     }
@@ -383,6 +167,12 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
     }
     return parts.join(', ');
   };
+
+  // Calculate discounted price for display
+  const isMonthly = nights >= 28;
+  const displayPrice = isMonthly && property.monthlyDiscount 
+    ? Math.round(property.price * (100 - property.monthlyDiscount) / 100)
+    : property.price;
 
   return (
     <main className="min-h-screen bg-white pb-32">
@@ -445,7 +235,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
               </div>
               <button 
                 onClick={() => setShowDatePicker(true)}
-                className="px-4 py-2 text-sm font-medium underline rounded-lg hover:bg-neutral-50 transition-colors"
+                className="px-4 py-2 text-sm font-semibold underline rounded-lg hover:bg-neutral-50 transition-colors"
               >
                 {t('common.change') || 'Change'}
               </button>
@@ -459,7 +249,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
               </div>
               <button 
                 onClick={() => setShowGuestPicker(true)}
-                className="px-4 py-2 text-sm font-medium underline rounded-lg hover:bg-neutral-50 transition-colors"
+                className="px-4 py-2 text-sm font-semibold underline rounded-lg hover:bg-neutral-50 transition-colors"
               >
                 {t('common.change') || 'Change'}
               </button>
@@ -501,48 +291,21 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
             </ul>
           </div>
 
-          {/* Price Summary (Preview) */}
+          {/* Price Summary */}
           <div className="py-4 border-b border-neutral-200 mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-medium">{t('booking.priceSummary') || 'Price Summary'}</h3>
-              <button 
-                onClick={() => setShowPriceDetails(!showPriceDetails)}
-                className="text-sm font-medium underline"
-              >
-                {showPriceDetails ? (t('common.hide') || 'Hide') : (t('common.show') || 'Show')}
-              </button>
-            </div>
+            <h3 className="font-medium mb-4">{t('booking.priceSummary') || 'Price Summary'}></h3>
             
-            {showPriceDetails && (
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-neutral-600">
-                    ${discountedPrice.toLocaleString()} {isMonthly ? (t('property.monthlyPrice') || 'CAD / month') : (t('property.perNight') || 'CAD / night')} x {nights} {nights === 1 ? (t('common.night') || 'night') : (t('common.nights') || 'nights')}
-                  </span>
-                  <span>${subtotal.toLocaleString()} CAD</span>
-                </div>
-                {isMonthly && property.monthlyDiscount && (
-                  <div className="flex justify-between text-rose-600">
-                    <span>{t('properties.monthlyDiscount', { percent: property.monthlyDiscount })}</span>
-                    <span>-${Math.round(property.price * nights - subtotal).toLocaleString()} CAD</span>
-                  </div>
-                )}
-                <div className="flex justify-between">
-                  <span className="text-neutral-600">{t('booking.taxHST') || 'Taxes (13% HST)'}</span>
-                  <span>${taxes.toLocaleString()} CAD</span>
-                </div>
-                <Divider className="my-3" />
-                <div className="flex justify-between font-semibold text-base">
-                  <span>{t('booking.total') || 'Total'} <u>CAD</u></span>
-                  <span>${finalPrice.toLocaleString()} CAD</span>
-                </div>
-              </div>
-            )}
-            
-            {!showPriceDetails && (
-              <p className="text-neutral-600">
-                <span className="font-semibold">${finalPrice.toLocaleString()} CAD</span> {t('checkout.totalBeforeTaxes') || 'total before taxes'}
-              </p>
+            {priceCalc ? (
+              <BookingPriceCalculator
+                basePrice={property.price}
+                checkIn={checkIn}
+                checkOut={checkOut}
+                monthlyDiscount={property.monthlyDiscount}
+                cleaningFee={property.cleaningFee || 80}
+                compact
+              />
+            ) : (
+              <p className="text-neutral-500 text-sm">Select dates to see pricing</p>
             )}
           </div>
         </div>
@@ -552,12 +315,28 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 z-50">
         <Container>
           <div className="py-4">
+            {/* Price info on mobile */}
+            <div className="flex items-center justify-between mb-3 sm:hidden">
+              <div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-lg font-bold">${finalPrice.toLocaleString()}</span>
+                  <span className="text-sm text-neutral-500">CAD</span>
+                </div>
+                <p className="text-xs text-neutral-500">{checkIn && checkOut ? formatDateRange() : 'Select dates'}</p>
+              </div>
+            </div>
+            
             <button 
               onClick={handleProceedToPayment}
-              className="w-full py-4 bg-black hover:bg-neutral-800 disabled:bg-neutral-300 text-white font-medium text-lg rounded-xl transition-colors"
+              disabled={!checkIn || !checkOut}
+              className="w-full py-4 bg-black hover:bg-neutral-800 disabled:bg-neutral-300 text-white font-semibold text-lg rounded-xl transition-colors"
             >
-              {t('checkout.reviewAndContinue') || 'Review and continue'}
+              {!checkIn || !checkOut 
+                ? 'Select dates' 
+                : (t('checkout.reviewAndContinue') || 'Review and continue')
+              }
             </button>
+            
             <p className="text-xs text-neutral-500 text-center mt-3">
               {t('checkout.agreement') || 'By selecting the button below, I agree to the'}{' '}
               <Link href="/terms" className="underline">{t('footer.terms') || 'booking terms'}</Link>,{' '}
@@ -569,26 +348,30 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
         </Container>
       </div>
 
-      {/* Date Picker Modal */}
+      {/* Date Picker Modal - Using AirbnbCalendar */}
       {showDatePicker && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center">
-          <div className="bg-white w-full max-w-3xl rounded-t-2xl sm:rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center"
+        >
+          <div className="bg-white w-full max-w-3xl rounded-t-2xl sm:rounded-2xl p-6 max-h-[90vh] overflow-y-auto"
+          >
             <div className="flex items-center justify-between mb-2">
+              <div />
               <button 
                 onClick={() => setShowDatePicker(false)}
-                className="p-2 -ml-2 hover:bg-neutral-100 rounded-full"
+                className="p-2 hover:bg-neutral-100 rounded-full"
               >
                 <X size={24} />
               </button>
             </div>
             
-            <RangeCalendar 
+            <AirbnbCalendar 
               checkIn={checkIn}
               checkOut={checkOut}
               onSelectCheckIn={setCheckIn}
               onSelectCheckOut={setCheckOut}
               onClose={() => setShowDatePicker(false)}
-              pricePerNight={discountedPrice}
+              pricePerNight={displayPrice}
+              minNights={property.minNights}
             />
           </div>
         </div>
@@ -596,8 +379,10 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
 
       {/* Guest Picker Modal */}
       {showGuestPicker && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center">
-          <div className="bg-white w-full max-w-lg rounded-t-2xl sm:rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center"
+        >
+          <div className="bg-white w-full max-w-lg rounded-t-2xl sm:rounded-2xl p-6 max-h-[90vh] overflow-y-auto"
+          >
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold">{t('checkout.changeGuests') || 'Change guests'}</h2>
               <button 
@@ -718,13 +503,13 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
             <div className="flex items-center justify-between mt-8 pt-4 border-t border-neutral-200">
               <button 
                 onClick={() => setShowGuestPicker(false)}
-                className="text-sm font-medium underline"
+                className="text-sm font-semibold underline"
               >
                 {t('common.cancel') || 'Cancel'}
               </button>
               <button
                 onClick={() => setShowGuestPicker(false)}
-                className="px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-neutral-800 transition-colors"
+                className="px-6 py-3 bg-black text-white font-semibold rounded-lg hover:bg-neutral-800 transition-colors"
               >
                 {t('common.save') || 'Save'}
               </button>

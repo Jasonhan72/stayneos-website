@@ -25,6 +25,7 @@ export interface Property {
   descriptionFr?: string; // 法文
   minNights?: number;
   monthlyDiscount?: number;
+  cleaningFee?: number;
 }
 
 // Helper function to get localized title

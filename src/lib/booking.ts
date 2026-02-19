@@ -52,8 +52,8 @@ export function calculateBookingPrice(
   const discountedPrice = Math.round(basePrice * discountRate);
   const subtotal = nights * discountedPrice;
   
-  // 清洁费（如果有）
-  const cleaningFee = 0; // 可以根据需要添加
+  // 清洁费（从属性中获取或使用默认值）
+  const cleaningFee = property.cleaningFee || 80;
   
   // 服务费（10%）
   const serviceFee = Math.round(subtotal * 0.1);

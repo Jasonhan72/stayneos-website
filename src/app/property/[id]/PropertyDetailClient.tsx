@@ -359,6 +359,9 @@ export default function PropertyDetailClient({ propertyId, initialProperty, init
                 maxGuests: property.maxGuests,
                 minNights: property.minNights,
                 monthlyDiscount: property.monthlyDiscount,
+                cleaningFee: property.cleaningFee || 80,
+                rating: property.rating,
+                reviewCount: property.reviewCount,
               }}
             />
           </div>

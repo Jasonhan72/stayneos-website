@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import DateRangePicker from '@/components/ui/DateRangePicker';
-import { BookingPriceCalculator } from '@/components/booking';
+import { AirbnbCalendar, BookingPriceCalculator } from '@/components/booking';
 import StripeProvider from '@/components/payment/StripeProvider';
 import PaymentForm from '@/components/payment/PaymentForm';
 import { Button, Input } from '@/components/ui';
@@ -26,7 +25,8 @@ import {
   Sparkles,
   Home,
   ChevronRight,
-  CreditCard
+  CreditCard,
+  X
 } from 'lucide-react';
 
 export default function BookingContent() {
@@ -66,6 +66,7 @@ export default function BookingContent() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showDatePicker, setShowDatePicker] = useState(!queryCheckIn || !queryCheckOut);
   
   // Booking and payment state
   const [, setBookingId] = useState('');
@@ -83,9 +84,15 @@ export default function BookingContent() {
     return null;
   }
 
-  // Calculate price
+  // Calculate price with cleaning fee
   const priceCalc = checkIn && checkOut 
-    ? calculateBookingPrice(property, checkIn, checkOut)
+    ? calculateBookingPrice({ 
+        basePrice: property.price, 
+        checkIn, 
+        checkOut,
+        monthlyDiscount: property.monthlyDiscount,
+        cleaningFee: property.cleaningFee || 80,
+      })
     : null;
 
   // Validate dates
@@ -97,6 +104,7 @@ export default function BookingContent() {
   const handleCreateBooking = async () => {
     if (!checkIn || !checkOut) {
       setError(t('booking.selectDatesError'));
+      setShowDatePicker(true);
       return;
     }
 
@@ -134,6 +142,7 @@ export default function BookingContent() {
           basePrice: property.price,
           discountRate: priceCalc?.discountPercentage || 0,
           discountAmount: priceCalc?.discount || 0,
+          cleaningFee: priceCalc?.cleaningFee || 0,
           serviceFee: priceCalc?.serviceFee || 0,
           totalPrice: priceCalc?.total || 0,
           specialRequests,
@@ -189,6 +198,20 @@ export default function BookingContent() {
     setError(errorMsg);
   };
 
+  // Format date display
+  const formatDateDisplay = (dateStr: string) => {
+    if (!dateStr) return 'Add date';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+
+  // Calculate discounted price for display
+  const nights = priceCalc?.nights || 0;
+  const isMonthly = nights >= 28;
+  const displayPrice = isMonthly && property.monthlyDiscount 
+    ? Math.round(property.price * (100 - property.monthlyDiscount) / 100)
+    : property.price;
+
   // Step indicator component
   const StepIndicator = () => (
     <div className="mb-8">
@@ -198,9 +221,9 @@ export default function BookingContent() {
             <div className={cn(
               "flex items-center justify-center w-10 h-10 rounded-full font-semibold transition-colors",
               currentStep > step 
-                ? 'bg-success text-white' 
+                ? 'bg-green-500 text-white' 
                 : currentStep === step 
-                  ? 'bg-primary text-white'
+                  ? 'bg-black text-white'
                   : 'bg-neutral-200 text-neutral-500'
             )}>
               {currentStep > step ? (
@@ -212,16 +235,16 @@ export default function BookingContent() {
             {index < 2 && (
               <div className={cn(
                 "w-16 h-1 mx-2 transition-colors",
-                currentStep > step ? 'bg-success' : 'bg-neutral-200'
+                currentStep > step ? 'bg-green-500' : 'bg-neutral-200'
               )} />
             )}
           </div>
         ))}
       </div>
       <div className="flex justify-center gap-12 mt-3 text-sm">
-        <span className={currentStep === 1 ? 'text-primary font-medium' : 'text-neutral-500'}>{t('booking.step1')}</span>
-        <span className={currentStep === 2 ? 'text-primary font-medium' : 'text-neutral-500'}>{t('booking.step2')}</span>
-        <span className={currentStep === 3 ? 'text-primary font-medium' : 'text-neutral-500'}>{t('booking.step3')}</span>
+        <span className={currentStep === 1 ? 'text-neutral-900 font-medium' : 'text-neutral-500'}>{t('booking.step1') || 'Dates'}</span>
+        <span className={currentStep === 2 ? 'text-neutral-900 font-medium' : 'text-neutral-500'}>{t('booking.step2') || 'Details'}</span>
+        <span className={currentStep === 3 ? 'text-neutral-900 font-medium' : 'text-neutral-500'}>{t('booking.step3') || 'Payment'}</span>
       </div>
     </div>
   );
@@ -248,7 +271,7 @@ export default function BookingContent() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left - Booking Form */}
             <div className="lg:col-span-2 space-y-6">
-              {/* Step 1: Dates & Guests */}
+              {/* Step 1: Dates & Guests - With Airbnb Calendar */}
               {currentStep === 1 && (
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
                   <h2 className="text-2xl font-bold text-neutral-900 mb-6">
@@ -256,38 +279,60 @@ export default function BookingContent() {
                   </h2>
                   
                   <div className="space-y-6">
-                    <div>
-                      <label className="block text-sm font-semibold text-neutral-900 mb-2">
-                        Check-in / Check-out
-                      </label>
-                      <DateRangePicker
-                        checkIn={checkIn}
-                        checkOut={checkOut}
-                        onCheckInChange={setCheckIn}
-                        onCheckOutChange={setCheckOut}
-                        minNights={property.minNights}
-                        monthlyDiscount={property.monthlyDiscount}
-                      />
-                      
-                      {!dateValidation.valid && (
-                        <div className="mt-3 flex items-center gap-2 text-amber-600 text-sm bg-amber-50 p-3 rounded-lg">
-                          <AlertCircle size={16} />
-                          <span>{dateValidation.error}</span>
-                        </div>
-                      )}
-                      
-                      {property.monthlyDiscount && property.monthlyDiscount > 0 && (
-                        <div className="mt-3 p-3 bg-accent-50 border border-accent-200 rounded-lg">
-                          <div className="flex items-center gap-2 text-accent-800">
-                            <Sparkles size={16} />
-                            <span className="text-sm">
-                              <span className="font-semibold">{property.monthlyDiscount}% off</span> for stays of 28+ nights
-                            </span>
+                    {/* Date Selection Summary */}
+                    <div 
+                      className="border-2 border-neutral-900 rounded-xl overflow-hidden cursor-pointer"
+                      onClick={() => setShowDatePicker(true)}
+                    >
+                      <div className="grid grid-cols-2 divide-x divide-neutral-200">
+                        <div className="p-4">
+                          <div className="text-xs font-bold text-neutral-900 uppercase">Check-in</div>
+                          <div className={cn(
+                            "text-sm mt-0.5 font-medium",
+                            checkIn ? 'text-neutral-900' : 'text-neutral-500'
+                          )}>
+                            {formatDateDisplay(checkIn)}
                           </div>
                         </div>
-                      )}
+                        <div className="p-4">
+                          <div className="text-xs font-bold text-neutral-900 uppercase">Checkout</div>
+                          <div className={cn(
+                            "text-sm mt-0.5 font-medium",
+                            checkOut ? 'text-neutral-900' : 'text-neutral-500'
+                          )}>
+                            {formatDateDisplay(checkOut)}
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                    
+                    {/* Calendar Modal Toggle */}
+                    <button
+                      onClick={() => setShowDatePicker(true)}
+                      className="w-full py-3 border-2 border-neutral-200 rounded-xl font-medium text-neutral-700 hover:border-neutral-900 transition-colors"
+                    >
+                      {checkIn && checkOut ? 'Change dates' : 'Select dates'}
+                    </button>
+                    
+                    {!dateValidation.valid && (
+                      <div className="mt-3 flex items-center gap-2 text-amber-600 text-sm bg-amber-50 p-3 rounded-lg">
+                        <AlertCircle size={16} />
+                        <span>{dateValidation.error}</span>
+                      </div>
+                    )}
+                    
+                    {property.monthlyDiscount && property.monthlyDiscount > 0 && (
+                      <div className="mt-3 p-3 bg-rose-50 border border-rose-200 rounded-lg">
+                        <div className="flex items-center gap-2 text-rose-800">
+                          <Sparkles size={16} />
+                          <span className="text-sm">
+                            <span className="font-semibold">{property.monthlyDiscount}% off</span> for stays of 28+ nights
+                          </span>
+                        </div>
+                      </div>
+                    )}
 
+                    {/* Guests Selector */}
                     <div>
                       <label className="block text-sm font-semibold text-neutral-900 mb-2">
                         Guests
@@ -295,7 +340,7 @@ export default function BookingContent() {
                       <select
                         value={guests}
                         onChange={(e) => setGuests(Number(e.target.value))}
-                        className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                        className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:ring-2 focus:ring-black focus:border-black transition-all"
                       >
                         {Array.from({ length: property.maxGuests }).map((_, i) => (
                           <option key={i} value={i + 1}>
@@ -308,14 +353,30 @@ export default function BookingContent() {
 
                   <div className="mt-8 flex justify-end">
                     <Button
-                      onClick={() => setCurrentStep(2)}
-                      disabled={!checkIn || !checkOut || !dateValidation.valid}
+                      onClick={() => {
+                        if (!checkIn || !checkOut) {
+                          setShowDatePicker(true);
+                          setError('Please select check-in and check-out dates');
+                        } else if (!dateValidation.valid) {
+                          setError(dateValidation.error || 'Invalid dates');
+                        } else {
+                          setCurrentStep(2);
+                          setError('');
+                        }
+                      }}
                       size="lg"
                       rightIcon={<ChevronRight size={18} />}
                     >
                       Continue
                     </Button>
                   </div>
+                  
+                  {error && (
+                    <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-red-700">
+                      <AlertCircle size={18} />
+                      <span>{error}</span>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -328,16 +389,17 @@ export default function BookingContent() {
                   
                   <div className="space-y-6">
                     {isAuthenticated && user ? (
-                      <div className="bg-primary-50 border border-primary-200 rounded-xl p-5">
+                      <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-5">
                         <div className="flex items-center gap-3 mb-4">
-                          <div className="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center">
-                            <User className="w-6 h-6 text-primary" />
+                          <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center">
+                            <User className="w-6 h-6 text-neutral-600" />
                           </div>
                           <div>
                             <h3 className="font-semibold text-neutral-900">Logged in as</h3>
                             <p className="text-sm text-neutral-500">Your account information will be used</p>
                           </div>
-                        </div>                        <div className="space-y-2 text-sm">
+                        </div>
+                        <div className="space-y-2 text-sm">
                           <p>
                             <span className="text-neutral-500">Name: </span>
                             <span className="font-medium">{guestName}</span>
@@ -353,8 +415,8 @@ export default function BookingContent() {
                             </p>
                           )}
                         </div>
-                        <div className="mt-4 pt-4 border-t border-primary-200">
-                          <Link href="/profile" className="text-primary text-sm font-medium hover:underline">
+                        <div className="mt-4 pt-4 border-t border-neutral-200">
+                          <Link href="/profile" className="text-neutral-900 text-sm font-medium hover:underline">
                             Edit profile →
                           </Link>
                         </div>
@@ -398,7 +460,7 @@ export default function BookingContent() {
                         onChange={(e) => setSpecialRequests(e.target.value)}
                         placeholder="Any special requests or requirements..."
                         rows={4}
-                        className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary resize-none transition-all"
+                        className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:ring-2 focus:ring-black focus:border-black resize-none transition-all"
                       />
                     </div>
                   </div>
@@ -430,8 +492,8 @@ export default function BookingContent() {
               {currentStep === 3 && (
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-primary-50 rounded-full flex items-center justify-center">
-                      <CreditCard className="w-6 h-6 text-primary" />
+                    <div className="w-12 h-12 bg-neutral-100 rounded-full flex items-center justify-center">
+                      <CreditCard className="w-6 h-6 text-neutral-600" />
                     </div>
                     <div>
                       <h2 className="text-2xl font-bold text-neutral-900">Secure Payment</h2>
@@ -450,7 +512,7 @@ export default function BookingContent() {
                     </StripeProvider>
                   ) : (
                     <div className="flex items-center justify-center py-12">
-                      <Loader2 className="animate-spin mr-2 text-primary" size={24} />
+                      <Loader2 className="animate-spin mr-2 text-black" size={24} />
                       <span>Loading payment details...</span>
                     </div>
                   )}
@@ -496,7 +558,7 @@ export default function BookingContent() {
                       </div>
                       <div>
                         <p className="text-xs text-neutral-500">Check-in</p>
-                        <p className="font-medium">{checkIn}</p>
+                        <p className="font-medium">{formatDateDisplay(checkIn)}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
@@ -505,31 +567,36 @@ export default function BookingContent() {
                       </div>
                       <div>
                         <p className="text-xs text-neutral-500">Check-out</p>
-                        <p className="font-medium">{checkOut}</p>
+                        <p className="font-medium">{formatDateDisplay(checkOut)}</p>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {/* Price Breakdown */}
-                {priceCalc && (
+                {priceCalc ? (
                   <BookingPriceCalculator
                     basePrice={property.price}
                     checkIn={checkIn}
                     checkOut={checkOut}
                     monthlyDiscount={property.monthlyDiscount}
+                    cleaningFee={property.cleaningFee || 80}
                     compact
                   />
+                ) : (
+                  <div className="text-center py-4 text-neutral-500">
+                    Select dates to see pricing
+                  </div>
                 )}
 
                 {/* Security Badges */}
                 <div className="mt-6 pt-6 border-t border-neutral-100 space-y-3">
                   <div className="flex items-center gap-2 text-sm text-neutral-600">
-                    <Shield size={16} className="text-primary" />
+                    <Shield size={16} className="text-black" />
                     <span>Secure booking</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-neutral-600">
-                    <Lock size={16} className="text-primary" />
+                    <Lock size={16} className="text-black" />
                     <span>Encrypted payment</span>
                   </div>
                 </div>
@@ -538,6 +605,40 @@ export default function BookingContent() {
           </div>
         </div>
       </div>
+      
+      {/* Date Picker Modal - Airbnb Style */}
+      {showDatePicker && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center"
+        >
+          <div 
+            className="bg-white w-full max-w-3xl rounded-t-2xl sm:rounded-2xl p-6 max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div />
+              <button 
+                onClick={() => setShowDatePicker(false)}
+                className="p-2 hover:bg-neutral-100 rounded-full transition-colors"
+              >
+                <X size={24} className="text-neutral-700" />
+              </button>
+            </div>
+            
+            <AirbnbCalendar 
+              checkIn={checkIn}
+              checkOut={checkOut}
+              onSelectCheckIn={setCheckIn}
+              onSelectCheckOut={setCheckOut}
+              onClose={() => {
+                setShowDatePicker(false);
+                setError('');
+              }}
+              pricePerNight={displayPrice}
+              minNights={property.minNights}
+            />
+          </div>
+        </div>
+      )}
     </main>
   );
 }
