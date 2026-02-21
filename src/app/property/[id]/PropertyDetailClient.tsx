@@ -38,6 +38,8 @@ export default function PropertyDetailClient({ propertyId, initialProperty, init
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
+  const [checkIn, setCheckIn] = useState('');
+  const [checkOut, setCheckOut] = useState('');
 
   const localizedTitle = useMemo(() => {
     if (!property) return '';
@@ -353,13 +355,13 @@ export default function PropertyDetailClient({ propertyId, initialProperty, init
           <div className="lg:col-span-1 space-y-6">
             {/* Airbnb Calendar */}
             <AirbnbCalendar 
-              checkIn=""
-              checkOut=""
+              checkIn={checkIn}
+              checkOut={checkOut}
               pricePerNight={property.price}
               minNights={property.minNights || 1}
-              onSelectCheckIn={(date) => console.log('Check-in:', date)}
-              onSelectCheckOut={(date) => console.log('Check-out:', date)}
-              onClose={() => console.log('Close calendar')}
+              onSelectCheckIn={(date) => setCheckIn(date)}
+              onSelectCheckOut={(date) => setCheckOut(date)}
+              onClose={() => { setCheckIn(''); setCheckOut(''); }}
             />
             
             <BookingCard 
