@@ -6,7 +6,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
-  Users, 
   AlertCircle, 
   ChevronDown,
   Minus,

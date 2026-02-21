@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 
@@ -44,7 +44,8 @@ const formatDate = (dateStr: string, locale: string = 'en') => {
 
 // Get translations
 const getTranslations = (locale: string) => {
-  const translations: Record<string, any> = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const translations: Record<string, Record<string, any>> = {
     zh: {
       months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
       weekDays: ['日', '一', '二', '三', '四', '五', '六'],
@@ -206,7 +207,8 @@ export function AirbnbCalendar({
   const selection = getSelectionDisplay();
 
   // Render a single month
-  const renderMonth = (monthData: typeof currentMonthData, monthOffset: number) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const renderMonth = (monthData: typeof currentMonthData, _monthOffset: number) => {
     const { year, month, daysInMonth, startingDay } = monthData;
     const weekDays = t.weekDays;
 

@@ -86,13 +86,7 @@ export default function BookingContent() {
 
   // Calculate price with cleaning fee
   const priceCalc = checkIn && checkOut 
-    ? calculateBookingPrice({ 
-        basePrice: property.price, 
-        checkIn, 
-        checkOut,
-        monthlyDiscount: property.monthlyDiscount,
-        cleaningFee: property.cleaningFee || 80,
-      })
+    ? calculateBookingPrice(property, checkIn, checkOut)
     : null;
 
   // Validate dates

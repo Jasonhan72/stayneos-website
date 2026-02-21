@@ -12,7 +12,7 @@ import {
   Minus,
   Shield
 } from 'lucide-react';
-import { Container, Divider } from '@/components/ui';
+import { Container } from '@/components/ui';
 import { AirbnbCalendar } from '@/components/booking';
 import { BookingPriceCalculator, calculateBookingPrice } from '@/components/booking';
 import { getPropertyById } from '@/lib/data';
@@ -293,7 +293,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
 
           {/* Price Summary */}
           <div className="py-4 border-b border-neutral-200 mb-6">
-            <h3 className="font-medium mb-4">{t('booking.priceSummary') || 'Price Summary'}></h3>
+            <h3 className="font-medium mb-4">{t('booking.priceSummary') || 'Price Summary'}</h3>
             
             {priceCalc ? (
               <BookingPriceCalculator

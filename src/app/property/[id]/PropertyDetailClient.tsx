@@ -353,6 +353,8 @@ export default function PropertyDetailClient({ propertyId, initialProperty, init
           <div className="lg:col-span-1 space-y-6">
             {/* Airbnb Calendar */}
             <AirbnbCalendar 
+              checkIn=""
+              checkOut=""
               pricePerNight={property.price}
               minNights={property.minNights || 1}
               onSelectCheckIn={(date) => console.log('Check-in:', date)}
