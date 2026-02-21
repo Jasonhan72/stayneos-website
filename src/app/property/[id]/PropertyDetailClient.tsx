@@ -19,7 +19,7 @@ import {
   X
 } from 'lucide-react';
 import { Container, Card, Divider } from '@/components/ui';
-import { BookingCard } from '@/components/booking';
+import { BookingCard, AirbnbCalendar } from '@/components/booking';
 import { getPropertyById, mockProperties } from '@/lib/data';
 import { getLocalizedTitle, getLocalizedDescription } from '@/components/property/PropertyCard';
 import { notFound } from 'next/navigation';
@@ -350,7 +350,10 @@ export default function PropertyDetailClient({ propertyId, initialProperty, init
           </div>
 
           {/* Right Column - Booking Card */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 space-y-6">
+            {/* Airbnb Calendar */}
+            <AirbnbCalendar />
+            
             <BookingCard 
               property={{
                 id: property.id,
