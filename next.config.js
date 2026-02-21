@@ -1,13 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // ============================================
-  // Hybrid Export Mode
-  // Static + Dynamic SSR via Workers
+  // Dynamic SSR Mode (支持API路由和动态渲染)
   // ============================================
   
-  // Output export for static deployment
-  output: 'export',
-  distDir: 'dist',
+  // 移除 output: 'export' 以支持动态渲染和API路由
+  // output: 'export',
+  // distDir: 'dist',
   
   // Experimental features
   experimental: {
@@ -15,9 +14,10 @@ const nextConfig = {
     optimizePackageImports: ["lucide-react"],
   },
   
-  // Image optimization - disabled for static export
+  // Image optimization - enabled for dynamic rendering
   images: {
-    unoptimized: true,
+    // Cloudflare supports image optimization
+    unoptimized: false,
     // Allow images from external domains
     remotePatterns: [
       {
