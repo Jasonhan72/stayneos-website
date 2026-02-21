@@ -4,9 +4,9 @@ const nextConfig = {
   // Dynamic SSR Mode (支持API路由和动态渲染)
   // ============================================
   
-  // 移除 output: 'export' 以支持动态渲染和API路由
-  // output: 'export',
-  // distDir: 'dist',
+  // Static export for Cloudflare Pages
+  output: 'export',
+  distDir: 'out',
   
   // Experimental features
   experimental: {
@@ -16,8 +16,8 @@ const nextConfig = {
   
   // Image optimization - enabled for dynamic rendering
   images: {
-    // Cloudflare supports image optimization
-    unoptimized: false,
+    // Static export requires unoptimized images
+    unoptimized: true,
     // Allow images from external domains
     remotePatterns: [
       {
