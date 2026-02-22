@@ -1,11 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // ============================================
-  // OpenNext Cloudflare Mode
+  // Static Export Mode (Cloudflare Pages)
   // ============================================
   
-  // Standalone output for Cloudflare Workers
-  output: 'standalone',
+  // Static export for Cloudflare Pages
+  output: 'export',
+  distDir: 'dist',
+  
+  // Trailing slash for static hosting
+  trailingSlash: true,
   
   // Experimental features
   experimental: {
