@@ -1,12 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // ============================================
-  // Dynamic SSR Mode (支持API路由和动态渲染)
+  // OpenNext Cloudflare Mode
   // ============================================
   
-  // Static export for Cloudflare Pages
-  output: 'export',
-  distDir: 'out',
+  // Standalone output for Cloudflare Workers
+  output: 'standalone',
   
   // Experimental features
   experimental: {

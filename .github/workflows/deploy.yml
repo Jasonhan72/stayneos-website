@@ -25,12 +25,12 @@ jobs:
       - name: Build with OpenNext
         run: npx opennextjs-cloudflare build --dangerouslyUseUnsupportedNextVersion
 
-      - name: Deploy to Cloudflare Pages
+      - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: 84e5534ae694a084f23f58020bd73c7b
-          command: pages deploy .open-next/assets --project-name=stayneos --branch=main
+          command: deploy .open-next/server/index.js --name stayneos
 
   verify-deployment:
     needs: build-and-deploy
