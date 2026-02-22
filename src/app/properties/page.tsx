@@ -25,6 +25,7 @@ import {
 import { Button, Container, Card, Badge, Input } from '@/components/ui';
 import DateRangePicker from '@/components/ui/DateRangePicker';
 import { mockProperties } from '@/lib/data';
+import { useI18n } from '@/lib/i18n';
 import dynamic from 'next/dynamic';
 import BackToHomeButton from '@/components/navigation/BackToHomeButton';
 
@@ -59,16 +60,18 @@ const amenitiesList = [
 ];
 
 const sortOptions = [
-  { value: 'recommended', label: 'Recommended' },
-  { value: 'price-low', label: 'Price: Low to High' },
-  { value: 'price-high', label: 'Price: High to Low' },
-  { value: 'rating', label: 'Highest Rated' },
+  { value: 'recommended', label: 'sort.recommended' },
+  { value: 'price-low', label: 'sort.priceLow' },
+  { value: 'price-high', label: 'sort.priceHigh' },
+  { value: 'rating', label: 'sort.rating' },
 ];
 
 // Pagination settings
 const ITEMS_PER_PAGE = 6;
 
 export default function PropertiesPage() {
+  const { t } = useI18n();
+  
   // State
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
   const [sortBy, setSortBy] = useState('recommended');
@@ -193,16 +196,16 @@ export default function PropertiesPage() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold mb-2 text-neutral-900">
-                All Properties
+                {t('properties.title')}
               </h1>
               <p className="text-neutral-600">
-                {filteredProperties.length} Premium Executive Apartments
+                {t('properties.count', { count: filteredProperties.length })}
               </p>
             </div>
             
             {/* View Mode Toggle */}
             <div className="flex items-center gap-2">
-              <span className="text-sm text-neutral-500 hidden sm:inline">View:</span>
+              <span className="text-sm text-neutral-500 hidden sm:inline">{t('properties.view')}:</span>
               <div className="flex items-center border border-neutral-300">
                 <button
                   onClick={() => setViewMode('grid')}
@@ -211,7 +214,7 @@ export default function PropertiesPage() {
                       ? 'bg-primary text-white'
                       : 'bg-white text-neutral-600 hover:bg-neutral-50'
                   }`}
-                  title="网格视图"
+                  title={t('properties.gridView')}
                 >
                   <Grid3X3 size={18} />
                 </button>
@@ -222,7 +225,7 @@ export default function PropertiesPage() {
                       ? 'bg-primary text-white'
                       : 'bg-white text-neutral-600 hover:bg-neutral-50'
                   }`}
-                  title="列表视图"
+                  title={t('properties.listView')}
                 >
                   <List size={18} />
                 </button>
@@ -233,7 +236,7 @@ export default function PropertiesPage() {
                       ? 'bg-primary text-white'
                       : 'bg-white text-neutral-600 hover:bg-neutral-50'
                   }`}
-                  title="地图视图"
+                  title={t('properties.mapView')}
                 >
                   <MapIcon size={18} />
                 </button>
@@ -254,7 +257,7 @@ export default function PropertiesPage() {
                   <Search size={20} />
                 </div>
                 <Input
-                  placeholder="Search location, property name..."
+                  placeholder={t('properties.searchPlaceholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-12"
@@ -286,7 +289,7 @@ export default function PropertiesPage() {
                 className="relative"
               >
                 <SlidersHorizontal size={18} className="mr-2" />
-                Filter
+                {t('properties.filter')}
                 {activeFiltersCount > 0 && (
                   <span className="absolute -top-2 -right-2 w-5 h-5 bg-accent text-white text-xs flex items-center justify-center">
                     {activeFiltersCount}
@@ -307,7 +310,7 @@ export default function PropertiesPage() {
                 {/* Price Range */}
                 <div>
                   <label className="block text-sm font-medium text-neutral-700 mb-3">
-                    Price Range (CAD/night)
+                    {t('properties.priceRange')}
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {priceRanges.map((range) => (
@@ -329,7 +332,7 @@ export default function PropertiesPage() {
                 {/* Bedrooms */}
                 <div>
                   <label className="block text-sm font-medium text-neutral-700 mb-3">
-                    Bedrooms
+                    {t('properties.bedrooms')}
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {bedroomOptions.map((option) => (
@@ -351,7 +354,7 @@ export default function PropertiesPage() {
                 {/* Amenities */}
                 <div>
                   <label className="block text-sm font-medium text-neutral-700 mb-3">
-                    Amenities
+                    {t('properties.amenities')}
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {amenitiesList.map((amenity) => (
@@ -374,10 +377,10 @@ export default function PropertiesPage() {
               {/* Filter Actions */}
               <div className="flex justify-end gap-3 mt-6 pt-6 border-t border-neutral-200">
                 <Button variant="ghost" onClick={clearFilters}>
-                  Reset Filters
+                  {t('properties.resetFilters')}
                 </Button>
                 <Button onClick={() => setIsFilterOpen(false)}>
-                  Apply Filters
+                  {t('properties.applyFilters')}
                 </Button>
               </div>
             </div>
@@ -390,10 +393,10 @@ export default function PropertiesPage() {
         {/* Results Toolbar */}
         <div className="flex items-center justify-between mb-6">
           <div className="text-sm text-neutral-600">
-            Showing <span className="font-medium text-neutral-900">{paginatedProperties.length}</span> properties
+            {t('properties.showing')} <span className="font-medium text-neutral-900">{paginatedProperties.length}</span> {t('properties.properties')}
             {filteredProperties.length > 0 && (
               <>  
-                {' '}of <span className="font-medium text-neutral-900">{filteredProperties.length}</span> total
+                {' '}{t('properties.of')} <span className="font-medium text-neutral-900">{filteredProperties.length}</span> {t('properties.total')}
               </>
             )}
           </div>
@@ -401,7 +404,7 @@ export default function PropertiesPage() {
           <div className="flex items-center gap-4">
             {/* Sort */}
             <div className="flex items-center gap-2">
-              <span className="text-sm text-neutral-600 hidden sm:inline">Sort:</span>
+              <span className="text-sm text-neutral-600 hidden sm:inline">{t('properties.sort')}:</span>
               <div className="relative">
                 <select
                   value={sortBy}
@@ -410,7 +413,7 @@ export default function PropertiesPage() {
                 >
                   {sortOptions.map((option) => (
                     <option key={option.value} value={option.value}>
-                      {option.label}
+                      {t(option.label)}
                     </option>
                   ))}
                 </select>
@@ -468,13 +471,13 @@ export default function PropertiesPage() {
               <Search size={32} className="text-neutral-400" />
             </div>
             <h3 className="text-lg font-medium text-neutral-900 mb-2">
-              No properties found
+              {t('properties.noResults')}
             </h3>
             <p className="text-neutral-600 mb-4">
-              Try adjusting your filters or search terms
+              {t('properties.adjustFilters')}
             </p>
             <Button variant="outline" onClick={clearFilters}>
-              Clear Filters
+              {t('properties.clearFilters')}
             </Button>
           </div>
         )}
@@ -530,6 +533,8 @@ function PropertyGridCard({
 }: { 
   property: typeof mockProperties[0]; 
 }) {
+  const { t } = useI18n();
+  
   return (
     <Card className="group overflow-hidden" hover>
       <Link href={`/property/${property.id}`}>
@@ -543,7 +548,7 @@ function PropertyGridCard({
           />
           
           {property.featured && (
-            <Badge className="absolute top-3 left-3" variant="primary">Featured</Badge>
+            <Badge className="absolute top-3 left-3" variant="primary">{t('property.featured')}</Badge>
           )}
           
           <button 
@@ -572,11 +577,11 @@ function PropertyGridCard({
           </div>
           
           <div className="flex items-center gap-3 text-neutral-500 text-sm mb-4">
-            <span>{property.bedrooms} BR</span>
+            <span>{property.bedrooms} {t('property.bedroomsShort')}</span>
             <span>·</span>
-            <span>{property.area} sq ft</span>
+            <span>{property.area} {t('property.sqft')}</span>
             <span>·</span>
-            <span>Max {property.maxGuests} guests</span>
+            <span>{t('property.max')} {property.maxGuests} {t('property.guests')}</span>
           </div>
           
           <div className="flex items-baseline justify-between pt-3 border-t border-neutral-200">
@@ -584,9 +589,9 @@ function PropertyGridCard({
               <span className="text-xl font-bold text-neutral-900">
                 ${property.price.toLocaleString()}
               </span>
-              <span className="text-sm text-neutral-500">/{property.priceUnit}</span>
+              <span className="text-sm text-neutral-500">{t('property.perNight')}</span>
             </div>
-            <span className="text-xs text-neutral-400">{property.reviewCount} reviews</span>
+            <span className="text-xs text-neutral-400">{property.reviewCount} {t('property.reviews')}</span>
           </div>
         </div>
       </Link>
@@ -602,6 +607,8 @@ interface PropertyListCardProps {
 }
 
 function PropertyListCard({ property, isSelected, onClick }: PropertyListCardProps) {
+  const { t } = useI18n();
+  
   return (
     <Card 
       className={`group ${isSelected ? 'ring-2 ring-primary' : ''}`} 
@@ -622,7 +629,7 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
           {property.featured && (
-            <Badge className="absolute top-3 left-3" variant="primary">Featured</Badge>
+            <Badge className="absolute top-3 left-3" variant="primary">{t('property.featured')}</Badge>
           )}
           <button 
             className="absolute top-3 right-3 p-2 bg-white/90 hover:bg-white transition-colors"
@@ -653,7 +660,7 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
             <div className="flex items-center gap-4 text-sm text-neutral-600 mb-4">
               <div className="flex items-center gap-1">
                 <Bed size={14} />
-                <span>{property.bedrooms} BR</span>
+                <span>{property.bedrooms} {t('property.bedroomsShort')}</span>
               </div>
               <div className="flex items-center gap-1">
                 <Bath size={14} />
@@ -661,11 +668,11 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
               </div>
               <div className="flex items-center gap-1">
                 <Maximize size={14} />
-                <span>{property.area} sq ft</span>
+                <span>{property.area} {t('property.sqft')}</span>
               </div>
               <div className="flex items-center gap-1">
                 <Users size={14} />
-                <span>Max {property.maxGuests} guests</span>
+                <span>{t('property.max')} {property.maxGuests} {t('property.guests')}</span>
               </div>
             </div>
             
@@ -683,9 +690,9 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
               <span className="text-2xl font-bold text-neutral-900">
                 ${property.price.toLocaleString()}
               </span>
-              <span className="text-neutral-500">CAD/{property.priceUnit}</span>
+              <span className="text-neutral-500">{t('property.perNight')}</span>
             </div>
-            <span className="text-sm text-neutral-400">{property.reviewCount} reviews</span>
+            <span className="text-sm text-neutral-400">{property.reviewCount} {t('property.reviews')}</span>
           </div>
         </div>
       </Link>

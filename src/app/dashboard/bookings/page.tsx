@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import { Modal } from '@/components/ui';
 import { useAuth } from '@/lib/UserContext';
+import { useI18n } from '@/lib/i18n';
 import { 
   Calendar, 
   ChevronRight,
@@ -36,42 +37,43 @@ interface Booking {
 
 type TabType = 'upcoming' | 'current' | 'past' | 'cancelled';
 
-const tabs: { id: TabType; label: string }[] = [
-  { id: 'upcoming', label: 'Upcoming' },
-  { id: 'current', label: 'Current' },
-  { id: 'past', label: 'Past' },
-  { id: 'cancelled', label: 'Cancelled' },
+const getTabs = (t: (key: string) => string): { id: TabType; label: string }[] => [
+  { id: 'upcoming', label: t('bookings.tabs.upcoming') },
+  { id: 'current', label: t('bookings.tabs.current') },
+  { id: 'past', label: t('bookings.tabs.past') },
+  { id: 'cancelled', label: t('bookings.tabs.cancelled') },
 ];
 
-const statusConfig: Record<string, { label: string; color: string; bgColor: string }> = {
+const getStatusConfig = (t: (key: string) => string): Record<string, { label: string; color: string; bgColor: string }> => ({
   PENDING: {
-    label: 'Pending',
+    label: t('bookings.status.pending'),
     color: 'text-yellow-700',
     bgColor: 'bg-yellow-100',
   },
   CONFIRMED: {
-    label: 'Confirmed',
+    label: t('bookings.status.confirmed'),
     color: 'text-green-700',
     bgColor: 'bg-green-100',
   },
   CHECKED_IN: {
-    label: 'Checked in',
+    label: t('bookings.status.checkedIn'),
     color: 'text-blue-700',
     bgColor: 'bg-blue-100',
   },
   CHECKED_OUT: {
-    label: 'Checked out',
+    label: t('bookings.status.checkedOut'),
     color: 'text-gray-700',
     bgColor: 'bg-gray-100',
   },
   CANCELLED: {
-    label: 'Cancelled',
+    label: t('bookings.status.cancelled'),
     color: 'text-red-700',
     bgColor: 'bg-red-100',
   },
-};
+});
 
 export default function BookingsPage() {
+  const { t, locale } = useI18n();
   const { user, isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>('upcoming');
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -79,6 +81,9 @@ export default function BookingsPage() {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [error, setError] = useState('');
+
+  const tabs = getTabs(t);
+  const statusConfig = getStatusConfig(t);
 
   // 获取预订列表
   const fetchBookings = useCallback(async () => {
@@ -95,7 +100,7 @@ export default function BookingsPage() {
       const response = await fetch(`/api/bookings/list?userId=${user.id}`);
       
       if (!response.ok) {
-        throw new Error('Failed to fetch bookings');
+        throw new Error(t('bookings.error.fetchFailed'));
       }
       
       const data = await response.json();
@@ -127,7 +132,7 @@ export default function BookingsPage() {
       setBookings(filteredBookings);
     } catch (err) {
       console.error('Error fetching bookings:', err);
-      setError('Failed to load bookings. Please try again.');
+      setError(t('bookings.error.loadFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -138,7 +143,7 @@ export default function BookingsPage() {
   }, [fetchBookings]);
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
@@ -170,7 +175,7 @@ export default function BookingsPage() {
       });
       
       if (!response.ok) {
-        throw new Error('Failed to cancel booking');
+        throw new Error(t('bookings.error.cancelFailed'));
       }
       
       // 刷新列表
@@ -179,36 +184,38 @@ export default function BookingsPage() {
       setSelectedBooking(null);
     } catch (err) {
       console.error('Error cancelling booking:', err);
-      alert('Failed to cancel booking. Please try again.');
+      alert(t('bookings.error.cancelAlert'));
     }
   };
 
-  const emptyStateContent = {
+  const getEmptyStateContent = (t: (key: string) => string) => ({
     upcoming: {
       icon: Calendar,
-      title: 'No upcoming bookings',
-      description: 'You don\'t have any upcoming stays. Time to plan your next trip!',
-      cta: { text: 'Browse Properties', href: '/properties' },
+      title: t('bookings.empty.upcoming.title'),
+      description: t('bookings.empty.upcoming.description'),
+      cta: { text: t('bookings.empty.upcoming.cta'), href: '/properties' },
     },
     current: {
       icon: Home,
-      title: 'No current stays',
-      description: 'You\'re not checked in anywhere right now.',
-      cta: { text: 'Browse Properties', href: '/properties' },
+      title: t('bookings.empty.current.title'),
+      description: t('bookings.empty.current.description'),
+      cta: { text: t('bookings.empty.current.cta'), href: '/properties' },
     },
     past: {
       icon: Check,
-      title: 'No past bookings',
-      description: 'You haven\'t completed any stays yet.',
+      title: t('bookings.empty.past.title'),
+      description: t('bookings.empty.past.description'),
       cta: null,
     },
     cancelled: {
       icon: X,
-      title: 'No cancelled bookings',
-      description: 'You don\'t have any cancelled reservations.',
+      title: t('bookings.empty.cancelled.title'),
+      description: t('bookings.empty.cancelled.description'),
       cta: null,
     },
-  };
+  });
+
+  const emptyStateContent = getEmptyStateContent(t);
 
   // 未登录提示
   if (!isAuthenticated) {
@@ -217,10 +224,10 @@ export default function BookingsPage() {
         <div className="pt-4 pb-12">
           <div className="container mx-auto px-4 max-w-6xl">
             <div className="bg-white rounded-xl p-12 text-center border border-neutral-200">
-              <h1 className="text-3xl font-bold text-neutral-900 mb-4">My Bookings</h1>
-              <p className="text-neutral-600 mb-6">Please log in to view your bookings</p>
+              <h1 className="text-3xl font-bold text-neutral-900 mb-4">{t('bookings.title')}</h1>
+              <p className="text-neutral-600 mb-6">{t('bookings.loginRequired')}</p>
               <Link href="/login">
-                <Button>Log In</Button>
+                <Button>{t('bookings.login')}</Button>
               </Link>
             </div>
           </div>
@@ -235,8 +242,8 @@ export default function BookingsPage() {
         <div className="container mx-auto px-4 max-w-6xl">
           {/* Page Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-neutral-900">My Bookings</h1>
-            <p className="text-neutral-600 mt-2">Manage your reservations and view your stay history</p>
+            <h1 className="text-3xl font-bold text-neutral-900">{t('bookings.title')}</h1>
+            <p className="text-neutral-600 mt-2">{t('bookings.subtitle')}</p>
           </div>
 
           {/* Tabs */}
@@ -273,7 +280,7 @@ export default function BookingsPage() {
           {isLoading ? (
             <div className="flex items-center justify-center py-16">
               <Loader2 className="animate-spin mr-2 text-accent" size={24} />
-              <span className="text-neutral-600">Loading your bookings...</span>
+              <span className="text-neutral-600">{t('bookings.loading')}</span>
             </div>
           ) : bookings.length === 0 ? (
             /* Empty State */
@@ -317,7 +324,7 @@ export default function BookingsPage() {
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
                             <span className="text-xs text-neutral-500">
-                              Booking #{booking.booking_number}
+                              {t('bookings.bookingNumberLabel', { number: booking.booking_number })}
                             </span>
                             {getStatusBadge(booking.status)}
                           </div>
@@ -328,19 +335,19 @@ export default function BookingsPage() {
 
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                             <div className="p-3 bg-neutral-50 rounded-lg">
-                              <p className="text-xs text-neutral-500 mb-1">Check-in</p>
+                              <p className="text-xs text-neutral-500 mb-1">{t('bookings.checkIn')}</p>
                               <p className="font-medium text-neutral-900">{formatDate(booking.check_in)}</p>
                             </div>
                             <div className="p-3 bg-neutral-50 rounded-lg">
-                              <p className="text-xs text-neutral-500 mb-1">Check-out</p>
+                              <p className="text-xs text-neutral-500 mb-1">{t('bookings.checkOut')}</p>
                               <p className="font-medium text-neutral-900">{formatDate(booking.check_out)}</p>
                             </div>
                             <div className="p-3 bg-neutral-50 rounded-lg">
-                              <p className="text-xs text-neutral-500 mb-1">Nights</p>
+                              <p className="text-xs text-neutral-500 mb-1">{t('bookings.nights')}</p>
                               <p className="font-medium text-neutral-900">{booking.nights}</p>
                             </div>
                             <div className="p-3 bg-neutral-50 rounded-lg">
-                              <p className="text-xs text-neutral-500 mb-1">Guests</p>
+                              <p className="text-xs text-neutral-500 mb-1">{t('bookings.guests')}</p>
                               <p className="font-medium text-neutral-900">{booking.guests}</p>
                             </div>
                           </div>
@@ -354,7 +361,7 @@ export default function BookingsPage() {
                           <div className="mt-4 space-y-2">
                             <Link href={`/dashboard/bookings/${booking.id}`}>
                               <Button variant="outline" size="sm" fullWidth>
-                                View Details
+                                {t('bookings.viewDetails')}
                                 <ChevronRight size={14} className="ml-1" />
                               </Button>
                             </Link>
@@ -366,7 +373,7 @@ export default function BookingsPage() {
                                 fullWidth
                                 onClick={() => handleCancelClick(booking)}
                               >
-                                Cancel
+                                {t('bookings.cancel')}
                               </Button>
                             )}
                           </div>
@@ -388,19 +395,19 @@ export default function BookingsPage() {
           setShowCancelModal(false);
           setSelectedBooking(null);
         }}
-        title="Cancel Booking"
+        title={t('bookings.cancelModal.title')}
       >
         <div className="space-y-4">
           <p className="text-neutral-600">
-            Are you sure you want to cancel booking <span className="font-medium">#{selectedBooking?.booking_number}</span>?
+            {t('bookings.cancelModal.confirmText', { number: selectedBooking?.booking_number || '' })}
           </p>
           
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-            <p className="font-medium text-amber-800 mb-2">⚠️ Please note:</p>
+            <p className="font-medium text-amber-800 mb-2">{t('bookings.cancelModal.noticeTitle')}</p>
             <ul className="text-sm text-amber-700 space-y-1">
-              <li>• This action cannot be undone</li>
-              <li>• Refunds will be processed within 3-5 business days</li>
-              <li>• Cancellation fees may apply</li>
+              <li>• {t('bookings.cancelModal.notice1')}</li>
+              <li>• {t('bookings.cancelModal.notice2')}</li>
+              <li>• {t('bookings.cancelModal.notice3')}</li>
             </ul>
           </div>
           
@@ -412,13 +419,13 @@ export default function BookingsPage() {
                 setSelectedBooking(null);
               }}
             >
-              Keep Booking
+              {t('bookings.cancelModal.keep')}
             </Button>
             <Button
               variant="danger"
               onClick={handleConfirmCancel}
             >
-              Cancel Booking
+              {t('bookings.cancelModal.confirm')}
             </Button>
           </div>
         </div>

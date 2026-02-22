@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Button from '@/components/ui/Button';
 import { Container } from '@/components/ui';
+import { useI18n } from '@/lib/i18n';
 import { 
   Heart, 
   MapPin, 
@@ -86,6 +87,7 @@ const mockWishlist: Property[] = [
 ];
 
 export default function WishlistsPage() {
+  const { t } = useI18n();
   const [wishlist, setWishlist] = useState<Property[]>(mockWishlist);
   const [removingId, setRemovingId] = useState<string | null>(null);
 
@@ -108,15 +110,14 @@ export default function WishlistsPage() {
                 <Heart size={40} className="text-neutral-300" />
               </div>
 
-              <h1 className="text-3xl font-bold text-neutral-900 mb-4">Your wishlist is empty</h1>
+              <h1 className="text-3xl font-bold text-neutral-900 mb-4">{t('wishlists.emptyTitle')}</h1>
               <p className="text-neutral-600 mb-8">
-                Start exploring our properties and save your favorites here. 
-                You&apos;ll be able to compare them and book when you&apos;re ready.
+                {t('wishlists.emptyDescription')}
               </p>
 
               <Link href="/properties">
                 <Button size="lg">
-                  Explore Properties
+                  {t('wishlists.explore')}
                   <ArrowRight size={18} className="ml-2" />
                 </Button>
               </Link>
@@ -133,9 +134,9 @@ export default function WishlistsPage() {
         <Container>
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-neutral-900">My Wishlist</h1>
+            <h1 className="text-3xl font-bold text-neutral-900">{t('wishlists.title')}</h1>
             <p className="text-neutral-600 mt-2">
-              {wishlist.length} {wishlist.length === 1 ? 'property' : 'properties'} saved
+              {t('wishlists.savedCount', { count: wishlist.length })}
             </p>
           </div>
 
@@ -166,7 +167,7 @@ export default function WishlistsPage() {
                     className="absolute top-3 right-3 p-2 rounded-full bg-white/90 text-red-500 
                                opacity-0 group-hover:opacity-100 transition-all duration-200
                                hover:bg-red-50 hover:scale-110"
-                    title="Remove from wishlist"
+                    title={t('wishlists.remove')}
                   >
                     <Trash2 size={18} />
                   </button>
@@ -174,7 +175,7 @@ export default function WishlistsPage() {
                   {/* Price Badge */}
                   <div className="absolute bottom-3 left-3 px-3 py-1.5 bg-white/95 rounded-lg shadow-sm">
                     <span className="font-bold text-neutral-900">${property.price}</span>
-                    <span className="text-sm text-neutral-500">/{property.priceUnit}</span>
+                    <span className="text-sm text-neutral-500">/{t('wishlists.priceUnit')}</span>
                   </div>
                 </div>
 
@@ -199,29 +200,29 @@ export default function WishlistsPage() {
                   <div className="flex items-center gap-1 mt-2">
                     <Star size={16} className="text-amber-400 fill-amber-400" />
                     <span className="font-medium text-neutral-900">{property.rating}</span>
-                    <span className="text-sm text-neutral-500">({property.reviewCount} reviews)</span>
+                    <span className="text-sm text-neutral-500">({t('wishlists.reviews', { count: property.reviewCount })})</span>
                   </div>
 
                   {/* Amenities */}
                   <div className="flex items-center gap-3 mt-3 text-sm text-neutral-600">
                     <div className="flex items-center gap-1">
                       <Home size={14} />
-                      <span>{property.bedrooms} {property.bedrooms === 1 ? 'bed' : 'beds'}</span>
+                      <span>{t('wishlists.beds', { count: property.bedrooms })}</span>
                     </div>
                     <span className="text-neutral-300">•</span>
-                    <span>{property.bathrooms} {property.bathrooms === 1 ? 'bath' : 'baths'}</span>
+                    <span>{t('wishlists.baths', { count: property.bathrooms })}</span>
                   </div>
 
                   {/* Actions */}
                   <div className="flex gap-2 mt-4 pt-4 border-t border-neutral-100">
                     <Link href={`/properties/${property.id}`} className="flex-1">
                       <Button variant="outline" size="sm" fullWidth>
-                        View Details
+                        {t('wishlists.viewDetails')}
                       </Button>
                     </Link>
                     <Link href={`/booking/${property.id}`} className="flex-1">
                       <Button size="sm" fullWidth>
-                        Book Now
+                        {t('wishlists.bookNow')}
                       </Button>
                     </Link>
                   </div>
@@ -232,10 +233,10 @@ export default function WishlistsPage() {
 
           {/* Browse More */}
           <div className="mt-12 text-center">
-            <p className="text-neutral-600 mb-4">Looking for more options?</p>
+            <p className="text-neutral-600 mb-4">{t('wishlists.moreOptions')}</p>
             <Link href="/properties">
               <Button variant="outline">
-                Browse All Properties
+                {t('wishlists.browseAll')}
                 <ArrowRight size={18} className="ml-2" />
               </Button>
             </Link>

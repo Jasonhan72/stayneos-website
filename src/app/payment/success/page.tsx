@@ -4,9 +4,11 @@ import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui';
+import { useI18n } from '@/lib/i18n';
 import { CheckCircle, Calendar, Mail, ArrowRight, Loader2 } from 'lucide-react';
 
 function PaymentSuccessContent() {
+  const { t } = useI18n();
   const searchParams = useSearchParams();
   const bookingNumber = searchParams.get('booking');
   const [countdown, setCountdown] = useState(5);
@@ -27,16 +29,16 @@ function PaymentSuccessContent() {
         </div>
 
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          支付成功！
+          {t('payment.success.title')}
         </h1>
         
         <p className="text-gray-600 mb-6">
-          您的预订已成功确认，我们将尽快发送确认邮件给您。
+          {t('payment.success.description')}
         </p>
 
         {bookingNumber && (
           <div className="bg-gray-50 rounded-lg p-4 mb-6">
-            <p className="text-sm text-gray-500 mb-1">预订编号</p>
+            <p className="text-sm text-gray-500 mb-1">{t('payment.success.bookingNumber')}</p>
             <p className="text-xl font-bold text-gray-900">{bookingNumber}</p>
           </div>
         )}
@@ -44,31 +46,31 @@ function PaymentSuccessContent() {
         <div className="space-y-3 mb-8">
           <div className="flex items-center gap-3 text-sm text-gray-600">
             <Mail size={18} className="text-amber-500" />
-            <span>确认邮件已发送至您的邮箱</span>
+            <span>{t('payment.success.emailSent')}</span>
           </div>
           <div className="flex items-center gap-3 text-sm text-gray-600">
             <Calendar size={18} className="text-amber-500" />
-            <span>您可以在&quot;我的预订&quot;中管理订单</span>
+            <span>{t('payment.success.manageBooking')}</span>
           </div>
         </div>
 
         <div className="space-y-3">
           <Link href="/dashboard/bookings">
             <Button size="lg" className="w-full">
-              查看我的预订
+              {t('payment.success.viewBookings')}
               <ArrowRight size={18} className="ml-2" />
             </Button>
           </Link>
           
           <Link href="/">
             <Button variant="outline" className="w-full">
-              返回首页
+              {t('payment.success.backHome')}
             </Button>
           </Link>
         </div>
 
         <p className="mt-6 text-sm text-gray-400">
-          {countdown > 0 ? `${countdown}秒后自动跳转到我的预订` : '正在跳转...'}
+          {countdown > 0 ? t('payment.success.redirecting', { seconds: countdown }) : t('payment.success.redirectingNow')}
         </p>
       </div>
     </main>
@@ -76,12 +78,14 @@ function PaymentSuccessContent() {
 }
 
 export default function PaymentSuccessPage() {
+  const { t } = useI18n();
+  
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-amber-50 flex items-center justify-center">
         <div className="flex items-center">
           <Loader2 className="animate-spin mr-2" size={24} />
-          <span>加载中...</span>
+          <span>{t('payment.success.loading')}</span>
         </div>
       </div>
     }>

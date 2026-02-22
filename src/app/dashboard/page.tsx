@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { useAuth } from "@/lib/context/UserContext";
+import { useI18n } from "@/lib/i18n";
 import { UserAvatar } from "@/components/ui/UserAvatar";
 import { mockProperties } from "@/lib/data";
 import {
@@ -49,6 +50,7 @@ const mockBookings = [
 const mockFavorites = [mockProperties[0], mockProperties[1]];
 
 function DashboardContent() {
+  const { t } = useI18n();
   const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState<"bookings" | "favorites" | "profile">("bookings");
   const [isEditing, setIsEditing] = useState(false);
@@ -56,13 +58,13 @@ function DashboardContent() {
     name: user?.name || "",
     email: user?.email || "",
     phone: "",
-    memberSince: "2024年1月",
+    memberSince: t('dashboard.memberSince', { date: '2024年1月' }),
   });
 
   const tabs = [
-    { id: "bookings", label: "我的预订", icon: Calendar },
-    { id: "favorites", label: "收藏房源", icon: Heart },
-    { id: "profile", label: "个人信息", icon: User },
+    { id: "bookings", label: t('dashboard.tabs.bookings'), icon: Calendar },
+    { id: "favorites", label: t('dashboard.tabs.favorites'), icon: Heart },
+    { id: "profile", label: t('dashboard.tabs.profile'), icon: User },
   ];
 
   const getStatusBadge = (status: string) => {
@@ -72,9 +74,9 @@ function DashboardContent() {
       cancelled: "bg-gray-100 text-gray-800",
     };
     const labels = {
-      upcoming: "即将入住",
-      completed: "已完成",
-      cancelled: "已取消",
+      upcoming: t('dashboard.status.upcoming'),
+      completed: t('dashboard.status.completed'),
+      cancelled: t('dashboard.status.cancelled'),
     };
     return (
       <span
@@ -89,7 +91,7 @@ function DashboardContent() {
 
   const handleSaveProfile = () => {
     setIsEditing(false);
-    alert("个人信息已更新！");
+    alert(t('dashboard.profile.saved'));
   };
 
   return (
@@ -107,9 +109,9 @@ function DashboardContent() {
               />
               <div className="flex-1">
                 <h1 className="text-2xl font-bold text-gray-900 mb-1">
-                  欢迎回来，{(user?.name?.split(" ").filter(n => n)[0]) || user?.email?.split("@")[0] || "User"}
+                  {t('dashboard.welcome', { name: (user?.name?.split(" ").filter(n => n)[0]) || user?.email?.split("@")[0] || "User" })}
                 </h1>
-                <p className="text-gray-500">会员自 {userData.memberSince}</p>
+                <p className="text-gray-500">{t('dashboard.memberSinceLabel', { date: '2024年1月' })}</p>
               </div>
               <div className="flex gap-3">
                 <button
@@ -117,14 +119,14 @@ function DashboardContent() {
                   className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
                 >
                   <Settings size={18} />
-                  设置
+                  {t('dashboard.settings')}
                 </button>
                 <button
                   onClick={logout}
                   className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   <LogOut size={18} />
-                  退出
+                  {t('dashboard.logout')}
                 </button>
               </div>
             </div>
@@ -160,19 +162,19 @@ function DashboardContent() {
               {/* Quick Stats */}
               <div className="bg-white rounded-xl shadow-sm mt-4 p-4">
                 <h3 className="text-sm font-semibold text-gray-900 mb-4">
-                  账户概览
+                  {t('dashboard.overview')}
                 </h3>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">已完成预订</span>
+                    <span className="text-sm text-gray-600">{t('dashboard.completedBookings')}</span>
                     <span className="font-semibold">1</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">即将入住</span>
+                    <span className="text-sm text-gray-600">{t('dashboard.upcomingStays')}</span>
                     <span className="font-semibold">1</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">收藏房源</span>
+                    <span className="text-sm text-gray-600">{t('dashboard.favorites')}</span>
                     <span className="font-semibold">{mockFavorites.length}</span>
                   </div>
                 </div>
@@ -185,12 +187,12 @@ function DashboardContent() {
               {activeTab === "bookings" && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold text-gray-900">我的预订</h2>
+                    <h2 className="text-xl font-bold text-gray-900">{t('dashboard.myBookings')}</h2>
                     <Link
                       href="/properties"
                       className="text-blue-600 hover:text-blue-700 text-sm font-medium"
                     >
-                      浏览房源 →
+                      {t('dashboard.browseProperties')} →
                     </Link>
                   </div>
 
@@ -238,7 +240,7 @@ function DashboardContent() {
                               </div>
                               <div className="flex items-center gap-1 text-gray-600">
                                 <User size={14} />
-                                <span>{booking.guests}位房客</span>
+                                <span>{t('dashboard.guestsCount', { count: booking.guests })}</span>
                               </div>
                               <div className="font-semibold text-gray-900">
                                 ¥{booking.totalPrice.toLocaleString()}
@@ -249,20 +251,20 @@ function DashboardContent() {
                               {booking.status === "upcoming" && (
                                 <>
                                   <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
-                                    查看详情
+                                    {t('dashboard.viewDetails')}
                                   </button>
                                   <button className="px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors">
-                                    取消预订
+                                    {t('dashboard.cancelBooking')}
                                   </button>
                                 </>
                               )}
                               {booking.status === "completed" && (
                                 <>
                                   <button className="px-4 py-2 bg-amber-500 text-white text-sm rounded-lg hover:bg-amber-600 transition-colors">
-                                    写评价
+                                    {t('dashboard.writeReview')}
                                   </button>
                                   <button className="px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors">
-                                    再次预订
+                                    {t('dashboard.bookAgain')}
                                   </button>
                                 </>
                               )}
@@ -275,14 +277,14 @@ function DashboardContent() {
                     <div className="bg-white rounded-xl p-12 text-center">
                       <Calendar size={48} className="text-gray-300 mx-auto mb-4" />
                       <h3 className="text-lg font-medium text-gray-900 mb-2">
-                        暂无预订
+                        {t('dashboard.noBookings')}
                       </h3>
-                      <p className="text-gray-500 mb-6">您还没有任何预订记录</p>
+                      <p className="text-gray-500 mb-6">{t('dashboard.noBookingsDesc')}</p>
                       <Link
                         href="/properties"
                         className="inline-block px-6 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors"
                       >
-                        浏览房源
+                        {t('dashboard.browseProperties')}
                       </Link>
                     </div>
                   )}
@@ -292,7 +294,7 @@ function DashboardContent() {
               {/* Favorites Tab */}
               {activeTab === "favorites" && (
                 <div className="space-y-4">
-                  <h2 className="text-xl font-bold text-gray-900 mb-4">收藏房源</h2>
+                  <h2 className="text-xl font-bold text-gray-900 mb-4">{t('dashboard.myFavorites')}</h2>
 
                   {mockFavorites.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -339,7 +341,7 @@ function DashboardContent() {
                                   ¥{property.price.toLocaleString()}
                                 </span>
                                 <span className="text-sm text-gray-500">
-                                  /{property.priceUnit}
+                                  /{t('dashboard.priceUnit')}
                                 </span>
                               </div>
                             </div>
@@ -349,10 +351,10 @@ function DashboardContent() {
                                 href={`/properties/${property.id}`}
                                 className="flex-1 px-4 py-2 bg-amber-500 text-white text-sm text-center rounded-lg hover:bg-amber-600 transition-colors"
                               >
-                                立即预订
+                                {t('dashboard.bookNow')}
                               </Link>
                               <button className="px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors">
-                                取消收藏
+                                {t('dashboard.removeFavorite')}
                               </button>
                             </div>
                           </div>
@@ -363,14 +365,14 @@ function DashboardContent() {
                     <div className="bg-white rounded-xl p-12 text-center">
                       <Heart size={48} className="text-gray-300 mx-auto mb-4" />
                       <h3 className="text-lg font-medium text-gray-900 mb-2">
-                        暂无收藏
+                        {t('dashboard.noFavorites')}
                       </h3>
-                      <p className="text-gray-500 mb-6">您还没有收藏任何房源</p>
+                      <p className="text-gray-500 mb-6">{t('dashboard.noFavoritesDesc')}</p>
                       <Link
                         href="/properties"
                         className="inline-block px-6 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors"
                       >
-                        浏览房源
+                        {t('dashboard.browseProperties')}
                       </Link>
                     </div>
                   )}
@@ -381,7 +383,7 @@ function DashboardContent() {
               {activeTab === "profile" && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold text-gray-900">个人信息</h2>
+                    <h2 className="text-xl font-bold text-gray-900">{t('dashboard.personalInfo')}</h2>
                     <button
                       onClick={() =>
                         isEditing ? handleSaveProfile() : setIsEditing(true)
@@ -389,11 +391,11 @@ function DashboardContent() {
                       className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                     >
                       {isEditing ? (
-                        <>保存</>
+                        <>{t('dashboard.save')}</>
                       ) : (
                         <>
                           <Edit3 size={16} />
-                          编辑
+                          {t('dashboard.edit')}
                         </>
                       )}
                     </button>
@@ -415,7 +417,7 @@ function DashboardContent() {
                         )}
                       </div>
                       {isEditing && (
-                        <p className="text-sm text-gray-500 mt-2">点击更换头像</p>
+                        <p className="text-sm text-gray-500 mt-2">{t('dashboard.changeAvatar')}</p>
                       )}
                     </div>
 
@@ -423,7 +425,7 @@ function DashboardContent() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          姓名
+                          {t('dashboard.name')}
                         </label>
                         <input
                           type="text"
@@ -438,7 +440,7 @@ function DashboardContent() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          邮箱
+                          {t('dashboard.email')}
                         </label>
                         <input
                           type="email"
@@ -453,7 +455,7 @@ function DashboardContent() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          手机号
+                          {t('dashboard.phone')}
                         </label>
                         <input
                           type="tel"
@@ -468,7 +470,7 @@ function DashboardContent() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          注册时间
+                          {t('dashboard.memberSince')}
                         </label>
                         <input
                           type="text"
@@ -482,7 +484,7 @@ function DashboardContent() {
 
                   {/* Security */}
                   <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">账户安全</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('dashboard.security')}</h3>
                     <div className="space-y-4">
                       <div className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
                         <div className="flex items-center gap-3">
@@ -490,12 +492,12 @@ function DashboardContent() {
                             <CheckCircle size={20} className="text-green-600" />
                           </div>
                           <div>
-                            <p className="font-medium text-gray-900">登录密码</p>
-                            <p className="text-sm text-gray-500">已设置</p>
+                            <p className="font-medium text-gray-900">{t('dashboard.password')}</p>
+                            <p className="text-sm text-gray-500">{t('dashboard.passwordSet')}</p>
                           </div>
                         </div>
                         <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                          修改
+                          {t('dashboard.modify')}
                         </button>
                       </div>
 
@@ -505,14 +507,14 @@ function DashboardContent() {
                             <CheckCircle size={20} className="text-yellow-600" />
                           </div>
                           <div>
-                            <p className="font-medium text-gray-900">手机验证</p>
+                            <p className="font-medium text-gray-900">{t('dashboard.phoneVerify')}</p>
                             <p className="text-sm text-gray-500">
-                              {userData.phone || "未设置"}
+                              {userData.phone || t('dashboard.notSet')}
                             </p>
                           </div>
                         </div>
                         <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                          修改
+                          {t('dashboard.modify')}
                         </button>
                       </div>
 
@@ -522,12 +524,12 @@ function DashboardContent() {
                             <XCircle size={20} className="text-gray-600" />
                           </div>
                           <div>
-                            <p className="font-medium text-gray-900">双重验证</p>
-                            <p className="text-sm text-gray-500">未开启</p>
+                            <p className="font-medium text-gray-900">{t('dashboard.twoFactor')}</p>
+                            <p className="text-sm text-gray-500">{t('dashboard.twoFactorOff')}</p>
                           </div>
                         </div>
                         <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                          开启
+                          {t('dashboard.enable')}
                         </button>
                       </div>
                     </div>

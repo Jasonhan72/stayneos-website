@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui';
+import { useI18n } from '@/lib/i18n';
 import { 
   ChevronLeft, 
   Calendar, 
@@ -74,35 +75,36 @@ interface BookingDetail {
   }[];
 }
 
-const statusConfig: Record<string, { label: string; color: string; icon: React.ComponentType<{ size?: number | string }> }> = {
+const getStatusConfig = (t: (key: string) => string): Record<string, { label: string; color: string; icon: React.ComponentType<{ size?: number | string }> }> => ({
   PENDING: {
-    label: '待确认',
+    label: t('bookingDetail.status.pending'),
     color: 'bg-yellow-100 text-yellow-800',
     icon: Clock,
   },
   CONFIRMED: {
-    label: '已确认',
+    label: t('bookingDetail.status.confirmed'),
     color: 'bg-green-100 text-green-800',
     icon: Check,
   },
   CHECKED_IN: {
-    label: '已入住',
+    label: t('bookingDetail.status.checkedIn'),
     color: 'bg-blue-100 text-blue-800',
     icon: Home,
   },
   CHECKED_OUT: {
-    label: '已退房',
+    label: t('bookingDetail.status.checkedOut'),
     color: 'bg-gray-100 text-gray-800',
     icon: Check,
   },
   CANCELLED: {
-    label: '已取消',
+    label: t('bookingDetail.status.cancelled'),
     color: 'bg-red-100 text-red-800',
     icon: X,
   },
-};
+});
 
 export default function BookingDetailClient() {
+  const { t, locale } = useI18n();
   const params = useParams();
   const bookingId = params.id as string;
   
@@ -117,12 +119,12 @@ export default function BookingDetailClient() {
       const data = await response.json() as { error?: string; booking: BookingDetail };
 
       if (!response.ok) {
-        throw new Error(data.error || '获取预订详情失败');
+        throw new Error(data.error || t('bookingDetail.error.fetchFailed'));
       }
 
       setBooking(data.booking);
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : '获取预订详情失败';
+      const errorMessage = err instanceof Error ? err.message : t('bookingDetail.error.fetchFailed');
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -135,7 +137,7 @@ export default function BookingDetailClient() {
 
   // 格式化日期
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('zh-CN', {
+    return new Date(dateString).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-CA', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -158,7 +160,7 @@ export default function BookingDetailClient() {
           <div className="container mx-auto px-4 max-w-4xl">
             <div className="flex items-center justify-center py-12">
               <Loader2 className="animate-spin mr-2" size={24} />
-              <span>加载中...</span>
+              <span>{t('bookingDetail.loading')}</span>
             </div>
           </div>
         </div>
@@ -174,10 +176,10 @@ export default function BookingDetailClient() {
           <div className="container mx-auto px-4 max-w-4xl">
             <div className="bg-white rounded-xl p-8 text-center">
               <AlertCircle size={48} className="text-red-500 mx-auto mb-4" />
-              <h2 className="text-xl font-bold text-gray-900 mb-2">加载失败</h2>
-              <p className="text-gray-600 mb-6">{error || '预订不存在'}</p>
+              <h2 className="text-xl font-bold text-gray-900 mb-2">{t('bookingDetail.error.title')}</h2>
+              <p className="text-gray-600 mb-6">{error || t('bookingDetail.error.notFound')}</p>
               <Link href="/dashboard/bookings">
-                <Button>返回预订列表</Button>
+                <Button>{t('bookingDetail.backToList')}</Button>
               </Link>
             </div>
           </div>
@@ -186,6 +188,7 @@ export default function BookingDetailClient() {
     );
   }
 
+  const statusConfig = getStatusConfig(t);
   const StatusIcon = statusConfig[booking.status]?.icon || Clock;
   const statusConfigItem = statusConfig[booking.status] || statusConfig.PENDING;
 
@@ -201,7 +204,7 @@ export default function BookingDetailClient() {
             className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6"
           >
             <ChevronLeft size={20} />
-            <span>返回预订列表</span>
+            <span>{t('bookingDetail.backToList')}</span>
           </Link>
 
           {/* 预订状态卡片 */}
@@ -213,14 +216,14 @@ export default function BookingDetailClient() {
                     <StatusIcon size={24} />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">预订号: {booking.bookingNumber}</p>
+                    <p className="text-sm text-gray-500">{t('bookingDetail.bookingNumber')}: {booking.bookingNumber}</p>
                     <h1 className="text-2xl font-bold text-gray-900">
                       {statusConfigItem.label}
                     </h1>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-gray-500">预订日期</p>
+                  <p className="text-sm text-gray-500">{t('bookingDetail.bookingDate')}</p>
                   <p className="font-medium">{formatDate(booking.createdAt)}</p>
                 </div>
               </div>
@@ -230,7 +233,7 @@ export default function BookingDetailClient() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* 房源信息 */}
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900 mb-4">房源信息</h2>
+                  <h2 className="text-lg font-bold text-gray-900 mb-4">{t('bookingDetail.propertyInfo')}</h2>
                   <div className="relative aspect-video rounded-lg overflow-hidden mb-4">
                     <Image
                       src={booking.property.images[0]?.url || '/images/placeholder.jpg'}
@@ -253,7 +256,7 @@ export default function BookingDetailClient() {
 
                 {/* 入住信息 */}
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900 mb-4">入住信息</h2>
+                  <h2 className="text-lg font-bold text-gray-900 mb-4">{t('bookingDetail.stayInfo')}</h2>
                   
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
@@ -261,7 +264,7 @@ export default function BookingDetailClient() {
                         <Calendar size={18} className="text-amber-600" />
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">入住日期</p>
+                        <p className="text-sm text-gray-500">{t('bookingDetail.checkInDate')}</p>
                         <p className="font-medium">{formatDate(booking.checkIn)}</p>
                       </div>
                     </div>
@@ -271,7 +274,7 @@ export default function BookingDetailClient() {
                         <Calendar size={18} className="text-amber-600" />
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">退房日期</p>
+                        <p className="text-sm text-gray-500">{t('bookingDetail.checkOutDate')}</p>
                         <p className="font-medium">{formatDate(booking.checkOut)}</p>
                       </div>
                     </div>
@@ -281,25 +284,25 @@ export default function BookingDetailClient() {
                         <span className="text-amber-600 font-medium">{booking.guests}</span>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">入住人数</p>
-                        <p className="font-medium">{booking.guests} 人 · {booking.nights} 晚</p>
+                        <p className="text-sm text-gray-500">{t('bookingDetail.guests')}</p>
+                        <p className="font-medium">{t('bookingDetail.guestsCount', { guests: booking.guests, nights: booking.nights })}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* 入住人信息 */}
                   <div className="mt-6 pt-6 border-t border-gray-100">
-                    <h3 className="font-medium text-gray-900 mb-3">入住人</h3>
+                    <h3 className="font-medium text-gray-900 mb-3">{t('bookingDetail.guestInfo')}</h3>
                     <div className="space-y-2 text-sm">
-                      <p><span className="text-gray-500">姓名：</span> {booking.guestName}</p>
-                      <p><span className="text-gray-500">电话：</span> {booking.guestPhone}</p>
-                      <p><span className="text-gray-500">邮箱：</span> {booking.guestEmail}</p>
+                      <p><span className="text-gray-500">{t('bookingDetail.guestName')}:</span> {booking.guestName}</p>
+                      <p><span className="text-gray-500">{t('bookingDetail.guestPhone')}:</span> {booking.guestPhone}</p>
+                      <p><span className="text-gray-500">{t('bookingDetail.guestEmail')}:</span> {booking.guestEmail}</p>
                     </div>
                   </div>
 
                   {booking.specialRequests && (
                     <div className="mt-6 pt-6 border-t border-gray-100">
-                      <h3 className="font-medium text-gray-900 mb-3">特殊需求</h3>
+                      <h3 className="font-medium text-gray-900 mb-3">{t('bookingDetail.specialRequests')}</h3>
                       <p className="text-sm text-gray-600">{booking.specialRequests}</p>
                     </div>
                   )}
@@ -310,41 +313,41 @@ export default function BookingDetailClient() {
 
           {/* 价格明细 */}
           <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">费用明细</h2>
+            <h2 className="text-lg font-bold text-gray-900 mb-4">{t('bookingDetail.priceBreakdown')}</h2>
             
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-gray-600">房费</span>
+                <span className="text-gray-600">{t('bookingDetail.roomFee')}</span>
                 <span>{formatAmount(booking.basePrice * booking.nights)}</span>
               </div>
               
               {booking.discount > 0 && (
                 <div className="flex justify-between text-green-600">
-                  <span>折扣</span>
+                  <span>{t('bookingDetail.discount')}</span>
                   <span>-{formatAmount(booking.discount)}</span>
                 </div>
               )}
               
               {booking.cleaningFee > 0 && (
                 <div className="flex justify-between">
-                  <span className="text-gray-600">清洁费</span>
+                  <span className="text-gray-600">{t('bookingDetail.cleaningFee')}</span>
                   <span>{formatAmount(booking.cleaningFee)}</span>
                 </div>
               )}
               
               <div className="flex justify-between">
-                <span className="text-gray-600">服务费</span>
+                <span className="text-gray-600">{t('bookingDetail.serviceFee')}</span>
                 <span>{formatAmount(booking.serviceFee)}</span>
               </div>
               
               <div className="flex justify-between">
-                <span className="text-gray-600">税费 (HST)</span>
+                <span className="text-gray-600">{t('bookingDetail.tax')}</span>
                 <span>{formatAmount(booking.tax)}</span>
               </div>
               
               <div className="pt-4 border-t border-gray-100">
                 <div className="flex justify-between items-center">
-                  <span className="font-bold text-lg">总价</span>
+                  <span className="font-bold text-lg">{t('bookingDetail.total')}</span>
                   <span className="font-bold text-lg">{formatAmount(Number(booking.totalPrice))}</span>
                 </div>
               </div>
@@ -354,7 +357,7 @@ export default function BookingDetailClient() {
           {/* 支付记录 */}
           {booking.payments.length > 0 && (
             <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">支付记录</h2>
+              <h2 className="text-lg font-bold text-gray-900 mb-4">{t('bookingDetail.paymentRecord')}</h2>
               
               <div className="space-y-4">
                 {booking.payments.map((payment) => (
@@ -365,10 +368,10 @@ export default function BookingDetailClient() {
                       </div>
                       <div>
                         <p className="font-medium">
-                          {payment.cardBrand ? `${payment.cardBrand.toUpperCase()} ****${payment.cardLast4}` : '信用卡'}
+                          {payment.cardBrand ? `${payment.cardBrand.toUpperCase()} ****${payment.cardLast4}` : t('bookingDetail.creditCard')}
                         </p>
                         <p className="text-sm text-gray-500">
-                          {payment.paidAt ? formatDate(payment.paidAt) : '待支付'}
+                          {payment.paidAt ? formatDate(payment.paidAt) : t('bookingDetail.pendingPayment')}
                         </p>
                       </div>
                     </div>
@@ -382,7 +385,7 @@ export default function BookingDetailClient() {
           {/* 评价 */}
           {booking.review && (
             <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">我的评价</h2>
+              <h2 className="text-lg font-bold text-gray-900 mb-4">{t('bookingDetail.myReview')}</h2>
               
               <div className="flex items-center gap-1 mb-3">
                 {Array.from({ length: 5 }).map((_, i) => (
@@ -403,18 +406,18 @@ export default function BookingDetailClient() {
           <div className="flex flex-wrap gap-3">
             <Button variant="outline">
               <Printer size={18} className="mr-2" />
-              打印
+              {t('bookingDetail.print')}
             </Button>
             
             <Button variant="outline">
               <Download size={18} className="mr-2" />
-              下载凭证
+              {t('bookingDetail.downloadVoucher')}
             </Button>
 
             {booking.status === 'CHECKED_OUT' && !booking.review && (
               <Button>
                 <Star size={18} className="mr-2" />
-                写评价
+                {t('bookingDetail.writeReview')}
               </Button>
             )}
           </div>

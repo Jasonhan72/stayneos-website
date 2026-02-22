@@ -3,15 +3,16 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n, type Locale } from "@/lib/i18n";
 
 interface LanguageCurrencySelectorProps {
   variant?: "light" | "dark" | "transparent";
 }
 
 const languages = [
-  { code: "EN", name: "English", flag: "🇺🇸" },
-  { code: "中文", name: "中文", flag: "🇨🇳" },
-  { code: "FR", name: "Français", flag: "🇫🇷" },
+  { code: "EN", name: "English", flag: "🇺🇸", locale: "en" as Locale },
+  { code: "中文", name: "中文", flag: "🇨🇳", locale: "zh" as Locale },
+  { code: "FR", name: "Français", flag: "🇫🇷", locale: "fr" as Locale },
 ];
 
 const currencies = [
@@ -23,9 +24,12 @@ const currencies = [
 
 export function LanguageCurrencySelector({ variant = "light" }: LanguageCurrencySelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedLang, setSelectedLang] = useState(languages[0]);
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0]);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { locale, setLocale } = useI18n();
+  
+  // Get current language based on i18n locale
+  const selectedLang = languages.find(lang => lang.locale === locale) || languages[0];
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -84,7 +88,7 @@ export function LanguageCurrencySelector({ variant = "light" }: LanguageCurrency
               <button
                 key={lang.code}
                 onClick={() => {
-                  setSelectedLang(lang);
+                  setLocale(lang.locale);
                 }}
                 className={cn(
                   "w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors",

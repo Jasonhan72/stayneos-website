@@ -68,6 +68,16 @@
     "guestCount": "{count} Guests",
     "search": "Search"
   },
+  "sort": {
+    "recommended": "Recommended",
+    "priceLow": "Price: Low to High",
+    "priceHigh": "Price: High to Low",
+    "rating": "Highest Rated"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
+  },
   "features": {
     "title": "Why Choose StayNeos",
     "subtitle": "We are committed to providing exceptional living experiences for every client, from property selection to check-in service, every detail is carefully crafted",
@@ -82,7 +92,24 @@
   },
   "properties": {
     "title": "Featured Properties",
-    "subtitle": "Carefully selected premium executive apartments, each one an embodiment of quality living",
+    "view": "View",
+    "gridView": "Grid view",
+    "listView": "List view",
+    "mapView": "Map view",
+    "searchPlaceholder": "Search location, property name...",
+    "filter": "Filter",
+    "priceRange": "Price Range (CAD/night)",
+    "resetFilters": "Reset Filters",
+    "applyFilters": "Apply Filters",
+    "showing": "Showing",
+    "of": "of",
+    "sort": "Sort",
+    "noResults": "No properties found",
+    "adjustFilters": "Try adjusting your filters or search terms",
+    "clearFilters": "Clear Filters",
+    "count": "{count} Premium Executive Apartments",
+    "amenities": "Amenities",
+    "bedrooms": "Bedrooms",
     "viewAll": "View All Properties",
     "featured": "Featured",
     "rating": "Rating",
@@ -406,7 +433,27 @@
     "pleaseSelectCheckOut": "Please select check-out date",
     "shareText": "Check out this property",
     "linkCopied": "Link copied to clipboard!",
-    "defaultDescription": "This beautiful apartment in {location} features {bedrooms} spacious bedrooms and {bathrooms} modern bathrooms.\n\nThe apartment has a total area of {area} square meters and can accommodate up to {maxGuests} guests. The thoughtfully designed layout and high-quality finishes provide a comfortable living experience.\n\nLocated in a prime city center location with convenient transportation and complete surrounding facilities. Whether for business trips or family vacations, this is your ideal choice."
+    "defaultDescription": "This beautiful apartment in {location} features {bedrooms} spacious bedrooms and {bathrooms} modern bathrooms.\n\nThe apartment has a total area of {area} square meters and can accommodate up to {maxGuests} guests. The thoughtfully designed layout and high-quality finishes provide a comfortable living experience.\n\nLocated in a prime city center location with convenient transportation and complete surrounding facilities. Whether for business trips or family vacations, this is your ideal choice.",
+    "entireCondo": "Entire condo",
+    "entireHome": "Entire home",
+    "guest": "Guest",
+    "guestInfo": "{maxGuests} guests · {bedrooms} bedrooms · {beds} beds · {bathrooms} baths",
+    "favourite": "favourite",
+    "hostedBy": "Hosted by {name}",
+    "superhostYears": "Superhost · {years} years hosting",
+    "top10": "Top 10% of homes",
+    "top10Desc": "This home is highly ranked based on ratings, reviews, and reliability.",
+    "diveIn": "Dive right in",
+    "diveInDesc": "This is one of the few places in the area with a pool.",
+    "aboutPlace": "About this place",
+    "whatOffers": "What this place offers",
+    "showAllAmenities": "Show all {count} amenities",
+    "whereYouBe": "Where you'll be",
+    "addDates": "Add dates for prices",
+    "checkAvailability": "Check availability",
+    "mapLoading": "Loading map...",
+    "selectDatesError": "Please select check-in and check-out dates",
+    "inLocation": "{propertyType} in {location}"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -709,10 +756,6 @@
     "share": "Share",
     "favorite": "Save",
     "night": "night"
-  },
-  "property": {
-    "mapLoading": "Loading map...",
-    "selectDatesError": "Please select check-in and check-out dates"
   },
   "errors": {
     "generic": "An error occurred. Please try again.",

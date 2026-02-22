@@ -125,6 +125,13 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const setLocale = useCallback((newLocale: Locale) => {
+    console.log('[i18n] setLocale called with:', newLocale, 'current locale:', locale);
+    
+    if (newLocale === locale) {
+      console.log('[i18n] Same locale, skipping update');
+      return;
+    }
+    
     setLocaleState(newLocale);
     
     // Save to cookie for SSR consistency
@@ -142,11 +149,25 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem(USER_KEY, JSON.stringify(user));
       }
     } catch {}
-  }, []);
+    
+    // Dispatch custom event to notify all components
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('localeChange', { detail: { locale: newLocale } }));
+      console.log('[i18n] localeChange event dispatched');
+    }
+    
+    console.log('[i18n] Locale updated to:', newLocale);
+  }, [locale]);
 
   const t = useCallback(
     (key: string, params?: Record<string, string | number>): string => {
-      let text = getNestedValue(translations[locale], key);
+      const translationObj = translations[locale];
+      let text = getNestedValue(translationObj, key);
+      
+      // Debug: log if translation not found
+      if (text === key && process.env.NODE_ENV === 'development') {
+        console.warn(`[i18n] Translation not found for key: "${key}" in locale: "${locale}"`);
+      }
       
       // Replace parameters
       if (params) {
