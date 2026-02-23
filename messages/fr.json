@@ -4,13 +4,13 @@
     "description": "StayNeos est une plateforme d'appartements exécutifs premium pour professionnels, offrant des propriétés de qualité, des baux flexibles et un service de conciergerie 24h/24."
   },
   "nav": {
-    "home": "Accueil",
-    "properties": "Propriétés",
-    "services": "Services",
-    "about": "À Propos",
+    "home": "Explorer",
+    "properties": "Appartements",
+    "services": "Entreprises",
+    "about": "À Notre Sujet",
     "login": "Connexion",
     "register": "S'inscrire",
-    "account": "Mon Compte",
+    "account": "Mes Réservations",
     "signup": "S'inscrire",
     "landlords": "Pour Propriétaires",
     "business": "Pour Entreprises",
@@ -22,27 +22,9 @@
     "logout": "Déconnexion"
   },
   "common": {
-    "or": "ou",
-    "there": "ami",
-    "back": "Retour",
-    "cancel": "Annuler",
-    "close": "Fermer",
-    "print": "Imprimer",
-    "download": "Télécharger",
-    "submit": "Soumettre",
-    "save": "Enregistrer",
-    "edit": "Modifier",
-    "delete": "Supprimer",
-    "search": "Rechercher",
-    "loading": "Chargement...",
-    "error": "Erreur",
-    "success": "Succès",
-    "nights": "nuits",
-    "night": "nuit",
-    "guests": "voyageurs",
-    "guest": "voyageur",
-    "people": "personnes",
-    "person": "personne"
+    "view": "Voir",
+    "actions": "Actions",
+    "saving": "Enregistrement..."
   },
   "greeting": {
     "morning": "Bonjour",
@@ -53,9 +35,9 @@
     "title": "Devise"
   },
   "hero": {
-    "title": "Appartements Exécutifs Premium",
-    "highlight": "Commencez Votre Vie de Qualité",
-    "subtitle": "Une plateforme d'appartements exécutifs premium pour professionnels, offrant des expériences de vie exceptionnelles et des services de conciergerie attentifs"
+    "title": "Appartements Exécutifs de Luxe à Toronto",
+    "highlight": "Résidence Exécutive Simplifiée",
+    "subtitle": "Appartements haut de gamme. Séjours flexibles. Conciergerie 24/7."
   },
   "search": {
     "location": "Emplacement",
@@ -79,13 +61,13 @@
   "features": {
     "title": "Pourquoi Choisir StayNeos",
     "subtitle": "Nous nous engageons à offrir des expériences de vie exceptionnelles à chaque client, de la sélection de la propriété au service d'enregistrement, chaque détail est soigneusement conçu",
-    "quality": "Assurance Qualité",
+    "quality": "Sélection Rigoureuse",
     "qualityDesc": "Propriétés premium soigneusement sélectionnées, garantissant que chaque détail répond à vos attentes",
     "flexible": "Bail Flexible",
     "flexibleDesc": "Location courte et longue durée supportées, répondant flexiblement aux différents besoins de voyage",
-    "service": "Service Professionnel",
+    "service": "Service de Conciergerie",
     "serviceDesc": "Service de conciergerie 24h/24 pour une expérience de vie plus confortable",
-    "support": "Support 24h/24",
+    "support": "Assistance 24h/24",
     "supportDesc": "Équipe de service client professionnelle prête à résoudre tout problème"
   },
   "properties": {
@@ -197,7 +179,8 @@
     "companyTitle": "Entreprise",
     "servicesTitle": "Services",
     "supportTitle": "Support",
-    "copyright": "© {year} StayNeos. Tous droits réservés."
+    "copyright": "© 2024-2026 StayNeos. Tous droits réservés.",
+    "trust": "🔒 Paiement Sécurisé · ✓ Logements Vérifiés · Assistance 24/7"
   },
   "language": {
     "title": "Langue",
@@ -270,7 +253,10 @@
     "bookingSuccess": "Demande de réservation soumise avec succès ! Notre service client vous contactera dans les 24 heures pour confirmation.",
     "ok": "OK",
     "bookingSubmitted": "Demande de réservation soumise",
-    "youWontBeCharged": "Vous ne serez pas encore facturé"
+    "youWontBeCharged": "Vous ne serez pas encore facturé",
+    "confirmTitle": "Vérifier Votre Séjour",
+    "priceDetails": "Résumé des Frais",
+    "confirmButton": "Réserver Maintenant"
   },
   "contact": {
     "pageTitle": "Contactez-nous",
@@ -394,91 +380,78 @@
     }
   },
   "property": {
-    "details": "Détails de la propriété",
-    "amenities": "Équipements",
+    "createTitle": "Ajouter une Propriété",
+    "editTitle": "Modifier la Propriété",
+    "addNew": "Ajouter une Propriété",
+    "addFirst": "Ajouter Votre Première Propriété",
+    "searchPlaceholder": "Rechercher par nom, adresse...",
+    "filter": {
+      "all": "Tous les Statuts"
+    },
+    "status": {
+      "draft": "Brouillon",
+      "pending": "En Révision",
+      "published": "Publié",
+      "paused": "En Pause",
+      "archived": "Archivé"
+    },
+    "table": {
+      "property": "Propriété",
+      "location": "Emplacement",
+      "details": "Détails",
+      "price": "Prix",
+      "status": "Statut"
+    },
+    "empty": {
+      "title": "Aucune Propriété",
+      "description": "Vous n'avez pas encore ajouté de propriété. Cliquez sur le bouton ci-dessus pour commencer."
+    },
+    "delete": {
+      "title": "Confirmer la Suppression",
+      "confirm": "Êtes-vous sûr de vouloir supprimer \"{title}\" ? Cette action est irréversible."
+    },
+    "section": {
+      "basic": "Informations de Base",
+      "location": "Emplacement",
+      "details": "Détails des Pièces",
+      "pricing": "Tarification",
+      "amenities": "Équipements",
+      "images": "Images de la Propriété"
+    },
+    "title": "Titre de la Propriété",
+    "titlePlaceholder": "ex: Appartement de Luxe au Centre-Ville",
+    "type": "Type de Propriété",
     "description": "Description",
-    "location": "Emplacement",
-    "reviews": "Avis",
-    "bookNow": "Réserver maintenant",
-    "price": "Prix",
-    "serviceFee": "Frais de service",
-    "total": "Total",
-    "originalPrice": "Prix original",
-    "monthlyPrice": "Prix mensuel",
-    "monthlyDiscountLabel": "Remise mensuelle ({percent}% de réduction)",
-    "minNightsWarning": "Minimum {count} nuits requis",
-    "minNightsLabel": "{count} nuits minimum",
-    "backToList": "Retour à la liste",
-    "maxGuests": "Max {count} voyageurs",
-    "maxGuestsLabel": "Max voyageurs",
-    "maxGuestsError": "Le nombre de voyageurs doit être entre {min} et {max}",
-    "bedrooms": "{count} chambres",
-    "bedroomsUnit": "ch",
-    "bedroomsLabel": "Chambres",
-    "bathrooms": "{count} salles de bain",
-    "bathroomsUnit": "sdb",
-    "bathroomsLabel": "Salles de bain",
-    "area": "{area} m²",
-    "areaLabel": "Surface",
-    "areaUnit": "m²",
-    "perNight": "/nuit",
-    "viewAllImages": "Voir toutes les {count} images",
-    "image": "Image",
-    "of": "sur",
-    "thumbnail": "Miniature",
-    "similarProperties": "Propriétés similaires",
-    "viewDetails": "Voir les détails",
-    "yourName": "Votre nom",
-    "email": "Email",
-    "phone": "Téléphone",
-    "emailAddress": "Adresse email",
-    "phoneNumber": "Numéro de téléphone",
-    "checkInOutDates": "Dates d'arrivée / départ",
-    "guestCount": "Nombre de voyageurs",
-    "guestsUnit": "voyageurs",
-    "specialRequests": "Demandes spéciales (Optionnel)",
-    "specialRequestsOptional": "Demandes spéciales (Optionnel)",
-    "specialRequestsPlaceholder": "Si vous avez des demandes spéciales, veuillez les décrire ici...",
-    "submitting": "Envoi en cours...",
-    "monthlyDiscount": "{percent}% de réduction pour les séjours mensuels",
-    "minNights": "{count} nuits minimum",
-    "rating": "Note",
-    "reviewCount": "{count} avis",
-    "bookingSuccessTitle": "Demande de réservation soumise",
-    "bookingSuccessMessage": "Votre demande de réservation a été soumise avec succès ! Notre équipe de service client vous contactera dans les 24 heures pour confirmation.",
-    "property": "Propriété",
-    "checkIn": "Arrivée",
-    "checkOut": "Départ",
-    "guests": "Voyageurs",
-    "bookedBy": "Réservé par",
-    "contactEmail": "Email de contact",
-    "totalPrice": "Prix total",
-    "confirm": "Confirmer",
-    "pleaseSelectCheckIn": "Veuillez sélectionner la date d'arrivée",
-    "pleaseSelectCheckOut": "Veuillez sélectionner la date de départ",
-    "shareText": "Découvrez cette propriété",
-    "linkCopied": "Lien copié dans le presse-papiers !",
-    "defaultDescription": "Ce bel appartement à {location} dispose de {bedrooms} chambres spacieuses et de {bathrooms} salles de bain modernes.\n\nL'appartement a une superficie totale de {area} m² et peut accueillir jusqu'à {maxGuests} voyageurs. La disposition soigneusement conçue et les finitions de haute qualité offrent une expérience de vie confortable.\n\nSitué dans un emplacement privilégié en centre-ville avec un transport commode et des installations complètes aux alentours. Que ce soit pour des voyages d'affaires ou des vacances en famille, c'est votre choix idéal.",
-    "entireCondo": "Condo entier",
-    "entireHome": "Logement entier",
-    "guest": "Voyageur",
-    "favourite": "favori",
-    "hostedBy": "Hébergé par {name}",
-    "superhostYears": "Superhôte · {years} ans d'expérience",
-    "top10": "Top 10% des logements",
-    "top10Desc": "Ce logement est classé parmi les meilleurs en fonction des notes, des avis et de la fiabilité.",
-    "diveIn": "Plongez",
-    "diveInDesc": "C'est l'un des rares logements de la région avec une piscine.",
-    "aboutPlace": "À propos de ce logement",
-    "whatOffers": "Ce que propose ce logement",
-    "showAllAmenities": "Afficher les {count} équipements",
-    "whereYouBe": "Où vous serez",
-    "addDates": "Ajoutez des dates pour voir les prix",
-    "checkAvailability": "Vérifier la disponibilité",
-    "guestInfo": "{maxGuests} voyageurs · {bedrooms} chambres · {beds} lits · {bathrooms} salles de bain",
-    "inLocation": "{propertyType} à {location}",
-    "mapLoading": "Chargement de la carte...",
-    "selectDatesError": "Veuillez sélectionner les dates d'arrivée et de départ"
+    "descriptionPlaceholder": "Décrivez votre propriété en détail, incluant les caractéristiques...",
+    "address": "Adresse",
+    "addressPlaceholder": "ex: 123 Rue Principale",
+    "city": "Ville",
+    "cityPlaceholder": "ex: Toronto",
+    "bedrooms": "Chambres",
+    "bathrooms": "Salles de Bain",
+    "maxGuests": "Max Invités",
+    "area": "Superficie",
+    "basePrice": "Prix de Base",
+    "images": {
+      "dragDrop": "Glissez-déposez les images ici ou cliquez pour télécharger",
+      "supportedFormats": "Formats JPG, PNG supportés, max 10 Mo"
+    },
+    "saveError": "Échec de l'enregistrement. Veuillez réessayer.",
+    "bookNow": "Réserver Maintenant — Meilleur Tarif",
+    "saveForLater": "Sauvegarder",
+    "amenities": "Ce Qui Est Inclus",
+    "amenitiesCategories": {
+      "kitchen": "Cuisine Équipée",
+      "bathroom": "Salle de Bain Haut de Gamme",
+      "workspace": "Espace de Travail",
+      "entertainment": "Divertissement",
+      "safety": "Sécurité"
+    },
+    "reviews": "Avis Vérifiés",
+    "reviewsIntro": "💬 Expériences authentiques de nos hôtes",
+    "location": "Emplacement & Quartier",
+    "checkInGuide": "Guide d'Arrivée",
+    "flexibleCancellation": "Annulation Flexible"
   },
   "dashboard": {
     "title": "Tableau de bord",
@@ -677,9 +650,10 @@
     "selectDates": "Veuillez sélectionner des dates",
     "checkOutAfterCheckIn": "La date de départ doit être après la date d'arrivée",
     "minNights": "Minimum {count} nuits requis",
-    "pageNotFound": "Page Non Trouvée",
-    "pageNotFoundDesc": "Désolé, la page que vous recherchez a peut-être été supprimée, renommée ou est temporairement indisponible.",
-    "youMayBeLooking": "Vous cherchez peut-être :"
+    "pageNotFound": "Oups ! Page Introuvable",
+    "pageNotFoundDesc": "La page que vous recherchez a peut-être été déplacée. Trouvez votre séjour idéal ?",
+    "youMayBeLooking": "Vous cherchez peut-être :",
+    "browseProperties": "Explorer les Appartements"
   },
   "services": {
     "title": "Nos Services",
@@ -778,5 +752,64 @@
       "browse": "Parcourir les Propriétés",
       "contact": "Contactez-Nous"
     }
+  },
+  "房型": {
+    "apartment": "Appartement",
+    "condo": "Copropriété",
+    "townhouse": "Maison de Ville",
+    "house": "Maison",
+    "loft": "Loft",
+    "studio": "Studio",
+    "penthouse": "Penthouse"
+  },
+  "ai": {
+    "assistant": {
+      "title": "Assistant IA",
+      "toggle": "Assistant IA"
+    },
+    "description": {
+      "title": "Générer Description",
+      "placeholder": "Entrez l'emplacement ou les caractéristiques...",
+      "button": "Générer",
+      "tip": "Entrez des mots-clés comme \"appartement luxe centre-ville\""
+    },
+    "pricing": {
+      "title": "Suggestion de Prix",
+      "placeholder": "Obtenir des suggestions de prix...",
+      "button": "Obtenir",
+      "tip": "L'IA analyse les prix du marché selon la ville et le type"
+    },
+    "amenities": {
+      "title": "Recommandations",
+      "placeholder": "Recommander des équipements selon la description...",
+      "button": "Recommander",
+      "tip": "L'IA analysera votre description et recommandera des équipements"
+    },
+    "generating": "Génération...",
+    "result": {
+      "title": "Résultat :"
+    },
+    "tip": {
+      "title": "Conseil"
+    },
+    "generateDescription": "IA Générer Description",
+    "suggestPrice": "Suggestion de Prix",
+    "suggestAmenities": "IA Recommander Équipements"
+  },
+  "validation": {
+    "titleRequired": "Veuillez entrer le titre",
+    "descriptionRequired": "Veuillez entrer la description",
+    "addressRequired": "Veuillez entrer l'adresse",
+    "cityRequired": "Veuillez entrer la ville",
+    "priceRequired": "Veuillez entrer un prix valide",
+    "cityRequiredForAI": "Veuillez d'abord remplir la ville"
+  },
+  "payment": {
+    "secureCheckout": "Paiement Sécurisé",
+    "sslProtection": "🔒 Protégé par SSL 256-bit",
+    "payButton": "Finaliser le Paiement",
+    "successTitle": "Bienvenue chez StayNeos!",
+    "successDesc": "Tout est prêt! Les instructions d'enregistrement ont été envoyées. Notre équipe est à votre service.",
+    "viewMyBooking": "Voir Ma Réservation"
   }
 }

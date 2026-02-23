@@ -4,13 +4,13 @@
     "description": "StayNeos is a premium executive apartment platform for business professionals, offering quality properties, flexible leases, and 24/7 concierge service."
   },
   "nav": {
-    "home": "Home",
-    "properties": "Properties",
-    "services": "Services",
-    "about": "About",
+    "home": "Explore",
+    "properties": "Apartments",
+    "services": "For Business",
+    "about": "About Us",
     "login": "Login",
     "register": "Register",
-    "account": "My Account",
+    "account": "My Bookings",
     "signup": "Sign Up",
     "landlords": "For Landlords",
     "business": "For Business",
@@ -22,9 +22,9 @@
     "logout": "Log Out"
   },
   "common": {
-    "share": "Share",
-    "favorite": "Save",
-    "night": "night"
+    "view": "View",
+    "actions": "Actions",
+    "saving": "Saving..."
   },
   "greeting": {
     "morning": "Good morning",
@@ -35,9 +35,9 @@
     "title": "Currency"
   },
   "hero": {
-    "title": "Premium Executive Apartments",
-    "highlight": "Start Your Quality Life",
-    "subtitle": "A premium executive apartment platform for business professionals, offering exceptional living experiences and attentive concierge services"
+    "title": "Premium Executive Apartments in Toronto",
+    "highlight": "Executive Living, Simplified",
+    "subtitle": "Premium apartments. Flexible stays. 24/7 concierge."
   },
   "search": {
     "location": "Location",
@@ -61,13 +61,13 @@
   "features": {
     "title": "Why Choose StayNeos",
     "subtitle": "We are committed to providing exceptional living experiences for every client, from property selection to check-in service, every detail is carefully crafted",
-    "quality": "Quality Assurance",
+    "quality": "Curated Homes",
     "qualityDesc": "Carefully selected premium properties, ensuring every detail meets your expectations",
     "flexible": "Flexible Lease",
     "flexibleDesc": "Support short-term and long-term rentals, flexibly meeting different travel needs",
-    "service": "Professional Service",
+    "service": "Concierge Service",
     "serviceDesc": "24/7 concierge service for a more comfortable living experience",
-    "support": "24/7 Support",
+    "support": "Always-On Support",
     "supportDesc": "Professional customer service team ready to solve any issues"
   },
   "properties": {
@@ -178,7 +178,8 @@
     "companyTitle": "Company",
     "servicesTitle": "Services",
     "supportTitle": "Support",
-    "copyright": "© {year} StayNeos. All rights reserved."
+    "copyright": "© 2024-2026 StayNeos. All rights reserved.",
+    "trust": "🔒 Secure Payment · ✓ Verified Homes · 24/7 Support"
   },
   "language": {
     "title": "Language",
@@ -251,7 +252,10 @@
     "bookingSuccess": "Booking request submitted successfully! Our customer service will contact you within 24 hours to confirm.",
     "ok": "OK",
     "bookingSubmitted": "Booking Application Submitted",
-    "youWontBeCharged": "You won't be charged yet"
+    "youWontBeCharged": "You won't be charged yet",
+    "confirmTitle": "Review Your Stay",
+    "priceDetails": "Cost Summary",
+    "confirmButton": "Complete Booking"
   },
   "contact": {
     "pageTitle": "Contact Us",
@@ -375,92 +379,78 @@
     }
   },
   "property": {
-    "details": "Property Details",
-    "amenities": "Amenities",
+    "createTitle": "Add New Property",
+    "editTitle": "Edit Property",
+    "addNew": "Add Property",
+    "addFirst": "Add Your First Property",
+    "searchPlaceholder": "Search property name, address...",
+    "filter": {
+      "all": "All Status"
+    },
+    "status": {
+      "draft": "Draft",
+      "pending": "Pending Review",
+      "published": "Published",
+      "paused": "Paused",
+      "archived": "Archived"
+    },
+    "table": {
+      "property": "Property",
+      "location": "Location",
+      "details": "Details",
+      "price": "Price",
+      "status": "Status"
+    },
+    "empty": {
+      "title": "No Properties",
+      "description": "You haven't added any properties yet. Click the button above to get started."
+    },
+    "delete": {
+      "title": "Confirm Delete",
+      "confirm": "Are you sure you want to delete \"{title}\"? This action cannot be undone."
+    },
+    "section": {
+      "basic": "Basic Information",
+      "location": "Location",
+      "details": "Room Details",
+      "pricing": "Pricing",
+      "amenities": "Amenities",
+      "images": "Property Images"
+    },
+    "title": "Property Title",
+    "titlePlaceholder": "e.g., Downtown Luxury Apartment",
+    "type": "Property Type",
     "description": "Description",
-    "location": "Location",
-    "reviews": "Reviews",
-    "bookNow": "Book Now",
-    "price": "Price",
-    "serviceFee": "Service Fee",
-    "total": "Total",
-    "originalPrice": "Original Price",
-    "monthlyPrice": "Monthly Price",
-    "monthlyDiscountLabel": "Monthly Discount ({percent}% off)",
-    "minNightsWarning": "Minimum {count} nights required",
-    "minNightsLabel": "{count} nights minimum",
-    "backToList": "Back to List",
-    "maxGuests": "Max {count} guests",
-    "maxGuestsLabel": "Max guests",
-    "maxGuestsValue": "Max {count} guests",
-    "maxGuestsError": "Guests must be between {min} and {max}",
-    "bedrooms": "{count} Bedrooms",
-    "bedroomsUnit": "BR",
-    "bedroomsLabel": "Bedrooms",
-    "bathrooms": "{count} Bathrooms",
-    "bathroomsUnit": "BA",
-    "bathroomsLabel": "Bathrooms",
-    "area": "{area} m²",
-    "areaLabel": "Area",
-    "areaUnit": "m²",
-    "perNight": "/night",
-    "viewAllImages": "View all {count} images",
-    "image": "Image",
-    "of": "of",
-    "thumbnail": "Thumbnail",
-    "similarProperties": "Similar Properties",
-    "viewDetails": "View Details",
-    "yourName": "Your Name",
-    "email": "Email",
-    "phone": "Phone",
-    "emailAddress": "Email Address",
-    "phoneNumber": "Phone Number",
-    "checkInOutDates": "Check-in / Check-out Dates",
-    "guestCount": "Guest Count",
-    "guestsUnit": "guests",
-    "specialRequests": "Special Requests (Optional)",
-    "specialRequestsOptional": "Special Requests (Optional)",
-    "specialRequestsPlaceholder": "If you have any special requests, please describe them here...",
-    "submitting": "Submitting...",
-    "monthlyDiscount": "{percent}% off monthly stays",
-    "minNights": "{count} nights minimum",
-    "rating": "Rating",
-    "reviewCount": "{count} reviews",
-    "bookingSuccessTitle": "Booking Request Submitted",
-    "bookingSuccessMessage": "Your booking request has been submitted successfully! Our customer service team will contact you within 24 hours to confirm.",
-    "property": "Property",
-    "checkIn": "Check-in",
-    "checkOut": "Check-out",
-    "guests": "Guests",
-    "bookedBy": "Booked by",
-    "contactEmail": "Contact Email",
-    "totalPrice": "Total Price",
-    "confirm": "Confirm",
-    "pleaseSelectCheckIn": "Please select check-in date",
-    "pleaseSelectCheckOut": "Please select check-out date",
-    "shareText": "Check out this property",
-    "linkCopied": "Link copied to clipboard!",
-    "defaultDescription": "This beautiful apartment in {location} features {bedrooms} spacious bedrooms and {bathrooms} modern bathrooms.\n\nThe apartment has a total area of {area} square meters and can accommodate up to {maxGuests} guests. The thoughtfully designed layout and high-quality finishes provide a comfortable living experience.\n\nLocated in a prime city center location with convenient transportation and complete surrounding facilities. Whether for business trips or family vacations, this is your ideal choice.",
-    "entireCondo": "Entire condo",
-    "entireHome": "Entire home",
-    "guest": "Guest",
-    "guestInfo": "{maxGuests} guests · {bedrooms} bedrooms · {beds} beds · {bathrooms} baths",
-    "favourite": "favourite",
-    "hostedBy": "Hosted by {name}",
-    "superhostYears": "Superhost · {years} years hosting",
-    "top10": "Top 10% of homes",
-    "top10Desc": "This home is highly ranked based on ratings, reviews, and reliability.",
-    "diveIn": "Dive right in",
-    "diveInDesc": "This is one of the few places in the area with a pool.",
-    "aboutPlace": "About this place",
-    "whatOffers": "What this place offers",
-    "showAllAmenities": "Show all {count} amenities",
-    "whereYouBe": "Where you'll be",
-    "addDates": "Add dates for prices",
-    "checkAvailability": "Check availability",
-    "mapLoading": "Loading map...",
-    "selectDatesError": "Please select check-in and check-out dates",
-    "inLocation": "{propertyType} in {location}"
+    "descriptionPlaceholder": "Describe your property in detail, including features and benefits...",
+    "address": "Street Address",
+    "addressPlaceholder": "e.g., 123 Main Street",
+    "city": "City",
+    "cityPlaceholder": "e.g., Toronto",
+    "bedrooms": "Bedrooms",
+    "bathrooms": "Bathrooms",
+    "maxGuests": "Max Guests",
+    "area": "Area",
+    "basePrice": "Base Price",
+    "images": {
+      "dragDrop": "Drag and drop images here or click to upload",
+      "supportedFormats": "Supports JPG, PNG formats, max 10MB"
+    },
+    "saveError": "Failed to save property. Please try again later.",
+    "bookNow": "Book Now — Best Rate",
+    "saveForLater": "Save for Later",
+    "amenities": "What's Included",
+    "amenitiesCategories": {
+      "kitchen": "Fully-equipped Kitchen",
+      "bathroom": "Premium Bath",
+      "workspace": "Work-ready",
+      "entertainment": "Entertainment",
+      "safety": "Safety Features"
+    },
+    "reviews": "Guest Reviews",
+    "reviewsIntro": "💬 Real experiences from recent guests",
+    "location": "Location & Neighborhood",
+    "checkInGuide": "Check-in Guide",
+    "flexibleCancellation": "Flexible Cancellation"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -659,9 +649,10 @@
     "selectDates": "Please select dates",
     "checkOutAfterCheckIn": "Check-out must be after check-in",
     "minNights": "Minimum {count} nights required",
-    "pageNotFound": "Page Not Found",
-    "pageNotFoundDesc": "Sorry, the page you are looking for may have been removed, renamed, or is temporarily unavailable.",
-    "youMayBeLooking": "You might be looking for:"
+    "pageNotFound": "Oops! Page Not Found",
+    "pageNotFoundDesc": "The page you're looking for might have moved. Find your perfect stay instead?",
+    "youMayBeLooking": "You might be looking for:",
+    "browseProperties": "Browse Apartments"
   },
   "services": {
     "title": "Our Services",
@@ -760,5 +751,64 @@
       "browse": "Browse Properties",
       "contact": "Contact Us"
     }
+  },
+  "房型": {
+    "apartment": "Apartment",
+    "condo": "Condo",
+    "townhouse": "Townhouse",
+    "house": "House",
+    "loft": "Loft",
+    "studio": "Studio",
+    "penthouse": "Penthouse"
+  },
+  "ai": {
+    "assistant": {
+      "title": "AI Smart Assistant",
+      "toggle": "AI Assistant"
+    },
+    "description": {
+      "title": "Generate Description",
+      "placeholder": "Enter location or features, AI will generate an attractive description...",
+      "button": "Generate",
+      "tip": "Enter keywords like \"luxury downtown apartment\" for better results"
+    },
+    "pricing": {
+      "title": "Pricing Suggestion",
+      "placeholder": "Get pricing suggestions based on property info...",
+      "button": "Get Suggestion",
+      "tip": "AI analyzes market prices based on city, type, and area"
+    },
+    "amenities": {
+      "title": "Amenity Recommendations",
+      "placeholder": "Recommend amenities based on description...",
+      "button": "Recommend",
+      "tip": "AI will analyze your description and recommend suitable amenities"
+    },
+    "generating": "Generating...",
+    "result": {
+      "title": "Result:"
+    },
+    "tip": {
+      "title": "Tip"
+    },
+    "generateDescription": "AI Generate Description",
+    "suggestPrice": "Get Pricing Suggestion",
+    "suggestAmenities": "AI Recommend Amenities"
+  },
+  "validation": {
+    "titleRequired": "Please enter property title",
+    "descriptionRequired": "Please enter property description",
+    "addressRequired": "Please enter street address",
+    "cityRequired": "Please enter city",
+    "priceRequired": "Please enter a valid price",
+    "cityRequiredForAI": "Please fill in the city first"
+  },
+  "payment": {
+    "secureCheckout": "Secure Checkout",
+    "sslProtection": "🔒 Protected by 256-bit SSL",
+    "payButton": "Complete Payment",
+    "successTitle": "Welcome to StayNeos!",
+    "successDesc": "You're all set! Check-in instructions have been sent to your email. Our concierge team is here to help.",
+    "viewMyBooking": "View My Booking"
   }
 }
