@@ -1,6 +1,5 @@
 "use client";
 
-import { Metadata } from "next";
 import { Container, Section } from "@/components/ui";
 import { Building2, Home, Briefcase, Shield, Clock, Globe } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
