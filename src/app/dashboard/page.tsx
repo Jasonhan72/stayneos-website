@@ -20,6 +20,7 @@ import {
   XCircle,
   Edit3,
   Camera,
+  Building2,
 } from "lucide-react";
 
 // 模拟预订数据
@@ -65,6 +66,11 @@ function DashboardContent() {
     { id: "bookings", label: t('dashboard.tabs.bookings'), icon: Calendar },
     { id: "favorites", label: t('dashboard.tabs.favorites'), icon: Heart },
     { id: "profile", label: t('dashboard.tabs.profile'), icon: User },
+  ];
+
+  // 房源管理入口（仅对 Host 角色显示）
+  const hostTabs = [
+    { id: "properties", label: t('dashboard.tabs.properties') || "我的房源", icon: Building2, href: "/dashboard/properties" },
   ];
 
   const getStatusBadge = (status: string) => {
@@ -154,6 +160,21 @@ function DashboardContent() {
                         <Icon size={20} />
                         <span className="font-medium">{tab.label}</span>
                       </button>
+                    );
+                  })}
+                  
+                  {/* 房源管理链接 */}
+                  {hostTabs.map((tab) => {
+                    const Icon = tab.icon;
+                    return (
+                      <Link
+                        key={tab.id}
+                        href={tab.href}
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors text-gray-700 hover:bg-gray-50"
+                      >
+                        <Icon size={20} />
+                        <span className="font-medium">{tab.label}</span>
+                      </Link>
                     );
                   })}
                 </nav>
