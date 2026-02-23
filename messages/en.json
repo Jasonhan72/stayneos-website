@@ -22,29 +22,9 @@
     "logout": "Log Out"
   },
   "common": {
-    "or": "or",
-    "there": "there",
-    "back": "Back",
-    "cancel": "Cancel",
-    "close": "Close",
-    "print": "Print",
-    "download": "Download",
-    "submit": "Submit",
-    "save": "Save",
-    "edit": "Edit",
-    "delete": "Delete",
-    "search": "Search",
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
     "share": "Share",
     "favorite": "Save",
-    "nights": "nights",
-    "night": "night",
-    "guests": "guests",
-    "guest": "guest",
-    "people": "people",
-    "person": "person"
+    "night": "night"
   },
   "greeting": {
     "morning": "Good morning",
@@ -222,17 +202,111 @@
     "selectDatesError": "Please select check-in and check-out dates",
     "selectCheckInError": "Please select check-in date",
     "selectCheckOutError": "Please select check-out date",
-    "checkOutAfterCheckIn": "Check-out date must be after check-in date"
+    "checkOutAfterCheckIn": "Check-out date must be after check-in date",
+    "step1": "Select Dates",
+    "step2": "Confirm Info",
+    "step3": "Complete Payment",
+    "nextStep": "Next Step",
+    "confirmAndPay": "Confirm and Pay",
+    "returnToProperty": "Return to Property Details",
+    "guestCount": "{count} Guests",
+    "minNights": "{count} nights minimum",
+    "monthlyDiscount": "{percent}% monthly discount",
+    "selectDatesAndGuestsTitle": "Select Dates and Guests",
+    "confirmInfoTitle": "Confirm Information",
+    "securePaymentTitle": "Secure Payment",
+    "guestInfo": "Guest Information",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "specialRequests": "Special Requests",
+    "specialRequestsPlaceholder": "If you have any special requests, please describe them here...",
+    "optional": "Optional",
+    "loggedInAccount": "Logged in Account",
+    "useAccountInfo": "Your account information will be used to complete the booking",
+    "editProfile": "To modify information, please go to Profile",
+    "loadingPayment": "Loading payment information...",
+    "securePayment": "Secure Payment",
+    "informationEncrypted": "Your information is encrypted and protected",
+    "priceSummary": "Price Summary",
+    "originalPrice": "Original Price",
+    "monthlyPrice": "Monthly Price",
+    "discount": "Discount",
+    "serviceFee": "Service Fee",
+    "cleaningFee": "Cleaning Fee",
+    "tax": "Tax",
+    "taxHST": "Tax (13% HST)",
+    "total": "Total",
+    "nightsCount": "{count} nights",
+    "perNight": "/night",
+    "propertyInfo": "Property Information",
+    "night": "night",
+    "nights": "nights",
+    "createBookingError": "Failed to create booking",
+    "createPaymentError": "Failed to create payment",
+    "guestName": "Guest Name",
+    "guestEmail": "Guest Email",
+    "guestPhone": "Guest Phone",
+    "fillAllInfo": "Please fill in all guest information",
+    "bookingSuccess": "Booking request submitted successfully! Our customer service will contact you within 24 hours to confirm.",
+    "ok": "OK",
+    "bookingSubmitted": "Booking Application Submitted",
+    "youWontBeCharged": "You won't be charged yet"
   },
   "contact": {
-    "title": "Contact Us",
-    "subtitle": "Get in touch with our team",
+    "pageTitle": "Contact Us",
+    "pageSubtitle": "Have questions or need assistance? Our team is here to help you. Get in touch with us through any of the channels below.",
+    "infoTitle": "Contact Information",
+    "formTitle": "Send Message",
+    "emailLabel": "Email",
+    "addressLabel": "Address",
+    "phoneLabel": "Phone",
+    "hoursLabel": "Hours",
+    "callAnytime": "Call anytime during work hours",
+    "workHours": "Monday to Friday 9:00-18:00 EST",
+    "weekend": "Closed on weekends and holidays",
     "form": {
+      "title": "Contact Us",
+      "subtitle": "Fill out the form below and we'll get back to you soon",
       "name": "Name",
       "email": "Email",
       "phone": "Phone",
+      "phoneOptional": "Phone (Optional)",
+      "subject": "Subject",
       "message": "Message",
-      "send": "Send Message"
+      "namePlaceholder": "Please enter your name",
+      "emailPlaceholder": "Please enter your email",
+      "phonePlaceholder": "Please enter your phone",
+      "messagePlaceholder": "Please describe your needs or questions...",
+      "subjectBooking": "Booking Inquiry",
+      "subjectPartnership": "Partnership",
+      "subjectSupport": "Technical Support",
+      "subjectOther": "Other",
+      "required": "Required",
+      "minChars": "Message must be at least 10 characters",
+      "privacyNote": "Your information will be sent to hello@stayneos.com. We promise to protect your privacy.",
+      "send": "Send Message",
+      "errorName": "Please enter your name",
+      "errorEmail": "Please enter your email",
+      "errorMessage": "Please enter your message"
+    },
+    "success": {
+      "title": "Submitted Successfully!",
+      "message": "Thank you for your message. We have received it and will contact you within 24 hours.",
+      "sendNew": "Send New Message"
+    },
+    "followUs": "Follow Us",
+    "followDesc": "Follow us on social media for the latest properties and promotions",
+    "faqTitle": "FAQ",
+    "faqHowToBook": "How to book an apartment?",
+    "faqMinStay": "What is the minimum stay?",
+    "faqDeposit": "How is the deposit refunded?",
+    "faqPets": "Are pets allowed?",
+    "viewAllFaq": "View All FAQ",
+    "openInMaps": "Open in Google Maps",
+    "emergency": {
+      "title": "Need Emergency Help?",
+      "desc": "If you are a current tenant and need immediate assistance, please call our 24/7 emergency hotline"
     }
   },
   "bookings": {
@@ -299,73 +373,6 @@
       "current": "Current",
       "completed": "Completed"
     }
-  },
-  "booking": {
-    "checkIn": "Check-in",
-    "checkOut": "Check-out",
-    "checkInDate": "Check-in Date",
-    "checkOutDate": "Check-out Date",
-    "selectCheckIn": "Select check-in date",
-    "selectCheckOut": "Select check-out date",
-    "selectDates": "Select Dates",
-    "selectDatesAndGuests": "Select dates and guests",
-    "dates": "Dates",
-    "guests": "Guests",
-    "submitting": "Submitting...",
-    "bookNow": "Book Now",
-    "selectDatesError": "Please select check-in and check-out dates",
-    "selectCheckInError": "Please select check-in date",
-    "selectCheckOutError": "Please select check-out date",
-    "checkOutAfterCheckIn": "Check-out date must be after check-in date",
-    "step1": "Select Dates",
-    "step2": "Confirm Info",
-    "step3": "Complete Payment",
-    "nextStep": "Next Step",
-    "confirmAndPay": "Confirm and Pay",
-    "returnToProperty": "Return to Property Details",
-    "guestCount": "{count} Guests",
-    "minNights": "{count} nights minimum",
-    "monthlyDiscount": "{percent}% monthly discount",
-    "selectDatesAndGuestsTitle": "Select Dates and Guests",
-    "confirmInfoTitle": "Confirm Information",
-    "securePaymentTitle": "Secure Payment",
-    "guestInfo": "Guest Information",
-    "name": "Name",
-    "email": "Email",
-    "phone": "Phone",
-    "specialRequests": "Special Requests",
-    "specialRequestsPlaceholder": "If you have any special requests, please describe them here...",
-    "optional": "Optional",
-    "loggedInAccount": "Logged in Account",
-    "useAccountInfo": "Your account information will be used to complete the booking",
-    "editProfile": "To modify information, please go to Profile",
-    "loadingPayment": "Loading payment information...",
-    "securePayment": "Secure Payment",
-    "informationEncrypted": "Your information is encrypted and protected",
-    "priceSummary": "Price Summary",
-    "originalPrice": "Original Price",
-    "monthlyPrice": "Monthly Price",
-    "discount": "Discount",
-    "serviceFee": "Service Fee",
-    "cleaningFee": "Cleaning Fee",
-    "tax": "Tax",
-    "taxHST": "Tax (13% HST)",
-    "total": "Total",
-    "nightsCount": "{count} nights",
-    "perNight": "/night",
-    "propertyInfo": "Property Information",
-    "night": "night",
-    "nights": "nights",
-    "createBookingError": "Failed to create booking",
-    "createPaymentError": "Failed to create payment",
-    "guestName": "Guest Name",
-    "guestEmail": "Guest Email",
-    "guestPhone": "Guest Phone",
-    "fillAllInfo": "Please fill in all guest information",
-    "bookingSuccess": "Booking request submitted successfully! Our customer service will contact you within 24 hours to confirm.",
-    "ok": "OK",
-    "bookingSubmitted": "Booking Application Submitted",
-    "youWontBeCharged": "You won't be charged yet"
   },
   "property": {
     "details": "Property Details",
@@ -512,58 +519,6 @@
     "browseMore": "Browse All Properties",
     "lookingForMore": "Looking for more options?"
   },
-  "contact": {
-    "title": "Contact Us",
-    "subtitle": "Get in touch with our team",
-    "contactInfo": "Contact Information",
-    "sendMessage": "Send Message",
-    "form": {
-      "name": "Name",
-      "email": "Email",
-      "phone": "Phone",
-      "subject": "Subject",
-      "message": "Message",
-      "send": "Send Message",
-      "namePlaceholder": "Please enter your name",
-      "emailPlaceholder": "Please enter your email",
-      "phonePlaceholder": "Please enter your phone",
-      "messagePlaceholder": "Please describe your needs or questions...",
-      "subjectBooking": "Booking Inquiry",
-      "subjectPartnership": "Partnership",
-      "subjectSupport": "Technical Support",
-      "subjectOther": "Other",
-      "required": "Required",
-      "minChars": "Message must be at least 10 characters",
-      "privacyNote": "Your information will be sent to hello@stayneos.com. We promise to protect your privacy."
-    },
-    "success": {
-      "title": "Submitted Successfully!",
-      "message": "Thank you for your message. We have received it and will contact you within 24 hours.",
-      "sendNew": "Send New Message"
-    },
-    "email": "Email",
-    "address": "Address",
-    "phone": "Phone",
-    "hours": "Hours",
-    "responseTime": "We typically respond within 24 hours",
-    "visitUs": "Welcome to visit by appointment",
-    "workHours": "Monday to Friday 9:00-18:00 EST",
-    "weekend": "Weekends and holidays closed",
-    "followUs": "Follow Us",
-    "followDesc": "Follow us on social media for the latest properties and promotions",
-    "faq": "FAQ",
-    "faqDesc": "Find answers to common questions",
-    "viewAllFaq": "View All FAQ",
-    "howToBook": "How to book an apartment?",
-    "minStay": "What is the minimum stay?",
-    "depositRefund": "How is the deposit refunded?",
-    "petPolicy": "Are pets allowed?",
-    "emergency": {
-      "title": "Need Emergency Help?",
-      "desc": "If you are a current tenant and need immediate assistance, please call our 24/7 emergency hotline",
-      "call": "Call Emergency Hotline"
-    }
-  },
   "status": {
     "pending": "Pending",
     "confirmed": "Confirmed",
@@ -680,62 +635,6 @@
       "button": "Contact Sales Team"
     }
   },
-  "contact": {
-    "pageTitle": "Contact Us",
-    "pageSubtitle": "Have questions or need assistance? Our team is here to help you. Get in touch with us through any of the channels below.",
-    "infoTitle": "Contact Information",
-    "formTitle": "Send Message",
-    "emailLabel": "Email",
-    "addressLabel": "Address",
-    "phoneLabel": "Phone",
-    "hoursLabel": "Hours",
-    "callAnytime": "Call anytime during work hours",
-    "workHours": "Monday to Friday 9:00-18:00 EST",
-    "weekend": "Closed on weekends and holidays",
-    "form": {
-      "title": "Contact Us",
-      "subtitle": "Fill out the form below and we'll get back to you soon",
-      "name": "Name",
-      "email": "Email",
-      "phone": "Phone",
-      "phoneOptional": "Phone (Optional)",
-      "subject": "Subject",
-      "message": "Message",
-      "namePlaceholder": "Please enter your name",
-      "emailPlaceholder": "Please enter your email",
-      "phonePlaceholder": "Please enter your phone",
-      "messagePlaceholder": "Please describe your needs or questions...",
-      "subjectBooking": "Booking Inquiry",
-      "subjectPartnership": "Partnership",
-      "subjectSupport": "Technical Support",
-      "subjectOther": "Other",
-      "required": "Required",
-      "minChars": "Message must be at least 10 characters",
-      "privacyNote": "Your information will be sent to hello@stayneos.com. We promise to protect your privacy.",
-      "send": "Send Message",
-      "errorName": "Please enter your name",
-      "errorEmail": "Please enter your email",
-      "errorMessage": "Please enter your message"
-    },
-    "success": {
-      "title": "Submitted Successfully!",
-      "message": "Thank you for your message. We have received it and will contact you within 24 hours.",
-      "sendNew": "Send New Message"
-    },
-    "followUs": "Follow Us",
-    "followDesc": "Follow us on social media for the latest properties and promotions",
-    "faqTitle": "FAQ",
-    "faqHowToBook": "How to book an apartment?",
-    "faqMinStay": "What is the minimum stay?",
-    "faqDeposit": "How is the deposit refunded?",
-    "faqPets": "Are pets allowed?",
-    "viewAllFaq": "View All FAQ",
-    "openInMaps": "Open in Google Maps",
-    "emergency": {
-      "title": "Need Emergency Help?",
-      "desc": "If you are a current tenant and need immediate assistance, please call our 24/7 emergency hotline"
-    }
-  },
   "unit": {
     "properties": "properties",
     "property": "property",
@@ -752,11 +651,6 @@
     "高层景观": "City View",
     "浴缸": "Bathtub"
   },
-  "common": {
-    "share": "Share",
-    "favorite": "Save",
-    "night": "night"
-  },
   "errors": {
     "generic": "An error occurred. Please try again.",
     "required": "This field is required",
@@ -768,5 +662,103 @@
     "pageNotFound": "Page Not Found",
     "pageNotFoundDesc": "Sorry, the page you are looking for may have been removed, renamed, or is temporarily unavailable.",
     "youMayBeLooking": "You might be looking for:"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "Premium furnished apartment solutions for every need. From corporate housing to short-term stays, we've got you covered.",
+    "corporateHousing": {
+      "title": "Corporate Housing",
+      "desc": "Fully furnished apartments for business travelers and relocating employees. Flexible lease terms from 1 month to 1 year."
+    },
+    "shortTerm": {
+      "title": "Short-term Rentals",
+      "desc": "Premium furnished apartments for short stays. Perfect for vacations, temporary relocations, or home renovations."
+    },
+    "propertyManagement": {
+      "title": "Property Management",
+      "desc": "Full-service property management for landlords. We handle everything from marketing to maintenance."
+    },
+    "concierge": {
+      "title": "Concierge Services",
+      "desc": "Personalized concierge services to make your stay exceptional. From airport transfers to grocery delivery."
+    },
+    "flexibleLeasing": {
+      "title": "Flexible Leasing",
+      "desc": "Lease terms that fit your schedule. No long-term commitments or hidden fees."
+    },
+    "globalNetwork": {
+      "title": "Global Network",
+      "desc": "Access to premium furnished apartments in major cities across North America and beyond."
+    },
+    "features": {
+      "utilities": "All utilities included",
+      "wifi": "High-speed WiFi",
+      "housekeeping": "Housekeeping service",
+      "support": "24/7 support",
+      "minNights": "Minimum 28 nights",
+      "kitchen": "Fully equipped kitchen",
+      "locations": "Premium locations",
+      "instant": "Instant booking",
+      "photography": "Professional photography",
+      "screening": "Tenant screening",
+      "collection": "Rent collection",
+      "maintenance": "Maintenance coordination",
+      "airport": "Airport pickup",
+      "grocery": "Grocery delivery",
+      "restaurant": "Restaurant reservations",
+      "recommendations": "Local recommendations",
+      "monthToMonth": "Month-to-month options",
+      "noHidden": "No hidden fees",
+      "renewal": "Easy renewal",
+      "termination": "Early termination available"
+    },
+    "cta": {
+      "title": "Ready to get started?",
+      "desc": "Contact us today to learn more about our services and find your perfect home.",
+      "button": "Contact Us"
+    }
+  },
+  "about": {
+    "title": "About StayNeos",
+    "hero": {
+      "title": "About StayNeos",
+      "subtitle": "Redefining the premium executive apartment experience, providing the warmth of home and professional service for business travelers and relocated residents"
+    },
+    "mission": {
+      "label": "OUR MISSION",
+      "title": "Our Mission",
+      "desc": "StayNeos is committed to creating the perfect living solution for modern business travelers and relocated residents, making every trip enjoyable with the comfort and convenience of home.",
+      "items": {
+        "executive": "Premium Executive Apartments",
+        "executiveDesc": "Providing carefully selected premium executive apartments for business travelers and relocated residents to meet quality living needs",
+        "simple": "Simple and Stress-Free",
+        "simpleDesc": "Making short-term rentals simple, easy, and stress-free, allowing you to focus on your work and life",
+        "flexible": "Flexible Lease Terms",
+        "flexibleDesc": "Flexible lease terms starting from 28 days, supporting monthly and quarterly rentals to accommodate your travel schedule",
+        "location": "Prime Locations",
+        "locationDesc": "Carefully selected quality properties in prime locations in Toronto with convenient transportation and complete amenities"
+      }
+    },
+    "story": {
+      "label": "OUR STORY",
+      "title": "Our Story",
+      "subtitle": "Born from the challenges of a business trip, StayNeos is dedicated to solving the housing difficulties of modern travelers"
+    },
+    "whyChoose": {
+      "label": "WHY CHOOSE US",
+      "title": "Why Choose Us",
+      "desc": "We don't just provide accommodation; we create a home where you can work and live with peace of mind away from home."
+    },
+    "commitment": {
+      "label": "OUR COMMITMENT",
+      "title": "Our Commitment",
+      "subtitle": "We promise every customer an experience that exceeds expectations"
+    },
+    "cta": {
+      "title": "Ready to Experience StayNeos?",
+      "subtitle": "Browse our carefully selected properties and find your ideal residence in Toronto",
+      "browse": "Browse Properties",
+      "contact": "Contact Us"
+    }
   }
 }
