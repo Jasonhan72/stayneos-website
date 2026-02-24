@@ -75,7 +75,11 @@
     "pets": "Pets",
     "pet": "Pet",
     "serviceAnimal": "Service animal",
-    "guest": "Guest"
+    "guest": "Guest",
+    "guests": "Guests",
+    "ages13Plus": "Age 13+",
+    "ages2To12": "Ages 2-12",
+    "under2": "Under 2"
   },
   "sort": {
     "recommended": "Recommended",
@@ -1620,7 +1624,7 @@
   "checkout": {
     "reviewAndContinue": "Review and Continue",
     "changeGuests": "Change guests",
-    "maxGuestsInfo": "Maximum {count} guests allowed",
+    "maxGuestsInfo": "This place has a maximum of {count} guests, not including infants. Pets aren't allowed.",
     "freeCancellation": "Free cancellation",
     "freeCancellationDesc": "Free cancellation before {date}",
     "cancellationPolicy": "Cancellation Policy",

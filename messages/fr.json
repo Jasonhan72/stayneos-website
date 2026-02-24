@@ -75,7 +75,11 @@
     "pets": "Animaux",
     "pet": "Animal",
     "serviceAnimal": "Animal d'assistance",
-    "guest": "Invité"
+    "guest": "Invité",
+    "guests": "Invités",
+    "ages13Plus": "13 ans et plus",
+    "ages2To12": "2-12 ans",
+    "under2": "Moins de 2 ans"
   },
   "sort": {
     "recommended": "Recommandé",
@@ -1620,7 +1624,7 @@
   "checkout": {
     "reviewAndContinue": "Vérifier et continuer",
     "changeGuests": "Modifier les voyageurs",
-    "maxGuestsInfo": "Maximum {count} invités",
+    "maxGuestsInfo": "Ce logement peut accueillir un maximum de {count} voyageurs, les bébés ne sont pas comptés. Les animaux ne sont pas autorisés.",
     "freeCancellation": "Annulation gratuite",
     "freeCancellationDesc": "Annulation gratuite avant le {date}",
     "cancellationPolicy": "Politique d'annulation",

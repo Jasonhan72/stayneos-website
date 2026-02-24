@@ -75,7 +75,11 @@
     "pets": "宠物",
     "pet": "宠物",
     "serviceAnimal": "服务性动物",
-    "guest": "房客"
+    "guest": "房客",
+    "guests": "房客",
+    "ages13Plus": "13岁以上",
+    "ages2To12": "2-12岁",
+    "under2": "2岁以下"
   },
   "sort": {
     "recommended": "推荐",
@@ -1620,7 +1624,7 @@
   "checkout": {
     "reviewAndContinue": "查看并继续",
     "changeGuests": "修改人数",
-    "maxGuestsInfo": "最多可住 {count} 人",
+    "maxGuestsInfo": "此房源最多可住 {count} 位房客（婴儿不计入）。不允许携带宠物。",
     "freeCancellation": "免费取消",
     "freeCancellationDesc": "{date} 前可免费取消",
     "cancellationPolicy": "取消政策",
