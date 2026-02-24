@@ -34,11 +34,27 @@ CREATE TABLE IF NOT EXISTS bookings (
     special_requests TEXT,
     status TEXT DEFAULT 'PENDING',
     payment_status TEXT DEFAULT 'PENDING',
+    stripe_payment_intent_id TEXT,
     created_at TEXT NOT NULL,
     updated_at TEXT,
     confirmed_at TEXT,
     cancelled_at TEXT,
     cancel_reason TEXT
+);
+
+-- 创建支付记录表
+CREATE TABLE IF NOT EXISTS payments (
+    id TEXT PRIMARY KEY,
+    booking_id TEXT NOT NULL,
+    amount REAL NOT NULL,
+    currency TEXT DEFAULT 'CAD',
+    stripe_payment_intent_id TEXT,
+    payment_method TEXT DEFAULT 'CREDIT_CARD',
+    status TEXT DEFAULT 'PENDING',
+    metadata TEXT,
+    error_message TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT
 );
 
 -- 创建邮件发送记录表
@@ -60,3 +76,6 @@ CREATE INDEX IF NOT EXISTS idx_users_id ON users(id);
 CREATE INDEX IF NOT EXISTS idx_bookings_user_id ON bookings(user_id);
 CREATE INDEX IF NOT EXISTS idx_bookings_status ON bookings(status);
 CREATE INDEX IF NOT EXISTS idx_bookings_booking_number ON bookings(booking_number);
+CREATE INDEX IF NOT EXISTS idx_bookings_stripe_id ON bookings(stripe_payment_intent_id);
+CREATE INDEX IF NOT EXISTS idx_payments_booking_id ON payments(booking_id);
+CREATE INDEX IF NOT EXISTS idx_payments_stripe_id ON payments(stripe_payment_intent_id);

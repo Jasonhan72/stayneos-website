@@ -120,7 +120,7 @@
   },
   "properties": {
     "title": "精选房源",
-    "subtitle": "精心挑选的高端行政公寓，每一处都是品质生活的体现",
+    "subtitle": "精选高端行政公寓，品质旅居之选",
     "viewAll": "查看全部房源",
     "featured": "精选",
     "rating": "评分",
@@ -693,7 +693,7 @@
     "inLocation": "位于 {location} 的 {propertyType}",
     "featured": "精选",
     "favourite": "收藏",
-    "guestInfo": "入住人信息",
+    "guestInfo": "{maxGuests} 位房客 · {bedrooms} 间卧室 · {beds} 张床 · {bathrooms} 间浴室",
     "mapLoading": "地图加载中...",
     "linkCopied": "链接已复制！",
     "shareText": "在 StayNeos 上查看此房源",

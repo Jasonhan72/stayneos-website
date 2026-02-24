@@ -68,7 +68,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       aria-labelledby={`property-title-${property.id}`}
     >
       <Link 
-        href={`/properties/${property.id}`} 
+        href={`/property/${property.id}`} 
         className="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-xl"
       >
         <div className="card h-full flex flex-col">

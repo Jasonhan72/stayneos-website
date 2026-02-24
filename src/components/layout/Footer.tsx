@@ -12,21 +12,19 @@ export default function Footer() {
   const footerLinks = {
     company: [
       { label: t("footer.about"), href: "/about" },
-      { label: t("footer.team"), href: "/team" },
-      { label: t("footer.careers"), href: "/careers" },
-      { label: t("footer.news"), href: "/news" },
+      { label: t("footer.landlords"), href: "/landlords" },
+      { label: t("footer.contact"), href: "/contact" },
     ],
     services: [
       { label: t("footer.corporate"), href: "/corporate" },
-      { label: t("footer.shortTerm"), href: "/short-term" },
-      { label: t("footer.longTerm"), href: "/long-term" },
-      { label: t("footer.propertyManagement"), href: "/property-management" },
+      { label: t("footer.services"), href: "/services" },
+      { label: t("footer.properties"), href: "/properties" },
     ],
     support: [
       { label: t("footer.help"), href: "/help" },
-      { label: t("footer.faq"), href: "/faq" },
       { label: t("footer.contact"), href: "/contact" },
       { label: t("footer.privacy"), href: "/privacy" },
+      { label: t("footer.terms"), href: "/terms" },
     ],
   };
 

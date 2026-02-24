@@ -243,7 +243,7 @@ export default function BookingDetailClient() {
                     />
                   </div>
                   <Link 
-                    href={`/properties/${booking.property.id}`}
+                    href={`/property/${booking.property.id}`}
                     className="text-lg font-semibold text-gray-900 hover:text-amber-600 transition-colors"
                   >
                     {booking.property.title}

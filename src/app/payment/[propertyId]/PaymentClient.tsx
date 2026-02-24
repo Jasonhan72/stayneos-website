@@ -1,11 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
 import { 
   ChevronLeft, 
   ChevronRight,
@@ -14,26 +11,15 @@ import {
   Shield, 
   CreditCard,
   Building2,
-  Wallet,
-  Check
+  Wallet
 } from 'lucide-react';
 import { Container, Divider } from '@/components/ui';
 import { getPropertyById } from '@/lib/data';
 import { getLocalizedTitle } from '@/components/property/PropertyCard';
 import { useI18n } from '@/lib/i18n';
-import StripePaymentForm from '@/components/payment/StripePaymentForm';
-
-let stripePromise: Promise<Stripe | null> | null = null;
-
-const getStripePromise = () => {
-  if (!stripePromise) {
-    const key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
-    if (key) {
-      stripePromise = loadStripe(key);
-    }
-  }
-  return stripePromise;
-};
+import CardDetailsForm from '@/components/payment/CardDetailsForm';
+import MessageToHost from '@/components/payment/MessageToHost';
+import RequestToBook from '@/components/payment/RequestToBook';
 
 interface PaymentClientProps {
   propertyId: string;
@@ -41,6 +27,7 @@ interface PaymentClientProps {
 
 type PaymentMethod = 'card' | 'bank' | 'paypal' | 'apple_pay' | 'google_pay';
 type PaymentTiming = 'now' | 'later';
+type BookingStep = 'method' | 'card-details' | 'message' | 'review';
 
 export default function PaymentClient({ propertyId }: PaymentClientProps) {
   const router = useRouter();
@@ -52,11 +39,19 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   
+  // Booking flow state
+  const [currentStep, setCurrentStep] = useState<BookingStep>('method');
+  
   // Payment options
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod>('card');
   const [paymentTiming, setPaymentTiming] = useState<PaymentTiming>('now');
-  const [showPaymentMethods, setShowPaymentMethods] = useState(false);
   const [showPriceDetails, setShowPriceDetails] = useState(false);
+  
+  // Message to host
+  const [messageToHost, setMessageToHost] = useState('');
+  
+  // Submit state
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Get booking details from URL
   const checkIn = searchParams.get('checkIn') || '';
@@ -86,6 +81,7 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
   const taxes = nights > 0 ? Math.round(subtotal * 0.13) : 0;
   const total = subtotal + taxes;
 
+  // Create payment intent on mount
   useEffect(() => {
     if (!amount || amount <= 0) {
       setError(t('payment.invalidAmount') || 'Invalid payment amount');
@@ -93,8 +89,7 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
       return;
     }
 
-    // Create payment intent
-    fetch('/api/payment/create-intent', {
+    fetch('/_api/payments/create-intent', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -129,10 +124,6 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
     router.push(`/payment/success?propertyId=${propertyId}`);
   };
 
-  const handleError = (err: string) => {
-    setError(err);
-  };
-
   const localizedTitle = property ? getLocalizedTitle(property, locale) : t('property.notFound') || 'Property';
 
   // Format date for display
@@ -165,8 +156,8 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
   // Format guest display text
   const getGuestDisplayText = () => {
     const parts = [];
-    const total = adults + children;
-    parts.push(`${total} ${total === 1 ? (t('search.guest') || 'guest') : (t('search.guests') || 'guests')}`);
+    const guestTotal = adults + children;
+    parts.push(`${guestTotal} ${guestTotal === 1 ? (t('search.guest') || 'guest') : (t('search.guests') || 'guests')}`);
     if (infants > 0) {
       parts.push(`${infants} ${infants === 1 ? (t('search.infant') || 'infant') : (t('search.infants') || 'infants')}`);
     }
@@ -174,6 +165,77 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
       parts.push(`${pets} ${pets === 1 ? (t('search.pet') || 'pet') : (t('search.pets') || 'pets')}`);
     }
     return parts.join(', ');
+  };
+
+  // Handle payment method selection
+  const handleSelectPaymentMethod = (method: PaymentMethod) => {
+    setSelectedPaymentMethod(method);
+    
+    if (method === 'card') {
+      // For card, go to card details
+      setCurrentStep('card-details');
+    } else if (method === 'paypal') {
+      // For PayPal, skip card details, go to message
+      setCurrentStep('message');
+    } else {
+      // For other methods, skip card details for now
+      setCurrentStep('message');
+    }
+  };
+
+  // Handle card details submission
+  const handleCardDetailsSubmit = () => {
+    setCurrentStep('message');
+  };
+
+  // Handle message submission
+  const handleMessageSubmit = (message: string) => {
+    setMessageToHost(message);
+    setCurrentStep('review');
+  };
+
+  // Handle final booking submission
+  const handleBookingSubmit = async () => {
+    setIsSubmitting(true);
+    
+    try {
+      // Create booking
+      const response = await fetch('/_api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          propertyId,
+          checkIn,
+          checkOut,
+          adults,
+          children,
+          infants,
+          pets,
+          guestName,
+          guestEmail,
+          totalAmount: total,
+          paymentMethod: selectedPaymentMethod,
+          messageToHost,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create booking');
+      }
+
+      // If card payment, process Stripe payment
+      if (selectedPaymentMethod === 'card' && clientSecret) {
+        // Stripe payment will be handled by StripePaymentForm
+        // For now, just redirect to success
+        handleSuccess();
+      } else {
+        // For other methods, redirect to success
+        handleSuccess();
+      }
+    } catch {
+      setError(t('payment.bookingFailed') || 'Failed to process booking');
+      setIsSubmitting(false);
+    }
   };
 
   // Payment method options
@@ -207,8 +269,6 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
     },
   ];
 
-  const selectedPayment = paymentMethods.find(m => m.id === selectedPaymentMethod);
-
   // Loading state
   if (isLoading) {
     return (
@@ -222,11 +282,11 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
   }
 
   // Error state
-  if (error || !clientSecret) {
+  if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center max-w-md px-4">
-          <p className="text-red-600 mb-4">{error || t('payment.unableToInitialize') || 'Unable to initialize payment'}</p>
+          <p className="text-red-600 mb-4">{error}</p>
           <button
             onClick={() => router.back()}
             className="px-6 py-2 bg-black text-white rounded-lg"
@@ -238,20 +298,54 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
     );
   }
 
-  const options = {
-    clientSecret,
-    appearance: {
-      theme: 'stripe' as const,
-      variables: {
-        colorPrimary: '#000000',
-        colorBackground: '#ffffff',
-        colorText: '#1f2937',
-        colorDanger: '#ef4444',
-        borderRadius: '12px',
-      },
-    },
-  };
+  // Render step: Card Details
+  if (currentStep === 'card-details') {
+    return (
+      <CardDetailsForm
+        isOpen={true}
+        onClose={() => setCurrentStep('method')}
+        onBack={() => setCurrentStep('method')}
+        onSubmit={handleCardDetailsSubmit}
+      />
+    );
+  }
 
+  // Render step: Message to Host
+  if (currentStep === 'message') {
+    return (
+      <MessageToHost
+        isOpen={true}
+        onClose={() => setCurrentStep('card-details')}
+        onBack={() => setCurrentStep(selectedPaymentMethod === 'card' ? 'card-details' : 'method')}
+        onSubmit={handleMessageSubmit}
+        hostName={property?.title?.split(' ')[0] || 'the host'}
+        initialMessage={messageToHost}
+      />
+    );
+  }
+
+  // Render step: Review and Request to Book
+  if (currentStep === 'review' && property) {
+    return (
+      <RequestToBook
+        property={property}
+        checkIn={checkIn}
+        checkOut={checkOut}
+        adults={adults}
+        childCount={children}
+        infants={infants}
+        pets={pets}
+        total={total}
+        paymentMethod={selectedPaymentMethod}
+        messageToHost={messageToHost}
+        onBack={() => setCurrentStep('message')}
+        onSubmit={handleBookingSubmit}
+        isProcessing={isSubmitting}
+      />
+    );
+  }
+
+  // Render step: Payment Method Selection (default)
   return (
     <main className="min-h-screen bg-white pb-32">
       {/* Header */}
@@ -332,9 +426,9 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
                 <p className="text-neutral-600 mt-1 text-sm">
                   {t('checkout.freeCancellationDesc', { date: getCancellationDeadline() }) || 
                     `After that, cancel before check-in for a partial refund.`}{' '}
-                  <Link href="/cancellation-policy" className="underline font-medium">
+                  <a href="/cancellation-policy" className="underline font-medium">
                     {t('checkout.fullPolicy') || 'Full policy'}
-                  </Link>
+                  </a>
                 </p>
               </div>
             </div>
@@ -391,28 +485,28 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
             </div>
           </div>
 
-          {/* Payment Method */}
+          {/* Payment Method Selection */}
           <div className="py-4 border-b border-neutral-200 mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-medium">{t('payment.paymentMethod') || 'Payment method'}</h3>
-            </div>
+            <h3 className="font-medium mb-4">{t('payment.paymentMethod') || 'Payment method'}</h3>
             
-            {/* Selected Payment Method Display */}
-            <button
-              onClick={() => setShowPaymentMethods(true)}
-              className="w-full flex items-center justify-between p-4 border border-neutral-200 rounded-xl hover:border-neutral-400 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <div className="text-neutral-600">{selectedPayment?.icon}</div>
-                <div className="text-left">
-                  <p className="font-medium">{selectedPayment?.name}</p>
-                  {selectedPayment?.description && (
-                    <p className="text-sm text-neutral-500">{selectedPayment.description}</p>
-                  )}
-                </div>
-              </div>
-              <ChevronRight size={20} className="text-neutral-400" />
-            </button>
+            <div className="space-y-2">
+              {paymentMethods.map((method) => (
+                <button
+                  key={method.id}
+                  onClick={() => handleSelectPaymentMethod(method.id)}
+                  className="w-full flex items-center gap-3 p-4 border border-neutral-200 rounded-xl hover:border-neutral-400 transition-colors"
+                >
+                  <div className="text-neutral-600">{method.icon}</div>
+                  <div className="flex-1 text-left">
+                    <p className="font-medium">{method.name}</p>
+                    {method.description && (
+                      <p className="text-sm text-neutral-500">{method.description}</p>
+                    )}
+                  </div>
+                  <ChevronRight size={20} className="text-neutral-400" />
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Price Details */}
@@ -454,9 +548,6 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
                     <span>{t('booking.total') || 'Total'} <u>CAD</u></span>
                     <span>${total.toLocaleString()} CAD</span>
                   </div>
-                  <Link href="#" className="text-sm underline block mt-2">
-                    {t('booking.priceBreakdown') || 'Price breakdown'}
-                  </Link>
                 </>
               )}
             </div>
@@ -476,85 +567,6 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
         </div>
       </Container>
 
-      {/* Payment Method Selector Modal */}
-      {showPaymentMethods && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center">
-          <div className="bg-white w-full max-w-lg rounded-t-2xl sm:rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold">{t('payment.selectPaymentMethod') || 'Select payment method'}</h2>
-              <button 
-                onClick={() => setShowPaymentMethods(false)}
-                className="p-2 hover:bg-neutral-100 rounded-full"
-              >
-                <X size={24} />
-              </button>
-            </div>
-            
-            <div className="space-y-2">
-              {paymentMethods.map((method) => (
-                <button
-                  key={method.id}
-                  onClick={() => {
-                    setSelectedPaymentMethod(method.id);
-                    setShowPaymentMethods(false);
-                  }}
-                  className={`w-full flex items-center gap-3 p-4 border rounded-xl transition-colors ${
-                    selectedPaymentMethod === method.id 
-                      ? 'border-black bg-neutral-50' 
-                      : 'border-neutral-200 hover:border-neutral-400'
-                  }`}
-                >
-                  <div className="text-neutral-600">{method.icon}</div>
-                  <div className="flex-1 text-left">
-                    <p className="font-medium">{method.name}</p>
-                    {method.description && (
-                      <p className="text-sm text-neutral-500">{method.description}</p>
-                    )}
-                  </div>
-                  {selectedPaymentMethod === method.id && (
-                    <Check size={20} className="text-black" />
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Stripe Payment Form - Only show for card payments */}
-      {selectedPaymentMethod === 'card' && clientSecret && (
-        <Container>
-          <div className="max-w-xl mx-auto mb-6">
-            <Elements stripe={getStripePromise()} options={options}>
-              <StripePaymentForm 
-                amount={paymentTiming === 'later' ? Math.round(total / 2) : total}
-                onSuccess={handleSuccess}
-                onError={handleError}
-              />
-            </Elements>
-          </div>
-        </Container>
-      )}
-
-      {/* Other Payment Methods - Placeholder */}
-      {selectedPaymentMethod !== 'card' && (
-        <Container>
-          <div className="max-w-xl mx-auto mb-6">
-            <div className="p-4 bg-neutral-50 rounded-xl text-center">
-              <p className="text-neutral-600 mb-4">
-                {t('payment.comingSoon') || `${selectedPayment?.name} integration coming soon. Please use credit card for now.`}
-              </p>
-              <button
-                onClick={() => setSelectedPaymentMethod('card')}
-                className="px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-neutral-800 transition-colors"
-              >
-                {t('payment.switchToCard') || 'Switch to Credit Card'}
-              </button>
-            </div>
-          </div>
-        </Container>
-      )}
-
       {/* Bottom Payment Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 z-50">
         <Container>
@@ -572,11 +584,9 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
               </p>
             </div>
             
-            {selectedPaymentMethod === 'card' && clientSecret && (
-              <div id="payment-submit-button">
-                {/* Stripe will inject the submit button here or we use the one in StripePaymentForm */}
-              </div>
-            )}
+            <p className="text-xs text-neutral-500 text-center">
+              {t('payment.selectMethodAbove') || 'Select a payment method above to continue'}
+            </p>
           </div>
         </Container>
       </div>

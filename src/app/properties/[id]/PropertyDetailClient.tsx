@@ -194,7 +194,7 @@ export default function PropertyDetailClient({ params }: PropertyDetailPageProps
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                      {property.bedrooms}{t('property.bedroomsUnit')} {property.bathrooms}{t('property.bathroomsUnit')} · {property.area}m²
+                      {property.bedrooms}{t('property.bedroomsUnit')} {property.bathrooms}{t('property.bathroomsUnit')} · {property.area}{t('property.areaUnit')}
                     </h2>
                     <div className="flex items-center gap-1 text-gray-500">
                       <MapPin size={16} />

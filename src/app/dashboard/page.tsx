@@ -225,7 +225,7 @@ function DashboardContent() {
                       >
                         <div className="flex flex-col md:flex-row gap-4">
                           <Link
-                            href={`/properties/${booking.property.id}`}
+                            href={`/property/${booking.property.id}`}
                             className="relative w-full md:w-48 h-32 rounded-lg overflow-hidden shrink-0"
                           >
                             <Image
@@ -239,7 +239,7 @@ function DashboardContent() {
                           <div className="flex-1">
                             <div className="flex items-start justify-between mb-2">
                               <Link
-                                href={`/properties/${booking.property.id}`}
+                                href={`/property/${booking.property.id}`}
                                 className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors"
                               >
                                 {booking.property.title}
@@ -325,7 +325,7 @@ function DashboardContent() {
                           className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
                         >
                           <Link
-                            href={`/properties/${property.id}`}
+                            href={`/property/${property.id}`}
                             className="relative aspect-[4/3] overflow-hidden block"
                           >
                             <Image
@@ -341,7 +341,7 @@ function DashboardContent() {
 
                           <div className="p-4">
                             <Link
-                              href={`/properties/${property.id}`}
+                              href={`/property/${property.id}`}
                               className="font-semibold text-gray-900 hover:text-blue-600 transition-colors"
                             >
                               {property.title}
@@ -369,7 +369,7 @@ function DashboardContent() {
 
                             <div className="flex gap-2 mt-4">
                               <Link
-                                href={`/properties/${property.id}`}
+                                href={`/property/${property.id}`}
                                 className="flex-1 px-4 py-2 bg-amber-500 text-white text-sm text-center rounded-lg hover:bg-amber-600 transition-colors"
                               >
                                 {t('dashboard.bookNow')}

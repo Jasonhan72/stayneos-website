@@ -120,7 +120,7 @@
   },
   "properties": {
     "title": "Propriétés en Vedette",
-    "subtitle": "Appartements exécutifs premium soigneusement sélectionnés, chacun est une incarnation de la vie de qualité",
+    "subtitle": "Appartements exécutifs premium pour une vie de qualité",
     "viewAll": "Voir Toutes les Propriétés",
     "featured": "En Vedette",
     "rating": "Note",
@@ -693,7 +693,7 @@
     "inLocation": "{propertyType} à {location}",
     "featured": "En vedette",
     "favourite": "Favori",
-    "guestInfo": "Informations de l'invité",
+    "guestInfo": "{maxGuests} invités · {bedrooms} chambres · {beds} lits · {bathrooms} salles de bain",
     "mapLoading": "Chargement de la carte...",
     "linkCopied": "Lien copié !",
     "shareText": "Découvrez cette propriété sur StayNeos",

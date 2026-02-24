@@ -241,8 +241,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               <Trophy size={14} className="text-neutral-900" />
               <Trophy size={14} className="text-neutral-900 transform rotate-180" />
             </div>
-            <p className="text-sm font-medium">{t('property.guest')}</p>
-            <p className="text-sm font-medium">{t('property.favourite')}</p>
+            <p className="text-sm font-medium">{t('property.guestFavourite')}</p>
           </div>
 
           <div className="w-px h-10 bg-neutral-200" />

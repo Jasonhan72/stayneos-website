@@ -182,7 +182,7 @@ export default function WishlistsPage() {
                 {/* Content */}
                 <div className="p-4">
                   <Link 
-                    href={`/properties/${property.id}`}
+                    href={`/property/${property.id}`}
                     className="block group/title"
                   >
                     <h3 className="font-semibold text-neutral-900 line-clamp-1 
@@ -215,7 +215,7 @@ export default function WishlistsPage() {
 
                   {/* Actions */}
                   <div className="flex gap-2 mt-4 pt-4 border-t border-neutral-100">
-                    <Link href={`/properties/${property.id}`} className="flex-1">
+                    <Link href={`/property/${property.id}`} className="flex-1">
                       <Button variant="outline" size="sm" fullWidth>
                         {t('wishlists.viewDetails')}
                       </Button>

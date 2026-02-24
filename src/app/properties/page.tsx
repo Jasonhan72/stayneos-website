@@ -579,7 +579,9 @@ function PropertyGridCard({
           <div className="flex items-center gap-3 text-neutral-500 text-sm mb-4">
             <span>{property.bedrooms} {t('property.bedroomsShort')}</span>
             <span>·</span>
-            <span>{property.area} {t('property.sqft')}</span>
+            <span>{property.bathrooms} {t('property.bathroomsShort')}</span>
+            <span>·</span>
+            <span>{property.area} {t('property.areaUnit')}</span>
             <span>·</span>
             <span>{t('property.max')} {property.maxGuests} {t('property.guests')}</span>
           </div>
@@ -664,11 +666,11 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
               </div>
               <div className="flex items-center gap-1">
                 <Bath size={14} />
-                <span>{property.bathrooms} BA</span>
+                <span>{property.bathrooms} {t('property.bathroomsShort')}</span>
               </div>
               <div className="flex items-center gap-1">
                 <Maximize size={14} />
-                <span>{property.area} {t('property.sqft')}</span>
+                <span>{property.area} {t('property.areaUnit')}</span>
               </div>
               <div className="flex items-center gap-1">
                 <Users size={14} />

@@ -162,7 +162,7 @@
       "monthlyDiscountLabel": "Monthly Discount ({percent}% off)",
       "minNightsWarning": "Minimum {count} nights required"
     },
-    "subtitle": "Carefully selected premium executive apartments, each embodying quality living"
+    "subtitle": "Premium executive apartments for quality living"
   },
   "details": {
     "title": "Property Details",
@@ -693,7 +693,7 @@
     "inLocation": "{propertyType} in {location}",
     "featured": "Featured",
     "favourite": "Favorite",
-    "guestInfo": "Guest information",
+    "guestInfo": "{maxGuests} guests · {bedrooms} bedrooms · {beds} beds · {bathrooms} baths",
     "mapLoading": "Loading map...",
     "linkCopied": "Link copied!",
     "shareText": "Check out this property on StayNeos",

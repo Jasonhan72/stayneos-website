@@ -172,7 +172,7 @@ export function PropertySchema({
     "@type": "LodgingReservation",
     name: property.title,
     description: `${property.title}，位于${property.location}，面积${property.area}平方米，可容纳${property.maxGuests}人`,
-    url: `${baseUrl}/properties/${property.id}`,
+    url: `${baseUrl}/property/${property.id}`,
     image: property.images,
     address: {
       "@type": "PostalAddress",
