@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useI18n } from '@/lib/i18n';
+import { useState, useMemo, useCallback, useEffect } from 'react';
+import { X, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export interface AirbnbCalendarProps {
@@ -11,74 +10,27 @@ export interface AirbnbCalendarProps {
   onSelectCheckIn: (date: string) => void;
   onSelectCheckOut: (date: string) => void;
   onClose?: () => void;
+  onClearDates?: () => void;
   pricePerNight?: number;
   minNights?: number;
+  rating?: number;
+  currency?: string;
   className?: string;
+  // For backward compatibility with inline usage
   showFooter?: boolean;
 }
 
-// Generate calendar data for a month
-const generateMonthData = (year: number, month: number) => {
-  const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
-  const daysInMonth = lastDay.getDate();
-  const startingDay = firstDay.getDay();
-  
-  return {
-    year,
-    month,
-    daysInMonth,
-    startingDay,
-  };
-};
+const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+const MONTH_NAMES = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
 
-// Format date for display
-const formatDate = (dateStr: string, locale: string = 'en') => {
-  if (!dateStr) return '';
-  const date = new Date(dateStr);
-  return date.toLocaleDateString(
-    locale === 'zh' ? 'zh-CN' : locale === 'fr' ? 'fr-FR' : 'en-US',
-    { weekday: 'short', month: 'short', day: 'numeric' }
-  );
-};
-
-// Get translations
-const getTranslations = (locale: string) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const translations: Record<string, Record<string, any>> = {
-    zh: {
-      months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-      weekDays: ['日', '一', '二', '三', '四', '五', '六'],
-      selectCheckIn: '选择入住日期',
-      selectCheckOut: '选择退房日期',
-      clearDates: '清除日期',
-      save: '保存',
-      nights: '晚',
-      night: '晚',
-    },
-    en: {
-      months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-      weekDays: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-      selectCheckIn: 'Select check-in date',
-      selectCheckOut: 'Select check-out date',
-      clearDates: 'Clear dates',
-      save: 'Save',
-      nights: 'nights',
-      night: 'night',
-    },
-    fr: {
-      months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-      weekDays: ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'],
-      selectCheckIn: "Sélectionnez la date d'arrivée",
-      selectCheckOut: 'Sélectionnez la date de départ',
-      clearDates: 'Effacer les dates',
-      save: 'Enregistrer',
-      nights: 'nuits',
-      night: 'nuit',
-    },
-  };
-  return translations[locale] || translations.en;
-};
+interface DayInfo {
+  date: Date;
+  isCurrentMonth: boolean;
+  isDisabled: boolean;
+}
 
 export function AirbnbCalendar({
   checkIn,
@@ -86,287 +38,438 @@ export function AirbnbCalendar({
   onSelectCheckIn,
   onSelectCheckOut,
   onClose,
-  pricePerNight,
+  onClearDates,
+  pricePerNight = 0,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   minNights = 1,
+  rating = 4.9,
+  currency = 'CAD',
   className,
   showFooter = true,
 }: AirbnbCalendarProps) {
-  const { locale } = useI18n();
-  const t = getTranslations(locale);
-  
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [isMobile, setIsMobile] = useState(false);
+  const [selectedStart, setSelectedStart] = useState<string>(checkIn);
+  const [selectedEnd, setSelectedEnd] = useState<string>(checkOut);
 
-  // Check if mobile on mount and window resize
+  // Sync with props
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 640); // sm breakpoint is 640px
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    setSelectedStart(checkIn);
+    setSelectedEnd(checkOut);
+  }, [checkIn, checkOut]);
+
+  // Generate months data (12 months from current month)
+  const monthsData = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const months = [];
+    
+    for (let i = 0; i < 12; i++) {
+      const date = new Date(today.getFullYear(), today.getMonth() + i, 1);
+      months.push({
+        year: date.getFullYear(),
+        month: date.getMonth(),
+        label: `${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`,
+      });
+    }
+    return months;
   }, []);
 
-  // Calculate months to display
-  const currentMonthData = generateMonthData(currentMonth.getFullYear(), currentMonth.getMonth());
-  const nextMonthData = generateMonthData(
-    currentMonth.getMonth() === 11 ? currentMonth.getFullYear() + 1 : currentMonth.getFullYear(),
-    (currentMonth.getMonth() + 1) % 12
-  );
+  // Calculate nights
+  const nights = useMemo(() => {
+    if (!selectedStart || !selectedEnd) return 0;
+    const start = new Date(selectedStart);
+    const end = new Date(selectedEnd);
+    return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+  }, [selectedStart, selectedEnd]);
+
+  const totalPrice = nights * pricePerNight;
 
   // Get today's date for disabling past dates
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = useMemo(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }, []);
 
-  // Calculate nights and price
-  const nights = checkIn && checkOut 
-    ? Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24))
-    : 0;
-  
-  const totalPrice = nights > 0 && pricePerNight ? nights * pricePerNight : 0;
-
-  // Check if date is disabled (past dates)
-  const isDateDisabled = (year: number, month: number, day: number) => {
-    const date = new Date(year, month, day);
-    date.setHours(0, 0, 0, 0);
-    return date < today;
-  };
-
-  // Get date status for styling
-  const getDateStatus = (year: number, month: number, day: number): 'none' | 'start' | 'end' | 'between' => {
-    const dateStr = new Date(year, month, day).toISOString().split('T')[0];
-    const date = new Date(year, month, day);
-    const start = checkIn ? new Date(checkIn) : null;
-    const end = checkOut ? new Date(checkOut) : null;
+  const getDateStatus = useCallback((date: Date): 'none' | 'start' | 'end' | 'between' | 'disabled' => {
+    if (date < today) return 'disabled';
     
-    if (checkIn && dateStr === checkIn) return 'start';
-    if (checkOut && dateStr === checkOut) return 'end';
+    const dateStr = date.toISOString().split('T')[0];
+    const start = selectedStart ? new Date(selectedStart) : null;
+    const end = selectedEnd ? new Date(selectedEnd) : null;
+    
+    if (selectedStart && dateStr === selectedStart) return 'start';
+    if (selectedEnd && dateStr === selectedEnd) return 'end';
     if (start && end && date > start && date < end) return 'between';
     return 'none';
-  };
+  }, [selectedStart, selectedEnd, today]);
 
-  // Handle date click - Airbnb style: click for check-in, click again for check-out
-  const handleDateClick = useCallback((year: number, month: number, day: number) => {
-    const dateStr = new Date(year, month, day).toISOString().split('T')[0];
-    const clickedDate = new Date(year, month, day);
+  const handleDateClick = useCallback((date: Date) => {
+    if (date < today) return;
     
-    // If no check-in or both dates selected, start fresh with check-in
-    if (!checkIn || (checkIn && checkOut)) {
+    const dateStr = date.toISOString().split('T')[0];
+    
+    // If no start date or both selected, start fresh
+    if (!selectedStart || (selectedStart && selectedEnd)) {
+      setSelectedStart(dateStr);
+      setSelectedEnd('');
       onSelectCheckIn(dateStr);
       onSelectCheckOut('');
     } else {
-      // Have check-in, selecting check-out
-      const startDate = new Date(checkIn);
+      // Have start, selecting end
+      const startDate = new Date(selectedStart);
       
-      // If clicked date is before or same as check-in, make it the new check-in
-      if (clickedDate <= startDate) {
+      if (date <= startDate) {
+        // Selected before start, make it new start
+        setSelectedStart(dateStr);
+        setSelectedEnd('');
         onSelectCheckIn(dateStr);
         onSelectCheckOut('');
       } else {
-        // Validate min nights
-        const selectedNights = Math.ceil((clickedDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-        if (selectedNights >= minNights) {
-          onSelectCheckOut(dateStr);
-        } else {
-          // Still allow selection but could show warning
-          onSelectCheckOut(dateStr);
-        }
+        // Valid end date
+        setSelectedEnd(dateStr);
+        onSelectCheckOut(dateStr);
       }
     }
-  }, [checkIn, checkOut, minNights, onSelectCheckIn, onSelectCheckOut]);
+  }, [selectedStart, selectedEnd, today, onSelectCheckIn, onSelectCheckOut]);
 
-  // Navigation handlers
-  const goToPrevMonth = () => {
-    const prevMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1);
-    // Don't allow going to months before current month
-    const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-    if (prevMonth >= currentMonthStart) {
-      setCurrentMonth(prevMonth);
+  const handleClear = useCallback(() => {
+    setSelectedStart('');
+    setSelectedEnd('');
+    if (onClearDates) {
+      onClearDates();
+    } else {
+      onSelectCheckIn('');
+      onSelectCheckOut('');
     }
-  };
+  }, [onClearDates, onSelectCheckIn, onSelectCheckOut]);
 
-  const goToNextMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
-  };
-
-  // Clear dates
-  const clearDates = () => {
-    onSelectCheckIn('');
-    onSelectCheckOut('');
-  };
-
-  // Get selection display text
-  const getSelectionDisplay = () => {
-    if (!checkIn) {
-      return { text: t.selectCheckIn, subText: '' };
+  const handleSave = useCallback(() => {
+    if (selectedStart && selectedEnd) {
+      onSelectCheckIn(selectedStart);
+      onSelectCheckOut(selectedEnd);
+      if (onClose) onClose();
     }
-    if (!checkOut) {
-      return { 
-        text: formatDate(checkIn, locale),
-        subText: t.selectCheckOut
-      };
+  }, [selectedStart, selectedEnd, onSelectCheckIn, onSelectCheckOut, onClose]);
+
+  const formatDateRange = useCallback(() => {
+    if (!selectedStart) return '';
+    if (!selectedEnd) {
+      const date = new Date(selectedStart);
+      return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
     }
-    return {
-      text: `${nights} ${nights > 1 ? t.nights : t.night}`,
-      subText: `${formatDate(checkIn, locale)} - ${formatDate(checkOut, locale)}`
-    };
+    const start = new Date(selectedStart);
+    const end = new Date(selectedEnd);
+    return `${start.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} - ${end.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}`;
+  }, [selectedStart, selectedEnd]);
+
+  // Generate days for a month
+  const generateDays = (year: number, month: number): DayInfo[] => {
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+    
+    const days: DayInfo[] = [];
+    
+    // Previous month padding
+    const prevMonthLastDay = new Date(year, month, 0).getDate();
+    for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+      const date = new Date(year, month - 1, prevMonthLastDay - i);
+      days.push({ date, isCurrentMonth: false, isDisabled: date < today });
+    }
+    
+    // Current month
+    for (let i = 1; i <= daysInMonth; i++) {
+      const date = new Date(year, month, i);
+      days.push({ date, isCurrentMonth: true, isDisabled: date < today });
+    }
+    
+    // Next month padding (fill to complete 6 rows = 42 cells)
+    const remainingCells = 42 - days.length;
+    for (let i = 1; i <= remainingCells; i++) {
+      const date = new Date(year, month + 1, i);
+      days.push({ date, isCurrentMonth: false, isDisabled: date < today });
+    }
+    
+    return days;
   };
 
-  const selection = getSelectionDisplay();
+  const hasSelection = selectedStart && selectedEnd;
+  const hasAnyDate = selectedStart || selectedEnd;
 
-  // Render a single month
-  const renderMonth = (monthData: typeof currentMonthData) => {
-    const { year, month, daysInMonth, startingDay } = monthData;
-    const weekDays = t.weekDays;
-
-    return (
-      <div className="flex-1 min-w-[280px]">
-        {/* Month header - ALWAYS show month title here */}
-        <h3 className="font-semibold text-center mb-4 text-neutral-900">
-          {t.months[month]} {year}
-        </h3>
-        
-        {/* Week day headers */}
-        <div className="grid grid-cols-7 gap-1 text-center text-sm mb-2">
-          {weekDays.map((day: string, i: number) => (
-            <div key={i} className="text-neutral-500 py-2 text-xs font-medium">
-              {day}
-            </div>
-          ))}
-        </div>
-        
-        {/* Calendar grid */}
-        <div className="grid grid-cols-7 gap-y-1">
-          {/* Empty cells for days before start of month */}
-          {Array.from({ length: startingDay }).map((_, i) => (
-            <div key={`empty-${i}`} className="aspect-square" />
-          ))}
-          
-          {/* Days */}
-          {Array.from({ length: daysInMonth }).map((_, i) => {
-            const day = i + 1;
-            const disabled = isDateDisabled(year, month, day);
-            const status = getDateStatus(year, month, day);
-            
-            // Base classes
-            const baseClasses = "aspect-square flex items-center justify-center text-sm relative transition-all duration-150";
-            
-            // State classes
-            let stateClasses = "";
-            if (disabled) {
-              stateClasses = "text-neutral-300 cursor-not-allowed line-through";
-            } else {
-              stateClasses = "cursor-pointer hover:bg-neutral-100";
-            }
-            
-            // Selection styling - Airbnb style
-            let selectionClasses = "";
-            if (status === 'start' || status === 'end') {
-              selectionClasses = "bg-black text-white rounded-full hover:bg-neutral-800 font-semibold";
-            } else if (status === 'between') {
-              selectionClasses = "bg-neutral-100 text-neutral-900";
-            } else {
-              selectionClasses = "rounded-full";
-            }
-            
-            // Rounded corners for range
-            let roundedClasses = "";
-            if (status === 'start') {
-              roundedClasses = checkOut ? "" : "rounded-full";
-            } else if (status === 'end') {
-              roundedClasses = "";
-            } else if (status === 'between') {
-              roundedClasses = "rounded-none";
-            }
-
-            return (
-              <button
-                key={day}
-                onClick={() => !disabled && handleDateClick(year, month, day)}
-                disabled={disabled}
-                className={cn(baseClasses, stateClasses, selectionClasses, roundedClasses)}
-              >
-                {day}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
-
-  return (
-    <div className={cn("w-full", className)}>
+  // Main calendar content
+  const calendarContent = (
+    <div className={cn("flex flex-col h-full", className)}>
       {/* Header with selection info */}
-      <div className="mb-6">
-        <h2 className="text-2xl font-semibold text-neutral-900">{selection.text}</h2>
-        {selection.subText && (
-          <p className="text-neutral-500 mt-1">{selection.subText}</p>
-        )}
+      <div className="mb-4">
+        <h2 className="text-2xl font-semibold text-neutral-900">
+          {hasSelection ? `${nights} nights` : 'Select check-in date'}
+        </h2>
+        <p className="text-neutral-500 mt-1">
+          {hasSelection ? formatDateRange() : 'Add dates for prices'}
+        </p>
       </div>
-      
-      {/* Navigation - NO month label here (it's in renderMonth) */}
-      <div className="flex items-center justify-between mb-4">
-        <button 
-          onClick={goToPrevMonth}
-          className="p-2 hover:bg-neutral-100 rounded-full transition-colors"
-          aria-label="Previous month"
-        >
-          <ChevronLeft size={20} className="text-neutral-700" />
-        </button>
-        
-        {/* Spacer for alignment */}
-        <div className="w-10" />
-        
-        <button 
-          onClick={goToNextMonth}
-          className="p-2 hover:bg-neutral-100 rounded-full transition-colors"
-          aria-label="Next month"
-        >
-          <ChevronRight size={20} className="text-neutral-700" />
-        </button>
+
+      {/* Weekday Headers - Fixed */}
+      <div className="grid grid-cols-7 gap-1 text-center border-b border-neutral-100 pb-3 sticky top-0 bg-white z-10">
+        {WEEKDAYS.map((day, i) => (
+          <div key={i} className="text-sm font-medium text-neutral-600 py-2">
+            {day}
+          </div>
+        ))}
       </div>
-      
-      {/* Calendar grid - Always show 2 months on desktop, 1 on mobile */}
-      <div className={cn(
-        "flex gap-8",
-        isMobile ? "flex-col" : "flex-row"
-      )}>
-        {renderMonth(currentMonthData)}
-        {!isMobile && (
-          <>
-            <div className="w-px bg-neutral-200" />
-            {renderMonth(nextMonthData)}
-          </>
-        )}
+
+      {/* Scrollable Calendar */}
+      <div className="flex-1 overflow-y-auto pb-4 -mx-4 px-4">
+        {monthsData.map(({ year, month, label }) => {
+          const days = generateDays(year, month);
+          
+          return (
+            <div key={label} className="py-6">
+              {/* Month Label */}
+              <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+                {label}
+              </h3>
+              
+              {/* Days Grid */}
+              <div className="grid grid-cols-7 gap-y-2">
+                {days.map((dayInfo, index) => {
+                  const status = getDateStatus(dayInfo.date);
+                  const dayNumber = dayInfo.date.getDate();
+                  
+                  let cellClasses = "aspect-square flex items-center justify-center text-sm relative";
+                  let textClasses = "";
+                  
+                  if (!dayInfo.isCurrentMonth) {
+                    textClasses = "text-transparent";
+                  } else if (status === 'disabled') {
+                    textClasses = "text-neutral-300 line-through cursor-not-allowed";
+                  } else if (status === 'start' || status === 'end') {
+                    textClasses = "bg-neutral-900 text-white rounded-full font-semibold cursor-pointer";
+                  } else if (status === 'between') {
+                    textClasses = "bg-neutral-100 text-neutral-900 cursor-pointer";
+                    cellClasses += " rounded-none";
+                  } else {
+                    textClasses = "text-neutral-900 hover:bg-neutral-100 rounded-full cursor-pointer";
+                  }
+                  
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => !dayInfo.isDisabled && handleDateClick(dayInfo.date)}
+                      disabled={dayInfo.isDisabled || !dayInfo.isCurrentMonth}
+                      className={cn(cellClasses, textClasses)}
+                    >
+                      <span className={cn(
+                        "w-10 h-10 flex items-center justify-center",
+                        (status === 'start' || status === 'end') && "bg-neutral-900 text-white rounded-full"
+                      )}>
+                        {dayNumber}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Footer with actions */}
       {showFooter && (
-        <div className="flex items-center justify-between mt-8 pt-4 border-t border-neutral-200">
-          <button 
-            onClick={clearDates}
-            className="text-sm font-semibold underline underline-offset-4 text-neutral-900 hover:text-neutral-600 transition-colors"
-          >
-            {t.clearDates}
-          </button>
+        <div className="flex items-center justify-between mt-4 pt-4 border-t border-neutral-200 shrink-0">
+          <div>
+            {hasSelection ? (
+              <div>
+                <p className="text-lg font-semibold text-neutral-900">
+                  ${totalPrice.toLocaleString()} {currency}
+                </p>
+                <div className="flex items-center gap-2">
+                  <Star size={14} className="fill-black" />
+                  <span className="text-sm text-neutral-600">{rating}</span>
+                </div>
+                <p className="text-sm text-neutral-500 underline">For {nights} nights</p>
+              </div>
+            ) : (
+              <div>
+                <p className="text-neutral-900">Add dates for prices</p>
+                <div className="flex items-center gap-2 mt-1">
+                  <Star size={14} className="fill-black" />
+                  <span className="text-sm text-neutral-600">{rating}</span>
+                </div>
+              </div>
+            )}
+          </div>
           
           <div className="flex items-center gap-4">
-            {nights > 0 && pricePerNight && (
-              <span className="text-sm text-neutral-600">
-                ${totalPrice.toLocaleString()} CAD total
-              </span>
+            {hasAnyDate && (
+              <button 
+                onClick={handleClear}
+                className="text-sm font-semibold underline underline-offset-4 text-neutral-900 hover:text-neutral-600 transition-colors"
+              >
+                Clear dates
+              </button>
             )}
             <button
-              onClick={onClose}
-              disabled={!checkIn || !checkOut}
-              className="px-6 py-3 bg-black text-white font-semibold rounded-lg hover:bg-neutral-800 disabled:bg-neutral-300 disabled:cursor-not-allowed transition-colors"
+              onClick={handleSave}
+              disabled={!hasSelection}
+              className={cn(
+                "px-8 py-3.5 rounded-xl font-semibold text-white transition-colors",
+                hasSelection 
+                  ? "bg-neutral-900 hover:bg-neutral-800" 
+                  : "bg-neutral-300 cursor-not-allowed"
+              )}
             >
-              {t.save}
+              Save
             </button>
           </div>
         </div>
       )}
+    </div>
+  );
+
+  // If used as inline component (has className prop for styling), return just content
+  if (className) {
+    return calendarContent;
+  }
+
+  // Full screen modal wrapper
+  return (
+    <div className="fixed inset-0 z-50 bg-white flex flex-col">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-4 border-b border-neutral-100 shrink-0">
+        <button 
+          onClick={onClose}
+          className="p-2 -ml-2 hover:bg-neutral-100 rounded-full transition-colors"
+        >
+          <X size={24} className="text-neutral-900" />
+        </button>
+        
+        {hasAnyDate && (
+          <button 
+            onClick={handleClear}
+            className="text-sm font-medium text-neutral-900 underline underline-offset-4"
+          >
+            Clear dates
+          </button>
+        )}
+      </div>
+
+      {/* Title */}
+      <div className="px-4 pt-6 pb-4 shrink-0">
+        <h2 className="text-2xl font-semibold text-neutral-900">
+          {hasSelection ? `${nights} nights` : 'Select check-in date'}
+        </h2>
+        <p className="text-neutral-500 mt-1">
+          {hasSelection ? formatDateRange() : 'Prices on calendar do not include taxes and fees'}
+        </p>
+      </div>
+
+      {/* Weekday Headers - Fixed */}
+      <div className="px-4 grid grid-cols-7 gap-1 text-center border-b border-neutral-100 pb-3 shrink-0 sticky top-0 bg-white z-10">
+        {WEEKDAYS.map((day, i) => (
+          <div key={i} className="text-sm font-medium text-neutral-600 py-2">
+            {day}
+          </div>
+        ))}
+      </div>
+
+      {/* Scrollable Calendar */}
+      <div className="flex-1 overflow-y-auto px-4 pb-32">
+        {monthsData.map(({ year, month, label }) => {
+          const days = generateDays(year, month);
+          
+          return (
+            <div key={label} className="py-6">
+              {/* Month Label */}
+              <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+                {label}
+              </h3>
+              
+              {/* Days Grid */}
+              <div className="grid grid-cols-7 gap-y-2">
+                {days.map((dayInfo, index) => {
+                  const status = getDateStatus(dayInfo.date);
+                  const dayNumber = dayInfo.date.getDate();
+                  
+                  let cellClasses = "aspect-square flex items-center justify-center text-sm relative";
+                  let textClasses = "";
+                  
+                  if (!dayInfo.isCurrentMonth) {
+                    textClasses = "text-transparent";
+                  } else if (status === 'disabled') {
+                    textClasses = "text-neutral-300 line-through cursor-not-allowed";
+                  } else if (status === 'start' || status === 'end') {
+                    textClasses = "bg-neutral-900 text-white rounded-full font-semibold cursor-pointer";
+                  } else if (status === 'between') {
+                    textClasses = "bg-neutral-100 text-neutral-900 cursor-pointer";
+                    cellClasses += " rounded-none";
+                  } else {
+                    textClasses = "text-neutral-900 hover:bg-neutral-100 rounded-full cursor-pointer";
+                  }
+                  
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => !dayInfo.isDisabled && handleDateClick(dayInfo.date)}
+                      disabled={dayInfo.isDisabled || !dayInfo.isCurrentMonth}
+                      className={cn(cellClasses, textClasses)}
+                    >
+                      <span className={cn(
+                        "w-10 h-10 flex items-center justify-center",
+                        (status === 'start' || status === 'end') && "bg-neutral-900 text-white rounded-full"
+                      )}>
+                        {dayNumber}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Bottom Bar */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 px-4 py-4">
+        <div className="flex items-center justify-between">
+          <div>
+            {hasSelection ? (
+              <div>
+                <p className="text-lg font-semibold text-neutral-900">
+                  ${totalPrice.toLocaleString()} {currency}
+                </p>
+                <div className="flex items-center gap-2">
+                  <Star size={14} className="fill-black" />
+                  <span className="text-sm text-neutral-600">{rating}</span>
+                </div>
+                <p className="text-sm text-neutral-500 underline">For {nights} nights</p>
+              </div>
+            ) : (
+              <div>
+                <p className="text-neutral-900">Add dates for prices</p>
+                <div className="flex items-center gap-2 mt-1">
+                  <Star size={14} className="fill-black" />
+                  <span className="text-sm text-neutral-600">{rating}</span>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          <button
+            onClick={handleSave}
+            disabled={!hasSelection}
+            className={cn(
+              "px-8 py-3.5 rounded-xl font-semibold text-white transition-colors",
+              hasSelection 
+                ? "bg-neutral-900 hover:bg-neutral-800" 
+                : "bg-neutral-300 cursor-not-allowed"
+            )}
+          >
+            Save
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

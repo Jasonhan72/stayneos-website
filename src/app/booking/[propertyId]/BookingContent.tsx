@@ -25,8 +25,7 @@ import {
   Sparkles,
   Home,
   ChevronRight,
-  CreditCard,
-  X
+  CreditCard
 } from 'lucide-react';
 
 export default function BookingContent() {
@@ -600,38 +599,27 @@ export default function BookingContent() {
         </div>
       </div>
       
-      {/* Date Picker Modal - Airbnb Style */}
+      {/* Date Picker Modal - Fullscreen Vertical Scroll Calendar */}
       {showDatePicker && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center"
-        >
-          <div 
-            className="bg-white w-full max-w-3xl rounded-t-2xl sm:rounded-2xl p-6 max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <div />
-              <button 
-                onClick={() => setShowDatePicker(false)}
-                className="p-2 hover:bg-neutral-100 rounded-full transition-colors"
-              >
-                <X size={24} className="text-neutral-700" />
-              </button>
-            </div>
-            
-            <AirbnbCalendar 
-              checkIn={checkIn}
-              checkOut={checkOut}
-              onSelectCheckIn={setCheckIn}
-              onSelectCheckOut={setCheckOut}
-              onClose={() => {
-                setShowDatePicker(false);
-                setError('');
-              }}
-              pricePerNight={displayPrice}
-              minNights={property.minNights}
-            />
-          </div>
-        </div>
+        <AirbnbCalendar 
+          checkIn={checkIn}
+          checkOut={checkOut}
+          onSelectCheckIn={setCheckIn}
+          onSelectCheckOut={setCheckOut}
+          onClose={() => {
+            setShowDatePicker(false);
+            setError('');
+          }}
+          onClearDates={() => {
+            setCheckIn('');
+            setCheckOut('');
+            setError('');
+          }}
+          pricePerNight={displayPrice}
+          minNights={property.minNights}
+          rating={property.rating}
+          currency="CAD"
+        />
       )}
     </main>
   );

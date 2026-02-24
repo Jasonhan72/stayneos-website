@@ -9,7 +9,6 @@ import {
   ChevronDown,
   Minus,
   Plus,
-  X,
 } from "lucide-react";
 import { AirbnbCalendar } from "@/components/booking";
 
@@ -230,30 +229,19 @@ export default function SearchBar() {
         </div>
       </div>
 
-      {/* Date Picker Modal - Unified Airbnb Calendar */}
+      {/* Date Picker Modal - Fullscreen Vertical Scroll Calendar */}
       {isDateOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center">
-          <div className="bg-white w-full max-w-3xl rounded-t-2xl sm:rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-2">
-              <div />
-              <button 
-                onClick={() => setIsDateOpen(false)}
-                className="p-2 hover:bg-neutral-100 rounded-full"
-              >
-                <X size={24} />
-              </button>
-            </div>
-            
-            <AirbnbCalendar 
-              checkIn={searchData.checkIn}
-              checkOut={searchData.checkOut}
-              onSelectCheckIn={(date) => setSearchData({ ...searchData, checkIn: date })}
-              onSelectCheckOut={(date) => setSearchData({ ...searchData, checkOut: date })}
-              onClose={() => setIsDateOpen(false)}
-              minNights={1}
-            />
-          </div>
-        </div>
+        <AirbnbCalendar 
+          checkIn={searchData.checkIn}
+          checkOut={searchData.checkOut}
+          onSelectCheckIn={(date) => setSearchData({ ...searchData, checkIn: date })}
+          onSelectCheckOut={(date) => setSearchData({ ...searchData, checkOut: date })}
+          onClose={() => setIsDateOpen(false)}
+          onClearDates={() => setSearchData({ ...searchData, checkIn: '', checkOut: '' })}
+          minNights={1}
+          rating={4.9}
+          currency="CAD"
+        />
       )}
     </div>
   );

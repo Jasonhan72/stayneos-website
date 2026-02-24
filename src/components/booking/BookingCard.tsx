@@ -12,7 +12,6 @@ import {
   Plus,
   Shield,
   Sparkles,
-  X,
   Star
 } from 'lucide-react';
 import { Button } from '@/components/ui';
@@ -313,40 +312,26 @@ export function BookingCard({ property, className }: BookingCardProps) {
         </div>
       </div>
 
-      {/* Date Picker Modal - Mobile Optimized */}
+      {/* Date Picker Modal - Fullscreen Vertical Scroll Calendar */}
       {showDatePicker && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center"
-        >
-          <div 
-            className="bg-white w-full max-w-3xl rounded-t-2xl sm:rounded-2xl p-6 max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between mb-2">
-              <div />
-              <button 
-                onClick={() => setShowDatePicker(false)}
-                className="p-2 hover:bg-neutral-100 rounded-full transition-colors"
-              >
-                <X size={24} className="text-neutral-700" />
-              </button>
-            </div>
-            
-            {/* Calendar */}
-            <AirbnbCalendar 
-              checkIn={checkIn}
-              checkOut={checkOut}
-              onSelectCheckIn={setCheckIn}
-              onSelectCheckOut={setCheckOut}
-              onClose={() => setShowDatePicker(false)}
-              pricePerNight={qualifiesForDiscount 
-                ? Math.round(property.price * (100 - (property.monthlyDiscount || 0)) / 100)
-                : property.price
-              }
-              minNights={property.minNights}
-            />
-          </div>
-        </div>
+        <AirbnbCalendar 
+          checkIn={checkIn}
+          checkOut={checkOut}
+          onSelectCheckIn={setCheckIn}
+          onSelectCheckOut={setCheckOut}
+          onClose={() => setShowDatePicker(false)}
+          onClearDates={() => {
+            setCheckIn('');
+            setCheckOut('');
+          }}
+          pricePerNight={qualifiesForDiscount 
+            ? Math.round(property.price * (100 - (property.monthlyDiscount || 0)) / 100)
+            : property.price
+          }
+          minNights={property.minNights}
+          rating={property.rating}
+          currency="CAD"
+        />
       )}
     </>
   );

@@ -291,30 +291,22 @@ export default function PropertiesPage() {
                   </div>
                 </button>
 
-                {/* Date Picker Modal */}
+                {/* Date Picker Modal - Fullscreen Vertical Scroll Calendar */}
                 {showDatePicker && (
-                  <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center">
-                    <div className="bg-white w-full max-w-3xl rounded-t-2xl sm:rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
-                      <div className="flex items-center justify-between mb-2">
-                        <div />
-                        <button 
-                          onClick={() => setShowDatePicker(false)}
-                          className="p-2 hover:bg-neutral-100 rounded-full"
-                        >
-                          <X size={24} />
-                        </button>
-                      </div>
-                      
-                      <AirbnbCalendar 
-                        checkIn={checkIn}
-                        checkOut={checkOut}
-                        onSelectCheckIn={setCheckIn}
-                        onSelectCheckOut={setCheckOut}
-                        onClose={() => setShowDatePicker(false)}
-                        minNights={28}
-                      />
-                    </div>
-                  </div>
+                  <AirbnbCalendar 
+                    checkIn={checkIn}
+                    checkOut={checkOut}
+                    onSelectCheckIn={setCheckIn}
+                    onSelectCheckOut={setCheckOut}
+                    onClose={() => setShowDatePicker(false)}
+                    onClearDates={() => {
+                      setCheckIn('');
+                      setCheckOut('');
+                    }}
+                    minNights={28}
+                    rating={4.9}
+                    currency="CAD"
+                  />
                 )}
               </div>
 
