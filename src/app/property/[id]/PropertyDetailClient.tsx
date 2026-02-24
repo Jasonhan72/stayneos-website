@@ -16,7 +16,7 @@ import {
   Check
 } from 'lucide-react';
 import { Container, Divider } from '@/components/ui';
-import { FullscreenCalendar, ReviewAndContinue, PaymentMethod, calculateBookingPrice } from '@/components/booking';
+import { AirbnbCalendar, ReviewAndContinue, PaymentMethod, calculateBookingPrice } from '@/components/booking';
 import { getPropertyById, mockProperties } from '@/lib/data';
 import { getLocalizedTitle, getLocalizedDescription } from '@/components/property/PropertyCard';
 import { useI18n } from '@/lib/i18n';
@@ -423,20 +423,32 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
         </div>
       </div>
 
-      {/* Full Screen Calendar Modal */}
-      <FullscreenCalendar
-        isOpen={showCalendar}
-        onClose={() => setShowCalendar(false)}
-        checkIn={checkIn}
-        checkOut={checkOut}
-        onSelectCheckIn={setCheckIn}
-        onSelectCheckOut={setCheckOut}
-        onClearDates={() => { setCheckIn(''); setCheckOut(''); }}
-        pricePerNight={property.price}
-        minNights={property.minNights || 1}
-        rating={property.rating}
-        currency="CAD"
-      />
+      {/* Calendar Modal - Unified Airbnb Calendar */}
+      {showCalendar && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center">
+          <div className="bg-white w-full max-w-3xl rounded-t-2xl sm:rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-2">
+              <div />
+              <button 
+                onClick={() => setShowCalendar(false)}
+                className="p-2 hover:bg-neutral-100 rounded-full"
+              >
+                <X size={24} />
+              </button>
+            </div>
+            
+            <AirbnbCalendar 
+              checkIn={checkIn}
+              checkOut={checkOut}
+              onSelectCheckIn={setCheckIn}
+              onSelectCheckOut={setCheckOut}
+              onClose={() => setShowCalendar(false)}
+              pricePerNight={property.price}
+              minNights={property.minNights || 1}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Review and Continue Modal */}
       <ReviewAndContinue

@@ -20,10 +20,11 @@ import {
   Bed,
   Bath,
   Maximize,
-  Users
+  Users,
+  Calendar
 } from 'lucide-react';
 import { Button, Container, Card, Badge, Input } from '@/components/ui';
-import DateRangePicker from '@/components/ui/DateRangePicker';
+import { AirbnbCalendar } from '@/components/booking';
 import { mockProperties } from '@/lib/data';
 import { useI18n } from '@/lib/i18n';
 import dynamic from 'next/dynamic';
@@ -69,7 +70,7 @@ const sortOptions = [
 const ITEMS_PER_PAGE = 6;
 
 export default function PropertiesPage() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   
   // State
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
@@ -85,6 +86,7 @@ export default function PropertiesPage() {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
+  const [showDatePicker, setShowDatePicker] = useState(false);
   
   // Filter logic
   const filteredProperties = useMemo(() => {
@@ -271,15 +273,50 @@ export default function PropertiesPage() {
                 )}
               </div>
 
-              {/* Date Range Picker - Airbnb Style */}
-              <DateRangePicker
-                checkIn={checkIn}
-                checkOut={checkOut}
-                onCheckInChange={setCheckIn}
-                onCheckOutChange={setCheckOut}
-                minNights={28}
-                className="w-full md:w-auto md:min-w-[280px]"
-              />
+              {/* Date Range Picker - Unified Airbnb Calendar */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowDatePicker(true)}
+                  className="w-full md:w-auto md:min-w-[280px] flex items-center gap-3 px-4 py-3 border-2 border-neutral-200 rounded-xl hover:border-neutral-300 transition-colors bg-white"
+                >
+                  <Calendar size={20} className="text-neutral-400" />
+                  <div className="text-left">
+                    <p className="text-xs font-semibold text-neutral-900 uppercase">{t('booking.dates') || 'Dates'}</p>
+                    <p className="text-sm text-neutral-600">
+                      {checkIn && checkOut 
+                        ? `${new Date(checkIn).toLocaleDateString(locale === 'zh' ? 'zh-CN' : locale === 'fr' ? 'fr-FR' : 'en-US', { month: 'short', day: 'numeric' })} - ${new Date(checkOut).toLocaleDateString(locale === 'zh' ? 'zh-CN' : locale === 'fr' ? 'fr-FR' : 'en-US', { month: 'short', day: 'numeric' })}`
+                        : t('booking.selectDates') || 'Select dates'
+                      }
+                    </p>
+                  </div>
+                </button>
+
+                {/* Date Picker Modal */}
+                {showDatePicker && (
+                  <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center">
+                    <div className="bg-white w-full max-w-3xl rounded-t-2xl sm:rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
+                      <div className="flex items-center justify-between mb-2">
+                        <div />
+                        <button 
+                          onClick={() => setShowDatePicker(false)}
+                          className="p-2 hover:bg-neutral-100 rounded-full"
+                        >
+                          <X size={24} />
+                        </button>
+                      </div>
+                      
+                      <AirbnbCalendar 
+                        checkIn={checkIn}
+                        checkOut={checkOut}
+                        onSelectCheckIn={setCheckIn}
+                        onSelectCheckOut={setCheckOut}
+                        onClose={() => setShowDatePicker(false)}
+                        minNights={28}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {/* Filter Button */}
               <Button

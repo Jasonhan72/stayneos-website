@@ -9,7 +9,9 @@ import {
   ChevronDown,
   Minus,
   Plus,
+  X,
 } from "lucide-react";
+import { AirbnbCalendar } from "@/components/booking";
 
 interface SearchData {
   location: string;
@@ -42,6 +44,12 @@ export default function SearchBar() {
   const handleSearch = () => {
     console.log("Search:", searchData);
     // TODO: Navigate to properties page with search params
+  };
+
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    return date.toLocaleDateString("zh-CN", { month: "short", day: "numeric" });
   };
 
   return (
@@ -103,7 +111,7 @@ export default function SearchBar() {
             )}
           </div>
 
-          {/* Dates */}
+          {/* Dates - Unified Airbnb Calendar */}
           <div className="relative flex-1 md:border-r md:border-gray-200">
             <button
               onClick={() => {
@@ -123,7 +131,7 @@ export default function SearchBar() {
                 <p className="text-xs font-medium text-gray-500">日期</p>
                 <p className="text-sm font-medium text-gray-800">
                   {searchData.checkIn && searchData.checkOut
-                    ? `${searchData.checkIn} - ${searchData.checkOut}`
+                    ? `${formatDate(searchData.checkIn)} - ${formatDate(searchData.checkOut)}`
                     : "选择日期"}
                 </p>
               </div>
@@ -135,47 +143,6 @@ export default function SearchBar() {
                 aria-hidden="true"
               />
             </button>
-
-            {isDateOpen && (
-              <div id="date-dropdown" className="absolute top-full left-0 right-0 md:left-auto md:w-80 mt-2 bg-white rounded-xl shadow-xl border border-gray-100 p-4 z-20">
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="checkin-date" className="block text-xs font-medium text-gray-500 mb-2">
-                      入住日期
-                    </label>
-                    <input
-                      id="checkin-date"
-                      type="date"
-                      value={searchData.checkIn}
-                      onChange={(e) =>
-                        setSearchData({ ...searchData, checkIn: e.target.value })
-                      }
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="checkout-date" className="block text-xs font-medium text-gray-500 mb-2">
-                      退房日期
-                    </label>
-                    <input
-                      id="checkout-date"
-                      type="date"
-                      value={searchData.checkOut}
-                      onChange={(e) =>
-                        setSearchData({ ...searchData, checkOut: e.target.value })
-                      }
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                  <button
-                    onClick={() => setIsDateOpen(false)}
-                    className="w-full bg-blue-600 text-white rounded-lg py-2 font-medium hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                  >
-                    确定
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Guests */}
@@ -262,6 +229,32 @@ export default function SearchBar() {
           </div>
         </div>
       </div>
+
+      {/* Date Picker Modal - Unified Airbnb Calendar */}
+      {isDateOpen && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center">
+          <div className="bg-white w-full max-w-3xl rounded-t-2xl sm:rounded-2xl p-6 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-2">
+              <div />
+              <button 
+                onClick={() => setIsDateOpen(false)}
+                className="p-2 hover:bg-neutral-100 rounded-full"
+              >
+                <X size={24} />
+              </button>
+            </div>
+            
+            <AirbnbCalendar 
+              checkIn={searchData.checkIn}
+              checkOut={searchData.checkOut}
+              onSelectCheckIn={(date) => setSearchData({ ...searchData, checkIn: date })}
+              onSelectCheckOut={(date) => setSearchData({ ...searchData, checkOut: date })}
+              onClose={() => setIsDateOpen(false)}
+              minNights={1}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
