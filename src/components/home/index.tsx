@@ -8,10 +8,12 @@ import {
   Search, 
   MapPin, 
   ArrowRight,
-  Star
+  Star,
+  Calendar,
+  ChevronRight
 } from 'lucide-react';
 import { Button, Container, Section, Card, Badge } from '@/components/ui';
-import DateRangePicker from '@/components/ui/DateRangePicker';
+import { AirbnbCalendar } from '@/components/booking';
 import { useI18n } from '@/lib/i18n';
 
 // Export WelcomeBanner
@@ -24,7 +26,14 @@ export function HeroSection() {
   const [location, setLocation] = useState('');
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
-  const { t } = useI18n();
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const { t, locale } = useI18n();
+
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString(locale === 'zh' ? 'zh-CN' : locale === 'fr' ? 'fr-FR' : 'en-US', { month: 'short', day: 'numeric' });
+  };
 
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center">
@@ -71,16 +80,43 @@ export function HeroSection() {
               </div>
             </div>
             
-            {/* Date Range Picker - Full Width */}
+            {/* Date Range Picker - Full Width with Airbnb Calendar */}
             <div className="mb-3">
-              <DateRangePicker
-                checkIn={checkIn}
-                checkOut={checkOut}
-                onCheckInChange={setCheckIn}
-                onCheckOutChange={setCheckOut}
-                minNights={28}
-                className="w-full"
-              />
+              <button
+                onClick={() => setShowDatePicker(true)}
+                className="w-full h-14 flex items-center justify-between px-4 bg-neutral-50 border border-neutral-200 hover:border-neutral-300 transition-all text-left"
+              >
+                <div className="flex items-center gap-3">
+                  <Calendar size={20} className="text-neutral-400" />
+                  <div>
+                    <div className="text-xs font-semibold text-neutral-900 uppercase tracking-wide">
+                      {checkIn && checkOut ? `${formatDate(checkIn)} - ${formatDate(checkOut)}` : t('booking.selectDates') || 'Select dates'}
+                    </div>
+                    <div className="text-sm text-neutral-400 mt-0.5">
+                      {checkIn && checkOut ? `${Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24))} nights` : 'Add dates'}
+                    </div>
+                  </div>
+                </div>
+                <ChevronRight size={20} className="text-neutral-400" />
+              </button>
+
+              {/* Date Picker Modal - Fullscreen Vertical Scroll Calendar */}
+              {showDatePicker && (
+                <AirbnbCalendar 
+                  checkIn={checkIn}
+                  checkOut={checkOut}
+                  onSelectCheckIn={setCheckIn}
+                  onSelectCheckOut={setCheckOut}
+                  onClose={() => setShowDatePicker(false)}
+                  onClearDates={() => {
+                    setCheckIn('');
+                    setCheckOut('');
+                  }}
+                  minNights={28}
+                  rating={4.9}
+                  currency="CAD"
+                />
+              )}
             </div>
 
             {/* Search Button - Full Width */}
