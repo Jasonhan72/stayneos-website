@@ -27,7 +27,6 @@ import DateRangePicker from '@/components/ui/DateRangePicker';
 import { mockProperties } from '@/lib/data';
 import { useI18n } from '@/lib/i18n';
 import dynamic from 'next/dynamic';
-import BackToHomeButton from '@/components/navigation/BackToHomeButton';
 
 // Dynamically import Google Maps component to avoid SSR issues
 const GooglePropertyMap = dynamic(() => import('@/components/property/GooglePropertyMap'), {
@@ -393,10 +392,10 @@ export default function PropertiesPage() {
         {/* Results Toolbar */}
         <div className="flex items-center justify-between mb-6">
           <div className="text-sm text-neutral-600">
-            {t('properties.showing')} <span className="font-medium text-neutral-900">{paginatedProperties.length}</span> {t('properties.properties')}
+            {t('properties.showing')} <span className="font-medium text-neutral-900">{paginatedProperties.length}</span> {paginatedProperties.length === 1 ? t('unit.property') : t('unit.properties')}
             {filteredProperties.length > 0 && (
               <>  
-                {' '}{t('properties.of')} <span className="font-medium text-neutral-900">{filteredProperties.length}</span> {t('properties.total')}
+                {' '}{t('properties.of')} <span className="font-medium text-neutral-900">{filteredProperties.length}</span> {t('unit.properties')}
               </>
             )}
           </div>
@@ -521,8 +520,6 @@ export default function PropertiesPage() {
         )}
       </Container>
 
-      {/* Back to Home Button */}
-      <BackToHomeButton />
     </main>
   );
 }

@@ -285,7 +285,10 @@
     "supportTitle": "支持",
     "copyright": "© 2024-2026 StayNeos. 版权所有",
     "trust": "🔒 安全支付 · ✓ 真实房源 · 24/7 客服支持",
-    "terms": "服务条款"
+    "terms": "服务条款",
+    "landlords": "房东合作",
+    "services": "我们的服务",
+    "properties": "浏览房源"
   },
   "language": {
     "title": "语言",
