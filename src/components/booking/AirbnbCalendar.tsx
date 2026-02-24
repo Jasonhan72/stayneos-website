@@ -97,9 +97,11 @@ export function AirbnbCalendar({
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [isMobile, setIsMobile] = useState(false);
 
-  // Check if mobile on mount
+  // Check if mobile on mount and window resize
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640); // sm breakpoint is 640px
+    };
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -123,9 +125,10 @@ export function AirbnbCalendar({
   
   const totalPrice = nights > 0 && pricePerNight ? nights * pricePerNight : 0;
 
-  // Check if date is disabled
+  // Check if date is disabled (past dates)
   const isDateDisabled = (year: number, month: number, day: number) => {
     const date = new Date(year, month, day);
+    date.setHours(0, 0, 0, 0);
     return date < today;
   };
 
@@ -174,7 +177,12 @@ export function AirbnbCalendar({
 
   // Navigation handlers
   const goToPrevMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
+    const prevMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1);
+    // Don't allow going to months before current month
+    const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+    if (prevMonth >= currentMonthStart) {
+      setCurrentMonth(prevMonth);
+    }
   };
 
   const goToNextMonth = () => {
@@ -207,14 +215,13 @@ export function AirbnbCalendar({
   const selection = getSelectionDisplay();
 
   // Render a single month
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const renderMonth = (monthData: typeof currentMonthData, _monthOffset: number) => {
+  const renderMonth = (monthData: typeof currentMonthData) => {
     const { year, month, daysInMonth, startingDay } = monthData;
     const weekDays = t.weekDays;
 
     return (
       <div className="flex-1 min-w-[280px]">
-        {/* Month header */}
+        {/* Month header - ALWAYS show month title here */}
         <h3 className="font-semibold text-center mb-4 text-neutral-900">
           {t.months[month]} {year}
         </h3>
@@ -298,7 +305,7 @@ export function AirbnbCalendar({
         )}
       </div>
       
-      {/* Navigation */}
+      {/* Navigation - NO month label here (it's in renderMonth) */}
       <div className="flex items-center justify-between mb-4">
         <button 
           onClick={goToPrevMonth}
@@ -308,12 +315,8 @@ export function AirbnbCalendar({
           <ChevronLeft size={20} className="text-neutral-700" />
         </button>
         
-        {/* Month labels (shown on mobile since we only show one month) */}
-        {isMobile && (
-          <span className="font-semibold text-neutral-900">
-            {t.months[currentMonth.getMonth()]} {currentMonth.getFullYear()}
-          </span>
-        )}
+        {/* Spacer for alignment */}
+        <div className="w-10" />
         
         <button 
           onClick={goToNextMonth}
@@ -324,13 +327,18 @@ export function AirbnbCalendar({
         </button>
       </div>
       
-      {/* Calendar grid - 1 month on mobile, 2 on desktop */}
+      {/* Calendar grid - Always show 2 months on desktop, 1 on mobile */}
       <div className={cn(
-        "flex flex-col sm:flex-row gap-4 sm:gap-8",
-        isMobile && "gap-4"
+        "flex gap-8",
+        isMobile ? "flex-col" : "flex-row"
       )}>
-        {renderMonth(currentMonthData, 0)}
-        {!isMobile && renderMonth(nextMonthData, 1)}
+        {renderMonth(currentMonthData)}
+        {!isMobile && (
+          <>
+            <div className="w-px bg-neutral-200" />
+            {renderMonth(nextMonthData)}
+          </>
+        )}
       </div>
 
       {/* Footer with actions */}
