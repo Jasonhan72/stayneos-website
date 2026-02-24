@@ -369,9 +369,13 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
 
       {/* Guest Picker Modal */}
       {showGuestPicker && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center"
+        <div 
+          className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center"
+          onClick={() => setShowGuestPicker(false)}
         >
-          <div className="bg-white w-full max-w-lg rounded-t-2xl sm:rounded-2xl p-6 max-h-[90vh] overflow-y-auto"
+          <div 
+            className="bg-white w-full max-w-lg rounded-t-2xl sm:rounded-2xl p-6 max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold">{t('checkout.changeGuests') || 'Change guests'}</h2>
