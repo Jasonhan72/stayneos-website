@@ -368,7 +368,21 @@
     "youWontBeCharged": "Vous ne serez pas encore facturé",
     "confirmTitle": "Vérifier Votre Séjour",
     "priceDetails": "Résumé des Frais",
-    "confirmButton": "Réserver Maintenant"
+    "confirmButton": "Réserver Maintenant",
+    "guest": "invité",
+    "guestSelector": {
+      "title": "Modifier les invités",
+      "maxGuests": "Cet établissement accepte un maximum de {count} invités, bébés non compris.",
+      "noPets": "Les animaux ne sont pas autorisés.",
+      "adults": "Adultes",
+      "adultsDescription": "13 ans et +",
+      "children": "Enfants",
+      "childrenDescription": "De 2 à 12 ans",
+      "child": "enfant",
+      "infants": "Bébés",
+      "infantsDescription": "Moins de 2 ans",
+      "infant": "bébé"
+    }
   },
   "contact": {
     "pageTitle": "Contactez-nous",

@@ -368,7 +368,21 @@
     "youWontBeCharged": "您暂时不会被收费",
     "confirmTitle": "确认您的入住",
     "priceDetails": "费用明细",
-    "confirmButton": "立即预订"
+    "confirmButton": "立即预订",
+    "guest": "位房客",
+    "guestSelector": {
+      "title": "更改房客",
+      "maxGuests": "此房源最多可接待 {count} 位房客，不包括婴幼儿。",
+      "noPets": "不允许携带宠物。",
+      "adults": "成人",
+      "adultsDescription": "13岁及以上",
+      "children": "儿童",
+      "childrenDescription": "2-12岁",
+      "child": "位儿童",
+      "infants": "婴幼儿",
+      "infantsDescription": "2岁以下",
+      "infant": "位婴幼儿"
+    }
   },
   "contact": {
     "pageTitle": "联系我们",

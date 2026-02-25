@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { AirbnbCalendar, BookingPriceCalculator } from '@/components/booking';
+import { AirbnbCalendar, BookingPriceCalculator, GuestSelector, type GuestCounts } from '@/components/booking';
 import StripeProvider from '@/components/payment/StripeProvider';
 import PaymentForm from '@/components/payment/PaymentForm';
 import { Button, Input } from '@/components/ui';
@@ -66,6 +66,14 @@ export default function BookingContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(!queryCheckIn || !queryCheckOut);
+  const [showGuestSelector, setShowGuestSelector] = useState(false);
+  
+  // Guest breakdown state (adults, children, infants)
+  const [guestBreakdown, setGuestBreakdown] = useState<GuestCounts>({
+    adults: queryGuests,
+    children: 0,
+    infants: 0,
+  });
   
   // Booking and payment state
   const [, setBookingId] = useState('');
@@ -550,7 +558,7 @@ export default function BookingContent() {
                         <Calendar size={18} className="text-neutral-500" />
                       </div>
                       <div>
-                        <p className="text-xs text-neutral-500">Check-in</p>
+                        <p className="text-xs text-neutral-500">{t('booking.checkIn')}</p>
                         <p className="font-medium">{formatDateDisplay(checkIn)}</p>
                       </div>
                     </div>
@@ -559,12 +567,45 @@ export default function BookingContent() {
                         <Calendar size={18} className="text-neutral-500" />
                       </div>
                       <div>
-                        <p className="text-xs text-neutral-500">Check-out</p>
+                        <p className="text-xs text-neutral-500">{t('booking.checkOut')}</p>
                         <p className="font-medium">{formatDateDisplay(checkOut)}</p>
                       </div>
                     </div>
                   </div>
                 )}
+
+                {/* Guests Summary with Change Button */}
+                <div className="mb-6 pb-6 border-b border-neutral-100">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-neutral-100 rounded-lg flex items-center justify-center">
+                        <User size={18} className="text-neutral-500" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-neutral-500">{t('booking.guests')}</p>
+                        <p className="font-medium">
+                          {guests} {guests === 1 ? t('booking.guest') : t('booking.guests')}
+                          {guestBreakdown.children > 0 && (
+                            <span className="text-neutral-500">
+                              , {guestBreakdown.children} {guestBreakdown.children === 1 ? t('booking.guestSelector.child') : t('booking.guestSelector.children')}
+                            </span>
+                          )}
+                          {guestBreakdown.infants > 0 && (
+                            <span className="text-neutral-500">
+                              , {guestBreakdown.infants} {guestBreakdown.infants === 1 ? t('booking.guestSelector.infant') : t('booking.guestSelector.infants')}
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setShowGuestSelector(true)}
+                      className="px-4 py-2 text-sm font-medium text-neutral-900 border border-neutral-300 rounded-lg hover:border-neutral-900 transition-colors"
+                    >
+                      {t('common.change')}
+                    </button>
+                  </div>
+                </div>
 
                 {/* Price Breakdown */}
                 {priceCalc ? (
@@ -621,6 +662,19 @@ export default function BookingContent() {
           currency="CAD"
         />
       )}
+
+      {/* Guest Selector Modal */}
+      <GuestSelector
+        isOpen={showGuestSelector}
+        onClose={() => setShowGuestSelector(false)}
+        onSave={(newGuests) => {
+          setGuestBreakdown(newGuests);
+          setGuests(newGuests.adults + newGuests.children);
+        }}
+        initialGuests={guestBreakdown}
+        maxGuests={property.maxGuests}
+        allowPets={false}
+      />
     </main>
   );
 }

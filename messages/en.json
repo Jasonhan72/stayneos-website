@@ -368,7 +368,21 @@
     "youWontBeCharged": "You won't be charged yet",
     "confirmTitle": "Review Your Stay",
     "priceDetails": "Cost Summary",
-    "confirmButton": "Complete Booking"
+    "confirmButton": "Complete Booking",
+    "guest": "guest",
+    "guestSelector": {
+      "title": "Change guests",
+      "maxGuests": "This place has a maximum of {count} guests, not including infants.",
+      "noPets": "Pets aren't allowed.",
+      "adults": "Adults",
+      "adultsDescription": "Age 13+",
+      "children": "Children",
+      "childrenDescription": "Ages 2-12",
+      "child": "child",
+      "infants": "Infants",
+      "infantsDescription": "Under 2",
+      "infant": "infant"
+    }
   },
   "contact": {
     "pageTitle": "Contact Us",

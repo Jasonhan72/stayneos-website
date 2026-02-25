@@ -7,3 +7,4 @@ export { AirbnbCalendar } from './AirbnbCalendar';
 export { FullscreenCalendar } from './FullscreenCalendar';
 export { ReviewAndContinue } from './ReviewAndContinue';
 export { PaymentMethod, type PaymentMethod as PaymentMethodType } from './PaymentMethod';
+export { GuestSelector, type GuestCounts } from './GuestSelector';
