@@ -16,7 +16,7 @@ import {
   Check
 } from 'lucide-react';
 import { Container, Divider } from '@/components/ui';
-import { AirbnbCalendar, ReviewAndContinue, PaymentMethod, calculateBookingPrice } from '@/components/booking';
+import { AirbnbCalendar, ReviewAndContinue, PaymentMethod, calculateBookingPrice, GuestSelector, type GuestCounts } from '@/components/booking';
 import { getPropertyById, mockProperties } from '@/lib/data';
 import { getLocalizedTitle, getLocalizedDescription } from '@/components/property/PropertyCard';
 import { useI18n } from '@/lib/i18n';
@@ -47,10 +47,18 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   // Booking state
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
-  const [guests] = useState(1);
+  const [guests, setGuests] = useState(1);
   const [showCalendar, setShowCalendar] = useState(false);
   const [showReview, setShowReview] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
+  const [showGuestSelector, setShowGuestSelector] = useState(false);
+  
+  // Guest breakdown state for GuestSelector
+  const [guestBreakdown, setGuestBreakdown] = useState<GuestCounts>({
+    adults: 1,
+    children: 0,
+    infants: 0,
+  });
 
   const localizedTitle = useMemo(() => {
     if (!property) return '';
@@ -449,7 +457,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
         onBack={() => { setShowReview(false); setShowCalendar(true); }}
         onNext={() => { setShowReview(false); setShowPayment(true); }}
         onChangeDates={() => { setShowReview(false); setShowCalendar(true); }}
-        onChangeGuests={() => { /* Handle guest change */ }}
+        onChangeGuests={() => setShowGuestSelector(true)}
         property={{
           id: property.id,
           title: localizedTitle,
@@ -482,6 +490,19 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           setShowPayment(false);
           // Navigate to payment form or confirmation
         }}
+      />
+
+      {/* Guest Selector Modal */}
+      <GuestSelector
+        isOpen={showGuestSelector}
+        onClose={() => setShowGuestSelector(false)}
+        onSave={(newGuests) => {
+          setGuestBreakdown(newGuests);
+          setGuests(newGuests.adults + newGuests.children);
+        }}
+        initialGuests={guestBreakdown}
+        maxGuests={property?.maxGuests || 10}
+        allowPets={false}
       />
 
       {/* Full Screen Gallery Modal */}
