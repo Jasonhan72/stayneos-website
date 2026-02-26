@@ -81,8 +81,9 @@ export function PaymentMethod({
     },
   ];
 
-  return (
-    <div className="fixed inset-0 z-50 bg-white flex flex-col">
+  // Mobile: Full screen
+  const mobileView = (
+    <div className="md:hidden fixed inset-0 z-50 bg-white flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-4 border-b border-neutral-100">
         <button 
@@ -158,6 +159,101 @@ export function PaymentMethod({
         </button>
       </div>
     </div>
+  );
+
+  // Desktop: Centered modal
+  const desktopView = (
+    <div className="hidden md:flex fixed inset-0 z-50 items-center justify-center">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      
+      {/* Modal Container */}
+      <div className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 max-h-[85vh] flex flex-col overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-100 shrink-0">
+          <button 
+            onClick={onBack}
+            className="p-2 -ml-2 hover:bg-neutral-100 rounded-full transition-colors"
+          >
+            <ChevronLeft size={24} className="text-neutral-900" />
+          </button>
+          
+          <h1 className="text-lg font-semibold text-neutral-900">Add payment method</h1>
+          
+          <button 
+            onClick={onClose}
+            className="p-2 -mr-2 hover:bg-neutral-100 rounded-full transition-colors"
+          >
+            <X size={24} className="text-neutral-900" />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 px-6 py-6">
+          <p className="text-neutral-600 mb-6">Choose your preferred payment method</p>
+          
+          <div className="border border-neutral-200 rounded-xl overflow-hidden">
+            {paymentOptions.map((option, index) => (
+              <button
+                key={option.id}
+                onClick={() => setSelectedMethod(option.id)}
+                className={cn(
+                  "w-full flex items-center justify-between p-4 transition-colors hover:bg-neutral-50",
+                  index !== paymentOptions.length - 1 && "border-b border-neutral-200",
+                  selectedMethod === option.id && "bg-neutral-50"
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  {option.id === 'card' ? (
+                    <CreditCard size={20} className="text-neutral-700" />
+                  ) : (
+                    option.icons[0]
+                  )}
+                  
+                  <div className="flex flex-col">
+                    <span className="font-medium text-neutral-900">{option.label}</span>
+                    {option.id === 'card' && (
+                      <div className="flex items-center gap-1 mt-0.5">
+                        {option.icons}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                <div className={cn(
+                  "w-5 h-5 rounded-full border-2 flex items-center justify-center",
+                  selectedMethod === option.id ? "border-neutral-900" : "border-neutral-400"
+                )}>
+                  {selectedMethod === option.id && (
+                    <div className="w-3 h-3 bg-neutral-900 rounded-full" />
+                  )}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="border-t border-neutral-100 px-6 py-4 flex items-center justify-end shrink-0">
+          <button
+            onClick={() => onNext(selectedMethod)}
+            className="px-8 py-3 bg-neutral-900 text-white font-semibold rounded-xl hover:bg-neutral-800 transition-colors"
+          >
+            Continue
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      {mobileView}
+      {desktopView}
+    </>
   );
 }
 

@@ -9,8 +9,10 @@ import {
   ChevronDown,
   Minus,
   Plus,
+  X
 } from "lucide-react";
 import { AirbnbCalendar } from "@/components/booking";
+import { cn } from "@/lib/utils";
 
 interface SearchData {
   location: string;
@@ -52,184 +54,400 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto" role="search" aria-label="搜索房源">
-      <div className="bg-white rounded-2xl shadow-xl p-2 md:p-4">
-        <div className="flex flex-col md:flex-row gap-2 md:gap-0">
+    <div className="w-full max-w-4xl mx-auto relative" role="search" aria-label="搜索房源">
+      {/* Desktop: Horizontal Search Bar */}
+      <div className="hidden md:block bg-white rounded-full shadow-xl border border-neutral-200 p-2">
+        <div className="flex items-center">
           {/* Location */}
-          <div className="relative flex-1 md:border-r md:border-gray-200">
+          <div className="relative flex-1 px-6 border-r border-neutral-200">
             <button
               onClick={() => {
                 setIsLocationOpen(!isLocationOpen);
                 setIsDateOpen(false);
                 setIsGuestsOpen(false);
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                isLocationOpen ? "bg-gray-50" : "hover:bg-gray-50"
-              }`}
+              className={cn(
+                "w-full text-left py-2 transition-all focus:outline-none",
+                isLocationOpen && "bg-neutral-50"
+              )}
               aria-expanded={isLocationOpen}
               aria-controls="location-dropdown"
               aria-label="选择位置"
             >
-              <MapPin className="text-blue-500 shrink-0" size={20} aria-hidden="true" />
-              <div className="flex-1">
-                <p className="text-xs font-medium text-gray-500">位置</p>
-                <p className="text-sm font-medium text-gray-800 truncate">
-                  {searchData.location || "选择位置"}
-                </p>
-              </div>
-              <ChevronDown
-                size={16}
-                className={`text-gray-400 transition-transform ${
-                  isLocationOpen ? "rotate-180" : ""
-                }`}
-                aria-hidden="true"
-              />
+              <p className="text-xs font-bold text-neutral-900">位置</p>
+              <p className={cn(
+                "text-sm truncate transition-colors",
+                searchData.location ? "text-neutral-900 font-medium" : "text-neutral-500"
+              )}>
+                {searchData.location || "搜索目的地"}
+              </p>
             </button>
 
+            {/* Location Dropdown */}
             {isLocationOpen && (
-              <div id="location-dropdown" className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-100 p-4 z-20">
-                <p className="text-xs font-medium text-gray-500 mb-3">热门位置</p>
-                <div className="grid grid-cols-2 gap-2" role="listbox" aria-label="热门位置">
-                  {popularLocations.map((location) => (
-                    <button
-                      key={location}
-                      onClick={() => {
-                        setSearchData({ ...searchData, location });
-                        setIsLocationOpen(false);
-                      }}
-                      className="flex items-center gap-2 p-3 rounded-lg hover:bg-gray-50 transition-colors text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      role="option"
-                      aria-selected={searchData.location === location}
+              <>
+                <div 
+                  className="fixed inset-0 z-30" 
+                  onClick={() => setIsLocationOpen(false)}
+                />
+                <div 
+                  id="location-dropdown" 
+                  className="absolute top-full left-0 mt-4 bg-white rounded-2xl shadow-2xl border border-neutral-100 p-4 z-40 min-w-[300px]"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-sm font-semibold text-neutral-900">热门位置</p>
+                    <button 
+                      onClick={() => setIsLocationOpen(false)}
+                      className="p-1 hover:bg-neutral-100 rounded-full"
                     >
-                      <MapPin size={16} className="text-gray-400" aria-hidden="true" />
-                      <span className="text-sm text-gray-700">{location}</span>
+                      <X size={16} />
                     </button>
-                  ))}
+                  </div>
+                  <div className="grid grid-cols-1 gap-1" role="listbox" aria-label="热门位置">
+                    {popularLocations.map((location) => (
+                      <button
+                        key={location}
+                        onClick={() => {
+                          setSearchData({ ...searchData, location });
+                          setIsLocationOpen(false);
+                        }}
+                        className={cn(
+                          "flex items-center gap-3 p-3 rounded-xl transition-colors text-left",
+                          searchData.location === location 
+                            ? "bg-neutral-100 font-medium" 
+                            : "hover:bg-neutral-50"
+                        )}
+                        role="option"
+                        aria-selected={searchData.location === location}
+                      >
+                        <div className="w-10 h-10 rounded-lg bg-neutral-100 flex items-center justify-center">
+                          <MapPin size={18} className="text-neutral-500" />
+                        </div>
+                        <span className="text-sm text-neutral-700">{location}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              </>
             )}
           </div>
 
-          {/* Dates - Unified Airbnb Calendar */}
-          <div className="relative flex-1 md:border-r md:border-gray-200">
+          {/* Check-in */}
+          <div className="relative flex-1 px-6 border-r border-neutral-200">
             <button
               onClick={() => {
                 setIsDateOpen(!isDateOpen);
                 setIsLocationOpen(false);
                 setIsGuestsOpen(false);
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                isDateOpen ? "bg-gray-50" : "hover:bg-gray-50"
-              }`}
+              className={cn(
+                "w-full text-left py-2 transition-all focus:outline-none",
+                isDateOpen && "bg-neutral-50"
+              )}
               aria-expanded={isDateOpen}
-              aria-controls="date-dropdown"
-              aria-label="选择日期"
+              aria-label="选择入住日期"
             >
-              <Calendar className="text-blue-500 shrink-0" size={20} aria-hidden="true" />
-              <div className="flex-1">
-                <p className="text-xs font-medium text-gray-500">日期</p>
-                <p className="text-sm font-medium text-gray-800">
-                  {searchData.checkIn && searchData.checkOut
-                    ? `${formatDate(searchData.checkIn)} - ${formatDate(searchData.checkOut)}`
-                    : "选择日期"}
-                </p>
-              </div>
-              <ChevronDown
-                size={16}
-                className={`text-gray-400 transition-transform ${
-                  isDateOpen ? "rotate-180" : ""
-                }`}
-                aria-hidden="true"
-              />
+              <p className="text-xs font-bold text-neutral-900">入住</p>
+              <p className={cn(
+                "text-sm transition-colors",
+                searchData.checkIn ? "text-neutral-900 font-medium" : "text-neutral-500"
+              )}>
+                {searchData.checkIn ? formatDate(searchData.checkIn) : "添加日期"}
+              </p>
+            </button>
+          </div>
+
+          {/* Check-out */}
+          <div className="relative flex-1 px-6 border-r border-neutral-200">
+            <button
+              onClick={() => {
+                setIsDateOpen(!isDateOpen);
+                setIsLocationOpen(false);
+                setIsGuestsOpen(false);
+              }}
+              className={cn(
+                "w-full text-left py-2 transition-all focus:outline-none",
+                isDateOpen && "bg-neutral-50"
+              )}
+              aria-expanded={isDateOpen}
+              aria-label="选择退房日期"
+            >
+              <p className="text-xs font-bold text-neutral-900">退房</p>
+              <p className={cn(
+                "text-sm transition-colors",
+                searchData.checkOut ? "text-neutral-900 font-medium" : "text-neutral-500"
+              )}>
+                {searchData.checkOut ? formatDate(searchData.checkOut) : "添加日期"}
+              </p>
             </button>
           </div>
 
           {/* Guests */}
-          <div className="relative flex-1">
+          <div className="relative flex-1 px-6">
             <button
               onClick={() => {
                 setIsGuestsOpen(!isGuestsOpen);
                 setIsLocationOpen(false);
                 setIsDateOpen(false);
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                isGuestsOpen ? "bg-gray-50" : "hover:bg-gray-50"
-              }`}
+              className={cn(
+                "w-full text-left py-2 transition-all focus:outline-none",
+                isGuestsOpen && "bg-neutral-50"
+              )}
               aria-expanded={isGuestsOpen}
               aria-controls="guests-dropdown"
               aria-label="选择人数"
             >
-              <Users className="text-blue-500 shrink-0" size={20} aria-hidden="true" />
-              <div className="flex-1">
-                <p className="text-xs font-medium text-gray-500">人数</p>
-                <p className="text-sm font-medium text-gray-800">
-                  {searchData.guests} 位房客
-                </p>
-              </div>
-              <ChevronDown
-                size={16}
-                className={`text-gray-400 transition-transform ${
-                  isGuestsOpen ? "rotate-180" : ""
-                }`}
-                aria-hidden="true"
-              />
+              <p className="text-xs font-bold text-neutral-900">人数</p>
+              <p className="text-sm text-neutral-900 font-medium">
+                {searchData.guests} 位房客
+              </p>
             </button>
 
+            {/* Guests Dropdown */}
             {isGuestsOpen && (
-              <div id="guests-dropdown" className="absolute top-full left-0 right-0 md:left-auto md:w-64 mt-2 bg-white rounded-xl shadow-xl border border-gray-100 p-4 z-20">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-700" id="guests-label">房客</span>
-                  <div className="flex items-center gap-3" role="group" aria-labelledby="guests-label">
-                    <button
-                      onClick={() =>
-                        setSearchData({
-                          ...searchData,
-                          guests: Math.max(1, searchData.guests - 1),
-                        })
-                      }
-                      disabled={searchData.guests <= 1}
-                      className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-40 hover:border-blue-500 hover:text-blue-500 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      aria-label="减少房客数量"
+              <>
+                <div 
+                  className="fixed inset-0 z-30" 
+                  onClick={() => setIsGuestsOpen(false)}
+                />
+                <div 
+                  id="guests-dropdown" 
+                  className="absolute top-full right-0 mt-4 bg-white rounded-2xl shadow-2xl border border-neutral-100 p-4 z-40 min-w-[280px]"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="text-sm font-semibold text-neutral-900">房客</p>
+                    <button 
+                      onClick={() => setIsGuestsOpen(false)}
+                      className="p-1 hover:bg-neutral-100 rounded-full"
                     >
-                      <Minus size={16} aria-hidden="true" />
-                    </button>
-                    <span className="w-6 text-center font-medium" aria-live="polite">
-                      {searchData.guests}
-                    </span>
-                    <button
-                      onClick={() =>
-                        setSearchData({
-                          ...searchData,
-                          guests: Math.min(10, searchData.guests + 1),
-                        })
-                      }
-                      disabled={searchData.guests >= 10}
-                      className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-40 hover:border-blue-500 hover:text-blue-500 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      aria-label="增加房客数量"
-                    >
-                      <Plus size={16} aria-hidden="true" />
+                      <X size={16} />
                     </button>
                   </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-neutral-900">成人</p>
+                      <p className="text-sm text-neutral-500">13岁及以上</p>
+                    </div>
+                    <div className="flex items-center gap-3" role="group">
+                      <button
+                        onClick={() =>
+                          setSearchData({
+                            ...searchData,
+                            guests: Math.max(1, searchData.guests - 1),
+                          })
+                        }
+                        disabled={searchData.guests <= 1}
+                        className="w-8 h-8 rounded-full border border-neutral-300 flex items-center justify-center disabled:opacity-40 hover:border-neutral-900 transition-colors"
+                        aria-label="减少房客数量"
+                      >
+                        <Minus size={16} />
+                      </button>
+                      <span className="w-6 text-center font-medium" aria-live="polite">
+                        {searchData.guests}
+                      </span>
+                      <button
+                        onClick={() =>
+                          setSearchData({
+                            ...searchData,
+                            guests: Math.min(10, searchData.guests + 1),
+                          })
+                        }
+                        disabled={searchData.guests >= 10}
+                        className="w-8 h-8 rounded-full border border-neutral-300 flex items-center justify-center disabled:opacity-40 hover:border-neutral-900 transition-colors"
+                        aria-label="增加房客数量"
+                      >
+                        <Plus size={16} />
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </>
             )}
           </div>
 
           {/* Search Button */}
-          <div className="md:pl-2">
+          <div className="pl-2">
             <button
               onClick={handleSearch}
-              className="w-full md:w-auto flex items-center justify-center gap-2 bg-amber-500 text-white rounded-xl py-3 px-6 font-medium hover:bg-amber-600 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+              className="flex items-center justify-center gap-2 bg-rose-500 hover:bg-rose-600 text-white rounded-full p-4 transition-colors"
               aria-label="搜索房源"
             >
-              <Search size={20} aria-hidden="true" />
-              <span className="md:hidden">搜索</span>
+              <Search size={20} />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Date Picker Modal - Fullscreen Vertical Scroll Calendar */}
+      {/* Mobile: Compact Search Bar */}
+      <div className="md:hidden bg-white rounded-2xl shadow-xl p-2">
+        <div className="flex flex-col gap-2">
+          {/* Location Row */}
+          <button
+            onClick={() => {
+              setIsLocationOpen(!isLocationOpen);
+              setIsDateOpen(false);
+              setIsGuestsOpen(false);
+            }}
+            className={cn(
+              "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left",
+              isLocationOpen ? "bg-neutral-50" : "hover:bg-neutral-50"
+            )}
+            aria-expanded={isLocationOpen}
+            aria-controls="location-dropdown-mobile"
+            aria-label="选择位置"
+          >
+            <MapPin className="text-rose-500 shrink-0" size={20} />
+            <div className="flex-1">
+              <p className="text-xs font-medium text-neutral-500">位置</p>
+              <p className="text-sm font-medium text-neutral-800 truncate">
+                {searchData.location || "选择位置"}
+              </p>
+            </div>
+            <ChevronDown
+              size={16}
+              className={cn(
+                "text-neutral-400 transition-transform",
+                isLocationOpen && "rotate-180"
+              )}
+            />
+          </button>
+
+          {/* Dates Row */}
+          <button
+            onClick={() => {
+              setIsDateOpen(!isDateOpen);
+              setIsLocationOpen(false);
+              setIsGuestsOpen(false);
+            }}
+            className={cn(
+              "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left",
+              isDateOpen ? "bg-neutral-50" : "hover:bg-neutral-50"
+            )}
+            aria-expanded={isDateOpen}
+            aria-label="选择日期"
+          >
+            <Calendar className="text-rose-500 shrink-0" size={20} />
+            <div className="flex-1">
+              <p className="text-xs font-medium text-neutral-500">日期</p>
+              <p className="text-sm font-medium text-neutral-800">
+                {searchData.checkIn && searchData.checkOut
+                  ? `${formatDate(searchData.checkIn)} - ${formatDate(searchData.checkOut)}`
+                  : "选择日期"}
+              </p>
+            </div>
+            <ChevronDown
+              size={16}
+              className={cn(
+                "text-neutral-400 transition-transform",
+                isDateOpen && "rotate-180"
+              )}
+            />
+          </button>
+
+          {/* Guests Row */}
+          <button
+            onClick={() => {
+              setIsGuestsOpen(!isGuestsOpen);
+              setIsLocationOpen(false);
+              setIsDateOpen(false);
+            }}
+            className={cn(
+              "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left",
+              isGuestsOpen ? "bg-neutral-50" : "hover:bg-neutral-50"
+            )}
+            aria-expanded={isGuestsOpen}
+            aria-controls="guests-dropdown-mobile"
+            aria-label="选择人数"
+          >
+            <Users className="text-rose-500 shrink-0" size={20} />
+            <div className="flex-1">
+              <p className="text-xs font-medium text-neutral-500">人数</p>
+              <p className="text-sm font-medium text-neutral-800">
+                {searchData.guests} 位房客
+              </p>
+            </div>
+            <ChevronDown
+              size={16}
+              className={cn(
+                "text-neutral-400 transition-transform",
+                isGuestsOpen && "rotate-180"
+              )}
+            />
+          </button>
+
+          {/* Mobile Location Dropdown */}
+          {isLocationOpen && (
+            <div id="location-dropdown-mobile" className="bg-white rounded-xl border border-neutral-100 p-3">
+              <p className="text-xs font-medium text-neutral-500 mb-2">热门位置</p>
+              <div className="grid grid-cols-2 gap-2">
+                {popularLocations.map((location) => (
+                  <button
+                    key={location}
+                    onClick={() => {
+                      setSearchData({ ...searchData, location });
+                      setIsLocationOpen(false);
+                    }}
+                    className="flex items-center gap-2 p-2 rounded-lg hover:bg-neutral-50 transition-colors text-left"
+                  >
+                      <MapPin size={16} className="text-neutral-400" />
+                      <span className="text-sm text-neutral-700">{location}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Mobile Guests Dropdown */}
+          {isGuestsOpen && (
+            <div id="guests-dropdown-mobile" className="bg-white rounded-xl border border-neutral-100 p-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-neutral-700">房客</span>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() =>
+                      setSearchData({
+                        ...searchData,
+                        guests: Math.max(1, searchData.guests - 1),
+                      })
+                    }
+                    disabled={searchData.guests <= 1}
+                    className="w-8 h-8 rounded-full border border-neutral-300 flex items-center justify-center disabled:opacity-40"
+                  >
+                    <Minus size={16} />
+                  </button>
+                  <span className="w-6 text-center font-medium">{searchData.guests}</span>
+                  <button
+                    onClick={() =>
+                      setSearchData({
+                        ...searchData,
+                        guests: Math.min(10, searchData.guests + 1),
+                      })
+                    }
+                    disabled={searchData.guests >= 10}
+                    className="w-8 h-8 rounded-full border border-neutral-300 flex items-center justify-center disabled:opacity-40"
+                  >
+                    <Plus size={16} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Search Button */}
+          <button
+            onClick={handleSearch}
+            className="w-full flex items-center justify-center gap-2 bg-rose-500 text-white rounded-xl py-3 font-medium hover:bg-rose-600 transition-colors"
+            aria-label="搜索房源"
+          >
+            <Search size={20} />
+            搜索
+          </button>
+        </div>
+      </div>
+
+      {/* Date Picker Modal */}
       {isDateOpen && (
         <AirbnbCalendar 
           checkIn={searchData.checkIn}

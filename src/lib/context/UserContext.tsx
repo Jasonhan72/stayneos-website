@@ -1,7 +1,6 @@
 "use client";
 
 import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
-import { useSession, signOut } from "next-auth/react";
 
 // Types
 export interface UserProfile {
@@ -64,7 +63,6 @@ const USER_KEY = "stayneos_user_data";
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  const { data: session, status } = useSession();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -74,9 +72,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
       try {
         const storedUser = localStorage.getItem(USER_KEY);
         const storedToken = localStorage.getItem(TOKEN_KEY);
-        
+
         if (storedUser && storedToken) {
           const parsedUser = JSON.parse(storedUser);
+          // Ensure preferences exist
+          if (!parsedUser.preferences) {
+            parsedUser.preferences = defaultPreferences;
+          }
           setUser(parsedUser);
         }
       } catch (error) {
@@ -108,41 +110,28 @@ export function UserProvider({ children }: { children: ReactNode }) {
       }
     };
 
+    const handleCustomEvent = () => {
+      const storedUser = localStorage.getItem(USER_KEY);
+      if (storedUser) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          setUser(parsedUser);
+        } catch {
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+    };
+
     window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
+    window.addEventListener("localStorageChange", handleCustomEvent);
+    
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("localStorageChange", handleCustomEvent);
+    };
   }, []);
-
-  // Sync with NextAuth session
-  useEffect(() => {
-    if (status === "authenticated" && session?.user) {
-      const fullName = session.user.name || "";
-      const nameParts = fullName.split(" ");
-      const firstName = nameParts[0] || "";
-      const lastName = nameParts.slice(1).join(" ") || "";
-
-      const userData: UserProfile = {
-        id: session.user.id,
-        firstName,
-        lastName,
-        name: fullName,
-        email: session.user.email || "",
-        image: session.user.image || undefined,
-        avatar: session.user.image || undefined,
-        phone: "",
-        dateOfBirth: "",
-        nationality: "",
-        preferences: defaultPreferences,
-        memberSince: new Date().toISOString().split("T")[0],
-        memberLevel: "普通会员",
-        role: session.user.role || "USER",
-      };
-      
-      setUser(userData);
-      localStorage.setItem(USER_KEY, JSON.stringify(userData));
-    } else if (status === "unauthenticated" && !localStorage.getItem(TOKEN_KEY)) {
-      setUser(null);
-    }
-  }, [session, status]);
 
   const updateProfile = useCallback(async (data: Partial<UserProfile>) => {
     setIsLoading(true);
@@ -215,7 +204,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setUser(null);
     // Dispatch event to notify other components (like Navbar)
     window.dispatchEvent(new CustomEvent("localStorageChange"));
-    await signOut({ callbackUrl: "/" });
+    // Redirect to home
+    window.location.href = "/";
   }, []);
 
   const refreshUser = useCallback(async () => {
@@ -259,7 +249,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const value: UserContextType = {
     user,
-    isLoading: isLoading || status === "loading",
+    isLoading,
     isAuthenticated: !!user,
     updateProfile,
     updatePreferences,

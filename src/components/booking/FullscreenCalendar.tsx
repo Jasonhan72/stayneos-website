@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
-import { X, Star } from 'lucide-react';
+import { X, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export interface FullscreenCalendarProps {
@@ -44,6 +44,7 @@ export function FullscreenCalendar({
 }: FullscreenCalendarProps) {
   const [selectedStart, setSelectedStart] = useState<string>(checkIn);
   const [selectedEnd, setSelectedEnd] = useState<string>(checkOut);
+  const [currentMonthOffset, setCurrentMonthOffset] = useState(0);
 
   // Sync with props
   useEffect(() => {
@@ -51,21 +52,11 @@ export function FullscreenCalendar({
     setSelectedEnd(checkOut);
   }, [checkIn, checkOut]);
 
-  // Generate months data (12 months from current month)
-  const monthsData = useMemo(() => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const months = [];
-    
-    for (let i = 0; i < 12; i++) {
-      const date = new Date(today.getFullYear(), today.getMonth() + i, 1);
-      months.push({
-        year: date.getFullYear(),
-        month: date.getMonth(),
-        label: `${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`,
-      });
-    }
-    return months;
+  // Get today's date for disabling past dates
+  const today = useMemo(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
   }, []);
 
   // Calculate nights
@@ -78,12 +69,22 @@ export function FullscreenCalendar({
 
   const totalPrice = nights * pricePerNight;
 
-  // Get today's date for disabling past dates
-  const today = useMemo(() => {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    return d;
-  }, []);
+  // Generate months data
+  const monthsData = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const months = [];
+    
+    for (let i = 0; i < 12; i++) {
+      const date = new Date(today.getFullYear(), today.getMonth() + i + currentMonthOffset, 1);
+      months.push({
+        year: date.getFullYear(),
+        month: date.getMonth(),
+        label: `${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`,
+      });
+    }
+    return months;
+  }, [currentMonthOffset]);
 
   const getDateStatus = useCallback((date: Date): 'none' | 'start' | 'end' | 'between' | 'disabled' => {
     if (date < today) return 'disabled';
@@ -103,24 +104,20 @@ export function FullscreenCalendar({
     
     const dateStr = date.toISOString().split('T')[0];
     
-    // If no start date or both selected, start fresh
     if (!selectedStart || (selectedStart && selectedEnd)) {
       setSelectedStart(dateStr);
       setSelectedEnd('');
       onSelectCheckIn(dateStr);
       onSelectCheckOut('');
     } else {
-      // Have start, selecting end
       const startDate = new Date(selectedStart);
       
       if (date <= startDate) {
-        // Selected before start, make it new start
         setSelectedStart(dateStr);
         setSelectedEnd('');
         onSelectCheckIn(dateStr);
         onSelectCheckOut('');
       } else {
-        // Valid end date
         setSelectedEnd(dateStr);
         onSelectCheckOut(dateStr);
       }
@@ -149,7 +146,7 @@ export function FullscreenCalendar({
     }
     const start = new Date(selectedStart);
     const end = new Date(selectedEnd);
-    return `${start.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} - ${end.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}`;
+    return `${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}-${end.toLocaleDateString('en-US', { day: 'numeric', year: 'numeric' })}`;
   }, [selectedStart, selectedEnd]);
 
   // Generate days for a month
@@ -161,20 +158,17 @@ export function FullscreenCalendar({
     
     const days: DayInfo[] = [];
     
-    // Previous month padding
     const prevMonthLastDay = new Date(year, month, 0).getDate();
     for (let i = startingDayOfWeek - 1; i >= 0; i--) {
       const date = new Date(year, month - 1, prevMonthLastDay - i);
       days.push({ date, isCurrentMonth: false, isDisabled: date < today });
     }
     
-    // Current month
     for (let i = 1; i <= daysInMonth; i++) {
       const date = new Date(year, month, i);
       days.push({ date, isCurrentMonth: true, isDisabled: date < today });
     }
     
-    // Next month padding (fill to complete 6 rows = 42 cells)
     const remainingCells = 42 - days.length;
     for (let i = 1; i <= remainingCells; i++) {
       const date = new Date(year, month + 1, i);
@@ -188,9 +182,63 @@ export function FullscreenCalendar({
 
   const hasSelection = selectedStart && selectedEnd;
 
-  return (
-    <div className="fixed inset-0 z-50 bg-white flex flex-col">
-      {/* Header */}
+  // Month View Component
+  const MonthView = ({ year, month, label }: { year: number; month: number; label: string }) => {
+    const days = generateDays(year, month);
+    
+    return (
+      <div className="flex-1">
+        <h3 className="text-lg font-semibold text-neutral-900 mb-4 text-center">{label}</h3>
+        
+        <div className="grid grid-cols-7 gap-1 text-center mb-2">
+          {WEEKDAYS.map((day, i) => (
+            <div key={i} className="text-sm font-medium text-neutral-600 py-2">{day}</div>
+          ))}
+        </div>
+        
+        <div className="grid grid-cols-7 gap-y-1">
+          {days.map((dayInfo, index) => {
+            const status = getDateStatus(dayInfo.date);
+            const dayNumber = dayInfo.date.getDate();
+            
+            let cellClasses = "aspect-square flex items-center justify-center text-sm relative";
+            let textClasses = "";
+            
+            if (!dayInfo.isCurrentMonth) {
+              textClasses = "text-transparent";
+            } else if (status === 'disabled') {
+              textClasses = "text-neutral-300 line-through cursor-not-allowed";
+            } else if (status === 'start' || status === 'end') {
+              textClasses = "bg-neutral-900 text-white rounded-full font-semibold cursor-pointer";
+            } else if (status === 'between') {
+              textClasses = "bg-neutral-100 text-neutral-900 cursor-pointer";
+              cellClasses += " rounded-none";
+            } else {
+              textClasses = "text-neutral-900 hover:bg-neutral-100 rounded-full cursor-pointer";
+            }
+            
+            return (
+              <button
+                key={index}
+                onClick={() => !dayInfo.isDisabled && handleDateClick(dayInfo.date)}
+                disabled={dayInfo.isDisabled || !dayInfo.isCurrentMonth}
+                className={cn(cellClasses, textClasses)}
+              >
+                <span className={cn(
+                  "w-10 h-10 flex items-center justify-center",
+                  (status === 'start' || status === 'end') && "bg-neutral-900 text-white rounded-full"
+                )}>{dayNumber}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  // Mobile: Full screen
+  const mobileView = (
+    <div className="md:hidden fixed inset-0 z-50 bg-white flex flex-col">
       <div className="flex items-center justify-between px-4 py-4 border-b border-neutral-100">
         <button 
           onClick={onClose}
@@ -209,7 +257,6 @@ export function FullscreenCalendar({
         )}
       </div>
 
-      {/* Title */}
       <div className="px-4 pt-6 pb-4">
         <h2 className="text-2xl font-semibold text-neutral-900">
           {hasSelection ? `${nights} nights` : 'Select check-in date'}
@@ -219,92 +266,30 @@ export function FullscreenCalendar({
         </p>
       </div>
 
-      {/* Weekday Headers - Fixed */}
       <div className="px-4 grid grid-cols-7 gap-1 text-center border-b border-neutral-100 pb-3">
         {WEEKDAYS.map((day, i) => (
-          <div key={i} className="text-sm font-medium text-neutral-600 py-2">
-            {day}
+          <div key={i} className="text-sm font-medium text-neutral-600 py-2">{day}</div>
+        ))}
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-4 pb-32">
+        {monthsData.map(({ year, month, label }) => (
+          <div key={label} className="py-6">
+            <MonthView year={year} month={month} label={label} />
           </div>
         ))}
       </div>
 
-      {/* Scrollable Calendar */}
-      <div className="flex-1 overflow-y-auto px-4 pb-32">
-        {monthsData.map(({ year, month, label }) => {
-          const days = generateDays(year, month);
-          
-          return (
-            <div key={label} className="py-6">
-              {/* Month Label */}
-              <h3 className="text-lg font-semibold text-neutral-900 mb-4">
-                {label}
-              </h3>
-              
-              {/* Days Grid */}
-              <div className="grid grid-cols-7 gap-y-2">
-                {days.map((dayInfo, index) => {
-                  const status = getDateStatus(dayInfo.date);
-                  const dayNumber = dayInfo.date.getDate();
-                  
-                  let cellClasses = "aspect-square flex items-center justify-center text-sm relative";
-                  let textClasses = "";
-                  
-                  if (!dayInfo.isCurrentMonth) {
-                    textClasses = "text-transparent";
-                  } else if (status === 'disabled') {
-                    textClasses = "text-neutral-300 line-through cursor-not-allowed";
-                  } else if (status === 'start' || status === 'end') {
-                    textClasses = "bg-neutral-900 text-white rounded-full font-semibold";
-                  } else if (status === 'between') {
-                    textClasses = "bg-neutral-100 text-neutral-900";
-                    cellClasses += " rounded-none";
-                  } else {
-                    textClasses = "text-neutral-900 hover:bg-neutral-100 rounded-full cursor-pointer";
-                  }
-                  
-                  // First and last of range styling
-                  if (status === 'start') {
-                    cellClasses += " rounded-l-full";
-                  } else if (status === 'end') {
-                    cellClasses += " rounded-r-full";
-                  }
-                  
-                  return (
-                    <button
-                      key={index}
-                      onClick={() => !dayInfo.isDisabled && handleDateClick(dayInfo.date)}
-                      disabled={dayInfo.isDisabled || !dayInfo.isCurrentMonth}
-                      className={cn(cellClasses, textClasses)}
-                    >
-                      <span className={cn(
-                        "w-10 h-10 flex items-center justify-center",
-                        (status === 'start' || status === 'end') && "bg-neutral-900 text-white rounded-full"
-                      )}>
-                        {dayNumber}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Bottom Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 px-4 py-4">
         <div className="flex items-center justify-between">
           <div>
             {hasSelection ? (
               <div>
-                <p className="text-lg font-semibold text-neutral-900">
-                  ${totalPrice.toLocaleString()} {currency}
-                </p>
+                <p className="text-lg font-semibold text-neutral-900">${totalPrice.toLocaleString()} {currency}</p>
                 <div className="flex items-center gap-2">
                   <Star size={14} className="fill-black" />
                   <span className="text-sm text-neutral-600">{rating}</span>
                 </div>
-                <p className="text-sm text-neutral-500 underline">For {nights} nights</p>
               </div>
             ) : (
               <div>
@@ -332,6 +317,120 @@ export function FullscreenCalendar({
         </div>
       </div>
     </div>
+  );
+
+  // Desktop: Centered modal with dual month view
+  const desktopView = (
+    <div className="hidden md:flex fixed inset-0 z-50 items-center justify-center">
+      <div 
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      
+      <div className="relative bg-white rounded-3xl shadow-2xl max-w-3xl w-full mx-4 max-h-[85vh] flex flex-col overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-100 shrink-0">
+          <button 
+            onClick={onClose}
+            className="p-2 -ml-2 hover:bg-neutral-100 rounded-full transition-colors"
+          >
+            <X size={24} className="text-neutral-900" />
+          </button>
+          
+          <div className="text-center">
+            <h2 className="text-lg font-semibold text-neutral-900">
+              {hasSelection ? `${nights} nights` : 'Select dates'}
+            </h2>
+            {hasSelection && <p className="text-sm text-neutral-500">{formatDateRange()}</p>}
+          </div>
+          
+          <div className="w-10">
+            {(selectedStart || selectedEnd) && (
+              <button 
+                onClick={handleClear}
+                className="text-sm font-medium text-neutral-900 underline underline-offset-4 hover:text-neutral-600"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="absolute top-20 left-4 z-10">
+          <button
+            onClick={() => setCurrentMonthOffset(prev => Math.max(0, prev - 1))}
+            disabled={currentMonthOffset === 0}
+            className="p-2 rounded-full border border-neutral-200 bg-white hover:border-neutral-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          >
+            <ChevronLeft size={20} />
+          </button>
+        </div>
+        
+        <div className="absolute top-20 right-4 z-10">
+          <button
+            onClick={() => setCurrentMonthOffset(prev => prev + 1)}
+            disabled={currentMonthOffset >= 10}
+            className="p-2 rounded-full border border-neutral-200 bg-white hover:border-neutral-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          >
+            <ChevronRight size={20} />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-8 py-6">
+          <div className="grid grid-cols-2 gap-8">
+            <MonthView year={monthsData[0].year} month={monthsData[0].month} label={monthsData[0].label} />
+            <MonthView year={monthsData[1].year} month={monthsData[1].month} label={monthsData[1].label} />
+          </div>
+        </div>
+
+        <div className="border-t border-neutral-100 px-6 py-4 flex items-center justify-between shrink-0">
+          <div>
+            {hasSelection ? (
+              <div className="flex items-baseline gap-2">
+                <span className="text-lg font-semibold text-neutral-900">${totalPrice.toLocaleString()} {currency}</span>
+                <span className="text-sm text-neutral-500">for {nights} nights</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Star size={14} className="fill-black" />
+                <span className="text-sm text-neutral-600">{rating}</span>
+                <span className="text-sm text-neutral-500">· Add dates for prices</span>
+              </div>
+            )}
+          </div>
+          
+          <div className="flex items-center gap-3">
+            {(selectedStart || selectedEnd) && (
+              <button 
+                onClick={handleClear}
+                className="px-4 py-2.5 text-sm font-semibold text-neutral-900 underline underline-offset-4 hover:text-neutral-600 transition-colors"
+              >
+                Clear dates
+              </button>
+            )}
+            
+            <button
+              onClick={handleSave}
+              disabled={!hasSelection}
+              className={cn(
+                "px-8 py-2.5 rounded-lg font-semibold text-white transition-colors",
+                hasSelection 
+                  ? "bg-neutral-900 hover:bg-neutral-800" 
+                  : "bg-neutral-300 cursor-not-allowed"
+              )}
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      {mobileView}
+      {desktopView}
+    </>
   );
 }
 

@@ -84,8 +84,9 @@ export function ReviewAndContinue({
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 bg-white flex flex-col">
+  // Mobile: Full screen
+  const mobileView = (
+    <div className="md:hidden fixed inset-0 z-50 bg-white flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-4 border-b border-neutral-100">
         <button 
@@ -287,6 +288,204 @@ export function ReviewAndContinue({
         </button>
       </div>
     </div>
+  );
+
+  // Desktop: Centered modal
+  const desktopView = (
+    <div className="hidden md:flex fixed inset-0 z-50 items-center justify-center">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      
+      {/* Modal Container */}
+      <div className="relative bg-white rounded-3xl shadow-2xl max-w-xl w-full mx-4 max-h-[85vh] flex flex-col overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-100 shrink-0">
+          <button 
+            onClick={onBack}
+            className="p-2 -ml-2 hover:bg-neutral-100 rounded-full transition-colors"
+          >
+            <ChevronLeft size={24} className="text-neutral-900" />
+          </button>
+          
+          <h1 className="text-lg font-semibold text-neutral-900">Review and continue</h1>
+          
+          <button 
+            onClick={onClose}
+            className="p-2 -mr-2 hover:bg-neutral-100 rounded-full transition-colors"
+          >
+            <X size={24} className="text-neutral-900" />
+          </button>
+        </div>
+
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto px-6 py-6">
+          {/* Property Card */}
+          <div className="border border-neutral-200 rounded-2xl p-4 mb-6">
+            <div className="flex gap-4">
+              <div className="relative w-28 h-24 flex-shrink-0 rounded-xl overflow-hidden">
+                <Image 
+                  src={property.image} 
+                  alt={property.title}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-medium text-neutral-900 line-clamp-2">{property.title}</h3>
+                <div className="flex items-center gap-2 mt-1">
+                  <Star size={14} className="fill-black" />
+                  <span className="text-sm">{property.rating} ({property.reviewCount} reviews)</span>
+                </div>
+                {property.isGuestFavourite && (
+                  <span className="inline-flex items-center gap-1 mt-2 text-sm text-neutral-600">
+                    <Diamond size={14} className="text-rose-500" />
+                    Guest favourite
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Booking Details */}
+          <div className="space-y-4 mb-6">
+            {/* Dates Row */}
+            <div className="flex items-center justify-between py-3 border-b border-neutral-100">
+              <div>
+                <p className="font-medium text-neutral-900">Dates</p>
+                <p className="text-sm text-neutral-600">{formatDateRange()}</p>
+              </div>
+              <button 
+                onClick={onChangeDates}
+                className="px-4 py-2 text-sm font-medium text-neutral-900 underline hover:text-neutral-600 transition-colors"
+              >
+                Change
+              </button>
+            </div>
+
+            {/* Guests Row */}
+            <div className="flex items-center justify-between py-3 border-b border-neutral-100">
+              <div>
+                <p className="font-medium text-neutral-900">Guests</p>
+                <p className="text-sm text-neutral-600">{guests} {guests === 1 ? 'adult' : 'adults'}</p>
+              </div>
+              <button 
+                onClick={onChangeGuests}
+                className="px-4 py-2 text-sm font-medium text-neutral-900 underline hover:text-neutral-600 transition-colors"
+              >
+                Change
+              </button>
+            </div>
+          </div>
+
+          {/* Price Details */}
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold text-neutral-900 mb-4">Price details</h2>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between">
+                <span className="text-neutral-600 underline">${pricePerNight.toLocaleString()} x {nights} nights</span>
+                <span className="text-neutral-900">${subtotal.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-600 underline">Cleaning fee</span>
+                <span className="text-neutral-900">${cleaningFee.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-600 underline">Service fee</span>
+                <span className="text-neutral-900">${serviceFee.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-600">Taxes</span>
+                <span className="text-neutral-900">${tax.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between pt-3 border-t border-neutral-200">
+                <span className="font-semibold text-neutral-900">Total ({currency})</span>
+                <span className="font-semibold text-neutral-900">${total.toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Payment Options */}
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold text-neutral-900 mb-4">Choose when to pay</h2>
+            
+            {/* Pay Now Option */}
+            <button
+              onClick={() => setPaymentOption('full')}
+              className={cn(
+                "w-full border rounded-xl p-4 flex items-center justify-between mb-3 transition-colors",
+                paymentOption === 'full' 
+                  ? "border-neutral-900 bg-neutral-50" 
+                  : "border-neutral-200 hover:border-neutral-300"
+              )}
+            >
+              <span className="font-medium text-neutral-900">Pay ${total.toLocaleString()} {currency} now</span>
+              <div className={cn(
+                "w-5 h-5 rounded-full border-2 flex items-center justify-center",
+                paymentOption === 'full' ? "border-neutral-900" : "border-neutral-400"
+              )}>
+                {paymentOption === 'full' && <div className="w-3 h-3 bg-neutral-900 rounded-full" />}
+              </div>
+            </button>
+
+            {/* Split Payment Option */}
+            <button
+              onClick={() => setPaymentOption('split')}
+              className={cn(
+                "w-full border rounded-xl p-4 flex items-center justify-between transition-colors",
+                paymentOption === 'split' 
+                  ? "border-neutral-900 bg-neutral-50" 
+                  : "border-neutral-200 hover:border-neutral-300"
+              )}
+            >
+              <div className="text-left">
+                <p className="font-medium text-neutral-900">Pay part now, part later</p>
+                <p className="text-sm text-neutral-600">
+                  ${firstPayment.toLocaleString()} {currency} now, ${secondPayment.toLocaleString()} {currency} on {secondPaymentDate}
+                </p>
+              </div>
+              <div className={cn(
+                "w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center",
+                paymentOption === 'split' ? "border-neutral-900" : "border-neutral-400"
+              )}>
+                {paymentOption === 'split' && <div className="w-3 h-3 bg-neutral-900 rounded-full" />}
+              </div>
+            </button>
+          </div>
+
+          {/* Cancellation Policy */}
+          <div className="p-4 bg-neutral-50 rounded-xl">
+            <p className="font-medium text-neutral-900 mb-1">Free cancellation</p>
+            <p className="text-sm text-neutral-600">
+              Cancel before {cancellationDate} for a full refund.
+            </p>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="border-t border-neutral-100 px-6 py-4 flex items-center justify-between shrink-0">
+          <div className="flex items-baseline gap-2">
+            <span className="text-lg font-semibold text-neutral-900">${total.toLocaleString()}</span>
+            <span className="text-sm text-neutral-500">{currency}</span>
+          </div>
+          <button
+            onClick={onNext}
+            className="px-8 py-3 bg-neutral-900 text-white font-semibold rounded-xl hover:bg-neutral-800 transition-colors"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      {mobileView}
+      {desktopView}
+    </>
   );
 }
 

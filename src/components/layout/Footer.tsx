@@ -21,10 +21,11 @@ export default function Footer() {
       { label: t("footer.properties"), href: "/properties" },
     ],
     support: [
-      { label: t("footer.help"), href: "/help" },
-      { label: t("footer.contact"), href: "/contact" },
-      { label: t("footer.privacy"), href: "/privacy" },
-      { label: t("footer.terms"), href: "/terms" },
+      { label: t("footer.help") || "Help Center", href: "/help" },
+      { label: "FAQ", href: "/faq" },
+      { label: t("footer.contact") || "Contact", href: "/contact" },
+      { label: t("footer.privacy") || "Privacy", href: "/privacy" },
+      { label: t("footer.terms") || "Terms", href: "/terms" },
     ],
   };
 
