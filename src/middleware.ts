@@ -162,10 +162,10 @@ export async function middleware(request: NextRequest) {
   
   if (token) {
     const result = await verifyToken(token);
-    if (result.valid) {
+    if (result.valid && result.payload) {
       isAuthenticated = true;
       userPayload = result.payload;
-      requestHeaders.set('x-user-id', userPayload.sub || '');
+      requestHeaders.set('x-user-id', userPayload.userId || '');
       requestHeaders.set('x-user-role', userPayload.role || '');
       requestHeaders.set('x-user-email', userPayload.email || '');
     }
