@@ -102,15 +102,24 @@ function isHostRoute(pathname: string): boolean {
   return false;
 }
 
+// JWT Payload 类型定义
+interface JWTPayload {
+  userId: string;
+  email: string;
+  role: UserRole;
+  exp?: number;
+  iat?: number;
+}
+
 // 验证 JWT token 并返回解码后的信息
-async function verifyToken(token: string): Promise<{ valid: boolean; payload?: any }> {
+async function verifyToken(token: string): Promise<{ valid: boolean; payload?: JWTPayload }> {
   try {
     // 简单的 JWT 结构验证
     const parts = token.split('.');
     if (parts.length !== 3) return { valid: false };
     
     // 解析 payload
-    const payload = JSON.parse(atob(parts[1]));
+    const payload = JSON.parse(atob(parts[1])) as JWTPayload;
     
     // 检查是否过期
     if (payload.exp && payload.exp * 1000 < Date.now()) {
@@ -148,7 +157,7 @@ export async function middleware(request: NextRequest) {
                 request.headers.get('authorization')?.replace('Bearer ', '');
   
   // 验证 token 并获取用户信息
-  let userPayload: any = null;
+  let userPayload: JWTPayload | null = null;
   let isAuthenticated = false;
   
   if (token) {

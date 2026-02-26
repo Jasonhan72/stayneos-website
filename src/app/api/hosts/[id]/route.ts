@@ -5,6 +5,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 
+import { Prisma } from '@prisma/client';
+
 // 查询参数验证
 const hostPropertiesQuerySchema = z.object({
   page: z.coerce.number().min(1).default(1),
@@ -79,7 +81,7 @@ export async function GET(
     }
 
     // 构建房源查询条件
-    const propertyWhere: any = {
+    const propertyWhere: Prisma.PropertyWhereInput = {
       hostId: id,
     };
 

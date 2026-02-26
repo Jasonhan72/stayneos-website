@@ -16,7 +16,6 @@ import {
   Users,
   DollarSign,
   AlertCircle,
-  MoreHorizontal,
   Loader2,
   ChevronLeft,
   ChevronRight,
@@ -105,7 +104,6 @@ const mockProperties: Property[] = [
 ];
 
 export default function AdminPropertiesPage() {
-  const router = useRouter();
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -541,7 +539,7 @@ export default function AdminPropertiesPage() {
                 <div>
                   <h3 className="text-lg font-semibold text-neutral-900">Delete Property</h3>
                   <p className="mt-2 text-neutral-600">
-                    Are you sure you want to delete <strong>"{propertyToDelete.title.en}"</strong>? 
+                    Are you sure you want to delete <strong>&quot;{propertyToDelete.title.en}&quot;</strong>? 
                     This action cannot be undone.
                   </p>
                 </div>

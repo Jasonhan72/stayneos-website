@@ -3,7 +3,6 @@
 
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
-import { prisma } from '@/lib/prisma';
 import { UserRole } from '@prisma/client';
 
 export interface AdminPayload {

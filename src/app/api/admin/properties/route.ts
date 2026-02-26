@@ -8,7 +8,7 @@ import {
   createPropertySchema, 
   adminPropertyListQuerySchema 
 } from '@/lib/validations/property';
-import { PropertyStatus, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 // 系统Host的固定UUID
 const SYSTEM_HOST_ID = '00000000-0000-0000-0000-000000000001';
