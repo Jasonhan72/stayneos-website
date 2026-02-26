@@ -31,8 +31,11 @@ export function InlineCalendar({
   onClearDates,
   className
 }: InlineCalendarProps) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const [today] = useState(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  });
   
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());

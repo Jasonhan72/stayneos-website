@@ -108,7 +108,7 @@ export default function PropertyMap({
         map.current = null;
       }
     };
-  }, []);
+  }, [properties]);
 
   // Add/update markers when properties change
   useEffect(() => {

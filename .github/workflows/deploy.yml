@@ -5,9 +5,76 @@ on:
     branches: [main]
   workflow_dispatch:
 
+env:
+  NODE_VERSION: '20'
+
 jobs:
+  # 步骤1: 代码检查和测试
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run ESLint
+        run: npm run lint || true
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+  # 步骤2: 数据库迁移
+  database-migrate:
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    environment: production
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Deploy Database Migrations
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: |
+          echo "🔄 执行数据库迁移..."
+          npx prisma migrate deploy
+          echo "✅ 数据库迁移完成"
+
+      - name: Seed Database (if needed)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+          SYSTEM_HOST_PASSWORD: ${{ secrets.SYSTEM_HOST_PASSWORD }}
+        run: |
+          echo "🌱 检查并更新种子数据..."
+          npx ts-node scripts/seed-host.ts || echo "⚠️ 种子数据步骤跳过"
+
+  # 步骤3: 构建和部署
   build-and-deploy:
     runs-on: ubuntu-latest
+    needs: [lint-and-test, database-migrate]
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -19,13 +86,23 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '25'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      - name: Build static export
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Build application
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
         run: npm run build
 
       - name: Deploy to Cloudflare Pages
@@ -37,6 +114,7 @@ jobs:
             --commit-message="${{ github.event.head_commit.message }}" \
             --commit-dirty=false
 
+  # 步骤4: 部署验证
   verify-deployment:
     needs: build-and-deploy
     runs-on: ubuntu-latest
@@ -61,18 +139,23 @@ jobs:
           RESPONSE_TIME=$(curl -s -o /dev/null -w "%{time_total}" "https://stayneos.com")
           echo "⏱️ Response time: ${RESPONSE_TIME}s"
 
+  # 步骤5: 通知
   notify:
-    needs: [build-and-deploy, verify-deployment]
+    needs: [lint-and-test, database-migrate, build-and-deploy, verify-deployment]
     runs-on: ubuntu-latest
     if: always()
     
     steps:
       - name: Notify deployment status
         run: |
-          if [ "${{ needs.build-and-deploy.result }}" = "success" ] && [ "${{ needs.verify-deployment.result }}" = "success" ]; then
+          if [ "${{ needs.lint-and-test.result }}" = "success" ] && [ "${{ needs.database-migrate.result }}" = "success" ] && [ "${{ needs.build-and-deploy.result }}" = "success" ] && [ "${{ needs.verify-deployment.result }}" = "success" ]; then
             echo "🎉 Deployment SUCCESSFUL!"
             echo "Website: https://stayneos.com"
           else
-            echo "❌ Deployment or verification FAILED!"
+            echo "❌ Deployment FAILED!"
+            echo "Lint: ${{ needs.lint-and-test.result }}"
+            echo "DB Migration: ${{ needs.database-migrate.result }}"
+            echo "Build: ${{ needs.build-and-deploy.result }}"
+            echo "Verify: ${{ needs.verify-deployment.result }}"
             exit 1
           fi

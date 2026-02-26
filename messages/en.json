@@ -40,7 +40,8 @@
     "done": "Done",
     "edit": "Edit",
     "skip": "Skip",
-    "next": "Next"
+    "next": "Next",
+    "retry": "Retry"
   },
   "greeting": {
     "morning": "Good morning",
@@ -1185,7 +1186,9 @@
     "pageNotFoundDesc": "The page you're looking for might have moved. Find your perfect stay instead?",
     "youMayBeLooking": "You might be looking for:",
     "browseProperties": "Browse Apartments",
-    "propertyNotFound": "Property not found"
+    "propertyNotFound": "Property not found",
+    "somethingWrong": "Something went wrong",
+    "pageLoadError": "Sorry, we encountered a problem loading this page"
   },
   "services": {
     "title": "Our Services",

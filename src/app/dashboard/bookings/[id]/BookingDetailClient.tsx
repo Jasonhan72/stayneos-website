@@ -129,7 +129,7 @@ export default function BookingDetailClient() {
     } finally {
       setIsLoading(false);
     }
-  }, [bookingId]);
+  }, [bookingId, t]);
 
   useEffect(() => {
     fetchBookingDetail();

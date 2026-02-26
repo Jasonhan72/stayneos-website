@@ -27,9 +27,9 @@ export function OrganizationSchema({
     ],
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: "+86-400-XXX-XXXX",
+      telephone: "+1-647-862-6518",
       contactType: "customer service",
-      availableLanguage: ["Chinese", "English"],
+      availableLanguage: ["Chinese", "English", "French"],
     },
   };
 
@@ -38,7 +38,6 @@ export function OrganizationSchema({
       id="organization-schema"
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      strategy="beforeInteractive"
     />
   );
 }
@@ -74,7 +73,6 @@ export function WebSiteSchema({
       id="website-schema"
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      strategy="beforeInteractive"
     />
   );
 }
@@ -103,17 +101,17 @@ export function LocalBusinessSchema({
   name = "StayNeos",
   description = "高端行政公寓出租平台",
   url = "https://stayneos.com",
-  telephone = "+86-400-XXX-XXXX",
+  telephone = "+1-647-862-6518",
   address = {
-    streetAddress: "南京西路1788号",
-    addressLocality: "上海市静安区",
-    addressRegion: "上海",
-    postalCode: "200040",
-    addressCountry: "CN",
+    streetAddress: "20 Upjohn Rd",
+    addressLocality: "North York",
+    addressRegion: "ON",
+    postalCode: "M3B 2V9",
+    addressCountry: "CA",
   },
   geo = {
-    latitude: 31.2304,
-    longitude: 121.4737,
+    latitude: 43.7503,
+    longitude: -79.3456,
   },
   openingHours = ["Mo-Su 00:00-23:59"],
   priceRange = "$$$",
@@ -153,7 +151,6 @@ export function LocalBusinessSchema({
       id="localbusiness-schema"
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      strategy="beforeInteractive"
     />
   );
 }
@@ -177,9 +174,9 @@ export function PropertySchema({
     address: {
       "@type": "PostalAddress",
       streetAddress: property.location,
-      addressCountry: "CN",
+      addressCountry: "CA",
     },
-    priceRange: `¥${property.price}/${property.priceUnit}`,
+    priceRange: `$${property.price} ${property.priceUnit}`,
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: property.rating,
@@ -207,7 +204,6 @@ export function PropertySchema({
       id={`property-schema-${property.id}`}
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      strategy="beforeInteractive"
     />
   );
 }
@@ -236,7 +232,6 @@ export function BreadcrumbSchema({ items }: BreadcrumbSchemaProps) {
       id="breadcrumb-schema"
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      strategy="beforeInteractive"
     />
   );
 }
@@ -267,7 +262,6 @@ export function FAQSchema({ questions }: FAQSchemaProps) {
       id="faq-schema"
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      strategy="beforeInteractive"
     />
   );
 }

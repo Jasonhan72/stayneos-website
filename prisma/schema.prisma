@@ -27,9 +27,119 @@ model User {
   sessions      Session[]
   bookings      Booking[]
   reviews       Review[]
+  host          Host?     // 一个用户可以成为一个Host
+  hostApplications HostApplication[] // 用户的Host申请
   
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+}
+
+// Host模型
+model Host {
+  id            String    @id @default(cuid())
+  
+  // 关联用户（可选，系统Host可能没有关联用户）
+  userId        String?   @unique
+  user          User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Host基本信息
+  displayName   String    @map("display_name")
+  tagline       String?
+  bio           String?   @db.Text
+  avatarUrl     String?   @map("avatar_url")
+  
+  // Host状态
+  status        HostStatus @default(PENDING)
+  
+  // 验证信息
+  isVerified    Boolean   @default(false) @map("is_verified")
+  verificationDate DateTime? @map("verification_date")
+  
+  // 联系信息
+  businessEmail String?   @map("business_email")
+  businessPhone String?   @map("business_phone")
+  
+  // 统计字段（反规范化）
+  totalProperties Int     @default(0) @map("total_properties")
+  totalBookings Int       @default(0) @map("total_bookings")
+  responseRate  Int       @default(0) @map("response_rate") // 0-100
+  responseTimeMinutes Int? @map("response_time_minutes")
+  rating        Decimal   @default(5.0) @db.Decimal(2,1)
+  
+  // Superhost等级系统
+  hostLevel     HostLevel @default(NEW) @map("host_level")
+  superhostSince DateTime? @map("superhost_since")
+  
+  // 时区和语言偏好
+  timezone      String    @default("America/Toronto")
+  preferredLanguages String[] @map("preferred_languages")
+  
+  // 关系
+  properties    Property[]
+  documents     HostDocument[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@index([userId])
+  @@index([status])
+  @@index([hostLevel])
+  @@map("hosts")
+}
+
+// Host申请记录
+model HostApplication {
+  id            String    @id @default(cuid())
+  userId        String    @map("user_id")
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // 申请信息
+  fullName      String    @map("full_name")
+  phone         String
+  email         String
+  
+  // 房产信息
+  expectedProperties Int  @default(1) @map("expected_properties")
+  propertyLocation String? @map("property_location")
+  
+  // 申请状态
+  status        ApplicationStatus @default(PENDING)
+  
+  // 审核信息
+  reviewedBy    String?   @map("reviewed_by")
+  reviewedAt    DateTime? @map("reviewed_at")
+  rejectionReason String? @map("rejection_reason")
+  
+  // 备注
+  notes         String?   @db.Text
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@index([userId])
+  @@index([status])
+  @@map("host_applications")
+}
+
+// Host身份验证文档
+model HostDocument {
+  id            String    @id @default(cuid())
+  hostId        String    @map("host_id")
+  host          Host      @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  
+  documentType  String    @map("document_type") // 'id_card', 'passport', 'business_license'
+  documentNumber String?  @map("document_number")
+  documentUrl   String    @map("document_url")
+  
+  status        DocumentStatus @default(PENDING)
+  
+  uploadedAt    DateTime  @default(now()) @map("uploaded_at")
+  verifiedAt    DateTime? @map("verified_at")
+  
+  createdAt     DateTime  @default(now())
+  
+  @@index([hostId])
+  @@map("host_documents")
 }
 
 // NextAuth 需要的模型
@@ -109,6 +219,11 @@ model Property {
   isFeatured      Boolean        @default(false)
   isInstantBook   Boolean        @default(false)
   
+  // Host关联
+  hostId          String?        @map("host_id")
+  host            Host?          @relation(fields: [hostId], references: [id])
+  adminCreated    Boolean        @default(false) @map("admin_created")
+  
   // 关系
   images          PropertyImage[]
   amenities       PropertyAmenity[]
@@ -128,6 +243,8 @@ model Property {
   @@index([status])
   @@index([isFeatured])
   @@index([latitude, longitude])
+  @@index([hostId])
+  @@index([adminCreated])
 }
 
 // 房源图片
@@ -472,4 +589,32 @@ enum CleaningPriority {
   NORMAL
   HIGH
   URGENT
+}
+
+// Host相关枚举
+enum HostStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  INACTIVE
+}
+
+enum HostLevel {
+  NEW
+  RISING
+  ESTABLISHED
+  SUPERHOST
+}
+
+enum ApplicationStatus {
+  PENDING
+  REVIEWING
+  APPROVED
+  REJECTED
+}
+
+enum DocumentStatus {
+  PENDING
+  VERIFIED
+  REJECTED
 }

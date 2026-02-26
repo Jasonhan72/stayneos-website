@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface UserAvatarProps {
   name?: string;
@@ -52,9 +53,11 @@ export function UserAvatar({
 
   if (image) {
     return (
-      <img
+      <Image
         src={image}
         alt={name || "User avatar"}
+        width={size === "sm" ? 32 : size === "md" ? 40 : 48}
+        height={size === "sm" ? 32 : size === "md" ? 40 : 48}
         className={cn(
           "rounded-full object-cover border-2 border-white shadow-sm",
           sizeClasses[size],

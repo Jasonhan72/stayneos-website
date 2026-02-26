@@ -136,7 +136,7 @@ export default function BookingsPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [activeTab, isAuthenticated, user]);
+  }, [activeTab, isAuthenticated, user, t]);
 
   useEffect(() => {
     fetchBookings();

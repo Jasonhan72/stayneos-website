@@ -130,9 +130,6 @@ const nextConfig = {
     ];
   },
 
-  // Trailing slash
-  trailingSlash: false,
-
   // Powered by header
   poweredByHeader: false,
 

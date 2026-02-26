@@ -416,138 +416,147 @@ export default function PropertiesPage() {
         </div>
       )}
 
-      {/* Main Content Area */}
-      <Container className="py-6">
-        {/* Results Toolbar */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="text-sm text-neutral-600">
-            {t('properties.showing')} <span className="font-medium text-neutral-900">{paginatedProperties.length}</span> {paginatedProperties.length === 1 ? t('unit.property') : t('unit.properties')}
-            {filteredProperties.length > 0 && (
-              <>  
-                {' '}{t('properties.of')} <span className="font-medium text-neutral-900">{filteredProperties.length}</span> {t('unit.properties')}
-              </>
-            )}
-          </div>
-          
-          <div className="flex items-center gap-4">
-            {/* Sort */}
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-neutral-600 hidden sm:inline">{t('properties.sort')}:</span>
-              <div className="relative">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="appearance-none bg-white border border-neutral-300 pr-8 pl-3 py-2 text-sm font-medium text-neutral-700 focus:outline-none focus:border-primary cursor-pointer"
-                >
-                  {sortOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {t(option.label)}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown
-                  size={16}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none"
-                />
+      {/* Main Content Area - Desktop: Split View, Mobile: Stack */}
+      <div className="flex flex-col lg:flex-row lg:h-[calc(100vh-200px)]">
+        {/* Left Panel - Property List (~60% on desktop) */}
+        <div className="w-full lg:w-[60%] lg:overflow-y-auto bg-white">
+          <Container className="py-6">
+            {/* Results Toolbar */}
+            <div className="flex items-center justify-between mb-6">
+              <div className="text-sm text-neutral-600">
+                {t('properties.showing')} <span className="font-medium text-neutral-900">{paginatedProperties.length}</span> {paginatedProperties.length === 1 ? t('unit.property') : t('unit.properties')}
+                {filteredProperties.length > 0 && (
+                  <>  
+                    {' '}{t('properties.of')} <span className="font-medium text-neutral-900">{filteredProperties.length}</span> {t('unit.properties')}
+                  </>
+                )}
+              </div>
+              
+              <div className="flex items-center gap-4">
+                {/* Sort */}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-neutral-600 hidden sm:inline">{t('properties.sort')}:</span>
+                  <div className="relative">
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="appearance-none bg-white border border-neutral-300 pr-8 pl-3 py-2 text-sm font-medium text-neutral-700 focus:outline-none focus:border-primary cursor-pointer"
+                    >
+                      {sortOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {t(option.label)}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      size={16}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+
+            {/* Content based on view mode - Desktop always shows list/grid, Mobile respects viewMode */}
+            <div className="lg:block">
+              {/* Desktop: Always show grid/list | Mobile: Respect viewMode */}
+              <div className={`${viewMode === 'map' ? 'hidden lg:block' : 'block'}`}>
+                {viewMode === 'list' ? (
+                  /* List View */
+                  <div className="space-y-4">
+                    {paginatedProperties.map((property) => (
+                      <PropertyListCard key={property.id} property={property} />
+                    ))}
+                  </div>
+                ) : (
+                  /* Grid View (Default) */
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {paginatedProperties.map((property) => (
+                      <PropertyGridCard key={property.id} property={property} />
+                    ))}
+                  </div>
+                )}
+              </div>
+              
+              {/* Mobile Map View */}
+              {viewMode === 'map' && (
+                <div className="lg:hidden h-[calc(100vh-300px)] min-h-[400px]">
+                  <GooglePropertyMap 
+                    properties={filteredProperties}
+                    selectedPropertyId={selectedPropertyId}
+                    onPropertySelect={setSelectedPropertyId}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Empty State */}
+            {filteredProperties.length === 0 && (
+              <div className="text-center py-20">
+                <div className="w-16 h-16 mx-auto mb-4 bg-neutral-100 flex items-center justify-center">
+                  <Search size={32} className="text-neutral-400" />
+                </div>
+                <h3 className="text-lg font-medium text-neutral-900 mb-2">
+                  {t('properties.noResults')}
+                </h3>
+                <p className="text-neutral-600 mb-4">
+                  {t('properties.adjustFilters')}
+                </p>
+                <Button variant="outline" onClick={clearFilters}>
+                  {t('properties.clearFilters')}
+                </Button>
+              </div>
+            )}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 mt-12">
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="p-2 border border-neutral-300 hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <ChevronLeft size={20} />
+                </button>
+                
+                {getPageNumbers().map((page, index) => (
+                  <button
+                    key={index}
+                    onClick={() => typeof page === 'number' && setCurrentPage(page)}
+                    disabled={page === '...'}
+                    className={`min-w-[40px] h-10 px-3 border text-sm font-medium transition-colors ${
+                      page === currentPage
+                        ? 'border-primary bg-primary text-white'
+                        : page === '...'
+                        ? 'border-transparent cursor-default'
+                        : 'border-neutral-300 hover:border-primary'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+                
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="p-2 border border-neutral-300 hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <ChevronRight size={20} />
+                </button>
+              </div>
+            )}
+          </Container>
         </div>
 
-        {/* Content based on view mode */}
-        {viewMode === 'map' ? (
-          /* Map View */
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-1 space-y-4 max-h-[calc(100vh-300px)] overflow-y-auto">
-              {paginatedProperties.map((property) => (
-                <PropertyListCard 
-                  key={property.id} 
-                  property={property}
-                  isSelected={selectedPropertyId === property.id}
-                  onClick={() => setSelectedPropertyId(property.id)}
-                />
-              ))}
-            </div>
-            <div className="lg:col-span-2 h-[calc(100vh-300px)] min-h-[500px]">
-              <GooglePropertyMap 
-                properties={filteredProperties}
-                selectedPropertyId={selectedPropertyId}
-                onPropertySelect={setSelectedPropertyId}
-              />
-            </div>
-          </div>
-        ) : viewMode === 'list' ? (
-          /* List View */
-          <div className="space-y-4">
-            {paginatedProperties.map((property) => (
-              <PropertyListCard key={property.id} property={property} />
-            ))}
-          </div>
-        ) : (
-          /* Grid View */
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {paginatedProperties.map((property) => (
-              <PropertyGridCard key={property.id} property={property} />
-            ))}
-          </div>
-        )}
-
-        {/* Empty State */}
-        {filteredProperties.length === 0 && (
-          <div className="text-center py-20">
-            <div className="w-16 h-16 mx-auto mb-4 bg-neutral-100 flex items-center justify-center">
-              <Search size={32} className="text-neutral-400" />
-            </div>
-            <h3 className="text-lg font-medium text-neutral-900 mb-2">
-              {t('properties.noResults')}
-            </h3>
-            <p className="text-neutral-600 mb-4">
-              {t('properties.adjustFilters')}
-            </p>
-            <Button variant="outline" onClick={clearFilters}>
-              {t('properties.clearFilters')}
-            </Button>
-          </div>
-        )}
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 mt-12">
-            <button
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="p-2 border border-neutral-300 hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronLeft size={20} />
-            </button>
-            
-            {getPageNumbers().map((page, index) => (
-              <button
-                key={index}
-                onClick={() => typeof page === 'number' && setCurrentPage(page)}
-                disabled={page === '...'}
-                className={`min-w-[40px] h-10 px-3 border text-sm font-medium transition-colors ${
-                  page === currentPage
-                    ? 'border-primary bg-primary text-white'
-                    : page === '...'
-                    ? 'border-transparent cursor-default'
-                    : 'border-neutral-300 hover:border-primary'
-                }`}
-              >
-                {page}
-              </button>
-            ))}
-            
-            <button
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-              className="p-2 border border-neutral-300 hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronRight size={20} />
-            </button>
-          </div>
-        )}
-      </Container>
+        {/* Right Panel - Map (~40% on desktop, sticky) */}
+        <div className="hidden lg:block lg:w-[40%] lg:sticky lg:top-0 lg:h-full">
+          <GooglePropertyMap 
+            properties={filteredProperties}
+            selectedPropertyId={selectedPropertyId}
+            onPropertySelect={setSelectedPropertyId}
+          />
+        </div>
+      </div>
 
     </main>
   );

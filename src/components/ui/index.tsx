@@ -2,6 +2,7 @@
 // All components have border-radius: 0 (square design)
 
 import React from 'react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 // ============================================================
@@ -570,7 +571,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       )}
     >
       {src ? (
-        <img src={src} alt={alt || name} className="w-full h-full object-cover" />
+        <Image src={src} alt={alt || name || 'Avatar'} width={64} height={64} className="w-full h-full object-cover" unoptimized />
       ) : (
         initials
       )}

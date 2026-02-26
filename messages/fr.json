@@ -40,7 +40,8 @@
     "done": "Terminé",
     "edit": "Modifier",
     "skip": "Passer",
-    "next": "Suivant"
+    "next": "Suivant",
+    "retry": "Réessayer"
   },
   "greeting": {
     "morning": "Bonjour",
@@ -1185,7 +1186,9 @@
     "pageNotFoundDesc": "La page que vous recherchez a peut-être été déplacée. Trouvez votre séjour idéal ?",
     "youMayBeLooking": "Vous cherchez peut-être :",
     "browseProperties": "Explorer les Appartements",
-    "propertyNotFound": "Propriété non trouvée"
+    "propertyNotFound": "Propriété non trouvée",
+    "somethingWrong": "Une erreur s'est produite",
+    "pageLoadError": "Désolé, nous avons rencontré un problème lors du chargement de cette page"
   },
   "services": {
     "title": "Nos Services",

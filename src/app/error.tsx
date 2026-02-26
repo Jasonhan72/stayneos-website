@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { AlertTriangle, Home, RefreshCw } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 export default function Error({
   error,
@@ -11,6 +12,8 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const { t } = useI18n();
+
   useEffect(() => {
     // Log the error to an error reporting service
     console.error("Page error:", error);
@@ -24,10 +27,10 @@ export default function Error({
             <AlertTriangle className="w-12 h-12 text-red-600" aria-hidden="true" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            出错了
+            {t('errors.somethingWrong') || '出错了'}
           </h1>
           <p className="text-gray-600 mb-2">
-            抱歉，页面加载时遇到了问题
+            {t('errors.pageLoadError') || '抱歉，页面加载时遇到了问题'}
           </p>
           {error.message && (
             <p className="text-sm text-gray-500 bg-gray-100 p-3 rounded-lg">
@@ -42,14 +45,14 @@ export default function Error({
             className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             <RefreshCw className="w-4 h-4" aria-hidden="true" />
-            重试
+            {t('common.retry') || '重试'}
           </button>
           <Link
             href="/"
             className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
           >
             <Home className="w-4 h-4" aria-hidden="true" />
-            返回首页
+            {t('nav.home')}
           </Link>
         </div>
       </div>

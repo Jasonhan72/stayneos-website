@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export type Locale = 'en' | 'fr' | 'zh';
+export type UserRole = 'GUEST' | 'HOST' | 'ADMIN' | 'SUPER_ADMIN';
 
 // 需要保护的路由
 const PROTECTED_ROUTES = [
@@ -20,23 +21,19 @@ const PROTECTED_PREFIXES = [
   '/payment/',
 ];
 
-// 公开路由（不需要认证）- 保留供将来使用
-// const PUBLIC_ROUTES = [
-//   '/',
-//   '/login',
-//   '/register',
-//   '/forgot-password',
-//   '/properties',
-//   '/property/',
-//   '/about',
-//   '/contact',
-//   '/services',
-//   '/landlords',
-//   '/corporate',
-//   '/help',
-//   '/terms',
-//   '/privacy',
-// ];
+// 需要 Admin 角色的路由
+const ADMIN_ROUTES = [
+  '/admin',
+];
+
+const ADMIN_PREFIXES = [
+  '/admin/',
+];
+
+// 需要 Host 角色的路由
+const HOST_PREFIXES = [
+  '/host/',
+];
 
 // Detect user's preferred locale from Accept-Language header
 function detectLocale(request: NextRequest): Locale {
@@ -79,25 +76,61 @@ function isProtectedRoute(pathname: string): boolean {
   return false;
 }
 
-// 验证 JWT token
-async function verifyToken(token: string): Promise<boolean> {
+// 检查是否是 Admin 路由
+function isAdminRoute(pathname: string): boolean {
+  if (ADMIN_ROUTES.includes(pathname)) {
+    return true;
+  }
+  
+  for (const prefix of ADMIN_PREFIXES) {
+    if (pathname.startsWith(prefix)) {
+      return true;
+    }
+  }
+  
+  return false;
+}
+
+// 检查是否是 Host 路由
+function isHostRoute(pathname: string): boolean {
+  for (const prefix of HOST_PREFIXES) {
+    if (pathname.startsWith(prefix)) {
+      return true;
+    }
+  }
+  
+  return false;
+}
+
+// 验证 JWT token 并返回解码后的信息
+async function verifyToken(token: string): Promise<{ valid: boolean; payload?: any }> {
   try {
     // 简单的 JWT 结构验证
     const parts = token.split('.');
-    if (parts.length !== 3) return false;
+    if (parts.length !== 3) return { valid: false };
     
     // 解析 payload
     const payload = JSON.parse(atob(parts[1]));
     
     // 检查是否过期
     if (payload.exp && payload.exp * 1000 < Date.now()) {
-      return false;
+      return { valid: false };
     }
     
-    return true;
+    return { valid: true, payload };
   } catch {
-    return false;
+    return { valid: false };
   }
+}
+
+// 检查用户是否有 Admin 权限
+function hasAdminRole(role?: string): boolean {
+  return role === 'ADMIN' || role === 'SUPER_ADMIN';
+}
+
+// 检查用户是否有 Host 权限
+function hasHostRole(role?: string): boolean {
+  return role === 'HOST' || role === 'ADMIN' || role === 'SUPER_ADMIN';
 }
 
 export async function middleware(request: NextRequest) {
@@ -110,37 +143,95 @@ export async function middleware(request: NextRequest) {
   // Always set x-locale header for server components
   requestHeaders.set('x-locale', locale);
   
-  // 检查是否需要认证
-  if (isProtectedRoute(pathname)) {
-    const token = request.cookies.get('stayneos_auth_token')?.value || 
-                  request.headers.get('authorization')?.replace('Bearer ', '');
-    
-    // 如果没有 token 或 token 无效，重定向到登录页
-    if (!token || !(await verifyToken(token))) {
+  // 获取 token
+  const token = request.cookies.get('stayneos_auth_token')?.value || 
+                request.headers.get('authorization')?.replace('Bearer ', '');
+  
+  // 验证 token 并获取用户信息
+  let userPayload: any = null;
+  let isAuthenticated = false;
+  
+  if (token) {
+    const result = await verifyToken(token);
+    if (result.valid) {
+      isAuthenticated = true;
+      userPayload = result.payload;
+      requestHeaders.set('x-user-id', userPayload.sub || '');
+      requestHeaders.set('x-user-role', userPayload.role || '');
+      requestHeaders.set('x-user-email', userPayload.email || '');
+    }
+  }
+  
+  // 检查 Admin 路由权限
+  if (isAdminRoute(pathname)) {
+    if (!isAuthenticated) {
       const loginUrl = new URL('/login', request.url);
       loginUrl.searchParams.set('callbackUrl', pathname);
+      loginUrl.searchParams.set('error', 'admin_required');
       
       const response = NextResponse.redirect(loginUrl);
-      
-      // Set locale cookie if not already set
-      const existingCookie = request.cookies.get('stayneos_locale')?.value;
-      if (!existingCookie) {
+      if (!request.cookies.get('stayneos_locale')?.value) {
         response.cookies.set('stayneos_locale', locale, {
           path: '/',
           maxAge: 365 * 24 * 60 * 60,
           sameSite: 'lax',
         });
       }
-      
       return response;
     }
     
-    // Token 有效，添加用户信息到 headers（可选）
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      requestHeaders.set('x-user-id', payload.sub || '');
-      requestHeaders.set('x-user-role', payload.role || '');
-    } catch {}
+    const userRole = userPayload?.role;
+    if (!hasAdminRole(userRole)) {
+      // 用户已登录但没有 Admin 权限
+      const forbiddenUrl = new URL('/403', request.url);
+      const response = NextResponse.redirect(forbiddenUrl);
+      return response;
+    }
+  }
+  
+  // 检查 Host 路由权限
+  if (isHostRoute(pathname)) {
+    if (!isAuthenticated) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('callbackUrl', pathname);
+      loginUrl.searchParams.set('error', 'host_required');
+      
+      const response = NextResponse.redirect(loginUrl);
+      if (!request.cookies.get('stayneos_locale')?.value) {
+        response.cookies.set('stayneos_locale', locale, {
+          path: '/',
+          maxAge: 365 * 24 * 60 * 60,
+          sameSite: 'lax',
+        });
+      }
+      return response;
+    }
+    
+    const userRole = userPayload?.role;
+    if (!hasHostRole(userRole)) {
+      // 用户已登录但没有 Host 权限，重定向到 Host 申请页面
+      const applyUrl = new URL('/become-host', request.url);
+      const response = NextResponse.redirect(applyUrl);
+      return response;
+    }
+  }
+  
+  // 检查普通受保护路由
+  if (isProtectedRoute(pathname)) {
+    if (!isAuthenticated) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('callbackUrl', pathname);
+      
+      const response = NextResponse.redirect(loginUrl);
+      if (!request.cookies.get('stayneos_locale')?.value) {
+        response.cookies.set('stayneos_locale', locale, {
+          path: '/',
+          maxAge: 365 * 24 * 60 * 60,
+          sameSite: 'lax',
+        });
+      }
+      return response;
+    }
   }
   
   // Create response with modified headers
@@ -165,7 +256,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Skip all internal paths (_next, api, etc)
+    // Skip all internal paths (_next, api, static files)
     '/((?!_next|api|favicon.ico|robots.txt|sitemap.xml|.*\\.).*)',
   ],
 };
