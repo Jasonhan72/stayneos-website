@@ -1,4 +1,4 @@
-// Property Detail Page - Airbnb Style with Desktop Two-Column Layout
+// Property Detail Page - Airbnb Style with Desktop Two-Column Layout (使用真实 API)
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -17,18 +17,20 @@ import {
   MapPin
 } from 'lucide-react';
 import { Container, Divider } from '@/components/ui';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { ApiErrorAlert } from '@/components/error';
 import { AirbnbCalendar, ReviewAndContinue, PaymentMethod, calculateBookingPrice, GuestSelector, type GuestCounts } from '@/components/booking';
-import { getPropertyById, mockProperties } from '@/lib/data';
-import { getLocalizedTitle, getLocalizedDescription } from '@/components/property/PropertyCard';
 import { useI18n } from '@/lib/i18n';
-import { notFound } from 'next/navigation';
+import { useProperty } from '@/hooks/useProperties';
+import { Property } from '@/types';
+import { toPropertyCardData, getPropertyLocation } from '@/lib/utils/property-transform';
 
 interface PropertyDetailClientProps {
   propertyId: string;
-  initialProperty?: ReturnType<typeof getPropertyById>;
+  initialProperty?: Property;
 }
 
-// Mock host data
+// Mock host data（后续可从 API 获取）
 const mockHost = {
   name: 'Nazli',
   avatar: '/images/host-avatar.jpg',
@@ -37,10 +39,11 @@ const mockHost = {
 };
 
 export default function PropertyDetailClient({ propertyId, initialProperty }: PropertyDetailClientProps) {
-  const propertyFromStore = getPropertyById(propertyId);
-  const property = initialProperty || propertyFromStore;
-  
   const { t, locale } = useI18n();
+  const { property, isLoading, error } = useProperty(propertyId, {
+    fallbackData: initialProperty,
+  });
+  
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
@@ -61,41 +64,80 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
     infants: 0,
   });
 
+  // 转换 API 数据为组件格式
+  const propertyCardData = useMemo(() => {
+    if (!property) return null;
+    return toPropertyCardData(property);
+  }, [property]);
+
   const localizedTitle = useMemo(() => {
-    if (!property) return '';
-    return getLocalizedTitle(property, locale);
-  }, [property, locale]);
+    if (!propertyCardData) return '';
+    switch (locale) {
+      case 'zh':
+        return propertyCardData.titleZh || propertyCardData.title;
+      case 'fr':
+        return propertyCardData.titleFr || propertyCardData.title;
+      default:
+        return propertyCardData.title;
+    }
+  }, [propertyCardData, locale]);
 
   const localizedDescription = useMemo(() => {
-    if (!property) return '';
-    return getLocalizedDescription(property, locale);
-  }, [property, locale]);
+    if (!propertyCardData) return '';
+    switch (locale) {
+      case 'zh':
+        return propertyCardData.descriptionZh || propertyCardData.description;
+      case 'fr':
+        return propertyCardData.descriptionFr || propertyCardData.description;
+      default:
+        return propertyCardData.description;
+    }
+  }, [propertyCardData, locale]);
 
-  const similarProperties = useMemo(() => {
-    if (!property) return [];
-    return mockProperties
-      .filter(p => p.id !== property.id)
-      .filter(p => 
-        p.location.includes(property.location.split(',')[1]?.trim() || '') ||
-        Math.abs(p.price - property.price) / property.price < 0.3
-      )
-      .slice(0, 3);
+  // 从 API 获取 amenities 列表
+  const amenities = useMemo(() => {
+    if (!property?.amenities) return [];
+    return property.amenities.map(a => a.amenity.name);
   }, [property]);
 
   // Calculate booking price
   const bookingPrice = useMemo(() => {
-    if (!property || !checkIn || !checkOut) return null;
+    if (!propertyCardData || !checkIn || !checkOut) return null;
     return calculateBookingPrice({
-      basePrice: property.price,
+      basePrice: propertyCardData.price,
       checkIn,
       checkOut,
-      monthlyDiscount: property.monthlyDiscount,
-      cleaningFee: property.cleaningFee || 80,
+      monthlyDiscount: propertyCardData.monthlyDiscount,
+      cleaningFee: propertyCardData.cleaningFee || 80,
     });
-  }, [property, checkIn, checkOut]);
+  }, [propertyCardData, checkIn, checkOut]);
 
-  if (!property) {
-    notFound();
+  // Loading state
+  if (isLoading) {
+    return <Skeleton.PropertyDetail />;
+  }
+
+  // Error state
+  if (error || !property || !propertyCardData) {
+    return (
+      <div className="min-h-screen bg-white pt-24 pb-12">
+        <Container>
+          <ApiErrorAlert 
+            error={error || new Error('Property not found')}
+            onRetry={() => window.location.reload()}
+          />
+          <div className="mt-6 text-center">
+            <Link 
+              href="/properties"
+              className="inline-flex items-center gap-2 text-primary hover:underline"
+            >
+              <ChevronLeft size={18} />
+              返回房源列表
+            </Link>
+          </div>
+        </Container>
+      </div>
+    );
   }
 
   const nextImage = () => {
@@ -111,22 +153,15 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   };
 
   // Format property type and location
-  const propertyType = property.bedrooms <= 1 ? t('property.entireCondo') : t('property.entireHome');
-  const locationShort = property.location.split(',')[1]?.trim() || 'Toronto';
-  
-  // Translated location string
-  const locationString = locale === 'zh' 
-    ? `${locationShort}，加拿大`
-    : locale === 'fr'
-    ? `${locationShort}, Canada`
-    : `${locationShort}, Canada`;
+  const propertyType = propertyCardData.bedrooms <= 1 ? t('property.entireCondo') : t('property.entireHome');
+  const locationShort = getPropertyLocation(propertyCardData);
   
   // Format guest info
   const guestInfo = t('property.guestInfo', { 
-    maxGuests: property.maxGuests, 
-    bedrooms: property.bedrooms, 
-    beds: property.bedrooms, 
-    bathrooms: property.bathrooms 
+    maxGuests: propertyCardData.maxGuests, 
+    bedrooms: propertyCardData.bedrooms, 
+    beds: propertyCardData.bedrooms, 
+    bathrooms: propertyCardData.bathrooms 
   });
 
   const handleCheckAvailability = () => {
@@ -137,19 +172,24 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
     }
   };
 
+  // 获取图片 URL 列表 - 使用可选链避免条件调用 hook
+  const imageUrls = property.images?.length 
+    ? property.images.map(img => img.url).filter(Boolean)
+    : ['/images/placeholder-property.jpg'];
+
   // Desktop Booking Card Component
   const BookingCard = ({ isSticky = false }: { isSticky?: boolean }) => (
     <div className={`bg-white border border-neutral-200 rounded-2xl p-6 shadow-lg ${isSticky ? 'sticky top-24' : ''}`}>
       {/* Price Header */}
       <div className="flex items-baseline justify-between mb-4">
         <div className="flex items-baseline gap-1">
-          <span className="text-2xl font-bold text-neutral-900">${property.price.toLocaleString()}</span>
-          <span className="text-neutral-500">CAD / {t('common.night')}</span>
+          <span className="text-2xl font-bold text-neutral-900">${propertyCardData.price.toLocaleString()}</span>
+          <span className="text-neutral-500">{property.currency} / {t('common.night')}</span>
         </div>
         <div className="flex items-center gap-1">
           <Star size={14} className="fill-black" />
-          <span className="font-medium">{property.rating}</span>
-          <span className="text-neutral-500">· {property.reviewCount} {t('property.reviews')}</span>
+          <span className="font-medium">{propertyCardData.rating}</span>
+          <span className="text-neutral-500">· {propertyCardData.reviewCount} {t('property.reviews')}</span>
         </div>
       </div>
 
@@ -201,8 +241,8 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
       {bookingPrice && (
         <div className="space-y-3 text-sm border-t border-neutral-100 pt-4">
           <div className="flex justify-between">
-            <span className="text-neutral-600 underline">${property.price.toLocaleString()} x {bookingPrice.nights} nights</span>
-            <span className="text-neutral-900">${(property.price * bookingPrice.nights).toLocaleString()}</span>
+            <span className="text-neutral-600 underline">${propertyCardData.price.toLocaleString()} x {bookingPrice.nights} nights</span>
+            <span className="text-neutral-900">${(propertyCardData.price * bookingPrice.nights).toLocaleString()}</span>
           </div>
           {bookingPrice.discount > 0 && (
             <div className="flex justify-between text-green-600">
@@ -250,7 +290,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                     try { 
                       await navigator.share({ 
                         title: localizedTitle, 
-                        text: `Check out this property: ${localizedTitle} - ${property.location}`, 
+                        text: `Check out this property: ${localizedTitle} - ${locationShort}`, 
                         url: shareUrl 
                       }); 
                     } catch {}
@@ -289,7 +329,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
         {/* Mobile: Carousel */}
         <div className="md:hidden relative w-full aspect-[4/3] bg-neutral-100">
           <Image 
-            src={property.images[currentImageIndex]} 
+            src={imageUrls[currentImageIndex]} 
             alt={`${localizedTitle} - Image ${currentImageIndex + 1}`} 
             fill 
             priority 
@@ -298,7 +338,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           
           {/* Image Counter */}
           <div className="absolute bottom-4 right-4 px-3 py-1.5 bg-black/70 text-white text-sm rounded-lg">
-            {currentImageIndex + 1} / {property.images.length}
+            {currentImageIndex + 1} / {imageUrls.length}
           </div>
 
           {/* Navigation Arrows */}
@@ -326,7 +366,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               onClick={() => setShowGallery(true)}
             >
               <Image 
-                src={property.images[0]} 
+                src={imageUrls[0]} 
                 alt={localizedTitle}
                 fill 
                 priority 
@@ -334,7 +374,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               />
             </div>
             {/* Side Images */}
-            {property.images.slice(1, 5).map((img, idx) => (
+            {imageUrls.slice(1, 5).map((img, idx) => (
               <div 
                 key={idx}
                 className="relative cursor-pointer hover:opacity-95 transition-opacity"
@@ -346,9 +386,9 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                   fill 
                   className="object-cover" 
                 />
-                {idx === 3 && property.images.length > 5 && (
+                {idx === 3 && imageUrls.length > 5 && (
                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                    <span className="text-white font-medium">+{property.images.length - 5} photos</span>
+                    <span className="text-white font-medium">+{imageUrls.length - 5} photos</span>
                   </div>
                 )}
               </div>
@@ -365,14 +405,14 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             {/* Title Section */}
             <div className="mb-6">
               <h1 className="text-2xl md:text-3xl font-bold text-neutral-900 mb-2">{localizedTitle}</h1>
-              <p className="text-neutral-600">{propertyType} · {locationString}</p>
+              <p className="text-neutral-600">{propertyType} · {locationShort}</p>
               <p className="text-neutral-600 mt-1">{guestInfo}</p>
             </div>
 
             {/* Info Bar - Mobile Only */}
             <div className="flex md:hidden items-center justify-center gap-6 mb-6 py-4 border-y border-neutral-200">
               <div className="text-center">
-                <p className="text-lg font-semibold">{property.rating}</p>
+                <p className="text-lg font-semibold">{propertyCardData.rating}</p>
                 <div className="flex justify-center">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} size={12} className="fill-black" />
@@ -389,7 +429,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               </div>
               <div className="w-px h-10 bg-neutral-200" />
               <div className="text-center">
-                <p className="text-lg font-semibold">{property.reviewCount}</p>
+                <p className="text-lg font-semibold">{propertyCardData.reviewCount}</p>
                 <p className="text-sm underline">{t('property.reviews')}</p>
               </div>
             </div>
@@ -443,11 +483,11 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               <p className="text-neutral-600 leading-relaxed">
                 {localizedDescription || t('property.defaultDescription', { 
                   propertyType: propertyType.toLowerCase(), 
-                  location: property.location, 
-                  bedrooms: property.bedrooms, 
-                  bathrooms: property.bathrooms, 
-                  area: property.area, 
-                  maxGuests: property.maxGuests 
+                  location: locationShort, 
+                  bedrooms: propertyCardData.bedrooms, 
+                  bathrooms: propertyCardData.bathrooms, 
+                  area: propertyCardData.area, 
+                  maxGuests: propertyCardData.maxGuests 
                 })}
               </p>
               <button className="mt-4 font-medium underline">Show more</button>
@@ -459,7 +499,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             <div className="py-6">
               <h2 className="text-xl font-semibold mb-4">{t('property.whatOffers')}</h2>
               <div className="grid grid-cols-2 gap-4">
-                {property.amenities.slice(0, 6).map((item) => (
+                {amenities.slice(0, 6).map((item) => (
                   <div key={item} className="flex items-center gap-3 text-neutral-700">
                     <Check size={18} className="text-neutral-900" />
                     {item}
@@ -467,7 +507,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                 ))}
               </div>
               <button className="mt-6 px-6 py-3 border border-neutral-900 rounded-xl font-medium text-neutral-900">
-                {t('property.showAllAmenities', { count: property.amenities.length })}
+                {t('property.showAllAmenities', { count: amenities.length })}
               </button>
             </div>
 
@@ -478,7 +518,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               <h2 className="text-xl font-semibold mb-4">{t('property.whereYouBe')}</h2>
               <div className="w-full h-[350px] bg-neutral-100 relative overflow-hidden rounded-2xl">
                 <iframe 
-                  src={`https://maps.google.com/maps?q=${encodeURIComponent(property.location)}&t=&z=15&ie=UTF8&iwloc=&output=embed`} 
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(locationShort)}&t=&z=15&ie=UTF8&iwloc=&output=embed`} 
                   width="100%" 
                   height="100%" 
                   style={{ border: 0 }} 
@@ -490,8 +530,8 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                 />
               </div>
               <div className="mt-4">
-                <p className="font-medium text-neutral-900">{locationString}</p>
-                <p className="text-sm text-neutral-600">{property.location}</p>
+                <p className="font-medium text-neutral-900">{locationShort}</p>
+                <p className="text-sm text-neutral-600">{property.address}</p>
               </div>
             </div>
           </div>
@@ -501,48 +541,6 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             <BookingCard isSticky={true} />
           </div>
         </div>
-
-        {/* Similar Properties */}
-        {similarProperties.length > 0 && (
-          <>
-            <Divider />
-            <div className="py-6">
-              <h2 className="text-xl font-semibold mb-6">{t('property.similarProperties')}</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {similarProperties.map((similarProperty) => (
-                  <Link 
-                    key={similarProperty.id} 
-                    href={`/property/${similarProperty.id}`} 
-                    className="group block"
-                  >
-                    <div className="relative aspect-[4/3] rounded-xl overflow-hidden mb-3">
-                      <Image 
-                        src={similarProperty.images[0]} 
-                        alt={getLocalizedTitle(similarProperty, locale)} 
-                        fill 
-                        className="object-cover transition-transform duration-500 group-hover:scale-105" 
-                      />
-                    </div>
-                    <div>
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-medium text-neutral-900">{getLocalizedTitle(similarProperty, locale)}</h3>
-                        <div className="flex items-center gap-1">
-                          <Star size={12} className="fill-black" />
-                          <span className="text-sm">{similarProperty.rating}</span>
-                        </div>
-                      </div>
-                      <p className="text-sm text-neutral-500">{similarProperty.location.split(',')[0]}</p>
-                      <p className="mt-1">
-                        <span className="font-semibold">${similarProperty.price.toLocaleString()}</span>
-                        <span className="text-neutral-500"> CAD / night</span>
-                      </p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </>
-        )}
       </Container>
 
       {/* Mobile Bottom Floating Bar */}
@@ -554,12 +552,12 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                 <p className="text-neutral-900">{t('property.addDates')}</p>
                 <div className="flex items-center gap-1">
                   <Star size={14} className="fill-black" />
-                  <span className="text-sm">{property.rating}</span>
+                  <span className="text-sm">{propertyCardData.rating}</span>
                 </div>
               </div>
             ) : bookingPrice ? (
               <div>
-                <p className="text-lg font-semibold">${bookingPrice.total.toLocaleString()} CAD</p>
+                <p className="text-lg font-semibold">${bookingPrice.total.toLocaleString()} {property.currency}</p>
                 <p className="text-sm text-neutral-600">{bookingPrice.nights} {t('common.nights')}</p>
               </div>
             ) : (
@@ -567,7 +565,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                 <p className="text-neutral-900">{t('property.addDates')}</p>
                 <div className="flex items-center gap-1">
                   <Star size={14} className="fill-black" />
-                  <span className="text-sm">{property.rating}</span>
+                  <span className="text-sm">{propertyCardData.rating}</span>
                 </div>
               </div>
             )}
@@ -594,10 +592,10 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             setCheckIn('');
             setCheckOut('');
           }}
-          pricePerNight={property.price}
-          minNights={property.minNights || 1}
-          rating={property.rating}
-          currency="CAD"
+          pricePerNight={propertyCardData.price}
+          minNights={propertyCardData.minNights || 1}
+          rating={propertyCardData.rating}
+          currency={property.currency}
         />
       )}
 
@@ -612,21 +610,21 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
         property={{
           id: property.id,
           title: localizedTitle,
-          image: property.images[0],
-          rating: property.rating,
-          reviewCount: property.reviewCount,
+          image: imageUrls[0],
+          rating: propertyCardData.rating,
+          reviewCount: propertyCardData.reviewCount,
           isGuestFavourite: true,
         }}
         bookingDetails={{
           checkIn,
           checkOut,
           guests,
-          pricePerNight: property.price,
+          pricePerNight: propertyCardData.price,
           cleaningFee: bookingPrice?.cleaningFee || 80,
           serviceFee: bookingPrice?.serviceFee || 0,
           tax: bookingPrice?.tax || 0,
           total: bookingPrice?.total || 0,
-          currency: 'CAD',
+          currency: property.currency,
         }}
       />
 
@@ -650,7 +648,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           setGuests(newGuests.adults + newGuests.children);
         }}
         initialGuests={guestBreakdown}
-        maxGuests={property?.maxGuests || 10}
+        maxGuests={propertyCardData.maxGuests}
         allowPets={false}
       />
 
@@ -661,7 +659,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             {/* Header */}
             <div className="flex items-center justify-between p-4 bg-neutral-900">
               <h3 className="text-white font-medium">
-                {currentImageIndex + 1} / {property.images.length}
+                {currentImageIndex + 1} / {imageUrls.length}
               </h3>
               <button 
                 onClick={() => setShowGallery(false)} 
@@ -675,7 +673,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             {/* Main Image */}
             <div className="flex-1 relative flex items-center justify-center">
               <Image 
-                src={property.images[currentImageIndex]} 
+                src={imageUrls[currentImageIndex]} 
                 alt={`${localizedTitle} - Image ${currentImageIndex + 1}`} 
                 fill 
                 className="object-contain" 
@@ -700,7 +698,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             {/* Thumbnails */}
             <div className="p-4 bg-neutral-900">
               <div className="flex gap-2 overflow-x-auto justify-center">
-                {property.images.map((image, index) => (
+                {imageUrls.map((image, index) => (
                   <button 
                     key={index} 
                     onClick={() => selectImage(index)} 

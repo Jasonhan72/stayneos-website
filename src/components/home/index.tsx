@@ -13,8 +13,12 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { Button, Container, Section, Card, Badge } from '@/components/ui';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { ApiErrorAlert } from '@/components/error';
 import { AirbnbCalendar } from '@/components/booking';
 import { useI18n } from '@/lib/i18n';
+import { useFeaturedProperties } from '@/hooks/useProperties';
+import { toPropertyCardData } from '@/lib/utils/property-transform';
 
 // Export WelcomeBanner
 export { WelcomeBanner } from './WelcomeBanner';
@@ -290,42 +294,26 @@ export function MarketSegmentsSection() {
 }
 
 // ============================================================
-// Featured Properties - 精选房源
+// Featured Properties - 精选房源 (使用真实 API)
 // ============================================================
-const featuredProperties = [
-  {
-    id: '1',
-    title: { zh: 'Cooper St 豪华湖景公寓', en: 'Cooper St Luxury Lakeview Condo', fr: 'Condo Vue Lac Cooper St' },
-    location: '55 Cooper St, Toronto',
-    price: 680,
-    rating: 4.9,
-    reviews: 42,
-    image: '/images/cooper-55-c5e8357d.jpg',
-    badges: ['featured', '3bed3bath']
-  },
-  {
-    id: '2',
-    title: { zh: 'Simcoe St 高层精品公寓', en: 'Simcoe St Premium High-rise', fr: 'Appartement Premium Simcoe St' },
-    location: '238 Simcoe St, Toronto',
-    price: 450,
-    rating: 4.8,
-    reviews: 38,
-    image: '/images/simcoe-238-living.jpg',
-    badges: ['new']
-  }
-];
-
-const badgeTranslations: Record<string, { en: string; zh: string; fr: string }> = {
-  featured: { en: 'Featured', zh: '精选', fr: 'En Vedette' },
-  new: { en: 'New', zh: '新上架', fr: 'Nouveau' },
-  '3bed3bath': { en: '3BR 3BA', zh: '3室3卫', fr: '3Ch 3SdB' }
-};
 
 export function FeaturedPropertiesSection() {
   const { t, locale } = useI18n();
+  const { properties, isLoading, error } = useFeaturedProperties(4);
   
-  const getBadgeText = (badge: string) => {
-    return badgeTranslations[badge]?.[locale] || badge;
+  // 转换 API 数据为 PropertyCardData
+  const featuredProperties = properties.map(toPropertyCardData);
+  
+  // 获取本地化的标题
+  const getLocalizedTitle = (property: ReturnType<typeof toPropertyCardData>) => {
+    switch (locale) {
+      case 'zh':
+        return property.titleZh || property.title;
+      case 'fr':
+        return property.titleFr || property.title;
+      default:
+        return property.title;
+    }
   };
   
   return (
@@ -349,65 +337,92 @@ export function FeaturedPropertiesSection() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {featuredProperties.map((property) => (
-          <Card key={property.id} className="group">
-            <Link href={`/property/${property.id}`}>
-              <div className="aspect-[4/3] overflow-hidden relative">
-                <Image
-                  src={property.image}
-                  alt={typeof property.title === 'object' ? property.title[locale] : property.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                
-                <div className="absolute top-4 left-4 flex gap-2">
-                  {property.badges.map((badge) => (
-                    <Badge 
-                      key={badge}
-                      variant={badge === 'featured' ? 'primary' : 'default'}
-                    >
-                      {getBadgeText(badge)}
-                    </Badge>
-                  ))}
+      {/* 错误提示 */}
+      {error && (
+        <div className="mb-6">
+          <ApiErrorAlert 
+            error={error as Error} 
+            onRetry={() => window.location.reload()}
+          />
+        </div>
+      )}
+
+      {/* 加载状态 */}
+      {isLoading ? (
+        <Skeleton.PropertyCardList count={4} />
+      ) : featuredProperties.length === 0 ? (
+        <div className="text-center py-12 bg-white rounded-xl border border-neutral-200">
+          <p className="text-neutral-500">暂无精选房源</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {featuredProperties.map((property) => (
+            <Card key={property.id} className="group">
+              <Link href={`/property/${property.id}`}>
+                <div className="aspect-[4/3] overflow-hidden relative">
+                  <Image
+                    src={property.images[0] || '/images/placeholder-property.jpg'}
+                    alt={getLocalizedTitle(property)}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  
+                  {property.featured && (
+                    <div className="absolute top-4 left-4 flex gap-2">
+                      <Badge variant="primary">
+                        {locale === 'zh' ? '精选' : locale === 'fr' ? 'En Vedette' : 'Featured'}
+                      </Badge>
+                    </div>
+                  )}
+                  
+                  <button 
+                    className="absolute top-4 right-4 p-2 bg-white/90 hover:bg-white transition-colors rounded-full"
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    <Star size={18} className="text-neutral-400" />
+                  </button>
                 </div>
                 
-                <button className="absolute top-4 right-4 p-2 bg-white/90 hover:bg-white transition-colors">
-                  <Star size={18} className="text-neutral-400" />
-                </button>
-              </div>
-              
-              <div className="p-6">
-                <div className="flex items-start justify-between mb-2">
-                  <h3 className="text-lg font-semibold text-neutral-900 group-hover:text-primary transition-colors">
-                    {typeof property.title === 'object' ? property.title[locale] : property.title}
-                  </h3>
-                  <div className="flex items-center gap-1">
-                    <Star size={14} className="text-accent fill-accent" />
-                    <span className="text-sm font-medium">{property.rating}</span>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-1 text-neutral-500 mb-4">
-                  <MapPin size={14} />
-                  <span className="text-sm">{property.location}</span>
-                </div>
-                
-                <div className="flex items-baseline justify-between pt-4 border-t border-neutral-200">
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-bold text-neutral-900">
-                      ${property.price}
-                    </span>
-                    <span className="text-neutral-500">CAD{t('properties.perNight')}</span>
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="text-lg font-semibold text-neutral-900 group-hover:text-primary transition-colors line-clamp-1">
+                      {getLocalizedTitle(property)}
+                    </h3>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <Star size={14} className="text-accent fill-accent" />
+                      <span className="text-sm font-medium">{property.rating}</span>
+                    </div>
                   </div>
                   
-                  <span className="text-sm text-neutral-400">{property.reviews} {t('properties.reviews')}</span>
+                  <div className="flex items-center gap-1 text-neutral-500 mb-4">
+                    <MapPin size={14} />
+                    <span className="text-sm truncate">{property.location}</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-3 text-sm text-neutral-500 mb-4">
+                    <span>{property.bedrooms} {t('property.bedroomsShort')}</span>
+                    <span>·</span>
+                    <span>{property.area}m²</span>
+                    <span>·</span>
+                    <span>最多 {property.maxGuests} 人</span>
+                  </div>
+                  
+                  <div className="flex items-baseline justify-between pt-4 border-t border-neutral-200">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-2xl font-bold text-neutral-900">
+                        ${property.price.toLocaleString()}
+                      </span>
+                      <span className="text-neutral-500">CAD{t('properties.perNight')}</span>
+                    </div>
+                    
+                    <span className="text-sm text-neutral-400">{property.reviewCount} {t('properties.reviews')}</span>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          </Card>
-        ))}
-      </div>
+              </Link>
+            </Card>
+          ))}
+        </div>
+      )}
     </Section>
   );
 }

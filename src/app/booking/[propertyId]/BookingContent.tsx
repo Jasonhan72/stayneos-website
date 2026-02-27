@@ -8,11 +8,15 @@ import { AirbnbCalendar, BookingPriceCalculator, GuestSelector, type GuestCounts
 import StripeProvider from '@/components/payment/StripeProvider';
 import PaymentForm from '@/components/payment/PaymentForm';
 import { Button, Input } from '@/components/ui';
-import { getPropertyById } from '@/lib/data';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { ApiErrorAlert } from '@/components/error';
 import { calculateBookingPrice, validateBookingDates } from '@/lib/booking';
 import { useAuth } from '@/lib/UserContext';
 import { useI18n } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { useProperty } from '@/hooks/useProperties';
+import { useCreateBooking } from '@/hooks/useBookings';
+import { toPropertyCardData } from '@/lib/utils/property-transform';
 import { 
   ChevronLeft, 
   Calendar, 
@@ -36,7 +40,12 @@ export default function BookingContent() {
   const { user, isAuthenticated } = useAuth();
   const { t } = useI18n();
   
-  const property = getPropertyById(propertyId);
+  // 使用 API 获取房源数据
+  const { property, isLoading: isPropertyLoading, error: propertyError } = useProperty(propertyId);
+  const propertyCardData = property ? toPropertyCardData(property) : null;
+  
+  // 预订 mutation
+  const { createBooking, isCreating, error: bookingError } = useCreateBooking();
   
   // Get pre-filled data from URL
   const queryCheckIn = searchParams.get('checkIn') || '';
@@ -63,7 +72,6 @@ export default function BookingContent() {
   
   // Step state
   const [currentStep, setCurrentStep] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(!queryCheckIn || !queryCheckOut);
   const [showGuestSelector, setShowGuestSelector] = useState(false);
@@ -76,29 +84,56 @@ export default function BookingContent() {
   });
   
   // Booking and payment state
-  const [, setBookingId] = useState('');
   const [clientSecret, setClientSecret] = useState('');
   const [bookingNumber, setBookingNumber] = useState('');
 
   // Redirect if property not found
   useEffect(() => {
-    if (!property) {
+    if (!isPropertyLoading && !property) {
       router.push('/properties');
     }
-  }, [property, router]);
+  }, [isPropertyLoading, property, router]);
 
-  if (!property) {
-    return null;
+  if (isPropertyLoading) {
+    return (
+      <div className="min-h-screen bg-neutral-50 pt-24 pb-12">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <Skeleton.PropertyDetail />
+        </div>
+      </div>
+    );
+  }
+
+  if (propertyError || !property || !propertyCardData) {
+    return (
+      <div className="min-h-screen bg-neutral-50 pt-24 pb-12">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <ApiErrorAlert 
+            error={propertyError || new Error('Property not found')}
+            onRetry={() => window.location.reload()}
+          />
+          <div className="mt-6 text-center">
+            <Link 
+              href="/properties"
+              className="inline-flex items-center gap-2 text-primary hover:underline"
+            >
+              <ChevronLeft size={18} />
+              返回房源列表
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // Calculate price with cleaning fee
   const priceCalc = checkIn && checkOut 
-    ? calculateBookingPrice(property, checkIn, checkOut)
+    ? calculateBookingPrice(propertyCardData, checkIn, checkOut)
     : null;
 
   // Validate dates
   const dateValidation = checkIn && checkOut
-    ? validateBookingDates(checkIn, checkOut, property.minNights)
+    ? validateBookingDates(checkIn, checkOut, propertyCardData.minNights)
     : { valid: true };
 
   // Handle create booking
@@ -123,70 +158,29 @@ export default function BookingContent() {
       return;
     }
 
-    setIsLoading(true);
     setError('');
 
     try {
-      const response = await fetch('/api/bookings/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          propertyId: property.id,
-          propertyTitle: property.title,
-          checkIn,
-          checkOut,
-          nights: priceCalc?.nights || 0,
-          guests,
-          guestName: finalGuestName,
-          guestEmail: finalGuestEmail,
-          guestPhone: finalGuestPhone,
-          basePrice: property.price,
-          discountRate: priceCalc?.discountPercentage || 0,
-          discountAmount: priceCalc?.discount || 0,
-          cleaningFee: priceCalc?.cleaningFee || 0,
-          serviceFee: priceCalc?.serviceFee || 0,
-          totalPrice: priceCalc?.total || 0,
-          specialRequests,
-          userId: isAuthenticated ? user?.id : undefined,
-        }),
+      const result = await createBooking({
+        propertyId: property.id,
+        checkIn,
+        checkOut,
+        guests,
+        guestName: finalGuestName,
+        guestEmail: finalGuestEmail,
+        guestPhone: finalGuestPhone,
+        specialRequests,
       });
 
-      const data = await response.json() as { error?: string; booking: { id: string; bookingNumber: string } };
-
-      if (!response.ok) {
-        throw new Error(data.error || t('booking.createBookingError'));
-      }
-
-      setBookingId(data.booking.id);
-      setBookingNumber(data.booking.bookingNumber);
-      setCurrentStep(3);
+      setBookingNumber(result.booking.bookingNumber);
       
-      await createPaymentIntent(data.booking.id);
+      if (result.clientSecret) {
+        setClientSecret(result.clientSecret);
+      }
+      
+      setCurrentStep(3);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to create booking';
-      setError(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const createPaymentIntent = async (bookingId: string) => {
-    try {
-      const response = await fetch('/api/payments/create-intent', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bookingId }),
-      });
-
-      const data = await response.json() as { error?: string; clientSecret: string };
-
-      if (!response.ok) {
-        throw new Error(data.error || t('booking.createPaymentError'));
-      }
-
-      setClientSecret(data.clientSecret);
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : t('booking.createPaymentError');
       setError(errorMessage);
     }
   };
@@ -209,9 +203,9 @@ export default function BookingContent() {
   // Calculate discounted price for display
   const nights = priceCalc?.nights || 0;
   const isMonthly = nights >= 28;
-  const displayPrice = isMonthly && property.monthlyDiscount 
-    ? Math.round(property.price * (100 - property.monthlyDiscount) / 100)
-    : property.price;
+  const displayPrice = isMonthly && propertyCardData.monthlyDiscount 
+    ? Math.round(propertyCardData.price * (100 - propertyCardData.monthlyDiscount) / 100)
+    : propertyCardData.price;
 
   // Step indicator component
   const StepIndicator = () => (
@@ -272,7 +266,7 @@ export default function BookingContent() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left - Booking Form */}
             <div className="lg:col-span-2 space-y-6">
-              {/* Step 1: Dates & Guests - With Airbnb Calendar */}
+              {/* Step 1: Dates & Guests */}
               {currentStep === 1 && (
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
                   <h2 className="text-2xl font-bold text-neutral-900 mb-6">
@@ -322,12 +316,12 @@ export default function BookingContent() {
                       </div>
                     )}
                     
-                    {property.monthlyDiscount && property.monthlyDiscount > 0 && (
+                    {propertyCardData.monthlyDiscount && propertyCardData.monthlyDiscount > 0 && (
                       <div className="mt-3 p-3 bg-rose-50 border border-rose-200 rounded-lg">
                         <div className="flex items-center gap-2 text-rose-800">
                           <Sparkles size={16} />
                           <span className="text-sm">
-                            <span className="font-semibold">{property.monthlyDiscount}% off</span> for stays of 28+ nights
+                            <span className="font-semibold">{propertyCardData.monthlyDiscount}% off</span> for stays of 28+ nights
                           </span>
                         </div>
                       </div>
@@ -343,7 +337,7 @@ export default function BookingContent() {
                         onChange={(e) => setGuests(Number(e.target.value))}
                         className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:ring-2 focus:ring-black focus:border-black transition-all"
                       >
-                        {Array.from({ length: property.maxGuests }).map((_, i) => (
+                        {Array.from({ length: propertyCardData.maxGuests }).map((_, i) => (
                           <option key={i} value={i + 1}>
                             {i + 1} {i === 0 ? 'guest' : 'guests'}
                           </option>
@@ -466,10 +460,10 @@ export default function BookingContent() {
                     </div>
                   </div>
 
-                  {error && (
+                  {(error || bookingError) && (
                     <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-red-700">
                       <AlertCircle size={18} />
-                      <span>{error}</span>
+                      <span>{error || (bookingError instanceof Error ? bookingError.message : 'Booking failed')}</span>
                     </div>
                   )}
 
@@ -479,11 +473,11 @@ export default function BookingContent() {
                     </Button>
                     <Button
                       onClick={handleCreateBooking}
-                      disabled={isLoading}
-                      isLoading={isLoading}
+                      disabled={isCreating}
+                      isLoading={isCreating}
                       size="lg"
                     >
-                      {isLoading ? 'Processing...' : 'Confirm & Pay'}
+                      {isCreating ? 'Processing...' : 'Confirm & Pay'}
                     </Button>
                   </div>
                 </div>
@@ -535,17 +529,17 @@ export default function BookingContent() {
                 <div className="flex gap-4 mb-6 pb-6 border-b border-neutral-100">
                   <div className="relative w-20 h-20 rounded-xl overflow-hidden">
                     <Image
-                      src={property.images[0]}
-                      alt={property.title}
+                      src={propertyCardData.images[0]}
+                      alt={propertyCardData.title}
                       fill
                       className="object-cover"
                     />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-neutral-900 line-clamp-2">{property.title}</h3>
+                    <h3 className="font-semibold text-neutral-900 line-clamp-2">{propertyCardData.title}</h3>
                     <div className="flex items-center gap-1 text-neutral-500 text-sm mt-1">
                       <Home size={14} />
-                      <span className="line-clamp-1">{property.location}</span>
+                      <span className="line-clamp-1">{property.address}</span>
                     </div>
                   </div>
                 </div>
@@ -574,7 +568,7 @@ export default function BookingContent() {
                   </div>
                 )}
 
-                {/* Guests Summary with Change Button */}
+                {/* Guests Summary */}
                 <div className="mb-6 pb-6 border-b border-neutral-100">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -610,11 +604,11 @@ export default function BookingContent() {
                 {/* Price Breakdown */}
                 {priceCalc ? (
                   <BookingPriceCalculator
-                    basePrice={property.price}
+                    basePrice={propertyCardData.price}
                     checkIn={checkIn}
                     checkOut={checkOut}
-                    monthlyDiscount={property.monthlyDiscount}
-                    cleaningFee={property.cleaningFee || 80}
+                    monthlyDiscount={propertyCardData.monthlyDiscount}
+                    cleaningFee={propertyCardData.cleaningFee || 80}
                     compact
                   />
                 ) : (
@@ -640,7 +634,7 @@ export default function BookingContent() {
         </div>
       </div>
       
-      {/* Date Picker Modal - Fullscreen Vertical Scroll Calendar */}
+      {/* Date Picker Modal */}
       {showDatePicker && (
         <AirbnbCalendar 
           checkIn={checkIn}
@@ -657,8 +651,8 @@ export default function BookingContent() {
             setError('');
           }}
           pricePerNight={displayPrice}
-          minNights={property.minNights}
-          rating={property.rating}
+          minNights={propertyCardData.minNights}
+          rating={propertyCardData.rating}
           currency="CAD"
         />
       )}
@@ -672,7 +666,7 @@ export default function BookingContent() {
           setGuests(newGuests.adults + newGuests.children);
         }}
         initialGuests={guestBreakdown}
-        maxGuests={property.maxGuests}
+        maxGuests={propertyCardData.maxGuests}
         allowPets={false}
       />
     </main>

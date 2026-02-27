@@ -1,3 +1,7 @@
+export function generateStaticParams() {
+  return []; // API routes are not statically generated
+}
+
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";

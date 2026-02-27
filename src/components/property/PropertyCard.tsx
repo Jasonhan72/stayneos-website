@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 
+// 扩展 Property 接口以兼容 API 数据结构
 export interface Property {
   id: string;
   title: string;         // 默认英文
@@ -26,6 +27,14 @@ export interface Property {
   minNights?: number;
   monthlyDiscount?: number;
   cleaningFee?: number;
+  
+  // API 数据结构的兼容字段
+  basePrice?: number | string;
+  currency?: string;
+  city?: string;
+  neighborhood?: string;
+  isFeatured?: boolean;
+  maxGuest?: number;
 }
 
 // Helper function to get localized title
@@ -54,6 +63,29 @@ export function getLocalizedDescription(property: Property, locale: string): str
   }
 }
 
+// Helper function to get property price (handles both old and API formats)
+export function getPropertyPrice(property: Property): number {
+  // 优先使用 price 字段
+  if (property.price !== undefined && property.price !== null) {
+    return typeof property.price === 'string' ? parseFloat(property.price) : property.price;
+  }
+  // 其次使用 basePrice 字段
+  if (property.basePrice !== undefined && property.basePrice !== null) {
+    return typeof property.basePrice === 'string' ? parseFloat(property.basePrice) : property.basePrice;
+  }
+  return 0;
+}
+
+// Helper function to get property location
+export function getPropertyLocation(property: Property): string {
+  if (property.location) return property.location;
+  if (property.city && property.neighborhood) {
+    return `${property.neighborhood}, ${property.city}`;
+  }
+  if (property.city) return property.city;
+  return '';
+}
+
 interface PropertyCardProps {
   property: Property;
 }
@@ -61,6 +93,10 @@ interface PropertyCardProps {
 export default function PropertyCard({ property }: PropertyCardProps) {
   const { locale, t } = useI18n();
   const title = getLocalizedTitle(property, locale);
+  const price = getPropertyPrice(property);
+  const location = getPropertyLocation(property);
+  const isFeatured = property.featured || property.isFeatured || false;
+  const maxGuests = property.maxGuests || property.maxGuest || 1;
   
   return (
     <article 
@@ -100,7 +136,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             </button>
 
             {/* Featured Badge */}
-            {property.featured && (
+            {isFeatured && (
               <div className="absolute top-3 left-3 px-3 py-1.5 bg-accent text-primary text-xs font-bold rounded-full shadow-md">
                 {t('properties.featured')}
               </div>
@@ -134,19 +170,21 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             </div>
 
             {/* Location */}
-            <div className="flex items-center gap-1.5 text-neutral-500 mb-3">
-              <MapPin size={16} className="shrink-0" aria-hidden="true" />
-              <span className="text-sm truncate">{property.location}</span>
-            </div>
+            {location && (
+              <div className="flex items-center gap-1.5 text-neutral-500 mb-3">
+                <MapPin size={16} className="shrink-0" aria-hidden="true" />
+                <span className="text-sm truncate">{location}</span>
+              </div>
+            )}
 
             {/* Features */}
             <div className="flex items-center gap-4 text-neutral-500 text-sm mb-4">
               <div 
                 className="flex items-center gap-1.5" 
-                aria-label={`Max ${property.maxGuests} guests`}
+                aria-label={`Max ${maxGuests} guests`}
               >
                 <Users size={16} aria-hidden="true" />
-                <span>{t('property.maxGuestsValue', { count: property.maxGuests })}</span>
+                <span>{t('property.maxGuestsValue', { count: maxGuests })}</span>
               </div>
               <div 
                 className="flex items-center gap-1.5" 
@@ -161,16 +199,18 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             <div className="flex items-baseline justify-between pt-4 mt-auto border-t border-neutral-100">
               <div className="flex items-baseline gap-1">
                 <span className="text-xl font-bold text-neutral-900">
-                  ${property.price.toLocaleString()} CAD
+                  ${price.toLocaleString()} {property.currency || 'CAD'}
                 </span>
                 <span className="text-sm text-neutral-500">/{t('common.night')}</span>
               </div>
-              <span 
-                className="text-xs text-neutral-400" 
-                aria-label={`${property.reviewCount} ${t('properties.details.reviews')}`}
-              >
-                {property.reviewCount}{t('properties.details.reviews')}
-              </span>
+              {property.reviewCount > 0 && (
+                <span 
+                  className="text-xs text-neutral-400" 
+                  aria-label={`${property.reviewCount} ${t('properties.details.reviews')}`}
+                >
+                  {property.reviewCount}{t('properties.details.reviews')}
+                </span>
+              )}
             </div>
           </div>
         </div>

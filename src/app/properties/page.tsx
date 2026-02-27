@@ -1,4 +1,4 @@
-// Property Listing Page - Blueground Style + Square UI + Mapbox
+// Property Listing Page - 使用真实 API
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -24,12 +24,15 @@ import {
   Calendar
 } from 'lucide-react';
 import { Button, Container, Card, Badge, Input } from '@/components/ui';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { ApiErrorAlert } from '@/components/error';
 import { AirbnbCalendar } from '@/components/booking';
-import { mockProperties } from '@/lib/data';
+import { useProperties } from '@/hooks/useProperties';
 import { useI18n } from '@/lib/i18n';
+import { toPropertyCardData, getPropertyLocation } from '@/lib/utils/property-transform';
 import dynamic from 'next/dynamic';
 
-// Dynamically import Google Maps component to avoid SSR issues
+// 动态导入地图组件
 const GooglePropertyMap = dynamic(() => import('@/components/property/GooglePropertyMap'), {
   ssr: false,
   loading: () => (
@@ -39,7 +42,7 @@ const GooglePropertyMap = dynamic(() => import('@/components/property/GoogleProp
   ),
 });
 
-// Filter options
+// 筛选选项
 const priceRanges = [
   { label: 'All Prices', min: 0, max: Infinity },
   { label: '$400-500', min: 400, max: 500 },
@@ -66,7 +69,7 @@ const sortOptions = [
   { value: 'rating', label: 'sort.rating' },
 ];
 
-// Pagination settings
+// 每页数量
 const ITEMS_PER_PAGE = 6;
 
 export default function PropertiesPage() {
@@ -88,61 +91,51 @@ export default function PropertiesPage() {
   const [checkOut, setCheckOut] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   
-  // Filter logic
+  // 构建 API 查询参数
+  const queryParams = useMemo(() => {
+    // 处理 sortBy 以符合 PropertyQueryParams 类型
+    let sortByValue: 'price' | 'createdAt' | 'rating' | undefined;
+    let sortOrderValue: 'asc' | 'desc' = 'asc';
+    
+    if (sortBy === 'price-low') {
+      sortByValue = 'price';
+      sortOrderValue = 'asc';
+    } else if (sortBy === 'price-high') {
+      sortByValue = 'price';
+      sortOrderValue = 'desc';
+    } else if (sortBy === 'rating') {
+      sortByValue = 'rating';
+      sortOrderValue = 'desc';
+    }
+    
+    return {
+      page: currentPage,
+      limit: ITEMS_PER_PAGE,
+      city: searchQuery || undefined,
+      minPrice: selectedPriceRange.min > 0 ? selectedPriceRange.min : undefined,
+      maxPrice: selectedPriceRange.max !== Infinity ? selectedPriceRange.max : undefined,
+      bedrooms: selectedBedrooms !== 'any' ? parseInt(selectedBedrooms) : undefined,
+      sortBy: sortByValue,
+      sortOrder: sortOrderValue,
+    };
+  }, [currentPage, searchQuery, selectedPriceRange, selectedBedrooms, sortBy]);
+  
+  // 使用 API 获取房源
+  const { properties, pagination, isLoading, error } = useProperties(queryParams);
+  
+  // 转换 API 数据
+  const propertyList = useMemo(() => properties.map(toPropertyCardData), [properties]);
+  
+  // 本地筛选（amenities）
   const filteredProperties = useMemo(() => {
-    let filtered = [...mockProperties];
+    if (selectedAmenities.length === 0) return propertyList;
     
-    // Search filter
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(p => 
-        p.title.toLowerCase().includes(query) ||
-        p.location.toLowerCase().includes(query)
-      );
-    }
-    
-    // Price filter
-    filtered = filtered.filter(p => 
-      p.price >= selectedPriceRange.min && p.price <= selectedPriceRange.max
+    return propertyList.filter(p => 
+      selectedAmenities.every(amenity => p.amenities.includes(amenity))
     );
-    
-    // Bedroom filter
-    if (selectedBedrooms !== 'any') {
-      const minBedrooms = parseInt(selectedBedrooms);
-      filtered = filtered.filter(p => p.bedrooms >= minBedrooms);
-    }
-    
-    // Amenities filter
-    if (selectedAmenities.length > 0) {
-      filtered = filtered.filter(p => 
-        selectedAmenities.every(amenity => p.amenities.includes(amenity))
-      );
-    }
-    
-    // Sort
-    switch (sortBy) {
-      case 'price-low':
-        filtered.sort((a, b) => a.price - b.price);
-        break;
-      case 'price-high':
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-      case 'rating':
-        filtered.sort((a, b) => b.rating - a.rating);
-        break;
-    }
-    
-    return filtered;
-  }, [searchQuery, selectedPriceRange, selectedBedrooms, selectedAmenities, sortBy]);
+  }, [propertyList, selectedAmenities]);
 
-  // Pagination logic
-  const totalPages = Math.ceil(filteredProperties.length / ITEMS_PER_PAGE);
-  const paginatedProperties = useMemo(() => {
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredProperties.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [filteredProperties, currentPage]);
-
-  // Reset page when filters change
+  // 当筛选条件变化时重置页码
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, selectedPriceRange, selectedBedrooms, selectedAmenities, sortBy]);
@@ -164,14 +157,17 @@ export default function PropertiesPage() {
   };
 
   const activeFiltersCount = 
-    (selectedPriceRange.label !== '全部价格' ? 1 : 0) +
+    (selectedPriceRange.label !== 'All Prices' ? 1 : 0) +
     (selectedBedrooms !== 'any' ? 1 : 0) +
     selectedAmenities.length;
 
-  // Pagination controls
+  // 分页控件
   const getPageNumbers = () => {
+    if (!pagination) return [];
+    
     const pages: (number | string)[] = [];
     const maxVisible = 5;
+    const totalPages = pagination.totalPages;
     
     if (totalPages <= maxVisible) {
       for (let i = 1; i <= totalPages; i++) {
@@ -200,7 +196,7 @@ export default function PropertiesPage() {
                 {t('properties.title')}
               </h1>
               <p className="text-neutral-600">
-                {t('properties.count', { count: filteredProperties.length })}
+                {isLoading ? '加载中...' : t('properties.count', { count: pagination?.total || 0 })}
               </p>
             </div>
             
@@ -273,7 +269,7 @@ export default function PropertiesPage() {
                 )}
               </div>
 
-              {/* Date Range Picker - Unified Airbnb Calendar */}
+              {/* Date Range Picker */}
               <div className="relative">
                 <button
                   onClick={() => setShowDatePicker(true)}
@@ -291,7 +287,7 @@ export default function PropertiesPage() {
                   </div>
                 </button>
 
-                {/* Date Picker Modal - Fullscreen Vertical Scroll Calendar */}
+                {/* Date Picker Modal */}
                 {showDatePicker && (
                   <AirbnbCalendar 
                     checkIn={checkIn}
@@ -415,19 +411,39 @@ export default function PropertiesPage() {
           </Container>
         </div>
       )}
+      
+      {/* Error Alert */}
+      {error && (
+        <Container>
+          <div className="py-4">
+            <ApiErrorAlert 
+              error={error as Error} 
+              onRetry={() => window.location.reload()}
+            />
+          </div>
+        </Container>
+      )}
 
-      {/* Main Content Area - Desktop: Split View, Mobile: Stack */}
+      {/* Main Content Area */}
       <div className="flex flex-col lg:flex-row lg:h-[calc(100vh-200px)]">
-        {/* Left Panel - Property List (~60% on desktop) */}
+        {/* Left Panel - Property List */}
         <div className="w-full lg:w-[60%] lg:overflow-y-auto bg-white">
           <Container className="py-6">
             {/* Results Toolbar */}
             <div className="flex items-center justify-between mb-6">
               <div className="text-sm text-neutral-600">
-                {t('properties.showing')} <span className="font-medium text-neutral-900">{paginatedProperties.length}</span> {paginatedProperties.length === 1 ? t('unit.property') : t('unit.properties')}
-                {filteredProperties.length > 0 && (
-                  <>  
-                    {' '}{t('properties.of')} <span className="font-medium text-neutral-900">{filteredProperties.length}</span> {t('unit.properties')}
+                {isLoading ? (
+                  '加载中...'
+                ) : (
+                  <>
+                    {t('properties.showing')} <span className="font-medium text-neutral-900">{filteredProperties.length}</span> {' '}
+                    {filteredProperties.length === 1 ? t('unit.property') : t('unit.properties')}
+                    {pagination && pagination.total > 0 && (
+                      <>
+                        {' '}{t('properties.of')} <span className="font-medium text-neutral-900">{pagination.total}</span> {' '}
+                        {t('unit.properties')}
+                      </>
+                    )}
                   </>
                 )}
               </div>
@@ -435,7 +451,7 @@ export default function PropertiesPage() {
               <div className="flex items-center gap-4">
                 {/* Sort */}
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-neutral-600 hidden sm:inline">{t('properties.sort')}:</span>
+                  <span className="text-sm text-neutral-500 hidden sm:inline">{t('properties.sort')}:</span>
                   <div className="relative">
                     <select
                       value={sortBy}
@@ -457,21 +473,39 @@ export default function PropertiesPage() {
               </div>
             </div>
 
-            {/* Content based on view mode - Desktop always shows list/grid, Mobile respects viewMode */}
+            {/* Content based on view mode */}
             <div className="lg:block">
-              {/* Desktop: Always show grid/list | Mobile: Respect viewMode */}
               <div className={`${viewMode === 'map' ? 'hidden lg:block' : 'block'}`}>
-                {viewMode === 'list' ? (
+                {isLoading ? (
+                  viewMode === 'list' ? (
+                    <div className="space-y-4">
+                      {Array.from({ length: 3 }).map((_, i) => (
+                        <div key={i} className="bg-white rounded-xl border border-neutral-200 p-4 animate-pulse">
+                          <div className="flex gap-4">
+                            <div className="w-72 h-48 bg-neutral-200 rounded-lg" />
+                            <div className="flex-1 space-y-3">
+                              <div className="h-5 bg-neutral-200 rounded w-1/3" />
+                              <div className="h-4 bg-neutral-200 rounded w-1/2" />
+                              <div className="h-4 bg-neutral-200 rounded w-1/4" />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <Skeleton.PropertyCardList count={6} />
+                  )
+                ) : viewMode === 'list' ? (
                   /* List View */
                   <div className="space-y-4">
-                    {paginatedProperties.map((property) => (
+                    {filteredProperties.map((property) => (
                       <PropertyListCard key={property.id} property={property} />
                     ))}
                   </div>
                 ) : (
-                  /* Grid View (Default) */
+                  /* Grid View */
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {paginatedProperties.map((property) => (
+                    {filteredProperties.map((property) => (
                       <PropertyGridCard key={property.id} property={property} />
                     ))}
                   </div>
@@ -491,7 +525,7 @@ export default function PropertiesPage() {
             </div>
 
             {/* Empty State */}
-            {filteredProperties.length === 0 && (
+            {!isLoading && filteredProperties.length === 0 && (
               <div className="text-center py-20">
                 <div className="w-16 h-16 mx-auto mb-4 bg-neutral-100 flex items-center justify-center">
                   <Search size={32} className="text-neutral-400" />
@@ -509,7 +543,7 @@ export default function PropertiesPage() {
             )}
 
             {/* Pagination */}
-            {totalPages > 1 && (
+            {pagination && pagination.totalPages > 1 && (
               <div className="flex items-center justify-center gap-2 mt-12">
                 <button
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
@@ -537,8 +571,8 @@ export default function PropertiesPage() {
                 ))}
                 
                 <button
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(p => Math.min(pagination.totalPages, p + 1))}
+                  disabled={currentPage === pagination.totalPages}
                   className="p-2 border border-neutral-300 hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronRight size={20} />
@@ -548,7 +582,7 @@ export default function PropertiesPage() {
           </Container>
         </div>
 
-        {/* Right Panel - Map (~40% on desktop, sticky) */}
+        {/* Right Panel - Map (~40% on desktop) */}
         <div className="hidden lg:block lg:w-[40%] lg:sticky lg:top-0 lg:h-full">
           <GooglePropertyMap 
             properties={filteredProperties}
@@ -563,12 +597,13 @@ export default function PropertiesPage() {
 }
 
 // Property Grid Card Component
-function PropertyGridCard({ 
-  property 
-}: { 
-  property: typeof mockProperties[0]; 
+function PropertyGridCard({
+  property
+}: {
+  property: ReturnType<typeof toPropertyCardData>;
 }) {
   const { t } = useI18n();
+  const location = getPropertyLocation(property);
   
   return (
     <Card className="group overflow-hidden" hover>
@@ -587,7 +622,7 @@ function PropertyGridCard({
           )}
           
           <button 
-            className="absolute top-3 right-3 p-2 bg-white/90 hover:bg-white transition-colors"
+            className="absolute top-3 right-3 p-2 bg-white/90 hover:bg-white transition-colors rounded-full"
             onClick={(e) => e.preventDefault()}
           >
             <Heart size={18} className="text-neutral-400" />
@@ -608,7 +643,7 @@ function PropertyGridCard({
           
           <div className="flex items-center gap-1 text-neutral-500 mb-3">
             <MapPin size={14} />
-            <span className="text-sm truncate">{property.location}</span>
+            <span className="text-sm truncate">{location}</span>
           </div>
           
           <div className="flex items-center gap-3 text-neutral-500 text-sm mb-4">
@@ -638,13 +673,14 @@ function PropertyGridCard({
 
 // Property List Card Component
 interface PropertyListCardProps {
-  property: typeof mockProperties[0];
+  property: ReturnType<typeof toPropertyCardData>;
   isSelected?: boolean;
   onClick?: () => void;
 }
 
 function PropertyListCard({ property, isSelected, onClick }: PropertyListCardProps) {
   const { t } = useI18n();
+  const location = getPropertyLocation(property);
   
   return (
     <Card 
@@ -669,7 +705,7 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
             <Badge className="absolute top-3 left-3" variant="primary">{t('property.featured')}</Badge>
           )}
           <button 
-            className="absolute top-3 right-3 p-2 bg-white/90 hover:bg-white transition-colors"
+            className="absolute top-3 right-3 p-2 bg-white/90 hover:bg-white transition-colors rounded-full"
             onClick={(e) => e.preventDefault()}
           >
             <Heart size={18} className="text-neutral-400" />
@@ -691,7 +727,7 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
             
             <div className="flex items-center gap-1 text-neutral-500 mb-3">
               <MapPin size={14} />
-              <span className="text-sm">{property.location}</span>
+              <span className="text-sm">{location}</span>
             </div>
             
             <div className="flex items-center gap-4 text-sm text-neutral-600 mb-4">
