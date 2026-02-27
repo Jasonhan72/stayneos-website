@@ -335,7 +335,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             alt={`${localizedTitle} - Image ${currentImageIndex + 1}`} 
             fill 
             priority 
-            className="object-cover" 
+            className="object-contain" 
           />
           
           {/* Image Counter */}
@@ -372,7 +372,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                 alt={localizedTitle}
                 fill 
                 priority 
-                className="object-cover" 
+                className="object-contain" 
               />
             </div>
             {/* Side Images */}
@@ -386,7 +386,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                   src={img} 
                   alt={`${localizedTitle} - ${idx + 2}`}
                   fill 
-                  className="object-cover" 
+                  className="object-contain" 
                 />
                 {idx === 3 && imageUrls.length > 5 && (
                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
@@ -440,12 +440,12 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
 
             {/* Host Info */}
             <div className="flex items-center gap-3 py-6">
-              <div className="relative w-12 h-12 rounded-full overflow-hidden bg-neutral-200">
+              <div className="relative w-12 h-12 rounded-full overflow-hidden bg-white border border-neutral-200 p-1.5">
                 <Image 
                   src={mockHost.avatar} 
                   alt={mockHost.name}
                   fill
-                  className="object-cover"
+                  className="object-contain"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${mockHost.name}&background=random`;
                   }}
@@ -723,7 +723,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                         : 'opacity-50 hover:opacity-100'
                     }`}
                   >
-                    <Image src={image} alt={`Thumbnail ${index + 1}`} fill className="object-cover" />
+                    <Image src={image} alt={`Thumbnail ${index + 1}`} fill className="object-contain" />
                   </button>
                 ))}
               </div>

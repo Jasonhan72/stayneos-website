@@ -93,7 +93,7 @@ export function HeroSection() {
                 <div className="flex items-center gap-3">
                   <Calendar size={20} className="text-neutral-400" />
                   <div>
-                    <div className="text-xs font-semibold text-neutral-900 uppercase tracking-wide">
+                    <div className="text-sm text-neutral-900">
                       {checkIn && checkOut ? `${formatDate(checkIn)} - ${formatDate(checkOut)}` : t('booking.selectDates') || 'Select dates'}
                     </div>
                     <div className="text-sm text-neutral-400 mt-0.5">
