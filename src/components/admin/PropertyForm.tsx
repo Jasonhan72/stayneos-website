@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -639,13 +640,10 @@ export function PropertyForm({ initialData, mode, hosts = [] }: PropertyFormProp
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                   {watchedImages.map((url: string, index: number) => (
                     <div key={index} className="relative group aspect-square">
-                      <img
+                      <Image fill
                         src={url}
                         alt={`Property ${index + 1}`}
-                        className="w-full h-full object-cover rounded-lg"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/images/placeholder-property.jpg';
-                        }}
+                        className="object-cover rounded-lg"
                       />
                       <button
                         type="button"

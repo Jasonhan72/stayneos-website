@@ -1,8 +1,9 @@
-// Property Detail Page - Static Export
+// Property Detail Page - 使用真实 API
 import { notFound } from "next/navigation";
 import { Metadata } from 'next';
 import PropertyDetailClient from "./PropertyDetailClient";
-import { mockProperties } from "@/lib/data";
+import { apiClient } from "@/lib/api-client";
+import { Property } from "@/types";
 
 interface PageProps {
   params: {
@@ -10,28 +11,45 @@ interface PageProps {
   };
 }
 
-// Generate static params
+// Required for static export - returns empty array for dynamic routes
 export function generateStaticParams() {
-  return mockProperties.map((p) => ({ id: p.id }));
+  return [{ id: 'dummy' }];
+}
+
+// 获取房源数据（用于 generateMetadata）
+async function getProperty(id: string): Promise<Property | null> {
+  try {
+    return await apiClient.get<Property>(`/api/properties/${id}`);
+  } catch {
+    return null;
+  }
 }
 
 // Generate metadata
-export function generateMetadata({ params }: PageProps): Metadata {
-  const property = mockProperties.find(p => p.id === params.id);
-  if (!property) return { title: 'Property Not Found' };
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const property = await getProperty(params.id);
+  
+  if (!property) {
+    return { title: 'Property Not Found | StayNeos' };
+  }
   
   return {
     title: `${property.title} | StayNeos`,
-    description: property.description || '',
+    description: property.shortDesc || property.description?.slice(0, 160) || '',
+    openGraph: {
+      title: property.title,
+      description: property.shortDesc || property.description?.slice(0, 160) || '',
+      images: property.images?.[0]?.url ? [property.images[0].url] : undefined,
+    },
   };
 }
 
-export default function PropertyDetailPage({ params }: PageProps) {
-  const property = mockProperties.find(p => p.id === params.id);
+export default async function PropertyDetailPage({ params }: PageProps) {
+  const property = await getProperty(params.id);
   
   if (!property) {
     notFound();
   }
   
-  return <PropertyDetailClient propertyId={params.id} />;
+  return <PropertyDetailClient propertyId={params.id} initialProperty={property} />;
 }

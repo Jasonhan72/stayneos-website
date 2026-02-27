@@ -1,14 +1,11 @@
-import BookingContent from './BookingContent';
-
-// Required for static export - pre-render property booking pages
+// Required for static export
 export function generateStaticParams() {
-  // Pre-render booking pages for all properties
-  return [
-    { propertyId: '1' },
-    { propertyId: '2' },
-  ];
+  return [{ propertyId: 'dummy' }];
 }
 
+import BookingContent from './BookingContent';
+
+// 预订页面 - 服务器组件
 export default function BookingPage() {
   return <BookingContent />;
 }

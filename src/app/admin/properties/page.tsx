@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   Plus, 
   Search, 
@@ -304,9 +305,9 @@ export default function AdminPropertiesPage() {
                     <tr key={property.id} className="hover:bg-neutral-50 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-14 h-14 rounded-lg bg-neutral-200 overflow-hidden flex-shrink-0">
+                          <div className="w-14 h-14 rounded-lg bg-neutral-200 overflow-hidden flex-shrink-0 relative">
                             {property.images[0] ? (
-                              <img
+                              <Image fill
                                 src={property.images[0]}
                                 alt={property.title.en}
                                 className="w-full h-full object-cover"
@@ -399,9 +400,9 @@ export default function AdminPropertiesPage() {
               {paginatedProperties.map((property) => (
                 <div key={property.id} className="p-4">
                   <div className="flex gap-4">
-                    <div className="w-20 h-20 rounded-lg bg-neutral-200 overflow-hidden flex-shrink-0">
+                    <div className="w-20 h-20 rounded-lg bg-neutral-200 overflow-hidden flex-shrink-0 relative">
                       {property.images[0] ? (
-                        <img
+                        <Image fill
                           src={property.images[0]}
                           alt={property.title.en}
                           className="w-full h-full object-cover"
