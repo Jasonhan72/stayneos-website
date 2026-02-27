@@ -20,6 +20,7 @@ import { Container, Divider } from '@/components/ui';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { ApiErrorAlert } from '@/components/error';
 import { AirbnbCalendar, ReviewAndContinue, PaymentMethod, calculateBookingPrice, GuestSelector, type GuestCounts } from '@/components/booking';
+import CardDetailsForm from '@/components/payment/CardDetailsForm';
 import { useI18n } from '@/lib/i18n';
 import { useProperty } from '@/hooks/useProperties';
 import { PropertyCardData } from '@/types';
@@ -32,10 +33,10 @@ interface PropertyDetailClientProps {
 
 // Mock host data（后续可从 API 获取）
 const mockHost = {
-  name: 'Nazli',
-  avatar: '/images/host-avatar.jpg',
+  name: 'StayNeos',
+  avatar: '/logo.png',
   isSuperhost: true,
-  yearsHosting: 7,
+  yearsHosting: 2,
 };
 
 export default function PropertyDetailClient({ propertyId, initialProperty }: PropertyDetailClientProps) {
@@ -55,6 +56,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   const [showCalendar, setShowCalendar] = useState(false);
   const [showReview, setShowReview] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
+  const [showCardForm, setShowCardForm] = useState(false);
   const [showGuestSelector, setShowGuestSelector] = useState(false);
   
   // Guest breakdown state for GuestSelector
@@ -634,11 +636,24 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
         onClose={() => setShowPayment(false)}
         onBack={() => { setShowPayment(false); setShowReview(true); }}
         onNext={(method) => {
-          console.log('Selected payment method:', method);
           setShowPayment(false);
+          if (method === 'card') {
+            setShowCardForm(true);
+          }
         }}
       />
 
+      {/* Card Details Form */}
+      <CardDetailsForm
+        isOpen={showCardForm}
+        onClose={() => setShowCardForm(false)}
+        onBack={() => { setShowCardForm(false); setShowPayment(true); }}
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        onSubmit={(_cardData) => {
+          setShowCardForm(false);
+          alert("Payment submitted! Booking confirmed.");
+        }}
+      />
       {/* Guest Selector Modal */}
       <GuestSelector
         isOpen={showGuestSelector}
