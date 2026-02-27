@@ -71,7 +71,7 @@ export default function UserMenu({ variant = 'light', isScrolled = false }: User
 
   const secondaryMenuItems = [
     { icon: Home, label: 'For Landlords', href: '/landlords' },
-    { icon: Briefcase, label: 'For Business', href: '/business' },
+    { icon: Briefcase, label: 'For Business', href: '/corporate' },
     { icon: Phone, label: 'Contact Us', href: '/contact' },
   ];
 

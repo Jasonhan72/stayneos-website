@@ -1,5 +1,6 @@
 // Property Listing Page - 使用真实 API
 'use client';
+import { PropertyCardData } from '@/types';
 
 import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
@@ -29,7 +30,7 @@ import { ApiErrorAlert } from '@/components/error';
 import { AirbnbCalendar } from '@/components/booking';
 import { useProperties } from '@/hooks/useProperties';
 import { useI18n } from '@/lib/i18n';
-import { toPropertyCardData, getPropertyLocation } from '@/lib/utils/property-transform';
+import { getPropertyLocation } from '@/lib/utils/property-transform';
 import dynamic from 'next/dynamic';
 
 // 动态导入地图组件
@@ -124,7 +125,7 @@ export default function PropertiesPage() {
   const { properties, pagination, isLoading, error } = useProperties(queryParams);
   
   // 转换 API 数据
-  const propertyList = useMemo(() => properties.map(toPropertyCardData), [properties]);
+  const propertyList = useMemo(() => properties, [properties]);
   
   // 本地筛选（amenities）
   const filteredProperties = useMemo(() => {
@@ -600,7 +601,7 @@ export default function PropertiesPage() {
 function PropertyGridCard({
   property
 }: {
-  property: ReturnType<typeof toPropertyCardData>;
+  property: PropertyCardData;
 }) {
   const { t } = useI18n();
   const location = getPropertyLocation(property);
@@ -673,7 +674,7 @@ function PropertyGridCard({
 
 // Property List Card Component
 interface PropertyListCardProps {
-  property: ReturnType<typeof toPropertyCardData>;
+  property: PropertyCardData;
   isSelected?: boolean;
   onClick?: () => void;
 }

@@ -1,9 +1,8 @@
-// Property Detail Page - 使用真实 API
+// Property Detail Page - Static data mode
 import { notFound } from "next/navigation";
 import { Metadata } from 'next';
 import PropertyDetailClient from "./PropertyDetailClient";
-import { apiClient } from "@/lib/api-client";
-import { Property } from "@/types";
+import { mockProperties, getPropertyById } from "@/lib/data";
 
 interface PageProps {
   params: {
@@ -11,23 +10,14 @@ interface PageProps {
   };
 }
 
-// Required for static export - returns empty array for dynamic routes
+// Required for static export
 export function generateStaticParams() {
-  return [{ id: 'dummy' }];
-}
-
-// 获取房源数据（用于 generateMetadata）
-async function getProperty(id: string): Promise<Property | null> {
-  try {
-    return await apiClient.get<Property>(`/api/properties/${id}`);
-  } catch {
-    return null;
-  }
+  return mockProperties.map(p => ({ id: p.id }));
 }
 
 // Generate metadata
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const property = await getProperty(params.id);
+  const property = getPropertyById(params.id);
   
   if (!property) {
     return { title: 'Property Not Found | StayNeos' };
@@ -35,21 +25,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   
   return {
     title: `${property.title} | StayNeos`,
-    description: property.shortDesc || property.description?.slice(0, 160) || '',
+    description: property.description?.slice(0, 160) || '',
     openGraph: {
       title: property.title,
-      description: property.shortDesc || property.description?.slice(0, 160) || '',
-      images: property.images?.[0]?.url ? [property.images[0].url] : undefined,
+      description: property.description?.slice(0, 160) || '',
+      images: property.images?.[0] ? [property.images[0]] : undefined,
     },
   };
 }
 
 export default async function PropertyDetailPage({ params }: PageProps) {
-  const property = await getProperty(params.id);
+  const property = getPropertyById(params.id);
   
   if (!property) {
     notFound();
   }
   
-  return <PropertyDetailClient propertyId={params.id} initialProperty={property} />;
+  return <PropertyDetailClient propertyId={params.id} />;
 }

@@ -18,7 +18,7 @@ import { ApiErrorAlert } from '@/components/error';
 import { AirbnbCalendar } from '@/components/booking';
 import { useI18n } from '@/lib/i18n';
 import { useFeaturedProperties } from '@/hooks/useProperties';
-import { toPropertyCardData } from '@/lib/utils/property-transform';
+import { PropertyCardData } from '@/types';
 
 // Export WelcomeBanner
 export { WelcomeBanner } from './WelcomeBanner';
@@ -223,7 +223,7 @@ const segments = [
     subtitleKey: 'segments.business.subtitle',
     descKey: 'segments.business.desc',
     ctaKey: 'segments.business.cta',
-    href: '/business',
+    href: '/corporate',
     image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&q=80'
   },
   {
@@ -302,10 +302,11 @@ export function FeaturedPropertiesSection() {
   const { properties, isLoading, error } = useFeaturedProperties(4);
   
   // 转换 API 数据为 PropertyCardData
-  const featuredProperties = properties.map(toPropertyCardData);
+  // Mock data already in correct format, no transform needed
+  const featuredProperties = properties;
   
   // 获取本地化的标题
-  const getLocalizedTitle = (property: ReturnType<typeof toPropertyCardData>) => {
+  const getLocalizedTitle = (property: PropertyCardData) => {
     switch (locale) {
       case 'zh':
         return property.titleZh || property.title;

@@ -52,7 +52,7 @@
     "title": "Devise"
   },
   "hero": {
-    "title": "À Propos de StayNeos",
+    "title": "Bienvenue chez StayNeos",
     "highlight": "Résidence Exécutive Simplifiée",
     "subtitle": "Redéfinir l'expérience des appartements exécutifs premium, offrant la chaleur du foyer et un service professionnel aux voyageurs d'affaires et aux résidents déplacés",
     "cta": "Listez Votre Propriété",
@@ -77,7 +77,6 @@
     "pet": "Animal",
     "serviceAnimal": "Animal d'assistance",
     "guest": "Invité",
-    "guests": "Invités",
     "ages13Plus": "13 ans et plus",
     "ages2To12": "2-12 ans",
     "under2": "Moins de 2 ans"
@@ -195,7 +194,7 @@
   },
   "howItWorks": {
     "title": "Comment Ça Marche",
-    "subtitle": "Commencer est facile. Trois étapes simples pour commencer à gagner plus."
+    "subtitle": "C'est simple. Trois étapes pour trouver votre logement idéal."
   },
   "steps": {
     "search": {

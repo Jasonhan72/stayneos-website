@@ -22,12 +22,12 @@ import { ApiErrorAlert } from '@/components/error';
 import { AirbnbCalendar, ReviewAndContinue, PaymentMethod, calculateBookingPrice, GuestSelector, type GuestCounts } from '@/components/booking';
 import { useI18n } from '@/lib/i18n';
 import { useProperty } from '@/hooks/useProperties';
-import { Property } from '@/types';
-import { toPropertyCardData, getPropertyLocation } from '@/lib/utils/property-transform';
+import { PropertyCardData } from '@/types';
+import { getPropertyLocation } from '@/lib/utils/property-transform';
 
 interface PropertyDetailClientProps {
   propertyId: string;
-  initialProperty?: Property;
+  initialProperty?: PropertyCardData;
 }
 
 // Mock host data（后续可从 API 获取）
@@ -67,7 +67,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   // 转换 API 数据为组件格式
   const propertyCardData = useMemo(() => {
     if (!property) return null;
-    return toPropertyCardData(property);
+    return property;
   }, [property]);
 
   const localizedTitle = useMemo(() => {
@@ -97,7 +97,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   // 从 API 获取 amenities 列表
   const amenities = useMemo(() => {
     if (!property?.amenities) return [];
-    return property.amenities.map(a => a.amenity.name);
+    return property.amenities;
   }, [property]);
 
   // Calculate booking price
@@ -174,7 +174,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
 
   // 获取图片 URL 列表 - 使用可选链避免条件调用 hook
   const imageUrls = property.images?.length 
-    ? property.images.map(img => img.url).filter(Boolean)
+    ? property.images.filter(Boolean)
     : ['/images/placeholder-property.jpg'];
 
   // Desktop Booking Card Component
@@ -184,7 +184,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
       <div className="flex items-baseline justify-between mb-4">
         <div className="flex items-baseline gap-1">
           <span className="text-2xl font-bold text-neutral-900">${propertyCardData.price.toLocaleString()}</span>
-          <span className="text-neutral-500">{property.currency} / {t('common.night')}</span>
+          <span className="text-neutral-500">CAD / {t('common.night')}</span>
         </div>
         <div className="flex items-center gap-1">
           <Star size={14} className="fill-black" />
@@ -531,7 +531,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               </div>
               <div className="mt-4">
                 <p className="font-medium text-neutral-900">{locationShort}</p>
-                <p className="text-sm text-neutral-600">{property.address}</p>
+                <p className="text-sm text-neutral-600">{property.location}</p>
               </div>
             </div>
           </div>
@@ -557,7 +557,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               </div>
             ) : bookingPrice ? (
               <div>
-                <p className="text-lg font-semibold">${bookingPrice.total.toLocaleString()} {property.currency}</p>
+                <p className="text-lg font-semibold">${bookingPrice.total.toLocaleString()} CAD</p>
                 <p className="text-sm text-neutral-600">{bookingPrice.nights} {t('common.nights')}</p>
               </div>
             ) : (
@@ -595,7 +595,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           pricePerNight={propertyCardData.price}
           minNights={propertyCardData.minNights || 1}
           rating={propertyCardData.rating}
-          currency={property.currency}
+          currency="CAD"
         />
       )}
 
@@ -624,7 +624,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           serviceFee: bookingPrice?.serviceFee || 0,
           tax: bookingPrice?.tax || 0,
           total: bookingPrice?.total || 0,
-          currency: property.currency,
+          currency: 'CAD',
         }}
       />
 

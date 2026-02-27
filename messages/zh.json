@@ -52,7 +52,7 @@
     "title": "货币"
   },
   "hero": {
-    "title": "关于 StayNeos",
+    "title": "欢迎来到 StayNeos",
     "highlight": "商务精英的旅居首选",
     "subtitle": "重新定义高端行政公寓体验，为商务人士和异地居住者提供家的温暖与专业的服务",
     "cta": "发布房源",
@@ -64,7 +64,7 @@
     "selectLocation": "选择位置",
     "date": "日期",
     "selectDate": "选择日期",
-    "guests": "人数",
+    "guests": "房客",
     "guestCount": "{count} 位房客",
     "search": "搜索",
     "title": "搜索房源",
@@ -77,7 +77,6 @@
     "pet": "宠物",
     "serviceAnimal": "服务性动物",
     "guest": "房客",
-    "guests": "房客",
     "ages13Plus": "13岁以上",
     "ages2To12": "2-12岁",
     "under2": "2岁以下"
@@ -195,7 +194,7 @@
   },
   "howItWorks": {
     "title": "如何运作",
-    "subtitle": "开始使用很简单。三个简单步骤开始赚取更多收入。"
+    "subtitle": "入住简单便捷，三步即可找到理想住所。"
   },
   "steps": {
     "search": {

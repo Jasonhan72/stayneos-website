@@ -139,7 +139,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
                     "hover:bg-neutral-100 focus:outline-none",
                     textStyles[currentVariant]
                   )}
-                  aria-label="打开菜单"
+                  aria-label="Open menu"
                 >
                   <Menu className="w-6 h-6" />
                 </button>

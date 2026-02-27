@@ -1,60 +1,56 @@
 /**
  * 房源数据获取 Hooks
- * 使用 SWR 进行数据缓存和重新验证
+ * 静态导出模式：直接使用本地数据
+ * 后端就绪后切换为 API 调用
  */
 
 'use client';
 
 import useSWR, { SWRConfiguration } from 'swr';
-import { apiClient } from '@/lib/api-client';
-import { 
-  Property, 
-  PropertyListItem, 
-  PropertyQueryParams,
-  PaginatedResponse 
-} from '@/types';
+import { mockProperties } from '@/lib/data';
+import { PropertyCardData } from '@/types';
 
-// SWR 默认配置
-const defaultSWRConfig: SWRConfiguration = {
-  revalidateOnFocus: false,
-  revalidateOnReconnect: true,
-  refreshInterval: 5 * 60 * 1000, // 5 分钟自动刷新
-  errorRetryCount: 3,
-};
+type MockProperty = (typeof mockProperties)[number];
 
-// 构建查询字符串
-function buildQueryString(params?: PropertyQueryParams): string {
-  if (!params) return '';
-  
-  const searchParams = new URLSearchParams();
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== '') {
-      searchParams.append(key, String(value));
-    }
-  });
-  
-  const queryString = searchParams.toString();
-  return queryString ? `?${queryString}` : '';
+function toCardData(p: MockProperty): PropertyCardData {
+  return {
+    id: p.id,
+    title: p.title,
+    titleZh: p.titleZh,
+    titleFr: p.titleFr,
+    location: p.location,
+    price: p.price,
+    priceUnit: p.priceUnit,
+    rating: p.rating,
+    reviewCount: p.reviewCount,
+    images: p.images,
+    maxGuests: p.maxGuests,
+    area: p.area,
+    bedrooms: p.bedrooms,
+    bathrooms: p.bathrooms,
+    amenities: p.amenities,
+    featured: p.featured,
+    description: p.description,
+    descriptionZh: p.descriptionZh,
+    descriptionFr: p.descriptionFr,
+    minNights: p.minNights,
+    monthlyDiscount: p.monthlyDiscount,
+  };
 }
 
 /**
  * 获取房源列表
  */
-export function useProperties(params?: PropertyQueryParams, config?: SWRConfiguration) {
-  const queryString = buildQueryString(params);
-  const key = `/api/properties${queryString}`;
-  
-  const { data, error, isLoading, mutate } = useSWR<
-    PaginatedResponse<PropertyListItem>
-  >(
-    key,
-    () => apiClient.get(`/api/properties${queryString}`),
-    { ...defaultSWRConfig, ...config }
+export function useProperties(_params?: Record<string, unknown>, config?: SWRConfiguration) {
+  const { data, error, isLoading, mutate } = useSWR(
+    'properties-list',
+    () => Promise.resolve(mockProperties.map(toCardData)),
+    { revalidateOnFocus: false, ...config }
   );
-  
+
   return {
-    properties: data?.data || [],
-    pagination: data?.pagination,
+    properties: data || [],
+    pagination: undefined as {totalPages: number; currentPage: number; total: number} | undefined,
     isLoading,
     error,
     mutate,
@@ -65,14 +61,15 @@ export function useProperties(params?: PropertyQueryParams, config?: SWRConfigur
  * 获取单个房源详情
  */
 export function useProperty(id: string | null, config?: SWRConfiguration) {
-  const key = id ? `/api/properties/${id}` : null;
-  
-  const { data, error, isLoading, mutate } = useSWR<Property>(
-    key,
-    () => apiClient.get(`/api/properties/${id}`),
-    { ...defaultSWRConfig, ...config }
+  const { data, error, isLoading, mutate } = useSWR(
+    id ? `property-${id}` : null,
+    () => {
+      const p = mockProperties.find(p => p.id === id);
+      return Promise.resolve(p ? toCardData(p) : null);
+    },
+    { revalidateOnFocus: false, ...config }
   );
-  
+
   return {
     property: data,
     isLoading,
@@ -85,14 +82,14 @@ export function useProperty(id: string | null, config?: SWRConfiguration) {
  * 获取精选房源
  */
 export function useFeaturedProperties(limit = 6, config?: SWRConfiguration) {
-  const key = `/api/properties/featured?limit=${limit}`;
-  
-  const { data, error, isLoading, mutate } = useSWR<Property[]>(
-    key,
-    () => apiClient.get(`/api/properties/featured?limit=${limit}`),
-    { ...defaultSWRConfig, ...config }
+  const { data, error, isLoading, mutate } = useSWR(
+    `featured-${limit}`,
+    () => Promise.resolve(
+      mockProperties.filter(p => p.featured).slice(0, limit).map(toCardData)
+    ),
+    { revalidateOnFocus: false, ...config }
   );
-  
+
   return {
     properties: data || [],
     isLoading,
@@ -102,42 +99,37 @@ export function useFeaturedProperties(limit = 6, config?: SWRConfiguration) {
 }
 
 /**
- * 获取房源可用日期
+ * 获取房源可用性
  */
 export function usePropertyAvailability(
-  propertyId: string | null, 
-  startDate?: string, 
-  endDate?: string,
+  propertyId: string | null,
+  _params?: { checkIn?: string; checkOut?: string },
   config?: SWRConfiguration
 ) {
-  const params = new URLSearchParams();
-  if (startDate) params.append('startDate', startDate);
-  if (endDate) params.append('endDate', endDate);
-  
-  const queryString = params.toString();
-  const key = propertyId ? `/api/properties/${propertyId}/availability${queryString ? `?${queryString}` : ''}` : null;
-  
-  const { data, error, isLoading } = useSWR<{ dates: string[] }>(
-    key,
-    () => apiClient.get(`/api/properties/${propertyId}/availability${queryString ? `?${queryString}` : ''}`),
-    { ...defaultSWRConfig, ...config }
+  const { data, error, isLoading } = useSWR(
+    propertyId ? `availability-${propertyId}` : null,
+    () => Promise.resolve({ available: true, price: 0 }),
+    { revalidateOnFocus: false, ...config }
   );
-  
+
   return {
-    availableDates: data?.dates || [],
+    availability: data,
     isLoading,
     error,
   };
 }
 
 /**
- * 预加载房源数据（用于预取）
+ * 获取房源详情（函数形式）
  */
-export function preloadProperty(id: string): Promise<Property> {
-  return apiClient.get(`/api/properties/${id}`);
+export async function fetchProperty(id: string) {
+  const p = mockProperties.find(p => p.id === id);
+  return p ? toCardData(p) : null;
 }
 
-export function preloadProperties(params?: PropertyQueryParams): Promise<PaginatedResponse<PropertyListItem>> {
-  const queryString = buildQueryString(params);
-  return apiClient.get(`/api/properties${queryString}`);
+/**
+ * 获取房源列表（函数形式）
+ */
+export async function fetchProperties() {
+  return mockProperties.map(toCardData);
 }

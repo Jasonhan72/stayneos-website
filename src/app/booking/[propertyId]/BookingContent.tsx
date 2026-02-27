@@ -16,7 +16,6 @@ import { useI18n } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { useProperty } from '@/hooks/useProperties';
 import { useCreateBooking } from '@/hooks/useBookings';
-import { toPropertyCardData } from '@/lib/utils/property-transform';
 import { 
   ChevronLeft, 
   Calendar, 
@@ -42,7 +41,7 @@ export default function BookingContent() {
   
   // 使用 API 获取房源数据
   const { property, isLoading: isPropertyLoading, error: propertyError } = useProperty(propertyId);
-  const propertyCardData = property ? toPropertyCardData(property) : null;
+  const propertyCardData = property;
   
   // 预订 mutation
   const { createBooking, isCreating, error: bookingError } = useCreateBooking();
@@ -539,7 +538,7 @@ export default function BookingContent() {
                     <h3 className="font-semibold text-neutral-900 line-clamp-2">{propertyCardData.title}</h3>
                     <div className="flex items-center gap-1 text-neutral-500 text-sm mt-1">
                       <Home size={14} />
-                      <span className="line-clamp-1">{property.address}</span>
+                      <span className="line-clamp-1">{property.location}</span>
                     </div>
                   </div>
                 </div>
