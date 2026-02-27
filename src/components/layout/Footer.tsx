@@ -32,7 +32,7 @@ export default function Footer() {
   const socialLinks = [
     { icon: Facebook, href: "https://facebook.com/stayneos", label: "Facebook" },
     { icon: Instagram, href: "https://instagram.com/stayneos", label: "Instagram" },
-    { icon: Twitter, href: "https://x.com/stayneos", label: "Twitter" },
+    { icon: Twitter, href: "https://x.com/Stayneos", label: "Twitter" },
     { icon: Linkedin, href: "https://linkedin.com/company/stayneos", label: "LinkedIn" },
   ];
 
