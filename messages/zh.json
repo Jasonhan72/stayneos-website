@@ -13,13 +13,18 @@
     "account": "我的预订",
     "signup": "注册",
     "landlords": "房东服务",
+    "agents": "经纪人合作",
     "business": "企业服务",
     "contact": "联系我们",
     "bookings": "我的预订",
     "personalDetails": "个人资料",
     "preferences": "偏好设置",
     "wishlists": "心愿单",
-    "logout": "退出登录"
+    "logout": "退出登录",
+    "becomeHost": "成为房东",
+    "listProperty": "发布房源",
+    "manageProperties": "管理房源",
+    "dashboard": "仪表盘"
   },
   "common": {
     "view": "查看",
@@ -41,7 +46,12 @@
     "edit": "编辑",
     "skip": "跳过",
     "next": "下一步",
-    "retry": "重试"
+    "retry": "重试",
+    "close": "关闭",
+    "delete": "删除",
+    "there": "您",
+    "loading": "加载中...",
+    "backToList": "返回房源列表"
   },
   "greeting": {
     "morning": "早上好",
@@ -291,6 +301,7 @@
     "trust": "🔒 安全支付 · ✓ 真实房源 · 24/7 客服支持",
     "terms": "服务条款",
     "landlords": "房东合作",
+    "agents": "经纪人合作",
     "services": "我们的服务",
     "properties": "浏览房源"
   },
@@ -383,7 +394,21 @@
       "infants": "婴幼儿",
       "infantsDescription": "2岁以下",
       "infant": "位婴幼儿"
-    }
+    },
+    "priceBreakdown": "费用明细",
+    "totalPrice": "总价",
+    "addDate": "添加日期",
+    "confirmInfo": "确认您的信息",
+    "paymentEncrypted": "您的支付信息已加密",
+    "selectDatesToSeePrice": "选择日期查看价格",
+    "secureBooking": "安全预订",
+    "encryptedPayment": "加密支付",
+    "backToProperty": "返回房源",
+    "continue": "继续",
+    "changeDates": "更改日期",
+    "guestSingular": "位客人",
+    "guestsPlural": "位客人",
+    "processing": "处理中..."
   },
   "contact": {
     "pageTitle": "联系我们",
@@ -439,7 +464,9 @@
     "emergency": {
       "title": "需要紧急帮助？",
       "desc": "如果您是已入住的租客，遇到紧急情况需要立即协助，请拨打我们的 24 小时紧急热线"
-    }
+    },
+    "responseTime": "我们通常在24小时内回复",
+    "visitUs": "来访地址"
   },
   "form": {
     "title": "联系我们",
@@ -583,7 +610,10 @@
       "confirmText": "确定要取消预订 {number} 吗？",
       "noticeTitle": "取消政策",
       "confirm": "确定取消",
-      "keep": "保留预订"
+      "keep": "保留预订",
+      "notice1": "退款将在3-5个工作日内处理",
+      "notice2": "根据取消政策可能会收取取消费用",
+      "notice3": "此操作无法撤销"
     },
     "error": {
       "fetchFailed": "获取预订失败",
@@ -724,7 +754,10 @@
     "rareFind": "稀有好房",
     "roomIn": "位于",
     "top10": "Top 10",
-    "top10Desc": "StayNeos 最受欢迎的房源之一"
+    "top10Desc": "StayNeos 最受欢迎的房源之一",
+    "reportListing": "举报此房源",
+    "showMore": "显示更多",
+    "loadingMap": "地图加载中..."
   },
   "filter": {
     "all": "全部状态"
@@ -1030,6 +1063,116 @@
   "step3": {
     "title": "获得收益",
     "desc": "每月直接将款项支付到您的账户。就这么简单。"
+  },
+  "agents": {
+    "hero": {
+      "title": "成为 StayNeos 合作伙伴",
+      "subtitle": "加入我们的房地产专业人士网络，通过推荐房源、代理租客或推荐客人入住我们的高端行政公寓，赚取丰厚佣金。",
+      "cta": "立即成为合作伙伴"
+    },
+    "models": {
+      "title": "合作模式",
+      "subtitle": "选择适合您业务的合作模式，今天就开始赚取佣金。",
+      "commission": "佣金",
+      "property": {
+        "title": "推荐房源",
+        "desc": "推荐房东将其带家具公寓上架 StayNeos。每个成功上架的房源都能赚取佣金。"
+      },
+      "tenant": {
+        "title": "代理租客",
+        "desc": "帮助客户找到理想的行政公寓。每笔促成的预订都能赚取佣金。"
+      },
+      "guest": {
+        "title": "推荐客人",
+        "desc": "向商务旅客、异地员工或项目团队推荐 StayNeos，每笔成功预订都能获得奖励。"
+      }
+    },
+    "process": {
+      "title": "合作流程",
+      "subtitle": "简单四步，轻松开始赚取佣金。",
+      "register": {
+        "title": "注册申请",
+        "desc": "填写申请表，提供您的详细信息和执照信息。"
+      },
+      "evaluate": {
+        "title": "房源评估",
+        "desc": "我们对推荐的房源进行评估，确保符合质量标准。"
+      },
+      "review": {
+        "title": "审核批准",
+        "desc": "我们的团队在48小时内审核申请并批准合格合作伙伴。"
+      },
+      "commission": {
+        "title": "获得佣金",
+        "desc": "每笔成功推荐或预订都能获得佣金。"
+      }
+    },
+    "requirements": {
+      "title": "房源要求",
+      "subtitle": "我们接受的房源必须符合以下标准：",
+      "furnished": {
+        "title": "全套家具",
+        "desc": "所有房源必须配备优质家具、电器和家居用品。"
+      },
+      "location": {
+        "title": "黄金地段",
+        "desc": "位于多伦多市中心、北约克或其他核心商务区，交通便利。"
+      },
+      "quality": {
+        "title": "高品质",
+        "desc": "维护良好的房源，配备现代设施、专业清洁服务和24/7支持。"
+      },
+      "amenities": {
+        "title": "必需设施",
+        "desc": "必须包含高速WiFi、室内洗衣设施或洗衣房、全套厨房和办公空间。"
+      }
+    },
+    "benefits": {
+      "title": "为什么选择 StayNeos",
+      "subtitle": "加入数百位信任 StayNeos 的房地产专业人士行列。",
+      "commission": {
+        "title": "丰厚佣金",
+        "desc": "房源推荐佣金高达50%，代理租客服务享有极具竞争力的佣金比例。"
+      },
+      "support": {
+        "title": "专属支持",
+        "desc": "获得合作伙伴支持团队的帮助，协助处理预订、咨询和客户需求。"
+      },
+      "marketing": {
+        "title": "营销支持",
+        "desc": "获取专业营销材料、房源照片和描述，方便与客户分享。"
+      },
+      "fast": {
+        "title": "快速结算",
+        "desc": "佣金按月结算，提供详细报表和透明追踪。"
+      }
+    },
+    "form": {
+      "title": "注册成为合作伙伴",
+      "subtitle": "填写以下表单，我们的团队将在24小时内与您联系。",
+      "firstName": "名字",
+      "firstNamePlaceholder": "请输入您的名字",
+      "lastName": "姓氏",
+      "lastNamePlaceholder": "请输入您的姓氏",
+      "email": "电子邮箱",
+      "emailPlaceholder": "your@email.com",
+      "phone": "电话号码",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "company": "公司/经纪公司",
+      "companyPlaceholder": "您的公司名称",
+      "license": "房地产执照号码",
+      "licensePlaceholder": "选填",
+      "partnershipType": "合作类型",
+      "selectType": "选择合作类型",
+      "message": "留言",
+      "messagePlaceholder": "请介绍您的业务以及您希望如何与 StayNeos 合作...",
+      "privacyNote": "您的信息将被严格保密，仅用于合作伙伴沟通。",
+      "submit": "提交申请",
+      "submitting": "提交中...",
+      "successTitle": "申请已提交！",
+      "successMessage": "感谢您的关注。我们的团队将审核您的申请，并在24小时内与您联系。",
+      "submitAnother": "提交另一份申请"
+    }
   },
   "corporate": {
     "hero": {
@@ -1541,11 +1684,18 @@
       "help": "需要帮助？",
       "contact": "联系客服",
       "viewBookings": "查看预订",
-      "browseProperties": "浏览房源"
+      "browseProperties": "浏览房源",
+      "reason1": "您选择了取消支付",
+      "reason2": "您的支付方式被拒绝",
+      "reason3": "会话已超时",
+      "reason4": "发生了技术错误"
     },
     "paypal": "PayPal",
     "applePay": "Apple Pay",
-    "googlePay": "Google Pay"
+    "googlePay": "Google Pay",
+    "applePayHint": "使用Apple Pay快速安全地完成支付",
+    "connectToPayPal": "连接到PayPal",
+    "next": "下一步"
   },
   "auth": {
     "loginLeftTitle": "开启您的品质旅居",
@@ -1651,7 +1801,8 @@
     "print": "打印",
     "downloadVoucher": "下载凭证",
     "writeReview": "写评价",
-    "myReview": "我的评价"
+    "myReview": "我的评价",
+    "guestInfo": "入住人信息"
   },
   "checkout": {
     "reviewAndContinue": "查看并继续",
@@ -2271,5 +2422,297 @@
   "pets": "宠物",
   "pet": "宠物",
   "serviceAnimal": "服务性动物",
-  "propertyNotFound": "未找到房源"
+  "propertyNotFound": "未找到房源",
+  "paypal": "PayPal",
+  "applePay": "Apple Pay",
+  "googlePay": "Google Pay",
+  "aboutPage": {
+    "title": "关于 StayNeos",
+    "heroSubtitle": "重新定义高端行政公寓体验，为商务人士和异地居住者提供家的温暖与专业的服务",
+    "missionLabel": "OUR MISSION",
+    "missionTitle": "我们的使命",
+    "missionDesc": "StayNeos 致力于为现代商务人士和异地居住者打造完美的居住解决方案。",
+    "missionItem1Title": "高端行政公寓",
+    "missionItem1Desc": "为商务人士提供精选高端行政公寓",
+    "missionItem2Title": "简单轻松无压力",
+    "missionItem2Desc": "让短期租赁变得简单轻松",
+    "missionItem3Title": "灵活租期",
+    "missionItem3Desc": "28天起租的灵活租期",
+    "missionItem4Title": "核心地段",
+    "missionItem4Desc": "精选多伦多核心地段优质房源",
+    "daysFlexible": "天起灵活租期",
+    "storyLabel": "OUR STORY",
+    "storyTitle": "我们的故事",
+    "storyDesc": "从一次商务出差的困境中诞生",
+    "story1Title": "创始人洞察",
+    "story1Desc": "商务出差和异地工作期间找到合适住所的困难。",
+    "story2Title": "传统酒店的局限",
+    "story2Desc": "传统酒店空间小、无厨房、缺乏家的感觉。",
+    "story3Title": "长期租赁的不便",
+    "story3Desc": "合同复杂、需购置家具、退租麻烦。",
+    "story4Title": "StayNeos 解决方案",
+    "story4Desc": "拎包入住的高端行政公寓。",
+    "whyLabel": "WHY CHOOSE US",
+    "whyTitle": "为什么选择我们",
+    "whyDesc": "我们为您打造一个在异地也能安心工作和生活的家。",
+    "why1Title": "精选房源",
+    "why1Desc": "每一处房源都经过实地考察。",
+    "why2Title": "灵活租期",
+    "why2Desc": "28天起租，支持月租、季租。",
+    "why3Title": "拎包入住",
+    "why3Desc": "家具家电齐全，一切准备就绪。",
+    "why4Title": "24/7 管家服务",
+    "why4Desc": "专业团队全天候待命。",
+    "why5Title": "透明价格",
+    "why5Desc": "无隐藏费用，所见即所得。",
+    "commitLabel": "OUR COMMITMENT",
+    "commitTitle": "我们的承诺",
+    "commitDesc": "提供超越期望的居住体验",
+    "commit1Title": "高品质居住体验",
+    "commit1Desc": "精心挑选每一处房源。",
+    "commit2Title": "家的温暖",
+    "commit2Desc": "让每一次异地居住都像在家。",
+    "commit3Title": "持续优化服务",
+    "commit3Desc": "不断倾听反馈，持续优化。",
+    "ctaTitle": "准备好体验 StayNeos 了吗？",
+    "ctaDesc": "浏览精选房源，找到您在多伦多的理想居所",
+    "ctaBrowse": "浏览房源",
+    "ctaContact": "联系我们"
+  },
+  "faqPage": {
+    "title": "常见问题",
+    "subtitle": "关于预订、付款和入住的常见问题。",
+    "stillHaveQuestions": "还有其他问题？",
+    "teamHelp": "我们的团队全天候为您服务。",
+    "whatsappUs": "WhatsApp 联系",
+    "emailUs": "发送邮件",
+    "cat_booking": "预订与预约",
+    "cat_payment": "付款与价格",
+    "cat_cancellation": "取消政策",
+    "cat_checkin": "入住与退房",
+    "cat_property": "房源与设施",
+    "cat_support": "支持与联系",
+    "bq1": "如何预订？",
+    "ba1": "浏览房源，选择日期，点击预订。",
+    "bq2": "最低入住天数？",
+    "ba2": "通常28晚。",
+    "bq3": "可以为他人预订吗？",
+    "ba3": "可以，结账时填写入住者信息。",
+    "bq4": "如何确认预订成功？",
+    "ba4": "您将收到确认邮件。",
+    "pq1": "接受哪些付款方式？",
+    "pa1": "信用卡、Google Pay、银行转账。",
+    "pq2": "什么时候扣款？",
+    "pa2": "预订时扣款。",
+    "pq3": "有额外费用吗？",
+    "pa3": "价格包含税费和清洁费。",
+    "pq4": "付款安全吗？",
+    "pa4": "是的，使用 Stripe。",
+    "cq1": "取消政策？",
+    "ca1": "30+天全额退款。14-30天退50%。<14天不退。",
+    "cq2": "修改日期？",
+    "ca2": "可以，视可用性而定。",
+    "cq3": "紧急取消？",
+    "ca3": "联系客服。建议购买旅行保险。",
+    "chq1": "入住/退房时间？",
+    "cha1": "下午3:00/上午11:00。",
+    "chq2": "如何获取钥匙？",
+    "cha2": "前24小时发送指南。",
+    "chq3": "深夜到达？",
+    "cha3": "智能锁自助入住。",
+    "prq1": "配备家具吗？",
+    "pra1": "是的，全配。",
+    "prq2": "包含 Wi-Fi？",
+    "pra2": "是的，高速Wi-Fi。",
+    "prq3": "允许宠物吗？",
+    "pra3": "因房源而异。",
+    "prq4": "允许吸烟吗？",
+    "pra4": "全部无烟房。",
+    "sq1": "如何联系客服？",
+    "sa1": "WhatsApp、电话、邮件。24/7。",
+    "sq2": "入住期间问题？",
+    "sa2": "24/7客服。",
+    "sq3": "企业住宿？",
+    "sa3": "是的，灵活条款。"
+  },
+  "helpPage": {
+    "title": "帮助中心",
+    "subtitle": "查找常见问题解答",
+    "searchPlaceholder": "搜索答案...",
+    "stillNeedHelp": "还需要帮助？",
+    "supportAvailable": "客服团队全天候服务。",
+    "cat_booking": "预订",
+    "cat_payment": "付款",
+    "cat_checkin": "入住与退房",
+    "cat_during": "入住期间",
+    "bkq1": "如何预订？",
+    "bka1": "浏览房源，选择日期，在线完成。",
+    "bkq2": "最低入住？",
+    "bka2": "28晚。",
+    "bkq3": "可以延长吗？",
+    "bka3": "可以，提前7天联系。",
+    "pmq1": "付款方式？",
+    "pma1": "信用卡和银行转账。",
+    "pmq2": "何时扣款？",
+    "pma2": "需定金。余款入住前14天。",
+    "pmq3": "取消政策？",
+    "pma3": "30+天全额。14-30天半额。<14不退。",
+    "ciq1": "如何入住？",
+    "cia1": "前48小时发送指南。智能锁自助。",
+    "ciq2": "时间？",
+    "cia2": "下午3点入住，上午11点退房。",
+    "ciq3": "需要带什么？",
+    "cia3": "只需行李！",
+    "duq1": "包含家政？",
+    "dua1": "30+天每周家政。",
+    "duq2": "东西坏了？",
+    "dua2": "24/7客服，4小时紧急维修。",
+    "duq3": "可以带客人？",
+    "dua3": "可以，过夜需登记。"
+  },
+  "termsPage": {
+    "title": "服务条款",
+    "lastUpdated": "最后更新：2026年2月7日",
+    "s1Title": "1. 条款同意",
+    "s1Text": "使用 StayNeos 即表示同意本条款。",
+    "s2Title": "2. 服务描述",
+    "s2Text": "StayNeos 提供精装公寓和企业住宿预订平台。",
+    "s3Title": "3. 预订与付款",
+    "s3_1": "3.1 预订视可用性而定。",
+    "s3_2": "3.2 需付款或定金。",
+    "s3_3": "3.3 最低28晚。",
+    "s4Title": "4. 取消政策",
+    "s4_1": "4.1 客人取消：",
+    "s4_1a": "30+天：全额退款",
+    "s4_1b": "14-30天：50%退款",
+    "s4_1c": "14天内：不退款",
+    "s4_2": "4.2 日期修改视可用性而定。",
+    "s5Title": "5. 住客责任",
+    "s5Text": "您同意：",
+    "s6Title": "6. 房屋规则",
+    "s6_1": "6.1 无烟房。",
+    "s6_2": "6.2 仅宠物友好房源允许。",
+    "s6_3": "6.3 未经同意不得举办派对。",
+    "s6_4": "6.4 安静时间晚10-早8点。",
+    "s7Title": "7. 责任与保险",
+    "s7Text": "住客对个人物品自行负责。",
+    "s8Title": "8. 责任限制",
+    "s8Text": "不对间接损害负责。",
+    "s9Title": "9. 适用法律",
+    "s9Text": "加拿大安大略省法律。",
+    "s10Title": "10. 条款变更",
+    "s10Text": "我们保留随时修改的权利。",
+    "s11Title": "11. 联系方式",
+    "s11Text": "如有问题，请联系：",
+    "contactInfo": "邮箱: hello@stayneos.com | 电话: +1 (647) 862-6518 | 地址: 20 Upjohn Rd, North York, ON, M3B 2V9",
+    "s5Items_0": "提供准确信息",
+    "s5Items_1": "爱护房产",
+    "s5Items_2": "遵守规章",
+    "s5Items_3": "不超过最大人数",
+    "s5Items_4": "及时报告损坏",
+    "s5Items_5": "不从事违法活动",
+    "s5Items_count": "6"
+  },
+  "privacyPage": {
+    "title": "隐私政策",
+    "lastUpdated": "最后更新：2026年2月7日",
+    "s1Title": "1. 引言",
+    "s1Text": "StayNeos 致力于保护您的隐私。",
+    "s2Title": "2. 收集的信息",
+    "s2Text": "我们可能收集：",
+    "s3Title": "3. 信息使用",
+    "s3Text": "我们使用您的信息：",
+    "s4Title": "4. 信息共享",
+    "s4Text": "我们不出售信息。可能共享给：",
+    "s5Title": "5. 数据安全",
+    "s5Text": "我们实施适当的安全措施。",
+    "s6Title": "6. 您的权利",
+    "s6Text": "您有权：",
+    "s7Title": "7. 联系我们",
+    "s7Text": "如有问题，请联系：",
+    "contactInfo": "邮箱: hello@stayneos.com | 电话: +1 (647) 862-6518 | 地址: 20 Upjohn Rd, North York, ON, M3B 2V9",
+    "s2Items_0": "个人信息：姓名、邮箱、电话、付款信息。",
+    "s2Items_1": "预订信息：日期、偏好、特殊要求。",
+    "s2Items_2": "技术信息：IP、浏览器、Cookie。",
+    "s2Items_3": "通信记录。",
+    "s2Items_count": "4",
+    "s3Items_0": "处理预订",
+    "s3Items_1": "沟通入住事宜",
+    "s3Items_2": "提供支持",
+    "s3Items_3": "改进服务",
+    "s3Items_4": "发送推广（经同意）",
+    "s3Items_5": "法律合规",
+    "s3Items_count": "6",
+    "s4Items_0": "房东/管理员",
+    "s4Items_1": "服务提供商",
+    "s4Items_2": "法律机关",
+    "s4Items_count": "3",
+    "s6Items_0": "访问信息",
+    "s6Items_1": "更正信息",
+    "s6Items_2": "请求删除",
+    "s6Items_3": "退出营销",
+    "s6Items_4": "撤回同意",
+    "s6Items_count": "5"
+  },
+  "cancellationPage": {
+    "title": "取消政策",
+    "flexible": "灵活取消",
+    "flexibleDesc": "入住前48小时可免费取消。之后第一晚不可退款。",
+    "moderate": "中度取消",
+    "moderateDesc": "入住前5天可免费取消。之后退50%。",
+    "longTerm": "长期入住（28晚以上）",
+    "longTermDesc": "入住前30天可免费取消。入住后30天不可退款。",
+    "refund": "退款流程",
+    "refundDesc": "5-10个工作日。服务费不可退。",
+    "extenuating": "特殊情况",
+    "extenuatingDesc": "自然灾害、旅行限制或医疗紧急情况可全额退款。",
+    "contact": "联系我们",
+    "contactDesc": "邮件 {email} 或致电 {phone}。"
+  },
+  "serviceAnimalsPage": {
+    "title": "服务动物政策",
+    "welcome": "欢迎服务动物",
+    "welcomeDesc": "StayNeos 欢迎所有房源中的服务动物。",
+    "noFees": "无额外费用",
+    "noFeesDesc": "服务动物不收宠物费或押金。",
+    "responsibilities": "住客责任",
+    "emotional": "情感支持动物",
+    "emotionalDesc": "可能适用标准宠物政策。请提前联系。",
+    "contact": "联系方式",
+    "contactDesc": "邮件 {email}。",
+    "responsibilityItems_0": "必须随时控制",
+    "responsibilityItems_1": "对损害负责",
+    "responsibilityItems_2": "必须经过如厕训练",
+    "responsibilityItems_count": "3"
+  },
+  "forbiddenPage": {
+    "title": "403",
+    "subtitle": "访问被禁止",
+    "description": "您没有权限访问此页面。",
+    "goHome": "返回首页",
+    "myDashboard": "我的面板"
+  },
+  "globalError": {
+    "title": "系统错误",
+    "description": "抱歉，应用遇到了严重错误。请刷新页面重试。",
+    "errorCode": "错误代码: {code}",
+    "refresh": "刷新页面"
+  },
+  "loginPage": {
+    "heroTitle": "找到您理想的\n异地之家",
+    "heroSubtitle": "享受全球顶级城市的高端精装公寓。",
+    "premiumProperties": "优质房源",
+    "globalCities": "全球城市",
+    "guestRating": "住客评分",
+    "loginTitle": "登录",
+    "loginSubtitle": "欢迎回到 StayNeos"
+  },
+  "registerPage": {
+    "heroTitle": "高端生活，",
+    "heroHighlight": "简单实现。",
+    "heroSubtitle": "加入数千名发现精装租赁未来的专业人士。",
+    "apartments": "公寓",
+    "cities": "城市",
+    "satisfaction": "满意度"
+  }
 }

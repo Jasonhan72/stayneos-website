@@ -13,6 +13,7 @@ export default function Footer() {
     company: [
       { label: t("footer.about"), href: "/about" },
       { label: t("footer.landlords"), href: "/landlords" },
+      { label: t("footer.agents") || "For Agents", href: "/for-agents" },
       { label: t("footer.contact"), href: "/contact" },
     ],
     services: [

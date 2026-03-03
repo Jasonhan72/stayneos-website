@@ -13,13 +13,18 @@
     "account": "My Bookings",
     "signup": "Sign Up",
     "landlords": "For Landlords",
+    "agents": "For Agents",
     "business": "For Business",
     "contact": "Contact Us",
     "bookings": "My Bookings",
     "personalDetails": "Personal Details",
     "preferences": "Preferences",
     "wishlists": "Wishlists",
-    "logout": "Log Out"
+    "logout": "Log Out",
+    "becomeHost": "Become a Host",
+    "listProperty": "List your property",
+    "manageProperties": "Manage Properties",
+    "dashboard": "Dashboard"
   },
   "common": {
     "view": "View",
@@ -41,7 +46,12 @@
     "edit": "Edit",
     "skip": "Skip",
     "next": "Next",
-    "retry": "Retry"
+    "retry": "Retry",
+    "close": "Close",
+    "delete": "Delete",
+    "there": "there",
+    "loading": "Loading...",
+    "backToList": "Back to property list"
   },
   "greeting": {
     "morning": "Good morning",
@@ -291,6 +301,7 @@
     "trust": "🔒 Secure Payment · ✓ Verified Homes · 24/7 Support",
     "terms": "Terms of Service",
     "landlords": "For Landlords",
+    "agents": "For Agents",
     "services": "Our Services",
     "properties": "Browse Properties"
   },
@@ -322,7 +333,7 @@
     "step2": "Confirm Info",
     "step3": "Complete Payment",
     "nextStep": "Next Step",
-    "confirmAndPay": "Confirm and Pay",
+    "confirmAndPay": "Confirm & Pay",
     "returnToProperty": "Return to Property Details",
     "guestCount": "{count} Guests",
     "minNights": "{count} nights minimum",
@@ -383,7 +394,21 @@
       "infants": "Infants",
       "infantsDescription": "Under 2",
       "infant": "infant"
-    }
+    },
+    "priceBreakdown": "Price Breakdown",
+    "totalPrice": "Total Price",
+    "addDate": "Add date",
+    "confirmInfo": "Confirm your information",
+    "paymentEncrypted": "Your payment information is encrypted",
+    "selectDatesToSeePrice": "Select dates to see pricing",
+    "secureBooking": "Secure booking",
+    "encryptedPayment": "Encrypted payment",
+    "backToProperty": "Back to property",
+    "continue": "Continue",
+    "changeDates": "Change dates",
+    "guestSingular": "guest",
+    "guestsPlural": "guests",
+    "processing": "Processing..."
   },
   "contact": {
     "pageTitle": "Contact Us",
@@ -439,7 +464,9 @@
     "emergency": {
       "title": "Need Emergency Help?",
       "desc": "If you are a current tenant and need immediate assistance, please call our 24/7 emergency hotline"
-    }
+    },
+    "responseTime": "We typically respond within 24 hours",
+    "visitUs": "Visit Us"
   },
   "form": {
     "title": "Contact Us",
@@ -583,7 +610,10 @@
       "confirmText": "Are you sure you want to cancel booking {number}?",
       "noticeTitle": "Cancellation Policy",
       "confirm": "Yes, Cancel Booking",
-      "keep": "Keep Booking"
+      "keep": "Keep Booking",
+      "notice1": "Refunds will be processed within 3-5 business days",
+      "notice2": "Cancellation fees may apply based on the cancellation policy",
+      "notice3": "This action cannot be undone"
     },
     "error": {
       "fetchFailed": "Failed to load bookings",
@@ -724,7 +754,10 @@
     "rareFind": "Rare find",
     "roomIn": "Room in",
     "top10": "Top 10",
-    "top10Desc": "One of the most loved homes on StayNeos"
+    "top10Desc": "One of the most loved homes on StayNeos",
+    "reportListing": "Report this listing",
+    "showMore": "Show more",
+    "loadingMap": "Loading map..."
   },
   "filter": {
     "all": "All Status"
@@ -1030,6 +1063,116 @@
   "step3": {
     "title": "Get Paid",
     "desc": "Receive monthly payouts directly to your account. It's that simple."
+  },
+  "agents": {
+    "hero": {
+      "title": "Partner with StayNeos",
+      "subtitle": "Join our network of real estate professionals and earn competitive commissions by referring properties, representing tenants, or referring guests to our premium executive apartments.",
+      "cta": "Become a Partner"
+    },
+    "models": {
+      "title": "Partnership Models",
+      "subtitle": "Choose the partnership model that fits your business and start earning today.",
+      "commission": "Commission",
+      "property": {
+        "title": "Refer Properties",
+        "desc": "Refer property owners to list their furnished apartments with StayNeos. Earn commission on every successful listing."
+      },
+      "tenant": {
+        "title": "Represent Tenants",
+        "desc": "Help your clients find the perfect executive apartment. Earn commission on every booking you facilitate."
+      },
+      "guest": {
+        "title": "Refer Guests",
+        "desc": "Refer business travelers, relocating employees, or project teams to StayNeos and earn for every successful booking."
+      }
+    },
+    "process": {
+      "title": "How It Works",
+      "subtitle": "Get started in four simple steps and start earning commissions.",
+      "register": {
+        "title": "Register",
+        "desc": "Complete the application form with your details and license information."
+      },
+      "evaluate": {
+        "title": "Property Evaluation",
+        "desc": "We evaluate referred properties to ensure they meet our quality standards."
+      },
+      "review": {
+        "title": "Review & Approve",
+        "desc": "Our team reviews applications and approves qualified partners within 48 hours."
+      },
+      "commission": {
+        "title": "Earn Commission",
+        "desc": "Start earning commissions on every successful referral or booking."
+      }
+    },
+    "requirements": {
+      "title": "Property Requirements",
+      "subtitle": "Properties we accept must meet the following criteria:",
+      "furnished": {
+        "title": "Fully Furnished",
+        "desc": "All properties must be fully furnished with quality furniture, appliances, and housewares."
+      },
+      "location": {
+        "title": "Prime Location",
+        "desc": "Located in Toronto downtown, North York, or other prime business districts with good transit access."
+      },
+      "quality": {
+        "title": "High Quality",
+        "desc": "Well-maintained properties with modern amenities, professional cleaning, and 24/7 support readiness."
+      },
+      "amenities": {
+        "title": "Essential Amenities",
+        "desc": "Must include high-speed WiFi, in-unit laundry or facilities, fully equipped kitchen, and workspace."
+      }
+    },
+    "benefits": {
+      "title": "Why Partner with StayNeos",
+      "subtitle": "Join hundreds of real estate professionals who trust StayNeos for their clients' housing needs.",
+      "commission": {
+        "title": "Competitive Commission",
+        "desc": "Earn up to 50% commission on property referrals and competitive rates on tenant representation."
+      },
+      "support": {
+        "title": "Dedicated Support",
+        "desc": "Access to our partner support team for assistance with bookings, inquiries, and client needs."
+      },
+      "marketing": {
+        "title": "Marketing Materials",
+        "desc": "Receive professional marketing materials, property photos, and descriptions to share with clients."
+      },
+      "fast": {
+        "title": "Fast Payouts",
+        "desc": "Commission payments processed monthly with detailed reporting and transparent tracking."
+      }
+    },
+    "form": {
+      "title": "Register as a Partner",
+      "subtitle": "Fill out the form below and our team will contact you within 24 hours.",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Enter your last name",
+      "email": "Email Address",
+      "emailPlaceholder": "your@email.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "company": "Company/Brokerage",
+      "companyPlaceholder": "Your company name",
+      "license": "Real Estate License Number",
+      "licensePlaceholder": "Optional",
+      "partnershipType": "Partnership Type",
+      "selectType": "Select partnership type",
+      "message": "Message",
+      "messagePlaceholder": "Tell us about your business and how you'd like to partner with StayNeos...",
+      "privacyNote": "Your information will be kept confidential and used only for partnership communication.",
+      "submit": "Submit Application",
+      "submitting": "Submitting...",
+      "successTitle": "Application Submitted!",
+      "successMessage": "Thank you for your interest. Our team will review your application and contact you within 24 hours.",
+      "submitAnother": "Submit another application"
+    }
   },
   "corporate": {
     "hero": {
@@ -1544,8 +1687,15 @@
       "help": "Need help?",
       "contact": "Contact Support",
       "viewBookings": "View Bookings",
-      "browseProperties": "Browse Properties"
-    }
+      "browseProperties": "Browse Properties",
+      "reason1": "You chose to cancel the payment",
+      "reason2": "Your payment method was declined",
+      "reason3": "The session timed out",
+      "reason4": "A technical error occurred"
+    },
+    "applePayHint": "Use Apple Pay to complete your payment quickly and securely",
+    "connectToPayPal": "Connect to PayPal",
+    "next": "Next"
   },
   "auth": {
     "loginLeftTitle": "Welcome Back",
@@ -1651,7 +1801,8 @@
     "print": "Print",
     "downloadVoucher": "Download Voucher",
     "writeReview": "Write Review",
-    "myReview": "My Review"
+    "myReview": "My Review",
+    "guestInfo": "Guest Information"
   },
   "checkout": {
     "reviewAndContinue": "Review and Continue",
@@ -2274,5 +2425,294 @@
   "pets": "Pets",
   "pet": "Pet",
   "serviceAnimal": "Service animal",
-  "propertyNotFound": "Property not found"
+  "propertyNotFound": "Property not found",
+  "aboutPage": {
+    "title": "About StayNeos",
+    "heroSubtitle": "Redefining premium executive apartment experiences, providing the warmth of home and professional service for business professionals and relocators",
+    "missionLabel": "OUR MISSION",
+    "missionTitle": "Our Mission",
+    "missionDesc": "StayNeos is dedicated to creating the perfect living solution for modern business professionals and relocators.",
+    "missionItem1Title": "Premium Executive Apartments",
+    "missionItem1Desc": "Curated premium executive apartments for business professionals",
+    "missionItem2Title": "Simple, Easy, Stress-Free",
+    "missionItem2Desc": "Making short-term rentals simple and stress-free",
+    "missionItem3Title": "Flexible Lease Terms",
+    "missionItem3Desc": "Flexible lease starting from 28 days",
+    "missionItem4Title": "Prime Locations",
+    "missionItem4Desc": "Curated properties in Toronto prime locations",
+    "daysFlexible": "days flexible lease",
+    "storyLabel": "OUR STORY",
+    "storyTitle": "Our Story",
+    "storyDesc": "Born from the frustration of a business trip, StayNeos solves housing challenges for modern travelers",
+    "story1Title": "Founder's Insight",
+    "story1Desc": "The difficulty of finding suitable housing during business trips.",
+    "story2Title": "Limitations of Traditional Hotels",
+    "story2Desc": "Hotels are small, lack kitchens, and feel nothing like home.",
+    "story3Title": "Inconvenience of Long-Term Leases",
+    "story3Desc": "Complex contracts, furniture purchases, and difficult move-outs.",
+    "story4Title": "The StayNeos Solution",
+    "story4Desc": "Move-in ready premium apartments with flexible terms and professional service.",
+    "whyLabel": "WHY CHOOSE US",
+    "whyTitle": "Why Choose Us",
+    "whyDesc": "We create a home where you can work and live comfortably, even away from home.",
+    "why1Title": "Curated Properties",
+    "why1Desc": "Every property is personally inspected by our team.",
+    "why2Title": "Flexible Lease Terms",
+    "why2Desc": "Starting from 28 days, monthly and quarterly.",
+    "why3Title": "Move-In Ready",
+    "why3Desc": "Fully furnished. Everything is ready.",
+    "why4Title": "24/7 Concierge Service",
+    "why4Desc": "Our team is on standby around the clock.",
+    "why5Title": "Transparent Pricing",
+    "why5Desc": "No hidden fees, what you see is what you get.",
+    "commitLabel": "OUR COMMITMENT",
+    "commitTitle": "Our Commitment",
+    "commitDesc": "We promise every client an experience that exceeds expectations",
+    "commit1Title": "Premium Living Experience",
+    "commit1Desc": "We carefully select every property to ensure outstanding quality.",
+    "commit2Title": "The Warmth of Home",
+    "commit2Desc": "Making every relocation feel like home.",
+    "commit3Title": "Continuous Improvement",
+    "commit3Desc": "We constantly listen to feedback and improve our service.",
+    "ctaTitle": "Ready to Experience StayNeos?",
+    "ctaDesc": "Browse our curated properties and find your ideal home in Toronto",
+    "ctaBrowse": "Browse Properties",
+    "ctaContact": "Contact Us"
+  },
+  "faqPage": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Find answers to common questions about booking, payments, and your stay.",
+    "stillHaveQuestions": "Still have questions?",
+    "teamHelp": "Our team is here to help you 24/7.",
+    "whatsappUs": "WhatsApp Us",
+    "emailUs": "Email Us",
+    "cat_booking": "Booking & Reservations",
+    "cat_payment": "Payment & Pricing",
+    "cat_cancellation": "Cancellation Policy",
+    "cat_checkin": "Check-in & Check-out",
+    "cat_property": "Property & Amenities",
+    "cat_support": "Support & Contact",
+    "bq1": "How do I make a reservation?",
+    "ba1": "Browse properties, select dates, click Reserve.",
+    "bq2": "What is the minimum stay?",
+    "ba2": "Typically 28 nights.",
+    "bq3": "Can I book for someone else?",
+    "ba3": "Yes, specify guest info during checkout.",
+    "bq4": "How do I know if my booking is confirmed?",
+    "ba4": "You'll receive a confirmation email.",
+    "pq1": "What payment methods do you accept?",
+    "pa1": "Major credit cards, Google Pay, bank transfers.",
+    "pq2": "When will I be charged?",
+    "pa2": "At booking time.",
+    "pq3": "Any additional fees?",
+    "pa3": "Pricing includes taxes and cleaning.",
+    "pq4": "Is my payment secure?",
+    "pa4": "Yes, Stripe (PCI DSS compliant).",
+    "cq1": "Cancellation policy?",
+    "ca1": "30+ days: full refund. 14-30: 50%. <14: none.",
+    "cq2": "Modify dates?",
+    "ca2": "Yes, subject to availability.",
+    "cq3": "Emergency cancellation?",
+    "ca3": "Contact support. Travel insurance recommended.",
+    "chq1": "Check-in/check-out times?",
+    "cha1": "3 PM / 11 AM.",
+    "chq2": "How to get keys?",
+    "cha2": "Instructions sent 24h before.",
+    "chq3": "Late arrival?",
+    "cha3": "Self-check-in with smart locks.",
+    "prq1": "Fully furnished?",
+    "pra1": "Yes, furniture, appliances, linens, toiletries.",
+    "prq2": "Wi-Fi?",
+    "pra2": "Yes, high-speed Wi-Fi included.",
+    "prq3": "Pets?",
+    "pra3": "Varies. Look for Pet-friendly tag.",
+    "prq4": "Smoking?",
+    "pra4": "All non-smoking.",
+    "sq1": "Contact support?",
+    "sa1": "WhatsApp, +1 (647) 862-6518, hello@stayneos.com. 24/7.",
+    "sq2": "Issue during stay?",
+    "sa2": "24/7 support with emergency contacts.",
+    "sq3": "Corporate housing?",
+    "sa3": "Yes, flexible terms and centralized billing."
+  },
+  "helpPage": {
+    "title": "Help Center",
+    "subtitle": "Find answers to common questions",
+    "searchPlaceholder": "Search for answers...",
+    "stillNeedHelp": "Still need help?",
+    "supportAvailable": "Our support team is available 24/7.",
+    "cat_booking": "Booking",
+    "cat_payment": "Payment",
+    "cat_checkin": "Check-in & Check-out",
+    "cat_during": "During Your Stay",
+    "bkq1": "How do I book?",
+    "bka1": "Browse, select dates, complete online.",
+    "bkq2": "Minimum stay?",
+    "bka2": "28 nights.",
+    "bkq3": "Extend stay?",
+    "bka3": "Yes, contact us 7 days before.",
+    "pmq1": "Payment methods?",
+    "pma1": "Credit cards and bank transfers.",
+    "pmq2": "When charged?",
+    "pma2": "Deposit required. Balance 14 days before.",
+    "pmq3": "Cancellation?",
+    "pma3": "30+: full. 14-30: 50%. <14: none.",
+    "ciq1": "Check-in process?",
+    "cia1": "Instructions 48h before. Self check-in.",
+    "ciq2": "Times?",
+    "cia2": "3 PM in, 11 AM out.",
+    "ciq3": "What to bring?",
+    "cia3": "Just luggage!",
+    "duq1": "Housekeeping?",
+    "dua1": "Weekly for 30+ days.",
+    "duq2": "Something breaks?",
+    "dua2": "24/7 support. 4h emergency.",
+    "duq3": "Guests?",
+    "dua3": "Yes, overnight guests must register."
+  },
+  "termsPage": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last updated: February 7, 2026",
+    "s1Title": "1. Agreement to Terms",
+    "s1Text": "By using StayNeos, you agree to these Terms.",
+    "s2Title": "2. Services Description",
+    "s2Text": "StayNeos provides furnished apartment and corporate housing bookings.",
+    "s3Title": "3. Booking and Payment",
+    "s3_1": "3.1 All bookings subject to availability.",
+    "s3_2": "3.2 Payment or deposit required.",
+    "s3_3": "3.3 Minimum 28 nights.",
+    "s4Title": "4. Cancellation Policy",
+    "s4_1": "4.1 Guest Cancellations:",
+    "s4_1a": "30+ days: Full refund",
+    "s4_1b": "14-30 days: 50% refund",
+    "s4_1c": "Less than 14 days: No refund",
+    "s4_2": "4.2 Date changes subject to availability.",
+    "s5Title": "5. Guest Responsibilities",
+    "s5Text": "You agree to:",
+    "s6Title": "6. Property Rules",
+    "s6_1": "6.1 Non-smoking.",
+    "s6_2": "6.2 Pets only in pet-friendly properties.",
+    "s6_3": "6.3 No parties without consent.",
+    "s6_4": "6.4 Quiet hours 10 PM-8 AM.",
+    "s7Title": "7. Liability and Insurance",
+    "s7Text": "Guests responsible for personal belongings.",
+    "s8Title": "8. Limitation of Liability",
+    "s8Text": "Not liable for indirect damages.",
+    "s9Title": "9. Governing Law",
+    "s9Text": "Laws of Ontario, Canada.",
+    "s10Title": "10. Changes to Terms",
+    "s10Text": "We may modify these Terms at any time.",
+    "s11Title": "11. Contact",
+    "s11Text": "Questions? Contact us:",
+    "contactInfo": "Email: hello@stayneos.com | Phone: +1 (647) 862-6518 | Address: 20 Upjohn Rd, North York, ON, M3B 2V9",
+    "s5Items_0": "Provide accurate information",
+    "s5Items_1": "Treat property with care",
+    "s5Items_2": "Follow building rules",
+    "s5Items_3": "Not exceed max occupancy",
+    "s5Items_4": "Report damages promptly",
+    "s5Items_5": "No illegal activities",
+    "s5Items_count": "6"
+  },
+  "privacyPage": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: February 7, 2026",
+    "s1Title": "1. Introduction",
+    "s1Text": "StayNeos is committed to protecting your privacy.",
+    "s2Title": "2. Information We Collect",
+    "s2Text": "We may collect:",
+    "s3Title": "3. How We Use Information",
+    "s3Text": "We use your information to:",
+    "s4Title": "4. Information Sharing",
+    "s4Text": "We do not sell your information. We may share with:",
+    "s5Title": "5. Data Security",
+    "s5Text": "We implement appropriate security measures.",
+    "s6Title": "6. Your Rights",
+    "s6Text": "You have the right to:",
+    "s7Title": "7. Contact Us",
+    "s7Text": "Questions? Contact us:",
+    "contactInfo": "Email: hello@stayneos.com | Phone: +1 (647) 862-6518 | Address: 20 Upjohn Rd, North York, ON, M3B 2V9",
+    "s2Items_0": "Personal: Name, email, phone, payment.",
+    "s2Items_1": "Booking: Dates, preferences, requests.",
+    "s2Items_2": "Technical: IP, browser, cookies.",
+    "s2Items_3": "Communications with support.",
+    "s2Items_count": "4",
+    "s3Items_0": "Process bookings",
+    "s3Items_1": "Communicate about stays",
+    "s3Items_2": "Provide support",
+    "s3Items_3": "Improve services",
+    "s3Items_4": "Send promotions (with consent)",
+    "s3Items_5": "Legal compliance",
+    "s3Items_count": "6",
+    "s4Items_0": "Property owners/managers",
+    "s4Items_1": "Service providers",
+    "s4Items_2": "Legal authorities",
+    "s4Items_count": "3",
+    "s6Items_0": "Access your info",
+    "s6Items_1": "Correct inaccuracies",
+    "s6Items_2": "Request deletion",
+    "s6Items_3": "Opt-out of marketing",
+    "s6Items_4": "Withdraw consent",
+    "s6Items_count": "5"
+  },
+  "cancellationPage": {
+    "title": "Cancellation Policy",
+    "flexible": "Flexible Cancellation",
+    "flexibleDesc": "Free cancellation up to 48 hours before check-in. After that, the first night is non-refundable.",
+    "moderate": "Moderate Cancellation",
+    "moderateDesc": "Free cancellation up to 5 days before. 50% refunded after.",
+    "longTerm": "Long-term Stays (28+ nights)",
+    "longTermDesc": "Free cancellation 30 days before. After check-in, next 30 days non-refundable.",
+    "refund": "Refund Process",
+    "refundDesc": "5-10 business days. Service fees non-refundable.",
+    "extenuating": "Extenuating Circumstances",
+    "extenuatingDesc": "Natural disasters, travel restrictions, or medical emergencies may qualify for full refund.",
+    "contact": "Contact Us",
+    "contactDesc": "Email {email} or call {phone}."
+  },
+  "serviceAnimalsPage": {
+    "title": "Service Animals Policy",
+    "welcome": "Service Animals Welcome",
+    "welcomeDesc": "StayNeos welcomes service animals in all properties.",
+    "noFees": "No Additional Fees",
+    "noFeesDesc": "No pet fees or deposits for service animals.",
+    "responsibilities": "Guest Responsibilities",
+    "emotional": "Emotional Support Animals",
+    "emotionalDesc": "May be subject to standard pet policy. Contact us in advance.",
+    "contact": "Contact",
+    "contactDesc": "Email {email} for questions.",
+    "responsibilityItems_0": "Must be under handler control",
+    "responsibilityItems_1": "Guest responsible for damage",
+    "responsibilityItems_2": "Must be housebroken",
+    "responsibilityItems_count": "3"
+  },
+  "forbiddenPage": {
+    "title": "403",
+    "subtitle": "Access Forbidden",
+    "description": "You do not have permission to access this page.",
+    "goHome": "Go Home",
+    "myDashboard": "My Dashboard"
+  },
+  "globalError": {
+    "title": "System Error",
+    "description": "Sorry, the application encountered a serious error. Please refresh and try again.",
+    "errorCode": "Error code: {code}",
+    "refresh": "Refresh Page"
+  },
+  "loginPage": {
+    "heroTitle": "Find your perfect\nhome away from home",
+    "heroSubtitle": "Access premium furnished apartments in top cities worldwide.",
+    "premiumProperties": "Premium Properties",
+    "globalCities": "Global Cities",
+    "guestRating": "Guest Rating",
+    "loginTitle": "Log in",
+    "loginSubtitle": "Welcome back to StayNeos"
+  },
+  "registerPage": {
+    "heroTitle": "Luxury living,",
+    "heroHighlight": "made simple.",
+    "heroSubtitle": "Join thousands of professionals who have discovered the future of furnished rentals.",
+    "apartments": "Apartments",
+    "cities": "Cities",
+    "satisfaction": "Satisfaction"
+  }
 }
