@@ -30,8 +30,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
   }, []);
 
   const navLinks = [
-    { href: "/", label: t("nav.home") },
-    { href: "/properties", label: t("nav.properties") },
+    { href: "/properties", label: t("nav.home") },
     { href: "/services", label: t("nav.services") },
     { href: "/about", label: t("nav.about") },
     { href: "/contact", label: t("nav.contact") },
@@ -90,9 +89,22 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
               ))}
             </div>
 
-            {/* Desktop - Language/Currency + User Menu */}
+            {/* Desktop - Language/Currency + Partner With Us + User Menu */}
             <div className="hidden lg:flex items-center gap-2">
               <LanguageCurrencySelector variant={currentVariant as "light" | "dark" | "transparent"} />
+              
+              {/* Partner With Us button */}
+              <Link
+                href="/for-agents"
+                className={cn(
+                  "text-sm font-medium px-3 py-2 rounded-full transition-all duration-200",
+                  "hover:bg-black/5",
+                  textStyles[currentVariant]
+                )}
+              >
+                {t("nav.partnerWithUs")}
+              </Link>
+              
               <UserMenu variant={currentVariant as "light" | "dark" | "transparent"} />
             </div>
 

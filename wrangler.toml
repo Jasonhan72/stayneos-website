@@ -1,22 +1,19 @@
 name = "stayneos"
 compatibility_date = "2026-02-06"
+compatibility_flags = ["nodejs_compat"]
+main = ".open-next/worker.js"
 
-# ============================================
-# Pages Configuration (OpenNext + Workers)
-# ============================================
-pages_build_output_dir = "dist"
+# Static assets served from .open-next/assets
+[assets]
+directory = ".open-next/assets"
 
 # Environment Variables
 [vars]
 RESEND_FROM_EMAIL = "hello@stayneos.com"
 NODE_ENV = "production"
 
-# Secrets (set via wrangler secret put)
-# RESEND_API_KEY
-# DATABASE_URL
-# DIRECT_URL
-# NEXTAUTH_SECRET
-# NEXTAUTH_URL
-# NEXT_PUBLIC_SUPABASE_URL
-# NEXT_PUBLIC_SUPABASE_ANON_KEY
-# SUPABASE_SERVICE_ROLE_KEY
+# D1 Database Binding
+[[d1_databases]]
+binding = "DB"
+database_name = "stayneos-db"
+database_id = "f667afae-6f66-4e4a-960a-37096eabdf03"

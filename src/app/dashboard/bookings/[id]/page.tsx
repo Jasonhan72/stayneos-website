@@ -1,12 +1,10 @@
 import BookingDetailClient from './BookingDetailClient';
+import { mockProperties } from '@/lib/data';
 
-// Required for static export - Next.js needs this for dynamic routes with output: export
+// Required for static export - generate from mock data
 export async function generateStaticParams() {
-  return [
-    { id: '1' },
-    { id: '2' },
-    { id: '3' },
-  ];
+  // Generate IDs based on mock properties (bookings reference property IDs)
+  return mockProperties.map(p => ({ id: p.id }));
 }
 
 // Server Component that wraps the Client Component

@@ -34,12 +34,15 @@ export default function SearchBar() {
   const [isGuestsOpen, setIsGuestsOpen] = useState(false);
 
   const popularLocations = [
-    "多伦多市中心",
-    "北约克",
-    "万锦",
-    "密西沙加",
-    "士嘉堡",
-    "列治文山",
+    "Downtown Toronto",
+    "Midtown Toronto", 
+    "North York",
+    "Scarborough",
+    "Etobicoke",
+    "Mississauga",
+    "Markham",
+    "Richmond Hill",
+    "Vaughan",
   ];
 
   const handleSearch = () => {
@@ -136,7 +139,7 @@ export default function SearchBar() {
           <div className="relative flex-1 px-6 border-r border-neutral-200">
             <button
               onClick={() => {
-                setIsDateOpen(!isDateOpen);
+                setIsDateOpen(true);
                 setIsLocationOpen(false);
                 setIsGuestsOpen(false);
               }}
@@ -161,7 +164,7 @@ export default function SearchBar() {
           <div className="relative flex-1 px-6 border-r border-neutral-200">
             <button
               onClick={() => {
-                setIsDateOpen(!isDateOpen);
+                setIsDateOpen(true);
                 setIsLocationOpen(false);
                 setIsGuestsOpen(false);
               }}
@@ -317,7 +320,7 @@ export default function SearchBar() {
           {/* Dates Row */}
           <button
             onClick={() => {
-              setIsDateOpen(!isDateOpen);
+              setIsDateOpen(true);
               setIsLocationOpen(false);
               setIsGuestsOpen(false);
             }}

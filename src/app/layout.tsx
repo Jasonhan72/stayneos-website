@@ -27,7 +27,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "StayNeos | 高端行政公寓出租平台",
+    default: "StayNeos | Premium Furnished Apartments",
     template: "%s | StayNeos",
   },
   description:
@@ -62,9 +62,9 @@ export const metadata: Metadata = {
     locale: "zh_CN",
     url: "https://stayneos.com",
     siteName: "StayNeos",
-    title: "StayNeos | 高端行政公寓出租平台",
+    title: "StayNeos | Premium Furnished Apartments",
     description:
-      "专为商务人士打造的高端行政公寓平台，提供优质的居住体验和贴心的管家服务",
+      "Premium furnished apartment platform for professionals with exceptional living experience and concierge service",
     images: [
       {
         url: "https://stayneos.com/og-image.jpg",
@@ -76,9 +76,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "StayNeos | 高端行政公寓出租平台",
+    title: "StayNeos | Premium Furnished Apartments",
     description:
-      "专为商务人士打造的高端行政公寓平台，提供优质的居住体验和贴心的管家服务",
+      "Premium furnished apartment platform for professionals with exceptional living experience and concierge service",
     images: ["https://stayneos.com/og-image.jpg"],
     creator: "@stayneos",
   },

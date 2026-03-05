@@ -7,9 +7,9 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 const mockPropertyData = {
   id: "prop-1",
   title: "市中心豪华公寓",
-  description: "这套精致的行政公寓位于多伦多市中心，专为追求品质生活的商务人士打造。",
+  description: "这套精致的行政公寓位于市中心，专为追求品质生活的商务人士打造。",
   address: "123 Main Street",
-  city: "多伦多",
+  city: "市中心",
   basePrice: 180,
   bedrooms: 2,
   bathrooms: 2,

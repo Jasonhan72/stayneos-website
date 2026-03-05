@@ -8,7 +8,9 @@ import {
   Home, 
   Heart, 
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  LayoutDashboard,
+  Building2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/UserContext";
@@ -138,9 +140,9 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
   // Logged in state - Blueground style menu
   const menuItems = [
     {
-      label: "Profile",
-      href: "/profile",
-      icon: User,
+      label: "Dashboard",
+      href: "/dashboard",
+      icon: LayoutDashboard,
     },
     {
       label: "Bookings",
@@ -148,9 +150,19 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
       icon: Home,
     },
     {
+      label: "Manage Properties",
+      href: "/dashboard/properties",
+      icon: Building2,
+    },
+    {
       label: "Wishlists",
       href: "/wishlists",
       icon: Heart,
+    },
+    {
+      label: "Profile",
+      href: "/profile",
+      icon: User,
     },
   ];
 

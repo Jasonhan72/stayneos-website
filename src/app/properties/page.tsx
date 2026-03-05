@@ -127,14 +127,37 @@ export default function PropertiesPage() {
   // 转换 API 数据
   const propertyList = useMemo(() => properties, [properties]);
   
-  // 本地筛选（amenities）
+  // 本地筛选（价格、卧室数量、amenities）
   const filteredProperties = useMemo(() => {
-    if (selectedAmenities.length === 0) return propertyList;
+    let filtered = propertyList;
     
-    return propertyList.filter(p => 
-      selectedAmenities.every(amenity => p.amenities.includes(amenity))
-    );
-  }, [propertyList, selectedAmenities]);
+    // 价格筛选
+    if (selectedPriceRange.min > 0 || selectedPriceRange.max !== Infinity) {
+      filtered = filtered.filter(p => 
+        p.price >= selectedPriceRange.min && 
+        (selectedPriceRange.max === Infinity || p.price <= selectedPriceRange.max)
+      );
+    }
+    
+    // 卧室数量筛选
+    if (selectedBedrooms !== 'any') {
+      const minBedrooms = parseInt(selectedBedrooms);
+      if (selectedBedrooms === '3') {
+        filtered = filtered.filter(p => p.bedrooms >= 3);
+      } else {
+        filtered = filtered.filter(p => p.bedrooms === minBedrooms);
+      }
+    }
+    
+    // Amenities 筛选
+    if (selectedAmenities.length > 0) {
+      filtered = filtered.filter(p => 
+        selectedAmenities.every(amenity => p.amenities.includes(amenity))
+      );
+    }
+    
+    return filtered;
+  }, [propertyList, selectedPriceRange, selectedBedrooms, selectedAmenities]);
 
   // 当筛选条件变化时重置页码
   useEffect(() => {
@@ -197,7 +220,7 @@ export default function PropertiesPage() {
                 {t('properties.title')}
               </h1>
               <p className="text-neutral-600">
-                {isLoading ? '加载中...' : t('properties.count', { count: pagination?.total || 0 })}
+                {isLoading ? t('common.loading') : t('properties.count', { count: pagination?.total || 0 })}
               </p>
             </div>
             
@@ -434,7 +457,7 @@ export default function PropertiesPage() {
             <div className="flex items-center justify-between mb-6">
               <div className="text-sm text-neutral-600">
                 {isLoading ? (
-                  '加载中...'
+                  t('common.loading')
                 ) : (
                   <>
                     {t('properties.showing')} <span className="font-medium text-neutral-900">{filteredProperties.length}</span> {' '}

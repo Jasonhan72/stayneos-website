@@ -149,7 +149,7 @@ export async function suggestPrice(propertyData: {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   
   // 基于城市和房型计算价格建议
-  const basePrice = propertyData.city.includes("多伦多") ? 150 : 120;
+  const basePrice = propertyData.city ? 150 : 120;
   const bedroomMultiplier = propertyData.bedrooms * 50;
   const bathroomMultiplier = propertyData.bathrooms * 25;
   const areaMultiplier = propertyData.area ? propertyData.area * 0.5 : 0;

@@ -411,7 +411,7 @@ export function PropertyForm({ initialData, mode, hosts = [] }: PropertyFormProp
                 <input
                   type="text"
                   {...register('city')}
-                  placeholder="Toronto"
+                  placeholder="Enter city"
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
                     errors.city ? 'border-red-500' : 'border-neutral-200'
                   }`}

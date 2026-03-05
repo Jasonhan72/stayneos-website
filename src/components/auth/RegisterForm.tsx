@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+// Note: next-auth signIn removed - using custom auth flow for static export
 import { 
   Eye, 
   EyeOff, 
@@ -229,19 +229,16 @@ export function RegisterForm() {
         throw new Error(data.message || "Registration failed");
       }
 
-      // Auto-login after registration
-      const signInResult = await signIn("credentials", {
-        email: formData.email,
-        password: formData.password,
-        redirect: false,
-      });
-
-      if (signInResult?.error) {
-        router.push("/login?registered=true");
-      } else {
-        router.push("/dashboard");
-        router.refresh();
+      // Store user data and redirect to dashboard
+      if (data.token) {
+        localStorage.setItem("stayneos_auth_token", data.token);
       }
+      if (data.user) {
+        localStorage.setItem("stayneos_user_data", JSON.stringify(data.user));
+        window.dispatchEvent(new CustomEvent("localStorageChange"));
+      }
+      router.push("/dashboard");
+      router.refresh();
     } catch (error) {
       setServerError(error instanceof Error ? error.message : "Registration failed. Please try again.");
     } finally {
@@ -252,7 +249,10 @@ export function RegisterForm() {
   const handleSocialLogin = async (provider: string) => {
     setSocialLoading(provider);
     try {
-      await signIn(provider, { callbackUrl: "/dashboard" });
+      // TODO: Implement OAuth flow with backend API
+      // For now, show a message that social login is coming soon
+      setServerError(`${provider.charAt(0).toUpperCase() + provider.slice(1)} login coming soon. Please use email registration.`);
+      setSocialLoading(null);
     } catch {
       setSocialLoading(null);
     }

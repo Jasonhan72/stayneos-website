@@ -5,6 +5,7 @@
   },
   "nav": {
     "home": "Explorer",
+    "explore": "Explorer",
     "properties": "Appartements",
     "services": "Entreprises",
     "about": "À Notre Sujet",
@@ -19,7 +20,13 @@
     "personalDetails": "Détails Personnels",
     "preferences": "Préférences",
     "wishlists": "Favoris",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "becomeHost": "Devenir hôte",
+    "listProperty": "Publier votre propriété",
+    "manageProperties": "Gérer les propriétés",
+    "dashboard": "Tableau de bord",
+    "partnerWithUs": "Devenez Partenaire",
+    "agents": "Pour Agents"
   },
   "common": {
     "view": "Voir",
@@ -41,7 +48,12 @@
     "edit": "Modifier",
     "skip": "Passer",
     "next": "Suivant",
-    "retry": "Réessayer"
+    "retry": "Réessayer",
+    "close": "Fermer",
+    "delete": "Supprimer",
+    "there": "là",
+    "loading": "Chargement...",
+    "backToList": "Retour à la liste"
   },
   "greeting": {
     "morning": "Bonjour",
@@ -52,9 +64,9 @@
     "title": "Devise"
   },
   "hero": {
-    "title": "Bienvenue chez StayNeos",
-    "highlight": "Résidence Exécutive Simplifiée",
-    "subtitle": "Redéfinir l'expérience des appartements exécutifs premium, offrant la chaleur du foyer et un service professionnel aux voyageurs d'affaires et aux résidents déplacés",
+    "title": "Votre chez-vous vous attend",
+    "highlight": "Arrivez aujourd'hui. Sentez-vous chez vous ce soir.",
+    "subtitle": "Appartements meublés au cœur de la ville. Prêts à vivre. Un mois, une saison ou un an.",
     "cta": "Listez Votre Propriété",
     "ctaQuote": "Demander un Devis",
     "ctaBrowse": "Parcourir les Propriétés"
@@ -92,16 +104,16 @@
     "next": "Suivant"
   },
   "features": {
-    "title": "Pourquoi Choisir StayNeos",
-    "subtitle": "Nous nous engageons à offrir des expériences de vie exceptionnelles à chaque client, de la sélection de la propriété au service d'enregistrement, chaque détail est soigneusement conçu",
-    "quality": "Sélection Rigoureuse",
-    "qualityDesc": "Propriétés premium soigneusement sélectionnées, garantissant que chaque détail répond à vos attentes",
-    "flexible": "Bail Flexible",
-    "flexibleDesc": "Location courte et longue durée supportées, répondant flexiblement aux différents besoins de voyage",
-    "service": "Service de Conciergerie",
-    "serviceDesc": "Service de conciergerie 24h/24 pour une expérience de vie plus confortable",
-    "support": "Support 24/7",
-    "supportDesc": "Équipe de service client professionnelle prête à résoudre tout problème",
+    "title": "Pourquoi StayNeos",
+    "subtitle": "Votre logement est prêt avant vous. Pas de surprises, pas de frais cachés — juste un bel espace qui vous attend.",
+    "quality": "Sélection sur le terrain",
+    "qualityDesc": "Chaque appartement est visité, vérifié et approuvé par notre équipe. S'il ne nous convainc pas, il ne va pas en ligne.",
+    "flexible": "À votre rythme",
+    "flexibleDesc": "Un mois ou douze. Prolongez ou raccourcissez à tout moment. Vos plans changent — votre logement ne devrait pas être un souci.",
+    "service": "Quelqu'un veille sur vous",
+    "serviceDesc": "Une vraie personne répond quand vous appelez. Jour et nuit, semaine et week-end.",
+    "support": "24 heures sur 24",
+    "supportDesc": "Enfermé dehors à minuit ? Besoin d'une réparation ? On est là. Toujours.",
     "utilities": "Tous les services publics inclus",
     "wifi": "WiFi haut débit",
     "housekeeping": "Service de ménage",
@@ -166,7 +178,8 @@
       "monthlyPrice": "Prix Mensuel",
       "monthlyDiscountLabel": "Réduction Mensuelle ({percent}% de réduction)",
       "minNightsWarning": "Minimum {count} nuits requis"
-    }
+    },
+    "empty": "Aucune propriété en vedette"
   },
   "details": {
     "title": "Détails de la Propriété",
@@ -184,30 +197,30 @@
     "minNightsWarning": "Minimum {count} nuits requis"
   },
   "cta": {
-    "title": "Prêt à Découvrir StayNeos?",
-    "subtitle": "Parcourez nos propriétés soigneusement sélectionnées et trouvez votre résidence idéale à Toronto",
-    "explore": "Commencer l'Exploration",
+    "title": "Trouvez votre chez-vous ce soir",
+    "subtitle": "Parcourez des appartements meublés prêts à vivre. Pas de bail long, pas de pièces vides — juste un foyer.",
+    "explore": "Parcourir les appartements",
     "contact": "Contactez-Nous",
     "button": "Contactez-Nous",
     "desc": "Contactez-nous aujourd'hui pour en savoir plus sur nos services et trouver votre logement idéal.",
-    "browse": "Parcourir les Propriétés"
+    "browse": "Parcourir les appartements"
   },
   "howItWorks": {
-    "title": "Comment Ça Marche",
-    "subtitle": "C'est simple. Trois étapes pour trouver votre logement idéal."
+    "title": "Trois étapes vers chez vous",
+    "subtitle": "Choisissez. Réservez. Emménagez. C'est tout."
   },
   "steps": {
     "search": {
-      "title": "Rechercher des Propriétés",
-      "desc": "Parcourez nos propriétés sélectionnées, filtrez par emplacement, prix et équipements"
+      "title": "Trouvez votre lieu",
+      "desc": "Parcourez les appartements par quartier, prix ou ambiance. Filtrez par vue sur le lac, animaux acceptés ou proximité du PATH."
     },
     "book": {
-      "title": "Réserver en Ligne",
-      "desc": "Sélectionnez vos dates, consultez les prix en temps réel et complétez votre réservation en un clic"
+      "title": "Réservez instantanément",
+      "desc": "Choisissez vos dates, voyez le prix — sans aller-retour. Confirmez en moins de deux minutes."
     },
     "movein": {
-      "title": "Emménager",
-      "desc": "Accueil par un concierge professionnel, entièrement équipé, commencez à profiter immédiatement"
+      "title": "Entrez et vivez",
+      "desc": "Vos clés sont prêtes. Le WiFi est branché. Le lit est fait. Commencez à vivre dès votre arrivée."
     },
     "step1": {
       "title": "Listez Votre Propriété",
@@ -223,52 +236,52 @@
     }
   },
   "book": {
-    "title": "Réserver en Ligne",
-    "desc": "Sélectionnez vos dates, consultez les prix en temps réel et complétez votre réservation en un clic"
+    "title": "Réservez instantanément",
+    "desc": "Choisissez vos dates, voyez le prix — sans aller-retour. Confirmez en moins de deux minutes."
   },
   "movein": {
-    "title": "Emménager",
-    "desc": "Accueil par un concierge professionnel, entièrement équipé, commencez à profiter immédiatement"
+    "title": "Entrez et vivez",
+    "desc": "Vos clés sont prêtes. Le WiFi est branché. Le lit est fait. Commencez à vivre dès votre arrivée."
   },
   "segments": {
-    "title": "Solutions d'Hébergement pour Vous",
-    "subtitle": "Que ce soit pour les déplacements d'affaires, les projets à long terme ou la relocation, nous avons des options pour vous",
+    "title": "Un chez-soi pour chaque étape",
+    "subtitle": "Ici pour le travail ? Entre deux logements ? Nouveau départ ? On s'occupe de tout.",
     "business": {
-      "title": "Déplacements d'Affaires",
-      "subtitle": "Remises Entreprises",
-      "desc": "Solutions d'hébergement pratiques pour les professionnels, près des quartiers financiers avec transport facile",
-      "cta": "En Savoir Plus sur les Plans Entreprise"
+      "title": "Séjours d'affaires",
+      "subtitle": "Tarifs entreprise",
+      "desc": "Vous êtes en mission pour un projet de 3 mois. On s'assure que le reste de votre vie ne s'arrête pas. Le quartier financier à pied, et votre propre cuisine pour le dîner.",
+      "cta": "Découvrir les offres entreprise"
     },
     "longterm": {
-      "title": "Séjour Long Terme",
-      "subtitle": "20% de Remise Mensuelle",
-      "desc": "Profitez de prix réduits pour les séjours d'un mois ou plus, idéal pour les projets à long terme ou la relocation",
-      "cta": "Voir les Propriétés Long Terme"
+      "title": "Séjour prolongé",
+      "subtitle": "Économisez 20 % par mois",
+      "desc": "Pas juste de passage ? Installez-vous. Votre appartement a tout — vaisselle, draps, même une cafetière. Amenez juste vous-même.",
+      "cta": "Voir les logements longue durée"
     },
     "relocation": {
-      "title": "Relocation",
-      "subtitle": "Emménagement Flexible",
-      "desc": "Le choix idéal pendant votre déménagement, aucun engagement à long terme requis, emménagez immédiatement",
-      "cta": "Réserver Maintenant"
+      "title": "Relocalisation",
+      "subtitle": "Emménagez cette semaine",
+      "desc": "Nouvelle ville, nouveau boulot, cent choses sur la liste. Rayez « trouver un logement » dès aujourd'hui.",
+      "cta": "Trouvez votre point de chute"
     }
   },
   "business": {
-    "title": "Déplacements d'Affaires",
-    "subtitle": "Remises Entreprises",
-    "desc": "Solutions d'hébergement pratiques pour les professionnels, près des quartiers financiers avec transport facile",
-    "cta": "En Savoir Plus sur les Plans Entreprise"
+    "title": "Séjours d'affaires",
+    "subtitle": "Tarifs entreprise",
+    "desc": "Vous êtes à Toronto pour un projet de 3 mois. On s'assure que le reste de votre vie ne s'arrête pas. Le quartier financier à pied, et votre propre cuisine.",
+    "cta": "Découvrir les offres entreprise"
   },
   "longterm": {
-    "title": "Séjour Long Terme",
-    "subtitle": "20% de Remise Mensuelle",
-    "desc": "Profitez de prix réduits pour les séjours d'un mois ou plus, idéal pour les projets à long terme ou la relocation",
-    "cta": "Voir les Propriétés Long Terme"
+    "title": "Séjour prolongé",
+    "subtitle": "Économisez 20 % par mois",
+    "desc": "Pas juste de passage ? Installez-vous. Tout est là — vaisselle, draps, cafetière. Amenez juste vous-même.",
+    "cta": "Voir les logements longue durée"
   },
   "relocation": {
-    "title": "Relocation",
-    "subtitle": "Emménagement Flexible",
-    "desc": "Le choix idéal pendant votre déménagement, aucun engagement à long terme requis, emménagez immédiatement",
-    "cta": "Réserver Maintenant"
+    "title": "Relocalisation",
+    "subtitle": "Emménagez cette semaine",
+    "desc": "Nouvelle ville, nouveau boulot, cent choses sur la liste. Rayez « trouver un logement » dès aujourd'hui.",
+    "cta": "Trouvez votre point de chute"
   },
   "footer": {
     "about": "À Propos",
@@ -283,7 +296,7 @@
     "faq": "FAQ",
     "contact": "Contactez-Nous",
     "privacy": "Politique de Confidentialité",
-    "description": "Des expériences d'hébergement soigneusement conçues pour les voyageurs modernes. Que ce soit pour affaires ou loisirs, nous vous offrons l'espace de vie parfait.",
+    "description": "Des appartements meublés pour ceux qui veulent vraiment vivre — pas juste séjourner. Conçu pour les voyageurs d'affaires, les expatriés, et tous ceux qui méritent un vrai foyer.",
     "companyTitle": "Entreprise",
     "servicesTitle": "Services",
     "supportTitle": "Support",
@@ -292,7 +305,8 @@
     "terms": "Conditions d'utilisation",
     "landlords": "Pour Propriétaires",
     "services": "Nos Services",
-    "properties": "Parcourir les Propriétés"
+    "properties": "Parcourir les Propriétés",
+    "agents": "Pour Agents"
   },
   "language": {
     "title": "Langue",
@@ -383,7 +397,21 @@
       "infants": "Bébés",
       "infantsDescription": "Moins de 2 ans",
       "infant": "bébé"
-    }
+    },
+    "priceBreakdown": "Détail des prix",
+    "totalPrice": "Prix total",
+    "addDate": "Ajouter une date",
+    "confirmInfo": "Confirmez vos informations",
+    "paymentEncrypted": "Vos informations de paiement sont cryptées",
+    "selectDatesToSeePrice": "Sélectionnez des dates pour voir les prix",
+    "secureBooking": "Réservation sécurisée",
+    "encryptedPayment": "Paiement crypté",
+    "backToProperty": "Retour à la propriété",
+    "continue": "Continuer",
+    "changeDates": "Modifier les dates",
+    "guestSingular": "voyageur",
+    "guestsPlural": "voyageurs",
+    "processing": "Traitement..."
   },
   "contact": {
     "pageTitle": "Contactez-nous",
@@ -439,7 +467,9 @@
     "emergency": {
       "title": "Besoin d'Aide d'Urgence?",
       "desc": "Si vous êtes un locataire actuel et avez besoin d'une assistance immédiate, veuillez appeler notre ligne d'urgence 24h/24"
-    }
+    },
+    "responseTime": "Nous répondons généralement sous 24 heures",
+    "visitUs": "Nous rendre visite"
   },
   "form": {
     "title": "Contactez-nous",
@@ -583,7 +613,10 @@
       "confirmText": "Êtes-vous sûr de vouloir annuler la réservation {number} ?",
       "noticeTitle": "Politique d'annulation",
       "confirm": "Oui, annuler",
-      "keep": "Garder la réservation"
+      "keep": "Garder la réservation",
+      "notice1": "Les remboursements seront traités dans un délai de 3 à 5 jours ouvrables",
+      "notice2": "Des frais d'annulation peuvent s'appliquer selon la politique d'annulation",
+      "notice3": "Cette action est irréversible"
     },
     "error": {
       "fetchFailed": "Échec du chargement des réservations",
@@ -724,7 +757,10 @@
     "rareFind": "Rare trouvaille",
     "roomIn": "Logement à",
     "top10": "Top 10",
-    "top10Desc": "L'une des maisons les plus appréciées sur StayNeos"
+    "top10Desc": "L'une des maisons les plus appréciées sur StayNeos",
+    "reportListing": "Signaler cette annonce",
+    "showMore": "Afficher plus",
+    "loadingMap": "Chargement de la carte..."
   },
   "filter": {
     "all": "Tous les Statuts"
@@ -1190,31 +1226,31 @@
     "pageLoadError": "Désolé, nous avons rencontré un problème lors du chargement de cette page"
   },
   "services": {
-    "title": "Nos Services",
-    "subtitle": "Solutions d'appartements meublés premium pour tous les besoins. Des logements d'entreprise aux séjours courts, nous vous couvrons.",
+    "title": "Comment on peut vous aider",
+    "subtitle": "Voyageur d'affaires, professionnel en relocalisation ou entreprise logeant une équipe — on a ce qu'il faut.",
     "corporateHousing": {
-      "title": "Logement d'Entreprise",
-      "desc": "Appartements entièrement meublés pour les voyageurs d'affaires et les employés en déménagement. Conditions de bail flexibles de 1 mois à 1 an."
+      "title": "Logement d'entreprise",
+      "desc": "Votre équipe arrive lundi. Leurs appartements sont prêts dimanche. Meublés, charges incluses, à pied du centre-ville."
     },
     "shortTerm": {
-      "title": "Locations Court Terme",
-      "desc": "Appartements meublés premium pour les séjours courts. Parfait pour les vacances, les déménagements temporaires ou les rénovations."
+      "title": "Séjours courts",
+      "desc": "Entre deux baux ? En travaux ? Besoin d'un bel espace quelques semaines ? Venez avec une valise, c'est tout."
     },
     "propertyManagement": {
-      "title": "Gestion Immobilière",
-      "desc": "Gestion immobilière complète pour les propriétaires. Nous gérons tout, du marketing à la maintenance."
+      "title": "Gestion immobilière",
+      "desc": "Vous avez un condo à Toronto ? On le remplit, on l'entretient, on gère tout. Vous encaissez."
     },
     "concierge": {
-      "title": "Services de Conciergerie",
-      "desc": "Services de conciergerie personnalisés pour rendre votre séjour exceptionnel. Des transferts aéroport à la livraison d'épicerie."
+      "title": "Conciergerie personnelle",
+      "desc": "Courses avant votre arrivée ? Transfert aéroport ? Restaurants du quartier ? Demandez, c'est fait."
     },
     "flexibleLeasing": {
-      "title": "Bail Flexible",
-      "desc": "Conditions de bail qui s'adaptent à votre emploi du temps. Pas d'engagement à long terme ni de frais cachés."
+      "title": "Bail flexible",
+      "desc": "Restez un mois, prolongez à six. Pas de pénalités, pas de paperasse. Le bail s'adapte à votre vie."
     },
     "globalNetwork": {
-      "title": "Réseau Global",
-      "desc": "Accès à des appartements meublés premium dans les principales villes d'Amérique du Nord et au-delà."
+      "title": "Réseau en croissance",
+      "desc": "Toronto d'abord, puis les villes où le business vous emmène. Une plateforme, une qualité constante."
     },
     "features": {
       "utilities": "Tous les services publics inclus",
@@ -1239,142 +1275,142 @@
       "termination": "Résiliation anticipée disponible"
     },
     "cta": {
-      "title": "Prêt à commencer?",
-      "desc": "Contactez-nous aujourd'hui pour en savoir plus sur nos services et trouver votre logement idéal.",
-      "button": "Contactez-Nous"
+      "title": "Trouvons votre logement",
+      "desc": "Dites-nous ce qu'il vous faut. On s'occupe du reste.",
+      "button": "Nous contacter"
     }
   },
   "corporateHousing": {
-    "title": "Logement d'Entreprise",
-    "desc": "Appartements entièrement meublés pour les voyageurs d'affaires et les employés en déménagement. Conditions de bail flexibles de 1 mois à 1 an."
+    "title": "Logement d'entreprise",
+    "desc": "Votre équipe arrive lundi. Appartements prêts dimanche. Meublés, à pied du centre-ville."
   },
   "shortTerm": {
-    "title": "Locations Court Terme",
-    "desc": "Appartements meublés premium pour les séjours courts. Parfait pour les vacances, les déménagements temporaires ou les rénovations."
+    "title": "Séjours courts",
+    "desc": "Entre deux baux ? En travaux ? Venez avec une valise."
   },
   "propertyManagement": {
-    "title": "Gestion Immobilière",
-    "desc": "Gestion immobilière complète pour les propriétaires. Nous gérons tout, du marketing à la maintenance."
+    "title": "Gestion immobilière",
+    "desc": "Un condo ? On gère tout. Vous encaissez."
   },
   "concierge": {
-    "title": "Services de Conciergerie",
-    "desc": "Services de conciergerie personnalisés pour rendre votre séjour exceptionnel. Des transferts aéroport à la livraison d'épicerie."
+    "title": "Conciergerie personnelle",
+    "desc": "Courses, transfert, restaurants. Demandez."
   },
   "flexibleLeasing": {
-    "title": "Bail Flexible",
-    "desc": "Conditions de bail qui s'adaptent à votre emploi du temps. Pas d'engagement à long terme ni de frais cachés."
+    "title": "Bail flexible",
+    "desc": "Un mois, prolongez à six. Pas de pénalités."
   },
   "globalNetwork": {
-    "title": "Réseau Global",
-    "desc": "Accès à des appartements meublés premium dans les principales villes d'Amérique du Nord et au-delà."
+    "title": "Réseau en croissance",
+    "desc": "Toronto d'abord, puis où le business vous emmène."
   },
   "about": {
     "title": "À Propos de StayNeos",
     "hero": {
-      "title": "À Propos de StayNeos",
-      "subtitle": "Redéfinir l'expérience des appartements exécutifs premium, offrant la chaleur du foyer et un service professionnel aux voyageurs d'affaires et aux résidents déplacés"
+      "title": "À propos de StayNeos",
+      "subtitle": "On sait ce que c'est d'arriver dans une nouvelle ville et d'avoir besoin d'un foyer — pas juste d'une chambre. C'est pour ça qu'on a créé StayNeos."
     },
     "mission": {
       "label": "NOTRE MISSION",
-      "title": "Notre Mission",
-      "desc": "StayNeos s'engage à créer la solution de logement parfaite pour les voyageurs d'affaires modernes et les résidents déplacés, pour que chaque voyage soit agréable avec le confort et la commodité de la maison.",
+      "title": "Ce qui nous motive",
+      "desc": "Tout le monde mérite un vrai foyer — même loin de chez soi. Ce n'est pas un slogan. C'est notre façon de prendre chaque décision.",
       "items": {
-        "executive": "Appartements Exécutifs Premium",
-        "executiveDesc": "Fournir des appartements exécutifs premium soigneusement sélectionnés pour les voyageurs d'affaires et les résidents déplacés",
-        "simple": "Simple et Sans Stress",
-        "simpleDesc": "Rendre la location à court terme simple, facile et sans stress",
-        "flexible": "Baux Flexibles",
-        "flexibleDesc": "Baux flexibles à partir de 28 jours, location mensuelle et trimestrielle",
-        "location": "Emplacements Prime",
-        "locationDesc": "Propriétés de qualité dans les emplacements prime de Toronto"
+        "executive": "Appartements sélectionnés",
+        "executiveDesc": "Des logements dans des quartiers que vous choisiriez vous-même. Une qualité qui se ressent.",
+        "simple": "Zéro tracas",
+        "simpleDesc": "Pas de paperasse. Pas de meubles à acheter. Pas de compteurs à ouvrir. Arrivez et vivez.",
+        "flexible": "Votre emploi du temps",
+        "flexibleDesc": "Restez 28 jours ou 365. Prolongez par message. Partez quand vous voulez.",
+        "location": "Les meilleurs quartiers de Toronto",
+        "locationDesc": "De l'énergie de King West au charme de Yorkville. Chaque logement est là où ça se passe."
       }
     },
     "story": {
       "label": "NOTRE HISTOIRE",
-      "title": "Notre Histoire",
-      "subtitle": "Né des défis d'un voyage d'affaires, StayNeos est dédié à résoudre les difficultés de logement des voyageurs modernes"
+      "title": "Comment tout a commencé",
+      "subtitle": "Une recherche d'appartement frustrante à Toronto. C'est tout ce qu'il a fallu."
     },
     "whyChoose": {
       "label": "POURQUOI NOUS CHOISIR",
-      "title": "Pourquoi Nous Choisir",
-      "desc": "Nous ne fournissons pas seulement un hébergement; nous créons une maison où vous pouvez travailler et vivre en paix loin de chez vous."
+      "title": "Pourquoi nous choisir",
+      "desc": "On ne vous trouve pas juste un endroit. On s'assure que ça ressemble vraiment à chez vous."
     },
     "commitment": {
       "label": "NOTRE ENGAGEMENT",
-      "title": "Notre Engagement",
-      "subtitle": "Nous promettons à chaque client une expérience qui dépasse les attentes"
+      "title": "Notre promesse",
+      "subtitle": "Chaque séjour doit valoir la peine d'en parler."
     },
     "cta": {
-      "title": "Prêt à Découvrir StayNeos?",
-      "subtitle": "Parcourez nos propriétés soigneusement sélectionnées et trouvez votre résidence idéale à Toronto",
+      "title": "Trouvez votre chez-vous à Toronto ce soir",
+      "subtitle": "Parcourez des appartements meublés prêts à vivre au centre-ville de Toronto.",
       "browse": "Parcourir les Propriétés",
       "contact": "Contactez-Nous"
     },
-    "heroTitle": "Redéfinir le Séjour Exécutif",
-    "heroSubtitle": "Nous croyons que chaque voyage d'affaires mérite de se sentir comme chez soi",
-    "storyTitle": "Notre Histoire",
-    "storyOrigin": "StayNeos est né d'une observation simple : à Toronto, les professionnels faisaient face à un dilemme — les hôtels étaient exigus et impersonnels; les locations traditionnelles étaient compliquées et rigides. Nous avons décidé de changer cela.",
-    "storyMission": "En 2024, nous avons fondé StayNeos pour créer des appartements exécutifs premium conçus pour les professionnels. Chaque propriété est soigneusement sélectionnée et entièrement équipée, pour que nos hôtes puissent se concentrer sur l'essentiel dès le premier jour.",
-    "storyToday": "Aujourd'hui, StayNeos est devenu la principale plateforme d'appartements exécutifs de Toronto, servant des professionnels et entreprises dans la tech, la finance, la santé et bien plus. Nous ne fournissons pas seulement un hébergement — nous offrons un mode de vie confortable.",
-    "valuesTitle": "Nos Valeurs",
-    "peopleFirst": "L'Humain d'Abord",
-    "peopleFirstDesc": "Chaque hôte est une personne, pas un numéro. Nous prêtons attention aux détails — des cadeaux de bienvenue au support 24/7",
-    "quality": "Obsédés par la Qualité",
-    "qualityDesc": "Nous inspectons personnellement chaque propriété pour garantir des standards exécutifs. Si ce n'est pas excellent, ce n'est pas sur notre plateforme",
-    "flexibility": "La Flexibilité Compte",
-    "flexibilityDesc": "Le monde des affaires évolue vite, et le logement doit s'adapter. D'une semaine à un an, nous offrons des conditions vraiment flexibles",
-    "sustainability": "Vie Durable",
-    "sustainabilityDesc": "Nous privilégions les bâtiments écologiques, réduisons les articles jetables, et collaborons avec des propriétaires soucieux de l'environnement",
-    "statsTitle": "En Chiffres",
-    "propertiesCount": "100+ Propriétés Sélectionnées",
-    "guestsCount": "1000+ Professionnels",
-    "partnersCount": "50+ Partenaires Entreprises",
-    "rating": "4.9/5 Note Moyenne",
-    "coverage": "Zones Centrales de Toronto",
-    "ctaTitle": "Rejoignez la Communauté StayNeos",
-    "ctaSubtitle": "Que vous soyez un professionnel cherchant le séjour parfait, un propriétaire ou une entreprise souhaitant collaborer, nous serions ravis de vous rencontrer",
-    "ctaBrowse": "Explorer les Appartements",
-    "ctaContact": "Nous Contacter"
+    "heroTitle": "Nous sommes passés par là",
+    "heroSubtitle": "Chercher un vrai chez-soi dans une ville qui n'était pas encore la nôtre",
+    "storyTitle": "Comment tout a commencé",
+    "storyOrigin": "Tout a commencé par une recherche frustrante. Un fondateur s'installe à Toronto pour le travail et fait face au même choix que tout le monde : une petite chambre d'hôtel sans cuisine, ou un bail de 12 mois dans un appartement vide. Ni l'un ni l'autre n'avait de sens. Alors on a créé une troisième option.",
+    "storyMission": "En 2024, StayNeos est né d'une idée simple : de beaux appartements meublés où l'on peut s'installer dès le lendemain. Chaque logement est trié sur le volet, entièrement équipé, situé dans des quartiers où vous voudriez vraiment vivre — du Harbourfront à Midtown.",
+    "storyToday": "Aujourd'hui, nous sommes la référence à Toronto pour les professionnels qui cherchent un vrai foyer. Ingénieurs, consultants, résidents en médecine, familles en relocalisation — ils restent chez nous parce qu'on traite chaque séjour comme s'il comptait. Parce que c'est le cas.",
+    "valuesTitle": "Ce en quoi nous croyons",
+    "peopleFirst": "Des vraies personnes, pas des transactions",
+    "peopleFirstDesc": "Vous n'êtes pas un numéro de réservation. Quand vous nous écrivez, une vraie personne répond. On se souvient de vos préférences.",
+    "quality": "Si on n'y vivrait pas, vous non plus",
+    "qualityDesc": "Notre équipe visite chaque appartement. On teste le WiFi, vérifie la pression de l'eau, et s'assoit sur le canapé. Seuls les meilleurs arrivent sur notre plateforme.",
+    "flexibility": "La vie ne rentre pas dans des cases",
+    "flexibilityDesc": "Les projets se prolongent. Les plans changent. On comprend. Conditions flexibles, prolongations faciles, pas de pénalités.",
+    "sustainability": "Mieux pour la ville",
+    "sustainabilityDesc": "On privilégie les bâtiments écoresponsables, on réduit les déchets, on choisit les fournisseurs locaux. Toronto est aussi notre ville.",
+    "statsTitle": "En chiffres",
+    "propertiesCount": "100+ Appartements sélectionnés",
+    "guestsCount": "1 000+ Clients satisfaits",
+    "partnersCount": "50+ Partenaires entreprise",
+    "rating": "4.9/5 Note moyenne",
+    "coverage": "Centre-ville de Toronto",
+    "ctaTitle": "Bienvenue chez StayNeos",
+    "ctaSubtitle": "Que vous restiez un mois ou un an, on fait de Toronto votre ville.",
+    "ctaBrowse": "Parcourir les appartements",
+    "ctaContact": "Nous dire bonjour"
   },
   "mission": {
     "label": "NOTRE MISSION",
-    "title": "Notre Mission",
-    "desc": "StayNeos s'engage à créer la solution de logement parfaite pour les voyageurs d'affaires modernes et les résidents déplacés, pour que chaque voyage soit agréable avec le confort et la commodité de la maison.",
+    "title": "Ce qui nous motive",
+    "desc": "Tout le monde mérite un vrai foyer — même loin de chez soi.",
     "items": {
-      "executive": "Appartements Exécutifs Premium",
-      "executiveDesc": "Fournir des appartements exécutifs premium soigneusement sélectionnés pour les voyageurs d'affaires et les résidents déplacés",
-      "simple": "Simple et Sans Stress",
-      "simpleDesc": "Rendre la location à court terme simple, facile et sans stress",
-      "flexible": "Baux Flexibles",
-      "flexibleDesc": "Baux flexibles à partir de 28 jours, location mensuelle et trimestrielle",
-      "location": "Emplacements Prime",
-      "locationDesc": "Propriétés de qualité dans les emplacements prime de Toronto"
+      "executive": "Appartements sélectionnés",
+      "executiveDesc": "Des quartiers que vous choisiriez vous-même.",
+      "simple": "Zéro tracas",
+      "simpleDesc": "Pas de paperasse. Pas de meubles. Arrivez et vivez.",
+      "flexible": "Votre emploi du temps",
+      "flexibleDesc": "28 jours ou 365. Prolongez par message. C'est vous qui décidez.",
+      "location": "Les meilleurs quartiers",
+      "locationDesc": "De King West à Yorkville. Là où ça se passe."
     }
   },
   "items": {
-    "executive": "Appartements Exécutifs Premium",
-    "executiveDesc": "Fournir des appartements exécutifs premium soigneusement sélectionnés pour les voyageurs d'affaires et les résidents déplacés",
-    "simple": "Simple et Sans Stress",
-    "simpleDesc": "Rendre la location à court terme simple, facile et sans stress",
-    "flexible": "Baux Flexibles",
-    "flexibleDesc": "Baux flexibles à partir de 28 jours, location mensuelle et trimestrielle",
-    "location": "Emplacements Prime",
-    "locationDesc": "Propriétés de qualité dans les emplacements prime de Toronto"
+    "executive": "Appartements sélectionnés",
+    "executiveDesc": "Des quartiers que vous choisiriez vous-même.",
+    "simple": "Zéro tracas",
+    "simpleDesc": "Pas de paperasse. Pas de meubles. Arrivez et vivez.",
+    "flexible": "Votre emploi du temps",
+    "flexibleDesc": "28 jours ou 365. Prolongez par message.",
+    "location": "Les meilleurs quartiers",
+    "locationDesc": "De King West à Yorkville. Là où ça se passe."
   },
   "story": {
     "label": "NOTRE HISTOIRE",
-    "title": "Notre Histoire",
-    "subtitle": "Né des défis d'un voyage d'affaires, StayNeos est dédié à résoudre les difficultés de logement des voyageurs modernes"
+    "title": "Comment tout a commencé",
+    "subtitle": "Une recherche d'appartement frustrante à Toronto. C'est tout."
   },
   "whyChoose": {
     "label": "POURQUOI NOUS CHOISIR",
-    "title": "Pourquoi Nous Choisir",
-    "desc": "Nous ne fournissons pas seulement un hébergement; nous créons une maison où vous pouvez travailler et vivre en paix loin de chez vous."
+    "title": "Pourquoi nous choisir",
+    "desc": "On ne vous trouve pas juste un endroit. On s'assure que ça ressemble à chez vous."
   },
   "commitment": {
     "label": "NOTRE ENGAGEMENT",
-    "title": "Notre Engagement",
-    "subtitle": "Nous promettons à chaque client une expérience qui dépasse les attentes"
+    "title": "Notre promesse",
+    "subtitle": "Chaque séjour doit valoir la peine d'en parler."
   },
   "ai": {
     "assistant": {
@@ -1541,11 +1577,18 @@
       "help": "Besoin d'aide ?",
       "contact": "Contacter le support",
       "viewBookings": "Voir les réservations",
-      "browseProperties": "Parcourir les propriétés"
+      "browseProperties": "Parcourir les propriétés",
+      "reason1": "Vous avez choisi d'annuler le paiement",
+      "reason2": "Votre mode de paiement a été refusé",
+      "reason3": "La session a expiré",
+      "reason4": "Une erreur technique s'est produite"
     },
     "paypal": "PayPal",
     "applePay": "Apple Pay",
-    "googlePay": "Google Pay"
+    "googlePay": "Google Pay",
+    "applePayHint": "Utilisez Apple Pay pour effectuer votre paiement rapidement et en toute sécurité",
+    "connectToPayPal": "Se connecter à PayPal",
+    "next": "Suivant"
   },
   "auth": {
     "loginLeftTitle": "Bienvenue",
@@ -1651,7 +1694,8 @@
     "print": "Imprimer",
     "downloadVoucher": "Télécharger le voucher",
     "writeReview": "Écrire un avis",
-    "myReview": "Mon avis"
+    "myReview": "Mon avis",
+    "guestInfo": "Informations du voyageur"
   },
   "checkout": {
     "reviewAndContinue": "Vérifier et continuer",
@@ -1710,8 +1754,8 @@
   "morning": "Bonjour",
   "afternoon": "Bon après-midi",
   "evening": "Bonsoir",
-  "highlight": "Résidence Exécutive Simplifiée",
-  "subtitle": "Appartements haut de gamme. Séjours flexibles. Conciergerie 24/7.",
+  "highlight": "Arrivez aujourd'hui. Sentez-vous chez vous ce soir.",
+  "subtitle": "Appartements meublés. Séjours flexibles. Emménagez demain.",
   "selectLocation": "Sélectionner l'emplacement",
   "date": "Dates",
   "selectDate": "Sélectionner les dates",
@@ -1722,13 +1766,13 @@
   "rating": "Mieux notés",
   "previous": "Précédent",
   "next": "Suivant",
-  "quality": "Sélection Rigoureuse",
-  "qualityDesc": "Propriétés premium soigneusement sélectionnées, garantissant que chaque détail répond à vos attentes",
-  "flexible": "Bail Flexible",
-  "flexibleDesc": "Location courte et longue durée supportées, répondant flexiblement aux différents besoins de voyage",
-  "service": "Service de Conciergerie",
-  "serviceDesc": "Service de conciergerie 24h/24 pour une expérience de vie plus confortable",
-  "supportDesc": "Équipe de service client professionnelle prête à résoudre tout problème",
+  "quality": "Sélection sur le terrain",
+  "qualityDesc": "Chaque appartement est visité, vérifié et approuvé par notre équipe. S'il ne nous convainc pas, il ne va pas en ligne.",
+  "flexible": "À votre rythme",
+  "flexibleDesc": "Un mois ou douze. Prolongez ou raccourcissez à tout moment. Vos plans changent — votre logement ne devrait pas être un souci.",
+  "service": "Quelqu'un veille sur vous",
+  "serviceDesc": "Une vraie personne répond quand vous appelez. Jour et nuit, semaine et week-end.",
+  "supportDesc": "Enfermé dehors à minuit ? Besoin d'une réparation ? On est là. Toujours.",
   "viewAll": "Voir Toutes les Propriétés",
   "featured": "En Vedette",
   "reviews": "avis",
@@ -2041,28 +2085,28 @@
   "renewal": "Renouvellement facile",
   "termination": "Résiliation anticipée disponible",
   "label": "NOTRE MISSION",
-  "executiveDesc": "Fournir des appartements exécutifs premium soigneusement sélectionnés pour les voyageurs d'affaires et les résidents déplacés",
-  "simple": "Simple et Sans Stress",
-  "simpleDesc": "Rendre la location à court terme simple, facile et sans stress",
-  "locationDesc": "Propriétés de qualité dans les emplacements prime de Toronto",
+  "executiveDesc": "Des quartiers que vous choisiriez vous-même.",
+  "simple": "Zéro tracas",
+  "simpleDesc": "Pas de paperasse. Pas de meubles. Arrivez et vivez.",
+  "locationDesc": "De King West à Yorkville. Là où ça se passe.",
   "browse": "Parcourir les Propriétés",
-  "storyTitle": "Notre Histoire",
-  "storyOrigin": "StayNeos est né d'une observation simple : à Toronto, les professionnels faisaient face à un dilemme — les hôtels étaient exigus et impersonnels; les locations traditionnelles étaient compliquées et rigides. Nous avons décidé de changer cela.",
-  "storyMission": "En 2024, nous avons fondé StayNeos pour créer des appartements exécutifs premium conçus pour les professionnels. Chaque propriété est soigneusement sélectionnée et entièrement équipée, pour que nos hôtes puissent se concentrer sur l'essentiel dès le premier jour.",
-  "storyToday": "Aujourd'hui, StayNeos est devenu la principale plateforme d'appartements exécutifs de Toronto, servant des professionnels et entreprises dans la tech, la finance, la santé et bien plus. Nous ne fournissons pas seulement un hébergement — nous offrons un mode de vie confortable.",
-  "valuesTitle": "Nos Valeurs",
-  "peopleFirst": "L'Humain d'Abord",
-  "peopleFirstDesc": "Chaque hôte est une personne, pas un numéro. Nous prêtons attention aux détails — des cadeaux de bienvenue au support 24/7",
-  "flexibility": "La Flexibilité Compte",
-  "flexibilityDesc": "Le monde des affaires évolue vite, et le logement doit s'adapter. D'une semaine à un an, nous offrons des conditions vraiment flexibles",
-  "sustainability": "Vie Durable",
-  "sustainabilityDesc": "Nous privilégions les bâtiments écologiques, réduisons les articles jetables, et collaborons avec des propriétaires soucieux de l'environnement",
-  "statsTitle": "En Chiffres",
-  "propertiesCount": "100+ Propriétés Sélectionnées",
-  "guestsCount": "1000+ Professionnels",
-  "partnersCount": "50+ Partenaires Entreprises",
-  "coverage": "Zones Centrales de Toronto",
-  "ctaContact": "Nous Contacter",
+  "storyTitle": "Comment tout a commencé",
+  "storyOrigin": "Tout a commencé par une recherche frustrante. Un fondateur s'installe à Toronto et fait face au même choix : hôtel sans cuisine ou bail de 12 mois vide. On a créé une troisième option.",
+  "storyMission": "En 2024, StayNeos est né : de beaux appartements meublés, prêts dès le lendemain. Triés sur le volet, dans les quartiers où vous voudriez vraiment vivre.",
+  "storyToday": "Aujourd'hui, nous sommes la référence à Toronto. Ingénieurs, consultants, familles — ils restent chez nous parce qu'on traite chaque séjour comme s'il comptait.",
+  "valuesTitle": "Ce en quoi nous croyons",
+  "peopleFirst": "Des vraies personnes, pas des transactions",
+  "peopleFirstDesc": "Vous n'êtes pas un numéro. Une vraie personne répond. On se souvient de vos préférences.",
+  "flexibility": "La vie ne rentre pas dans des cases",
+  "flexibilityDesc": "Les projets se prolongent. Les plans changent. On comprend. Flexibilité, pas de pénalités.",
+  "sustainability": "Mieux pour la ville",
+  "sustainabilityDesc": "Bâtiments écoresponsables, fournisseurs locaux. Toronto est aussi notre ville.",
+  "statsTitle": "En chiffres",
+  "propertiesCount": "100+ Appartements sélectionnés",
+  "guestsCount": "1 000+ Clients satisfaits",
+  "partnersCount": "50+ Partenaires entreprise",
+  "coverage": "Centre-ville de Toronto",
+  "ctaContact": "Nous dire bonjour",
   "apartment": "Appartement",
   "condo": "Copropriété",
   "townhouse": "Maison de Ville",
@@ -2271,5 +2315,407 @@
   "pets": "Animaux",
   "pet": "Animal",
   "serviceAnimal": "Animal d'assistance",
-  "propertyNotFound": "Propriété non trouvée"
+  "propertyNotFound": "Propriété non trouvée",
+  "paypal": "PayPal",
+  "applePay": "Apple Pay",
+  "googlePay": "Google Pay",
+  "aboutPage": {
+    "title": "À propos de StayNeos",
+    "heroSubtitle": "On sait ce que c'est d'avoir besoin d'un foyer dans une ville qui n'est pas encore la vôtre. C'est pour ça qu'on a créé StayNeos.",
+    "missionLabel": "NOTRE MISSION",
+    "missionTitle": "Ce qui nous motive",
+    "missionDesc": "Tout le monde mérite un vrai foyer — même loin de chez soi.",
+    "missionItem1Title": "Appartements sélectionnés",
+    "missionItem1Desc": "Des quartiers que vous choisiriez vous-même",
+    "missionItem2Title": "Zéro tracas",
+    "missionItem2Desc": "Pas de paperasse. Pas de meubles. Vivez.",
+    "missionItem3Title": "Votre emploi du temps",
+    "missionItem3Desc": "28 jours ou 365. C'est vous qui décidez.",
+    "missionItem4Title": "Les meilleurs quartiers",
+    "missionItem4Desc": "De King West à Yorkville. Là où il faut être.",
+    "daysFlexible": "jours de bail flexible",
+    "storyLabel": "NOTRE HISTOIRE",
+    "storyTitle": "Comment tout a commencé",
+    "storyDesc": "Une recherche d'appartement frustrante à Toronto",
+    "story1Title": "Le problème",
+    "story1Desc": "S'installer à Toronto sans trouver un vrai chez-soi.",
+    "story2Title": "L'hôtel, non merci",
+    "story2Desc": "Petit, sans cuisine, aucun sentiment d'appartenance.",
+    "story3Title": "Le bail non plus",
+    "story3Desc": "Contrat d'un an, appartement vide, semaines d'attente.",
+    "story4Title": "Alors on a créé StayNeos",
+    "story4Desc": "Meublé, flexible, prêt quand vous l'êtes.",
+    "whyLabel": "POURQUOI NOUS",
+    "whyTitle": "Pourquoi nous choisir",
+    "whyDesc": "On fait de Toronto votre ville.",
+    "why1Title": "Chaque logement visité",
+    "why1Desc": "On a testé chaque canapé.",
+    "why2Title": "Vraiment flexible",
+    "why2Desc": "Dès 28 jours. Prolongez quand vous voulez.",
+    "why3Title": "Prêt à vivre",
+    "why3Desc": "Meublé jusqu'aux tasses à café.",
+    "why4Title": "Toujours disponible",
+    "why4Desc": "De vraies personnes, 24h/24.",
+    "why5Title": "Pas de surprises",
+    "why5Desc": "Le prix affiché est le prix payé.",
+    "commitLabel": "NOTRE ENGAGEMENT",
+    "commitTitle": "Notre promesse",
+    "commitDesc": "Chaque séjour mérite d'être raconté",
+    "commit1Title": "Une qualité palpable",
+    "commit1Desc": "On soigne chaque détail.",
+    "commit2Title": "Un foyer loin de chez soi",
+    "commit2Desc": "Pas juste un endroit pour dormir — un endroit pour vivre.",
+    "commit3Title": "En constante amélioration",
+    "commit3Desc": "Vos retours façonnent notre futur.",
+    "ctaTitle": "Trouvez votre chez-vous à Toronto ce soir",
+    "ctaDesc": "Parcourez des appartements meublés prêts à vivre",
+    "ctaBrowse": "Parcourir",
+    "ctaContact": "Nous dire bonjour"
+  },
+  "faqPage": {
+    "title": "Questions Fréquentes",
+    "subtitle": "Réponses aux questions courantes.",
+    "stillHaveQuestions": "D'autres questions ?",
+    "teamHelp": "Équipe disponible 24/7.",
+    "whatsappUs": "WhatsApp",
+    "emailUs": "Email",
+    "cat_booking": "Réservation",
+    "cat_payment": "Paiement",
+    "cat_cancellation": "Annulation",
+    "cat_checkin": "Arrivée/Départ",
+    "cat_property": "Équipements",
+    "cat_support": "Support",
+    "bq1": "Comment réserver ?",
+    "ba1": "Parcourez, sélectionnez, réservez.",
+    "bq2": "Durée minimum ?",
+    "ba2": "28 nuits.",
+    "bq3": "Réserver pour quelqu'un ?",
+    "ba3": "Oui.",
+    "bq4": "Confirmation ?",
+    "ba4": "Email de confirmation envoyé.",
+    "pq1": "Modes de paiement ?",
+    "pa1": "Cartes, Google Pay, virements.",
+    "pq2": "Quand débité ?",
+    "pa2": "À la réservation.",
+    "pq3": "Frais supplémentaires ?",
+    "pa3": "Taxes et ménage inclus.",
+    "pq4": "Paiement sécurisé ?",
+    "pa4": "Oui, Stripe PCI DSS.",
+    "cq1": "Politique d'annulation ?",
+    "ca1": "30+ jours: intégral. 14-30: 50%. <14: non.",
+    "cq2": "Modifier dates ?",
+    "ca2": "Oui, sous réserve.",
+    "cq3": "Urgence ?",
+    "ca3": "Contactez le support.",
+    "chq1": "Horaires ?",
+    "cha1": "15h / 11h.",
+    "chq2": "Clés ?",
+    "cha2": "Instructions 24h avant.",
+    "chq3": "Arrivée tardive ?",
+    "cha3": "Check-in autonome.",
+    "prq1": "Meublé ?",
+    "pra1": "Oui, entièrement.",
+    "prq2": "Wi-Fi ?",
+    "pra2": "Oui, inclus.",
+    "prq3": "Animaux ?",
+    "pra3": "Selon la propriété.",
+    "prq4": "Tabac ?",
+    "pra4": "Non-fumeur.",
+    "sq1": "Contact support ?",
+    "sa1": "WhatsApp, tél, email. 24/7.",
+    "sq2": "Problème ?",
+    "sa2": "Support 24/7.",
+    "sq3": "Entreprise ?",
+    "sa3": "Oui, conditions flexibles."
+  },
+  "helpPage": {
+    "title": "Centre d'Aide",
+    "subtitle": "Réponses à vos questions",
+    "searchPlaceholder": "Rechercher...",
+    "stillNeedHelp": "Besoin d'aide ?",
+    "supportAvailable": "Support 24/7.",
+    "cat_booking": "Réservation",
+    "cat_payment": "Paiement",
+    "cat_checkin": "Arrivée/Départ",
+    "cat_during": "Pendant le Séjour",
+    "bkq1": "Comment réserver ?",
+    "bka1": "En ligne.",
+    "bkq2": "Minimum ?",
+    "bka2": "28 nuits.",
+    "bkq3": "Prolonger ?",
+    "bka3": "Oui, 7 jours avant.",
+    "pmq1": "Paiement ?",
+    "pma1": "Cartes et virements.",
+    "pmq2": "Débit ?",
+    "pma2": "Acompte + solde 14 jours avant.",
+    "pmq3": "Annulation ?",
+    "pma3": "30+: intégral. 14-30: 50%.",
+    "ciq1": "Arrivée ?",
+    "cia1": "Instructions 48h avant.",
+    "ciq2": "Horaires ?",
+    "cia2": "15h / 11h.",
+    "ciq3": "Apporter ?",
+    "cia3": "Juste vos bagages !",
+    "duq1": "Ménage ?",
+    "dua1": "Hebdomadaire pour 30+ jours.",
+    "duq2": "Panne ?",
+    "dua2": "Support 24/7, 4h urgence.",
+    "duq3": "Invités ?",
+    "dua3": "Oui, enregistrement requis."
+  },
+  "termsPage": {
+    "title": "Conditions d'Utilisation",
+    "lastUpdated": "Dernière MAJ : 7 février 2026",
+    "s1Title": "1. Acceptation",
+    "s1Text": "En utilisant StayNeos, vous acceptez ces conditions.",
+    "s2Title": "2. Services",
+    "s2Text": "Plateforme de réservation d'appartements meublés.",
+    "s3Title": "3. Réservation et Paiement",
+    "s3_1": "3.1 Sous réserve de disponibilité.",
+    "s3_2": "3.2 Paiement ou acompte requis.",
+    "s3_3": "3.3 Minimum 28 nuits.",
+    "s4Title": "4. Annulation",
+    "s4_1": "4.1 Annulations :",
+    "s4_1a": "30+ jours : intégral",
+    "s4_1b": "14-30 jours : 50%",
+    "s4_1c": "<14 jours : non remboursable",
+    "s4_2": "4.2 Modifications sous réserve.",
+    "s5Title": "5. Responsabilités",
+    "s5Text": "Vous acceptez de :",
+    "s6Title": "6. Règles",
+    "s6_1": "6.1 Non-fumeur.",
+    "s6_2": "6.2 Animaux sur approbation.",
+    "s6_3": "6.3 Pas de fêtes.",
+    "s6_4": "6.4 Heures calmes 22h-8h.",
+    "s7Title": "7. Assurance",
+    "s7Text": "Effets personnels sous responsabilité de l'invité.",
+    "s8Title": "8. Limitation",
+    "s8Text": "Pas responsable des dommages indirects.",
+    "s9Title": "9. Droit",
+    "s9Text": "Lois de l'Ontario, Canada.",
+    "s10Title": "10. Modifications",
+    "s10Text": "Droit de modifier à tout moment.",
+    "s11Title": "11. Contact",
+    "s11Text": "Questions :",
+    "contactInfo": "Email: hello@stayneos.com | Tél: +1 (647) 862-6518 | Adresse: 20 Upjohn Rd, North York, ON, M3B 2V9",
+    "s5Items_0": "Informations exactes",
+    "s5Items_1": "Soin de la propriété",
+    "s5Items_2": "Règles de l'immeuble",
+    "s5Items_3": "Capacité maximale",
+    "s5Items_4": "Signaler les dommages",
+    "s5Items_5": "Pas d'activités illégales",
+    "s5Items_count": "6"
+  },
+  "privacyPage": {
+    "title": "Politique de Confidentialité",
+    "lastUpdated": "Dernière MAJ : 7 février 2026",
+    "s1Title": "1. Introduction",
+    "s1Text": "StayNeos protège votre vie privée.",
+    "s2Title": "2. Informations Collectées",
+    "s2Text": "Nous collectons :",
+    "s3Title": "3. Utilisation",
+    "s3Text": "Pour :",
+    "s4Title": "4. Partage",
+    "s4Text": "Pas de vente. Partage avec :",
+    "s5Title": "5. Sécurité",
+    "s5Text": "Mesures de protection appropriées.",
+    "s6Title": "6. Vos Droits",
+    "s6Text": "Vous pouvez :",
+    "s7Title": "7. Contact",
+    "s7Text": "Questions :",
+    "contactInfo": "Email: hello@stayneos.com | Tél: +1 (647) 862-6518 | Adresse: 20 Upjohn Rd, North York, ON, M3B 2V9",
+    "s2Items_0": "Nom, email, téléphone, paiement.",
+    "s2Items_1": "Dates, préférences, demandes.",
+    "s2Items_2": "IP, navigateur, cookies.",
+    "s2Items_3": "Communications support.",
+    "s2Items_count": "4",
+    "s3Items_0": "Traiter réservations",
+    "s3Items_1": "Communiquer",
+    "s3Items_2": "Support",
+    "s3Items_3": "Améliorer services",
+    "s3Items_4": "Promotions (avec consentement)",
+    "s3Items_5": "Conformité légale",
+    "s3Items_count": "6",
+    "s4Items_0": "Propriétaires",
+    "s4Items_1": "Fournisseurs",
+    "s4Items_2": "Autorités légales",
+    "s4Items_count": "3",
+    "s6Items_0": "Accéder",
+    "s6Items_1": "Corriger",
+    "s6Items_2": "Supprimer",
+    "s6Items_3": "Refuser marketing",
+    "s6Items_4": "Retirer consentement",
+    "s6Items_count": "5"
+  },
+  "cancellationPage": {
+    "title": "Politique d'Annulation",
+    "flexible": "Flexible",
+    "flexibleDesc": "Gratuit 48h avant. Première nuit non remboursable après.",
+    "moderate": "Modérée",
+    "moderateDesc": "Gratuit 5 jours avant. 50% après.",
+    "longTerm": "Long Séjour (28+ nuits)",
+    "longTermDesc": "Gratuit 30 jours avant. 30 jours non remboursables après.",
+    "refund": "Remboursement",
+    "refundDesc": "5-10 jours ouvrables. Frais de service non remboursables.",
+    "extenuating": "Circonstances Exceptionnelles",
+    "extenuatingDesc": "Remboursement possible pour catastrophes ou urgences.",
+    "contact": "Contact",
+    "contactDesc": "Email {email} ou appelez {phone}."
+  },
+  "serviceAnimalsPage": {
+    "title": "Animaux d'Assistance",
+    "welcome": "Bienvenus",
+    "welcomeDesc": "StayNeos accueille les animaux d'assistance.",
+    "noFees": "Pas de Frais",
+    "noFeesDesc": "Aucun frais pour les animaux d'assistance.",
+    "responsibilities": "Responsabilités",
+    "emotional": "Soutien Émotionnel",
+    "emotionalDesc": "Politique standard pour animaux peut s'appliquer.",
+    "contact": "Contact",
+    "contactDesc": "Email {email}.",
+    "responsibilityItems_0": "Sous contrôle en permanence",
+    "responsibilityItems_1": "Responsable des dommages",
+    "responsibilityItems_2": "Propreté requise",
+    "responsibilityItems_count": "3"
+  },
+  "forbiddenPage": {
+    "title": "403",
+    "subtitle": "Accès Interdit",
+    "description": "Vous n'avez pas la permission d'accéder à cette page.",
+    "goHome": "Accueil",
+    "myDashboard": "Tableau de Bord"
+  },
+  "globalError": {
+    "title": "Erreur Système",
+    "description": "Désolé, erreur grave. Veuillez rafraîchir.",
+    "errorCode": "Code : {code}",
+    "refresh": "Rafraîchir"
+  },
+  "loginPage": {
+    "heroTitle": "Trouvez votre\nchez-vous loin de chez vous",
+    "heroSubtitle": "Appartements meublés premium dans les meilleures villes.",
+    "premiumProperties": "Propriétés Premium",
+    "globalCities": "Villes",
+    "guestRating": "Note",
+    "loginTitle": "Connexion",
+    "loginSubtitle": "Bienvenue sur StayNeos"
+  },
+  "registerPage": {
+    "heroTitle": "Vie de luxe,",
+    "heroHighlight": "en toute simplicité.",
+    "heroSubtitle": "Rejoignez des milliers de professionnels.",
+    "apartments": "Appartements",
+    "cities": "Villes",
+    "satisfaction": "Satisfaction"
+  },
+  "agents": {
+    "hero": {
+      "title": "Devenez Partenaire StayNeos",
+      "subtitle": "Rejoignez notre réseau de professionnels de l'immobilier et gagnez des commissions compétitives en référant des propriétés, en représentant des locataires ou en référant des clients vers nos appartements exécutifs de qualité supérieure.",
+      "cta": "Devenir Partenaire"
+    },
+    "models": {
+      "title": "Modèles de Partenariat",
+      "subtitle": "Choisissez le modèle de partenariat adapté à votre activité et commencez à gagner dès aujourd'hui.",
+      "commission": "Commission",
+      "property": {
+        "title": "Référer des Propriétés",
+        "desc": "Référez des propriétaires pour inscrire leurs appartements meublés avec StayNeos. Gagnez une commission sur chaque inscription réussie."
+      },
+      "tenant": {
+        "title": "Représenter des Locataires",
+        "desc": "Aidez vos clients à trouver l'appartement exécutif parfait. Gagnez une commission sur chaque réservation que vous facilitez."
+      },
+      "guest": {
+        "title": "Référer des Clients",
+        "desc": "Référez des voyageurs d'affaires, des employés en relocalisation ou des équipes de projet vers StayNeos et gagnez pour chaque réservation réussie."
+      }
+    },
+    "process": {
+      "title": "Comment Ça Fonctionne",
+      "subtitle": "Commencez en quatre étapes simples et commencez à gagner des commissions.",
+      "register": {
+        "title": "Inscrivez-vous",
+        "desc": "Remplissez le formulaire de candidature avec vos coordonnées et informations de licence."
+      },
+      "evaluate": {
+        "title": "Évaluation de la Propriété",
+        "desc": "Nous évaluons les propriétés référées pour nous assurer qu'elles répondent à nos normes de qualité."
+      },
+      "review": {
+        "title": "Révision et Approbation",
+        "desc": "Notre équipe examine les candidatures et approuve les partenaires qualifiés sous 48 heures."
+      },
+      "commission": {
+        "title": "Gagnez des Commissions",
+        "desc": "Commencez à gagner des commissions sur chaque référence ou réservation réussie."
+      }
+    },
+    "requirements": {
+      "title": "Exigences pour les Propriétés",
+      "subtitle": "Les propriétés que nous acceptons doivent répondre aux critères suivants :",
+      "furnished": {
+        "title": "Entièrement Meublé",
+        "desc": "Toutes les propriétés doivent être entièrement meublées avec des meubles de qualité, des appareils électroménagers et des articles ménagers."
+      },
+      "location": {
+        "title": "Emplacement de Premier Choix",
+        "desc": "Situé au centre-ville de Toronto, North York ou d'autres quartiers d'affaires de premier plan avec un bon accès aux transports."
+      },
+      "quality": {
+        "title": "Haute Qualité",
+        "desc": "Propriétés bien entretenues avec des commodités modernes, un nettoyage professionnel et une disponibilité de support 24h/24."
+      },
+      "amenities": {
+        "title": "Commodités Essentielles",
+        "desc": "Doit inclure le WiFi haut débit, une buanderie dans l'unité ou sur place, une cuisine entièrement équipée et un espace de travail."
+      }
+    },
+    "benefits": {
+      "title": "Pourquoi Devenir Partenaire StayNeos",
+      "subtitle": "Rejoignez des centaines de professionnels de l'immobilier qui font confiance à StayNeos pour les besoins de logement de leurs clients.",
+      "commission": {
+        "title": "Commission Compétitive",
+        "desc": "Gagnez jusqu'à 50% de commission sur les références de propriétés et des taux compétitifs sur la représentation de locataires."
+      },
+      "support": {
+        "title": "Support Dédié",
+        "desc": "Accédez à notre équipe de support partenaire pour l'aide aux réservations, demandes et besoins des clients."
+      },
+      "marketing": {
+        "title": "Matériaux Marketing",
+        "desc": "Recevez des matériaux marketing professionnels, des photos de propriétés et des descriptions à partager avec vos clients."
+      },
+      "fast": {
+        "title": "Paiements Rapides",
+        "desc": "Les paiements de commissions sont traités mensuellement avec des rapports détaillés et un suivi transparent."
+      }
+    },
+    "form": {
+      "title": "Inscrivez-vous en tant que Partenaire",
+      "subtitle": "Remplissez le formulaire ci-dessous et notre équipe vous contactera sous 24 heures.",
+      "firstName": "Prénom",
+      "firstNamePlaceholder": "Entrez votre prénom",
+      "lastName": "Nom de Famille",
+      "lastNamePlaceholder": "Entrez votre nom de famille",
+      "email": "Adresse Courriel",
+      "emailPlaceholder": "votre@courriel.com",
+      "phone": "Numéro de Téléphone",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "company": "Entreprise/Courtage",
+      "companyPlaceholder": "Nom de votre entreprise",
+      "license": "Numéro de Licence Immobilière",
+      "licensePlaceholder": "Optionnel",
+      "partnershipType": "Type de Partenariat",
+      "selectType": "Sélectionnez le type de partenariat",
+      "message": "Message",
+      "messagePlaceholder": "Parlez-nous de votre activité et comment vous aimeriez devenir partenaire de StayNeos...",
+      "privacyNote": "Vos informations seront gardées confidentielles et utilisées uniquement pour la communication de partenariat.",
+      "submit": "Soumettre la Candidature",
+      "submitting": "Envoi en cours...",
+      "successTitle": "Candidature Soumise !",
+      "successMessage": "Merci pour votre intérêt. Notre équipe examinera votre candidature et vous contactera sous 24 heures.",
+      "submitAnother": "Soumettre une autre candidature"
+    }
+  }
 }

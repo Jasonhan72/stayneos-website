@@ -12,7 +12,7 @@ export function OrganizationSchema({
   name = "StayNeos",
   url = "https://stayneos.com",
   logo = "https://stayneos.com/logo.png",
-  description = "专为商务人士打造的高端行政公寓平台",
+  description = "Premium furnished apartment platform for business professionals",
 }: OrganizationSchemaProps) {
   const schema = {
     "@context": "https://schema.org",
@@ -22,8 +22,7 @@ export function OrganizationSchema({
     logo,
     description,
     sameAs: [
-      "https://weibo.com/stayneos",
-      "https://mp.weixin.qq.com/s/stayneos",
+      "https://x.com/stayneos",
     ],
     contactPoint: {
       "@type": "ContactPoint",
@@ -99,7 +98,7 @@ interface LocalBusinessSchemaProps {
 
 export function LocalBusinessSchema({
   name = "StayNeos",
-  description = "高端行政公寓出租平台",
+  description = "Premium furnished apartment rental platform",
   url = "https://stayneos.com",
   telephone = "+1-647-862-6518",
   address = {
@@ -168,7 +167,7 @@ export function PropertySchema({
     "@context": "https://schema.org",
     "@type": "LodgingReservation",
     name: property.title,
-    description: `${property.title}，位于${property.location}，面积${property.area}平方米，可容纳${property.maxGuests}人`,
+    description: `${property.title} in ${property.location}, ${property.area} sqm, up to ${property.maxGuests} guests`,
     url: `${baseUrl}/property/${property.id}`,
     image: property.images,
     address: {

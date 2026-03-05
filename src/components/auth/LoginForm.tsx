@@ -92,15 +92,11 @@ export function LoginForm({ callbackUrl = "/" }: LoginFormProps) {
   };
 
   const handleGoogleLogin = () => {
-    setIsLoading(true);
-    // TODO: Implement Google OAuth
-    window.location.href = "/api/auth/oauth/google";
+    setServerError("Google login coming soon. Please use email login.");
   };
 
   const handleFacebookLogin = () => {
-    setIsLoading(true);
-    // TODO: Implement Facebook OAuth
-    window.location.href = "/api/auth/oauth/facebook";
+    setServerError("Facebook login coming soon. Please use email login.");
   };
 
   return (

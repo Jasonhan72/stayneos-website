@@ -44,8 +44,8 @@ export function HeroSection() {
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
-          src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1920&q=80"
-          alt="Luxury apartment"
+          src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1920&q=80"
+          alt="Premium executive apartment with city view"
           fill
           priority
           className="object-cover"
@@ -158,22 +158,26 @@ export function HeroSection() {
 // ============================================================
 const valueProps = [
   {
-    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&q=80',
+    // Curated Homes — 精致公寓内饰
+    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&q=80',
     titleKey: 'features.quality',
     descKey: 'features.qualityDesc'
   },
   {
-    image: 'https://images.unsplash.com/photo-1554995207-c18c203602cb?w=400&q=80',
+    // Flexible Lease — 现代公寓钥匙/入住
+    image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&q=80',
     titleKey: 'features.flexible',
     descKey: 'features.flexibleDesc'
   },
   {
-    image: 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=400&q=80',
+    // Concierge Service — 酒店级服务
+    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=80',
     titleKey: 'features.service',
     descKey: 'features.serviceDesc'
   },
   {
-    image: 'https://images.unsplash.com/photo-1556745757-8d76bdb6984b?w=400&q=80',
+    // 24/7 Support — 专业客服支持
+    image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&q=80',
     titleKey: 'features.support',
     descKey: 'features.supportDesc'
   }
@@ -224,7 +228,7 @@ const segments = [
     descKey: 'segments.business.desc',
     ctaKey: 'segments.business.cta',
     href: '/corporate',
-    image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80'
   },
   {
     titleKey: 'segments.longterm.title',
@@ -240,7 +244,7 @@ const segments = [
     descKey: 'segments.relocation.desc',
     ctaKey: 'segments.relocation.cta',
     href: '/properties',
-    image: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80'
   }
 ];
 
@@ -353,7 +357,7 @@ export function FeaturedPropertiesSection() {
         <Skeleton.PropertyCardList count={4} />
       ) : featuredProperties.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-xl border border-neutral-200">
-          <p className="text-neutral-500">暂无精选房源</p>
+          <p className="text-neutral-500">{t('properties.empty')}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -405,7 +409,7 @@ export function FeaturedPropertiesSection() {
                     <span>·</span>
                     <span>{property.area}m²</span>
                     <span>·</span>
-                    <span>最多 {property.maxGuests} 人</span>
+                    <span>{t('properties.maxGuests', { count: property.maxGuests })}</span>
                   </div>
                   
                   <div className="flex items-baseline justify-between pt-4 border-t border-neutral-200">

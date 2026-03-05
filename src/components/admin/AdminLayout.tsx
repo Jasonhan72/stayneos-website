@@ -165,8 +165,8 @@ export default function AdminLayout({
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-neutral-500">
             <p>© 2024 StayNeos Admin. All rights reserved.</p>
             <div className="flex items-center gap-4">
-              <Link href="/admin/help" className="hover:text-neutral-700">帮助</Link>
-              <Link href="/admin/settings" className="hover:text-neutral-700">设置</Link>
+              <Link href="#" className="hover:text-neutral-700">帮助</Link>
+              <Link href="#" className="hover:text-neutral-700">设置</Link>
               <Link href="/" className="hover:text-neutral-700">返回网站</Link>
             </div>
           </div>

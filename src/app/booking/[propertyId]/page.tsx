@@ -1,6 +1,8 @@
+import { mockProperties } from '@/lib/data';
+
 // Required for static export
 export function generateStaticParams() {
-  return [{ propertyId: 'dummy' }];
+  return mockProperties.map(p => ({ propertyId: p.id }));
 }
 
 import BookingContent from './BookingContent';

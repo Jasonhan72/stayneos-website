@@ -41,7 +41,7 @@ export function HostCard({ host, variant = 'full', showContact = true }: HostCar
   if (variant === 'compact') {
     return (
       <Link 
-        href={`/host/${host.id}`} 
+        href={`/property/${host.id}`} 
         className="flex items-center gap-3 group p-2 -m-2 rounded-lg hover:bg-neutral-50 transition-colors"
       >
         <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-transparent group-hover:ring-primary/20 transition-all">
@@ -70,7 +70,7 @@ export function HostCard({ host, variant = 'full', showContact = true }: HostCar
   return (
     <div className="flex items-start gap-4 py-6">
       {/* Avatar */}
-      <Link href={`/host/${host.id}`} className="shrink-0">
+      <Link href={`/property/${host.id}`} className="shrink-0">
         <div className="relative w-16 h-16 rounded-full overflow-hidden hover:ring-2 ring-primary transition-all">
           <Image
             src={host.avatarUrl || '/images/default-avatar.jpg'}
@@ -83,7 +83,7 @@ export function HostCard({ host, variant = 'full', showContact = true }: HostCar
 
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <Link href={`/host/${host.id}`}>
+        <Link href={`/property/${host.id}`}>
           <h3 className="font-semibold text-lg text-neutral-900 hover:text-primary transition-colors">
             Hosted by {host.displayName}
           </h3>

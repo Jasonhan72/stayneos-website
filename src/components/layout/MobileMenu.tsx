@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { X, User, Home, Heart, KeyRound, Building2, Phone, ChevronRight, SlidersHorizontal } from "lucide-react";
+import { X, User, Home, Heart, KeyRound, Building2, Phone, ChevronRight, SlidersHorizontal, LayoutDashboard, Search, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/UserContext";
 import { useI18n } from "@/lib/i18n";
@@ -67,7 +67,9 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
   // Logged out menu items
   const publicMenuItems = [
-    { label: t("nav.landlords"), href: "/landlords", icon: KeyRound },
+    { label: t("nav.explore") || "Explore", href: "/properties", icon: Search },
+    { label: t("nav.about") || "About Us", href: "/about", icon: Info },
+    { label: t("nav.partnerWithUs"), href: "/for-agents", icon: Building2 },
     { label: t("nav.business"), href: "/corporate", icon: Building2 },
     { label: t("nav.contact"), href: "/contact", icon: Phone },
   ];
@@ -244,6 +246,18 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               {/* Primary Menu Items */}
               <div className="space-y-0">
                 <Link
+                  href="/dashboard"
+                  onClick={onClose}
+                  className="flex items-center justify-between py-4 border-b border-neutral-100"
+                >
+                  <div className="flex items-center gap-4">
+                    <LayoutDashboard className="w-5 h-5 text-neutral-600" />
+                    <span className="text-neutral-800">{t("nav.dashboard")}</span>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-neutral-400" />
+                </Link>
+
+                <Link
                   href="/dashboard/bookings"
                   onClick={onClose}
                   className="flex items-center justify-between py-4 border-b border-neutral-100"
@@ -251,6 +265,18 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   <div className="flex items-center gap-4">
                     <Home className="w-5 h-5 text-neutral-600" />
                     <span className="text-neutral-800">{t("nav.bookings")}</span>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-neutral-400" />
+                </Link>
+
+                <Link
+                  href="/dashboard/properties"
+                  onClick={onClose}
+                  className="flex items-center justify-between py-4 border-b border-neutral-100"
+                >
+                  <div className="flex items-center gap-4">
+                    <Building2 className="w-5 h-5 text-neutral-600" />
+                    <span className="text-neutral-800">{t("nav.manageProperties")}</span>
                   </div>
                   <ChevronRight className="w-5 h-5 text-neutral-400" />
                 </Link>

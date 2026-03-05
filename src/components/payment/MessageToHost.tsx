@@ -28,9 +28,9 @@ export function MessageToHost({
   if (!isOpen) return null;
 
   const placeholderExamples = [
-    t('payment.messageExample1') || "Hi! I'm visiting Toronto for a business conference and your place looks perfect for my stay.",
+    t('payment.messageExample1') || "Hi! I'm traveling for work and looking for a short-term residence. Your place looks perfect for my stay.",
     t('payment.messageExample2') || "Looking forward to staying at your beautiful apartment! I'll be working remotely during the weekdays.",
-    t('payment.messageExample3') || "This will be my first time in Toronto. Excited to explore the city from your conveniently located place!",
+    t('payment.messageExample3') || "This will be my first time staying in this city. Excited to explore from your conveniently located place!",
   ];
 
   const randomPlaceholder = placeholderExamples[Math.floor(Math.random() * placeholderExamples.length)];

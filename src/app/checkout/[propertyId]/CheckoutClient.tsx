@@ -15,7 +15,7 @@ import {
 import { Container } from '@/components/ui';
 import { AirbnbCalendar } from '@/components/booking';
 import { BookingPriceCalculator, calculateBookingPrice } from '@/components/booking';
-import { getPropertyById } from '@/lib/data';
+import { useProperty } from '@/hooks/useProperties';
 import { getLocalizedTitle } from '@/components/property/PropertyCard';
 import { useI18n } from '@/lib/i18n';
 import { useAuth } from '@/lib/UserContext';
@@ -27,7 +27,7 @@ interface CheckoutClientProps {
 export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const property = getPropertyById(propertyId);
+  const { property, isLoading: isPropertyLoading } = useProperty(propertyId);
   const { t, locale } = useI18n();
   const { isAuthenticated, user } = useAuth();
 
@@ -42,6 +42,17 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
   // Modals state
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showGuestPicker, setShowGuestPicker] = useState(false);
+
+  if (isPropertyLoading) {
+    return (
+      <main className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-black border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-neutral-500">{t('common.loading') || 'Loading...'}</p>
+        </div>
+      </main>
+    );
+  }
 
   if (!property) {
     return (

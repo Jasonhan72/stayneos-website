@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { AirbnbCalendar, BookingPriceCalculator, GuestSelector, type GuestCounts } from '@/components/booking';
 import StripeProvider from '@/components/payment/StripeProvider';
 import PaymentForm from '@/components/payment/PaymentForm';
-import { Button, Input } from '@/components/ui';
+import { Input } from '@/components/ui';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { ApiErrorAlert } from '@/components/error';
 import { calculateBookingPrice, validateBookingDates } from '@/lib/booking';
@@ -18,8 +18,6 @@ import { useProperty } from '@/hooks/useProperties';
 import { useCreateBooking } from '@/hooks/useBookings';
 import { 
   ChevronLeft, 
-  Calendar, 
-  Check, 
   AlertCircle,
   Loader2,
   Shield,
@@ -27,7 +25,6 @@ import {
   User,
   Sparkles,
   Home,
-  ChevronRight,
   CreditCard
 } from 'lucide-react';
 
@@ -39,17 +36,19 @@ export default function BookingContent() {
   const { user, isAuthenticated } = useAuth();
   const { t } = useI18n();
   
-  // 使用 API 获取房源数据
+  // Property data
   const { property, isLoading: isPropertyLoading, error: propertyError } = useProperty(propertyId);
   const propertyCardData = property;
   
-  // 预订 mutation
+  // Booking mutation
   const { createBooking, isCreating, error: bookingError } = useCreateBooking();
   
   // Get pre-filled data from URL
   const queryCheckIn = searchParams.get('checkIn') || '';
   const queryCheckOut = searchParams.get('checkOut') || '';
   const queryGuests = parseInt(searchParams.get('guests') || '1', 10);
+  
+  const hasPrefilled = !!(queryCheckIn && queryCheckOut);
   
   // Form state
   const [checkIn, setCheckIn] = useState(queryCheckIn);
@@ -69,13 +68,12 @@ export default function BookingContent() {
     }
   }, [isAuthenticated, user]);
   
-  // Step state
-  const [currentStep, setCurrentStep] = useState(1);
+  // Inline edit toggles
+  const [editingDates, setEditingDates] = useState(!hasPrefilled);
+  const [editingGuests, setEditingGuests] = useState(false);
   const [error, setError] = useState('');
-  const [showDatePicker, setShowDatePicker] = useState(!queryCheckIn || !queryCheckOut);
-  const [showGuestSelector, setShowGuestSelector] = useState(false);
   
-  // Guest breakdown state (adults, children, infants)
+  // Guest breakdown state
   const [guestBreakdown, setGuestBreakdown] = useState<GuestCounts>({
     adults: queryGuests,
     children: 0,
@@ -85,6 +83,7 @@ export default function BookingContent() {
   // Booking and payment state
   const [clientSecret, setClientSecret] = useState('');
   const [bookingNumber, setBookingNumber] = useState('');
+  const [showPayment, setShowPayment] = useState(false);
 
   // Redirect if property not found
   useEffect(() => {
@@ -117,7 +116,7 @@ export default function BookingContent() {
               className="inline-flex items-center gap-2 text-primary hover:underline"
             >
               <ChevronLeft size={18} />
-              返回房源列表
+              {t('common.backToList')}
             </Link>
           </div>
         </div>
@@ -125,7 +124,7 @@ export default function BookingContent() {
     );
   }
 
-  // Calculate price with cleaning fee
+  // Calculate price
   const priceCalc = checkIn && checkOut 
     ? calculateBookingPrice(propertyCardData, checkIn, checkOut)
     : null;
@@ -135,11 +134,36 @@ export default function BookingContent() {
     ? validateBookingDates(checkIn, checkOut, propertyCardData.minNights)
     : { valid: true };
 
+  // Calculate discounted price for display
+  const nights = priceCalc?.nights || 0;
+  const isMonthly = nights >= 28;
+  const displayPrice = isMonthly && propertyCardData.monthlyDiscount 
+    ? Math.round(propertyCardData.price * (100 - propertyCardData.monthlyDiscount) / 100)
+    : propertyCardData.price;
+
+  // Format date display
+  const formatDateDisplay = (dateStr: string) => {
+    if (!dateStr) return t('booking.addDate');
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+
+  // Format guest display
+  const formatGuestDisplay = () => {
+    const parts: string[] = [];
+    const totalGuests = guestBreakdown.adults + guestBreakdown.children;
+    parts.push(`${totalGuests} ${totalGuests === 1 ? t('booking.guest') : t('booking.guests')}`);
+    if (guestBreakdown.infants > 0) {
+      parts.push(`${guestBreakdown.infants} ${guestBreakdown.infants === 1 ? t('booking.guestSelector.infant') : t('booking.guestSelector.infants')}`);
+    }
+    return parts.join(', ');
+  };
+
   // Handle create booking
   const handleCreateBooking = async () => {
     if (!checkIn || !checkOut) {
       setError(t('booking.selectDatesError'));
-      setShowDatePicker(true);
+      setEditingDates(true);
       return;
     }
 
@@ -177,7 +201,7 @@ export default function BookingContent() {
         setClientSecret(result.clientSecret);
       }
       
-      setCurrentStep(3);
+      setShowPayment(true);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to create booking';
       setError(errorMessage);
@@ -192,307 +216,213 @@ export default function BookingContent() {
     setError(errorMsg);
   };
 
-  // Format date display
-  const formatDateDisplay = (dateStr: string) => {
-    if (!dateStr) return 'Add date';
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  };
-
-  // Calculate discounted price for display
-  const nights = priceCalc?.nights || 0;
-  const isMonthly = nights >= 28;
-  const displayPrice = isMonthly && propertyCardData.monthlyDiscount 
-    ? Math.round(propertyCardData.price * (100 - propertyCardData.monthlyDiscount) / 100)
-    : propertyCardData.price;
-
-  // Step indicator component
-  const StepIndicator = () => (
-    <div className="mb-8">
-      <div className="flex items-center justify-center max-w-2xl mx-auto">
-        {[1, 2, 3].map((step, index) => (
-          <div key={step} className="flex items-center">
-            <div className={cn(
-              "flex items-center justify-center w-10 h-10 rounded-full font-semibold transition-colors",
-              currentStep > step 
-                ? 'bg-green-500 text-white' 
-                : currentStep === step 
-                  ? 'bg-black text-white'
-                  : 'bg-neutral-200 text-neutral-500'
-            )}>
-              {currentStep > step ? (
-                <Check size={20} />
-              ) : (
-                step
-              )}
-            </div>
-            {index < 2 && (
-              <div className={cn(
-                "w-16 h-1 mx-2 transition-colors",
-                currentStep > step ? 'bg-green-500' : 'bg-neutral-200'
-              )} />
-            )}
-          </div>
-        ))}
-      </div>
-      <div className="flex justify-center gap-12 mt-3 text-sm">
-        <span className={currentStep === 1 ? 'text-neutral-900 font-medium' : 'text-neutral-500'}>{t('booking.step1') || 'Dates'}</span>
-        <span className={currentStep === 2 ? 'text-neutral-900 font-medium' : 'text-neutral-500'}>{t('booking.step2') || 'Details'}</span>
-        <span className={currentStep === 3 ? 'text-neutral-900 font-medium' : 'text-neutral-500'}>{t('booking.step3') || 'Payment'}</span>
-      </div>
-    </div>
-  );
-
   return (
-    <main className="min-h-screen bg-neutral-50">
+    <main className="min-h-screen bg-white">
       {/* Navigation */}
       <nav className="bg-white border-b border-neutral-200 sticky top-0 z-40">
-        <div className="container mx-auto px-4 h-16 flex items-center">
+        <div className="container mx-auto px-4 max-w-5xl h-16 flex items-center">
           <Link 
             href={`/property/${property.id}`}
             className="flex items-center gap-2 text-neutral-600 hover:text-neutral-900 transition-colors"
           >
             <ChevronLeft size={20} />
-            <span className="font-medium">Back to property</span>
+            <span className="font-medium">{t('booking.backToProperty')}</span>
           </Link>
         </div>
       </nav>
 
-      <div className="py-8">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <StepIndicator />
+      <div className="py-8 md:py-12">
+        <div className="container mx-auto px-4 max-w-5xl">
+          {/* Page Title */}
+          <h1 className="text-2xl md:text-3xl font-semibold text-neutral-900 mb-8">
+            {t('booking.confirmAndPay') || 'Confirm and pay'}
+          </h1>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Left - Booking Form */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Step 1: Dates & Guests */}
-              {currentStep === 1 && (
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
-                  <h2 className="text-2xl font-bold text-neutral-900 mb-6">
-                    Select dates and guests
-                  </h2>
-                  
-                  <div className="space-y-6">
-                    {/* Date Selection Summary */}
-                    <div 
-                      className="border-2 border-neutral-900 rounded-xl overflow-hidden cursor-pointer"
-                      onClick={() => setShowDatePicker(true)}
-                    >
-                      <div className="grid grid-cols-2 divide-x divide-neutral-200">
-                        <div className="p-4">
-                          <div className="text-xs font-bold text-neutral-900 uppercase">Check-in</div>
-                          <div className={cn(
-                            "text-sm mt-0.5 font-medium",
-                            checkIn ? 'text-neutral-900' : 'text-neutral-500'
-                          )}>
-                            {formatDateDisplay(checkIn)}
-                          </div>
-                        </div>
-                        <div className="p-4">
-                          <div className="text-xs font-bold text-neutral-900 uppercase">Checkout</div>
-                          <div className={cn(
-                            "text-sm mt-0.5 font-medium",
-                            checkOut ? 'text-neutral-900' : 'text-neutral-500'
-                          )}>
-                            {formatDateDisplay(checkOut)}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Calendar Modal Toggle */}
-                    <button
-                      onClick={() => setShowDatePicker(true)}
-                      className="w-full py-3 border-2 border-neutral-200 rounded-xl font-medium text-neutral-700 hover:border-neutral-900 transition-colors"
-                    >
-                      {checkIn && checkOut ? 'Change dates' : 'Select dates'}
-                    </button>
-                    
-                    {!dateValidation.valid && (
-                      <div className="mt-3 flex items-center gap-2 text-amber-600 text-sm bg-amber-50 p-3 rounded-lg">
-                        <AlertCircle size={16} />
-                        <span>{dateValidation.error}</span>
-                      </div>
-                    )}
-                    
-                    {propertyCardData.monthlyDiscount && propertyCardData.monthlyDiscount > 0 && (
-                      <div className="mt-3 p-3 bg-rose-50 border border-rose-200 rounded-lg">
-                        <div className="flex items-center gap-2 text-rose-800">
-                          <Sparkles size={16} />
-                          <span className="text-sm">
-                            <span className="font-semibold">{propertyCardData.monthlyDiscount}% off</span> for stays of 28+ nights
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
+            {/* Left Column - Main Content */}
+            <div className="lg:col-span-3 space-y-0">
+
+              {/* Section 1: Trip Details - Dates */}
+              <section className="py-6 border-b border-neutral-200">
+                <h2 className="text-xl font-semibold text-neutral-900 mb-4">
+                  {t('booking.yourTrip') || 'Your trip'}
+                </h2>
+                
+                {/* Dates Row */}
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="font-medium text-neutral-900">{t('booking.dates') || 'Dates'}</h3>
+                    {checkIn && checkOut ? (
+                      <p className="text-neutral-600 mt-0.5">
+                        {formatDateDisplay(checkIn)} – {formatDateDisplay(checkOut)}
+                        {nights > 0 && (
+                          <span className="text-neutral-400 ml-1">
+                            · {nights} {nights === 1 ? 'night' : 'nights'}
                           </span>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Guests Selector */}
-                    <div>
-                      <label className="block text-sm font-semibold text-neutral-900 mb-2">
-                        Guests
-                      </label>
-                      <select
-                        value={guests}
-                        onChange={(e) => setGuests(Number(e.target.value))}
-                        className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:ring-2 focus:ring-black focus:border-black transition-all"
-                      >
-                        {Array.from({ length: propertyCardData.maxGuests }).map((_, i) => (
-                          <option key={i} value={i + 1}>
-                            {i + 1} {i === 0 ? 'guest' : 'guests'}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="mt-8 flex justify-end">
-                    <Button
-                      onClick={() => {
-                        if (!checkIn || !checkOut) {
-                          setShowDatePicker(true);
-                          setError('Please select check-in and check-out dates');
-                        } else if (!dateValidation.valid) {
-                          setError(dateValidation.error || 'Invalid dates');
-                        } else {
-                          setCurrentStep(2);
-                          setError('');
-                        }
-                      }}
-                      size="lg"
-                      rightIcon={<ChevronRight size={18} />}
-                    >
-                      Continue
-                    </Button>
-                  </div>
-                  
-                  {error && (
-                    <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-red-700">
-                      <AlertCircle size={18} />
-                      <span>{error}</span>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Step 2: Guest Info */}
-              {currentStep === 2 && (
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
-                  <h2 className="text-2xl font-bold text-neutral-900 mb-6">
-                    Confirm your information
-                  </h2>
-                  
-                  <div className="space-y-6">
-                    {isAuthenticated && user ? (
-                      <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-5">
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center">
-                            <User className="w-6 h-6 text-neutral-600" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-neutral-900">Logged in as</h3>
-                            <p className="text-sm text-neutral-500">Your account information will be used</p>
-                          </div>
-                        </div>
-                        <div className="space-y-2 text-sm">
-                          <p>
-                            <span className="text-neutral-500">Name: </span>
-                            <span className="font-medium">{guestName}</span>
-                          </p>
-                          <p>
-                            <span className="text-neutral-500">Email: </span>
-                            <span className="font-medium">{guestEmail}</span>
-                          </p>
-                          {guestPhone && (
-                            <p>
-                              <span className="text-neutral-500">Phone: </span>
-                              <span className="font-medium">{guestPhone}</span>
-                            </p>
-                          )}
-                        </div>
-                        <div className="mt-4 pt-4 border-t border-neutral-200">
-                          <Link href="/profile" className="text-neutral-900 text-sm font-medium hover:underline">
-                            Edit profile →
-                          </Link>
-                        </div>
-                      </div>
+                        )}
+                      </p>
                     ) : (
-                      <>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <Input
-                            label="Full Name *"
-                            value={guestName}
-                            onChange={(e) => setGuestName(e.target.value)}
-                            placeholder="Enter your full name"
-                            required
-                          />
-                          <Input
-                            label="Phone Number *"
-                            value={guestPhone}
-                            onChange={(e) => setGuestPhone(e.target.value)}
-                            placeholder="+1 (xxx) xxx-xxxx"
-                            required
-                          />
-                        </div>
-
-                        <Input
-                          label="Email Address *"
-                          type="email"
-                          value={guestEmail}
-                          onChange={(e) => setGuestEmail(e.target.value)}
-                          placeholder="your@email.com"
-                          required
-                        />
-                      </>
+                      <p className="text-neutral-500 mt-0.5">{t('booking.addDates') || 'Add dates'}</p>
                     )}
+                  </div>
+                  <button
+                    onClick={() => setEditingDates(!editingDates)}
+                    className="text-sm font-semibold text-neutral-900 underline hover:text-neutral-600 transition-colors shrink-0 ml-4"
+                  >
+                    {editingDates ? (t('common.close') || 'Close') : (t('common.edit') || 'Edit')}
+                  </button>
+                </div>
 
-                    <div>
-                      <label className="block text-sm font-semibold text-neutral-900 mb-2">
-                        Special Requests (Optional)
-                      </label>
-                      <textarea
-                        value={specialRequests}
-                        onChange={(e) => setSpecialRequests(e.target.value)}
-                        placeholder="Any special requests or requirements..."
-                        rows={4}
-                        className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:ring-2 focus:ring-black focus:border-black resize-none transition-all"
+                {/* Inline Calendar (opens as modal since AirbnbCalendar is modal-based) */}
+                {editingDates && (
+                  <AirbnbCalendar 
+                    checkIn={checkIn}
+                    checkOut={checkOut}
+                    onSelectCheckIn={setCheckIn}
+                    onSelectCheckOut={setCheckOut}
+                    onClose={() => {
+                      setEditingDates(false);
+                      setError('');
+                    }}
+                    onClearDates={() => {
+                      setCheckIn('');
+                      setCheckOut('');
+                      setError('');
+                    }}
+                    pricePerNight={displayPrice}
+                    minNights={propertyCardData.minNights}
+                    rating={propertyCardData.rating}
+                    currency="CAD"
+                  />
+                )}
+
+                {!dateValidation.valid && !editingDates && (
+                  <div className="mt-3 flex items-center gap-2 text-amber-600 text-sm bg-amber-50 p-3 rounded-lg">
+                    <AlertCircle size={16} />
+                    <span>{dateValidation.error}</span>
+                  </div>
+                )}
+
+                {propertyCardData.monthlyDiscount && propertyCardData.monthlyDiscount > 0 && nights >= 28 && (
+                  <div className="mt-3 p-3 bg-rose-50 border border-rose-200 rounded-lg">
+                    <div className="flex items-center gap-2 text-rose-800">
+                      <Sparkles size={16} />
+                      <span className="text-sm">
+                        <span className="font-semibold">{propertyCardData.monthlyDiscount}% off</span> for stays of 28+ nights
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Guests Row */}
+                <div className="flex items-start justify-between mt-6">
+                  <div>
+                    <h3 className="font-medium text-neutral-900">{t('booking.guests') || 'Guests'}</h3>
+                    <p className="text-neutral-600 mt-0.5">{formatGuestDisplay()}</p>
+                  </div>
+                  <button
+                    onClick={() => setEditingGuests(!editingGuests)}
+                    className="text-sm font-semibold text-neutral-900 underline hover:text-neutral-600 transition-colors shrink-0 ml-4"
+                  >
+                    {editingGuests ? (t('common.close') || 'Close') : (t('common.edit') || 'Edit')}
+                  </button>
+                </div>
+
+                {/* Guest Selector (inline via modal) */}
+                <GuestSelector
+                  isOpen={editingGuests}
+                  onClose={() => setEditingGuests(false)}
+                  onSave={(newGuests) => {
+                    setGuestBreakdown(newGuests);
+                    setGuests(newGuests.adults + newGuests.children);
+                    setEditingGuests(false);
+                  }}
+                  initialGuests={guestBreakdown}
+                  maxGuests={propertyCardData.maxGuests}
+                  allowPets={false}
+                />
+              </section>
+
+              {/* Section 2: Contact Info */}
+              <section className="py-6 border-b border-neutral-200">
+                <h2 className="text-xl font-semibold text-neutral-900 mb-4">
+                  {t('booking.contactInfo') || 'Contact information'}
+                </h2>
+                
+                {isAuthenticated && user ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center">
+                        <User className="w-5 h-5 text-neutral-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium text-neutral-900">{guestName}</p>
+                        <p className="text-sm text-neutral-500">{guestEmail}</p>
+                        {guestPhone && (
+                          <p className="text-sm text-neutral-500">{guestPhone}</p>
+                        )}
+                      </div>
+                      <Link 
+                        href="/profile" 
+                        className="text-sm font-semibold text-neutral-900 underline hover:text-neutral-600 transition-colors"
+                      >
+                        {t('common.edit') || 'Edit'}
+                      </Link>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Input
+                        label="Full Name *"
+                        value={guestName}
+                        onChange={(e) => setGuestName(e.target.value)}
+                        placeholder="Enter your full name"
+                        required
+                      />
+                      <Input
+                        label="Phone Number *"
+                        value={guestPhone}
+                        onChange={(e) => setGuestPhone(e.target.value)}
+                        placeholder="+1 (xxx) xxx-xxxx"
+                        required
                       />
                     </div>
-                  </div>
 
-                  {(error || bookingError) && (
-                    <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-red-700">
-                      <AlertCircle size={18} />
-                      <span>{error || (bookingError instanceof Error ? bookingError.message : 'Booking failed')}</span>
-                    </div>
-                  )}
-
-                  <div className="mt-8 flex justify-between">
-                    <Button variant="outline" onClick={() => setCurrentStep(1)}>
-                      Back
-                    </Button>
-                    <Button
-                      onClick={handleCreateBooking}
-                      disabled={isCreating}
-                      isLoading={isCreating}
-                      size="lg"
-                    >
-                      {isCreating ? 'Processing...' : 'Confirm & Pay'}
-                    </Button>
+                    <Input
+                      label="Email Address *"
+                      type="email"
+                      value={guestEmail}
+                      onChange={(e) => setGuestEmail(e.target.value)}
+                      placeholder="your@email.com"
+                      required
+                    />
                   </div>
+                )}
+
+                {/* Special Requests */}
+                <div className="mt-6">
+                  <label className="block text-sm font-medium text-neutral-900 mb-2">
+                    {t('booking.specialRequests') || 'Special requests'} <span className="text-neutral-400 font-normal">({t('common.optional') || 'optional'})</span>
+                  </label>
+                  <textarea
+                    value={specialRequests}
+                    onChange={(e) => setSpecialRequests(e.target.value)}
+                    placeholder={t('booking.specialRequestsPlaceholder') || 'Any special requests or requirements...'}
+                    rows={3}
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-black focus:border-black resize-none transition-all text-sm"
+                  />
                 </div>
-              )}
+              </section>
 
-              {/* Step 3: Payment */}
-              {currentStep === 3 && (
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
+              {/* Section 3: Payment */}
+              {showPayment ? (
+                <section className="py-6 border-b border-neutral-200">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-neutral-100 rounded-full flex items-center justify-center">
-                      <CreditCard className="w-6 h-6 text-neutral-600" />
-                    </div>
-                    <div>
-                      <h2 className="text-2xl font-bold text-neutral-900">Secure Payment</h2>
-                      <p className="text-neutral-500">Your payment information is encrypted</p>
-                    </div>
+                    <CreditCard className="w-5 h-5 text-neutral-700" />
+                    <h2 className="text-xl font-semibold text-neutral-900">
+                      {t('booking.payWith') || 'Pay with'}
+                    </h2>
                   </div>
                   
                   {clientSecret ? (
@@ -506,27 +436,65 @@ export default function BookingContent() {
                     </StripeProvider>
                   ) : (
                     <div className="flex items-center justify-center py-12">
-                      <Loader2 className="animate-spin mr-2 text-black" size={24} />
-                      <span>Loading payment details...</span>
+                      <Loader2 className="animate-spin mr-2 text-neutral-400" size={24} />
+                      <span className="text-neutral-500">{t('common.loading')}</span>
+                    </div>
+                  )}
+                </section>
+              ) : (
+                <section className="py-6">
+                  {/* Error */}
+                  {(error || bookingError) && (
+                    <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-red-700">
+                      <AlertCircle size={18} />
+                      <span>{error || (bookingError instanceof Error ? bookingError.message : 'Booking failed')}</span>
                     </div>
                   )}
 
-                  {error && (
-                    <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-red-700">
-                      <AlertCircle size={18} />
-                      <span>{error}</span>
-                    </div>
-                  )}
+                  {/* Confirm Button */}
+                  <button
+                    onClick={handleCreateBooking}
+                    disabled={isCreating}
+                    className={cn(
+                      "w-full py-4 rounded-xl text-base font-semibold transition-all",
+                      "bg-neutral-900 text-white hover:bg-neutral-800",
+                      "disabled:bg-neutral-300 disabled:cursor-not-allowed",
+                      "flex items-center justify-center gap-2"
+                    )}
+                  >
+                    {isCreating ? (
+                      <>
+                        <Loader2 className="animate-spin" size={20} />
+                        {t('booking.processing') || 'Processing...'}
+                      </>
+                    ) : (
+                      t('booking.confirmAndPay') || 'Confirm and pay'
+                    )}
+                  </button>
+
+                  <p className="text-xs text-neutral-500 mt-4 text-center leading-relaxed">
+                    {t('booking.termsNotice') || 'By confirming, you agree to our Terms of Service and Cancellation Policy.'}
+                  </p>
+                </section>
+              )}
+
+              {/* Payment Error */}
+              {showPayment && error && (
+                <div className="py-4">
+                  <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-red-700">
+                    <AlertCircle size={18} />
+                    <span>{error}</span>
+                  </div>
                 </div>
               )}
             </div>
 
-            {/* Right - Price Summary */}
-            <div className="lg:col-span-1">
-              <div className="sticky top-24 bg-white rounded-2xl p-6 shadow-lg border border-neutral-200">
+            {/* Right Column - Sticky Summary Card */}
+            <div className="lg:col-span-2">
+              <div className="sticky top-24 bg-white rounded-2xl p-6 border border-neutral-200 shadow-sm">
                 {/* Property Info */}
-                <div className="flex gap-4 mb-6 pb-6 border-b border-neutral-100">
-                  <div className="relative w-20 h-20 rounded-xl overflow-hidden">
+                <div className="flex gap-4 pb-6 border-b border-neutral-200">
+                  <div className="relative w-28 h-24 rounded-xl overflow-hidden shrink-0">
                     <Image
                       src={propertyCardData.images[0]}
                       alt={propertyCardData.title}
@@ -534,10 +502,11 @@ export default function BookingContent() {
                       className="object-cover"
                     />
                   </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-neutral-900 line-clamp-2">{propertyCardData.title}</h3>
-                    <div className="flex items-center gap-1 text-neutral-500 text-sm mt-1">
-                      <Home size={14} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-neutral-500 mb-0.5">{t('booking.entireHome') || 'Entire home'}</p>
+                    <h3 className="font-medium text-neutral-900 text-sm line-clamp-2">{propertyCardData.title}</h3>
+                    <div className="flex items-center gap-1 text-neutral-500 text-xs mt-1">
+                      <Home size={12} />
                       <span className="line-clamp-1">{property.location}</span>
                     </div>
                   </div>
@@ -545,86 +514,49 @@ export default function BookingContent() {
 
                 {/* Dates Summary */}
                 {checkIn && checkOut && (
-                  <div className="mb-6 pb-6 border-b border-neutral-100">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 bg-neutral-100 rounded-lg flex items-center justify-center">
-                        <Calendar size={18} className="text-neutral-500" />
-                      </div>
-                      <div>
-                        <p className="text-xs text-neutral-500">{t('booking.checkIn')}</p>
-                        <p className="font-medium">{formatDateDisplay(checkIn)}</p>
-                      </div>
+                  <div className="py-4 border-b border-neutral-200">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-neutral-600">{t('booking.checkIn')}</span>
+                      <span className="font-medium">{formatDateDisplay(checkIn)}</span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-neutral-100 rounded-lg flex items-center justify-center">
-                        <Calendar size={18} className="text-neutral-500" />
-                      </div>
-                      <div>
-                        <p className="text-xs text-neutral-500">{t('booking.checkOut')}</p>
-                        <p className="font-medium">{formatDateDisplay(checkOut)}</p>
-                      </div>
+                    <div className="flex items-center justify-between text-sm mt-2">
+                      <span className="text-neutral-600">{t('booking.checkOut')}</span>
+                      <span className="font-medium">{formatDateDisplay(checkOut)}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm mt-2">
+                      <span className="text-neutral-600">{t('booking.guests')}</span>
+                      <span className="font-medium">{formatGuestDisplay()}</span>
                     </div>
                   </div>
                 )}
-
-                {/* Guests Summary */}
-                <div className="mb-6 pb-6 border-b border-neutral-100">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-neutral-100 rounded-lg flex items-center justify-center">
-                        <User size={18} className="text-neutral-500" />
-                      </div>
-                      <div>
-                        <p className="text-xs text-neutral-500">{t('booking.guests')}</p>
-                        <p className="font-medium">
-                          {guests} {guests === 1 ? t('booking.guest') : t('booking.guests')}
-                          {guestBreakdown.children > 0 && (
-                            <span className="text-neutral-500">
-                              , {guestBreakdown.children} {guestBreakdown.children === 1 ? t('booking.guestSelector.child') : t('booking.guestSelector.children')}
-                            </span>
-                          )}
-                          {guestBreakdown.infants > 0 && (
-                            <span className="text-neutral-500">
-                              , {guestBreakdown.infants} {guestBreakdown.infants === 1 ? t('booking.guestSelector.infant') : t('booking.guestSelector.infants')}
-                            </span>
-                          )}
-                        </p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => setShowGuestSelector(true)}
-                      className="px-4 py-2 text-sm font-medium text-neutral-900 border border-neutral-300 rounded-lg hover:border-neutral-900 transition-colors"
-                    >
-                      {t('common.change')}
-                    </button>
-                  </div>
-                </div>
 
                 {/* Price Breakdown */}
-                {priceCalc ? (
-                  <BookingPriceCalculator
-                    basePrice={propertyCardData.price}
-                    checkIn={checkIn}
-                    checkOut={checkOut}
-                    monthlyDiscount={propertyCardData.monthlyDiscount}
-                    cleaningFee={propertyCardData.cleaningFee || 80}
-                    compact
-                  />
-                ) : (
-                  <div className="text-center py-4 text-neutral-500">
-                    Select dates to see pricing
-                  </div>
-                )}
+                <div className="py-4">
+                  {priceCalc ? (
+                    <BookingPriceCalculator
+                      basePrice={propertyCardData.price}
+                      checkIn={checkIn}
+                      checkOut={checkOut}
+                      monthlyDiscount={propertyCardData.monthlyDiscount}
+                      cleaningFee={propertyCardData.cleaningFee || 80}
+                      compact
+                    />
+                  ) : (
+                    <div className="text-center py-2 text-neutral-500 text-sm">
+                      {t('booking.selectDatesToSeePrice')}
+                    </div>
+                  )}
+                </div>
 
                 {/* Security Badges */}
-                <div className="mt-6 pt-6 border-t border-neutral-100 space-y-3">
-                  <div className="flex items-center gap-2 text-sm text-neutral-600">
-                    <Shield size={16} className="text-black" />
-                    <span>Secure booking</span>
+                <div className="pt-4 border-t border-neutral-200 space-y-2.5">
+                  <div className="flex items-center gap-2 text-xs text-neutral-500">
+                    <Shield size={14} className="text-neutral-400" />
+                    <span>{t('booking.secureBooking')}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-neutral-600">
-                    <Lock size={16} className="text-black" />
-                    <span>Encrypted payment</span>
+                  <div className="flex items-center gap-2 text-xs text-neutral-500">
+                    <Lock size={14} className="text-neutral-400" />
+                    <span>{t('booking.encryptedPayment')}</span>
                   </div>
                 </div>
               </div>
@@ -632,42 +564,6 @@ export default function BookingContent() {
           </div>
         </div>
       </div>
-      
-      {/* Date Picker Modal */}
-      {showDatePicker && (
-        <AirbnbCalendar 
-          checkIn={checkIn}
-          checkOut={checkOut}
-          onSelectCheckIn={setCheckIn}
-          onSelectCheckOut={setCheckOut}
-          onClose={() => {
-            setShowDatePicker(false);
-            setError('');
-          }}
-          onClearDates={() => {
-            setCheckIn('');
-            setCheckOut('');
-            setError('');
-          }}
-          pricePerNight={displayPrice}
-          minNights={propertyCardData.minNights}
-          rating={propertyCardData.rating}
-          currency="CAD"
-        />
-      )}
-
-      {/* Guest Selector Modal */}
-      <GuestSelector
-        isOpen={showGuestSelector}
-        onClose={() => setShowGuestSelector(false)}
-        onSave={(newGuests) => {
-          setGuestBreakdown(newGuests);
-          setGuests(newGuests.adults + newGuests.children);
-        }}
-        initialGuests={guestBreakdown}
-        maxGuests={propertyCardData.maxGuests}
-        allowPets={false}
-      />
     </main>
   );
 }

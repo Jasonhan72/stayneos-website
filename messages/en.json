@@ -5,6 +5,7 @@
   },
   "nav": {
     "home": "Explore",
+    "explore": "Explore",
     "properties": "Apartments",
     "services": "For Business",
     "about": "About Us",
@@ -24,7 +25,8 @@
     "becomeHost": "Become a Host",
     "listProperty": "List your property",
     "manageProperties": "Manage Properties",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "partnerWithUs": "Partner With Us"
   },
   "common": {
     "view": "View",
@@ -62,9 +64,9 @@
     "title": "Currency"
   },
   "hero": {
-    "title": "Welcome to StayNeos",
-    "highlight": "Executive Living, Simplified",
-    "subtitle": "Redefining the premium executive apartment experience, providing the warmth of home and professional service for business travelers and relocated residents",
+    "title": "Your Home Awaits",
+    "highlight": "Arrive today. Feel at home tonight.",
+    "subtitle": "Beautifully furnished apartments in prime locations. Move-in ready. Stay a month, a season, or a year.",
     "cta": "List Your Property",
     "ctaQuote": "Request a Quote",
     "ctaBrowse": "Browse Properties"
@@ -102,16 +104,16 @@
     "next": "Next"
   },
   "features": {
-    "title": "Why Choose StayNeos",
-    "subtitle": "We are committed to providing exceptional living experiences for every client, from property selection to check-in service, every detail is carefully crafted",
-    "quality": "Curated Homes",
-    "qualityDesc": "Carefully selected premium properties, ensuring every detail meets your expectations",
-    "flexible": "Flexible Lease",
-    "flexibleDesc": "Support short-term and long-term rentals, flexibly meeting different travel needs",
-    "service": "Concierge Service",
-    "serviceDesc": "24/7 concierge service for a more comfortable living experience",
-    "support": "24/7 support",
-    "supportDesc": "Professional customer service team ready to solve any issues",
+    "title": "Why StayNeos",
+    "subtitle": "Your home is ready before you are. No surprises, no hidden fees — just a beautiful space waiting for you.",
+    "quality": "Hand-Picked Homes",
+    "qualityDesc": "Every apartment is visited, vetted, and approved by our team. If it doesn't feel right, it doesn't go live.",
+    "flexible": "Stay on Your Terms",
+    "flexibleDesc": "One month or twelve. Extend or shorten anytime. Your plans change — your home shouldn't be a problem.",
+    "service": "Around-the-Clock Support",
+    "serviceDesc": "A real person answers when you call. Day or night, weekday or weekend.",
+    "support": "Around the Clock",
+    "supportDesc": "Locked out at midnight? Need a repair? We're here. Always.",
     "utilities": "All utilities included",
     "wifi": "High-speed WiFi",
     "housekeeping": "Housekeeping service",
@@ -176,7 +178,8 @@
       "monthlyDiscountLabel": "Monthly Discount ({percent}% off)",
       "minNightsWarning": "Minimum {count} nights required"
     },
-    "subtitle": "Premium executive apartments for quality living"
+    "subtitle": "Premium executive apartments for quality living",
+    "empty": "No featured properties available"
   },
   "details": {
     "title": "Property Details",
@@ -194,30 +197,30 @@
     "minNightsWarning": "Minimum {count} nights required"
   },
   "cta": {
-    "title": "Ready to Experience StayNeos?",
-    "subtitle": "Browse our carefully selected properties and find your ideal residence in Toronto",
-    "explore": "Start Exploring",
+    "title": "Find Your Home Tonight",
+    "subtitle": "Browse furnished apartments ready for move-in. No long leases, no empty rooms — just home.",
+    "explore": "Browse Apartments",
     "contact": "Contact Us",
     "button": "Contact Us",
     "desc": "Contact us today to learn more about our services and find your perfect home.",
-    "browse": "Browse Properties"
+    "browse": "Browse Apartments"
   },
   "howItWorks": {
-    "title": "How It Works",
-    "subtitle": "Getting started is easy. Three simple steps to find your perfect home."
+    "title": "Three Steps to Home",
+    "subtitle": "Pick a place. Book it. Move in. That's it."
   },
   "steps": {
     "search": {
-      "title": "Search Properties",
-      "desc": "Browse our curated properties, filter by location, price, and amenities"
+      "title": "Find Your Place",
+      "desc": "Browse apartments by neighborhood, price, or vibe. Filter for lake views, pet-friendly, or walking distance to the PATH."
     },
     "book": {
-      "title": "Book Online",
-      "desc": "Select your dates, view real-time pricing, and complete your booking with one click"
+      "title": "Book Instantly",
+      "desc": "Choose your dates, see the price — no back-and-forth. Confirm in under two minutes."
     },
     "movein": {
-      "title": "Move In",
-      "desc": "Professional concierge welcome, fully equipped, start enjoying immediately"
+      "title": "Walk In, Live",
+      "desc": "Your keys are ready. The WiFi's on. The bed's made. Start living from the moment you arrive."
     },
     "step1": {
       "title": "List Your Property",
@@ -233,52 +236,52 @@
     }
   },
   "book": {
-    "title": "Book Online",
-    "desc": "Select your dates, view real-time pricing, and complete your booking with one click"
+    "title": "Book Instantly",
+    "desc": "Choose your dates, see the price — no back-and-forth. Confirm in under two minutes."
   },
   "movein": {
-    "title": "Move In",
-    "desc": "Professional concierge welcome, fully equipped, start enjoying immediately"
+    "title": "Walk In, Live",
+    "desc": "Your keys are ready. The WiFi's on. The bed's made. Start living from the moment you arrive."
   },
   "segments": {
-    "title": "Living Solutions for You",
-    "subtitle": "Whether for business travel, long-term projects, or relocation, we have options for you",
+    "title": "A Home for Every Chapter",
+    "subtitle": "Here for work? In between places? Starting fresh? We've got you covered.",
     "business": {
-      "title": "Business Travel",
-      "subtitle": "Corporate Discounts",
-      "desc": "Convenient accommodation solutions for business professionals, near financial districts with easy transportation",
-      "cta": "Learn About Corporate Plans"
+      "title": "Business Stays",
+      "subtitle": "Corporate rates available",
+      "desc": "You're here for a 3-month project. We'll make sure the rest of your life doesn't pause. Walk to the Financial District, cook dinner in your own kitchen.",
+      "cta": "Explore Corporate Plans"
     },
     "longterm": {
-      "title": "Long-term Stay",
-      "subtitle": "20% Off Monthly",
-      "desc": "Enjoy discounted prices for stays over one month, ideal for long-term projects or relocation",
-      "cta": "View Long-term Properties"
+      "title": "Extended Living",
+      "subtitle": "Save 20% monthly",
+      "desc": "Not just passing through? Settle in. Your apartment comes with everything — dishes, linens, even a coffee maker. Just bring yourself.",
+      "cta": "Browse Long-Stay Homes"
     },
     "relocation": {
-      "title": "Relocation",
-      "subtitle": "Flexible Move-in",
-      "desc": "The ideal choice during your move, no long-term commitment required, move in immediately",
-      "cta": "Book Now"
+      "title": "Relocation Landing",
+      "subtitle": "Move in this week",
+      "desc": "New city, new job, a hundred things on your list. Cross \"find a place to live\" off today.",
+      "cta": "Find Your Landing Spot"
     }
   },
   "business": {
-    "title": "Business Travel",
-    "subtitle": "Corporate Discounts",
-    "desc": "Convenient accommodation solutions for business professionals, near financial districts with easy transportation",
-    "cta": "Learn About Corporate Plans"
+    "title": "Business Stays",
+    "subtitle": "Corporate rates available",
+    "desc": "You're here for a 3-month project. We'll make sure the rest of your life doesn't pause. Walk to the Financial District, cook dinner in your own kitchen.",
+    "cta": "Explore Corporate Plans"
   },
   "longterm": {
-    "title": "Long-term Stay",
-    "subtitle": "20% Off Monthly",
-    "desc": "Enjoy discounted prices for stays over one month, ideal for long-term projects or relocation",
-    "cta": "View Long-term Properties"
+    "title": "Extended Living",
+    "subtitle": "Save 20% monthly",
+    "desc": "Not just passing through? Settle in. Your apartment comes with everything — dishes, linens, even a coffee maker. Just bring yourself.",
+    "cta": "Browse Long-Stay Homes"
   },
   "relocation": {
-    "title": "Relocation",
-    "subtitle": "Flexible Move-in",
-    "desc": "The ideal choice during your move, no long-term commitment required, move in immediately",
-    "cta": "Book Now"
+    "title": "Relocation Landing",
+    "subtitle": "Move in this week",
+    "desc": "New city, new job, a hundred things on your list. Cross \"find a place to live\" off today.",
+    "cta": "Find Your Landing Spot"
   },
   "footer": {
     "about": "About Us",
@@ -293,7 +296,7 @@
     "faq": "FAQ",
     "contact": "Contact Us",
     "privacy": "Privacy Policy",
-    "description": "Carefully designed accommodation experiences for modern travelers. Whether for business or leisure, we provide the perfect living space.",
+    "description": "Furnished apartments for people who want to actually live — not just stay. Built for business travelers, relocators, and anyone who deserves a real home.",
     "companyTitle": "Company",
     "servicesTitle": "Services",
     "supportTitle": "Support",
@@ -681,7 +684,7 @@
     "address": "Street Address",
     "addressPlaceholder": "e.g., 123 Main Street",
     "city": "City",
-    "cityPlaceholder": "e.g., Toronto",
+    "cityPlaceholder": "Enter city",
     "bedrooms": "Bedrooms",
     "bathrooms": "Bathrooms",
     "maxGuests": "Max Guests",
@@ -1025,7 +1028,7 @@
     },
     "location": {
       "title": "Prime Locations",
-      "desc": "Downtown Toronto & GTA"
+      "desc": "Prime business districts & major cities"
     }
   },
   "income": {
@@ -1116,7 +1119,7 @@
       },
       "location": {
         "title": "Prime Location",
-        "desc": "Located in Toronto downtown, North York, or other prime business districts with good transit access."
+        "desc": "Located in prime business districts with good transit access"
       },
       "quality": {
         "title": "High Quality",
@@ -1212,7 +1215,7 @@
       },
       "location": {
         "title": "Prime Locations",
-        "desc": "Downtown Toronto & GTA"
+        "desc": "Prime business districts"
       },
       "support": {
         "title": "Dedicated Support",
@@ -1294,7 +1297,7 @@
   },
   "location": {
     "title": "Prime Locations",
-    "desc": "Downtown Toronto & GTA"
+    "desc": "Prime business districts & major cities"
   },
   "unit": {
     "properties": "properties",
@@ -1333,31 +1336,31 @@
     "pageLoadError": "Sorry, we encountered a problem loading this page"
   },
   "services": {
-    "title": "Our Services",
-    "subtitle": "Premium furnished apartment solutions for every need. From corporate housing to short-term stays, we've got you covered.",
+    "title": "How We Can Help",
+    "subtitle": "Whether you're a business traveler, a relocating professional, or a company housing a team — we have a home for that.",
     "corporateHousing": {
       "title": "Corporate Housing",
-      "desc": "Fully furnished apartments for business travelers and relocating employees. Flexible lease terms from 1 month to 1 year."
+      "desc": "Your team flies in Monday. Their apartments are ready Sunday. Fully furnished, utilities included, walking distance to downtown offices."
     },
     "shortTerm": {
-      "title": "Short-term Rentals",
-      "desc": "Premium furnished apartments for short stays. Perfect for vacations, temporary relocations, or home renovations."
+      "title": "Short-Term Stays",
+      "desc": "Between leases? Renovating? Just need a beautiful space for a few weeks? Move in with nothing but a suitcase."
     },
     "propertyManagement": {
       "title": "Property Management",
-      "desc": "Full-service property management for landlords. We handle everything from marketing to maintenance."
+      "desc": "Own a condo? We'll fill it, maintain it, and handle everything. You just collect the income."
     },
     "concierge": {
-      "title": "Concierge Services",
-      "desc": "Personalized concierge services to make your stay exceptional. From airport transfers to grocery delivery."
+      "title": "Personal Concierge",
+      "desc": "Need groceries before you arrive? Airport pickup? Restaurant recs in your neighborhood? Just ask."
     },
     "flexibleLeasing": {
       "title": "Flexible Leasing",
-      "desc": "Lease terms that fit your schedule. No long-term commitments or hidden fees."
+      "desc": "Stay a month, extend to six. No penalties, no paperwork headaches. Your lease works around your life."
     },
     "globalNetwork": {
-      "title": "Global Network",
-      "desc": "Access to premium furnished apartments in major cities across North America and beyond."
+      "title": "Growing Network",
+      "desc": "Expanding to cities where business takes you. One platform, consistent quality everywhere."
     },
     "features": {
       "utilities": "All utilities included",
@@ -1382,142 +1385,142 @@
       "termination": "Early termination available"
     },
     "cta": {
-      "title": "Ready to get started?",
-      "desc": "Contact us today to learn more about our services and find your perfect home.",
-      "button": "Contact Us"
+      "title": "Let's Find Your Home",
+      "desc": "Tell us what you need. We'll handle the rest.",
+      "button": "Get in Touch"
     }
   },
   "corporateHousing": {
     "title": "Corporate Housing",
-    "desc": "Fully furnished apartments for business travelers and relocating employees. Flexible lease terms from 1 month to 1 year."
+    "desc": "Your team flies in Monday. Their apartments are ready Sunday. Fully furnished, walking distance to downtown."
   },
   "shortTerm": {
-    "title": "Short-term Rentals",
-    "desc": "Premium furnished apartments for short stays. Perfect for vacations, temporary relocations, or home renovations."
+    "title": "Short-Term Stays",
+    "desc": "Between leases? Renovating? Move in with nothing but a suitcase."
   },
   "propertyManagement": {
     "title": "Property Management",
-    "desc": "Full-service property management for landlords. We handle everything from marketing to maintenance."
+    "desc": "Own a condo? We'll fill it, maintain it, and handle everything."
   },
   "concierge": {
-    "title": "Concierge Services",
-    "desc": "Personalized concierge services to make your stay exceptional. From airport transfers to grocery delivery."
+    "title": "Personal Concierge",
+    "desc": "Groceries, airport pickup, restaurant recs. Just ask."
   },
   "flexibleLeasing": {
     "title": "Flexible Leasing",
-    "desc": "Lease terms that fit your schedule. No long-term commitments or hidden fees."
+    "desc": "Stay a month, extend to six. No penalties."
   },
   "globalNetwork": {
-    "title": "Global Network",
-    "desc": "Access to premium furnished apartments in major cities across North America and beyond."
+    "title": "Growing Network",
+    "desc": "Expanding to cities where business takes you."
   },
   "about": {
     "title": "About StayNeos",
     "hero": {
       "title": "About StayNeos",
-      "subtitle": "Redefining the premium executive apartment experience, providing the warmth of home and professional service for business travelers and relocated residents"
+      "subtitle": "We know what it's like to land in a new city and need a home — not just a room. That's why we built StayNeos."
     },
     "mission": {
       "label": "OUR MISSION",
-      "title": "Our Mission",
-      "desc": "StayNeos is committed to creating the perfect living solution for modern business travelers and relocated residents, making every trip enjoyable with the comfort and convenience of home.",
+      "title": "What Drives Us",
+      "desc": "We believe everyone deserves a real home — even when they're far from theirs. That's not a tagline. It's how we make every decision.",
       "items": {
-        "executive": "Premium Executive Apartments",
-        "executiveDesc": "Providing carefully selected premium executive apartments for business travelers and relocated residents to meet quality living needs",
-        "simple": "Simple and Stress-Free",
-        "simpleDesc": "Making short-term rentals simple, easy, and stress-free, allowing you to focus on your work and life",
-        "flexible": "Flexible Lease Terms",
-        "flexibleDesc": "Flexible lease terms starting from 28 days, supporting monthly and quarterly rentals to accommodate your travel schedule",
-        "location": "Prime Locations",
-        "locationDesc": "Carefully selected quality properties in prime locations in Toronto with convenient transportation and complete amenities"
+        "executive": "Curated Apartments",
+        "executiveDesc": "Hand-picked homes in neighborhoods you'd choose yourself. Quality you can feel the moment you walk in.",
+        "simple": "Zero Hassle",
+        "simpleDesc": "No paperwork maze. No furniture shopping. No utility setup. Just show up and live.",
+        "flexible": "Your Timeline",
+        "flexibleDesc": "Stay 28 days or 365. Extend with a message. Leave when you're ready. It's your call.",
+        "location": "Premium Locations",
+        "locationDesc": "Curated homes in vibrant neighborhoods where you want to be."
       }
     },
     "story": {
       "label": "OUR STORY",
-      "title": "Our Story",
-      "subtitle": "Born from the challenges of a business trip, StayNeos is dedicated to solving the housing difficulties of modern travelers"
+      "title": "How It Started",
+      "subtitle": "One frustrating apartment search. That's all it took."
     },
     "whyChoose": {
       "label": "WHY CHOOSE US",
-      "title": "Why Choose Us",
-      "desc": "We don't just provide accommodation; we create a home where you can work and live with peace of mind away from home."
+      "title": "Why People Choose Us",
+      "desc": "We don't just find you a place. We make sure it actually feels like home."
     },
     "commitment": {
       "label": "OUR COMMITMENT",
-      "title": "Our Commitment",
-      "subtitle": "We promise every customer an experience that exceeds expectations"
+      "title": "Our Promise",
+      "subtitle": "Every guest gets an experience worth talking about. That's the bar we set."
     },
     "cta": {
-      "title": "Ready to Experience StayNeos?",
-      "subtitle": "Browse our carefully selected properties and find your ideal residence in Toronto",
+      "title": "Find Your Home Tonight",
+      "subtitle": "Browse furnished apartments ready for move-in.",
       "browse": "Browse Properties",
       "contact": "Contact Us"
     },
-    "heroTitle": "Redefining Executive Living",
-    "heroSubtitle": "We believe every business trip deserves to feel like home",
-    "storyTitle": "Our Story",
-    "storyOrigin": "StayNeos was born from a simple observation: in Toronto, business professionals faced a dilemma — hotels were cramped and impersonal; traditional rentals were complicated and inflexible. We decided to change that.",
-    "storyMission": "In 2024, we founded StayNeos to create premium executive apartments designed for business professionals. Every property is carefully selected and fully equipped with furniture and workspaces, so our guests can focus on what matters from day one.",
-    "storyToday": "Today, StayNeos has become Toronto's leading executive apartment platform, serving business professionals and corporate clients across tech, finance, healthcare, and beyond. We don't just provide accommodation — we provide a lifestyle of effortless comfort.",
-    "valuesTitle": "What We Believe",
-    "peopleFirst": "People First",
-    "peopleFirstDesc": "Every guest is a person, not a booking number. We pay attention to details — from welcome gifts to 24/7 support — so every stay feels valued",
-    "quality": "Quality Obsessed",
-    "qualityDesc": "We personally inspect every property to ensure furniture, amenities, and locations meet executive standards. If it's not great, it doesn't make the cut",
-    "flexibility": "Flexibility Matters",
-    "flexibilityDesc": "The business world changes fast, and housing should adapt. From one week to one year, we offer truly flexible terms without red tape",
-    "sustainability": "Sustainable Living",
-    "sustainabilityDesc": "We prioritize eco-friendly buildings, reduce single-use items, and partner with sustainability-minded landlords. For professionals, and for the planet",
-    "statsTitle": "By the Numbers",
-    "propertiesCount": "100+ Curated Properties",
-    "guestsCount": "1000+ Business Professionals",
+    "heroTitle": "We Started Where You Are",
+    "heroSubtitle": "Looking for a real home in a city that wasn't ours yet",
+    "storyTitle": "How It Started",
+    "storyOrigin": "It started with a frustrating search. A founder relocated for work and faced the same choice everyone does: a tiny hotel room with no kitchen, or a 12-month lease on an empty apartment. Neither made sense. So we built a third option.",
+    "storyMission": "In 2024, StayNeos launched with a simple idea: beautiful, furnished apartments you can move into tomorrow. Every home is hand-picked, fully equipped, and located in neighborhoods where you'd actually want to live.",
+    "storyToday": "Today, we're the go-to choice for professionals who need a real home, not a temporary fix. Tech leads, consultants, medical residents, relocating families — they all stay with us because we treat every stay like it matters. Because it does.",
+    "valuesTitle": "What We Stand For",
+    "peopleFirst": "Real People, Not Transactions",
+    "peopleFirstDesc": "You're not a booking number. When you message us, a real person replies. We remember your coffee preference and your check-in quirks.",
+    "quality": "If We Wouldn't Stay There, Neither Should You",
+    "qualityDesc": "Our team visits every apartment. We test the WiFi, check the water pressure, and sit on the couch. Only the best make it to our platform.",
+    "flexibility": "Life Doesn't Fit Neat Boxes",
+    "flexibilityDesc": "Projects get extended. Plans change. We get it. Flexible terms, easy extensions, no penalties for being human.",
+    "sustainability": "Better for the City",
+    "sustainabilityDesc": "We partner with eco-conscious buildings, minimize waste, and choose local suppliers. Every city is our home too.",
+    "statsTitle": "The Numbers",
+    "propertiesCount": "100+ Curated Apartments",
+    "guestsCount": "1,000+ Happy Guests",
     "partnersCount": "50+ Corporate Partners",
-    "rating": "4.9/5 Average Rating",
-    "coverage": "Toronto Core Areas",
-    "ctaTitle": "Join the StayNeos Community",
-    "ctaSubtitle": "Whether you're a professional seeking the perfect stay, a landlord, or a business looking to partner, we'd love to connect",
+    "rating": "4.9/5 Guest Rating",
+    "coverage": "Across Major Cities",
+    "ctaTitle": "Come Home to StayNeos",
+    "ctaSubtitle": "Whether you're here for a month or a year, we'll make every city feel like yours.",
     "ctaBrowse": "Browse Apartments",
-    "ctaContact": "Get in Touch"
+    "ctaContact": "Say Hello"
   },
   "mission": {
     "label": "OUR MISSION",
-    "title": "Our Mission",
-    "desc": "StayNeos is committed to creating the perfect living solution for modern business travelers and relocated residents, making every trip enjoyable with the comfort and convenience of home.",
+    "title": "What Drives Us",
+    "desc": "We believe everyone deserves a real home — even when they're far from theirs. That's not a tagline. It's how we make every decision.",
     "items": {
-      "executive": "Premium Executive Apartments",
-      "executiveDesc": "Providing carefully selected premium executive apartments for business travelers and relocated residents to meet quality living needs",
-      "simple": "Simple and Stress-Free",
-      "simpleDesc": "Making short-term rentals simple, easy, and stress-free, allowing you to focus on your work and life",
-      "flexible": "Flexible Lease Terms",
-      "flexibleDesc": "Flexible lease terms starting from 28 days, supporting monthly and quarterly rentals to accommodate your travel schedule",
-      "location": "Prime Locations",
-      "locationDesc": "Carefully selected quality properties in prime locations in Toronto with convenient transportation and complete amenities"
+      "executive": "Curated Apartments",
+      "executiveDesc": "Hand-picked homes in neighborhoods you'd choose yourself. Quality you can feel the moment you walk in.",
+      "simple": "Zero Hassle",
+      "simpleDesc": "No paperwork maze. No furniture shopping. No utility setup. Just show up and live.",
+      "flexible": "Your Timeline",
+      "flexibleDesc": "Stay 28 days or 365. Extend with a message. Leave when you're ready. It's your call.",
+      "location": "Premium Locations",
+      "locationDesc": "Curated homes in vibrant neighborhoods where you want to be."
     }
   },
   "items": {
-    "executive": "Premium Executive Apartments",
-    "executiveDesc": "Providing carefully selected premium executive apartments for business travelers and relocated residents to meet quality living needs",
-    "simple": "Simple and Stress-Free",
-    "simpleDesc": "Making short-term rentals simple, easy, and stress-free, allowing you to focus on your work and life",
-    "flexible": "Flexible Lease Terms",
-    "flexibleDesc": "Flexible lease terms starting from 28 days, supporting monthly and quarterly rentals to accommodate your travel schedule",
-    "location": "Prime Locations",
-    "locationDesc": "Carefully selected quality properties in prime locations in Toronto with convenient transportation and complete amenities"
+    "executive": "Curated Apartments",
+    "executiveDesc": "Hand-picked homes in neighborhoods you'd choose yourself. Quality you can feel the moment you walk in.",
+    "simple": "Zero Hassle",
+    "simpleDesc": "No paperwork maze. No furniture shopping. No utility setup. Just show up and live.",
+    "flexible": "Your Timeline",
+    "flexibleDesc": "Stay 28 days or 365. Extend with a message. Leave when you're ready. It's your call.",
+    "location": "Premium Locations",
+    "locationDesc": "Curated homes in vibrant neighborhoods where you want to be."
   },
   "story": {
     "label": "OUR STORY",
-    "title": "Our Story",
-    "subtitle": "Born from the challenges of a business trip, StayNeos is dedicated to solving the housing difficulties of modern travelers"
+    "title": "How It Started",
+    "subtitle": "One frustrating apartment search. That's all it took."
   },
   "whyChoose": {
     "label": "WHY CHOOSE US",
-    "title": "Why Choose Us",
-    "desc": "We don't just provide accommodation; we create a home where you can work and live with peace of mind away from home."
+    "title": "Why People Choose Us",
+    "desc": "We don't just find you a place. We make sure it actually feels like home."
   },
   "commitment": {
     "label": "OUR COMMITMENT",
-    "title": "Our Commitment",
-    "subtitle": "We promise every customer an experience that exceeds expectations"
+    "title": "Our Promise",
+    "subtitle": "Every guest gets an experience worth talking about. That's the bar we set."
   },
   "ai": {
     "assistant": {
@@ -1654,9 +1657,9 @@
     "tip2": "Mention the purpose of your trip",
     "tip3": "Share why you chose this place",
     "tip4": "Ask any questions you may have",
-    "messageExample1": "Hi! I'm visiting Toronto for a business conference and your place looks perfect for my stay.",
+    "messageExample1": "Hi! I'm traveling for work and looking for a short-term residence. Your place looks perfect for my stay.",
     "messageExample2": "Looking forward to staying at your beautiful apartment! I'll be working remotely during the weekdays.",
-    "messageExample3": "This will be my first time in Toronto. Excited to explore the city from your conveniently located place!",
+    "messageExample3": "This will be my first time staying in this city. Excited to explore from your conveniently located place!",
     "requestToBook": "Request to book",
     "totalPrice": "Total price",
     "chargedUponConfirmation": "You will be charged upon host confirmation.",
@@ -1861,8 +1864,8 @@
   "morning": "Good morning",
   "afternoon": "Good afternoon",
   "evening": "Good evening",
-  "highlight": "Executive Living, Simplified",
-  "subtitle": "Premium apartments. Flexible stays. 24/7 concierge.",
+  "highlight": "Arrive today. Feel at home tonight.",
+  "subtitle": "Furnished apartments. Flexible stays. Move in tomorrow.",
   "selectLocation": "Select Location",
   "date": "Dates",
   "selectDate": "Select Dates",
@@ -1873,13 +1876,13 @@
   "rating": "Highest Rated",
   "previous": "Previous",
   "next": "Next",
-  "quality": "Curated Homes",
-  "qualityDesc": "Carefully selected premium properties, ensuring every detail meets your expectations",
-  "flexible": "Flexible Lease",
-  "flexibleDesc": "Support short-term and long-term rentals, flexibly meeting different travel needs",
-  "service": "Concierge Service",
-  "serviceDesc": "24/7 concierge service for a more comfortable living experience",
-  "supportDesc": "Professional customer service team ready to solve any issues",
+  "quality": "Hand-Picked Homes",
+  "qualityDesc": "Every apartment is visited, vetted, and approved by our team. If it doesn't feel right, it doesn't go live.",
+  "flexible": "Stay on Your Terms",
+  "flexibleDesc": "One month or twelve. Extend or shorten anytime. Your plans change — your home shouldn't be a problem.",
+  "service": "Someone Always Has Your Back",
+  "serviceDesc": "A real person answers when you call. Day or night, weekday or weekend.",
+  "supportDesc": "Locked out at midnight? Need a repair? We're here. Always.",
   "gridView": "Grid view",
   "listView": "List view",
   "mapView": "Map view",
@@ -2078,7 +2081,7 @@
   "address": "Street Address",
   "addressPlaceholder": "e.g., 123 Main Street",
   "city": "City",
-  "cityPlaceholder": "e.g., Toronto",
+  "cityPlaceholder": "Enter city",
   "bathrooms": "Bathrooms",
   "dragDrop": "Drag and drop images here or click to upload",
   "supportedFormats": "Supports JPG, PNG formats, max 10MB",
@@ -2192,28 +2195,28 @@
   "renewal": "Easy renewal",
   "termination": "Early termination available",
   "label": "OUR MISSION",
-  "executiveDesc": "Providing carefully selected premium executive apartments for business travelers and relocated residents to meet quality living needs",
-  "simple": "Simple and Stress-Free",
-  "simpleDesc": "Making short-term rentals simple, easy, and stress-free, allowing you to focus on your work and life",
-  "locationDesc": "Carefully selected quality properties in prime locations in Toronto with convenient transportation and complete amenities",
+  "executiveDesc": "Hand-picked homes in neighborhoods you'd choose yourself.",
+  "simple": "Zero Hassle",
+  "simpleDesc": "No paperwork maze. No furniture shopping. Just show up and live.",
+  "locationDesc": "From King West's energy to Yorkville's charm. Every home is where the action is.",
   "browse": "Browse Properties",
-  "storyTitle": "Our Story",
-  "storyOrigin": "StayNeos was born from a simple observation: in Toronto, business professionals faced a dilemma — hotels were cramped and impersonal; traditional rentals were complicated and inflexible. We decided to change that.",
-  "storyMission": "In 2024, we founded StayNeos to create premium executive apartments designed for business professionals. Every property is carefully selected and fully equipped with furniture and workspaces, so our guests can focus on what matters from day one.",
-  "storyToday": "Today, StayNeos has become Toronto's leading executive apartment platform, serving business professionals and corporate clients across tech, finance, healthcare, and beyond. We don't just provide accommodation — we provide a lifestyle of effortless comfort.",
-  "valuesTitle": "What We Believe",
-  "peopleFirst": "People First",
-  "peopleFirstDesc": "Every guest is a person, not a booking number. We pay attention to details — from welcome gifts to 24/7 support — so every stay feels valued",
-  "flexibility": "Flexibility Matters",
-  "flexibilityDesc": "The business world changes fast, and housing should adapt. From one week to one year, we offer truly flexible terms without red tape",
-  "sustainability": "Sustainable Living",
-  "sustainabilityDesc": "We prioritize eco-friendly buildings, reduce single-use items, and partner with sustainability-minded landlords. For professionals, and for the planet",
-  "statsTitle": "By the Numbers",
-  "propertiesCount": "100+ Curated Properties",
-  "guestsCount": "1000+ Business Professionals",
+  "storyTitle": "How It Started",
+  "storyOrigin": "It started with a frustrating search. A founder relocated for work and faced the same choice everyone does: a tiny hotel room with no kitchen, or a 12-month lease on an empty apartment. Neither made sense. So we built a third option.",
+  "storyMission": "In 2024, StayNeos launched with a simple idea: beautiful, furnished apartments you can move into tomorrow. Every home is hand-picked, fully equipped, and located in neighborhoods where you'd actually want to live.",
+  "storyToday": "Today, we're the go-to choice for professionals who need a real home, not a temporary fix. Tech leads, consultants, medical residents, relocating families — they all stay with us because we treat every stay like it matters. Because it does.",
+  "valuesTitle": "What We Stand For",
+  "peopleFirst": "Real People, Not Transactions",
+  "peopleFirstDesc": "You're not a booking number. When you message us, a real person replies. We remember your coffee preference and your check-in quirks.",
+  "flexibility": "Life Doesn't Fit Neat Boxes",
+  "flexibilityDesc": "Projects get extended. Plans change. We get it. Flexible terms, easy extensions, no penalties for being human.",
+  "sustainability": "Better for the City",
+  "sustainabilityDesc": "We partner with eco-conscious buildings, minimize waste, and choose local suppliers. Every city is our home too.",
+  "statsTitle": "The Numbers",
+  "propertiesCount": "100+ Curated Apartments",
+  "guestsCount": "1,000+ Happy Guests",
   "partnersCount": "50+ Corporate Partners",
-  "coverage": "Toronto Core Areas",
-  "ctaContact": "Get in Touch",
+  "coverage": "Across Major Cities",
+  "ctaContact": "Say Hello",
   "apartment": "Apartment",
   "condo": "Condo",
   "townhouse": "Townhouse",
@@ -2384,9 +2387,9 @@
   "tip2": "Mention the purpose of your trip",
   "tip3": "Share why you chose this place",
   "tip4": "Ask any questions you may have",
-  "messageExample1": "Hi! I'm visiting Toronto for a business conference and your place looks perfect for my stay.",
+  "messageExample1": "Hi! I'm traveling for work and looking for a short-term residence. Your place looks perfect for my stay.",
   "messageExample2": "Looking forward to staying at your beautiful apartment! I'll be working remotely during the weekdays.",
-  "messageExample3": "This will be my first time in Toronto. Excited to explore the city from your conveniently located place!",
+  "messageExample3": "This will be my first time staying in this city. Excited to explore from your conveniently located place!",
   "requestToBook": "Request to book",
   "chargedUponConfirmation": "You will be charged upon host confirmation.",
   "messageToHost": "Message to the host",
@@ -2428,56 +2431,56 @@
   "propertyNotFound": "Property not found",
   "aboutPage": {
     "title": "About StayNeos",
-    "heroSubtitle": "Redefining premium executive apartment experiences, providing the warmth of home and professional service for business professionals and relocators",
+    "heroSubtitle": "We know what it's like to need a home in a city that isn't yours yet. That's why we built StayNeos.",
     "missionLabel": "OUR MISSION",
-    "missionTitle": "Our Mission",
-    "missionDesc": "StayNeos is dedicated to creating the perfect living solution for modern business professionals and relocators.",
-    "missionItem1Title": "Premium Executive Apartments",
-    "missionItem1Desc": "Curated premium executive apartments for business professionals",
-    "missionItem2Title": "Simple, Easy, Stress-Free",
-    "missionItem2Desc": "Making short-term rentals simple and stress-free",
-    "missionItem3Title": "Flexible Lease Terms",
-    "missionItem3Desc": "Flexible lease starting from 28 days",
-    "missionItem4Title": "Prime Locations",
-    "missionItem4Desc": "Curated properties in Toronto prime locations",
+    "missionTitle": "What Drives Us",
+    "missionDesc": "Everyone deserves a real home — even far from theirs.",
+    "missionItem1Title": "Curated Apartments",
+    "missionItem1Desc": "Hand-picked homes you'd choose yourself",
+    "missionItem2Title": "Zero Hassle",
+    "missionItem2Desc": "No paperwork. No furniture shopping. Just live.",
+    "missionItem3Title": "Your Timeline",
+    "missionItem3Desc": "Stay 28 days or 365. It's your call.",
+    "missionItem4Title": "Premium Locations",
+    "missionItem4Desc": "Curated homes in vibrant neighborhoods where you want to be.",
     "daysFlexible": "days flexible lease",
     "storyLabel": "OUR STORY",
-    "storyTitle": "Our Story",
-    "storyDesc": "Born from the frustration of a business trip, StayNeos solves housing challenges for modern travelers",
-    "story1Title": "Founder's Insight",
-    "story1Desc": "The difficulty of finding suitable housing during business trips.",
-    "story2Title": "Limitations of Traditional Hotels",
-    "story2Desc": "Hotels are small, lack kitchens, and feel nothing like home.",
-    "story3Title": "Inconvenience of Long-Term Leases",
-    "story3Desc": "Complex contracts, furniture purchases, and difficult move-outs.",
-    "story4Title": "The StayNeos Solution",
-    "story4Desc": "Move-in ready premium apartments with flexible terms and professional service.",
+    "storyTitle": "How It Started",
+    "storyDesc": "One frustrating apartment search",
+    "story1Title": "The Problem",
+    "story1Desc": "Relocating to a new city with nowhere that felt like home.",
+    "story2Title": "Hotels Weren't It",
+    "story2Desc": "Small rooms, no kitchen, zero sense of belonging.",
+    "story3Title": "Leases Weren't Either",
+    "story3Desc": "Year-long contracts, empty apartments, weeks of setup.",
+    "story4Title": "So We Built StayNeos",
+    "story4Desc": "Furnished, flexible, and ready when you are.",
     "whyLabel": "WHY CHOOSE US",
-    "whyTitle": "Why Choose Us",
-    "whyDesc": "We create a home where you can work and live comfortably, even away from home.",
-    "why1Title": "Curated Properties",
-    "why1Desc": "Every property is personally inspected by our team.",
-    "why2Title": "Flexible Lease Terms",
-    "why2Desc": "Starting from 28 days, monthly and quarterly.",
+    "whyTitle": "Why People Choose Us",
+    "whyDesc": "We make every city feel like yours.",
+    "why1Title": "Every Home Visited",
+    "why1Desc": "We've sat on every couch.",
+    "why2Title": "Truly Flexible",
+    "why2Desc": "From 28 days. Extend anytime.",
     "why3Title": "Move-In Ready",
-    "why3Desc": "Fully furnished. Everything is ready.",
-    "why4Title": "24/7 Concierge Service",
-    "why4Desc": "Our team is on standby around the clock.",
-    "why5Title": "Transparent Pricing",
-    "why5Desc": "No hidden fees, what you see is what you get.",
+    "why3Desc": "Furnished down to the coffee mugs.",
+    "why4Title": "Always Available",
+    "why4Desc": "Real people, real responses, 24/7.",
+    "why5Title": "No Surprises",
+    "why5Desc": "The price you see is the price you pay.",
     "commitLabel": "OUR COMMITMENT",
-    "commitTitle": "Our Commitment",
-    "commitDesc": "We promise every client an experience that exceeds expectations",
-    "commit1Title": "Premium Living Experience",
-    "commit1Desc": "We carefully select every property to ensure outstanding quality.",
-    "commit2Title": "The Warmth of Home",
-    "commit2Desc": "Making every relocation feel like home.",
-    "commit3Title": "Continuous Improvement",
-    "commit3Desc": "We constantly listen to feedback and improve our service.",
-    "ctaTitle": "Ready to Experience StayNeos?",
-    "ctaDesc": "Browse our curated properties and find your ideal home in Toronto",
-    "ctaBrowse": "Browse Properties",
-    "ctaContact": "Contact Us"
+    "commitTitle": "Our Promise",
+    "commitDesc": "Every stay should be worth talking about",
+    "commit1Title": "Quality You Can Feel",
+    "commit1Desc": "We sweat every detail.",
+    "commit2Title": "Home Away From Home",
+    "commit2Desc": "Not just a place to sleep — a place to live.",
+    "commit3Title": "Always Improving",
+    "commit3Desc": "Your feedback shapes what we do next.",
+    "ctaTitle": "Find Your Home Tonight",
+    "ctaDesc": "Browse furnished apartments ready for move-in.",
+    "ctaBrowse": "Browse Apartments",
+    "ctaContact": "Say Hello"
   },
   "faqPage": {
     "title": "Frequently Asked Questions",

@@ -3,7 +3,7 @@ import LandlordsPageContent from "./LandlordsPageContent";
 
 export const metadata: Metadata = {
   title: "For Landlords - StayNeos",
-  description: "Partner with StayNeos to maximize your rental income. Professional property management services for landlords in Toronto and GTA.",
+  description: "Partner with StayNeos to maximize your rental income. Professional property management services for landlords.",
 };
 
 // Static data for benefits - just keys, icons resolved in client component

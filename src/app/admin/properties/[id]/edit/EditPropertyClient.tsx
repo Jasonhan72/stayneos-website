@@ -34,11 +34,11 @@ const mockPropertyData = {
     en: 'Luxury Downtown Apartment' 
   },
   description: { 
-    zh: '这套精致的行政公寓位于多伦多市中心，专为追求品质生活的商务人士打造。步行可达金融区、购物中心和顶级餐厅。', 
-    en: 'This exquisite executive apartment is located in the heart of downtown Toronto, designed for business professionals seeking quality living. Walking distance to the Financial District, shopping centers, and top restaurants.' 
+    zh: '这套精致的行政公寓位于市中心，专为追求品质生活的商务人士打造。步行可达金融区、购物中心和顶级餐厅。', 
+    en: 'This exquisite executive apartment is located in the heart of downtown, designed for business professionals seeking quality living. Walking distance to the Financial District, shopping centers, and top restaurants.' 
   },
   address: '123 Main Street',
-  city: 'Toronto',
+  city: 'Downtown',
   province: 'Ontario',
   postalCode: 'M5V 3A8',
   country: 'Canada',

@@ -31,7 +31,7 @@ export default function GooglePropertyMap({
   }
 
   // Calculate map center based on all properties (using first one for now)
-  const centerLocation = encodeURIComponent(properties[0]?.location || 'Toronto, ON');
+  const centerLocation = encodeURIComponent(properties[0]?.location || 'Downtown');
   
   return (
     <div className="w-full h-full relative">

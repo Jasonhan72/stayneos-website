@@ -59,7 +59,7 @@ function DashboardContent() {
     name: user?.name || "",
     email: user?.email || "",
     phone: "",
-    memberSince: t('dashboard.memberSince', { date: '2024年1月' }),
+    memberSince: t('dashboard.memberSince', { date: 'January 2024' }),
   });
 
   const tabs = [
@@ -117,7 +117,7 @@ function DashboardContent() {
                 <h1 className="text-2xl font-bold text-gray-900 mb-1">
                   {t('dashboard.welcome', { name: (user?.name?.split(" ").filter(n => n)[0]) || user?.email?.split("@")[0] || "User" })}
                 </h1>
-                <p className="text-gray-500">{t('dashboard.memberSinceLabel', { date: '2024年1月' })}</p>
+                <p className="text-gray-500">{t('dashboard.memberSinceLabel', { date: 'January 2024' })}</p>
               </div>
               <div className="flex gap-3">
                 <button
@@ -264,7 +264,7 @@ function DashboardContent() {
                                 <span>{t('dashboard.guestsCount', { count: booking.guests })}</span>
                               </div>
                               <div className="font-semibold text-gray-900">
-                                ¥{booking.totalPrice.toLocaleString()}
+                                {"$"}{booking.totalPrice.toLocaleString()}
                               </div>
                             </div>
 
@@ -359,7 +359,7 @@ function DashboardContent() {
                               </div>
                               <div className="text-right">
                                 <span className="font-bold text-gray-900">
-                                  ¥{property.price.toLocaleString()}
+                                  {"$"}{property.price.toLocaleString()}
                                 </span>
                                 <span className="text-sm text-gray-500">
                                   /{t('dashboard.priceUnit')}

@@ -1,11 +1,9 @@
 import CheckoutClient from './CheckoutClient';
+import { mockProperties } from '@/lib/data';
 
 // Required for static export
 export function generateStaticParams() {
-  return [
-    { propertyId: '1' },
-    { propertyId: '2' },
-  ];
+  return mockProperties.map(p => ({ propertyId: p.id }));
 }
 
 export default function CheckoutPage({ params }: { params: { propertyId: string } }) {

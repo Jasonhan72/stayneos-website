@@ -91,10 +91,14 @@ export function AirbnbCalendar({
     return months;
   }, [currentMonthOffset]);
 
+  const formatDateKey = useCallback((date: Date): string => {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  }, []);
+
   const getDateStatus = useCallback((date: Date): 'none' | 'start' | 'end' | 'between' | 'disabled' => {
     if (date < today) return 'disabled';
     
-    const dateStr = date.toISOString().split('T')[0];
+    const dateStr = formatDateKey(date);
     const start = selectedStart ? new Date(selectedStart) : null;
     const end = selectedEnd ? new Date(selectedEnd) : null;
     
@@ -102,12 +106,12 @@ export function AirbnbCalendar({
     if (selectedEnd && dateStr === selectedEnd) return 'end';
     if (start && end && date > start && date < end) return 'between';
     return 'none';
-  }, [selectedStart, selectedEnd, today]);
+  }, [selectedStart, selectedEnd, today, formatDateKey]);
 
   const handleDateClick = useCallback((date: Date) => {
     if (date < today) return;
     
-    const dateStr = date.toISOString().split('T')[0];
+    const dateStr = formatDateKey(date);
     
     // If no start date or both selected, start fresh
     if (!selectedStart || (selectedStart && selectedEnd)) {
@@ -119,19 +123,23 @@ export function AirbnbCalendar({
       // Have start, selecting end
       const startDate = new Date(selectedStart);
       
-      if (date <= startDate) {
-        // Selected before start, make it new start
+      // Calculate minimum end date (at least 1 night after start)
+      const minEndDate = new Date(startDate);
+      minEndDate.setDate(minEndDate.getDate() + 1);
+      
+      if (date < minEndDate) {
+        // Selected same day or before minimum end date - reset to new start
         setSelectedStart(dateStr);
         setSelectedEnd('');
         onSelectCheckIn(dateStr);
         onSelectCheckOut('');
       } else {
-        // Valid end date
+        // Valid end date (at least 1 night after start)
         setSelectedEnd(dateStr);
         onSelectCheckOut(dateStr);
       }
     }
-  }, [selectedStart, selectedEnd, today, onSelectCheckIn, onSelectCheckOut]);
+  }, [selectedStart, selectedEnd, today, onSelectCheckIn, onSelectCheckOut, formatDateKey]);
 
   const handleClear = useCallback(() => {
     setSelectedStart('');
@@ -225,6 +233,7 @@ export function AirbnbCalendar({
           {days.map((dayInfo, index) => {
             const status = getDateStatus(dayInfo.date);
             const dayNumber = dayInfo.date.getDate();
+            const isSelected = (status === 'start' || status === 'end') && dayInfo.isCurrentMonth;
             
             let cellClasses = "aspect-square flex items-center justify-center text-sm relative";
             let textClasses = "";
@@ -251,7 +260,7 @@ export function AirbnbCalendar({
               >
                 <span className={cn(
                   "w-10 h-10 flex items-center justify-center",
-                  (status === 'start' || status === 'end') && "bg-neutral-900 text-white rounded-full"
+                  isSelected && "bg-neutral-900 text-white rounded-full"
                 )}>
                   {dayNumber}
                 </span>
@@ -407,6 +416,7 @@ export function AirbnbCalendar({
                 {days.map((dayInfo, index) => {
                   const status = getDateStatus(dayInfo.date);
                   const dayNumber = dayInfo.date.getDate();
+                  const isSelected = (status === 'start' || status === 'end') && dayInfo.isCurrentMonth;
                   
                   let cellClasses = "aspect-square flex items-center justify-center text-sm relative";
                   let textClasses = "";
@@ -433,7 +443,7 @@ export function AirbnbCalendar({
                     >
                       <span className={cn(
                         "w-10 h-10 flex items-center justify-center",
-                        (status === 'start' || status === 'end') && "bg-neutral-900 text-white rounded-full"
+                        isSelected && "bg-neutral-900 text-white rounded-full"
                       )}>
                         {dayNumber}
                       </span>

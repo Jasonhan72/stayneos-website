@@ -1,9 +1,10 @@
 // Property Detail Page - Airbnb Style with Desktop Two-Column Layout (使用真实 API)
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { 
   Star,
   Heart,
@@ -13,14 +14,13 @@ import {
   X,
   Trophy,
   Waves,
-  Check,
-  MapPin
+  Check
 } from 'lucide-react';
 import { Container, Divider } from '@/components/ui';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { ApiErrorAlert } from '@/components/error';
 import { AirbnbCalendar, ReviewAndContinue, PaymentMethod, calculateBookingPrice, GuestSelector, type GuestCounts } from '@/components/booking';
-import CardDetailsForm from '@/components/payment/CardDetailsForm';
+// CardDetailsForm removed - PCI compliance: all card input handled by Stripe Elements
 import { useI18n } from '@/lib/i18n';
 import { useProperty } from '@/hooks/useProperties';
 import { PropertyCardData } from '@/types';
@@ -41,6 +41,7 @@ const mockHost = {
 
 export default function PropertyDetailClient({ propertyId, initialProperty }: PropertyDetailClientProps) {
   const { t, locale } = useI18n();
+  const router = useRouter();
   const { property, isLoading, error } = useProperty(propertyId, {
     fallbackData: initialProperty,
   });
@@ -49,6 +50,19 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   const [isLiked, setIsLiked] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
   
+  // Mobile carousel scroll ref
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Handle scroll to update current image index
+  const handleScroll = () => {
+    if (scrollContainerRef.current) {
+      const scrollLeft = scrollContainerRef.current.scrollLeft;
+      const containerWidth = scrollContainerRef.current.offsetWidth;
+      const newIndex = Math.round(scrollLeft / containerWidth);
+      setCurrentImageIndex(Math.max(0, Math.min(newIndex, imageUrls.length - 1)));
+    }
+  };
+
   // Booking state
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
@@ -56,8 +70,9 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   const [showCalendar, setShowCalendar] = useState(false);
   const [showReview, setShowReview] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
-  const [showCardForm, setShowCardForm] = useState(false);
+  // showCardForm removed - card input now handled by Stripe Elements
   const [showGuestSelector, setShowGuestSelector] = useState(false);
+  const [showPaymentNotice, setShowPaymentNotice] = useState<string | null>(null);
   
   // Guest breakdown state for GuestSelector
   const [guestBreakdown, setGuestBreakdown] = useState<GuestCounts>({
@@ -134,7 +149,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               className="inline-flex items-center gap-2 text-primary hover:underline"
             >
               <ChevronLeft size={18} />
-              返回房源列表
+              {t('common.backToList')}
             </Link>
           </div>
         </Container>
@@ -170,7 +185,13 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
     if (!checkIn || !checkOut) {
       setShowCalendar(true);
     } else {
-      setShowReview(true);
+      // Navigate to the booking page with Stripe payment integration
+      const params = new URLSearchParams({
+        checkIn,
+        checkOut,
+        guests: guests.toString(),
+      });
+      router.push(`/booking/${propertyId}?${params.toString()}`);
     }
   };
 
@@ -205,7 +226,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           >
             <p className="text-xs font-semibold text-neutral-900 uppercase">Check-in</p>
             <p className="text-sm text-neutral-600 mt-1">
-              {checkIn ? new Date(checkIn).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' }) : 'Add date'}
+              {checkIn ? new Date(checkIn).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' }) : t('booking.addDate')}
             </p>
           </button>
           <button 
@@ -214,7 +235,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           >
             <p className="text-xs font-semibold text-neutral-900 uppercase">Checkout</p>
             <p className="text-sm text-neutral-600 mt-1">
-              {checkOut ? new Date(checkOut).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' }) : 'Add date'}
+              {checkOut ? new Date(checkOut).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' }) : t('booking.addDate')}
             </p>
           </button>
         </div>
@@ -225,7 +246,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           className="w-full p-3 text-left border-t border-neutral-300 hover:bg-neutral-50 transition-colors"
         >
           <p className="text-xs font-semibold text-neutral-900 uppercase">Guests</p>
-          <p className="text-sm text-neutral-600 mt-1">{guests} {guests === 1 ? 'guest' : 'guests'}</p>
+          <p className="text-sm text-neutral-600 mt-1">{guests} {guests === 1 ? t('booking.guestSingular') : t('booking.guestsPlural')}</p>
         </button>
       </div>
 
@@ -237,7 +258,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
         {checkIn && checkOut ? 'Reserve' : t('property.checkAvailability')}
       </button>
 
-      <p className="text-center text-neutral-500 text-sm mb-6">You won&apos;t be charged yet</p>
+      <p className="text-center text-neutral-500 text-sm mb-6">{t('booking.youWontBeCharged')}</p>
 
       {/* Price Breakdown */}
       {bookingPrice && (
@@ -269,7 +290,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
 
       {/* Report */}
       <div className="mt-6 pt-4 border-t border-neutral-100 flex items-center justify-center gap-2 text-neutral-500 text-sm">
-        <span className="underline"><MapPin size={14} className="inline" /> Report this listing</span>
+        <span className="underline">{t('property.reportListing')}</span>
       </div>
     </div>
   );
@@ -328,36 +349,34 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
 
       {/* Full Width Image Gallery - Desktop Grid / Mobile Carousel */}
       <div className="relative">
-        {/* Mobile: Carousel */}
-        <div className="md:hidden relative w-full aspect-[4/3] bg-neutral-100">
-          <Image 
-            src={imageUrls[currentImageIndex]} 
-            alt={`${localizedTitle} - Image ${currentImageIndex + 1}`} 
-            fill 
-            priority 
-            className="object-contain" 
-          />
+        {/* Mobile: Swipe Carousel with CSS Scroll Snap */}
+        <div className="md:hidden relative w-full bg-neutral-100">
+          <div 
+            ref={scrollContainerRef}
+            onScroll={handleScroll}
+            className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {imageUrls.map((url, index) => (
+              <div 
+                key={index} 
+                className="w-full flex-shrink-0 snap-center relative aspect-[4/3]"
+              >
+                <Image 
+                  src={url} 
+                  alt={`${localizedTitle} - Image ${index + 1}`}
+                  fill 
+                  priority={index === 0}
+                  className="object-cover" 
+                />
+              </div>
+            ))}
+          </div>
           
           {/* Image Counter */}
           <div className="absolute bottom-4 right-4 px-3 py-1.5 bg-black/70 text-white text-sm rounded-lg">
             {currentImageIndex + 1} / {imageUrls.length}
           </div>
-
-          {/* Navigation Arrows */}
-          <button 
-            onClick={prevImage} 
-            className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-white/90 hover:bg-white transition-colors rounded-full shadow-lg"
-            aria-label="Previous image"
-          >
-            <ChevronLeft size={24} />
-          </button>
-          <button 
-            onClick={nextImage} 
-            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white/90 hover:bg-white transition-colors rounded-full shadow-lg"
-            aria-label="Next image"
-          >
-            <ChevronRight size={24} />
-          </button>
         </div>
 
         {/* Desktop: Grid Gallery */}
@@ -492,7 +511,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                   maxGuests: propertyCardData.maxGuests 
                 })}
               </p>
-              <button className="mt-4 font-medium underline">Show more</button>
+              <button className="mt-4 font-medium underline">{t('property.showMore')}</button>
             </div>
 
             <Divider />
@@ -638,22 +657,22 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
         onNext={(method) => {
           setShowPayment(false);
           if (method === 'card') {
-            setShowCardForm(true);
+            // Redirect to booking page with Stripe integration
+            const params = new URLSearchParams({
+              checkIn,
+              checkOut,
+              guests: guests.toString(),
+            });
+            router.push(`/booking/${propertyId}?${params.toString()}`);
+          } else if (method === 'paypal' || method === 'applepay') {
+            // PayPal and Apple Pay coming soon - show inline message
+            setShowPayment(false);
+            setShowPaymentNotice(method === 'paypal' ? 'PayPal' : 'Apple Pay');
           }
         }}
       />
 
-      {/* Card Details Form */}
-      <CardDetailsForm
-        isOpen={showCardForm}
-        onClose={() => setShowCardForm(false)}
-        onBack={() => { setShowCardForm(false); setShowPayment(true); }}
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        onSubmit={(_cardData) => {
-          setShowCardForm(false);
-          alert("Payment submitted! Booking confirmed.");
-        }}
-      />
+      {/* Card details now handled by Stripe Elements on the booking page */}
       {/* Guest Selector Modal */}
       <GuestSelector
         isOpen={showGuestSelector}
@@ -666,6 +685,36 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
         maxGuests={propertyCardData.maxGuests}
         allowPets={false}
       />
+
+      {/* Payment Method Coming Soon Notice */}
+      {showPaymentNotice && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowPaymentNotice(null)} />
+          <div className="relative bg-white rounded-2xl shadow-2xl max-w-sm w-full mx-4 p-6 text-center">
+            <div className="w-12 h-12 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl">🚧</span>
+            </div>
+            <h3 className="text-lg font-semibold text-neutral-900 mb-2">{showPaymentNotice} Coming Soon</h3>
+            <p className="text-neutral-600 text-sm mb-6">
+              {showPaymentNotice} payment is not yet available. Please use a credit or debit card for now.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowPaymentNotice(null)}
+                className="flex-1 py-3 border border-neutral-300 text-neutral-700 font-medium rounded-xl hover:bg-neutral-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => { setShowPaymentNotice(null); setShowPayment(true); }}
+                className="flex-1 py-3 bg-neutral-900 text-white font-semibold rounded-xl hover:bg-neutral-800 transition-colors"
+              >
+                Use Card
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Full Screen Gallery Modal */}
       {showGallery && (

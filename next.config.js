@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Static Export Mode (Cloudflare Pages)
-  output: 'export',
-  distDir: 'dist',
-  trailingSlash: true,
+  // SSR Mode (Cloudflare Pages + Workers via OpenNext)
+  // output: 'export' removed for SSR
 
   experimental: {
     optimizePackageImports: ["lucide-react"],
@@ -30,9 +28,6 @@ const nextConfig = {
         ? { exclude: ["error"] }
         : false,
   },
-
-  // NOTE: headers and redirects don't work with output: 'export'
-  // Moved to Cloudflare Pages: public/_headers and public/_redirects
 
   poweredByHeader: false,
   compress: true,

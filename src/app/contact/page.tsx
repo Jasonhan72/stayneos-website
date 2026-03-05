@@ -2,14 +2,14 @@ import { Metadata } from "next";
 import ContactPageContent from "./ContactPageContent";
 
 export const metadata: Metadata = {
-  title: "联系我们 | StayNeos",
-  description: "联系 StayNeos 团队，获取高端行政公寓租赁咨询。我们的专业团队随时为您提供帮助，解答您的任何问题。",
-  keywords: ["联系我们", "StayNeos", "公寓咨询", "多伦多租房", "客户服务"],
+  title: "Contact Us | StayNeos",
+  description: "Contact the StayNeos team for premium executive apartment rental inquiries. Our professional team is ready to help with any questions.",
+  keywords: ["Contact Us", "StayNeos", "apartment inquiries", "customer service"],
   openGraph: {
-    title: "联系我们 | StayNeos",
-    description: "联系 StayNeos 团队，获取高端行政公寓租赁咨询",
+    title: "Contact Us | StayNeos",
+    description: "Contact the StayNeos team for premium executive apartment rental inquiries",
     type: "website",
-    locale: "zh_CN",
+    locale: "en_US",
   },
 };
 

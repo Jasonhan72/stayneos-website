@@ -5,6 +5,7 @@
   },
   "nav": {
     "home": "探索房源",
+    "explore": "探索房源",
     "properties": "精选公寓",
     "services": "企业服务",
     "about": "关于 StayNeos",
@@ -24,7 +25,8 @@
     "becomeHost": "成为房东",
     "listProperty": "发布房源",
     "manageProperties": "管理房源",
-    "dashboard": "仪表盘"
+    "dashboard": "仪表盘",
+    "partnerWithUs": "合作伙伴"
   },
   "common": {
     "view": "查看",
@@ -62,9 +64,9 @@
     "title": "货币"
   },
   "hero": {
-    "title": "欢迎来到 StayNeos",
-    "highlight": "商务精英的旅居首选",
-    "subtitle": "重新定义高端行政公寓体验，为商务人士和异地居住者提供家的温暖与专业的服务",
+    "title": "您的家，已准备就绪",
+    "highlight": "今天到达，今晚回家",
+    "subtitle": "核心地段精装公寓，拎包即住。住一个月、一季、或一年。",
     "cta": "发布房源",
     "ctaQuote": "获取报价",
     "ctaBrowse": "浏览房源"
@@ -102,16 +104,16 @@
     "next": "下一页"
   },
   "features": {
-    "title": "为什么选择 StayNeos",
-    "subtitle": "我们致力于为每一位客户提供卓越的居住体验，从房源筛选到入住服务，每一个细节都精心打磨",
-    "quality": "严选房源",
-    "qualityDesc": "严选高端房源，确保每一处细节都符合您的期望",
-    "flexible": "灵活租期",
-    "flexibleDesc": "支持短租、长租，灵活满足不同出行需求",
-    "service": "礼宾服务",
-    "serviceDesc": "24小时管家服务，让您的居住体验更加舒适",
-    "support": "24/7支持",
-    "supportDesc": "专业客服团队随时为您解决任何问题",
+    "title": "为何选择 StayNeos",
+    "subtitle": "您的居所，比您更早准备就绪。没有意外，没有隐藏费用——只有一处为您精心打造的温馨空间。",
+    "quality": "逐一精选",
+    "qualityDesc": "每套公寓都经过我们团队实地看房、审核、把关。不够好的，不会上线。",
+    "flexible": "随需而变",
+    "flexibleDesc": "住一个月或十二个月。随时延长或缩短。您的计划会变，住的地方不该成为麻烦。",
+    "service": "全天候专属支持",
+    "serviceDesc": "随时致电，真人接听。无论白天黑夜，工作日或周末，我们始终在线。",
+    "support": "全天候守护",
+    "supportDesc": "深夜遇到门锁问题？需要维修协助？我们一直都在。",
     "utilities": "包含所有公用事业费用",
     "wifi": "高速WiFi",
     "housekeeping": "家政服务",
@@ -176,7 +178,8 @@
       "monthlyPrice": "月租价",
       "monthlyDiscountLabel": "月租优惠 ({percent}% 折扣)",
       "minNightsWarning": "最少需预订 {count} 天"
-    }
+    },
+    "empty": "暂无精选房源"
   },
   "details": {
     "title": "房源详情",
@@ -194,30 +197,30 @@
     "minNightsWarning": "最少需预订 {count} 天"
   },
   "cta": {
-    "title": "准备好体验 StayNeos 了吗？",
-    "subtitle": "浏览我们的精选房源，找到您在多伦多的理想居所",
-    "explore": "开始探索",
+    "title": "今晚，找到您的理想居所",
+    "subtitle": "浏览可以立即入住的精装公寓。不用长租约，不用空房间——只有家。",
+    "explore": "浏览公寓",
     "contact": "联系我们",
     "button": "联系我们",
     "desc": "今天联系我们，了解更多关于我们服务的信息，找到您的理想居所。",
-    "browse": "浏览房源"
+    "browse": "浏览公寓"
   },
   "howItWorks": {
-    "title": "如何运作",
-    "subtitle": "入住简单便捷，三步即可找到理想住所。"
+    "title": "三步回家",
+    "subtitle": "选房、下单、入住。就这么简单。"
   },
   "steps": {
     "search": {
-      "title": "搜索房源",
-      "desc": "浏览我们的精选房源，按位置、价格、设施筛选"
+      "title": "找到你的房子",
+      "desc": "按社区、价格或风格浏览公寓。筛选湖景、允许宠物、或步行可达 PATH 的房源。"
     },
     "book": {
-      "title": "在线预订",
-      "desc": "选择入住日期，查看实时价格，一键完成预订"
+      "title": "立即预订",
+      "desc": "选好日期，看到价格——不用来回沟通。两分钟内确认。"
     },
     "movein": {
-      "title": "拎包入住",
-      "desc": "专业管家迎接，设施齐全，即刻开始享受"
+      "title": "推门即住",
+      "desc": "钥匙已备好。WiFi 已连上。床已铺好。到了就开始生活。"
     },
     "step1": {
       "title": "发布房源",
@@ -233,52 +236,52 @@
     }
   },
   "book": {
-    "title": "在线预订",
-    "desc": "选择入住日期，查看实时价格，一键完成预订"
+    "title": "立即预订",
+    "desc": "选好日期，看到价格——不用来回沟通。两分钟内确认。"
   },
   "movein": {
-    "title": "拎包入住",
-    "desc": "专业管家迎接，设施齐全，即刻开始享受"
+    "title": "推门即住",
+    "desc": "钥匙已备好。WiFi 已连上。床已铺好。到了就开始生活。"
   },
   "segments": {
-    "title": "适合您的居住方案",
-    "subtitle": "无论商务出差、长期项目还是搬迁过渡，我们都有适合您的选择",
+    "title": "每段旅程，都有归处",
+    "subtitle": "来出差？找房过渡？重新开始？我们都能帮您安顿下来。",
     "business": {
       "title": "商务出差",
-      "subtitle": "企业客户优惠",
-      "desc": "为商务人士提供便捷住宿方案，靠近金融区，交通便利",
+      "subtitle": "企业优惠价",
+      "desc": "您因项目在此驻留三个月。我们确保您的生活品质不受影响。步行即达商务区，在精心配备的厨房中烹饪家的味道。",
       "cta": "了解企业方案"
     },
     "longterm": {
       "title": "长期居住",
-      "subtitle": "月租享8折",
-      "desc": "一个月以上享受优惠价格，适合长期项目或搬迁过渡",
-      "cta": "查看长租房源"
+      "subtitle": "月租省 20%",
+      "desc": "不只是路过？安心住下来。公寓里什么都有——碗碟、床品，连咖啡机都备好了。你只需要带上自己。",
+      "cta": "浏览长租房源"
     },
     "relocation": {
       "title": "搬迁过渡",
-      "subtitle": "灵活入住",
-      "desc": "搬家期间的理想选择，无需长期承诺，即刻入住",
-      "cta": "立即预订"
+      "subtitle": "本周即可入住",
+      "desc": "新城市，新工作，清单上一堆事。今天就把\"找住处\"这一项划掉吧。",
+      "cta": "找到你的落脚点"
     }
   },
   "business": {
     "title": "商务出差",
-    "subtitle": "企业客户优惠",
-    "desc": "为商务人士提供便捷住宿方案，靠近金融区，交通便利",
+    "subtitle": "企业优惠价",
+    "desc": "您因项目在此驻留三个月。我们确保您的生活品质不受影响。步行即达商务区，在精心配备的厨房中烹饪家的味道。",
     "cta": "了解企业方案"
   },
   "longterm": {
     "title": "长期居住",
-    "subtitle": "月租享8折",
-    "desc": "一个月以上享受优惠价格，适合长期项目或搬迁过渡",
-    "cta": "查看长租房源"
+    "subtitle": "月租省 20%",
+    "desc": "不只是路过？安心住下来。公寓里什么都有——碗碟、床品，连咖啡机都备好了。你只需要带上自己。",
+    "cta": "浏览长租房源"
   },
   "relocation": {
     "title": "搬迁过渡",
-    "subtitle": "灵活入住",
-    "desc": "搬家期间的理想选择，无需长期承诺，即刻入住",
-    "cta": "立即预订"
+    "subtitle": "本周即可入住",
+    "desc": "新城市，新工作，清单上一堆事。今天就把\"找住处\"这一项划掉吧。",
+    "cta": "找到你的落脚点"
   },
   "footer": {
     "about": "关于我们",
@@ -293,7 +296,7 @@
     "faq": "常见问题",
     "contact": "联系我们",
     "privacy": "隐私政策",
-    "description": "为现代旅行者提供精心设计的住宿体验。无论是商务出行还是休闲度假，我们都能为您提供完美的居住空间。",
+    "description": "为真正想生活——而不只是住下——的人准备的精装公寓。为商务旅客、搬迁者，和所有值得拥有真正品质居所的人而建。",
     "companyTitle": "公司",
     "servicesTitle": "服务",
     "supportTitle": "支持",
@@ -681,7 +684,7 @@
     "address": "详细地址",
     "addressPlaceholder": "例如：123 Main Street",
     "city": "城市",
-    "cityPlaceholder": "例如：多伦多",
+    "cityPlaceholder": "请输入城市",
     "bedrooms": "卧室",
     "bathrooms": "卫生间",
     "maxGuests": "最多入住",
@@ -1025,7 +1028,7 @@
     },
     "location": {
       "title": "黄金地段",
-      "desc": "多伦多市中心及 GTA"
+      "desc": "核心商务区及主要城市"
     }
   },
   "income": {
@@ -1116,7 +1119,7 @@
       },
       "location": {
         "title": "黄金地段",
-        "desc": "位于多伦多市中心、北约克或其他核心商务区，交通便利。"
+        "desc": "位于核心商务区，交通便利"
       },
       "quality": {
         "title": "高品质",
@@ -1212,7 +1215,7 @@
       },
       "location": {
         "title": "黄金地段",
-        "desc": "多伦多市中心及 GTA"
+        "desc": "核心商务区及主要城市"
       },
       "support": {
         "title": "专属支持",
@@ -1294,7 +1297,7 @@
   },
   "location": {
     "title": "黄金地段",
-    "desc": "多伦多市中心及 GTA"
+    "desc": "核心商务区及主要城市"
   },
   "unit": {
     "properties": "房源",
@@ -1333,31 +1336,31 @@
     "pageLoadError": "抱歉，页面加载时遇到了问题"
   },
   "services": {
-    "title": "我们的服务",
-    "subtitle": "为各种需求提供优质家具公寓解决方案。从企业住房到短期住宿，我们都能满足您的需求。",
+    "title": "我们能为您提供什么",
+    "subtitle": "无论您是出差的商务人士、搬迁的专业人士，还是为团队找房的企业——我们都有解决方案。",
     "corporateHousing": {
       "title": "企业住房",
-      "desc": "为商务旅客和搬迁员工提供全套家具公寓。灵活的租期，从1个月到1年。"
+      "desc": "您的团队周一飞来，他们的公寓周日就已准备就绪。精装家具，设施齐全，步行即达市中心办公室。"
     },
     "shortTerm": {
-      "title": "短期租赁",
-      "desc": "优质家具公寓，适合短期居住。完美的度假、临时搬迁或房屋装修选择。"
+      "title": "短期入住",
+      "desc": "租约衔接期？房子在装修？只需要一个高品质空间住几周？带个行李箱就能搬进来。"
     },
     "propertyManagement": {
       "title": "物业管理",
-      "desc": "为房东提供全方位物业管理服务。我们处理从营销到维护的一切事务。"
+      "desc": "拥有闲置公寓？我们帮您寻找优质租客、日常维护、处理一切事务。您只需坐享收益。"
     },
     "concierge": {
-      "title": "礼宾服务",
-      "desc": "个性化礼宾服务，让您的住宿体验 exceptional。从机场接送到杂货配送。"
+      "title": "私人礼宾",
+      "desc": "入住前想填满冰箱？需要机场接送？想知道附近哪家餐厅值得尝试？只需告知，我们为您安排。"
     },
     "flexibleLeasing": {
-      "title": "灵活租赁",
-      "desc": "适合您日程的租赁条款。无长期承诺或隐藏费用。"
+      "title": "灵活租约",
+      "desc": "住一个月，延长到半年。无违约金，手续简便。让租约适应您的生活节奏。"
     },
     "globalNetwork": {
-      "title": "全球网络",
-      "desc": "在北美及其他主要城市的优质家具公寓。"
+      "title": "持续扩展",
+      "desc": "从主要城市起步，扩展至商务带您去的每一座城市。一个平台，始终如一的品质。"
     },
     "features": {
       "utilities": "包含所有公用事业费用",
@@ -1382,142 +1385,142 @@
       "termination": "可提前终止"
     },
     "cta": {
-      "title": "准备开始了吗？",
-      "desc": "今天联系我们，了解更多关于我们服务的信息，找到您的理想居所。",
+      "title": "让我们帮你找到家",
+      "desc": "告诉我们你的需求，剩下的交给我们。",
       "button": "联系我们"
     }
   },
   "corporateHousing": {
     "title": "企业住房",
-    "desc": "为商务旅客和搬迁员工提供全套家具公寓。灵活的租期，从1个月到1年。"
+    "desc": "你的团队周一飞来，公寓周日就准备好了。精装家具，步行到市中心。"
   },
   "shortTerm": {
-    "title": "短期租赁",
-    "desc": "优质家具公寓，适合短期居住。完美的度假、临时搬迁或房屋装修选择。"
+    "title": "短期入住",
+    "desc": "租约衔接期？房子装修？带个行李箱就能搬进来。"
   },
   "propertyManagement": {
     "title": "物业管理",
-    "desc": "为房东提供全方位物业管理服务。我们处理从营销到维护的一切事务。"
+    "desc": "有公寓？我们帮你找租客、维护、处理一切。"
   },
   "concierge": {
-    "title": "礼宾服务",
-    "desc": "个性化礼宾服务，让您的住宿体验 exceptional。从机场接送到杂货配送。"
+    "title": "私人管家",
+    "desc": "填冰箱、接机、推荐餐厅。开口就行。"
   },
   "flexibleLeasing": {
-    "title": "灵活租赁",
-    "desc": "适合您日程的租赁条款。无长期承诺或隐藏费用。"
+    "title": "灵活租约",
+    "desc": "住一个月，延长到半年。不罚款。"
   },
   "globalNetwork": {
-    "title": "全球网络",
-    "desc": "在北美及其他主要城市的优质家具公寓。"
+    "title": "持续扩展",
+    "desc": "从主要城市起步，扩展至商务带您去的每一座城市。一个平台，始终如一的品质。"
   },
   "about": {
     "title": "关于 StayNeos",
     "hero": {
       "title": "关于 StayNeos",
-      "subtitle": "重新定义高端行政公寓体验，为商务人士和异地居住者提供家的温暖与专业的服务"
+      "subtitle": "我们知道来到一座新城市、需要一个家——而不只是一间房——是什么感觉。所以我们创建了 StayNeos。"
     },
     "mission": {
       "label": "我们的使命",
-      "title": "我们的使命",
-      "desc": "StayNeos 致力于为现代商务人士和异地居住者打造完美的居住解决方案，让每一次出行都能享受到家的舒适与便利。",
+      "title": "驱动我们的是什么",
+      "desc": "每个人都值得拥有一个真正的家——即使远在他乡。这不是口号，是我们做每个决定的依据。",
       "items": {
-        "executive": "高端行政公寓",
-        "executiveDesc": "为商务人士和异地居住者提供精选高端行政公寓，满足品质生活需求",
-        "simple": "简单轻松无压力",
-        "simpleDesc": "让短期租赁变得简单、轻松、无压力，专注于您的工作和生活",
-        "flexible": "灵活租期",
-        "flexibleDesc": "28天起租的灵活租期，支持月租、季租，适应您的行程安排",
-        "location": "核心地段",
-        "locationDesc": "精选多伦多核心地段优质房源，交通便利，生活配套完善"
+        "executive": "精选公寓",
+        "executiveDesc": "你自己会选的社区，进门就能感受到的品质。",
+        "simple": "零麻烦",
+        "simpleDesc": "没有繁琐手续。不用买家具。不用装宽带。来了就住。",
+        "flexible": "你的时间表",
+        "flexibleDesc": "住 28 天或 365 天。发条消息就能续约。想走就走。你说了算。",
+        "location": "优越地理位置",
+        "locationDesc": "精选核心城市优质社区，每个家都在您想待的地方。"
       }
     },
     "story": {
       "label": "我们的故事",
-      "title": "我们的故事",
-      "subtitle": "从一次商务出差的困境中诞生，StayNeos 致力于解决现代出行者的居住难题"
+      "title": "如何开始的",
+      "subtitle": "一次令人难忘的找房经历，就是全部的起点。"
     },
     "whyChoose": {
       "label": "为什么选择我们",
-      "title": "为什么选择我们",
-      "desc": "我们不仅仅是提供住宿，更是为您打造一个在异地也能安心工作和生活的家。"
+      "title": "为什么大家选我们",
+      "desc": "我们不只是帮你找个地方。我们确保那里真的有家的感觉。"
     },
     "commitment": {
       "label": "我们的承诺",
       "title": "我们的承诺",
-      "subtitle": "我们向每一位客户承诺，提供超越期望的居住体验"
+      "subtitle": "每位住客都应该获得值得分享的体验。这是我们给自己定的标准。"
     },
     "cta": {
-      "title": "准备好体验 StayNeos 了吗？",
-      "subtitle": "浏览我们的精选房源，找到您在多伦多的理想居所",
+      "title": "今晚，找到您的理想居所",
+      "subtitle": "浏览可以立即入住的精装公寓。",
       "browse": "浏览房源",
       "contact": "联系我们"
     },
-    "heroTitle": "重新定义高端旅居",
-    "heroSubtitle": "我们相信，每一次出差都值得被善待",
-    "storyTitle": "我们的故事",
-    "storyOrigin": "StayNeos 诞生于一个简单的观察：在多伦多，商务人士长期面临一个选择困境——酒店空间狭小、缺乏生活气息；传统租房流程繁琐、无法灵活解约。我们决定改变这一切。",
-    "storyMission": "2024年，我们创立了 StayNeos，专为商务精英打造高端行政公寓。每一套房源都经过严格筛选，配备全套家具和办公设施，让入住者从第一天起就能专注于工作与生活的平衡。",
-    "storyToday": "今天，StayNeos 已成为多伦多领先的高端行政公寓平台，服务于科技、金融、医疗等行业的商务人士和企业客户。我们不仅提供住宿，更提供一种从容不迫的生活方式。",
-    "valuesTitle": "我们的价值观",
-    "peopleFirst": "以人为本",
-    "peopleFirstDesc": "每一位入住者都是我们的客人，而非房号。我们关注细节，从欢迎礼到24小时响应，让每次入住都感受到被重视",
-    "quality": "品质至上",
-    "qualityDesc": "我们亲自考察每一套房源，确保家具、设施、位置都符合商务精英的标准。不好的房源，我们不会上架",
-    "flexibility": "灵活应变",
-    "flexibilityDesc": "商务世界瞬息万变，住宿方案也应如此。从一周到一年，我们提供真正灵活的租期，没有繁琐的束缚",
-    "sustainability": "可持续理念",
-    "sustainabilityDesc": "我们优先选择环保建筑，倡导减少一次性用品，与关注可持续发展的房东合作。为商务人士，也为地球",
-    "statsTitle": "数字见证成长",
-    "propertiesCount": "100+ 严选房源",
-    "guestsCount": "1000+ 商务人士",
-    "partnersCount": "50+ 合作企业",
-    "rating": "4.9/5 平均评分",
-    "coverage": "多伦多核心区域",
-    "ctaTitle": "加入 StayNeos 社区",
-    "ctaSubtitle": "无论您是寻找理想住所的商务人士，还是期待合作的房东或企业，我们都期待与您相遇",
-    "ctaBrowse": "探索房源",
-    "ctaContact": "联系我们"
+    "heroTitle": "我们从你现在的处境走过来",
+    "heroSubtitle": "在一座还不属于自己的城市，找一个真正的家",
+    "storyTitle": "如何开始的",
+    "storyOrigin": "这始于一次令人崩溃的找房经历。创始人因工作搬到陌生城市，面对和每个人一样的选择：没有厨房的酒店小房间，或者要签12个月租约的空荡公寓。两个都不合理。于是我们打造了第三种选择。",
+    "storyMission": "2024 年，StayNeos 带着一个简单的想法上线：漂亮的精装公寓，明天就能搬进去。每套房子都是精心挑选、设施齐全，而且都在您真正想住的社区。",
+    "storyToday": "如今，我们是专业人士找家的首选。技术主管、咨询顾问、住院医生、搬迁家庭——他们选择我们，因为我们认真对待每一次入住。因为每一次都很重要。",
+    "valuesTitle": "我们的信念",
+    "peopleFirst": "真实的人，不是交易",
+    "peopleFirstDesc": "你不是一个订单号。给我们发消息，回复你的是真人。我们记得你的咖啡偏好和入住习惯。",
+    "quality": "我们自己不愿住的地方，也不会让你住",
+    "qualityDesc": "我们的团队会去每套公寓。测 WiFi、查水压、坐沙发。只有最好的才会上线。",
+    "flexibility": "生活不是按剧本走的",
+    "flexibilityDesc": "项目延期了。计划变了。我们理解。灵活租期，轻松续约，不因为你是人而受惩罚。",
+    "sustainability": "让城市更好",
+    "sustainabilityDesc": "我们优先选择环保建筑，减少浪费，选择本地供应商。每一座城市都是我们的家。",
+    "statsTitle": "用数字说话",
+    "propertiesCount": "100+ 精选公寓",
+    "guestsCount": "1,000+ 满意住客",
+    "partnersCount": "50+ 企业合作伙伴",
+    "rating": "4.9/5 住客评分",
+    "coverage": "覆盖主要核心城市",
+    "ctaTitle": "回家，到 StayNeos",
+    "ctaSubtitle": "无论您住一个月还是一年，我们让每一座城市都成为您的城市。",
+    "ctaBrowse": "浏览公寓",
+    "ctaContact": "跟我们聊聊"
   },
   "mission": {
     "label": "我们的使命",
-    "title": "我们的使命",
-    "desc": "StayNeos 致力于为现代商务人士和异地居住者打造完美的居住解决方案，让每一次出行都能享受到家的舒适与便利。",
+    "title": "驱动我们的是什么",
+    "desc": "每个人都值得拥有一个真正的家——即使远在他乡。这不是口号，是我们做每个决定的依据。",
     "items": {
-      "executive": "高端行政公寓",
-      "executiveDesc": "为商务人士和异地居住者提供精选高端行政公寓，满足品质生活需求",
-      "simple": "简单轻松无压力",
-      "simpleDesc": "让短期租赁变得简单、轻松、无压力，专注于您的工作和生活",
-      "flexible": "灵活租期",
-      "flexibleDesc": "28天起租的灵活租期，支持月租、季租，适应您的行程安排",
-      "location": "核心地段",
-      "locationDesc": "精选多伦多核心地段优质房源，交通便利，生活配套完善"
+      "executive": "精选公寓",
+      "executiveDesc": "你自己会选的社区，进门就能感受到的品质。",
+      "simple": "零麻烦",
+      "simpleDesc": "没有繁琐手续。不用买家具。不用装宽带。来了就住。",
+      "flexible": "你的时间表",
+      "flexibleDesc": "住 28 天或 365 天。发条消息就能续约。想走就走。你说了算。",
+      "location": "优越地理位置",
+      "locationDesc": "精选核心城市优质社区，每个家都在您想待的地方。"
     }
   },
   "items": {
-    "executive": "高端行政公寓",
-    "executiveDesc": "为商务人士和异地居住者提供精选高端行政公寓，满足品质生活需求",
-    "simple": "简单轻松无压力",
-    "simpleDesc": "让短期租赁变得简单、轻松、无压力，专注于您的工作和生活",
-    "flexible": "灵活租期",
-    "flexibleDesc": "28天起租的灵活租期，支持月租、季租，适应您的行程安排",
-    "location": "核心地段",
-    "locationDesc": "精选多伦多核心地段优质房源，交通便利，生活配套完善"
+    "executive": "精选公寓",
+    "executiveDesc": "你自己会选的社区，进门就能感受到的品质。",
+    "simple": "零麻烦",
+    "simpleDesc": "没有繁琐手续。不用买家具。不用装宽带。来了就住。",
+    "flexible": "你的时间表",
+    "flexibleDesc": "住 28 天或 365 天。发条消息就能续约。想走就走。你说了算。",
+    "location": "优越地理位置",
+    "locationDesc": "精选核心城市优质社区，每个家都在您想待的地方。"
   },
   "story": {
     "label": "我们的故事",
-    "title": "我们的故事",
-    "subtitle": "从一次商务出差的困境中诞生，StayNeos 致力于解决现代出行者的居住难题"
+    "title": "如何开始的",
+    "subtitle": "一次令人难忘的找房经历，就是全部的起点。"
   },
   "whyChoose": {
     "label": "为什么选择我们",
-    "title": "为什么选择我们",
-    "desc": "我们不仅仅是提供住宿，更是为您打造一个在异地也能安心工作和生活的家。"
+    "title": "为什么大家选我们",
+    "desc": "我们不只是帮你找个地方。我们确保那里真的有家的感觉。"
   },
   "commitment": {
     "label": "我们的承诺",
     "title": "我们的承诺",
-    "subtitle": "我们向每一位客户承诺，提供超越期望的居住体验"
+    "subtitle": "每位住客都应该获得值得分享的体验。这是我们给自己定的标准。"
   },
   "ai": {
     "assistant": {
@@ -1651,9 +1654,9 @@
     "tip2": "说明您此行的目的",
     "tip3": "分享您为什么选择这个房源",
     "tip4": "提出您可能有的任何问题",
-    "messageExample1": "您好！我来多伦多参加商务会议，您的房源看起来非常适合我的住宿。",
+    "messageExample1": "您好！我因工作出差需要寻找短期居所，您的房源看起来非常适合我的住宿。",
     "messageExample2": "期待入住您美丽的公寓！工作日我会远程办公。",
-    "messageExample3": "这将是我第一次来多伦多。很高兴从您便利的位置探索这座城市！",
+    "messageExample3": "这将是我第一次入住贵地。很高兴从您便利的位置探索这座城市！",
     "requestToBook": "申请预订",
     "totalPrice": "总价",
     "chargedUponConfirmation": "房东确认后您将被扣款。",
@@ -1861,8 +1864,8 @@
   "morning": "早上好",
   "afternoon": "下午好",
   "evening": "晚上好",
-  "highlight": "商务精英的旅居首选",
-  "subtitle": "高端公寓 · 灵活租期 · 一站式服务",
+  "highlight": "今天到达，今晚回家",
+  "subtitle": "精装公寓 · 灵活入住 · 明天就能搬进来",
   "selectLocation": "选择位置",
   "date": "日期",
   "selectDate": "选择日期",
@@ -1873,13 +1876,13 @@
   "rating": "评分最高",
   "previous": "上一页",
   "next": "下一页",
-  "quality": "严选房源",
-  "qualityDesc": "严选高端房源，确保每一处细节都符合您的期望",
-  "flexible": "灵活租期",
-  "flexibleDesc": "支持短租、长租，灵活满足不同出行需求",
-  "service": "礼宾服务",
-  "serviceDesc": "24小时管家服务，让您的居住体验更加舒适",
-  "supportDesc": "专业客服团队随时为您解决任何问题",
+  "quality": "逐一精选",
+  "qualityDesc": "每套公寓都经过我们团队实地看房、审核、把关。不够好的，不会上线。",
+  "flexible": "按你的节奏来",
+  "flexibleDesc": "住一个月或十二个月。随时延长或缩短。你的计划会变，住的地方不该成为麻烦。",
+  "service": "随时有人罩着你",
+  "serviceDesc": "打电话过来，接听的是真人。白天黑夜，工作日周末，都在。",
+  "supportDesc": "半夜锁门外了？需要维修？我们在。一直都在。",
   "viewAll": "查看全部房源",
   "featured": "精选",
   "reviews": "条评价",
@@ -2078,7 +2081,7 @@
   "address": "详细地址",
   "addressPlaceholder": "例如：123 Main Street",
   "city": "城市",
-  "cityPlaceholder": "例如：多伦多",
+  "cityPlaceholder": "请输入城市",
   "bathrooms": "卫生间",
   "dragDrop": "拖拽图片到此处或点击上传",
   "supportedFormats": "支持 JPG、PNG 格式，最大 10MB",
@@ -2192,28 +2195,28 @@
   "renewal": "轻松续租",
   "termination": "可提前终止",
   "label": "我们的使命",
-  "executiveDesc": "为商务人士和异地居住者提供精选高端行政公寓，满足品质生活需求",
-  "simple": "简单轻松无压力",
-  "simpleDesc": "让短期租赁变得简单、轻松、无压力，专注于您的工作和生活",
-  "locationDesc": "精选多伦多核心地段优质房源，交通便利，生活配套完善",
+  "executiveDesc": "你自己会选的社区，进门就能感受到的品质。",
+  "simple": "零麻烦",
+  "simpleDesc": "没有繁琐手续。不用买家具。来了就住。",
+  "locationDesc": "从 King West 的活力到 Yorkville 的优雅。每个家都在你想待的地方。",
   "browse": "浏览房源",
-  "storyTitle": "我们的故事",
-  "storyOrigin": "StayNeos 诞生于一个简单的观察：在多伦多，商务人士长期面临一个选择困境——酒店空间狭小、缺乏生活气息；传统租房流程繁琐、无法灵活解约。我们决定改变这一切。",
-  "storyMission": "2024年，我们创立了 StayNeos，专为商务精英打造高端行政公寓。每一套房源都经过严格筛选，配备全套家具和办公设施，让入住者从第一天起就能专注于工作与生活的平衡。",
-  "storyToday": "今天，StayNeos 已成为多伦多领先的高端行政公寓平台，服务于科技、金融、医疗等行业的商务人士和企业客户。我们不仅提供住宿，更提供一种从容不迫的生活方式。",
-  "valuesTitle": "我们的价值观",
-  "peopleFirst": "以人为本",
-  "peopleFirstDesc": "每一位入住者都是我们的客人，而非房号。我们关注细节，从欢迎礼到24小时响应，让每次入住都感受到被重视",
-  "flexibility": "灵活应变",
-  "flexibilityDesc": "商务世界瞬息万变，住宿方案也应如此。从一周到一年，我们提供真正灵活的租期，没有繁琐的束缚",
-  "sustainability": "可持续理念",
-  "sustainabilityDesc": "我们优先选择环保建筑，倡导减少一次性用品，与关注可持续发展的房东合作。为商务人士，也为地球",
-  "statsTitle": "数字见证成长",
-  "propertiesCount": "100+ 严选房源",
-  "guestsCount": "1000+ 商务人士",
-  "partnersCount": "50+ 合作企业",
-  "coverage": "多伦多核心区域",
-  "ctaContact": "联系我们",
+  "storyTitle": "如何开始的",
+  "storyOrigin": "这始于一次令人崩溃的找房经历。创始人因工作搬到陌生城市，面对和每个人一样的选择：没有厨房的酒店小房间，或者要签12个月租约的空荡公寓。两个都不合理。于是我们打造了第三种选择。",
+  "storyMission": "2024 年，StayNeos 带着一个简单的想法上线：漂亮的精装公寓，明天就能搬进去。每套房子都是精心挑选、设施齐全，而且都在您真正想住的社区。",
+  "storyToday": "如今，我们是专业人士找家的首选。技术主管、咨询顾问、住院医生、搬迁家庭——他们选择我们，因为我们认真对待每一次入住。因为每一次都很重要。",
+  "valuesTitle": "我们的信念",
+  "peopleFirst": "真实的人，不是交易",
+  "peopleFirstDesc": "你不是一个订单号。给我们发消息，回复你的是真人。我们记得你的咖啡偏好和入住习惯。",
+  "flexibility": "生活不是按剧本走的",
+  "flexibilityDesc": "项目延期了。计划变了。我们理解。灵活租期，轻松续约，不因为你是人而受惩罚。",
+  "sustainability": "让城市更好",
+  "sustainabilityDesc": "我们优先选择环保建筑，减少浪费，选择本地供应商。每一座城市都是我们的家。",
+  "statsTitle": "用数字说话",
+  "propertiesCount": "100+ 精选公寓",
+  "guestsCount": "1,000+ 满意住客",
+  "partnersCount": "50+ 企业合作伙伴",
+  "coverage": "覆盖主要核心城市",
+  "ctaContact": "跟我们聊聊",
   "apartment": "公寓",
   "condo": "公寓式住宅",
   "townhouse": "联排别墅",
@@ -2381,9 +2384,9 @@
   "tip2": "说明您此行的目的",
   "tip3": "分享您为什么选择这个房源",
   "tip4": "提出您可能有的任何问题",
-  "messageExample1": "您好！我来多伦多参加商务会议，您的房源看起来非常适合我的住宿。",
+  "messageExample1": "您好！我因工作出差需要寻找短期居所，您的房源看起来非常适合我的住宿。",
   "messageExample2": "期待入住您美丽的公寓！工作日我会远程办公。",
-  "messageExample3": "这将是我第一次来多伦多。很高兴从您便利的位置探索这座城市！",
+  "messageExample3": "这将是我第一次入住贵地。很高兴从您便利的位置探索这座城市！",
   "requestToBook": "申请预订",
   "chargedUponConfirmation": "房东确认后您将被扣款。",
   "messageToHost": "给房东的留言",
@@ -2428,56 +2431,56 @@
   "googlePay": "Google Pay",
   "aboutPage": {
     "title": "关于 StayNeos",
-    "heroSubtitle": "重新定义高端行政公寓体验，为商务人士和异地居住者提供家的温暖与专业的服务",
+    "heroSubtitle": "我们知道在一座还不属于自己的城市需要一个家是什么感觉。所以我们创建了 StayNeos。",
     "missionLabel": "OUR MISSION",
-    "missionTitle": "我们的使命",
-    "missionDesc": "StayNeos 致力于为现代商务人士和异地居住者打造完美的居住解决方案。",
-    "missionItem1Title": "高端行政公寓",
-    "missionItem1Desc": "为商务人士提供精选高端行政公寓",
-    "missionItem2Title": "简单轻松无压力",
-    "missionItem2Desc": "让短期租赁变得简单轻松",
-    "missionItem3Title": "灵活租期",
-    "missionItem3Desc": "28天起租的灵活租期",
-    "missionItem4Title": "核心地段",
-    "missionItem4Desc": "精选多伦多核心地段优质房源",
+    "missionTitle": "驱动我们的是什么",
+    "missionDesc": "每个人都值得拥有一个真正的家——即使远在他乡。",
+    "missionItem1Title": "精选公寓",
+    "missionItem1Desc": "你自己会选的社区，进门就能感受到的品质",
+    "missionItem2Title": "零麻烦",
+    "missionItem2Desc": "没有繁琐手续。不用买家具。来了就住。",
+    "missionItem3Title": "你的时间表",
+    "missionItem3Desc": "住 28 天或 365 天。你说了算。",
+    "missionItem4Title": "优越地理位置",
+    "missionItem4Desc": "精选核心城市优质社区，每个家都在您想待的地方。",
     "daysFlexible": "天起灵活租期",
     "storyLabel": "OUR STORY",
-    "storyTitle": "我们的故事",
-    "storyDesc": "从一次商务出差的困境中诞生",
-    "story1Title": "创始人洞察",
-    "story1Desc": "商务出差和异地工作期间找到合适住所的困难。",
-    "story2Title": "传统酒店的局限",
-    "story2Desc": "传统酒店空间小、无厨房、缺乏家的感觉。",
-    "story3Title": "长期租赁的不便",
-    "story3Desc": "合同复杂、需购置家具、退租麻烦。",
-    "story4Title": "StayNeos 解决方案",
-    "story4Desc": "拎包入住的高端行政公寓。",
+    "storyTitle": "如何开始的",
+    "storyDesc": "一次令人难忘的找房经历",
+    "story1Title": "问题所在",
+    "story1Desc": "搬到陌生城市，找不到有家感觉的地方。",
+    "story2Title": "酒店不行",
+    "story2Desc": "空间小，没厨房，毫无归属感。",
+    "story3Title": "长租也不行",
+    "story3Desc": "签一年合同，空荡荡的房子，好几周才能住进去。",
+    "story4Title": "于是有了 StayNeos",
+    "story4Desc": "精装、灵活，你到了就能住。",
     "whyLabel": "WHY CHOOSE US",
-    "whyTitle": "为什么选择我们",
-    "whyDesc": "我们为您打造一个在异地也能安心工作和生活的家。",
-    "why1Title": "精选房源",
-    "why1Desc": "每一处房源都经过实地考察。",
-    "why2Title": "灵活租期",
-    "why2Desc": "28天起租，支持月租、季租。",
-    "why3Title": "拎包入住",
-    "why3Desc": "家具家电齐全，一切准备就绪。",
-    "why4Title": "24/7 管家服务",
-    "why4Desc": "专业团队全天候待命。",
-    "why5Title": "透明价格",
-    "why5Desc": "无隐藏费用，所见即所得。",
+    "whyTitle": "为什么大家选我们",
+    "whyDesc": "我们让每一座城市都成为您的城市。",
+    "why1Title": "每套房子都去看过",
+    "why1Desc": "每张沙发我们都坐过。",
+    "why2Title": "真正灵活",
+    "why2Desc": "28 天起住。随时续约。",
+    "why3Title": "拎包即住",
+    "why3Desc": "连咖啡杯都帮你备好了。",
+    "why4Title": "随时在线",
+    "why4Desc": "真人客服，全天候响应。",
+    "why5Title": "没有惊喜",
+    "why5Desc": "看到的价格就是你要付的价格。",
     "commitLabel": "OUR COMMITMENT",
     "commitTitle": "我们的承诺",
-    "commitDesc": "提供超越期望的居住体验",
-    "commit1Title": "高品质居住体验",
-    "commit1Desc": "精心挑选每一处房源。",
-    "commit2Title": "家的温暖",
-    "commit2Desc": "让每一次异地居住都像在家。",
-    "commit3Title": "持续优化服务",
-    "commit3Desc": "不断倾听反馈，持续优化。",
-    "ctaTitle": "准备好体验 StayNeos 了吗？",
-    "ctaDesc": "浏览精选房源，找到您在多伦多的理想居所",
-    "ctaBrowse": "浏览房源",
-    "ctaContact": "联系我们"
+    "commitDesc": "每次入住都值得分享",
+    "commit1Title": "感受得到的品质",
+    "commit1Desc": "每个细节我们都用心。",
+    "commit2Title": "异乡的家",
+    "commit2Desc": "不只是睡觉的地方——是生活的地方。",
+    "commit3Title": "持续进步",
+    "commit3Desc": "您的反馈决定我们下一步做什么。",
+    "ctaTitle": "今晚，找到您的理想居所",
+    "ctaDesc": "浏览可立即入住的精装公寓",
+    "ctaBrowse": "浏览公寓",
+    "ctaContact": "跟我们聊聊"
   },
   "faqPage": {
     "title": "常见问题",

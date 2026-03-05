@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui';
 import { useI18n } from '@/lib/i18n';
@@ -9,17 +9,19 @@ import { CheckCircle, Calendar, Mail, ArrowRight, Loader2 } from 'lucide-react';
 
 function PaymentSuccessContent() {
   const { t } = useI18n();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const bookingNumber = searchParams.get('booking');
   const [countdown, setCountdown] = useState(5);
 
-  // 自动跳转倒计时
   useEffect(() => {
     if (countdown > 0) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
       return () => clearTimeout(timer);
+    } else {
+      router.push('/dashboard/bookings');
     }
-  }, [countdown]);
+  }, [countdown, router]);
 
   return (
     <main className="min-h-screen bg-amber-50 flex items-center justify-center p-4">

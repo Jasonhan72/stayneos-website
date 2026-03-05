@@ -23,7 +23,8 @@ export async function verifyAdmin(): Promise<AdminPayload | null> {
     
     if (!token) return null;
 
-    const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+    const JWT_SECRET = process.env.JWT_SECRET;
+    if (!JWT_SECRET) throw new Error('JWT_SECRET environment variable is required');
     const payload = jwt.verify(token, JWT_SECRET) as AdminPayload;
     
     // 验证是否为admin角色
@@ -75,7 +76,8 @@ export async function getCurrentUser(): Promise<AdminPayload | null> {
     
     if (!token) return null;
 
-    const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+    const JWT_SECRET = process.env.JWT_SECRET;
+    if (!JWT_SECRET) throw new Error('JWT_SECRET environment variable is required');
     return jwt.verify(token, JWT_SECRET) as AdminPayload;
   } catch {
     return null;

@@ -52,7 +52,8 @@ export function calculateBookingPrice({
   const end = new Date(checkOut);
   const nights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
 
-  if (nights <= 0) return null;
+  // Require at least 1 night - same day checkout is not allowed
+  if (nights < 1) return null;
 
   const isMonthly = nights >= 28;
   const discountPercentage = isMonthly && monthlyDiscount ? monthlyDiscount : 0;
