@@ -48,7 +48,7 @@ const mockWishlist: Property[] = [
   {
     id: 'prop-2',
     title: 'Waterfront Executive Suite',
-    location: 'Harbourfront, Toronto, ON',
+    location: 'Vancouver, BC',
     price: 250,
     currency: 'CAD',
     priceUnit: 'night',
@@ -61,7 +61,7 @@ const mockWishlist: Property[] = [
   {
     id: 'prop-3',
     title: 'Modern Yorkville Apartment',
-    location: 'Yorkville, Toronto, ON',
+    location: 'Montreal, QC',
     price: 220,
     currency: 'CAD',
     priceUnit: 'night',
@@ -74,9 +74,9 @@ const mockWishlist: Property[] = [
   {
     id: 'prop-4',
     title: 'Cozy Midtown Studio',
-    location: 'Midtown Toronto, ON',
-    price: 120,
-    currency: 'CAD',
+    location: 'New York, NY',
+    price: 320,
+    currency: 'USD',
     priceUnit: 'night',
     rating: 4.7,
     reviewCount: 84,

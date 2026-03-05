@@ -268,7 +268,7 @@
   "business": {
     "title": "Séjours d'affaires",
     "subtitle": "Tarifs entreprise",
-    "desc": "Vous êtes à Toronto pour un projet de 3 mois. On s'assure que le reste de votre vie ne s'arrête pas. Le quartier financier à pied, et votre propre cuisine.",
+    "desc": "Vous êtes en déplacement pour un projet de 3 mois. On s'assure que le reste de votre vie ne s'arrête pas. Votre propre cuisine, et un quartier d'affaires accessible.",
     "cta": "Découvrir les offres entreprise"
   },
   "longterm": {
@@ -1238,7 +1238,7 @@
     },
     "propertyManagement": {
       "title": "Gestion immobilière",
-      "desc": "Vous avez un condo à Toronto ? On le remplit, on l'entretient, on gère tout. Vous encaissez."
+      "desc": "Vous avez un condo ? On le remplit, on l'entretient, on gère tout. Vous encaissez."
     },
     "concierge": {
       "title": "Conciergerie personnelle",
@@ -1250,7 +1250,7 @@
     },
     "globalNetwork": {
       "title": "Réseau en croissance",
-      "desc": "Toronto d'abord, puis les villes où le business vous emmène. Une plateforme, une qualité constante."
+      "desc": "Commençant dans les grandes villes, puis partout où le business vous emmène. Une plateforme, une qualité constante."
     },
     "features": {
       "utilities": "Tous les services publics inclus",
@@ -1302,7 +1302,7 @@
   },
   "globalNetwork": {
     "title": "Réseau en croissance",
-    "desc": "Toronto d'abord, puis où le business vous emmène."
+    "desc": "Commençant dans les grandes villes, puis partout où le business vous emmène."
   },
   "about": {
     "title": "À Propos de StayNeos",
@@ -1321,14 +1321,14 @@
         "simpleDesc": "Pas de paperasse. Pas de meubles à acheter. Pas de compteurs à ouvrir. Arrivez et vivez.",
         "flexible": "Votre emploi du temps",
         "flexibleDesc": "Restez 28 jours ou 365. Prolongez par message. Partez quand vous voulez.",
-        "location": "Les meilleurs quartiers de Toronto",
+        "location": "Les meilleurs quartiers des grandes villes",
         "locationDesc": "De l'énergie de King West au charme de Yorkville. Chaque logement est là où ça se passe."
       }
     },
     "story": {
       "label": "NOTRE HISTOIRE",
       "title": "Comment tout a commencé",
-      "subtitle": "Une recherche d'appartement frustrante à Toronto. C'est tout ce qu'il a fallu."
+      "subtitle": "Une recherche d'appartement frustrante. C'est tout ce qu'il a fallu."
     },
     "whyChoose": {
       "label": "POURQUOI NOUS CHOISIR",
@@ -1341,17 +1341,17 @@
       "subtitle": "Chaque séjour doit valoir la peine d'en parler."
     },
     "cta": {
-      "title": "Trouvez votre chez-vous à Toronto ce soir",
-      "subtitle": "Parcourez des appartements meublés prêts à vivre au centre-ville de Toronto.",
+      "title": "Trouvez votre chez-vous ce soir",
+      "subtitle": "Parcourez des appartements meublés prêts à vivre dans les grandes villes.",
       "browse": "Parcourir les Propriétés",
       "contact": "Contactez-Nous"
     },
     "heroTitle": "Nous sommes passés par là",
     "heroSubtitle": "Chercher un vrai chez-soi dans une ville qui n'était pas encore la nôtre",
     "storyTitle": "Comment tout a commencé",
-    "storyOrigin": "Tout a commencé par une recherche frustrante. Un fondateur s'installe à Toronto pour le travail et fait face au même choix que tout le monde : une petite chambre d'hôtel sans cuisine, ou un bail de 12 mois dans un appartement vide. Ni l'un ni l'autre n'avait de sens. Alors on a créé une troisième option.",
+    "storyOrigin": "Tout a commencé par une recherche frustrante. Un fondateur s'installe dans une nouvelle ville pour le travail et fait face au même choix que tout le monde : une petite chambre d'hôtel sans cuisine, ou un bail de 12 mois dans un appartement vide. Ni l'un ni l'autre n'avait de sens. Alors on a créé une troisième option.",
     "storyMission": "En 2024, StayNeos est né d'une idée simple : de beaux appartements meublés où l'on peut s'installer dès le lendemain. Chaque logement est trié sur le volet, entièrement équipé, situé dans des quartiers où vous voudriez vraiment vivre — du Harbourfront à Midtown.",
-    "storyToday": "Aujourd'hui, nous sommes la référence à Toronto pour les professionnels qui cherchent un vrai foyer. Ingénieurs, consultants, résidents en médecine, familles en relocalisation — ils restent chez nous parce qu'on traite chaque séjour comme s'il comptait. Parce que c'est le cas.",
+    "storyToday": "Aujourd'hui, nous sommes la référence pour les professionnels qui cherchent un vrai foyer. Ingénieurs, consultants, résidents en médecine, familles en relocalisation — ils restent chez nous parce qu'on traite chaque séjour comme s'il comptait. Parce que c'est le cas.",
     "valuesTitle": "Ce en quoi nous croyons",
     "peopleFirst": "Des vraies personnes, pas des transactions",
     "peopleFirstDesc": "Vous n'êtes pas un numéro de réservation. Quand vous nous écrivez, une vraie personne répond. On se souvient de vos préférences.",
@@ -1360,15 +1360,15 @@
     "flexibility": "La vie ne rentre pas dans des cases",
     "flexibilityDesc": "Les projets se prolongent. Les plans changent. On comprend. Conditions flexibles, prolongations faciles, pas de pénalités.",
     "sustainability": "Mieux pour la ville",
-    "sustainabilityDesc": "On privilégie les bâtiments écoresponsables, on réduit les déchets, on choisit les fournisseurs locaux. Toronto est aussi notre ville.",
+    "sustainabilityDesc": "On privilégie les bâtiments écoresponsables, on réduit les déchets, on choisit les fournisseurs locaux. Chaque ville est aussi notre ville.",
     "statsTitle": "En chiffres",
     "propertiesCount": "100+ Appartements sélectionnés",
     "guestsCount": "1 000+ Clients satisfaits",
     "partnersCount": "50+ Partenaires entreprise",
     "rating": "4.9/5 Note moyenne",
-    "coverage": "Centre-ville de Toronto",
+    "coverage": "Dans les grandes villes",
     "ctaTitle": "Bienvenue chez StayNeos",
-    "ctaSubtitle": "Que vous restiez un mois ou un an, on fait de Toronto votre ville.",
+    "ctaSubtitle": "Que vous restiez un mois ou un an, on fait de chaque ville votre ville.",
     "ctaBrowse": "Parcourir les appartements",
     "ctaContact": "Nous dire bonjour"
   },
@@ -1400,7 +1400,7 @@
   "story": {
     "label": "NOTRE HISTOIRE",
     "title": "Comment tout a commencé",
-    "subtitle": "Une recherche d'appartement frustrante à Toronto. C'est tout."
+    "subtitle": "Une recherche d'appartement frustrante. C'est tout."
   },
   "whyChoose": {
     "label": "POURQUOI NOUS CHOISIR",
@@ -1544,9 +1544,9 @@
     "tip2": "Mentionnez le but de votre voyage",
     "tip3": "Expliquez pourquoi vous avez choisi ce logement",
     "tip4": "Posez toutes les questions que vous pourriez avoir",
-    "messageExample1": "Bonjour ! Je visite Toronto pour une conférence d'affaires et votre logement semble parfait pour mon séjour.",
+    "messageExample1": "Bonjour ! Je visite pour une conférence d'affaires et votre logement semble parfait pour mon séjour.",
     "messageExample2": "J'ai hâte de séjourner dans votre bel appartement ! Je travaillerai à distance en semaine.",
-    "messageExample3": "Ce sera ma première fois à Toronto. Je suis excité d'explorer la ville depuis votre emplacement pratique !",
+    "messageExample3": "Ce sera ma première fois dans cette ville. Je suis excité d'explorer depuis votre emplacement pratique !",
     "requestToBook": "Demande de réservation",
     "totalPrice": "Prix total",
     "chargedUponConfirmation": "Vous serez débité après confirmation par l'hôte.",
@@ -2091,21 +2091,21 @@
   "locationDesc": "De King West à Yorkville. Là où ça se passe.",
   "browse": "Parcourir les Propriétés",
   "storyTitle": "Comment tout a commencé",
-  "storyOrigin": "Tout a commencé par une recherche frustrante. Un fondateur s'installe à Toronto et fait face au même choix : hôtel sans cuisine ou bail de 12 mois vide. On a créé une troisième option.",
+  "storyOrigin": "Tout a commencé par une recherche frustrante. Un fondateur s'installe dans une nouvelle ville et fait face au même choix : hôtel sans cuisine ou bail de 12 mois vide. On a créé une troisième option.",
   "storyMission": "En 2024, StayNeos est né : de beaux appartements meublés, prêts dès le lendemain. Triés sur le volet, dans les quartiers où vous voudriez vraiment vivre.",
-  "storyToday": "Aujourd'hui, nous sommes la référence à Toronto. Ingénieurs, consultants, familles — ils restent chez nous parce qu'on traite chaque séjour comme s'il comptait.",
+  "storyToday": "Aujourd'hui, nous sommes la référence pour les professionnels. Ingénieurs, consultants, familles — ils restent chez nous parce qu'on traite chaque séjour comme s'il comptait.",
   "valuesTitle": "Ce en quoi nous croyons",
   "peopleFirst": "Des vraies personnes, pas des transactions",
   "peopleFirstDesc": "Vous n'êtes pas un numéro. Une vraie personne répond. On se souvient de vos préférences.",
   "flexibility": "La vie ne rentre pas dans des cases",
   "flexibilityDesc": "Les projets se prolongent. Les plans changent. On comprend. Flexibilité, pas de pénalités.",
   "sustainability": "Mieux pour la ville",
-  "sustainabilityDesc": "Bâtiments écoresponsables, fournisseurs locaux. Toronto est aussi notre ville.",
+  "sustainabilityDesc": "Bâtiments écoresponsables, fournisseurs locaux. Chaque ville est aussi notre ville.",
   "statsTitle": "En chiffres",
   "propertiesCount": "100+ Appartements sélectionnés",
   "guestsCount": "1 000+ Clients satisfaits",
   "partnersCount": "50+ Partenaires entreprise",
-  "coverage": "Centre-ville de Toronto",
+  "coverage": "Dans les grandes villes",
   "ctaContact": "Nous dire bonjour",
   "apartment": "Appartement",
   "condo": "Copropriété",
@@ -2336,9 +2336,9 @@
     "daysFlexible": "jours de bail flexible",
     "storyLabel": "NOTRE HISTOIRE",
     "storyTitle": "Comment tout a commencé",
-    "storyDesc": "Une recherche d'appartement frustrante à Toronto",
+    "storyDesc": "Une recherche d'appartement frustrante",
     "story1Title": "Le problème",
-    "story1Desc": "S'installer à Toronto sans trouver un vrai chez-soi.",
+    "story1Desc": "S'installer dans une nouvelle ville sans trouver un vrai chez-soi.",
     "story2Title": "L'hôtel, non merci",
     "story2Desc": "Petit, sans cuisine, aucun sentiment d'appartenance.",
     "story3Title": "Le bail non plus",
@@ -2347,7 +2347,7 @@
     "story4Desc": "Meublé, flexible, prêt quand vous l'êtes.",
     "whyLabel": "POURQUOI NOUS",
     "whyTitle": "Pourquoi nous choisir",
-    "whyDesc": "On fait de Toronto votre ville.",
+    "whyDesc": "On fait de chaque ville votre ville.",
     "why1Title": "Chaque logement visité",
     "why1Desc": "On a testé chaque canapé.",
     "why2Title": "Vraiment flexible",
@@ -2367,7 +2367,7 @@
     "commit2Desc": "Pas juste un endroit pour dormir — un endroit pour vivre.",
     "commit3Title": "En constante amélioration",
     "commit3Desc": "Vos retours façonnent notre futur.",
-    "ctaTitle": "Trouvez votre chez-vous à Toronto ce soir",
+    "ctaTitle": "Trouvez votre chez-vous ce soir",
     "ctaDesc": "Parcourez des appartements meublés prêts à vivre",
     "ctaBrowse": "Parcourir",
     "ctaContact": "Nous dire bonjour"
@@ -2660,7 +2660,7 @@
       },
       "location": {
         "title": "Emplacement de Premier Choix",
-        "desc": "Situé au centre-ville de Toronto, North York ou d'autres quartiers d'affaires de premier plan avec un bon accès aux transports."
+        "desc": "Situé dans les quartiers d'affaires de premier plan avec un bon accès aux transports."
       },
       "quality": {
         "title": "Haute Qualité",

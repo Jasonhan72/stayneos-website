@@ -31,12 +31,12 @@ interface PropertyMapProps {
   onPropertySelect?: (id: string) => void;
 }
 
-// Mock coordinates for Toronto area properties
+// Mock coordinates for property locations
 // In production, these should come from geocoding the actual addresses
 const getMockCoordinates = (propertyId: string): { lat: number; lng: number } => {
   const coordinates: Record<string, { lat: number; lng: number }> = {
-    '1': { lat: 43.6532, lng: -79.3832 }, // Downtown Toronto
-    '2': { lat: 43.6487, lng: -79.3790 }, // Financial District
+    '1': { lat: 43.6532, lng: -79.3832 }, // Property 1
+    '2': { lat: 43.6487, lng: -79.3790 }, // Property 2
   };
   
   // Generate pseudo-random coordinates for properties without specific coords

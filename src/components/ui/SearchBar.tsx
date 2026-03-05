@@ -34,15 +34,15 @@ export default function SearchBar() {
   const [isGuestsOpen, setIsGuestsOpen] = useState(false);
 
   const popularLocations = [
-    "Downtown Toronto",
-    "Midtown Toronto", 
-    "North York",
-    "Scarborough",
-    "Etobicoke",
-    "Mississauga",
-    "Markham",
-    "Richmond Hill",
-    "Vaughan",
+    "Toronto",
+    "Vancouver",
+    "Montreal",
+    "New York",
+    "San Francisco",
+    "Calgary",
+    "Ottawa",
+    "Chicago",
+    "Boston",
   ];
 
   const handleSearch = () => {
@@ -98,7 +98,7 @@ export default function SearchBar() {
                   className="absolute top-full left-0 mt-4 bg-white rounded-2xl shadow-2xl border border-neutral-100 p-4 z-40 min-w-[300px]"
                 >
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-sm font-semibold text-neutral-900">热门位置</p>
+                    <p className="text-sm font-semibold text-neutral-900">热门城市</p>
                     <button 
                       onClick={() => setIsLocationOpen(false)}
                       className="p-1 hover:bg-neutral-100 rounded-full"
@@ -383,7 +383,7 @@ export default function SearchBar() {
           {/* Mobile Location Dropdown */}
           {isLocationOpen && (
             <div id="location-dropdown-mobile" className="bg-white rounded-xl border border-neutral-100 p-3">
-              <p className="text-xs font-medium text-neutral-500 mb-2">热门位置</p>
+              <p className="text-xs font-medium text-neutral-500 mb-2">热门城市</p>
               <div className="grid grid-cols-2 gap-2">
                 {popularLocations.map((location) => (
                   <button
