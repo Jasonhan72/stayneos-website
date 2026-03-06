@@ -1,10 +1,26 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { userDb, getDb } from "@/lib/d1";
 
 export async function POST(request: Request) {
   try {
+    console.log("Register API called");
+    
+    let db;
+    try {
+      db = getDb();
+      console.log("D1 database connection established");
+    } catch (dbError) {
+      console.error("Failed to get D1 database:", dbError);
+      return NextResponse.json(
+        { message: "数据库连接失败" },
+        { status: 500 }
+      );
+    }
+    
     const body = await request.json();
+    console.log("Request body:", { name: body.name, email: body.email });
+    
     const { name, email, password } = body;
 
     // 验证必填字段
@@ -33,9 +49,8 @@ export async function POST(request: Request) {
     }
 
     // 检查邮箱是否已存在
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
-    });
+    console.log("Checking if email exists:", email);
+    const existingUser = await userDb.findByEmail(db, email);
 
     if (existingUser) {
       return NextResponse.json(
@@ -48,33 +63,35 @@ export async function POST(request: Request) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // 创建用户
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-        role: "GUEST",
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        createdAt: true,
-      },
+    console.log("Creating user...");
+    const user = await userDb.create(db, {
+      id: crypto.randomUUID(),
+      name,
+      email,
+      password: hashedPassword,
+      role: "GUEST",
     });
+
+    console.log("User created successfully:", user.id);
 
     return NextResponse.json(
       {
         message: "注册成功",
-        user,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          createdAt: user.createdAt,
+        },
       },
       { status: 201 }
     );
   } catch (error) {
     console.error("注册错误:", error);
+    const errorMessage = error instanceof Error ? error.message : "未知错误";
     return NextResponse.json(
-      { message: "注册失败，请稍后重试" },
+      { message: "注册失败，请稍后重试", error: errorMessage },
       { status: 500 }
     );
   }

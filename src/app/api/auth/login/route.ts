@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { userDb, getDb } from "@/lib/d1";
 
 export async function POST(request: Request) {
   try {
+    const db = getDb();
     const body = await request.json();
     const { email, password } = body;
 
@@ -17,9 +18,7 @@ export async function POST(request: Request) {
     }
 
     // 查找用户
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    const user = await userDb.findByEmail(db, email);
 
     if (!user) {
       return NextResponse.json(
@@ -46,8 +45,9 @@ export async function POST(request: Request) {
     }
 
     // 生成 JWT token
-    const JWT_SECRET = process.env.JWT_SECRET;
-    if (!JWT_SECRET) throw new Error('JWT_SECRET environment variable is required');
+    const JWT_SECRET = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET;
+    if (!JWT_SECRET) throw new Error('JWT_SECRET or NEXTAUTH_SECRET environment variable is required');
+    
     const token = jwt.sign(
       {
         userId: user.id,
