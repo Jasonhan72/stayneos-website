@@ -1,9 +1,12 @@
 import { Metadata } from 'next';
 import {
   HeroSection,
-  ValuePropositionSection,
-  MarketSegmentsSection,
+  TrustBadgesSection,
   FeaturedPropertiesSection,
+  CitiesSection,
+  ValuePropositionSection,
+  TestimonialsSection,
+  MarketSegmentsSection,
   HowItWorksSection,
   CTASection
 } from '@/components/home';
@@ -24,8 +27,11 @@ export default function HomePage() {
   return (
     <main className="min-h-screen">
       <HeroSection />
+      <TrustBadgesSection />
       <FeaturedPropertiesSection />
+      <CitiesSection />
       <ValuePropositionSection />
+      <TestimonialsSection />
       <MarketSegmentsSection />
       <HowItWorksSection />
       <CTASection />

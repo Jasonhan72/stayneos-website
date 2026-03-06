@@ -526,3 +526,9 @@ export function CTASection() {
     </section>
   );
 }
+
+
+// Export new sections
+export { TrustBadgesSection } from './TrustBadgesSection';
+export { CitiesSection } from './CitiesSection';
+export { TestimonialsSection } from './TestimonialsSection';
