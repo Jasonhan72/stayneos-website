@@ -39,18 +39,31 @@ export interface Account {
   session_state: string | null;
 }
 
+// Get Cloudflare context from global symbol
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getCloudflareContext(): any | undefined {
+  const symbol = Symbol.for("__cloudflare-context__");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const context = (globalThis as any)[symbol];
+  return context;
+}
+
 // Get D1 database from environment
 export function getDb(): D1Database {
-  // In Cloudflare Workers with OpenNext, DB is bound via wrangler.toml
-  // and accessed through process.env (which is patched by OpenNext)
-  const env = process.env as unknown as { DB?: D1Database };
-  const db = env.DB;
-  
-  if (!db) {
-    console.error("D1 database binding 'DB' not found. Available env vars:", Object.keys(env));
-    throw new Error("D1 database binding 'DB' not found. Make sure DB is bound in wrangler.toml");
+  // Try to get DB from Cloudflare context (for Cloudflare Workers)
+  const cfContext = getCloudflareContext();
+  if (cfContext?.env?.DB) {
+    return cfContext.env.DB;
   }
-  return db;
+  
+  // Fallback to process.env (for development/testing)
+  const env = process.env as unknown as { DB?: D1Database };
+  if (env.DB) {
+    return env.DB;
+  }
+  
+  console.error("D1 database binding 'DB' not found");
+  throw new Error("D1 database binding 'DB' not found. Make sure DB is bound in wrangler.toml");
 }
 
 // D1 User helper functions
