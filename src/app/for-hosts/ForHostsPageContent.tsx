@@ -6,12 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Container, Section } from "@/components/ui";
 import { 
-  Home, 
   DollarSign, 
   Shield, 
   Clock,
   TrendingUp,
-  Building2,
   CheckCircle2,
   Calculator,
   ArrowRight,

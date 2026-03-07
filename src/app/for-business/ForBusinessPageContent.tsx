@@ -8,9 +8,7 @@ import { Container, Section } from "@/components/ui";
 import { 
   Building2, 
   Users, 
-  DollarSign, 
   Clock,
-  Shield,
   Headphones,
   TrendingDown,
   CheckCircle2,
@@ -19,10 +17,8 @@ import {
   BarChart3,
   Globe,
   Award,
-  Zap,
   Calendar,
   CreditCard,
-  FileText,
   Phone
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";

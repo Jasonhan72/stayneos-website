@@ -11,17 +11,12 @@ import {
   CheckCircle2, 
   ArrowRight,
   Loader2,
-  DollarSign,
   Home,
   Shield,
-  Clock,
-  Award,
   Users,
   Building2,
   Zap,
   Heart,
-  Phone,
-  Mail,
   MapPin,
   Star
 } from "lucide-react";
@@ -466,7 +461,7 @@ export default function LongTermPageContent() {
                 </div>
                 
                 <blockquote className="text-gray-700 italic mb-6 leading-relaxed">
-                  "{testimonial.quote}"
+                  &quot;{testimonial.quote}&quot;
                 </blockquote>
                 
                 <div>

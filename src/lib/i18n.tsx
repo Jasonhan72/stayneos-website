@@ -7,7 +7,7 @@ export type Locale = 'en' | 'fr' | 'zh';
 interface I18nContextType {
   locale: Locale;
   setLocale: (locale: Locale) => void;
-  t: (key: string, params?: Record<string, string | number>) => string;
+  t: (key: string, defaultValue?: string | Record<string, string | number>, params?: Record<string, string | number>) => string;
   isLoading: boolean;
 }
 
@@ -160,20 +160,33 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   }, [locale]);
 
   const t = useCallback(
-    (key: string, params?: Record<string, string | number>): string => {
+    (key: string, defaultValue?: string | Record<string, string | number>, params?: Record<string, string | number>): string => {
       const translationObj = translations[locale];
       let text = getNestedValue(translationObj, key);
+      
+      // If translation not found and defaultValue is provided as string, use it
+      if (text === key && typeof defaultValue === 'string') {
+        text = defaultValue;
+      }
+      
+      // Handle parameters - either from second argument if it's an object, or third argument
+      let actualParams: Record<string, string | number> | undefined;
+      if (typeof defaultValue === 'object' && defaultValue !== null) {
+        actualParams = defaultValue;
+      } else if (params) {
+        actualParams = params;
+      }
+      
+      // Replace parameters
+      if (actualParams) {
+        Object.entries(actualParams).forEach(([paramKey, paramValue]) => {
+          text = text.replace(`{${paramKey}}`, String(paramValue));
+        });
+      }
       
       // Debug: log if translation not found
       if (text === key && process.env.NODE_ENV === 'development') {
         console.warn(`[i18n] Translation not found for key: "${key}" in locale: "${locale}"`);
-      }
-      
-      // Replace parameters
-      if (params) {
-        Object.entries(params).forEach(([paramKey, paramValue]) => {
-          text = text.replace(`{${paramKey}}`, String(paramValue));
-        });
       }
       
       return text;

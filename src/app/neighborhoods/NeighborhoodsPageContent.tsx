@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import React, { useState } from "react";
 import { Container, Section } from "@/components/ui";
 import { 
   MapPin, 
@@ -15,7 +14,8 @@ import {
   Clock,
   Users,
   Car,
-  Plane
+  Plane,
+  type LucideIcon
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 
@@ -32,7 +32,7 @@ interface Neighborhood {
     twoBed: number;
   };
   highlights: {
-    icon: any;
+    icon: LucideIcon;
     text: string;
   }[];
   imageUrl: string;

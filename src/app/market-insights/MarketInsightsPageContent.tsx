@@ -9,23 +9,18 @@ import {
   TrendingUp, 
   TrendingDown, 
   Download, 
-  ArrowRight,
   Loader2,
   BarChart3,
   PieChart,
   LineChart,
   Building2,
   DollarSign,
-  Users,
   MapPin,
-  Calendar,
   AlertTriangle,
   CheckCircle2,
   Info,
-  Eye,
   FileText,
-  Mail,
-  Phone
+  Mail
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 
@@ -297,8 +292,8 @@ export default function MarketInsightsPageContent() {
               <div className="bg-white p-4 border">
                 <div className="text-sm text-gray-500 mb-2">Sample Data Preview:</div>
                 <div className="flex justify-between text-xs">
-                  <span>Jan '23: $2,950</span>
-                  <span>Jul '24: $3,247</span>
+                  <span>Jan &apos;23: $2,950</span>
+                  <span>Jul &apos;24: $3,247</span>
                   <span>Current: $3,280</span>
                 </div>
               </div>

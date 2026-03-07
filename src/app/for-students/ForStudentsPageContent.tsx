@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Container, Section } from "@/components/ui";
 import { 
-  GraduationCap, 
   Users, 
   MapPin, 
   Wifi,
@@ -18,16 +17,11 @@ import {
   DollarSign,
   Calendar,
   Shield,
-  Heart,
   Home,
-  Zap,
-  Globe,
   Star,
-  Train,
-  Building2
+  Train
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
-import Image from "next/image";
 
 // Form validation schema
 const studentFormSchema = z.object({
@@ -446,7 +440,7 @@ export default function ForStudentsPageContent() {
                 </div>
                 
                 <blockquote className="text-gray-700 italic mb-6 leading-relaxed">
-                  "{testimonial.quote}"
+                  &quot;{testimonial.quote}&quot;
                 </blockquote>
                 
                 <div>
