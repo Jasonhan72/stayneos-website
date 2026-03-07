@@ -1322,6 +1322,77 @@
       }
     }
   },
+  "students": {
+    "hero": {
+      "title": "Student Housing Made Simple",
+      "subtitle": "Premium furnished apartments near Toronto's top universities. Move in ready with flexible leases, vibrant student community, and everything you need to succeed academically.",
+      "pricingCta": "View Pricing",
+      "cta": "Apply Now"
+    },
+    "advantages": {
+      "title": "Why Students Choose StayNeos",
+      "subtitle": "Focus on your studies while we take care of your housing needs with purpose-built student living solutions."
+    },
+    "universities": {
+      "title": "Partner Universities & Colleges",
+      "subtitle": "Strategically located near Toronto's top educational institutions for easy access to campus and academic resources."
+    },
+    "features": {
+      "title": "Student-Focused Amenities", 
+      "subtitle": "Every space is designed with student success in mind, from study areas to social spaces."
+    },
+    "pricing": {
+      "title": "Student-Friendly Pricing",
+      "subtitle": "Flexible options to fit every student budget with all-inclusive pricing and no hidden fees.",
+      "select": "Select Plan"
+    },
+    "testimonials": {
+      "title": "What Students Say",
+      "subtitle": "Hear from current and former residents about their StayNeos experience."
+    },
+    "form": {
+      "title": "Apply for Student Housing",
+      "subtitle": "Ready to secure your Toronto student housing? Complete the application below and our team will contact you within 24 hours.",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last Name", 
+      "lastNamePlaceholder": "Enter your last name",
+      "email": "Email Address",
+      "emailPlaceholder": "your@email.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "university": "University/College",
+      "selectUniversity": "Select your school",
+      "uoft": "University of Toronto",
+      "tmu": "Toronto Metropolitan University",
+      "ocad": "OCAD University",
+      "gbc": "George Brown College",
+      "cc": "Centennial College",
+      "seneca": "Seneca Polytechnic",
+      "other": "Other",
+      "program": "Program/Major",
+      "programPlaceholder": "e.g. Computer Science",
+      "moveInDate": "Move-in Date",
+      "duration": "Lease Duration",
+      "selectDuration": "Select",
+      "months": "Months",
+      "flexible": "Flexible",
+      "budget": "Monthly Budget",
+      "selectBudget": "Select budget",
+      "roomType": "Preferred Room Type",
+      "shared": "Shared Room",
+      "studio": "Private Studio",
+      "oneBed": "1-Bedroom",
+      "message": "Additional Information",
+      "messagePlaceholder": "Tell us about yourself, any special requirements, roommate preferences, or questions you have about student housing with StayNeos...",
+      "submitting": "Submitting...",
+      "submit": "Submit Application",
+      "success": {
+        "title": "Application Submitted!",
+        "message": "Thank you for your application! Our student housing team will review your information and contact you within 24 hours to discuss available options and next steps."
+      }
+    }
+  },
   "corporate": {
     "hero": {
       "title": "Corporate Housing Solutions",
