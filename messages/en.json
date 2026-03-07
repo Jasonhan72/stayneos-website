@@ -1454,6 +1454,69 @@
       }
     }
   },
+  "marketInsights": {
+    "hero": {
+      "title": "Toronto Real Estate Market Insights",
+      "subtitle": "Comprehensive market analysis and trends for Toronto's executive housing market. Data-driven insights to inform your investment and housing decisions.",
+      "downloadCta": "Download Report",
+      "viewCta": "View Insights"
+    },
+    "stats": {
+      "title": "Key Market Metrics",
+      "subtitle": "Latest data from Toronto's premium executive housing market as of Q3 2024."
+    },
+    "charts": {
+      "title": "Market Data Visualization",
+      "subtitle": "Interactive charts and graphs showing market trends, pricing patterns, and demand analytics.",
+      "rentalTrends": "Rental Rate Trends",
+      "rentalTrendsDesc": "24-month historical rental rate progression across different property types and neighborhoods.",
+      "occupancyRates": "Occupancy by Neighborhood",
+      "occupancyRatesDesc": "Comparative occupancy rates across Toronto's primary executive housing districts.",
+      "demandSources": "Demand by Industry",
+      "demandSourcesDesc": "Corporate housing demand breakdown by industry sector and company size.",
+      "forecastModel": "12-Month Forecast",
+      "forecastModelDesc": "Predictive modeling for rental rates, occupancy, and market demand through 2025."
+    },
+    "insights": {
+      "title": "Key Market Insights",
+      "subtitle": "Expert analysis of current market conditions and emerging trends affecting Toronto's executive housing sector."
+    },
+    "neighborhoods": {
+      "title": "Neighborhood Performance",
+      "subtitle": "Comparative analysis of Toronto's premium neighborhoods for executive housing investment and occupancy."
+    },
+    "forecasts": {
+      "title": "Market Forecasts",
+      "subtitle": "Expert predictions and analysis for Toronto's executive housing market outlook."
+    },
+    "form": {
+      "title": "Download Complete Market Report",
+      "subtitle": "Access our comprehensive market analysis including detailed charts, forecasts, and investment insights.",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Enter your last name",
+      "email": "Email Address",
+      "emailPlaceholder": "your@email.com",
+      "company": "Company",
+      "companyPlaceholder": "Your company name",
+      "jobTitle": "Job Title",
+      "jobTitlePlaceholder": "Your job title",
+      "reportType": "Preferred Report Type",
+      "selectReport": "Select report type",
+      "quarterly": "Quarterly Report",
+      "annual": "Annual Analysis",
+      "custom": "Custom Research",
+      "interests": "Areas of Interest",
+      "submitting": "Processing...",
+      "submit": "Download Market Report",
+      "success": {
+        "title": "Report Download Ready!",
+        "message": "Thank you! Your market report is being prepared and will be emailed to you within the next few minutes. Check your inbox for the download link.",
+        "checkEmail": "Check Your Email"
+      }
+    }
+  },
   "corporate": {
     "hero": {
       "title": "Corporate Housing Solutions",
