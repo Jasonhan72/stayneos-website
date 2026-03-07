@@ -68,9 +68,14 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   // Logged out menu items
   const publicMenuItems = [
     { label: t("nav.explore") || "Explore", href: "/properties", icon: Search },
+    { label: t("nav.neighborhoods") || "Neighborhoods", href: "/neighborhoods", icon: Info },
     { label: t("nav.about") || "About Us", href: "/about", icon: Info },
     { label: t("nav.partnerWithUs"), href: "/for-agents", icon: Building2 },
-    { label: t("nav.business"), href: "/corporate", icon: Building2 },
+    { label: t("nav.hosts") || "For Hosts", href: "/for-hosts", icon: Building2 },
+    { label: t("nav.business"), href: "/for-business", icon: Building2 },
+    { label: t("nav.students") || "Students", href: "/for-students", icon: Building2 },
+    { label: t("nav.longTerm") || "Long-term", href: "/long-term", icon: Building2 },
+    { label: t("nav.marketInsights") || "Market Insights", href: "/market-insights", icon: Building2 },
     { label: t("nav.contact"), href: "/contact", icon: Phone },
   ];
 

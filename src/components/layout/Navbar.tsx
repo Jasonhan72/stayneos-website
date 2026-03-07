@@ -31,6 +31,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
 
   const navLinks = [
     { href: "/properties", label: t("nav.home") },
+    { href: "/neighborhoods", label: t("nav.neighborhoods") },
     { href: "/services", label: t("nav.services") },
     { href: "/about", label: t("nav.about") },
     { href: "/contact", label: t("nav.contact") },
