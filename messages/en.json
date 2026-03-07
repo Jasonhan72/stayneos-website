@@ -1393,6 +1393,67 @@
       }
     }
   },
+  "longterm": {
+    "hero": {
+      "title": "Long-Term Rental Discounts",
+      "subtitle": "Save significantly on extended stays with our flexible long-term lease options. Choose 3, 6, or 12-month terms and enjoy up to 30% off monthly rates in Toronto's premium furnished apartments.",
+      "savingsCta": "See Savings",
+      "cta": "Get Quote"
+    },
+    "pricing": {
+      "title": "Choose Your Savings Level",
+      "subtitle": "The longer you stay, the more you save. All options include the same premium amenities and services.",
+      "select": "Select This Plan"
+    },
+    "advantages": {
+      "title": "Why Choose Long-Term with StayNeos",
+      "subtitle": "Beyond just savings, long-term stays offer stability, convenience, and a true home-away-from-home experience."
+    },
+    "usecases": {
+      "title": "Perfect For Your Situation",
+      "subtitle": "Long-term rentals work for a variety of life and business situations requiring extended Toronto stays."
+    },
+    "benefits": {
+      "title": "Everything Included",
+      "subtitle": "All long-term rentals include premium amenities and services at no additional cost."
+    },
+    "testimonials": {
+      "title": "Long-Term Resident Stories",
+      "subtitle": "See how our long-term residents have saved money and enjoyed their extended Toronto stays."
+    },
+    "form": {
+      "title": "Get Your Long-Term Rental Quote",
+      "subtitle": "Tell us about your long-term housing needs and we'll create a custom proposal with your savings breakdown.",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Enter your last name",
+      "email": "Email Address",
+      "emailPlaceholder": "your@email.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "moveInDate": "Desired Move-in Date",
+      "leaseDuration": "Preferred Lease Duration",
+      "months": "Months",
+      "propertyType": "Property Type",
+      "selectType": "Select type",
+      "studio": "Studio",
+      "bedroom": "Bedroom",
+      "bedrooms": "Bedrooms",
+      "budget": "Monthly Budget",
+      "selectBudget": "Select budget",
+      "location": "Preferred Area",
+      "selectLocation": "Select area",
+      "message": "Tell us about your requirements",
+      "messagePlaceholder": "Please describe your long-term housing needs, any specific requirements, reasons for extended stay, and any questions about our long-term rental program...",
+      "submitting": "Submitting...",
+      "submit": "Get My Quote & Savings",
+      "success": {
+        "title": "Quote Request Submitted!",
+        "message": "Thank you for your interest in long-term rentals! Our team will prepare a detailed quote with your exact savings breakdown and contact you within 24 hours."
+      }
+    }
+  },
   "corporate": {
     "hero": {
       "title": "Corporate Housing Solutions",
