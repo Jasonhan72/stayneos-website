@@ -53,7 +53,8 @@
     "delete": "删除",
     "there": "您",
     "loading": "加载中...",
-    "backToList": "返回房源列表"
+    "backToList": "返回房源列表",
+    "optional": "可选"
   },
   "greeting": {
     "morning": "早上好",
@@ -411,7 +412,22 @@
     "changeDates": "更改日期",
     "guestSingular": "位客人",
     "guestsPlural": "位客人",
-    "processing": "处理中..."
+    "processing": "处理中...",
+    "addDates": "添加日期",
+    "contactInfo": "联系信息",
+    "entireHome": "整套房屋",
+    "payWith": "支付方式",
+    "termsNotice": "点击下方按钮，我同意服务条款和隐私政策",
+    "yourTrip": "您的行程"
+  },
+  "testimonials": {
+    "title": "客人评价",
+    "subtitle": "阅读我们满意客户的真实评价，了解StayNeos的服务差异"
+  },
+  "cities": {
+    "title": "探索城市",
+    "subtitle": "在全球顶级目的地发现精彩房源",
+    "properties": "可预订房源"
   },
   "contact": {
     "pageTitle": "联系我们",
@@ -1680,6 +1696,8 @@
       "redirecting": "正在跳转...",
       "redirectingNow": "正在为您跳转..."
     },
+    "goToBooking": "前往预订",
+    "noBookingId": "未提供预订ID",
     "cancel": {
       "title": "支付已取消",
       "description": "您的支付已取消",
@@ -1926,7 +1944,12 @@
   "servicesTitle": "服务",
   "supportTitle": "支持",
   "copyright": "© 2024-2026 StayNeos. 版权所有",
-  "trust": "🔒 安全支付 · ✓ 真实房源 · 24/7 客服支持",
+  "trust": {
+    "rating": "4.9/5 评分",
+    "verified": "真实房源认证",
+    "support": "24/7 专属支持",
+    "customers": "1000+ 满意客户"
+  },
   "en": "English",
   "fr": "Français",
   "zh": "中文",

@@ -58,7 +58,8 @@
     "delete": "Delete",
     "there": "there",
     "loading": "Loading...",
-    "backToList": "Back to property list"
+    "backToList": "Back to property list",
+    "optional": "Optional"
   },
   "greeting": {
     "morning": "Good morning",
@@ -271,16 +272,133 @@
     }
   },
   "business": {
-    "title": "Business Stays",
-    "subtitle": "Corporate rates available",
-    "desc": "You're here for a 3-month project. We'll make sure the rest of your life doesn't pause. Walk to the Financial District, cook dinner in your own kitchen.",
-    "cta": "Explore Corporate Plans"
+    "hero": {
+      "title": "Corporate Housing Solutions",
+      "subtitle": "Streamlined accommodation solutions for business travelers, employee relocations, and project teams. Save costs, reduce complexity, and provide premium housing for your organization.",
+      "ctaQuote": "Request a Quote",
+      "ctaBrowse": "Explore Solutions"
+    },
+    "solutions": {
+      "title": "Solutions for Every Need",
+      "subtitle": "From individual business travelers to large project teams, we have the perfect accommodation solution for your organization."
+    },
+    "advantages": {
+      "title": "Why Choose StayNeos for Business",
+      "subtitle": "Transform your corporate accommodation strategy with our comprehensive business solutions."
+    },
+    "cases": {
+      "title": "Success Stories",
+      "subtitle": "See how leading companies have transformed their accommodation strategies with StayNeos."
+    },
+    "features": {
+      "title": "Business-First Features",
+      "subtitle": "Enterprise-grade features designed to simplify corporate accommodation management."
+    },
+    "stats": {
+      "companies": "Companies Served",
+      "stays": "Corporate Stays",
+      "savings": "Average Savings vs Hotels",
+      "satisfaction": "Client Satisfaction Rate"
+    },
+    "form": {
+      "title": "Request a Custom Quote",
+      "subtitle": "Tell us about your requirements and our team will create a customized solution for your organization.",
+      "companyName": "Company Name",
+      "companyNamePlaceholder": "Your company name",
+      "contactName": "Contact Name",
+      "contactNamePlaceholder": "Your full name",
+      "email": "Email Address",
+      "emailPlaceholder": "your@company.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "jobTitle": "Job Title",
+      "jobTitlePlaceholder": "Your job title",
+      "accommodationType": "Accommodation Type",
+      "selectType": "Select type",
+      "individual": "Individual Travel",
+      "group": "Group Accommodation",
+      "longTerm": "Long-term Stay",
+      "projectTeam": "Project Team",
+      "numberOfUnits": "Number of Units",
+      "selectUnits": "Select",
+      "unit": "Unit",
+      "units": "Units",
+      "duration": "Expected Duration",
+      "selectDuration": "Select",
+      "months": "Months",
+      "years": "Years",
+      "budget": "Monthly Budget Range",
+      "selectBudget": "Select budget range",
+      "requirements": "Specific Requirements",
+      "requirementsPlaceholder": "Please describe your accommodation needs, preferred locations, special requirements, timeline, and any other details that would help us create the perfect solution for your organization...",
+      "submitting": "Submitting...",
+      "submit": "Request Quote",
+      "success": {
+        "title": "Quote Request Submitted!",
+        "message": "Thank you for your interest! Our business development team will analyze your requirements and contact you within 24 hours with a customized proposal and pricing."
+      }
+    }
   },
   "longterm": {
-    "title": "Extended Living",
-    "subtitle": "Save 20% monthly",
-    "desc": "Not just passing through? Settle in. Your apartment comes with everything — dishes, linens, even a coffee maker. Just bring yourself.",
-    "cta": "Browse Long-Stay Homes"
+    "hero": {
+      "title": "Long-Term Rental Discounts",
+      "subtitle": "Save significantly on extended stays with our flexible long-term lease options. Choose 3, 6, or 12-month terms and enjoy up to 30% off monthly rates in Toronto's premium furnished apartments.",
+      "savingsCta": "See Savings",
+      "cta": "Get Quote"
+    },
+    "pricing": {
+      "title": "Choose Your Savings Level",
+      "subtitle": "The longer you stay, the more you save. All options include the same premium amenities and services.",
+      "select": "Select This Plan"
+    },
+    "advantages": {
+      "title": "Why Choose Long-Term with StayNeos",
+      "subtitle": "Beyond just savings, long-term stays offer stability, convenience, and a true home-away-from-home experience."
+    },
+    "usecases": {
+      "title": "Perfect For Your Situation",
+      "subtitle": "Long-term rentals work for a variety of life and business situations requiring extended Toronto stays."
+    },
+    "benefits": {
+      "title": "Everything Included",
+      "subtitle": "All long-term rentals include premium amenities and services at no additional cost."
+    },
+    "testimonials": {
+      "title": "Long-Term Resident Stories",
+      "subtitle": "See how our long-term residents have saved money and enjoyed their extended Toronto stays."
+    },
+    "form": {
+      "title": "Get Your Long-Term Rental Quote",
+      "subtitle": "Tell us about your long-term housing needs and we'll create a custom proposal with your savings breakdown.",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Enter your last name",
+      "email": "Email Address",
+      "emailPlaceholder": "your@email.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "moveInDate": "Desired Move-in Date",
+      "leaseDuration": "Preferred Lease Duration",
+      "months": "Months",
+      "propertyType": "Property Type",
+      "selectType": "Select type",
+      "studio": "Studio",
+      "bedroom": "Bedroom",
+      "bedrooms": "Bedrooms",
+      "budget": "Monthly Budget",
+      "selectBudget": "Select budget",
+      "location": "Preferred Area",
+      "selectLocation": "Select area",
+      "message": "Tell us about your requirements",
+      "messagePlaceholder": "Please describe your long-term housing needs, any specific requirements, reasons for extended stay, and any questions about our long-term rental program...",
+      "submitting": "Submitting...",
+      "submit": "Get My Quote & Savings",
+      "success": {
+        "title": "Quote Request Submitted!",
+        "message": "Thank you for your interest in long-term rentals! Our team will prepare a detailed quote with your exact savings breakdown and contact you within 24 hours."
+      }
+    }
   },
   "relocation": {
     "title": "Relocation Landing",
@@ -420,7 +538,22 @@
     "changeDates": "Change dates",
     "guestSingular": "guest",
     "guestsPlural": "guests",
-    "processing": "Processing..."
+    "processing": "Processing...",
+    "addDates": "Add dates",
+    "contactInfo": "Contact info",
+    "entireHome": "Entire home",
+    "payWith": "Pay with",
+    "termsNotice": "By selecting the button below, I agree to the Terms of Service and Privacy Policy",
+    "yourTrip": "Your trip"
+  },
+  "testimonials": {
+    "title": "What Our Guests Say",
+    "subtitle": "Read reviews from our satisfied guests who have experienced the StayNeos difference"
+  },
+  "cities": {
+    "title": "Explore Cities",
+    "subtitle": "Discover amazing properties in top destinations around the world",
+    "properties": "Properties available"
   },
   "contact": {
     "pageTitle": "Contact Us",
@@ -1251,84 +1384,15 @@
       "title": "Toronto Neighborhoods Guide",
       "subtitle": "Discover the perfect neighborhood for your Toronto stay. From the bustling Financial District to trendy Liberty Village, find your ideal location with insider insights on transit, amenities, and pricing."
     },
-    "cta": "View Properties in",
-    "facts": {
-      "title": "Toronto Quick Facts",
-      "subtitle": "Essential information for executive travelers and business professionals."
-    },
     "cta": {
       "title": "Ready to Find Your Perfect Toronto Home?",
       "subtitle": "Browse our curated selection of executive apartments in these premium Toronto neighborhoods.",
       "browse": "Browse All Properties",
       "contact": "Contact Our Team"
-    }
-  },
-  "business": {
-    "hero": {
-      "title": "Corporate Housing Solutions",
-      "subtitle": "Streamlined accommodation solutions for business travelers, employee relocations, and project teams. Save costs, reduce complexity, and provide premium housing for your organization.",
-      "ctaQuote": "Request a Quote",
-      "ctaBrowse": "Explore Solutions"
     },
-    "solutions": {
-      "title": "Solutions for Every Need",
-      "subtitle": "From individual business travelers to large project teams, we have the perfect accommodation solution for your organization."
-    },
-    "advantages": {
-      "title": "Why Choose StayNeos for Business",
-      "subtitle": "Transform your corporate accommodation strategy with our comprehensive business solutions."
-    },
-    "cases": {
-      "title": "Success Stories",
-      "subtitle": "See how leading companies have transformed their accommodation strategies with StayNeos."
-    },
-    "features": {
-      "title": "Business-First Features",
-      "subtitle": "Enterprise-grade features designed to simplify corporate accommodation management."
-    },
-    "stats": {
-      "companies": "Companies Served",
-      "stays": "Corporate Stays",
-      "savings": "Average Savings vs Hotels",
-      "satisfaction": "Client Satisfaction Rate"
-    },
-    "form": {
-      "title": "Request a Custom Quote",
-      "subtitle": "Tell us about your requirements and our team will create a customized solution for your organization.",
-      "companyName": "Company Name",
-      "companyNamePlaceholder": "Your company name",
-      "contactName": "Contact Name",
-      "contactNamePlaceholder": "Your full name",
-      "email": "Email Address",
-      "emailPlaceholder": "your@company.com",
-      "phone": "Phone Number",
-      "phonePlaceholder": "+1 (555) 000-0000",
-      "jobTitle": "Job Title",
-      "jobTitlePlaceholder": "Your job title",
-      "accommodationType": "Accommodation Type",
-      "selectType": "Select type",
-      "individual": "Individual Travel",
-      "group": "Group Accommodation",
-      "longTerm": "Long-term Stay",
-      "projectTeam": "Project Team",
-      "numberOfUnits": "Number of Units",
-      "selectUnits": "Select",
-      "unit": "Unit",
-      "units": "Units",
-      "duration": "Expected Duration",
-      "selectDuration": "Select",
-      "months": "Months",
-      "years": "Years",
-      "budget": "Monthly Budget Range",
-      "selectBudget": "Select budget range",
-      "requirements": "Specific Requirements",
-      "requirementsPlaceholder": "Please describe your accommodation needs, preferred locations, special requirements, timeline, and any other details that would help us create the perfect solution for your organization...",
-      "submitting": "Submitting...",
-      "submit": "Request Quote",
-      "success": {
-        "title": "Quote Request Submitted!",
-        "message": "Thank you for your interest! Our business development team will analyze your requirements and contact you within 24 hours with a customized proposal and pricing."
-      }
+    "facts": {
+      "title": "Toronto Quick Facts",
+      "subtitle": "Essential information for executive travelers and business professionals."
     }
   },
   "students": {
@@ -1347,7 +1411,7 @@
       "subtitle": "Strategically located near Toronto's top educational institutions for easy access to campus and academic resources."
     },
     "features": {
-      "title": "Student-Focused Amenities", 
+      "title": "Student-Focused Amenities",
       "subtitle": "Every space is designed with student success in mind, from study areas to social spaces."
     },
     "pricing": {
@@ -1364,7 +1428,7 @@
       "subtitle": "Ready to secure your Toronto student housing? Complete the application below and our team will contact you within 24 hours.",
       "firstName": "First Name",
       "firstNamePlaceholder": "Enter your first name",
-      "lastName": "Last Name", 
+      "lastName": "Last Name",
       "lastNamePlaceholder": "Enter your last name",
       "email": "Email Address",
       "emailPlaceholder": "your@email.com",
@@ -1399,67 +1463,6 @@
       "success": {
         "title": "Application Submitted!",
         "message": "Thank you for your application! Our student housing team will review your information and contact you within 24 hours to discuss available options and next steps."
-      }
-    }
-  },
-  "longterm": {
-    "hero": {
-      "title": "Long-Term Rental Discounts",
-      "subtitle": "Save significantly on extended stays with our flexible long-term lease options. Choose 3, 6, or 12-month terms and enjoy up to 30% off monthly rates in Toronto's premium furnished apartments.",
-      "savingsCta": "See Savings",
-      "cta": "Get Quote"
-    },
-    "pricing": {
-      "title": "Choose Your Savings Level",
-      "subtitle": "The longer you stay, the more you save. All options include the same premium amenities and services.",
-      "select": "Select This Plan"
-    },
-    "advantages": {
-      "title": "Why Choose Long-Term with StayNeos",
-      "subtitle": "Beyond just savings, long-term stays offer stability, convenience, and a true home-away-from-home experience."
-    },
-    "usecases": {
-      "title": "Perfect For Your Situation",
-      "subtitle": "Long-term rentals work for a variety of life and business situations requiring extended Toronto stays."
-    },
-    "benefits": {
-      "title": "Everything Included",
-      "subtitle": "All long-term rentals include premium amenities and services at no additional cost."
-    },
-    "testimonials": {
-      "title": "Long-Term Resident Stories",
-      "subtitle": "See how our long-term residents have saved money and enjoyed their extended Toronto stays."
-    },
-    "form": {
-      "title": "Get Your Long-Term Rental Quote",
-      "subtitle": "Tell us about your long-term housing needs and we'll create a custom proposal with your savings breakdown.",
-      "firstName": "First Name",
-      "firstNamePlaceholder": "Enter your first name",
-      "lastName": "Last Name",
-      "lastNamePlaceholder": "Enter your last name",
-      "email": "Email Address",
-      "emailPlaceholder": "your@email.com",
-      "phone": "Phone Number",
-      "phonePlaceholder": "+1 (555) 000-0000",
-      "moveInDate": "Desired Move-in Date",
-      "leaseDuration": "Preferred Lease Duration",
-      "months": "Months",
-      "propertyType": "Property Type",
-      "selectType": "Select type",
-      "studio": "Studio",
-      "bedroom": "Bedroom",
-      "bedrooms": "Bedrooms",
-      "budget": "Monthly Budget",
-      "selectBudget": "Select budget",
-      "location": "Preferred Area",
-      "selectLocation": "Select area",
-      "message": "Tell us about your requirements",
-      "messagePlaceholder": "Please describe your long-term housing needs, any specific requirements, reasons for extended stay, and any questions about our long-term rental program...",
-      "submitting": "Submitting...",
-      "submit": "Get My Quote & Savings",
-      "success": {
-        "title": "Quote Request Submitted!",
-        "message": "Thank you for your interest in long-term rentals! Our team will prepare a detailed quote with your exact savings breakdown and contact you within 24 hours."
       }
     }
   },
@@ -2032,6 +2035,8 @@
       "redirecting": "Redirecting...",
       "redirectingNow": "Redirecting you now..."
     },
+    "goToBooking": "Go to booking",
+    "noBookingId": "No booking ID provided",
     "cancel": {
       "title": "Payment Cancelled",
       "description": "Your payment was cancelled",
@@ -2275,7 +2280,12 @@
   "servicesTitle": "Services",
   "supportTitle": "Support",
   "copyright": "© 2024-2026 StayNeos. All rights reserved.",
-  "trust": "🔒 Secure Payment · ✓ Verified Homes · 24/7 Support",
+  "trust": {
+    "rating": "4.9/5 Rating",
+    "verified": "Verified Homes",
+    "support": "24/7 Support",
+    "customers": "1000+ Happy Guests"
+  },
   "en": "English",
   "fr": "Français",
   "zh": "中文",

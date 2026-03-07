@@ -53,7 +53,8 @@
     "delete": "Supprimer",
     "there": "là",
     "loading": "Chargement...",
-    "backToList": "Retour à la liste"
+    "backToList": "Retour à la liste",
+    "optional": "Optionnel"
   },
   "greeting": {
     "morning": "Bonjour",
@@ -411,7 +412,22 @@
     "changeDates": "Modifier les dates",
     "guestSingular": "voyageur",
     "guestsPlural": "voyageurs",
-    "processing": "Traitement..."
+    "processing": "Traitement...",
+    "addDates": "Ajouter des dates",
+    "contactInfo": "Informations de contact",
+    "entireHome": "Logement entier",
+    "payWith": "Payer avec",
+    "termsNotice": "En sélectionnant le bouton ci-dessous, j'accepte les Conditions d'utilisation et la Politique de confidentialité",
+    "yourTrip": "Votre voyage"
+  },
+  "testimonials": {
+    "title": "Ce que disent nos clients",
+    "subtitle": "Lisez les avis de nos clients satisfaits qui ont vécu la différence StayNeos"
+  },
+  "cities": {
+    "title": "Explorez les villes",
+    "subtitle": "Découvrez des propriétés extraordinaires dans les destinations les plus prisées du monde",
+    "properties": "Propriétés disponibles"
   },
   "contact": {
     "pageTitle": "Contactez-nous",
@@ -1570,6 +1586,8 @@
       "redirecting": "Redirection...",
       "redirectingNow": "Redirection en cours..."
     },
+    "goToBooking": "Aller à la réservation",
+    "noBookingId": "Aucun ID de réservation fourni",
     "cancel": {
       "title": "Paiement annulé",
       "description": "Votre paiement a été annulé",
@@ -1816,7 +1834,12 @@
   "servicesTitle": "Services",
   "supportTitle": "Support",
   "copyright": "© 2024-2026 StayNeos. Tous droits réservés.",
-  "trust": "🔒 Paiement Sécurisé · ✓ Logements Vérifiés · Assistance 24/7",
+  "trust": {
+    "rating": "4,9/5 Évaluation",
+    "verified": "Logements Vérifiés",
+    "support": "Support 24/7",
+    "customers": "1000+ Clients Satisfaits"
+  },
   "en": "English",
   "fr": "Français",
   "zh": "中文",
