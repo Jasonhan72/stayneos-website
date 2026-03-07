@@ -1177,6 +1177,66 @@
       "submitAnother": "Submit another application"
     }
   },
+  "hosts": {
+    "hero": {
+      "title": "List Your Property",
+      "subtitle": "Earn guaranteed monthly income with zero vacancy risk. Join Toronto's premium executive housing platform and let us handle everything while you collect steady payments.",
+      "calculateCta": "Calculate Your Earnings",
+      "cta": "Get Started"
+    },
+    "advantages": {
+      "title": "Why Choose StayNeos",
+      "subtitle": "Join hundreds of property owners who've transformed their real estate investments into hassle-free income streams."
+    },
+    "calculator": {
+      "title": "Calculate Your Potential Earnings",
+      "subtitle": "See how much more you could earn with StayNeos compared to traditional rentals.",
+      "currentRent": "Current Monthly Rent",
+      "occupancyRate": "Current Occupancy Rate",
+      "guarantee": "Monthly payments regardless of occupancy, plus professional management included."
+    },
+    "process": {
+      "title": "How It Works",
+      "subtitle": "Get started in four simple steps and begin earning guaranteed income from your property."
+    },
+    "benefits": {
+      "title": "Additional Benefits",
+      "subtitle": "More reasons why property owners choose StayNeos for their investment properties."
+    },
+    "form": {
+      "title": "List Your Property Today",
+      "subtitle": "Complete the form below and our team will contact you within 24 hours to discuss your property.",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Enter your last name",
+      "email": "Email Address",
+      "emailPlaceholder": "your@email.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "propertyAddress": "Property Address",
+      "propertyAddressPlaceholder": "Enter property address",
+      "propertyType": "Property Type",
+      "selectType": "Select type",
+      "apartment": "Apartment",
+      "condo": "Condo",
+      "house": "House",
+      "bedrooms": "Bedrooms",
+      "bedroom": "Bedroom",
+      "selectBedrooms": "Select",
+      "studio": "Studio",
+      "monthlyRent": "Current Monthly Rent",
+      "rentPlaceholder": "Optional",
+      "message": "Tell us about your property",
+      "messagePlaceholder": "Describe your property, current condition, furnishing status, and any questions you have about our program...",
+      "submitting": "Submitting...",
+      "submit": "Submit Application",
+      "success": {
+        "title": "Application Submitted!",
+        "message": "Thank you for your interest! Our team will review your application and contact you within 24 hours to discuss next steps and answer any questions you may have."
+      }
+    }
+  },
   "corporate": {
     "hero": {
       "title": "Corporate Housing Solutions",
