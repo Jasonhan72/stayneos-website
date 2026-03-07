@@ -1237,6 +1237,23 @@
       }
     }
   },
+  "neighborhoods": {
+    "hero": {
+      "title": "Toronto Neighborhoods Guide",
+      "subtitle": "Discover the perfect neighborhood for your Toronto stay. From the bustling Financial District to trendy Liberty Village, find your ideal location with insider insights on transit, amenities, and pricing."
+    },
+    "cta": "View Properties in",
+    "facts": {
+      "title": "Toronto Quick Facts",
+      "subtitle": "Essential information for executive travelers and business professionals."
+    },
+    "cta": {
+      "title": "Ready to Find Your Perfect Toronto Home?",
+      "subtitle": "Browse our curated selection of executive apartments in these premium Toronto neighborhoods.",
+      "browse": "Browse All Properties",
+      "contact": "Contact Our Team"
+    }
+  },
   "corporate": {
     "hero": {
       "title": "Corporate Housing Solutions",
