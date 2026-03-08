@@ -26,6 +26,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://stayneos.com'),
   title: {
     default: "StayNeos | Premium Furnished Apartments",
     template: "%s | StayNeos",
