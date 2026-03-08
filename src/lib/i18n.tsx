@@ -9,6 +9,7 @@ interface I18nContextType {
   setLocale: (locale: Locale) => void;
   t: (key: string, defaultValue?: string | Record<string, string | number>, params?: Record<string, string | number>) => string;
   isLoading: boolean;
+  isHydrated: boolean;
 }
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
@@ -56,10 +57,10 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
   return typeof value === 'string' ? value : path;
 }
 
-function getInitialLocale(): Locale {
+// Client-side only function to detect real locale after hydration
+function getClientLocale(): Locale {
   if (typeof window === 'undefined') {
-    // Server-side: default to 'en'
-    return 'en';
+    return 'en'; // Should never be called on server
   }
   
   // Client-side: Check in order of priority
@@ -98,20 +99,25 @@ function getInitialLocale(): Locale {
 }
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
+  // Always start with 'en' to match SSR
   const [locale, setLocaleState] = useState<Locale>('en');
+  const [isHydrated, setIsHydrated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Initialize locale from storage
+  // After hydration, detect real locale
   useEffect(() => {
-    const initialLocale = getInitialLocale();
-    setLocaleState(initialLocale);
+    const detectedLocale = getClientLocale();
+    if (detectedLocale !== locale) {
+      setLocaleState(detectedLocale);
+    }
+    setIsHydrated(true);
     setIsLoading(false);
-  }, []);
+  }, []); // 只在挂载时运行，不依赖locale
 
   // Listen for locale changes from other components
   useEffect(() => {
     const handleLocaleChange = () => {
-      const newLocale = getInitialLocale();
+      const newLocale = getClientLocale();
       setLocaleState(newLocale);
     };
     
@@ -195,7 +201,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <I18nContext.Provider value={{ locale, setLocale, t, isLoading }}>
+    <I18nContext.Provider value={{ locale, setLocale, t, isLoading, isHydrated }}>
       {children}
     </I18nContext.Provider>
   );

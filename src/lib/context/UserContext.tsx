@@ -63,12 +63,15 @@ const USER_KEY = "stayneos_user_data";
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
+  // Always start with null to match SSR
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load user from localStorage on mount
+  // Load user from localStorage after hydration
   useEffect(() => {
     const loadUserFromStorage = () => {
+      if (typeof window === 'undefined') return;
+      
       try {
         const storedUser = localStorage.getItem(USER_KEY);
         const storedToken = localStorage.getItem(TOKEN_KEY);
@@ -83,8 +86,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
         }
       } catch (error) {
         console.error("Error loading user from storage:", error);
-        localStorage.removeItem(USER_KEY);
-        localStorage.removeItem(TOKEN_KEY);
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem(USER_KEY);
+          localStorage.removeItem(TOKEN_KEY);
+        }
       } finally {
         setIsLoading(false);
       }
