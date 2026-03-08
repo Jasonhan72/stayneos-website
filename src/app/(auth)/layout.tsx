@@ -9,5 +9,4 @@ export default function AuthLayout({
   return children;
 }
 
-// Force static generation for auth pages in export mode
-export const dynamic = "force-static";
+// Allow dynamic rendering for auth pages (needed for client-side interactivity)
