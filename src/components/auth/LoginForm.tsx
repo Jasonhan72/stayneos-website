@@ -97,11 +97,12 @@ export function LoginForm({ callbackUrl = "/" }: LoginFormProps) {
     <div className="w-full space-y-6">
       {/* 第三方登录按钮 */}
       <div className="space-y-3">
-        {/* Google 登录按钮 - 禁用状态 */}
+        {/* Google 登录按钮 - 启用状态 */}
         <button
           type="button"
-          disabled={true}
-          className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-neutral-300 text-neutral-500 font-medium rounded-lg cursor-not-allowed opacity-75"
+          onClick={() => window.location.href = '/api/auth/google'}
+          disabled={isLoading}
+          className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border border-neutral-300 text-neutral-700 font-medium rounded-lg hover:bg-neutral-50 hover:border-neutral-400 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -109,7 +110,7 @@ export function LoginForm({ callbackUrl = "/" }: LoginFormProps) {
             <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
             <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
           </svg>
-          Continue with Google (Coming Soon)
+          Continue with Google
         </button>
 
         {/* Facebook 登录按钮 - 禁用状态 */}

@@ -261,3 +261,91 @@ export const sessionDb = {
     }
   },
 };
+
+// D1 Account helper functions
+export const accountDb = {
+  async findByProviderAccountId(db: D1Database, provider: string, providerAccountId: string): Promise<Account | null> {
+    try {
+      const result = await db
+        .prepare('SELECT * FROM Account WHERE provider = ? AND providerAccountId = ?')
+        .bind(provider, providerAccountId)
+        .first<Account>();
+      return result || null;
+    } catch (error) {
+      console.error('Error finding account by provider:', error);
+      throw error;
+    }
+  },
+
+  async findByUserId(db: D1Database, userId: string): Promise<Account[]> {
+    try {
+      const result = await db
+        .prepare('SELECT * FROM Account WHERE userId = ?')
+        .bind(userId)
+        .all<Account>();
+      return result.results || [];
+    } catch (error) {
+      console.error('Error finding accounts by user id:', error);
+      throw error;
+    }
+  },
+
+  async create(db: D1Database, data: {
+    userId: string;
+    type: string;
+    provider: string;
+    providerAccountId: string;
+    refresh_token?: string | null;
+    access_token?: string | null;
+    expires_at?: number | null;
+    token_type?: string | null;
+    scope?: string | null;
+    id_token?: string | null;
+    session_state?: string | null;
+  }): Promise<Account> {
+    const id = crypto.randomUUID();
+    
+    try {
+      await db
+        .prepare(`
+          INSERT INTO Account (id, userId, type, provider, providerAccountId, 
+                             refresh_token, access_token, expires_at, token_type, 
+                             scope, id_token, session_state)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `)
+        .bind(
+          id,
+          data.userId,
+          data.type,
+          data.provider,
+          data.providerAccountId,
+          data.refresh_token || null,
+          data.access_token || null,
+          data.expires_at || null,
+          data.token_type || null,
+          data.scope || null,
+          data.id_token || null,
+          data.session_state || null
+        )
+        .run();
+
+      return {
+        id,
+        userId: data.userId,
+        type: data.type,
+        provider: data.provider,
+        providerAccountId: data.providerAccountId,
+        refresh_token: data.refresh_token || null,
+        access_token: data.access_token || null,
+        expires_at: data.expires_at || null,
+        token_type: data.token_type || null,
+        scope: data.scope || null,
+        id_token: data.id_token || null,
+        session_state: data.session_state || null,
+      };
+    } catch (error) {
+      console.error('Error creating account:', error);
+      throw error;
+    }
+  },
+};
