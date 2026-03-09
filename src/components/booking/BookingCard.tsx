@@ -273,22 +273,6 @@ export function BookingCard({ property, className }: BookingCardProps) {
           </div>
         )}
 
-        {/* Reserve Button */}
-        <Button
-          onClick={handleReserve}
-          disabled={isLoading}
-          isLoading={isLoading}
-          fullWidth
-          size="lg"
-          className="py-4 text-lg font-semibold bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700"
-        >
-          {getReserveButtonText()}
-        </Button>
-
-        <p className="text-center text-sm text-neutral-500 mt-3">
-          You won&apos;t be charged yet
-        </p>
-
         {/* Price Breakdown */}
         {price && (
           <div className="pt-4 mt-4 border-t border-neutral-200">
@@ -302,6 +286,22 @@ export function BookingCard({ property, className }: BookingCardProps) {
             />
           </div>
         )}
+
+        {/* Reserve Button - below price breakdown */}
+        <Button
+          onClick={handleReserve}
+          disabled={isLoading}
+          isLoading={isLoading}
+          fullWidth
+          size="lg"
+          className="mt-6 py-4 text-lg font-semibold bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700"
+        >
+          {getReserveButtonText()}
+        </Button>
+
+        <p className="text-center text-sm text-neutral-500 mt-3">
+          You won&apos;t be charged yet
+        </p>
 
         {/* Trust Badges */}
         <div className="mt-6 pt-6 border-t border-neutral-200">
