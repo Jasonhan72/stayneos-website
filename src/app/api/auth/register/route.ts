@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { userDb, getDb } from "@/lib/d1";
@@ -21,12 +22,15 @@ export async function POST(request: Request) {
     const body = await request.json();
     console.log("Request body:", { name: body.name, email: body.email });
     
-    const { name, email, password } = body;
+    // Support both {name} and {firstName, lastName} formats
+    const name = body.name || [body.firstName, body.lastName].filter(Boolean).join(' ');
+    const email = body.email;
+    const password = body.password;
 
     // 验证必填字段
     if (!name || !email || !password) {
       return NextResponse.json(
-        { message: "请填写所有必填字段" },
+        { message: "Please fill in all required fields" },
         { status: 400 }
       );
     }

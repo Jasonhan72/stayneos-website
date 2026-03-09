@@ -3,6 +3,8 @@ import { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 import { userDb, accountDb, getDb } from "@/lib/d1";
 
+export const dynamic = "force-dynamic";
+
 interface GoogleTokenResponse {
   access_token: string;
   expires_in: number;
