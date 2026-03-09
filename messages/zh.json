@@ -26,7 +26,12 @@
     "listProperty": "发布房源",
     "manageProperties": "管理房源",
     "dashboard": "仪表盘",
-    "partnerWithUs": "合作伙伴"
+    "partnerWithUs": "合作伙伴",
+    "neighborhoods": "社区",
+    "hosts": "房东合作",
+    "longTerm": "长期租赁",
+    "marketInsights": "市场洞察",
+    "students": "学生住房"
   },
   "common": {
     "view": "查看",

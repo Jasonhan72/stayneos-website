@@ -26,7 +26,12 @@
     "manageProperties": "Gérer les propriétés",
     "dashboard": "Tableau de bord",
     "partnerWithUs": "Devenez Partenaire",
-    "agents": "Pour Agents"
+    "agents": "Pour Agents",
+    "neighborhoods": "Quartiers",
+    "hosts": "Hôtes",
+    "longTerm": "Location longue durée",
+    "marketInsights": "Aperçu du marché",
+    "students": "Logement étudiant"
   },
   "common": {
     "view": "Voir",
