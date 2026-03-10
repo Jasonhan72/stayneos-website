@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -176,8 +177,10 @@ export default function LoginPage() {
             }}
           />
 
-          {/* Client-side enhancement - only adds interactivity */}
-          <LoginFormClient />
+          {/* Client-side enhancement - wrapped in Suspense for static generation */}
+          <Suspense fallback={null}>
+            <LoginFormClient />
+          </Suspense>
         </div>
       </div>
     </div>

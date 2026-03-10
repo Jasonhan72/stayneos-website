@@ -13,6 +13,8 @@ CREATE TABLE IF NOT EXISTS User (
     role TEXT DEFAULT 'GUEST' CHECK (role IN ('GUEST', 'HOST', 'ADMIN', 'SUPER_ADMIN')),
     createdAt TEXT NOT NULL DEFAULT (datetime('now')),
     updatedAt TEXT NOT NULL DEFAULT (datetime('now'))
+    resetToken TEXT,
+    resetTokenExpiry TEXT,
 );
 
 -- Session table for NextAuth
@@ -78,6 +80,8 @@ CREATE TABLE IF NOT EXISTS Booking (
     cancelReason TEXT,
     createdAt TEXT NOT NULL DEFAULT (datetime('now')),
     updatedAt TEXT NOT NULL DEFAULT (datetime('now')),
+    resetToken TEXT,
+    resetTokenExpiry TEXT,
     FOREIGN KEY (userId) REFERENCES User(id) ON DELETE CASCADE
 );
 
@@ -103,6 +107,8 @@ CREATE TABLE IF NOT EXISTS Payment (
     metadata TEXT, -- JSON string
     createdAt TEXT NOT NULL DEFAULT (datetime('now')),
     updatedAt TEXT NOT NULL DEFAULT (datetime('now')),
+    resetToken TEXT,
+    resetTokenExpiry TEXT,
     FOREIGN KEY (bookingId) REFERENCES Booking(id) ON DELETE CASCADE
 );
 
@@ -120,6 +126,8 @@ CREATE TABLE IF NOT EXISTS Inquiry (
     metadata TEXT,
     createdAt TEXT NOT NULL DEFAULT (datetime('now')),
     updatedAt TEXT NOT NULL DEFAULT (datetime('now'))
+    resetToken TEXT,
+    resetTokenExpiry TEXT,
 );
 
 -- Property table (simplified - minimal for bookings)
@@ -159,6 +167,8 @@ CREATE TABLE IF NOT EXISTS Property (
     bookingCount INTEGER DEFAULT 0,
     createdAt TEXT NOT NULL DEFAULT (datetime('now')),
     updatedAt TEXT NOT NULL DEFAULT (datetime('now'))
+    resetToken TEXT,
+    resetTokenExpiry TEXT,
 );
 
 -- PropertyImage table
