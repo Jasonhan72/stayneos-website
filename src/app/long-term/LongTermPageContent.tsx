@@ -21,6 +21,7 @@ import {
   Star
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { submitInquiry } from "@/lib/inquiry-client";
 
 // Form validation schema
 const longTermFormSchema = z.object({
@@ -55,12 +56,11 @@ export default function LongTermPageContent() {
   const onSubmit = async (data: LongTermFormData) => {
     setIsSubmitting(true);
     try {
-      // TODO: Implement API call to submit form
-      console.log("Form data:", data);
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await submitInquiry("long_term", data);
       setIsSubmitted(true);
     } catch (error) {
       console.error("Submission error:", error);
+      alert(error instanceof Error ? error.message : "Submission failed");
     } finally {
       setIsSubmitting(false);
     }

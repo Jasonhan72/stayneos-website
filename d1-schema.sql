@@ -106,6 +106,22 @@ CREATE TABLE IF NOT EXISTS Payment (
     FOREIGN KEY (bookingId) REFERENCES Booking(id) ON DELETE CASCADE
 );
 
+-- Inquiry / lead capture table for public forms
+CREATE TABLE IF NOT EXISTS Inquiry (
+    id TEXT PRIMARY KEY,
+    type TEXT NOT NULL CHECK (type IN ('agents', 'hosts', 'business', 'students', 'long_term', 'contact', 'market_insights')),
+    name TEXT,
+    email TEXT NOT NULL,
+    phone TEXT,
+    company TEXT,
+    subject TEXT,
+    message TEXT,
+    status TEXT DEFAULT 'NEW' CHECK (status IN ('NEW', 'CONTACTED', 'QUALIFIED', 'CLOSED')),
+    metadata TEXT,
+    createdAt TEXT NOT NULL DEFAULT (datetime('now')),
+    updatedAt TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
 -- Property table (simplified - minimal for bookings)
 CREATE TABLE IF NOT EXISTS Property (
     id TEXT PRIMARY KEY,
@@ -166,6 +182,10 @@ CREATE INDEX IF NOT EXISTS idx_booking_user ON Booking(userId);
 CREATE INDEX IF NOT EXISTS idx_booking_number ON Booking(bookingNumber);
 CREATE INDEX IF NOT EXISTS idx_booking_status ON Booking(status);
 CREATE INDEX IF NOT EXISTS idx_payment_booking ON Payment(bookingId);
+CREATE INDEX IF NOT EXISTS idx_payment_intent ON Payment(stripePaymentIntentId);
+CREATE INDEX IF NOT EXISTS idx_inquiry_type ON Inquiry(type);
+CREATE INDEX IF NOT EXISTS idx_inquiry_email ON Inquiry(email);
+CREATE INDEX IF NOT EXISTS idx_inquiry_status ON Inquiry(status);
 CREATE INDEX IF NOT EXISTS idx_property_slug ON Property(slug);
 CREATE INDEX IF NOT EXISTS idx_property_city ON Property(city);
 CREATE INDEX IF NOT EXISTS idx_property_status ON Property(status);

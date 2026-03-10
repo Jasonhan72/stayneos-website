@@ -20,6 +20,29 @@ export interface AuthPayload {
   userId: string;
   email: string;
   name: string;
+  role?: string;
+}
+
+function verifyAuthToken(token: string): AuthPayload | null {
+  try {
+    return jwt.verify(token, getJwtSecret()) as AuthPayload;
+  } catch {
+    return null;
+  }
+}
+
+function getTokenFromCookieHeader(cookieHeader: string | null): string | null {
+  if (!cookieHeader) return null;
+
+  const cookiePairs = cookieHeader.split(";").map((part) => part.trim());
+  const tokenCookie = cookiePairs.find(
+    (part) =>
+      part.startsWith("stayneos_auth_token=") ||
+      part.startsWith("auth-token=") ||
+      part.startsWith("auth_token=")
+  );
+
+  return tokenCookie ? decodeURIComponent(tokenCookie.split("=").slice(1).join("=")) : null;
 }
 
 /**
@@ -79,12 +102,34 @@ export function removeAuthCookie(): void {
  */
 export function getCurrentUser(): AuthPayload | null {
   try {
-    const token = cookies().get("auth-token")?.value;
+    const token =
+      cookies().get("stayneos_auth_token")?.value ||
+      cookies().get("auth-token")?.value ||
+      cookies().get("auth_token")?.value;
     if (!token) return null;
     return verifyToken(token);
   } catch {
     return null;
   }
+}
+
+export function getCurrentUserFromRequest(request: Request): AuthPayload | null {
+  const authHeader = request.headers.get("authorization");
+
+  if (authHeader?.startsWith("Bearer ")) {
+    const bearerToken = authHeader.slice(7).trim();
+    const payload = verifyAuthToken(bearerToken);
+    if (payload) {
+      return payload;
+    }
+  }
+
+  const cookieToken = getTokenFromCookieHeader(request.headers.get("cookie"));
+  if (cookieToken) {
+    return verifyAuthToken(cookieToken);
+  }
+
+  return null;
 }
 
 /**

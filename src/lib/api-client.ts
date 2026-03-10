@@ -19,7 +19,12 @@ const DEFAULT_TIMEOUT = 30000;
 function getAuthToken(): string | null {
   // 从 localStorage 获取 token（客户端）
   if (typeof window !== 'undefined') {
-    return localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
+    return (
+      localStorage.getItem('stayneos_auth_token') ||
+      sessionStorage.getItem('stayneos_auth_token') ||
+      localStorage.getItem('auth_token') ||
+      sessionStorage.getItem('auth_token')
+    );
   }
   return null;
 }

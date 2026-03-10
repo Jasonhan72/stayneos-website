@@ -19,6 +19,7 @@ import {
 import Link from "next/link";
 import { Card, CardContent, Input, TextArea, UIButton } from "@/components/ui";
 import { useI18n } from "@/lib/i18n";
+import { submitInquiry } from "@/lib/inquiry-client";
 
 // 联系表单组件
 export function ContactForm() {
@@ -73,17 +74,12 @@ export function ContactForm() {
     setIsSubmitting(true);
     
     try {
-      // Send contact form via mailto link as backup, and try API
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      if (!response.ok) throw new Error("API failed");
-    } catch {
-      // API not available - that's ok, form data is captured
-      // In production, this would send via Resend/email API
-      console.log("Contact form submitted (API pending):", formData);
+      await submitInquiry("contact", formData);
+    } catch (error) {
+      console.error("Contact form submission failed:", error);
+      setErrors({ submit: error instanceof Error ? error.message : "Submission failed" });
+      setIsSubmitting(false);
+      return;
     }
     
     setIsSubmitting(false);
@@ -149,6 +145,11 @@ export function ContactForm() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {errors.submit ? (
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {errors.submit}
+            </div>
+          ) : null}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Input
               label={`${t("contact.form.name")} *`}

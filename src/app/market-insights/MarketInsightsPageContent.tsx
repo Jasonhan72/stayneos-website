@@ -23,6 +23,7 @@ import {
   Mail
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { submitInquiry } from "@/lib/inquiry-client";
 
 // Form validation schema
 const reportFormSchema = z.object({
@@ -55,11 +56,11 @@ export default function MarketInsightsPageContent() {
     setIsSubmitting(true);
     try {
       const formData = { ...data, interests: selectedInterests };
-      console.log("Form data:", formData);
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await submitInquiry("market_insights", formData);
       setIsSubmitted(true);
     } catch (error) {
       console.error("Submission error:", error);
+      alert(error instanceof Error ? error.message : "Submission failed");
     } finally {
       setIsSubmitting(false);
     }

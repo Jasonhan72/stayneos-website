@@ -22,6 +22,7 @@ import {
   Train
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { submitInquiry } from "@/lib/inquiry-client";
 
 // Form validation schema
 const studentFormSchema = z.object({
@@ -56,12 +57,11 @@ export default function ForStudentsPageContent() {
   const onSubmit = async (data: StudentFormData) => {
     setIsSubmitting(true);
     try {
-      // TODO: Implement API call to submit form
-      console.log("Form data:", data);
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await submitInquiry("students", data);
       setIsSubmitted(true);
     } catch (error) {
       console.error("Submission error:", error);
+      alert(error instanceof Error ? error.message : "Submission failed");
     } finally {
       setIsSubmitting(false);
     }

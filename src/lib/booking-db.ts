@@ -104,4 +104,33 @@ export const bookingDb = {
       .bind(...values)
       .run();
   },
+
+  async update(
+    db: ReturnType<typeof getDb>,
+    id: string,
+    data: Partial<Omit<Booking, "id" | "createdAt">>
+  ): Promise<void> {
+    const sets: string[] = [];
+    const values: Array<string | number | null> = [];
+
+    for (const [key, value] of Object.entries(data)) {
+      if (value !== undefined) {
+        sets.push(`${key} = ?`);
+        values.push(value as string | number | null);
+      }
+    }
+
+    if (sets.length === 0) {
+      return;
+    }
+
+    sets.push("updatedAt = ?");
+    values.push(new Date().toISOString());
+    values.push(id);
+
+    await db
+      .prepare(`UPDATE Booking SET ${sets.join(", ")} WHERE id = ?`)
+      .bind(...values)
+      .run();
+  },
 };

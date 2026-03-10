@@ -1,183 +1,137 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { getCurrentUser } from '@/lib/auth';
+import { NextRequest, NextResponse } from "next/server";
+import { getCurrentUserFromRequest } from "@/lib/auth";
+import { userDb, getDb } from "@/lib/d1";
+import { bookingDb } from "@/lib/booking-db";
+import { paymentDb } from "@/lib/payment-db";
+import { getPropertySnapshot } from "@/lib/property-catalog";
+import { stripe } from "@/lib/stripe";
 
-// Required for static export - API routes need this but won't function in static export
 export async function generateStaticParams() {
-  return [
-    { id: '1' },
-    { id: '2' },
-    { id: '3' },
-  ];
+  return [{ id: "1" }, { id: "2" }, { id: "3" }];
 }
 
-// 获取单个预订详情
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const currentUser = getCurrentUser();
-    
+    const currentUser = getCurrentUserFromRequest(request);
+
     if (!currentUser?.email) {
-      return NextResponse.json(
-        { error: '请先登录' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "请先登录" }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email: currentUser.email },
-    });
-
+    const db = getDb();
+    const user = await userDb.findByEmail(db, currentUser.email);
     if (!user) {
-      return NextResponse.json(
-        { error: '用户不存在' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "用户不存在" }, { status: 404 });
     }
 
-    const booking = await prisma.booking.findFirst({
-      where: {
-        id: params.id,
-        userId: user.id,
-      },
-      include: {
-        property: {
-          include: {
-            images: {
-              orderBy: { order: 'asc' },
-              select: { url: true, alt: true },
-            },
-            amenities: {
-              include: {
-                amenity: true,
-              },
-            },
-          },
-        },
-        review: true,
-        payments: {
-          orderBy: { createdAt: 'desc' },
-        },
-      },
-    });
-
-    if (!booking) {
-      return NextResponse.json(
-        { error: '预订不存在' },
-        { status: 404 }
-      );
+    const booking = await bookingDb.findById(db, params.id);
+    if (!booking || booking.userId !== user.id) {
+      return NextResponse.json({ error: "预订不存在" }, { status: 404 });
     }
+
+    const property = getPropertySnapshot(booking.propertyId);
+    const payments = await paymentDb.findByBookingId(db, booking.id);
 
     return NextResponse.json({
       success: true,
-      booking,
+      booking: {
+        ...booking,
+        property,
+        review: null,
+        payments,
+      },
     });
   } catch (error) {
-    console.error('Get booking detail error:', error);
-    return NextResponse.json(
-      { error: '获取预订详情失败' },
-      { status: 500 }
-    );
+    console.error("Get booking detail error:", error);
+    return NextResponse.json({ error: "获取预订详情失败" }, { status: 500 });
   }
 }
 
-// 取消预订
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const currentUser = getCurrentUser();
-    
+    const currentUser = getCurrentUserFromRequest(request);
+
     if (!currentUser?.email) {
-      return NextResponse.json(
-        { error: '请先登录' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "请先登录" }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email: currentUser.email },
-    });
-
+    const db = getDb();
+    const user = await userDb.findByEmail(db, currentUser.email);
     if (!user) {
-      return NextResponse.json(
-        { error: '用户不存在' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "用户不存在" }, { status: 404 });
     }
 
-    const body = await request.json();
-    const { action, reason } = body;
+    const body = (await request.json().catch(() => ({}))) as { action?: string; status?: string; reason?: string };
+    const isCancelRequest = body.action === "cancel" || body.status === "CANCELLED";
 
-    if (action !== 'cancel') {
-      return NextResponse.json(
-        { error: '无效的操作' },
-        { status: 400 }
-      );
+    if (!isCancelRequest) {
+      return NextResponse.json({ error: "无效的操作" }, { status: 400 });
     }
 
-    // 获取预订信息
-    const booking = await prisma.booking.findFirst({
-      where: {
-        id: params.id,
-        userId: user.id,
-      },
-      include: {
-        payments: {
-          where: { status: 'COMPLETED' },
+    const booking = await bookingDb.findById(db, params.id);
+    if (!booking || booking.userId !== user.id) {
+      return NextResponse.json({ error: "预订不存在" }, { status: 404 });
+    }
+
+    if (booking.status === "CANCELLED") {
+      return NextResponse.json({ error: "预订已取消" }, { status: 400 });
+    }
+
+    if (booking.status === "CHECKED_IN" || booking.status === "CHECKED_OUT") {
+      return NextResponse.json({ error: "已入住或已完成的预订无法取消" }, { status: 400 });
+    }
+
+    const payments = await paymentDb.findByBookingId(db, booking.id);
+    const completedPayment = payments.find((payment) => payment.status === "COMPLETED");
+    const cancelledAt = new Date().toISOString();
+    let paymentStatus = booking.paymentStatus;
+    let refundMessage = "预订已成功取消";
+
+    if (completedPayment?.stripePaymentIntentId && typeof stripe.refunds?.create === "function") {
+      const refund = await stripe.refunds.create({
+        payment_intent: completedPayment.stripePaymentIntentId,
+        reason: "requested_by_customer",
+        metadata: {
+          bookingId: booking.id,
+          bookingNumber: booking.bookingNumber,
         },
-      },
+      });
+
+      paymentStatus = refund.status === "succeeded" ? "REFUNDED" : "PARTIALLY_REFUNDED";
+
+      await paymentDb.updateByPaymentIntentId(db, completedPayment.stripePaymentIntentId, {
+        status: "REFUNDED",
+        refundedAt: cancelledAt,
+        refundAmount: (refund.amount || 0) / 100,
+        refundReason: body.reason || "Customer cancellation",
+      });
+
+      refundMessage = "预订已取消，退款已发起";
+    }
+
+    await bookingDb.update(db, params.id, {
+      status: "CANCELLED",
+      paymentStatus,
+      cancelledAt,
+      cancelReason: body.reason || null,
     });
 
-    if (!booking) {
-      return NextResponse.json(
-        { error: '预订不存在' },
-        { status: 404 }
-      );
-    }
-
-    // 检查是否可以取消
-    if (booking.status === 'CANCELLED') {
-      return NextResponse.json(
-        { error: '预订已取消' },
-        { status: 400 }
-      );
-    }
-
-    if (booking.status === 'CHECKED_IN' || booking.status === 'CHECKED_OUT') {
-      return NextResponse.json(
-        { error: '已入住或已完成的预订无法取消' },
-        { status: 400 }
-      );
-    }
-
-    // 更新预订状态
-    const updatedBooking = await prisma.booking.update({
-      where: { id: params.id },
-      data: {
-        status: 'CANCELLED',
-        paymentStatus: 'REFUNDED',
-        cancelledAt: new Date(),
-        cancelReason: reason,
-      },
-    });
-
-    // TODO: 如果有已支付金额，发起退款
-    // 这里应该调用 Stripe 退款 API
+    const updatedBooking = await bookingDb.findById(db, params.id);
 
     return NextResponse.json({
       success: true,
       booking: updatedBooking,
-      message: '预订已成功取消',
+      message: refundMessage,
     });
   } catch (error) {
-    console.error('Cancel booking error:', error);
-    return NextResponse.json(
-      { error: '取消预订失败' },
-      { status: 500 }
-    );
+    console.error("Cancel booking error:", error);
+    return NextResponse.json({ error: "取消预订失败" }, { status: 500 });
   }
 }
+

@@ -19,6 +19,7 @@ import {
   Zap
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { submitInquiry } from "@/lib/inquiry-client";
 
 // Form validation schema
 const hostFormSchema = z.object({
@@ -55,12 +56,11 @@ export default function ForHostsPageContent() {
   const onSubmit = async (data: HostFormData) => {
     setIsSubmitting(true);
     try {
-      // TODO: Implement API call to submit form
-      console.log("Form data:", data);
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await submitInquiry("hosts", data);
       setIsSubmitted(true);
     } catch (error) {
       console.error("Submission error:", error);
+      alert(error instanceof Error ? error.message : "Submission failed");
     } finally {
       setIsSubmitting(false);
     }
