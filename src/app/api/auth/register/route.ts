@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import { userDb, getDb } from "@/lib/d1";
 
 export async function POST(request: Request) {
@@ -78,7 +79,22 @@ export async function POST(request: Request) {
 
     console.log("User created successfully:", user.id);
 
-    return NextResponse.json(
+    // Generate JWT token
+    const JWT_SECRET = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET;
+    if (!JWT_SECRET) throw new Error('JWT_SECRET or NEXTAUTH_SECRET environment variable is required');
+
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
+      JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    const response = NextResponse.json(
       {
         message: "注册成功",
         user: {
@@ -88,9 +104,21 @@ export async function POST(request: Request) {
           role: user.role,
           createdAt: user.createdAt,
         },
+        token,
       },
       { status: 201 }
     );
+
+    // Set auth cookie for middleware
+    response.cookies.set('stayneos_auth_token', token, {
+      path: '/',
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+    });
+
+    return response;
   } catch (error) {
     console.error("注册错误:", error);
     const errorMessage = error instanceof Error ? error.message : "未知错误";

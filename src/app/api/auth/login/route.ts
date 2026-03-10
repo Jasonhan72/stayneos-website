@@ -59,7 +59,7 @@ export async function POST(request: Request) {
       { expiresIn: "7d" }
     );
 
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         message: "登录成功",
         user: {
@@ -72,6 +72,17 @@ export async function POST(request: Request) {
       },
       { status: 200 }
     );
+
+    // Set auth cookie for middleware
+    response.cookies.set('stayneos_auth_token', token, {
+      path: '/',
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+    });
+
+    return response;
   } catch (error) {
     console.error("登录错误:", error);
     return NextResponse.json(
