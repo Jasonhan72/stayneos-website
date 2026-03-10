@@ -6,12 +6,10 @@ import { userDb, getDb } from "@/lib/d1";
 
 export async function POST(request: Request) {
   try {
-    console.log("Register API called");
     
     let db;
     try {
       db = getDb();
-      console.log("D1 database connection established");
     } catch (dbError) {
       console.error("Failed to get D1 database:", dbError);
       return NextResponse.json(
@@ -33,7 +31,6 @@ export async function POST(request: Request) {
       password = (formData.get("password") as string) || "";
     } else {
       const body = await request.json();
-      console.log("Request body:", { name: body.name, email: body.email });
       name = body.name || [body.firstName, body.lastName].filter(Boolean).join(" ");
       email = body.email;
       password = body.password;
@@ -65,7 +62,6 @@ export async function POST(request: Request) {
     }
 
     // 检查邮箱是否已存在
-    console.log("Checking if email exists:", email);
     const existingUser = await userDb.findByEmail(db, email);
 
     if (existingUser) {
@@ -79,7 +75,6 @@ export async function POST(request: Request) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // 创建用户
-    console.log("Creating user...");
     const user = await userDb.create(db, {
       id: crypto.randomUUID(),
       name,
@@ -88,7 +83,6 @@ export async function POST(request: Request) {
       role: "GUEST",
     });
 
-    console.log("User created successfully:", user.id);
 
     // Generate JWT token
     const JWT_SECRET = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET;
@@ -113,7 +107,7 @@ export async function POST(request: Request) {
       const response = NextResponse.redirect(`${baseUrl}/dashboard`);
       response.cookies.set('stayneos_auth_token', token, {
         path: '/',
-        httpOnly: false,
+        httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         maxAge: 7 * 24 * 60 * 60,
@@ -139,7 +133,7 @@ export async function POST(request: Request) {
     // Set auth cookie for middleware
     response.cookies.set('stayneos_auth_token', token, {
       path: '/',
-      httpOnly: false,
+      httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60,
@@ -148,9 +142,9 @@ export async function POST(request: Request) {
     return response;
   } catch (error) {
     console.error("注册错误:", error);
-    const errorMessage = error instanceof Error ? error.message : "未知错误";
+    
     return NextResponse.json(
-      { message: "注册失败，请稍后重试", error: errorMessage },
+      { message: "注册失败，请稍后重试" },
       { status: 500 }
     );
   }

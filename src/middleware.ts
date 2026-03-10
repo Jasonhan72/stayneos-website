@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { jwtVerify } from 'jose';
 
 export type Locale = 'en' | 'fr' | 'zh';
 export type UserRole = 'GUEST' | 'HOST' | 'ADMIN' | 'SUPER_ADMIN';
@@ -114,19 +115,25 @@ interface JWTPayload {
 // 验证 JWT token 并返回解码后的信息
 async function verifyToken(token: string): Promise<{ valid: boolean; payload?: JWTPayload }> {
   try {
-    // 简单的 JWT 结构验证
-    const parts = token.split('.');
-    if (parts.length !== 3) return { valid: false };
-    
-    // 解析 payload
-    const payload = JSON.parse(atob(parts[1])) as JWTPayload;
-    
-    // 检查是否过期
-    if (payload.exp && payload.exp * 1000 < Date.now()) {
-      return { valid: false };
-    }
-    
-    return { valid: true, payload };
+    const secret = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET;
+    if (!secret) return { valid: false };
+
+    const { payload } = await jwtVerify(
+      token,
+      new TextEncoder().encode(secret),
+      { algorithms: ['HS256'] }
+    );
+
+    return {
+      valid: true,
+      payload: {
+        userId: payload.userId as string,
+        email: payload.email as string,
+        role: payload.role as UserRole,
+        exp: payload.exp,
+        iat: payload.iat,
+      },
+    };
   } catch {
     return { valid: false };
   }

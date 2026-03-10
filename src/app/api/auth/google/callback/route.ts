@@ -47,18 +47,21 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    // Verify state parameter (CSRF protection)
-    // Note: In Cloudflare Workers, cookies may not persist through cross-origin redirects
-    const storedState = request.cookies.get("oauth_state")?.value;
-    if (storedState && state !== storedState) {
-      console.error("OAuth state mismatch:", { expected: storedState, got: state });
+    // Verify state parameter via D1 (cookies unreliable in Cloudflare cross-origin redirects)
+    const db = getDb();
+    const stateRow = await db
+      .prepare("SELECT id FROM OAuthState WHERE state = ? AND expiresAt > ?")
+      .bind(state, new Date().toISOString())
+      .first<{ id: string }>();
+
+    if (!stateRow) {
       return NextResponse.redirect(
         `${process.env.NEXTAUTH_URL || "https://stayneos.com"}/login?error=invalid_state`
       );
     }
-    if (!storedState) {
-      console.warn("OAuth state cookie missing - skipping CSRF check (Cloudflare Workers cookie issue)");
-    }
+
+    // Delete used state (single-use)
+    await db.prepare("DELETE FROM OAuthState WHERE state = ?").bind(state).run();
     
     // Get environment variables
     const clientId = process.env.GOOGLE_CLIENT_ID;
@@ -114,8 +117,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(`${baseUrl}/login?error=email_not_verified`);
     }
     
-    // Step 3: Handle user in database
-    const db = getDb();
+    // Step 3: Handle user in database (reuse db from state check)
     
     // Check if account already exists
     const existingAccount = await accountDb.findByProviderAccountId(
@@ -210,7 +212,7 @@ export async function GET(request: NextRequest) {
     
     // Set the main auth cookie for middleware (same as login/register)
     response.cookies.set("stayneos_auth_token", token, {
-      httpOnly: false,
+      httpOnly: true,
       secure: true,
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60, // 7 days

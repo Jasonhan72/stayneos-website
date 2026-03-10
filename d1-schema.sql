@@ -201,3 +201,11 @@ CREATE INDEX IF NOT EXISTS idx_property_city ON Property(city);
 CREATE INDEX IF NOT EXISTS idx_property_status ON Property(status);
 CREATE INDEX IF NOT EXISTS idx_property_host ON Property(hostId);
 CREATE INDEX IF NOT EXISTS idx_propertyimage_property ON PropertyImage(propertyId);
+
+-- OAuth State (CSRF protection, replaces cookies)
+CREATE TABLE IF NOT EXISTS OAuthState (
+    id TEXT PRIMARY KEY,
+    state TEXT NOT NULL UNIQUE,
+    expiresAt TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_oauth_state ON OAuthState(state);

@@ -7,7 +7,7 @@ export async function POST() {
   // Clear auth cookie
   response.cookies.set("stayneos_auth_token", "", {
     path: "/",
-    httpOnly: false,
+    httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     maxAge: 0,
@@ -21,7 +21,7 @@ export async function GET() {
 
   response.cookies.set("stayneos_auth_token", "", {
     path: "/",
-    httpOnly: false,
+    httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     maxAge: 0,

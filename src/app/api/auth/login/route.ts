@@ -79,7 +79,7 @@ export async function POST(request: Request) {
       const response = NextResponse.redirect(`${baseUrl}/dashboard`);
       response.cookies.set('stayneos_auth_token', token, {
         path: '/',
-        httpOnly: false,
+        httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         maxAge: 7 * 24 * 60 * 60,
@@ -104,7 +104,7 @@ export async function POST(request: Request) {
     // Set auth cookie for middleware
     response.cookies.set('stayneos_auth_token', token, {
       path: '/',
-      httpOnly: false,
+      httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60,
