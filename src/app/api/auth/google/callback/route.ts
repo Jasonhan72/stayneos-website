@@ -202,40 +202,18 @@ export async function GET(request: NextRequest) {
       { expiresIn: "7d" }
     );
     
-    // Step 5: Redirect with token
-    const response = NextResponse.redirect(`${baseUrl}/auth-callback?success=true`);
+    // Step 5: Set auth cookie and redirect directly to dashboard
+    const response = NextResponse.redirect(`${baseUrl}/dashboard`);
     
     // Clear the oauth state cookie
     response.cookies.delete("oauth_state");
     
-    // Set the MAIN auth cookie (same as login/register) for middleware
+    // Set the main auth cookie for middleware (same as login/register)
     response.cookies.set("stayneos_auth_token", token, {
       httpOnly: false,
       secure: true,
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60, // 7 days
-      path: "/"
-    });
-    
-    // Set temp cookies for auth-callback page to transfer to localStorage
-    response.cookies.set("auth_token", token, {
-      httpOnly: false,
-      secure: true,
-      sameSite: "lax",
-      maxAge: 300,
-      path: "/"
-    });
-    
-    response.cookies.set("auth_user", JSON.stringify({
-      id: user!.id,
-      name: user!.name,
-      email: user!.email,
-      role: user!.role,
-    }), {
-      httpOnly: false,
-      secure: true,
-      sameSite: "lax",
-      maxAge: 300,
       path: "/"
     });
     
