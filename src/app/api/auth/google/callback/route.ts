@@ -205,7 +205,7 @@ export async function GET(request: NextRequest) {
     );
     
     // Step 5: Set auth cookie and redirect directly to dashboard
-    const response = NextResponse.redirect(`${baseUrl}/dashboard`);
+    const response = NextResponse.redirect(`${baseUrl}/dashboard`, 303);
     
     // Clear the oauth state cookie
     response.cookies.delete("oauth_state");

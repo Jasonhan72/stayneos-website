@@ -72,7 +72,8 @@ export default function RegisterFormClient() {
       try {
         const response = await fetch('/api/auth/register', {
           method: 'POST',
-          headers: {
+          credentials: 'same-origin',
+            headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({

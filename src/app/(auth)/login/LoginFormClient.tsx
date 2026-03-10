@@ -63,7 +63,8 @@ export default function LoginFormClient() {
       try {
         const response = await fetch('/api/auth/login', {
           method: 'POST',
-          headers: {
+          credentials: 'same-origin',
+            headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -87,7 +88,7 @@ export default function LoginFormClient() {
         }
 
         // Redirect to callback URL or dashboard
-        const callbackUrl = searchParams?.get('callback') || '/dashboard';
+        const callbackUrl = searchParams?.get('callbackUrl') || searchParams?.get('callback') || '/dashboard';
         router.push(callbackUrl);
       } catch (error) {
         console.error('Login error:', error);

@@ -76,7 +76,7 @@ export async function POST(request: Request) {
     if (isFormSubmit) {
       // Native form submission → redirect to dashboard with cookie
       const baseUrl = process.env.NEXTAUTH_URL || "https://stayneos.com";
-      const response = NextResponse.redirect(`${baseUrl}/dashboard`);
+      const response = NextResponse.redirect(`${baseUrl}/dashboard`, 303);
       response.cookies.set('stayneos_auth_token', token, {
         path: '/',
         httpOnly: true,
