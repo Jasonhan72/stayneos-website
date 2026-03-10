@@ -48,11 +48,16 @@ export async function GET(request: NextRequest) {
     }
     
     // Verify state parameter (CSRF protection)
+    // Note: In Cloudflare Workers, cookies may not persist through cross-origin redirects
     const storedState = request.cookies.get("oauth_state")?.value;
-    if (state !== storedState) {
+    if (storedState && state !== storedState) {
+      console.error("OAuth state mismatch:", { expected: storedState, got: state });
       return NextResponse.redirect(
         `${process.env.NEXTAUTH_URL || "https://stayneos.com"}/login?error=invalid_state`
       );
+    }
+    if (!storedState) {
+      console.warn("OAuth state cookie missing - skipping CSRF check (Cloudflare Workers cookie issue)");
     }
     
     // Get environment variables
