@@ -7,8 +7,20 @@ import { userDb, getDb } from "@/lib/d1";
 export async function POST(request: Request) {
   try {
     const db = getDb();
-    const body = await request.json();
-    const { email, password } = body;
+    
+    // Support both JSON and form-urlencoded submissions
+    const contentType = request.headers.get("content-type") || "";
+    let email: string, password: string;
+    
+    if (contentType.includes("application/x-www-form-urlencoded")) {
+      const formData = await request.formData();
+      email = (formData.get("email") as string)?.trim() || "";
+      password = (formData.get("password") as string) || "";
+    } else {
+      const body = await request.json();
+      email = body.email;
+      password = body.password;
+    }
 
     // 验证必填字段
     if (!email || !password) {
@@ -59,6 +71,22 @@ export async function POST(request: Request) {
       { expiresIn: "7d" }
     );
 
+    const isFormSubmit = contentType.includes("application/x-www-form-urlencoded");
+    
+    if (isFormSubmit) {
+      // Native form submission → redirect to dashboard with cookie
+      const baseUrl = process.env.NEXTAUTH_URL || "https://stayneos.com";
+      const response = NextResponse.redirect(`${baseUrl}/dashboard`);
+      response.cookies.set('stayneos_auth_token', token, {
+        path: '/',
+        httpOnly: false,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60,
+      });
+      return response;
+    }
+    
     const response = NextResponse.json(
       {
         message: "登录成功",
@@ -79,7 +107,7 @@ export async function POST(request: Request) {
       httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60, // 7 days
+      maxAge: 7 * 24 * 60 * 60,
     });
 
     return response;

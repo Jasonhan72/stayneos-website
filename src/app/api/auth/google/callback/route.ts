@@ -198,31 +198,39 @@ export async function GET(request: NextRequest) {
     );
     
     // Step 5: Redirect with token
-    // We'll set the token in a cookie and redirect to a callback page that handles localStorage
     const response = NextResponse.redirect(`${baseUrl}/auth-callback?success=true`);
     
     // Clear the oauth state cookie
     response.cookies.delete("oauth_state");
     
-    // Set auth data in httpOnly cookies temporarily for the callback page to read
-    response.cookies.set("auth_token", token, {
-      httpOnly: false, // Allow JS to read it for localStorage transfer
+    // Set the MAIN auth cookie (same as login/register) for middleware
+    response.cookies.set("stayneos_auth_token", token, {
+      httpOnly: false,
       secure: true,
       sameSite: "lax",
-      maxAge: 300, // 5 minutes (just for transfer)
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: "/"
+    });
+    
+    // Set temp cookies for auth-callback page to transfer to localStorage
+    response.cookies.set("auth_token", token, {
+      httpOnly: false,
+      secure: true,
+      sameSite: "lax",
+      maxAge: 300,
       path: "/"
     });
     
     response.cookies.set("auth_user", JSON.stringify({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
+      id: user!.id,
+      name: user!.name,
+      email: user!.email,
+      role: user!.role,
     }), {
-      httpOnly: false, // Allow JS to read it for localStorage transfer
+      httpOnly: false,
       secure: true,
       sameSite: "lax",
-      maxAge: 300, // 5 minutes (just for transfer)
+      maxAge: 300,
       path: "/"
     });
     
