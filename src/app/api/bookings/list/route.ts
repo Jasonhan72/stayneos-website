@@ -9,23 +9,27 @@ export function generateStaticParams() {
   return [];
 }
 
-export async function GET(request: NextRequest) {
-  try {
-    const currentUser = getCurrentUserFromRequest(request);
+async function listBookings(request: NextRequest, statusFilter?: string) {
+  const currentUser = getCurrentUserFromRequest(request);
 
-    if (!currentUser?.email) {
-      return NextResponse.json({ error: "请先登录" }, { status: 401 });
-    }
+  if (!currentUser?.email) {
+    return NextResponse.json({ error: "请先登录" }, { status: 401 });
+  }
 
-    const db = getDb();
-    const user = await userDb.findByEmail(db, currentUser.email);
+  const db = getDb();
+  const user = await userDb.findByEmail(db, currentUser.email);
 
-    if (!user) {
-      return NextResponse.json({ error: "用户不存在" }, { status: 404 });
-    }
+  if (!user) {
+    return NextResponse.json({ error: "用户不存在" }, { status: 404 });
+  }
 
-    const bookings = await bookingDb.findByUserId(db, user.id);
-    const payload = bookings.map((booking) => {
+  const bookings = await bookingDb.findByUserId(db, user.id);
+  const payload = bookings
+    .filter((booking) => {
+      if (!statusFilter || statusFilter === "all") return true;
+      return booking.status === statusFilter;
+    })
+    .map((booking) => {
       const property = getPropertySnapshot(booking.propertyId);
 
       return {
@@ -47,10 +51,26 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    return NextResponse.json({ success: true, bookings: payload });
+  return NextResponse.json({ success: true, bookings: payload });
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const status = searchParams.get("status") || undefined;
+    return await listBookings(request, status);
   } catch (error) {
     console.error("Get bookings list error:", error);
     return NextResponse.json({ error: "获取预订列表失败" }, { status: 500 });
   }
 }
 
+export async function POST(request: NextRequest) {
+  try {
+    const body = (await request.json().catch(() => ({}))) as { status?: string };
+    return await listBookings(request, body.status);
+  } catch (error) {
+    console.error("Post bookings list error:", error);
+    return NextResponse.json({ error: "获取预订列表失败" }, { status: 500 });
+  }
+}

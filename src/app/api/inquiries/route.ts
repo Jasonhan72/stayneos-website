@@ -86,17 +86,23 @@ export async function POST(request: Request) {
     const body = (await request.json()) as {
       type?: InquiryType;
       payload?: Record<string, unknown>;
+      [key: string]: unknown;
     };
 
     if (!body.type || !VALID_TYPES.has(body.type)) {
       return NextResponse.json({ error: "Invalid inquiry type" }, { status: 400 });
     }
 
-    if (!body.payload || typeof body.payload !== "object") {
+    const normalizedPayload =
+      body.payload && typeof body.payload === "object"
+        ? body.payload
+        : (body as Record<string, unknown>);
+
+    if (!normalizedPayload || typeof normalizedPayload !== "object") {
       return NextResponse.json({ error: "Invalid inquiry payload" }, { status: 400 });
     }
 
-    const inquiry = buildInquiryRecord(body.type, body.payload);
+    const inquiry = buildInquiryRecord(body.type, normalizedPayload);
 
     if (!inquiry.email) {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
@@ -105,7 +111,7 @@ export async function POST(request: Request) {
     await inquiryDb.create(db, {
       type: body.type,
       ...inquiry,
-      metadata: body.payload,
+      metadata: normalizedPayload,
     });
 
     return NextResponse.json({ success: true }, { status: 201 });
