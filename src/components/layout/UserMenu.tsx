@@ -152,7 +152,7 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
       icon: Home,
     },
     {
-      label: "Manage Properties",
+      label: t("nav.manageProperties"),
       href: "/dashboard/properties",
       icon: Building2,
     },

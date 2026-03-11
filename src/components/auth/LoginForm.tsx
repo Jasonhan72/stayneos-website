@@ -146,7 +146,7 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="john@example.com"
+          placeholder={t('auth.emailPlaceholder', 'john@example.com')}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
         {errors.email && (
@@ -156,14 +156,14 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
 
       <div>
         <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-          Password
+          {t('auth.passwordLabel', 'Password')}
         </label>
         <input
           id="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter your password"
+          placeholder={t('auth.passwordPlaceholder', 'Enter your password')}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
         {errors.password && (

@@ -5,6 +5,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/context/UserContext";
 import { UserAvatar } from "@/components/ui/UserAvatar";
+import { useI18n } from "@/lib/i18n";
 import Button from "@/components/ui/Button";
 
 interface WelcomeBannerProps {
@@ -13,12 +14,13 @@ interface WelcomeBannerProps {
 
 export function WelcomeBanner({ className }: WelcomeBannerProps) {
   const { user, isAuthenticated, isLoading } = useAuth();
+  const { t } = useI18n();
 
   if (isLoading || !isAuthenticated || !user) {
     return null;
   }
 
-  const firstName = user.name?.split(" ").filter(n => n)[0] || user.email?.split("@")[0] || "there";
+  const firstName = user.name?.split(" ").filter(n => n)[0] || user.email?.split("@")[0] || t("common.there");
 
   return (
     <section 
@@ -49,13 +51,13 @@ export function WelcomeBanner({ className }: WelcomeBannerProps) {
             <div className="text-white">
               <div className="flex items-center gap-2 mb-1">
                 <Sparkles className="w-4 h-4 text-accent" />
-                <span className="text-sm text-white/80">欢迎回来</span>
+                <span className="text-sm text-white/80">{t("welcome.back", "Welcome back")}</span>
               </div>
               <h1 className="text-2xl md:text-3xl font-bold mb-2">
-                您好，{firstName}！
+                {t("welcome.greeting", { name: firstName })}
               </h1>
               <p className="text-white/80 text-sm md:text-base max-w-md">
-                Feel at home, free to roam
+                {t("welcome.tagline", "Feel at home, free to roam")}
                 <span className="hidden md:inline"> — 体验灵活的租住方式，找到属于您的理想居所</span>
               </p>
             </div>
@@ -69,7 +71,7 @@ export function WelcomeBanner({ className }: WelcomeBannerProps) {
                 size="lg"
                 className="border-white/30 text-white hover:bg-white/10 hover:border-white/50"
               >
-                个人中心
+                {t("welcome.dashboard", "Dashboard")}
               </Button>
             </Link>
             <Link href="/properties">
@@ -78,7 +80,7 @@ export function WelcomeBanner({ className }: WelcomeBannerProps) {
                 size="lg"
                 className="group"
               >
-                寻找您的新家
+                {t("welcome.findHome", "Find your new home")}
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
@@ -88,12 +90,12 @@ export function WelcomeBanner({ className }: WelcomeBannerProps) {
         {/* Quick Stats */}
         <div className="mt-8 pt-8 border-t border-white/10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-            <QuickStat label="进行中的预订" value="0" />
-            <QuickStat label="收藏的房源" value="0" />
-            <QuickStat label="历史订单" value="0" />
+            <QuickStat label={t("welcome.stats.activeBookings", "Active bookings")} value="0" />
+            <QuickStat label={t("welcome.stats.savedHomes", "Saved homes")} value="0" />
+            <QuickStat label={t("welcome.stats.pastStays", "Past stays")} value="0" />
             <QuickStat 
-              label="会员等级" 
-              value="普通会员" 
+              label={t("welcome.stats.membership", "Membership")} 
+              value={t("welcome.stats.standard", "Standard")} 
               highlight 
             />
           </div>

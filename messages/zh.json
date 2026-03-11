@@ -61,7 +61,8 @@
     "there": "您",
     "loading": "加载中...",
     "backToList": "返回房源列表",
-    "optional": "可选"
+    "optional": "可选",
+    "or": "或"
   },
   "greeting": {
     "morning": "早上好",
@@ -1729,7 +1730,7 @@
     "loginLeftTitle": "开启您的品质旅居",
     "loginLeftDesc": "登录即可管理预订、收藏心仪房源、享受会员专属优惠",
     "loginWelcome": "欢迎回到 StayNeos",
-    "emailPlaceholder": "邮箱地址",
+    "emailPlaceholder": "name@example.com",
     "passwordPlaceholder": "密码",
     "loginButton": "立即登录",
     "keepSignedIn": "保持登录状态",
@@ -1745,7 +1746,7 @@
     "namePlaceholder": "您的姓名",
     "workEmailPlaceholder": "工作邮箱（推荐）",
     "createPasswordPlaceholder": "设置密码（至少8位）",
-    "confirmPasswordPlaceholder": "确认密码",
+    "confirmPasswordPlaceholder": "请再次输入密码",
     "passwordWeak": "密码强度：弱",
     "passwordFair": "密码强度：中",
     "passwordStrong": "密码强度：强 ✓",
@@ -1772,7 +1773,15 @@
     "passwordsMismatch": "两次密码不一致",
     "registerFailed": "注册失败，请重试",
     "orRegisterWithEmail": "或使用邮箱注册",
-    "creatingAccount": "创建账户中..."
+    "creatingAccount": "创建账户中...",
+    "firstNameLabel": "名",
+    "firstNamePlaceholder": "张",
+    "lastNameLabel": "姓",
+    "lastNamePlaceholder": "三",
+    "passwordMinPlaceholder": "至少 6 个字符",
+    "confirmPasswordLabel": "确认密码",
+    "alreadyHaveAccount": "已有账号？",
+    "signIn": "登录"
   },
   "upcoming": {
     "title": "暂无即将入住的预订",
@@ -2143,7 +2152,20 @@
   "reviewsIntro": "💬 来自真实住客的入住体验",
   "checkInGuide": "入住指南",
   "flexibleCancellation": "灵活取消",
-  "welcome": "欢迎回来",
+  "welcome": {
+    "back": "欢迎回来",
+    "greeting": "你好，{name}！",
+    "tagline": "像在家一样自在，随心入住",
+    "dashboard": "个人中心",
+    "findHome": "寻找您的新家",
+    "stats": {
+      "activeBookings": "进行中的预订",
+      "savedHomes": "收藏的房源",
+      "pastStays": "历史订单",
+      "membership": "会员等级",
+      "standard": "普通会员"
+    }
+  },
   "memberSince": "会员自",
   "settings": "设置",
   "myBookings": "我的预订",
@@ -2765,5 +2787,248 @@
     "apartments": "公寓",
     "cities": "城市",
     "satisfaction": "满意度"
+  },
+  "neighborhoods": {
+    "categories": {
+      "all": "全部社区",
+      "business": "商务核心区",
+      "luxury": "高端居住",
+      "value": "高性价比"
+    },
+    "city": "多伦多",
+    "labels": {
+      "popularWith": "适合人群：",
+      "highlights": "亮点：",
+      "keyFeatures": "核心特色：",
+      "transportation": "交通：",
+      "averageMonthlyPricing": "月均租金：",
+      "studio": "开间",
+      "oneBedroom": "一居室",
+      "twoBedroom": "两居室"
+    },
+    "facts": {
+      "businessHours": {
+        "title": "办公时间",
+        "desc": "多数办公室营业时间为东部时间 9:00-17:00"
+      },
+      "airport": {
+        "title": "机场交通",
+        "desc": "乘 UP Express 到皮尔逊机场约 45-60 分钟"
+      },
+      "transit": {
+        "title": "公共交通",
+        "desc": "地铁、电车和公交网络覆盖广泛"
+      },
+      "culture": {
+        "title": "商务文化",
+        "desc": "专业且多元文化的环境"
+      }
+    },
+    "data": {
+      "downtown": {
+        "name": "多伦多市中心",
+        "tagline": "多伦多市中心生活方式",
+        "description": "在多伦多市中心发现高品质房源，交通便利，配套完善。",
+        "features": {
+          "1": "特色 1",
+          "2": "特色 2",
+          "3": "特色 3",
+          "4": "特色 4",
+          "5": "特色 5"
+        },
+        "transportation": {
+          "1": "交通方式 1",
+          "2": "交通方式 2",
+          "3": "交通方式 3",
+          "4": "交通方式 4"
+        },
+        "highlights": {
+          "1": "亮点 1",
+          "2": "亮点 2",
+          "3": "亮点 3",
+          "4": "亮点 4"
+        },
+        "popularWith": {
+          "1": "人群 1",
+          "2": "人群 2",
+          "3": "人群 3"
+        },
+        "pricing": {
+          "studio": "2800",
+          "oneBed": "3500",
+          "twoBed": "4800"
+        }
+      },
+      "yorkville": {
+        "name": "约克维尔",
+        "tagline": "约克维尔生活方式",
+        "description": "在约克维尔发现高品质房源，交通便利，配套完善。",
+        "features": {
+          "1": "特色 1",
+          "2": "特色 2",
+          "3": "特色 3",
+          "4": "特色 4",
+          "5": "特色 5"
+        },
+        "transportation": {
+          "1": "交通方式 1",
+          "2": "交通方式 2",
+          "3": "交通方式 3",
+          "4": "交通方式 4"
+        },
+        "highlights": {
+          "1": "亮点 1",
+          "2": "亮点 2",
+          "3": "亮点 3",
+          "4": "亮点 4"
+        },
+        "popularWith": {
+          "1": "人群 1",
+          "2": "人群 2",
+          "3": "人群 3"
+        },
+        "pricing": {
+          "studio": "3200",
+          "oneBed": "4200",
+          "twoBed": "6000"
+        }
+      },
+      "liberty-village": {
+        "name": "自由村",
+        "tagline": "自由村生活方式",
+        "description": "在自由村发现高品质房源，交通便利，配套完善。",
+        "features": {
+          "1": "特色 1",
+          "2": "特色 2",
+          "3": "特色 3",
+          "4": "特色 4",
+          "5": "特色 5"
+        },
+        "transportation": {
+          "1": "交通方式 1",
+          "2": "交通方式 2",
+          "3": "交通方式 3",
+          "4": "交通方式 4"
+        },
+        "highlights": {
+          "1": "亮点 1",
+          "2": "亮点 2",
+          "3": "亮点 3",
+          "4": "亮点 4"
+        },
+        "popularWith": {
+          "1": "人群 1",
+          "2": "人群 2",
+          "3": "人群 3"
+        },
+        "pricing": {
+          "studio": "2400",
+          "oneBed": "3000",
+          "twoBed": "4200"
+        }
+      },
+      "midtown": {
+        "name": "中城区",
+        "tagline": "中城区生活方式",
+        "description": "在中城区发现高品质房源，交通便利，配套完善。",
+        "features": {
+          "1": "特色 1",
+          "2": "特色 2",
+          "3": "特色 3",
+          "4": "特色 4",
+          "5": "特色 5"
+        },
+        "transportation": {
+          "1": "交通方式 1",
+          "2": "交通方式 2",
+          "3": "交通方式 3",
+          "4": "交通方式 4"
+        },
+        "highlights": {
+          "1": "亮点 1",
+          "2": "亮点 2",
+          "3": "亮点 3",
+          "4": "亮点 4"
+        },
+        "popularWith": {
+          "1": "人群 1",
+          "2": "人群 2",
+          "3": "人群 3"
+        },
+        "pricing": {
+          "studio": "2200",
+          "oneBed": "2800",
+          "twoBed": "3800"
+        }
+      },
+      "north-york": {
+        "name": "北约克",
+        "tagline": "北约克生活方式",
+        "description": "在北约克发现高品质房源，交通便利，配套完善。",
+        "features": {
+          "1": "特色 1",
+          "2": "特色 2",
+          "3": "特色 3",
+          "4": "特色 4",
+          "5": "特色 5"
+        },
+        "transportation": {
+          "1": "交通方式 1",
+          "2": "交通方式 2",
+          "3": "交通方式 3",
+          "4": "交通方式 4"
+        },
+        "highlights": {
+          "1": "亮点 1",
+          "2": "亮点 2",
+          "3": "亮点 3",
+          "4": "亮点 4"
+        },
+        "popularWith": {
+          "1": "人群 1",
+          "2": "人群 2",
+          "3": "人群 3"
+        },
+        "pricing": {
+          "studio": "1900",
+          "oneBed": "2400",
+          "twoBed": "3200"
+        }
+      },
+      "waterfront": {
+        "name": "湖滨区",
+        "tagline": "湖滨区生活方式",
+        "description": "在湖滨区发现高品质房源，交通便利，配套完善。",
+        "features": {
+          "1": "特色 1",
+          "2": "特色 2",
+          "3": "特色 3",
+          "4": "特色 4",
+          "5": "特色 5"
+        },
+        "transportation": {
+          "1": "交通方式 1",
+          "2": "交通方式 2",
+          "3": "交通方式 3",
+          "4": "交通方式 4"
+        },
+        "highlights": {
+          "1": "亮点 1",
+          "2": "亮点 2",
+          "3": "亮点 3",
+          "4": "亮点 4"
+        },
+        "popularWith": {
+          "1": "人群 1",
+          "2": "人群 2",
+          "3": "人群 3"
+        },
+        "pricing": {
+          "studio": "2900",
+          "oneBed": "3800",
+          "twoBed": "5200"
+        }
+      }
+    }
   }
 }

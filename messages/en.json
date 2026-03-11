@@ -61,7 +61,8 @@
     "there": "there",
     "loading": "Loading...",
     "backToList": "Back to property list",
-    "optional": "Optional"
+    "optional": "Optional",
+    "or": "or"
   },
   "greeting": {
     "morning": "Good morning",
@@ -1394,7 +1395,246 @@
     },
     "facts": {
       "title": "Toronto Quick Facts",
-      "subtitle": "Essential information for executive travelers and business professionals."
+      "subtitle": "Essential information for executive travelers and business professionals.",
+      "businessHours": {
+        "title": "Business Hours",
+        "desc": "Most offices operate 9 AM - 5 PM EST"
+      },
+      "airport": {
+        "title": "Airport Access",
+        "desc": "45-60 min to Pearson via UP Express"
+      },
+      "transit": {
+        "title": "Public Transit",
+        "desc": "Extensive subway, streetcar & bus network"
+      },
+      "culture": {
+        "title": "Business Culture",
+        "desc": "Professional, multicultural environment"
+      }
+    },
+    "categories": {
+      "all": "All Neighborhoods",
+      "business": "Business Districts",
+      "luxury": "Luxury Living",
+      "value": "Value Options"
+    },
+    "city": "Toronto",
+    "labels": {
+      "popularWith": "Popular with:",
+      "highlights": "Highlights:",
+      "keyFeatures": "Key Features:",
+      "transportation": "Transportation:",
+      "averageMonthlyPricing": "Average Monthly Pricing:",
+      "studio": "Studio",
+      "oneBedroom": "1 Bedroom",
+      "twoBedroom": "2 Bedroom"
+    },
+    "data": {
+      "downtown": {
+        "name": "Downtown Core",
+        "tagline": "Downtown Core living",
+        "description": "Discover premium stays in Downtown Core with great transit and amenities.",
+        "features": {
+          "1": "Feature 1",
+          "2": "Feature 2",
+          "3": "Feature 3",
+          "4": "Feature 4",
+          "5": "Feature 5"
+        },
+        "transportation": {
+          "1": "Transit option 1",
+          "2": "Transit option 2",
+          "3": "Transit option 3",
+          "4": "Transit option 4"
+        },
+        "highlights": {
+          "1": "Highlight 1",
+          "2": "Highlight 2",
+          "3": "Highlight 3",
+          "4": "Highlight 4"
+        },
+        "popularWith": {
+          "1": "Group 1",
+          "2": "Group 2",
+          "3": "Group 3"
+        },
+        "pricing": {
+          "studio": "2800",
+          "oneBed": "3500",
+          "twoBed": "4800"
+        }
+      },
+      "yorkville": {
+        "name": "Yorkville",
+        "tagline": "Yorkville living",
+        "description": "Discover premium stays in Yorkville with great transit and amenities.",
+        "features": {
+          "1": "Feature 1",
+          "2": "Feature 2",
+          "3": "Feature 3",
+          "4": "Feature 4",
+          "5": "Feature 5"
+        },
+        "transportation": {
+          "1": "Transit option 1",
+          "2": "Transit option 2",
+          "3": "Transit option 3",
+          "4": "Transit option 4"
+        },
+        "highlights": {
+          "1": "Highlight 1",
+          "2": "Highlight 2",
+          "3": "Highlight 3",
+          "4": "Highlight 4"
+        },
+        "popularWith": {
+          "1": "Group 1",
+          "2": "Group 2",
+          "3": "Group 3"
+        },
+        "pricing": {
+          "studio": "3200",
+          "oneBed": "4200",
+          "twoBed": "6000"
+        }
+      },
+      "liberty-village": {
+        "name": "Liberty Village",
+        "tagline": "Liberty Village living",
+        "description": "Discover premium stays in Liberty Village with great transit and amenities.",
+        "features": {
+          "1": "Feature 1",
+          "2": "Feature 2",
+          "3": "Feature 3",
+          "4": "Feature 4",
+          "5": "Feature 5"
+        },
+        "transportation": {
+          "1": "Transit option 1",
+          "2": "Transit option 2",
+          "3": "Transit option 3",
+          "4": "Transit option 4"
+        },
+        "highlights": {
+          "1": "Highlight 1",
+          "2": "Highlight 2",
+          "3": "Highlight 3",
+          "4": "Highlight 4"
+        },
+        "popularWith": {
+          "1": "Group 1",
+          "2": "Group 2",
+          "3": "Group 3"
+        },
+        "pricing": {
+          "studio": "2400",
+          "oneBed": "3000",
+          "twoBed": "4200"
+        }
+      },
+      "midtown": {
+        "name": "Midtown",
+        "tagline": "Midtown living",
+        "description": "Discover premium stays in Midtown with great transit and amenities.",
+        "features": {
+          "1": "Feature 1",
+          "2": "Feature 2",
+          "3": "Feature 3",
+          "4": "Feature 4",
+          "5": "Feature 5"
+        },
+        "transportation": {
+          "1": "Transit option 1",
+          "2": "Transit option 2",
+          "3": "Transit option 3",
+          "4": "Transit option 4"
+        },
+        "highlights": {
+          "1": "Highlight 1",
+          "2": "Highlight 2",
+          "3": "Highlight 3",
+          "4": "Highlight 4"
+        },
+        "popularWith": {
+          "1": "Group 1",
+          "2": "Group 2",
+          "3": "Group 3"
+        },
+        "pricing": {
+          "studio": "2200",
+          "oneBed": "2800",
+          "twoBed": "3800"
+        }
+      },
+      "north-york": {
+        "name": "North York",
+        "tagline": "North York living",
+        "description": "Discover premium stays in North York with great transit and amenities.",
+        "features": {
+          "1": "Feature 1",
+          "2": "Feature 2",
+          "3": "Feature 3",
+          "4": "Feature 4",
+          "5": "Feature 5"
+        },
+        "transportation": {
+          "1": "Transit option 1",
+          "2": "Transit option 2",
+          "3": "Transit option 3",
+          "4": "Transit option 4"
+        },
+        "highlights": {
+          "1": "Highlight 1",
+          "2": "Highlight 2",
+          "3": "Highlight 3",
+          "4": "Highlight 4"
+        },
+        "popularWith": {
+          "1": "Group 1",
+          "2": "Group 2",
+          "3": "Group 3"
+        },
+        "pricing": {
+          "studio": "1900",
+          "oneBed": "2400",
+          "twoBed": "3200"
+        }
+      },
+      "waterfront": {
+        "name": "Waterfront",
+        "tagline": "Waterfront living",
+        "description": "Discover premium stays in Waterfront with great transit and amenities.",
+        "features": {
+          "1": "Feature 1",
+          "2": "Feature 2",
+          "3": "Feature 3",
+          "4": "Feature 4",
+          "5": "Feature 5"
+        },
+        "transportation": {
+          "1": "Transit option 1",
+          "2": "Transit option 2",
+          "3": "Transit option 3",
+          "4": "Transit option 4"
+        },
+        "highlights": {
+          "1": "Highlight 1",
+          "2": "Highlight 2",
+          "3": "Highlight 3",
+          "4": "Highlight 4"
+        },
+        "popularWith": {
+          "1": "Group 1",
+          "2": "Group 2",
+          "3": "Group 3"
+        },
+        "pricing": {
+          "studio": "2900",
+          "oneBed": "3800",
+          "twoBed": "5200"
+        }
+      }
     }
   },
   "students": {
@@ -2060,7 +2300,7 @@
     "loginLeftTitle": "Welcome Back",
     "loginLeftDesc": "Sign in to manage bookings, save favorites, and unlock member-exclusive perks",
     "loginWelcome": "Welcome Back",
-    "emailPlaceholder": "Email Address",
+    "emailPlaceholder": "john@example.com",
     "passwordPlaceholder": "Password",
     "loginButton": "Sign In",
     "keepSignedIn": "Keep me signed in",
@@ -2076,7 +2316,7 @@
     "namePlaceholder": "Full Name",
     "workEmailPlaceholder": "Work Email (recommended)",
     "createPasswordPlaceholder": "Create password (8+ characters)",
-    "confirmPasswordPlaceholder": "Confirm password",
+    "confirmPasswordPlaceholder": "Confirm your password",
     "passwordWeak": "Weak password",
     "passwordFair": "Fair password",
     "passwordStrong": "Strong password ✓",
@@ -2103,7 +2343,15 @@
     "passwordsMismatch": "Passwords do not match",
     "registerFailed": "Registration failed. Please try again.",
     "orRegisterWithEmail": "Or register with email",
-    "creatingAccount": "Creating Account..."
+    "creatingAccount": "Creating Account...",
+    "firstNameLabel": "First Name",
+    "firstNamePlaceholder": "John",
+    "lastNameLabel": "Last Name",
+    "lastNamePlaceholder": "Doe",
+    "passwordMinPlaceholder": "At least 6 characters",
+    "confirmPasswordLabel": "Confirm Password",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in"
   },
   "upcoming": {
     "title": "No upcoming bookings",
@@ -2474,7 +2722,20 @@
   "reviewsIntro": "💬 Real experiences from recent guests",
   "checkInGuide": "Check-in Guide",
   "flexibleCancellation": "Flexible Cancellation",
-  "welcome": "Welcome back",
+  "welcome": {
+    "back": "Welcome back",
+    "greeting": "Hi, {name}!",
+    "tagline": "Feel at home, free to roam",
+    "dashboard": "Dashboard",
+    "findHome": "Find your new home",
+    "stats": {
+      "activeBookings": "Active bookings",
+      "savedHomes": "Saved homes",
+      "pastStays": "Past stays",
+      "membership": "Membership",
+      "standard": "Standard"
+    }
+  },
   "memberSince": "Member since",
   "settings": "Settings",
   "myBookings": "My Bookings",

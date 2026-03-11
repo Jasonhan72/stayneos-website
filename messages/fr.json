@@ -61,7 +61,8 @@
     "there": "là",
     "loading": "Chargement...",
     "backToList": "Retour à la liste",
-    "optional": "Optionnel"
+    "optional": "Optionnel",
+    "or": "ou"
   },
   "greeting": {
     "morning": "Bonjour",
@@ -1619,7 +1620,7 @@
     "loginLeftTitle": "Bienvenue",
     "loginLeftDesc": "Connectez-vous pour gérer vos réservations, sauvegarder vos favoris et débloquer des avantages exclusifs",
     "loginWelcome": "Bon Retour",
-    "emailPlaceholder": "Adresse Email",
+    "emailPlaceholder": "jean@example.com",
     "passwordPlaceholder": "Mot de Passe",
     "loginButton": "Se Connecter",
     "keepSignedIn": "Rester connecté",
@@ -1635,7 +1636,7 @@
     "namePlaceholder": "Nom Complet",
     "workEmailPlaceholder": "Email Professionnel (recommandé)",
     "createPasswordPlaceholder": "Créer un mot de passe (8+ caractères)",
-    "confirmPasswordPlaceholder": "Confirmer le mot de passe",
+    "confirmPasswordPlaceholder": "Confirmez votre mot de passe",
     "passwordWeak": "Mot de passe faible",
     "passwordFair": "Mot de passe moyen",
     "passwordStrong": "Mot de passe fort ✓",
@@ -1662,7 +1663,15 @@
     "passwordsMismatch": "Les mots de passe ne correspondent pas",
     "registerFailed": "Échec de l'inscription",
     "orRegisterWithEmail": "Ou inscrivez-vous par email",
-    "creatingAccount": "Création du compte..."
+    "creatingAccount": "Création du compte...",
+    "firstNameLabel": "Prénom",
+    "firstNamePlaceholder": "Jean",
+    "lastNameLabel": "Nom",
+    "lastNamePlaceholder": "Dupont",
+    "passwordMinPlaceholder": "Au moins 6 caractères",
+    "confirmPasswordLabel": "Confirmer le mot de passe",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "signIn": "Se connecter"
   },
   "upcoming": {
     "title": "Aucune réservation à venir",
@@ -2033,7 +2042,20 @@
   "reviewsIntro": "💬 Expériences authentiques de nos hôtes",
   "checkInGuide": "Guide d'Arrivée",
   "flexibleCancellation": "Annulation Flexible",
-  "welcome": "Bon retour",
+  "welcome": {
+    "back": "Bon retour",
+    "greeting": "Bonjour, {name} !",
+    "tagline": "Comme à la maison, en toute liberté",
+    "dashboard": "Tableau de bord",
+    "findHome": "Trouvez votre nouveau chez-vous",
+    "stats": {
+      "activeBookings": "Réservations actives",
+      "savedHomes": "Logements sauvegardés",
+      "pastStays": "Séjours passés",
+      "membership": "Adhésion",
+      "standard": "Standard"
+    }
+  },
   "memberSince": "Membre depuis",
   "settings": "Paramètres",
   "myBookings": "Mes Réservations",
@@ -2764,6 +2786,249 @@
       "successTitle": "Candidature Soumise !",
       "successMessage": "Merci pour votre intérêt. Notre équipe examinera votre candidature et vous contactera sous 24 heures.",
       "submitAnother": "Soumettre une autre candidature"
+    }
+  },
+  "neighborhoods": {
+    "categories": {
+      "all": "Tous les quartiers",
+      "business": "Quartiers d'affaires",
+      "luxury": "Vie de luxe",
+      "value": "Bon rapport qualité-prix"
+    },
+    "city": "Toronto",
+    "labels": {
+      "popularWith": "Populaire auprès de :",
+      "highlights": "Points forts :",
+      "keyFeatures": "Caractéristiques clés :",
+      "transportation": "Transport :",
+      "averageMonthlyPricing": "Prix mensuel moyen :",
+      "studio": "Studio",
+      "oneBedroom": "1 chambre",
+      "twoBedroom": "2 chambres"
+    },
+    "facts": {
+      "businessHours": {
+        "title": "Heures de bureau",
+        "desc": "La plupart des bureaux sont ouverts de 9h à 17h (HE)"
+      },
+      "airport": {
+        "title": "Accès à l'aéroport",
+        "desc": "45 à 60 min jusqu'à Pearson via UP Express"
+      },
+      "transit": {
+        "title": "Transports en commun",
+        "desc": "Réseau étendu de métro, tramway et bus"
+      },
+      "culture": {
+        "title": "Culture d'affaires",
+        "desc": "Environnement professionnel et multiculturel"
+      }
+    },
+    "data": {
+      "downtown": {
+        "name": "Centre-ville",
+        "tagline": "Vivre à Centre-ville",
+        "description": "Découvrez des logements premium à Centre-ville, avec transport pratique et excellents services.",
+        "features": {
+          "1": "Caractéristique 1",
+          "2": "Caractéristique 2",
+          "3": "Caractéristique 3",
+          "4": "Caractéristique 4",
+          "5": "Caractéristique 5"
+        },
+        "transportation": {
+          "1": "Option de transport 1",
+          "2": "Option de transport 2",
+          "3": "Option de transport 3",
+          "4": "Option de transport 4"
+        },
+        "highlights": {
+          "1": "Point fort 1",
+          "2": "Point fort 2",
+          "3": "Point fort 3",
+          "4": "Point fort 4"
+        },
+        "popularWith": {
+          "1": "Groupe 1",
+          "2": "Groupe 2",
+          "3": "Groupe 3"
+        },
+        "pricing": {
+          "studio": "2800",
+          "oneBed": "3500",
+          "twoBed": "4800"
+        }
+      },
+      "yorkville": {
+        "name": "Yorkville",
+        "tagline": "Vivre à Yorkville",
+        "description": "Découvrez des logements premium à Yorkville, avec transport pratique et excellents services.",
+        "features": {
+          "1": "Caractéristique 1",
+          "2": "Caractéristique 2",
+          "3": "Caractéristique 3",
+          "4": "Caractéristique 4",
+          "5": "Caractéristique 5"
+        },
+        "transportation": {
+          "1": "Option de transport 1",
+          "2": "Option de transport 2",
+          "3": "Option de transport 3",
+          "4": "Option de transport 4"
+        },
+        "highlights": {
+          "1": "Point fort 1",
+          "2": "Point fort 2",
+          "3": "Point fort 3",
+          "4": "Point fort 4"
+        },
+        "popularWith": {
+          "1": "Groupe 1",
+          "2": "Groupe 2",
+          "3": "Groupe 3"
+        },
+        "pricing": {
+          "studio": "3200",
+          "oneBed": "4200",
+          "twoBed": "6000"
+        }
+      },
+      "liberty-village": {
+        "name": "Liberty Village",
+        "tagline": "Vivre à Liberty Village",
+        "description": "Découvrez des logements premium à Liberty Village, avec transport pratique et excellents services.",
+        "features": {
+          "1": "Caractéristique 1",
+          "2": "Caractéristique 2",
+          "3": "Caractéristique 3",
+          "4": "Caractéristique 4",
+          "5": "Caractéristique 5"
+        },
+        "transportation": {
+          "1": "Option de transport 1",
+          "2": "Option de transport 2",
+          "3": "Option de transport 3",
+          "4": "Option de transport 4"
+        },
+        "highlights": {
+          "1": "Point fort 1",
+          "2": "Point fort 2",
+          "3": "Point fort 3",
+          "4": "Point fort 4"
+        },
+        "popularWith": {
+          "1": "Groupe 1",
+          "2": "Groupe 2",
+          "3": "Groupe 3"
+        },
+        "pricing": {
+          "studio": "2400",
+          "oneBed": "3000",
+          "twoBed": "4200"
+        }
+      },
+      "midtown": {
+        "name": "Midtown",
+        "tagline": "Vivre à Midtown",
+        "description": "Découvrez des logements premium à Midtown, avec transport pratique et excellents services.",
+        "features": {
+          "1": "Caractéristique 1",
+          "2": "Caractéristique 2",
+          "3": "Caractéristique 3",
+          "4": "Caractéristique 4",
+          "5": "Caractéristique 5"
+        },
+        "transportation": {
+          "1": "Option de transport 1",
+          "2": "Option de transport 2",
+          "3": "Option de transport 3",
+          "4": "Option de transport 4"
+        },
+        "highlights": {
+          "1": "Point fort 1",
+          "2": "Point fort 2",
+          "3": "Point fort 3",
+          "4": "Point fort 4"
+        },
+        "popularWith": {
+          "1": "Groupe 1",
+          "2": "Groupe 2",
+          "3": "Groupe 3"
+        },
+        "pricing": {
+          "studio": "2200",
+          "oneBed": "2800",
+          "twoBed": "3800"
+        }
+      },
+      "north-york": {
+        "name": "North York",
+        "tagline": "Vivre à North York",
+        "description": "Découvrez des logements premium à North York, avec transport pratique et excellents services.",
+        "features": {
+          "1": "Caractéristique 1",
+          "2": "Caractéristique 2",
+          "3": "Caractéristique 3",
+          "4": "Caractéristique 4",
+          "5": "Caractéristique 5"
+        },
+        "transportation": {
+          "1": "Option de transport 1",
+          "2": "Option de transport 2",
+          "3": "Option de transport 3",
+          "4": "Option de transport 4"
+        },
+        "highlights": {
+          "1": "Point fort 1",
+          "2": "Point fort 2",
+          "3": "Point fort 3",
+          "4": "Point fort 4"
+        },
+        "popularWith": {
+          "1": "Groupe 1",
+          "2": "Groupe 2",
+          "3": "Groupe 3"
+        },
+        "pricing": {
+          "studio": "1900",
+          "oneBed": "2400",
+          "twoBed": "3200"
+        }
+      },
+      "waterfront": {
+        "name": "Front de lac",
+        "tagline": "Vivre à Front de lac",
+        "description": "Découvrez des logements premium à Front de lac, avec transport pratique et excellents services.",
+        "features": {
+          "1": "Caractéristique 1",
+          "2": "Caractéristique 2",
+          "3": "Caractéristique 3",
+          "4": "Caractéristique 4",
+          "5": "Caractéristique 5"
+        },
+        "transportation": {
+          "1": "Option de transport 1",
+          "2": "Option de transport 2",
+          "3": "Option de transport 3",
+          "4": "Option de transport 4"
+        },
+        "highlights": {
+          "1": "Point fort 1",
+          "2": "Point fort 2",
+          "3": "Point fort 3",
+          "4": "Point fort 4"
+        },
+        "popularWith": {
+          "1": "Groupe 1",
+          "2": "Groupe 2",
+          "3": "Groupe 3"
+        },
+        "pricing": {
+          "studio": "2900",
+          "oneBed": "3800",
+          "twoBed": "5200"
+        }
+      }
     }
   }
 }

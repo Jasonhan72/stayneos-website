@@ -26,7 +26,7 @@ export function LanguageCurrencySelector({ variant = "light" }: LanguageCurrency
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0]);
   const menuRef = useRef<HTMLDivElement>(null);
-  const { locale, setLocale } = useI18n();
+  const { locale, setLocale, t } = useI18n();
   
   // Get current language based on i18n locale
   const selectedLang = languages.find(lang => lang.locale === locale) || languages[0];
@@ -81,7 +81,7 @@ export function LanguageCurrencySelector({ variant = "light" }: LanguageCurrency
         {/* Language Section */}
         <div className="px-4 py-3 border-b border-neutral-100">
           <p className="text-xs font-medium text-neutral-400 uppercase tracking-wider mb-2">
-            Language
+            {t("language.title")}
           </p>
           <div className="space-y-1">
             {languages.map((lang) => (
@@ -107,7 +107,7 @@ export function LanguageCurrencySelector({ variant = "light" }: LanguageCurrency
         {/* Currency Section */}
         <div className="px-4 py-3">
           <p className="text-xs font-medium text-neutral-400 uppercase tracking-wider mb-2">
-            Currency
+            {t("currency.title")}
           </p>
           <div className="grid grid-cols-2 gap-1">
             {currencies.map((curr) => (

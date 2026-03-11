@@ -155,14 +155,14 @@ export function RegisterForm() {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
-            First Name
+            {t('auth.firstNameLabel', 'First Name')}
           </label>
           <input
             id="firstName"
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            placeholder="John"
+            placeholder={t('auth.firstNamePlaceholder', 'John')}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
           {errors.firstName && (
@@ -171,14 +171,14 @@ export function RegisterForm() {
         </div>
         <div>
           <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
-            Last Name
+            {t('auth.lastNameLabel', 'Last Name')}
           </label>
           <input
             id="lastName"
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            placeholder="Doe"
+            placeholder={t('auth.lastNamePlaceholder', 'Doe')}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
           {errors.lastName && (
@@ -189,14 +189,14 @@ export function RegisterForm() {
 
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-          Email Address
+          {t('auth.emailLabel', 'Email Address')}
         </label>
         <input
           id="email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="john@example.com"
+          placeholder={t('auth.emailPlaceholder', 'john@example.com')}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
         {errors.email && (
@@ -206,14 +206,14 @@ export function RegisterForm() {
 
       <div>
         <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-          Password
+          {t('auth.passwordLabel', 'Password')}
         </label>
         <input
           id="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="At least 6 characters"
+          placeholder={t('auth.passwordMinPlaceholder', 'At least 6 characters')}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
         {errors.password && (
@@ -223,14 +223,14 @@ export function RegisterForm() {
 
       <div>
         <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-          Confirm Password
+          {t('auth.confirmPasswordLabel', 'Confirm Password')}
         </label>
         <input
           id="confirmPassword"
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          placeholder="Confirm your password"
+          placeholder={t('auth.confirmPasswordPlaceholder', 'Confirm your password')}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
         {errors.confirmPassword && (
@@ -257,9 +257,9 @@ export function RegisterForm() {
       {/* Login Link */}
       <div className="text-center">
         <p className="text-sm text-gray-600">
-          Already have an account?{' '}
+          {t('auth.alreadyHaveAccount', 'Already have an account?')}{' '}
           <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
-            Sign in
+            {t('auth.signIn', 'Sign in')}
           </Link>
         </p>
       </div>
