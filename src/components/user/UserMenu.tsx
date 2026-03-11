@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useI18n } from '@/lib/i18n';
 import { useUser } from '@/lib/context/UserContext';
 import { cn } from '@/lib/utils';
 import {
@@ -24,6 +25,7 @@ interface UserMenuProps {
 }
 
 export default function UserMenu({ variant = 'light', isScrolled = false }: UserMenuProps) {
+  const { t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const { user, logout, isAuthenticated } = useUser();
@@ -62,10 +64,10 @@ export default function UserMenu({ variant = 'light', isScrolled = false }: User
 
   // Menu items
   const mainMenuItems = [
-    { icon: Calendar, label: 'My Bookings', href: '/dashboard/bookings' },
+    { icon: Calendar, label: t('nav.myBookings'), href: '/dashboard/bookings' },
     { icon: User, label: 'Personal Details', href: '/profile' },
     { icon: Settings, label: 'Preferences', href: '/profile/preferences' },
-    { icon: Heart, label: 'Wishlists', href: '/wishlists' },
+    { icon: Heart, label: t('nav.wishlists'), href: '/wishlists' },
     { icon: Globe, label: 'Language / Currency', href: '/profile/preferences' },
   ];
 
@@ -229,7 +231,7 @@ export default function UserMenu({ variant = 'light', isScrolled = false }: User
             className="flex items-center gap-3 px-4 py-2.5 w-full text-red-600 hover:bg-red-50 transition-colors"
           >
             <LogOut size={18} />
-            <span className="text-sm font-medium">Log out</span>
+            <span className="text-sm font-medium">{t('nav.logout')}</span>
           </button>
         </div>
       </div>

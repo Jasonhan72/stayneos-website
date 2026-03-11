@@ -31,7 +31,9 @@
     "hosts": "Hôtes",
     "longTerm": "Location longue durée",
     "marketInsights": "Aperçu du marché",
-    "students": "Logement étudiant"
+    "students": "Logement étudiant",
+    "profile": "Profil",
+    "myBookings": "Mes réservations"
   },
   "common": {
     "view": "Voir",
@@ -1642,7 +1644,25 @@
     "haveAccount": "Déjà membre ?",
     "signInNow": "Connectez-vous",
     "registerSuccessTitle": "🎉 Bienvenue chez StayNeos !",
-    "registerSuccessDesc": "Veuillez vérifier votre email pour activer votre compte"
+    "registerSuccessDesc": "Veuillez vérifier votre email pour activer votre compte",
+    "emailRequired": "Email requis",
+    "invalidEmail": "Email invalide",
+    "passwordRequired": "Mot de passe requis",
+    "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères",
+    "loginFailed": "Échec de la connexion",
+    "continueWithGoogle": "Continuer avec Google",
+    "facebookComingSoon": "Continuer avec Facebook (Bientôt)",
+    "orSignInWithEmail": "Ou connectez-vous par email",
+    "emailLabel": "Adresse email",
+    "passwordLabel": "Mot de passe",
+    "signingIn": "Connexion...",
+    "firstNameRequired": "Prénom requis",
+    "lastNameRequired": "Nom requis",
+    "confirmPasswordRequired": "Veuillez confirmer le mot de passe",
+    "passwordsMismatch": "Les mots de passe ne correspondent pas",
+    "registerFailed": "Échec de l'inscription",
+    "orRegisterWithEmail": "Ou inscrivez-vous par email",
+    "creatingAccount": "Création du compte..."
   },
   "upcoming": {
     "title": "Aucune réservation à venir",

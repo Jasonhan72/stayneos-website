@@ -31,7 +31,9 @@
     "hosts": "房东合作",
     "longTerm": "长期租赁",
     "marketInsights": "市场洞察",
-    "students": "学生住房"
+    "students": "学生住房",
+    "profile": "个人资料",
+    "myBookings": "我的预订"
   },
   "common": {
     "view": "查看",
@@ -1752,7 +1754,25 @@
     "haveAccount": "已有账户？",
     "signInNow": "立即登录",
     "registerSuccessTitle": "🎉 欢迎加入 StayNeos！",
-    "registerSuccessDesc": "验证邮件已发送，请查收并激活您的账户"
+    "registerSuccessDesc": "验证邮件已发送，请查收并激活您的账户",
+    "emailRequired": "请输入邮箱",
+    "invalidEmail": "请输入有效的邮箱地址",
+    "passwordRequired": "请输入密码",
+    "passwordTooShort": "密码至少需要6位",
+    "loginFailed": "登录失败，请重试",
+    "continueWithGoogle": "使用 Google 登录",
+    "facebookComingSoon": "使用 Facebook 登录（即将推出）",
+    "orSignInWithEmail": "或使用邮箱登录",
+    "emailLabel": "邮箱地址",
+    "passwordLabel": "密码",
+    "signingIn": "登录中...",
+    "firstNameRequired": "请输入名字",
+    "lastNameRequired": "请输入姓氏",
+    "confirmPasswordRequired": "请确认密码",
+    "passwordsMismatch": "两次密码不一致",
+    "registerFailed": "注册失败，请重试",
+    "orRegisterWithEmail": "或使用邮箱注册",
+    "creatingAccount": "创建账户中..."
   },
   "upcoming": {
     "title": "暂无即将入住的预订",

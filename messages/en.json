@@ -31,7 +31,9 @@
     "listProperty": "List your property",
     "manageProperties": "Manage Properties",
     "dashboard": "Dashboard",
-    "partnerWithUs": "Partner With Us"
+    "partnerWithUs": "Partner With Us",
+    "profile": "Profile",
+    "myBookings": "My Bookings"
   },
   "common": {
     "view": "View",
@@ -2083,7 +2085,25 @@
     "haveAccount": "Already a member?",
     "signInNow": "Sign in",
     "registerSuccessTitle": "🎉 Welcome to StayNeos!",
-    "registerSuccessDesc": "Please check your email to verify your account"
+    "registerSuccessDesc": "Please check your email to verify your account",
+    "emailRequired": "Email is required",
+    "invalidEmail": "Please enter a valid email",
+    "passwordRequired": "Password is required",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "loginFailed": "Login failed. Please try again.",
+    "continueWithGoogle": "Continue with Google",
+    "facebookComingSoon": "Continue with Facebook (Coming Soon)",
+    "orSignInWithEmail": "Or sign in with email",
+    "emailLabel": "Email Address",
+    "passwordLabel": "Password",
+    "signingIn": "Signing in...",
+    "firstNameRequired": "First name is required",
+    "lastNameRequired": "Last name is required",
+    "confirmPasswordRequired": "Please confirm your password",
+    "passwordsMismatch": "Passwords do not match",
+    "registerFailed": "Registration failed. Please try again.",
+    "orRegisterWithEmail": "Or register with email",
+    "creatingAccount": "Creating Account..."
   },
   "upcoming": {
     "title": "No upcoming bookings",

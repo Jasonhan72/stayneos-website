@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useI18n } from "@/lib/i18n";
 import { 
   User, 
   Home, 
@@ -20,6 +21,7 @@ interface UserMenuProps {
 }
 
 export function UserMenu({ variant = "light" }: UserMenuProps) {
+  const { t } = useI18n();
   const { user, logout, isLoading } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -119,7 +121,7 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
                 "hover:bg-neutral-50 hover:text-primary transition-colors duration-150"
               )}
             >
-              Sign up
+              {t('nav.signup')}
             </Link>
             <Link
               href="/login"
@@ -129,7 +131,7 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
                 "hover:bg-neutral-50 hover:text-primary transition-colors duration-150"
               )}
             >
-              Log in
+              {t('nav.login')}
             </Link>
           </div>
         </div>
@@ -140,12 +142,12 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
   // Logged in state - Blueground style menu
   const menuItems = [
     {
-      label: "Dashboard",
+      label: t("nav.dashboard"),
       href: "/dashboard",
       icon: LayoutDashboard,
     },
     {
-      label: "Bookings",
+      label: t("nav.bookings"),
       href: "/dashboard/bookings",
       icon: Home,
     },
@@ -155,12 +157,12 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
       icon: Building2,
     },
     {
-      label: "Wishlists",
+      label: t("nav.wishlists"),
       href: "/wishlists",
       icon: Heart,
     },
     {
-      label: "Profile",
+      label: t("nav.profile"),
       href: "/profile",
       icon: User,
     },
@@ -267,7 +269,7 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
               "hover:bg-red-50 transition-colors duration-150"
             )}
           >
-            Log out
+            {t('nav.logout')}
           </button>
         </div>
       </div>

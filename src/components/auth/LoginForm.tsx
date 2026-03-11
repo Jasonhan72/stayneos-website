@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useI18n } from '@/lib/i18n';
 
 interface LoginFormProps {
   callbackUrl?: string;
@@ -12,6 +13,7 @@ const TOKEN_KEY = 'stayneos_auth_token';
 const USER_KEY = 'stayneos_user_data';
 
 export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
+  const { t } = useI18n();
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,15 +24,15 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
     const newErrors: Record<string, string> = {};
 
     if (!email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = t('auth.emailRequired', 'Email is required');
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = t('auth.invalidEmail', 'Please enter a valid email');
     }
 
     if (!password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = t('auth.passwordRequired', 'Password is required');
     } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = t('auth.passwordTooShort', 'Password must be at least 6 characters');
     }
 
     setErrors(newErrors);
@@ -78,7 +80,7 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
     } catch (error) {
       console.error('Login error:', error);
       setErrors({
-        submit: error instanceof Error ? error.message : 'Login failed. Please try again.'
+        submit: error instanceof Error ? error.message : t('auth.loginFailed', 'Login failed')
       });
     } finally {
       setIsLoading(false);
@@ -91,7 +93,7 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
 
   const handleFacebookLogin = () => {
     // Facebook login not implemented yet
-    setErrors({ submit: 'Facebook login coming soon!' });
+    setErrors({ submit: t('auth.facebookComingSoon', 'Facebook login coming soon!') });
   };
 
   return (
@@ -110,7 +112,7 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
           </svg>
-          Continue with Google
+          {t('auth.continueWithGoogle', 'Continue with Google')}
         </button>
         <button
           type="button"
@@ -121,7 +123,7 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
           <svg className="w-5 h-5 mr-2" fill="#1877F2" viewBox="0 0 24 24">
             <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
           </svg>
-          Continue with Facebook (Coming Soon)
+          {t('auth.facebookComingSoon', 'Continue with Facebook (Coming Soon)')}
         </button>
       </div>
 
@@ -130,14 +132,14 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
           <div className="w-full border-t border-gray-300" />
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-500">Or sign in with email</span>
+          <span className="px-2 bg-white text-gray-500">{t('auth.orSignInWithEmail', 'Or sign in with email')}</span>
         </div>
       </div>
 
       {/* Form Fields */}
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-          Email Address
+          {t('auth.emailLabel', 'Email Address')}
         </label>
         <input
           id="email"
@@ -182,15 +184,15 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
         disabled={isLoading}
         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
-        {isLoading ? 'Signing in...' : 'Sign In'}
+        {isLoading ? t('auth.signingIn', 'Signing in...') : t('auth.loginButton', 'Sign In')}
       </button>
 
       {/* Register Link */}
       <div className="text-center">
         <p className="text-sm text-gray-600">
-          Don&apos;t have an account?{' '}
+          {t('auth.noAccount', "Don't have an account?")}{' '}
           <Link href="/register" className="font-medium text-blue-600 hover:text-blue-500">
-            Create account
+            {t('nav.signup', 'Create account')}
           </Link>
         </p>
       </div>
@@ -198,7 +200,7 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
       {/* Forgot Password Link */}
       <div className="text-center">
         <Link href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-500">
-          Forgot your password?
+          {t('auth.forgotPassword', 'Forgot your password?')}
         </Link>
       </div>
     </form>

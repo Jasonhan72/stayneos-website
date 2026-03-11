@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useI18n } from '@/lib/i18n';
 
 const TOKEN_KEY = 'stayneos_auth_token';
 const USER_KEY = 'stayneos_user_data';
 
 export function RegisterForm() {
+  const { t } = useI18n();
   const router = useRouter();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -21,29 +23,29 @@ export function RegisterForm() {
     const newErrors: Record<string, string> = {};
 
     if (!firstName.trim()) {
-      newErrors.firstName = 'First name is required';
+      newErrors.firstName = t('auth.firstNameRequired', 'First name is required');
     }
 
     if (!lastName.trim()) {
-      newErrors.lastName = 'Last name is required';
+      newErrors.lastName = t('auth.lastNameRequired', 'Last name is required');
     }
 
     if (!email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = t('auth.emailRequired', 'Email is required');
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = t('auth.invalidEmail', 'Please enter a valid email');
     }
 
     if (!password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = t('auth.passwordRequired', 'Password is required');
     } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = t('auth.passwordTooShort', 'Password must be at least 6 characters');
     }
 
     if (!confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
+      newErrors.confirmPassword = t('auth.confirmPasswordRequired', 'Please confirm your password');
     } else if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = t('auth.passwordsMismatch', 'Passwords do not match');
     }
 
     setErrors(newErrors);
@@ -93,7 +95,7 @@ export function RegisterForm() {
     } catch (error) {
       console.error('Registration error:', error);
       setErrors({
-        submit: error instanceof Error ? error.message : 'Registration failed. Please try again.'
+        submit: error instanceof Error ? error.message : t('auth.registerFailed', 'Registration failed')
       });
     } finally {
       setIsLoading(false);
@@ -106,7 +108,7 @@ export function RegisterForm() {
 
   const handleFacebookLogin = () => {
     // Facebook login not implemented yet
-    setErrors({ submit: 'Facebook login coming soon!' });
+    setErrors({ submit: t('auth.facebookComingSoon', 'Facebook login coming soon!') });
   };
 
   return (
@@ -125,7 +127,7 @@ export function RegisterForm() {
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
           </svg>
-          Continue with Google
+          {t('auth.continueWithGoogle', 'Continue with Google')}
         </button>
         <button
           type="button"
@@ -136,7 +138,7 @@ export function RegisterForm() {
           <svg className="w-5 h-5 mr-2" fill="#1877F2" viewBox="0 0 24 24">
             <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
           </svg>
-          Continue with Facebook (Coming Soon)
+          {t('auth.facebookComingSoon', 'Continue with Facebook (Coming Soon)')}
         </button>
       </div>
 
@@ -145,7 +147,7 @@ export function RegisterForm() {
           <div className="w-full border-t border-gray-300" />
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-500">Or register with email</span>
+          <span className="px-2 bg-white text-gray-500">{t('auth.orRegisterWithEmail', 'Or register with email')}</span>
         </div>
       </div>
 
@@ -249,7 +251,7 @@ export function RegisterForm() {
         disabled={isLoading}
         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
-        {isLoading ? 'Creating Account...' : 'Create Account'}
+        {isLoading ? t('auth.creatingAccount', 'Creating Account...') : t('auth.registerButton', 'Create Account')}
       </button>
 
       {/* Login Link */}
