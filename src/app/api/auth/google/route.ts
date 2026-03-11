@@ -33,8 +33,8 @@ export async function GET() {
     googleOAuthUrl.searchParams.set("state", state);
     
     return NextResponse.redirect(googleOAuthUrl.toString());
-  } catch (error) {
-    console.error("Google OAuth error:", error);
+  } catch {
+    console.error("Google OAuth error");
     return NextResponse.json(
       { message: "OAuth initialization failed" },
       { status: 500 }

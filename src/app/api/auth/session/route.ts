@@ -1,21 +1,25 @@
+export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 import { userDb, getDb } from "@/lib/d1";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const db = getDb();
     
-    // 从 header 获取 token
+    // Get token from cookie (NextRequest) OR Authorization header
+    const cookieToken = request.cookies.get("stayneos_auth_token")?.value;
     const authHeader = request.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    const bearerToken = authHeader?.startsWith("Bearer ") ? authHeader.substring(7) : null;
+    const token = cookieToken || bearerToken;
+
+    if (!token) {
       return NextResponse.json(
         { message: "未登录", user: null },
         { status: 401 }
       );
     }
-
-    const token = authHeader.substring(7);
 
     // 验证 token
     const JWT_SECRET = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET;
@@ -47,8 +51,8 @@ export async function GET(request: Request) {
         avatar: user.avatar,
       }
     }, { status: 200 });
-  } catch (error) {
-    console.error("验证会话错误:", error);
+  } catch {
+    console.error("验证会话错误");
     return NextResponse.json(
       { message: "会话已过期", user: null },
       { status: 401 }

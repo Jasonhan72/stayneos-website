@@ -111,8 +111,8 @@ export async function POST(request: Request) {
     });
 
     return response;
-  } catch (error) {
-    console.error("登录错误:", error);
+  } catch {
+    console.error("登录错误");
     return NextResponse.json(
       { message: "登录失败，请稍后重试" },
       { status: 500 }

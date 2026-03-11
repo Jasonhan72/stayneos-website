@@ -10,8 +10,8 @@ export async function POST(request: Request) {
     let db;
     try {
       db = getDb();
-    } catch (dbError) {
-      console.error("Failed to get D1 database:", dbError);
+    } catch {
+      console.error("Failed to get D1 database");
       return NextResponse.json(
         { message: "数据库连接失败" },
         { status: 500 }
@@ -140,8 +140,8 @@ export async function POST(request: Request) {
     });
 
     return response;
-  } catch (error) {
-    console.error("注册错误:", error);
+  } catch {
+    console.error("注册错误");
     
     return NextResponse.json(
       { message: "注册失败，请稍后重试" },

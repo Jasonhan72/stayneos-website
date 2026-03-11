@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     
     // Check for OAuth error
     if (error) {
-      console.error("Google OAuth error:", error);
+      console.error("Google OAuth error");
       return NextResponse.redirect(
         `${process.env.NEXTAUTH_URL || "https://stayneos.com"}/login?error=oauth_error`
       );
@@ -89,8 +89,8 @@ export async function GET(request: NextRequest) {
     });
     
     if (!tokenResponse.ok) {
-      const errorText = await tokenResponse.text();
-      console.error("Google token exchange failed:", errorText);
+      
+      console.error("Google token exchange failed");
       return NextResponse.redirect(`${baseUrl}/login?error=token_exchange_failed`);
     }
     
@@ -221,8 +221,8 @@ export async function GET(request: NextRequest) {
     
     return response;
     
-  } catch (error) {
-    console.error("Google OAuth callback error:", error);
+  } catch {
+    console.error("Google OAuth callback error");
     return NextResponse.redirect(
       `${process.env.NEXTAUTH_URL || "https://stayneos.com"}/login?error=callback_failed`
     );
