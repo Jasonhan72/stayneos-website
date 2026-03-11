@@ -1,24 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function ResetPasswordForm() {
+export default function ResetPasswordForm({ initialToken = "" }: { initialToken?: string }) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const [token, setToken] = useState("");
+  const [token] = useState(initialToken);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-
-  useEffect(() => {
-    const t = searchParams?.get("token");
-    if (t) setToken(t);
-  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
