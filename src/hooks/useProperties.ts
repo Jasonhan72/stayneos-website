@@ -1,135 +1,63 @@
-/**
- * 房源数据获取 Hooks
- * 静态导出模式：直接使用本地数据
- * 后端就绪后切换为 API 调用
- */
-
 'use client';
 
 import useSWR, { SWRConfiguration } from 'swr';
-import { mockProperties } from '@/lib/data';
 import { PropertyCardData } from '@/types';
 
-type MockProperty = (typeof mockProperties)[number];
+const fetcher = async (url: string) => {
+  const res = await fetch(url, { credentials: 'include' });
+  if (!res.ok) throw new Error('Failed to fetch');
+  return res.json();
+};
 
-function toCardData(p: MockProperty): PropertyCardData {
-  return {
-    id: p.id,
-    title: p.title,
-    titleZh: p.titleZh,
-    titleFr: p.titleFr,
-    location: p.location,
-    price: p.price,
-    priceUnit: p.priceUnit,
-    rating: p.rating,
-    reviewCount: p.reviewCount,
-    images: p.images,
-    maxGuests: p.maxGuests,
-    area: p.area,
-    bedrooms: p.bedrooms,
-    bathrooms: p.bathrooms,
-    amenities: p.amenities,
-    featured: p.featured,
-    description: p.description,
-    descriptionZh: p.descriptionZh,
-    descriptionFr: p.descriptionFr,
-    minNights: p.minNights,
-    monthlyDiscount: p.monthlyDiscount,
-  };
-}
-
-/**
- * 获取房源列表
- */
 export function useProperties(_params?: Record<string, unknown>, config?: SWRConfiguration) {
-  const { data, error, isLoading, mutate } = useSWR(
-    'properties-list',
-    () => Promise.resolve(mockProperties.map(toCardData)),
-    { revalidateOnFocus: false, ...config }
-  );
+  const { data, error, isLoading, mutate } = useSWR('/api/properties', fetcher, {
+    revalidateOnFocus: false,
+    ...config,
+  });
 
   return {
-    properties: data || [],
-    pagination: undefined as {totalPages: number; currentPage: number; total: number} | undefined,
+    properties: (data?.properties || []) as PropertyCardData[],
+    pagination: data?.properties
+      ? { totalPages: 1, currentPage: 1, total: data.properties.length }
+      : undefined,
     isLoading,
     error,
     mutate,
   };
 }
 
-/**
- * 获取单个房源详情
- */
-export function useProperty(id: string | null, config?: SWRConfiguration) {
+export function useProperty(idOrSlug: string | null, config?: SWRConfiguration) {
   const { data, error, isLoading, mutate } = useSWR(
-    id ? `property-${id}` : null,
-    () => {
-      const p = mockProperties.find(p => p.id === id);
-      return Promise.resolve(p ? toCardData(p) : null);
-    },
+    idOrSlug ? `/api/properties/${idOrSlug}` : null,
+    fetcher,
     { revalidateOnFocus: false, ...config }
   );
 
   return {
-    property: data,
+    property: (data?.property || null) as PropertyCardData | null,
     isLoading,
     error,
     mutate,
   };
 }
 
-/**
- * 获取精选房源
- */
 export function useFeaturedProperties(limit = 6, config?: SWRConfiguration) {
-  const { data, error, isLoading, mutate } = useSWR(
-    `featured-${limit}`,
-    () => Promise.resolve(
-      mockProperties.filter(p => p.featured).slice(0, limit).map(toCardData)
-    ),
-    { revalidateOnFocus: false, ...config }
-  );
+  const { data, error, isLoading, mutate } = useSWR('/api/properties', fetcher, {
+    revalidateOnFocus: false,
+    ...config,
+  });
 
-  return {
-    properties: data || [],
-    isLoading,
-    error,
-    mutate,
-  };
+  const properties = ((data?.properties || []) as PropertyCardData[]).slice(0, limit);
+
+  return { properties, isLoading, error, mutate };
 }
 
-/**
- * 获取房源可用性
- */
-export function usePropertyAvailability(
-  propertyId: string | null,
-  _params?: { checkIn?: string; checkOut?: string },
-  config?: SWRConfiguration
-) {
-  const { data, error, isLoading } = useSWR(
-    propertyId ? `availability-${propertyId}` : null,
-    () => Promise.resolve({ available: true, price: 0 }),
-    { revalidateOnFocus: false, ...config }
-  );
-
-  return {
-    availability: data,
-    isLoading,
-    error,
-  };
+export async function fetchProperty(idOrSlug: string) {
+  const data = await fetcher(`/api/properties/${idOrSlug}`);
+  return data?.property || null;
 }
 
-/**
- * 获取房源详情（函数形式）
- */
-export async function fetchProperty(id: string) {
-  const p = mockProperties.find(p => p.id === id);
-  return p ? toCardData(p) : null;
-}
-
-/**
- * 获取房源列表（函数形式）
- */
 export async function fetchProperties() {
-  return mockProperties.map(toCardData);
+  const data = await fetcher('/api/properties');
+  return data?.properties || [];
 }
