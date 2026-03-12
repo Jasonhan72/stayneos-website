@@ -188,7 +188,28 @@
       "monthlyDiscountLabel": "Réduction Mensuelle ({percent}% de réduction)",
       "minNightsWarning": "Minimum {count} nuits requis"
     },
-    "empty": "Aucune propriété en vedette"
+    "empty": "Aucune propriété en vedette",
+    "filters": {
+      "price": {
+        "all": "Tous les prix"
+      },
+      "bedrooms": {
+        "all": "Tous",
+        "one": "1 ch",
+        "two": "2 ch",
+        "threePlus": "3+ ch"
+      }
+    },
+    "amenity": {
+      "wifi": "WiFi",
+      "kitchen": "Cuisine",
+      "washer": "Lave-linge",
+      "airConditioning": "Climatisation",
+      "gym": "Gym",
+      "pool": "Piscine",
+      "parking": "Stationnement",
+      "concierge": "Conciergerie"
+    }
   },
   "details": {
     "title": "Détails de la Propriété",
@@ -293,6 +314,15 @@
       "invoicing": "Facturation d’entreprise avec modalités de paiement net-30",
       "secure": "Toutes les propriétés sont dans des immeubles sécurisés avec conciergerie",
       "response": "Gestionnaire de compte dédié avec garantie de réponse en 2 heures"
+    },
+    "form": {
+      "budgetOptions": {
+        "under5k": "Moins de 5 000 $",
+        "5kTo15k": "5 000 $ - 15 000 $",
+        "15kTo30k": "15 000 $ - 30 000 $",
+        "30kTo50k": "30 000 $ - 50 000 $",
+        "50kPlus": "50 000 $+"
+      }
     }
   },
   "longterm": {
@@ -804,7 +834,20 @@
     "top10Desc": "L'une des maisons les plus appréciées sur StayNeos",
     "reportListing": "Signaler cette annonce",
     "showMore": "Afficher plus",
-    "loadingMap": "Chargement de la carte..."
+    "loadingMap": "Chargement de la carte...",
+    "reserve": "Réserver",
+    "totalBeforeTaxes": "Total avant taxes",
+    "photos": "photos",
+    "highlights": {
+      "title": "Points forts du logement",
+      "pricing": "Tarifs",
+      "layout": "Configuration",
+      "allInclusive": "Tout inclus",
+      "building": "Commodités de l’immeuble",
+      "location": "Emplacement",
+      "stayTerms": "Conditions de séjour",
+      "buildingInfo": "Infos immeuble"
+    }
   },
   "filter": {
     "all": "Tous les Statuts"
@@ -1634,7 +1677,10 @@
     "googlePay": "Google Pay",
     "applePayHint": "Utilisez Apple Pay pour effectuer votre paiement rapidement et en toute sécurité",
     "connectToPayPal": "Se connecter à PayPal",
-    "next": "Suivant"
+    "next": "Suivant",
+    "comingSoonTitle": "{method} bientôt disponible",
+    "comingSoonDescription": "Le paiement {method} n’est pas encore disponible. Veuillez utiliser une carte de crédit ou de débit pour le moment.",
+    "useCard": "Utiliser la carte"
   },
   "auth": {
     "loginLeftTitle": "Bienvenue",

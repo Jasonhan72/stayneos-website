@@ -188,7 +188,28 @@
       "minNightsWarning": "Minimum {count} nights required"
     },
     "subtitle": "Premium executive apartments for quality living",
-    "empty": "No featured properties available"
+    "empty": "No featured properties available",
+    "filters": {
+      "price": {
+        "all": "All Prices"
+      },
+      "bedrooms": {
+        "all": "All",
+        "one": "1 BR",
+        "two": "2 BR",
+        "threePlus": "3+ BR"
+      }
+    },
+    "amenity": {
+      "wifi": "WiFi",
+      "kitchen": "Kitchen",
+      "washer": "Washer",
+      "airConditioning": "Air Conditioning",
+      "gym": "Gym",
+      "pool": "Pool",
+      "parking": "Parking",
+      "concierge": "Concierge"
+    }
   },
   "details": {
     "title": "Property Details",
@@ -340,6 +361,13 @@
       "success": {
         "title": "Quote Request Submitted!",
         "message": "Thank you for your interest! Our business development team will analyze your requirements and contact you within 24 hours with a customized proposal and pricing."
+      },
+      "budgetOptions": {
+        "under5k": "Under $5,000",
+        "5kTo15k": "$5,000 - $15,000",
+        "15kTo30k": "$15,000 - $30,000",
+        "30kTo50k": "$30,000 - $50,000",
+        "50kPlus": "$50,000+"
       }
     },
     "trust": {
@@ -917,7 +945,20 @@
     "top10Desc": "One of the most loved homes on StayNeos",
     "reportListing": "Report this listing",
     "showMore": "Show more",
-    "loadingMap": "Loading map..."
+    "loadingMap": "Loading map...",
+    "reserve": "Reserve",
+    "totalBeforeTaxes": "Total before taxes",
+    "photos": "photos",
+    "highlights": {
+      "title": "Property highlights",
+      "pricing": "Pricing",
+      "layout": "Layout",
+      "allInclusive": "All-inclusive",
+      "building": "Building amenities",
+      "location": "Location",
+      "stayTerms": "Stay terms",
+      "buildingInfo": "Building info"
+    }
   },
   "filter": {
     "all": "All Status"
@@ -2257,7 +2298,10 @@
     },
     "applePayHint": "Use Apple Pay to complete your payment quickly and securely",
     "connectToPayPal": "Connect to PayPal",
-    "next": "Next"
+    "next": "Next",
+    "comingSoonTitle": "{method} Coming Soon",
+    "comingSoonDescription": "{method} payment is not yet available. Please use a credit or debit card for now.",
+    "useCard": "Use Card"
   },
   "auth": {
     "loginLeftTitle": "Welcome Back",

@@ -33,7 +33,7 @@ interface PropertyDetailClientProps {
 
 // Mock host data（后续可从 API 获取）
 
-const PROPERTY_FACTS: Record<string, {
+type PropertyFacts = {
   pricing: string;
   layout: string;
   allInclusive: string;
@@ -41,40 +41,116 @@ const PROPERTY_FACTS: Record<string, {
   location: string;
   minimumStay: string;
   extra?: string;
-}> = {
-  'prop-55-cooper': {
-    pricing: 'Monthly $8,000-10,000 · Quarterly (3-6 months) $7,500-9,000 · Annual (12 months) $6,500-8,000',
-    layout: '3BR/2BA · approx. 1,200 sqft · 55+ floors',
-    allInclusive: 'WiFi, hydro/water/gas/heating, basic cable, full kitchenware, linens/towels, bi-weekly cleaning, and building amenities.',
-    building: 'Pool, gym, 24-hour concierge, visitor parking, and party room.',
-    location: '8-minute walk to Union Station · 5-minute walk to Financial District.',
-    minimumStay: 'Minimum stay 30 days · Smart lock self check-in.',
-    extra: 'Developer: Menkes · Building year: 2024.',
+};
+
+const PROPERTY_FACTS: Record<string, Record<string, PropertyFacts>> = {
+  en: {
+    'prop-55-cooper': {
+      pricing: 'Monthly $8,000-10,000 · Quarterly (3-6 months) $7,500-9,000 · Annual (12 months) $6,500-8,000',
+      layout: '3BR/2BA · approx. 1,200 sqft · 55+ floors',
+      allInclusive: 'WiFi, hydro/water/gas/heating, basic cable, full kitchenware, linens/towels, bi-weekly cleaning, and building amenities.',
+      building: 'Pool, gym, 24-hour concierge, visitor parking, and party room.',
+      location: '8-minute walk to Union Station · 5-minute walk to Financial District.',
+      minimumStay: 'Minimum stay 30 days · Smart lock self check-in.',
+      extra: 'Developer: Menkes · Building year: 2024.',
+    },
+    '55-cooper-st-sugar-wharf': {
+      pricing: 'Monthly $8,000-10,000 · Quarterly (3-6 months) $7,500-9,000 · Annual (12 months) $6,500-8,000',
+      layout: '3BR/2BA · approx. 1,200 sqft · 55+ floors',
+      allInclusive: 'WiFi, hydro/water/gas/heating, basic cable, full kitchenware, linens/towels, bi-weekly cleaning, and building amenities.',
+      building: 'Pool, gym, 24-hour concierge, visitor parking, and party room.',
+      location: '8-minute walk to Union Station · 5-minute walk to Financial District.',
+      minimumStay: 'Minimum stay 30 days · Smart lock self check-in.',
+      extra: 'Developer: Menkes · Building year: 2024.',
+    },
+    'prop-238-simcoe': {
+      pricing: 'Monthly $6,500-8,000 · Quarterly $6,000-7,000 · Annual $5,500-6,500',
+      layout: '3BR/2BA',
+      allInclusive: 'WiFi, hydro/water/gas/heating, basic cable, full kitchenware, linens/towels, bi-weekly cleaning, and building amenities.',
+      building: 'Gym, lobby concierge, and mail room.',
+      location: '3-minute walk to St. Patrick/Osgoode subway · Walkable to major hospitals and UofT.',
+      minimumStay: 'Minimum stay 30 days · Smart lock self check-in.',
+    },
+    '238-simcoe-st-grange-park': {
+      pricing: 'Monthly $6,500-8,000 · Quarterly $6,000-7,000 · Annual $5,500-6,500',
+      layout: '3BR/2BA',
+      allInclusive: 'WiFi, hydro/water/gas/heating, basic cable, full kitchenware, linens/towels, bi-weekly cleaning, and building amenities.',
+      building: 'Gym, lobby concierge, and mail room.',
+      location: '3-minute walk to St. Patrick/Osgoode subway · Walkable to major hospitals and UofT.',
+      minimumStay: 'Minimum stay 30 days · Smart lock self check-in.',
+    },
   },
-  '55-cooper-st-sugar-wharf': {
-    pricing: 'Monthly $8,000-10,000 · Quarterly (3-6 months) $7,500-9,000 · Annual (12 months) $6,500-8,000',
-    layout: '3BR/2BA · approx. 1,200 sqft · 55+ floors',
-    allInclusive: 'WiFi, hydro/water/gas/heating, basic cable, full kitchenware, linens/towels, bi-weekly cleaning, and building amenities.',
-    building: 'Pool, gym, 24-hour concierge, visitor parking, and party room.',
-    location: '8-minute walk to Union Station · 5-minute walk to Financial District.',
-    minimumStay: 'Minimum stay 30 days · Smart lock self check-in.',
-    extra: 'Developer: Menkes · Building year: 2024.',
+  zh: {
+    'prop-55-cooper': {
+      pricing: '月租 $8,000-10,000 · 季租（3-6个月）$7,500-9,000 · 年租（12个月）$6,500-8,000',
+      layout: '3室2卫 · 约 1,200 平方英尺 · 55+ 层',
+      allInclusive: '包含 WiFi、水电气暖、基础有线电视、全套厨具、床品毛巾、双周保洁及楼宇配套。',
+      building: '泳池、健身房、24 小时礼宾、访客停车位和派对室。',
+      location: '步行 8 分钟到 Union Station · 步行 5 分钟到金融区。',
+      minimumStay: '最短入住 30 天 · 智能门锁自助入住。',
+      extra: '开发商：Menkes · 建成时间：2024 年。',
+    },
+    '55-cooper-st-sugar-wharf': {
+      pricing: '月租 $8,000-10,000 · 季租（3-6个月）$7,500-9,000 · 年租（12个月）$6,500-8,000',
+      layout: '3室2卫 · 约 1,200 平方英尺 · 55+ 层',
+      allInclusive: '包含 WiFi、水电气暖、基础有线电视、全套厨具、床品毛巾、双周保洁及楼宇配套。',
+      building: '泳池、健身房、24 小时礼宾、访客停车位和派对室。',
+      location: '步行 8 分钟到 Union Station · 步行 5 分钟到金融区。',
+      minimumStay: '最短入住 30 天 · 智能门锁自助入住。',
+      extra: '开发商：Menkes · 建成时间：2024 年。',
+    },
+    'prop-238-simcoe': {
+      pricing: '月租 $6,500-8,000 · 季租 $6,000-7,000 · 年租 $5,500-6,500',
+      layout: '3室2卫',
+      allInclusive: '包含 WiFi、水电气暖、基础有线电视、全套厨具、床品毛巾、双周保洁及楼宇配套。',
+      building: '健身房、大堂礼宾和信件收发室。',
+      location: '步行 3 分钟到 St. Patrick/Osgoode 地铁站 · 可步行到主要医院和多伦多大学。',
+      minimumStay: '最短入住 30 天 · 智能门锁自助入住。',
+    },
+    '238-simcoe-st-grange-park': {
+      pricing: '月租 $6,500-8,000 · 季租 $6,000-7,000 · 年租 $5,500-6,500',
+      layout: '3室2卫',
+      allInclusive: '包含 WiFi、水电气暖、基础有线电视、全套厨具、床品毛巾、双周保洁及楼宇配套。',
+      building: '健身房、大堂礼宾和信件收发室。',
+      location: '步行 3 分钟到 St. Patrick/Osgoode 地铁站 · 可步行到主要医院和多伦多大学。',
+      minimumStay: '最短入住 30 天 · 智能门锁自助入住。',
+    },
   },
-  'prop-238-simcoe': {
-    pricing: 'Monthly $6,500-8,000 · Quarterly $6,000-7,000 · Annual $5,500-6,500',
-    layout: '3BR/2BA',
-    allInclusive: 'WiFi, hydro/water/gas/heating, basic cable, full kitchenware, linens/towels, bi-weekly cleaning, and building amenities.',
-    building: 'Gym, lobby concierge, and mail room.',
-    location: '3-minute walk to St. Patrick/Osgoode subway · Walkable to major hospitals and UofT.',
-    minimumStay: 'Minimum stay 30 days · Smart lock self check-in.',
-  },
-  '238-simcoe-st-grange-park': {
-    pricing: 'Monthly $6,500-8,000 · Quarterly $6,000-7,000 · Annual $5,500-6,500',
-    layout: '3BR/2BA',
-    allInclusive: 'WiFi, hydro/water/gas/heating, basic cable, full kitchenware, linens/towels, bi-weekly cleaning, and building amenities.',
-    building: 'Gym, lobby concierge, and mail room.',
-    location: '3-minute walk to St. Patrick/Osgoode subway · Walkable to major hospitals and UofT.',
-    minimumStay: 'Minimum stay 30 days · Smart lock self check-in.',
+  fr: {
+    'prop-55-cooper': {
+      pricing: 'Mensuel 8 000-10 000 $ · Trimestriel (3-6 mois) 7 500-9 000 $ · Annuel (12 mois) 6 500-8 000 $',
+      layout: '3 ch./2 sdb · env. 1 200 pi² · plus de 55 étages',
+      allInclusive: 'Inclus : WiFi, électricité/eau/gaz/chauffage, câble de base, cuisine entièrement équipée, draps/serviettes, ménage bihebdomadaire et commodités de l’immeuble.',
+      building: 'Piscine, gym, concierge 24 h, stationnement visiteurs et salle de réception.',
+      location: 'À 8 minutes à pied de Union Station · À 5 minutes du quartier financier.',
+      minimumStay: 'Séjour minimum de 30 jours · Arrivée autonome avec serrure intelligente.',
+      extra: 'Promoteur : Menkes · Année de construction : 2024.',
+    },
+    '55-cooper-st-sugar-wharf': {
+      pricing: 'Mensuel 8 000-10 000 $ · Trimestriel (3-6 mois) 7 500-9 000 $ · Annuel (12 mois) 6 500-8 000 $',
+      layout: '3 ch./2 sdb · env. 1 200 pi² · plus de 55 étages',
+      allInclusive: 'Inclus : WiFi, électricité/eau/gaz/chauffage, câble de base, cuisine entièrement équipée, draps/serviettes, ménage bihebdomadaire et commodités de l’immeuble.',
+      building: 'Piscine, gym, concierge 24 h, stationnement visiteurs et salle de réception.',
+      location: 'À 8 minutes à pied de Union Station · À 5 minutes du quartier financier.',
+      minimumStay: 'Séjour minimum de 30 jours · Arrivée autonome avec serrure intelligente.',
+      extra: 'Promoteur : Menkes · Année de construction : 2024.',
+    },
+    'prop-238-simcoe': {
+      pricing: 'Mensuel 6 500-8 000 $ · Trimestriel 6 000-7 000 $ · Annuel 5 500-6 500 $',
+      layout: '3 ch./2 sdb',
+      allInclusive: 'Inclus : WiFi, électricité/eau/gaz/chauffage, câble de base, cuisine entièrement équipée, draps/serviettes, ménage bihebdomadaire et commodités de l’immeuble.',
+      building: 'Gym, concierge du hall et salle du courrier.',
+      location: 'À 3 minutes à pied du métro St. Patrick/Osgoode · Accès à pied aux principaux hôpitaux et à l’Université de Toronto.',
+      minimumStay: 'Séjour minimum de 30 jours · Arrivée autonome avec serrure intelligente.',
+    },
+    '238-simcoe-st-grange-park': {
+      pricing: 'Mensuel 6 500-8 000 $ · Trimestriel 6 000-7 000 $ · Annuel 5 500-6 500 $',
+      layout: '3 ch./2 sdb',
+      allInclusive: 'Inclus : WiFi, électricité/eau/gaz/chauffage, câble de base, cuisine entièrement équipée, draps/serviettes, ménage bihebdomadaire et commodités de l’immeuble.',
+      building: 'Gym, concierge du hall et salle du courrier.',
+      location: 'À 3 minutes à pied du métro St. Patrick/Osgoode · Accès à pied aux principaux hôpitaux et à l’Université de Toronto.',
+      minimumStay: 'Séjour minimum de 30 jours · Arrivée autonome avec serrure intelligente.',
+    },
   },
 };
 
@@ -145,6 +221,11 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
         return propertyCardData.title;
     }
   }, [propertyCardData, locale]);
+
+  const localizedFacts = useMemo(() => {
+    const languageFacts = PROPERTY_FACTS[locale] || PROPERTY_FACTS.en;
+    return languageFacts[propertyId] || PROPERTY_FACTS.en[propertyId];
+  }, [locale, propertyId]);
 
   const localizedDescription = useMemo(() => {
     if (!propertyCardData) return '';
@@ -265,13 +346,13 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
 
       {/* Date/Guest Selector Box */}
       <div className="border border-neutral-300 rounded-xl overflow-hidden mb-4">
-        {/* Check-in / Check-out */}
+        {/* {t('booking.checkIn', 'Check-in')} / Check-out */}
         <div className="grid grid-cols-2 divide-x divide-neutral-300">
           <button 
             onClick={() => setShowCalendar(true)}
             className="p-3 text-left hover:bg-neutral-50 transition-colors"
           >
-            <p className="text-xs font-semibold text-neutral-900 uppercase">Check-in</p>
+            <p className="text-xs font-semibold text-neutral-900 uppercase">{t('booking.checkIn', 'Check-in')}</p>
             <p className="text-sm text-neutral-600 mt-1">
               {checkIn ? new Date(checkIn).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' }) : t('booking.addDate')}
             </p>
@@ -280,19 +361,19 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             onClick={() => setShowCalendar(true)}
             className="p-3 text-left hover:bg-neutral-50 transition-colors"
           >
-            <p className="text-xs font-semibold text-neutral-900 uppercase">Checkout</p>
+            <p className="text-xs font-semibold text-neutral-900 uppercase">{t('booking.checkOut', 'Checkout')}</p>
             <p className="text-sm text-neutral-600 mt-1">
               {checkOut ? new Date(checkOut).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' }) : t('booking.addDate')}
             </p>
           </button>
         </div>
         
-        {/* Guests */}
+        {/* {t('booking.guests', 'Guests')} */}
         <button 
           onClick={() => setShowGuestSelector(true)}
           className="w-full p-3 text-left border-t border-neutral-300 hover:bg-neutral-50 transition-colors"
         >
-          <p className="text-xs font-semibold text-neutral-900 uppercase">Guests</p>
+          <p className="text-xs font-semibold text-neutral-900 uppercase">{t('booking.guests', 'Guests')}</p>
           <p className="text-sm text-neutral-600 mt-1">{guests} {guests === 1 ? t('booking.guestSingular') : t('booking.guestsPlural')}</p>
         </button>
       </div>
@@ -302,7 +383,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
         onClick={handleCheckAvailability}
         className="w-full py-3.5 bg-gradient-to-r from-rose-500 to-rose-600 text-white font-semibold rounded-xl hover:from-rose-600 hover:to-rose-700 transition-colors mb-4"
       >
-        {checkIn && checkOut ? 'Reserve' : t('property.checkAvailability')}
+        {checkIn && checkOut ? t('property.reserve', 'Reserve') : t('property.checkAvailability')}
       </button>
 
       <p className="text-center text-neutral-500 text-sm mb-6">{t('booking.youWontBeCharged')}</p>
@@ -311,25 +392,25 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
       {bookingPrice && (
         <div className="space-y-3 text-sm border-t border-neutral-100 pt-4">
           <div className="flex justify-between">
-            <span className="text-neutral-600 underline">${propertyCardData.price.toLocaleString()} x {bookingPrice.nights} nights</span>
+            <span className="text-neutral-600 underline">${propertyCardData.price.toLocaleString()} x {bookingPrice.nights} {t('common.nights', 'nights')}</span>
             <span className="text-neutral-900">${(propertyCardData.price * bookingPrice.nights).toLocaleString()}</span>
           </div>
           {bookingPrice.discount > 0 && (
             <div className="flex justify-between text-green-600">
-              <span>Monthly stay discount</span>
+              <span>{t('booking.monthlyDiscount', 'Monthly stay discount')}</span>
               <span>-${bookingPrice.discount.toLocaleString()}</span>
             </div>
           )}
           <div className="flex justify-between">
-            <span className="text-neutral-600 underline">Cleaning fee</span>
+            <span className="text-neutral-600 underline">{t('booking.cleaningFee', 'Cleaning fee')}</span>
             <span className="text-neutral-900">${bookingPrice.cleaningFee.toLocaleString()}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-neutral-600 underline">Service fee</span>
+            <span className="text-neutral-600 underline">{t('booking.serviceFee', 'Service fee')}</span>
             <span className="text-neutral-900">${bookingPrice.serviceFee.toLocaleString()}</span>
           </div>
           <div className="flex justify-between pt-3 border-t border-neutral-200">
-            <span className="font-semibold text-neutral-900">Total before taxes</span>
+            <span className="font-semibold text-neutral-900">{t('property.totalBeforeTaxes', 'Total before taxes')}</span>
             <span className="font-semibold text-neutral-900">${bookingPrice.total.toLocaleString()}</span>
           </div>
         </div>
@@ -456,7 +537,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                 />
                 {idx === 3 && imageUrls.length > 5 && (
                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                    <span className="text-white font-medium">+{imageUrls.length - 5} photos</span>
+                    <span className="text-white font-medium">+{imageUrls.length - 5} {t('property.photos', 'photos')}</span>
                   </div>
                 )}
               </div>
@@ -558,17 +639,17 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                   maxGuests: propertyCardData.maxGuests 
                 })}
               </p>
-              {PROPERTY_FACTS[propertyId] && (
+              {localizedFacts && (
                 <section className="mt-6 border border-neutral-200 rounded-2xl p-5">
-                  <h3 className="text-lg font-semibold text-neutral-900 mb-3">Property highlights</h3>
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-3">{t('property.highlights.title', 'Property highlights')}</h3>
                   <ul className="space-y-2 text-sm text-neutral-700">
-                    <li><strong>Pricing:</strong> {PROPERTY_FACTS[propertyId].pricing}</li>
-                    <li><strong>Layout:</strong> {PROPERTY_FACTS[propertyId].layout}</li>
-                    <li><strong>All-inclusive:</strong> {PROPERTY_FACTS[propertyId].allInclusive}</li>
-                    <li><strong>Building amenities:</strong> {PROPERTY_FACTS[propertyId].building}</li>
-                    <li><strong>Location:</strong> {PROPERTY_FACTS[propertyId].location}</li>
-                    <li><strong>Stay terms:</strong> {PROPERTY_FACTS[propertyId].minimumStay}</li>
-                    {PROPERTY_FACTS[propertyId].extra && <li><strong>Building info:</strong> {PROPERTY_FACTS[propertyId].extra}</li>}
+                    <li><strong>{t('property.highlights.pricing', 'Pricing')}:</strong> {localizedFacts.pricing}</li>
+                    <li><strong>{t('property.highlights.layout', 'Layout')}:</strong> {localizedFacts.layout}</li>
+                    <li><strong>{t('property.highlights.allInclusive', 'All-inclusive')}:</strong> {localizedFacts.allInclusive}</li>
+                    <li><strong>{t('property.highlights.building', 'Building amenities')}:</strong> {localizedFacts.building}</li>
+                    <li><strong>{t('property.highlights.location', 'Location')}:</strong> {localizedFacts.location}</li>
+                    <li><strong>{t('property.highlights.stayTerms', 'Stay terms')}:</strong> {localizedFacts.minimumStay}</li>
+                    {localizedFacts?.extra && <li><strong>{t('property.highlights.buildingInfo', 'Building info')}:</strong> {localizedFacts.extra}</li>}
                   </ul>
                 </section>
               )}
@@ -755,22 +836,22 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             <div className="w-12 h-12 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">🚧</span>
             </div>
-            <h3 className="text-lg font-semibold text-neutral-900 mb-2">{showPaymentNotice} Coming Soon</h3>
+            <h3 className="text-lg font-semibold text-neutral-900 mb-2">{t('payment.comingSoonTitle', { method: showPaymentNotice })}</h3>
             <p className="text-neutral-600 text-sm mb-6">
-              {showPaymentNotice} payment is not yet available. Please use a credit or debit card for now.
+              {t('payment.comingSoonDescription', { method: showPaymentNotice })}
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowPaymentNotice(null)}
                 className="flex-1 py-3 border border-neutral-300 text-neutral-700 font-medium rounded-xl hover:bg-neutral-50 transition-colors"
               >
-                Cancel
+                {t('common.cancel', 'Cancel')}
               </button>
               <button
                 onClick={() => { setShowPaymentNotice(null); setShowPayment(true); }}
                 className="flex-1 py-3 bg-neutral-900 text-white font-semibold rounded-xl hover:bg-neutral-800 transition-colors"
               >
-                Use Card
+                {t('payment.useCard', 'Use Card')}
               </button>
             </div>
           </div>

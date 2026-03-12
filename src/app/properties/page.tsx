@@ -43,46 +43,70 @@ const GooglePropertyMap = dynamic(() => import('@/components/property/GoogleProp
   ),
 });
 
-// 筛选选项
-const priceRanges = [
-  { label: 'All Prices', min: 0, max: Infinity },
-  { label: '$400-500', min: 400, max: 500 },
-  { label: '$500-600', min: 500, max: 600 },
-  { label: '$600-700', min: 600, max: 700 },
-  { label: '$700+', min: 700, max: Infinity },
-];
-
-const bedroomOptions = [
-  { label: 'All', value: 'any' },
-  { label: '1 BR', value: '1' },
-  { label: '2 BR', value: '2' },
-  { label: '3+ BR', value: '3' },
-];
-
-const amenitiesList = [
-  'WiFi', 'Kitchen', 'Washer', 'Air Conditioning', 'Gym', 'Pool', 'Parking', 'Concierge'
-];
-
-const sortOptions = [
-  { value: 'recommended', label: 'sort.recommended' },
-  { value: 'price-low', label: 'sort.priceLow' },
-  { value: 'price-high', label: 'sort.priceHigh' },
-  { value: 'rating', label: 'sort.rating' },
-];
-
 // 每页数量
 const ITEMS_PER_PAGE = 6;
-
-const PROPERTY_PRICING_TIERS: Record<string, string> = {
-  'prop-55-cooper': 'Monthly $8,000-10,000 · Quarterly $7,500-9,000 · Annual $6,500-8,000',
-  '55-cooper-st-sugar-wharf': 'Monthly $8,000-10,000 · Quarterly $7,500-9,000 · Annual $6,500-8,000',
-  'prop-238-simcoe': 'Monthly $6,500-8,000 · Quarterly $6,000-7,000 · Annual $5,500-6,500',
-  '238-simcoe-st-grange-park': 'Monthly $6,500-8,000 · Quarterly $6,000-7,000 · Annual $5,500-6,500',
-};
 
 
 export default function PropertiesPage() {
   const { t, locale } = useI18n();
+  const priceRanges = useMemo(() => ([
+    { label: t('properties.filters.price.all', 'All Prices'), min: 0, max: Infinity },
+    { label: '$400-500', min: 400, max: 500 },
+    { label: '$500-600', min: 500, max: 600 },
+    { label: '$600-700', min: 600, max: 700 },
+    { label: '$700+', min: 700, max: Infinity },
+  ]), [t]);
+
+  const bedroomOptions = useMemo(() => ([
+    { label: t('properties.filters.bedrooms.all', 'All'), value: 'any' },
+    { label: t('properties.filters.bedrooms.one', '1 BR'), value: '1' },
+    { label: t('properties.filters.bedrooms.two', '2 BR'), value: '2' },
+    { label: t('properties.filters.bedrooms.threePlus', '3+ BR'), value: '3' },
+  ]), [t]);
+
+  const amenitiesList = useMemo(() => ([
+    { value: 'WiFi', label: t('properties.amenity.wifi', 'WiFi') },
+    { value: 'Kitchen', label: t('properties.amenity.kitchen', 'Kitchen') },
+    { value: 'Washer', label: t('properties.amenity.washer', 'Washer') },
+    { value: 'Air Conditioning', label: t('properties.amenity.airConditioning', 'Air Conditioning') },
+    { value: 'Gym', label: t('properties.amenity.gym', 'Gym') },
+    { value: 'Pool', label: t('properties.amenity.pool', 'Pool') },
+    { value: 'Parking', label: t('properties.amenity.parking', 'Parking') },
+    { value: 'Concierge', label: t('properties.amenity.concierge', 'Concierge') },
+  ]), [t]);
+
+  const sortOptions = [
+    { value: 'recommended', label: 'sort.recommended' },
+    { value: 'price-low', label: 'sort.priceLow' },
+    { value: 'price-high', label: 'sort.priceHigh' },
+    { value: 'rating', label: 'sort.rating' },
+  ];
+
+  const pricingTiers = useMemo<Record<string, string>>(() => {
+    if (locale === 'zh') {
+      return {
+        'prop-55-cooper': '月租 $8,000-10,000 · 季租 $7,500-9,000 · 年租 $6,500-8,000',
+        '55-cooper-st-sugar-wharf': '月租 $8,000-10,000 · 季租 $7,500-9,000 · 年租 $6,500-8,000',
+        'prop-238-simcoe': '月租 $6,500-8,000 · 季租 $6,000-7,000 · 年租 $5,500-6,500',
+        '238-simcoe-st-grange-park': '月租 $6,500-8,000 · 季租 $6,000-7,000 · 年租 $5,500-6,500',
+      };
+    }
+    if (locale === 'fr') {
+      return {
+        'prop-55-cooper': 'Mensuel 8 000-10 000 $ · Trimestriel 7 500-9 000 $ · Annuel 6 500-8 000 $',
+        '55-cooper-st-sugar-wharf': 'Mensuel 8 000-10 000 $ · Trimestriel 7 500-9 000 $ · Annuel 6 500-8 000 $',
+        'prop-238-simcoe': 'Mensuel 6 500-8 000 $ · Trimestriel 6 000-7 000 $ · Annuel 5 500-6 500 $',
+        '238-simcoe-st-grange-park': 'Mensuel 6 500-8 000 $ · Trimestriel 6 000-7 000 $ · Annuel 5 500-6 500 $',
+      };
+    }
+    return {
+      'prop-55-cooper': 'Monthly $8,000-10,000 · Quarterly $7,500-9,000 · Annual $6,500-8,000',
+      '55-cooper-st-sugar-wharf': 'Monthly $8,000-10,000 · Quarterly $7,500-9,000 · Annual $6,500-8,000',
+      'prop-238-simcoe': 'Monthly $6,500-8,000 · Quarterly $6,000-7,000 · Annual $5,500-6,500',
+      '238-simcoe-st-grange-park': 'Monthly $6,500-8,000 · Quarterly $6,000-7,000 · Annual $5,500-6,500',
+    };
+  }, [locale]);
+
   
   // State
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
@@ -189,7 +213,7 @@ export default function PropertiesPage() {
   };
 
   const activeFiltersCount = 
-    (selectedPriceRange.label !== 'All Prices' ? 1 : 0) +
+    (selectedPriceRange.min > 0 || selectedPriceRange.max !== Infinity ? 1 : 0) +
     (selectedBedrooms !== 'any' ? 1 : 0) +
     selectedAmenities.length;
 
@@ -286,7 +310,7 @@ export default function PropertiesPage() {
                   <Search size={20} />
                 </div>
                 <Input
-                  placeholder={t('properties.searchPlaceholder')}
+                  placeholder={t('properties.searchPlaceholder', 'Search location, property name...')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-12"
@@ -313,7 +337,7 @@ export default function PropertiesPage() {
                     <p className="text-sm text-neutral-600">
                       {checkIn && checkOut 
                         ? `${new Date(checkIn).toLocaleDateString(locale === 'zh' ? 'zh-CN' : locale === 'fr' ? 'fr-FR' : 'en-US', { month: 'short', day: 'numeric' })} - ${new Date(checkOut).toLocaleDateString(locale === 'zh' ? 'zh-CN' : locale === 'fr' ? 'fr-FR' : 'en-US', { month: 'short', day: 'numeric' })}`
-                        : t('booking.selectDates') || 'Select dates'
+                        : t('booking.selectDates', 'Select dates')
                       }
                     </p>
                   </div>
@@ -415,15 +439,15 @@ export default function PropertiesPage() {
                   <div className="flex flex-wrap gap-2">
                     {amenitiesList.map((amenity) => (
                       <button
-                        key={amenity}
-                        onClick={() => toggleAmenity(amenity)}
+                        key={amenity.value}
+                        onClick={() => toggleAmenity(amenity.value)}
                         className={`px-3 py-2 border text-sm transition-colors ${
-                          selectedAmenities.includes(amenity)
+                          selectedAmenities.includes(amenity.value)
                             ? 'border-primary bg-primary text-white'
                             : 'border-neutral-300 bg-white hover:border-primary'
                         }`}
                       >
-                        {amenity}
+                        {amenity.label}
                       </button>
                     ))}
                   </div>
@@ -531,14 +555,14 @@ export default function PropertiesPage() {
                   /* List View */
                   <div className="space-y-4">
                     {filteredProperties.map((property) => (
-                      <PropertyListCard key={property.id} property={property} />
+                      <PropertyListCard key={property.id} property={property} pricingTier={pricingTiers[property.id]} />
                     ))}
                   </div>
                 ) : (
                   /* Grid View */
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {filteredProperties.map((property) => (
-                      <PropertyGridCard key={property.id} property={property} />
+                      <PropertyGridCard key={property.id} property={property} pricingTier={pricingTiers[property.id]} />
                     ))}
                   </div>
                 )}
@@ -630,9 +654,11 @@ export default function PropertiesPage() {
 
 // Property Grid Card Component
 function PropertyGridCard({
-  property
+  property,
+  pricingTier,
 }: {
   property: PropertyCardData;
+  pricingTier?: string;
 }) {
   const { t } = useI18n();
   const location = getPropertyLocation(property);
@@ -688,8 +714,8 @@ function PropertyGridCard({
             <span>{t('property.max')} {property.maxGuests} {t('property.guests')}</span>
           </div>
           
-          {PROPERTY_PRICING_TIERS[property.id] && (
-            <p className="text-xs text-neutral-600 mb-3">{PROPERTY_PRICING_TIERS[property.id]}</p>
+          {pricingTier && (
+            <p className="text-xs text-neutral-600 mb-3">{pricingTier}</p>
           )}
 
           <div className="flex items-baseline justify-between pt-3 border-t border-neutral-200">
@@ -710,11 +736,12 @@ function PropertyGridCard({
 // Property List Card Component
 interface PropertyListCardProps {
   property: PropertyCardData;
+  pricingTier?: string;
   isSelected?: boolean;
   onClick?: () => void;
 }
 
-function PropertyListCard({ property, isSelected, onClick }: PropertyListCardProps) {
+function PropertyListCard({ property, pricingTier, isSelected, onClick }: PropertyListCardProps) {
   const { t } = useI18n();
   const location = getPropertyLocation(property);
   
@@ -788,14 +815,14 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
             <div className="flex flex-wrap gap-2">
               {property.amenities.slice(0, 4).map((amenity) => (
                 <span key={amenity} className="px-2 py-1 bg-neutral-100 text-xs text-neutral-600">
-                  {amenity}
+                  {t(`properties.amenity.${amenity.toLowerCase().replace(/\s+/g, '')}`, amenity)}
                 </span>
               ))}
             </div>
           </div>
           
-          {PROPERTY_PRICING_TIERS[property.id] && (
-            <p className="text-xs text-neutral-600 mt-4">{PROPERTY_PRICING_TIERS[property.id]}</p>
+          {pricingTier && (
+            <p className="text-xs text-neutral-600 mt-4">{pricingTier}</p>
           )}
 
           <div className="flex items-baseline justify-between mt-4 pt-4 border-t border-neutral-200">

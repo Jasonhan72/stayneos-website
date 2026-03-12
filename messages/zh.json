@@ -188,7 +188,28 @@
       "monthlyDiscountLabel": "月租优惠 ({percent}% 折扣)",
       "minNightsWarning": "最少需预订 {count} 天"
     },
-    "empty": "暂无精选房源"
+    "empty": "暂无精选房源",
+    "filters": {
+      "price": {
+        "all": "全部价格"
+      },
+      "bedrooms": {
+        "all": "全部",
+        "one": "1居",
+        "two": "2居",
+        "threePlus": "3居+"
+      }
+    },
+    "amenity": {
+      "wifi": "无线网络",
+      "kitchen": "厨房",
+      "washer": "洗衣机",
+      "airConditioning": "空调",
+      "gym": "健身房",
+      "pool": "游泳池",
+      "parking": "停车位",
+      "concierge": "礼宾服务"
+    }
   },
   "details": {
     "title": "房源详情",
@@ -293,6 +314,15 @@
       "invoicing": "支持企业发票与 net-30 账期",
       "secure": "所有房源均位于安全的礼宾服务楼宇",
       "response": "专属客户经理，2小时响应承诺"
+    },
+    "form": {
+      "budgetOptions": {
+        "under5k": "低于 $5,000",
+        "5kTo15k": "$5,000 - $15,000",
+        "15kTo30k": "$15,000 - $30,000",
+        "30kTo50k": "$30,000 - $50,000",
+        "50kPlus": "$50,000+"
+      }
     }
   },
   "longterm": {
@@ -804,7 +834,20 @@
     "top10Desc": "StayNeos 最受欢迎的房源之一",
     "reportListing": "举报此房源",
     "showMore": "显示更多",
-    "loadingMap": "地图加载中..."
+    "loadingMap": "地图加载中...",
+    "reserve": "预订",
+    "totalBeforeTaxes": "税前总计",
+    "photos": "张照片",
+    "highlights": {
+      "title": "房源亮点",
+      "pricing": "价格",
+      "layout": "户型",
+      "allInclusive": "全包内容",
+      "building": "楼宇配套",
+      "location": "位置",
+      "stayTerms": "入住条款",
+      "buildingInfo": "楼宇信息"
+    }
   },
   "filter": {
     "all": "全部状态"
@@ -1744,7 +1787,10 @@
     "googlePay": "Google Pay",
     "applePayHint": "使用Apple Pay快速安全地完成支付",
     "connectToPayPal": "连接到PayPal",
-    "next": "下一步"
+    "next": "下一步",
+    "comingSoonTitle": "{method} 即将上线",
+    "comingSoonDescription": "{method} 支付方式暂不可用。请先使用信用卡或借记卡。",
+    "useCard": "使用银行卡"
   },
   "auth": {
     "loginLeftTitle": "开启您的品质旅居",

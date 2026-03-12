@@ -551,11 +551,11 @@ export default function ForBusinessPageContent() {
                       className="w-full px-4 py-3 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                     >
                       <option value="">{t("business.form.selectBudget", "Select budget range")}</option>
-                      <option value="under-5k">Under $5,000</option>
-                      <option value="5k-15k">$5,000 - $15,000</option>
-                      <option value="15k-30k">$15,000 - $30,000</option>
-                      <option value="30k-50k">$30,000 - $50,000</option>
-                      <option value="50k+">$50,000+</option>
+                      <option value="under-5k">{t("business.form.budgetOptions.under5k", "Under $5,000")}</option>
+                      <option value="5k-15k">{t("business.form.budgetOptions.5kTo15k", "$5,000 - $15,000")}</option>
+                      <option value="15k-30k">{t("business.form.budgetOptions.15kTo30k", "$15,000 - $30,000")}</option>
+                      <option value="30k-50k">{t("business.form.budgetOptions.30kTo50k", "$30,000 - $50,000")}</option>
+                      <option value="50k+">{t("business.form.budgetOptions.50kPlus", "$50,000+")}</option>
                     </select>
                   </div>
 
