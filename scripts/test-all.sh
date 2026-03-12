@@ -147,5 +147,42 @@ else
 fi
 echo "============================================"
 
+# ============ 第四层：i18n 完整性 ============
+echo ""
+echo "▸ 第四层：i18n 完整性"
+
+cd /Users/neos/.openclaw/workspace/stayneos-web
+MISS_COUNT=$(python3 -c "
+import json
+with open('messages/en.json') as f: en = json.load(f)
+with open('messages/zh.json') as f: zh = json.load(f)
+def flatten(d, prefix=''):
+    items = {}
+    for k, v in d.items():
+        key = f'{prefix}.{k}' if prefix else k
+        if isinstance(v, dict): items.update(flatten(v, key))
+        else: items[key] = v
+    return items
+en_flat = flatten(en)
+zh_flat = flatten(zh)
+missing = set(en_flat.keys()) - set(zh_flat.keys())
+print(len(missing))
+for k in sorted(list(missing)[:5]): print(f'    {k}')
+" 2>/dev/null | head -1)
+TOTAL=$((TOTAL+1))
+if [ "$MISS_COUNT" = "0" ]; then
+  PASS=$((PASS+1)); echo "  ✅ 中文翻译 key 完整"
+else
+  FAIL=$((FAIL+1)); echo "  ❌ 中文缺少 $MISS_COUNT 个 key"
+fi
+
+HARDCODED=$(grep -rn ">[A-Z][a-z].*</" src/components/layout/ src/components/auth/ --include="*.tsx" 2>/dev/null | grep -v "t(\|className\|import\|//\|console\|Error\|{" | wc -l | tr -d ' ')
+TOTAL=$((TOTAL+1))
+if [ "$HARDCODED" = "0" ]; then
+  PASS=$((PASS+1)); echo "  ✅ 核心组件无硬编码英文"
+else
+  FAIL=$((FAIL+1)); echo "  ❌ 核心组件发现 $HARDCODED 处可能的硬编码英文"
+fi
+
 rm -f /tmp/test_cookie.txt /tmp/admin_cookie.txt
 exit $FAIL
