@@ -31,7 +31,7 @@ check "$([ "$COUNT" -gt 0 ] && echo true)" "物业列表 ($COUNT 套)"
 
 # 4. 每个物业的详情 API（slug + id 都测）
 echo "$PROPS" | python3 -c "
-import json, sys, urllib.request
+import json, sys, subprocess
 data = json.load(sys.stdin)
 for p in data.get('properties', []):
     slug = p.get('slug','')
@@ -40,9 +40,9 @@ for p in data.get('properties', []):
     ok = True
     for key in [slug, pid]:
         if not key: continue
+        r = subprocess.run(['curl','-s','$BASE/api/properties/'+key], capture_output=True, text=True)
         try:
-            r = urllib.request.urlopen('$BASE/api/properties/' + key)
-            d = json.loads(r.read())
+            d = json.loads(r.stdout)
             if not d.get('property',{}).get('title'): ok = False
         except: ok = False
     print(f'  {\"✅\" if ok else \"❌\"} 详情: {title} (slug={slug})')

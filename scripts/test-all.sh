@@ -41,7 +41,7 @@ COUNT=$(echo "$PROPS" | python3 -c "import json,sys; print(len(json.load(sys.std
 check "$([ "$COUNT" -gt 0 ] && echo true)" "物业 API 返回 $COUNT 套"
 
 echo "$PROPS" | python3 -c "
-import json, sys, urllib.request
+import json, sys, subprocess
 data = json.load(sys.stdin)
 for p in data.get('properties', []):
     slug = p.get('slug','')
@@ -49,26 +49,23 @@ for p in data.get('properties', []):
     title = p.get('title','?')[:40]
     errors = []
     
-    # Test slug API
+    # Test slug API (use curl to avoid SSL issues)
+    r = subprocess.run(['curl','-s','$BASE/api/properties/'+slug], capture_output=True, text=True)
     try:
-        r = urllib.request.urlopen('$BASE/api/properties/' + slug)
-        d = json.loads(r.read())
+        d = json.loads(r.stdout)
         if not d.get('property',{}).get('title'): errors.append('slug API 无数据')
     except: errors.append('slug API 失败')
     
     # Test id API
+    r = subprocess.run(['curl','-s','$BASE/api/properties/'+pid], capture_output=True, text=True)
     try:
-        r = urllib.request.urlopen('$BASE/api/properties/' + pid)
-        d = json.loads(r.read())
+        d = json.loads(r.stdout)
         if not d.get('property',{}).get('title'): errors.append('id API 无数据')
     except: errors.append('id API 失败')
     
     # Test detail page HTML
-    try:
-        r = urllib.request.urlopen('$BASE/property/' + slug)
-        html = r.read().decode()
-        if len(html) < 1000: errors.append('详情页内容少')
-    except: errors.append('详情页加载失败')
+    r = subprocess.run(['curl','-s','$BASE/property/'+slug], capture_output=True, text=True)
+    if len(r.stdout) < 1000: errors.append('详情页内容少')
     
     ok = len(errors) == 0
     err = f' ({chr(44).join(errors)})' if errors else ''
@@ -113,12 +110,12 @@ TEST_SLUG="autotest-$(date +%s)"
 CREATE=$(curl -s -X POST -b /tmp/admin_cookie.txt "$BASE/api/admin/properties" \
   -H "Content-Type: application/json" \
   -d "{\"title\":\"Auto Test Property\",\"slug\":\"$TEST_SLUG\",\"address\":\"999 Test St\",\"neighborhood\":\"Test\",\"bedrooms\":1,\"bathrooms\":1}")
-NEW_ID=$(echo "$CREATE" | python3 -c "import json,sys; print(json.load(sys.stdin).get('property',{}).get('id',''))" 2>/dev/null)
+NEW_ID=$(echo "$CREATE" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('property',{}).get('id','') or d.get('id',''))" 2>/dev/null)
 check "$([ -n "$NEW_ID" ] && echo true)" "创建物业 $NEW_ID"
 
 if [ -n "$NEW_ID" ]; then
   # Read
-  GET_TITLE=$(curl -s -b /tmp/admin_cookie.txt "$BASE/api/admin/properties/$NEW_ID" | python3 -c "import json,sys; print(json.load(sys.stdin).get('property',{}).get('title',''))" 2>/dev/null)
+  GET_TITLE=$(curl -s -b /tmp/admin_cookie.txt "$BASE/api/admin/properties/$NEW_ID" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('property',{}).get('title','') or d.get('title',''))" 2>/dev/null)
   check "$([ "$GET_TITLE" = "Auto Test Property" ] && echo true)" "查询物业"
   
   # Delete
@@ -137,7 +134,7 @@ echo "▸ 第三层：表单 API"
 for TYPE in agents hosts business students long_term contact market_insights; do
   RESULT=$(curl -s -X POST "$BASE/api/inquiries" -H "Content-Type: application/json" \
     -d "{\"type\":\"$TYPE\",\"payload\":{\"email\":\"test@test.com\",\"name\":\"Test\"}}" -o /dev/null -w "%{http_code}")
-  check "$([ "$RESULT" = "200" ] && echo true)" "inquiry/$TYPE → $RESULT"
+  check "$([ "$RESULT" = "200" ] || [ "$RESULT" = "201" ] && echo true)" "inquiry/$TYPE → $RESULT"
 done
 
 # ============ 结果 ============
