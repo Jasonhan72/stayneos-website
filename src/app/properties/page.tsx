@@ -74,9 +74,10 @@ const sortOptions = [
 const ITEMS_PER_PAGE = 6;
 
 const PROPERTY_PRICING_TIERS: Record<string, string> = {
-  '1': 'Monthly $8,000-10,000 · Quarterly $7,500-9,000 · Annual $6,500-8,000',
-  '2': 'Monthly $6,500-8,000 · Quarterly $6,000-7,000 · Annual $5,500-6,500',
-  '3': 'Monthly $5,500-7,000 · Quarterly $5,000-6,000 · Annual $4,500-5,500',
+  'prop-55-cooper': 'Monthly $8,000-10,000 · Quarterly $7,500-9,000 · Annual $6,500-8,000',
+  '55-cooper-st-sugar-wharf': 'Monthly $8,000-10,000 · Quarterly $7,500-9,000 · Annual $6,500-8,000',
+  'prop-238-simcoe': 'Monthly $6,500-8,000 · Quarterly $6,000-7,000 · Annual $5,500-6,500',
+  '238-simcoe-st-grange-park': 'Monthly $6,500-8,000 · Quarterly $6,000-7,000 · Annual $5,500-6,500',
 };
 
 
@@ -638,7 +639,7 @@ function PropertyGridCard({
   
   return (
     <Card className="group overflow-hidden" hover>
-      <Link href={`/property/${property.id}`}>
+      <Link href={`/property/${property.slug || property.id}`}>
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden">
           <Image
@@ -724,7 +725,7 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
       onClick={onClick}
     >
       <Link 
-        href={`/property/${property.id}`} 
+        href={`/property/${property.slug || property.id}`} 
         className="flex flex-col md:flex-row"
         onClick={(e) => onClick && e.preventDefault()}
       >

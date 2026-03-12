@@ -42,7 +42,7 @@ const PROPERTY_FACTS: Record<string, {
   minimumStay: string;
   extra?: string;
 }> = {
-  '1': {
+  'prop-55-cooper': {
     pricing: 'Monthly $8,000-10,000 · Quarterly (3-6 months) $7,500-9,000 · Annual (12 months) $6,500-8,000',
     layout: '3BR/2BA · approx. 1,200 sqft · 55+ floors',
     allInclusive: 'WiFi, hydro/water/gas/heating, basic cable, full kitchenware, linens/towels, bi-weekly cleaning, and building amenities.',
@@ -51,7 +51,16 @@ const PROPERTY_FACTS: Record<string, {
     minimumStay: 'Minimum stay 30 days · Smart lock self check-in.',
     extra: 'Developer: Menkes · Building year: 2024.',
   },
-  '2': {
+  '55-cooper-st-sugar-wharf': {
+    pricing: 'Monthly $8,000-10,000 · Quarterly (3-6 months) $7,500-9,000 · Annual (12 months) $6,500-8,000',
+    layout: '3BR/2BA · approx. 1,200 sqft · 55+ floors',
+    allInclusive: 'WiFi, hydro/water/gas/heating, basic cable, full kitchenware, linens/towels, bi-weekly cleaning, and building amenities.',
+    building: 'Pool, gym, 24-hour concierge, visitor parking, and party room.',
+    location: '8-minute walk to Union Station · 5-minute walk to Financial District.',
+    minimumStay: 'Minimum stay 30 days · Smart lock self check-in.',
+    extra: 'Developer: Menkes · Building year: 2024.',
+  },
+  'prop-238-simcoe': {
     pricing: 'Monthly $6,500-8,000 · Quarterly $6,000-7,000 · Annual $5,500-6,500',
     layout: '3BR/2BA',
     allInclusive: 'WiFi, hydro/water/gas/heating, basic cable, full kitchenware, linens/towels, bi-weekly cleaning, and building amenities.',
@@ -59,13 +68,13 @@ const PROPERTY_FACTS: Record<string, {
     location: '3-minute walk to St. Patrick/Osgoode subway · Walkable to major hospitals and UofT.',
     minimumStay: 'Minimum stay 30 days · Smart lock self check-in.',
   },
-  '3': {
-    pricing: 'Monthly $5,500-7,000 · Quarterly $5,000-6,000 · Annual $4,500-5,500',
-    layout: 'North York suite near Sheppard subway station.',
-    allInclusive: 'All-inclusive utilities and furnished setup.',
-    building: 'Building amenities vary by unit.',
-    location: 'Walkable to Sheppard subway station.',
-    minimumStay: 'Minimum stay 30 days.',
+  '238-simcoe-st-grange-park': {
+    pricing: 'Monthly $6,500-8,000 · Quarterly $6,000-7,000 · Annual $5,500-6,500',
+    layout: '3BR/2BA',
+    allInclusive: 'WiFi, hydro/water/gas/heating, basic cable, full kitchenware, linens/towels, bi-weekly cleaning, and building amenities.',
+    building: 'Gym, lobby concierge, and mail room.',
+    location: '3-minute walk to St. Patrick/Osgoode subway · Walkable to major hospitals and UofT.',
+    minimumStay: 'Minimum stay 30 days · Smart lock self check-in.',
   },
 };
 

@@ -113,6 +113,7 @@ export interface PropertyListItem {
 // 用于 PropertyCard 的属性（兼容现有组件）
 export interface PropertyCardData {
   id: string;
+  slug?: string;
   title: string;
   titleZh?: string;
   titleFr?: string;
