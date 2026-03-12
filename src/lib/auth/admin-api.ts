@@ -48,8 +48,11 @@ export async function verifyRequestAuth(request: Request): Promise<TokenPayload 
 
 export async function requireAdmin(request: Request): Promise<TokenPayload> {
   const user = await verifyRequestAuth(request);
-  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
+  if (!user) {
     throw new Error('UNAUTHORIZED');
+  }
+  if (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN') {
+    throw new Error('FORBIDDEN');
   }
   return user;
 }
