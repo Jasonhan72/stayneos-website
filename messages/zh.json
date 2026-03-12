@@ -302,12 +302,14 @@
     "cta": "了解企业方案",
     "cases": {
       "title": "典型场景",
-      "typical": "典型场景"
+      "typical": "典型场景",
+      "subtitle": "See how leading companies have transformed their accommodation strategies with StayNeos."
     },
     "stats": {
       "companies": "运营支持",
       "stays": "灵活房源组合",
-      "satisfaction": "专属客户支持"
+      "satisfaction": "专属客户支持",
+      "savings": "Average Savings vs Hotels"
     },
     "trust": {
       "insured": "全面承保 — 200万加元商业综合责任险",
@@ -322,14 +324,127 @@
         "15kTo30k": "$15,000 - $30,000",
         "30kTo50k": "$30,000 - $50,000",
         "50kPlus": "$50,000+"
-      }
+      },
+      "selectType": "Select type",
+      "contactName": "联系 姓名",
+      "units": "Units",
+      "email": "邮箱 地址",
+      "success": {
+        "title": "Quote Request 提交ted!",
+        "message": "Thank you for your interest! Our business development team will analyze your requirements and contact you within 24 hours with a customized proposal and pricing."
+      },
+      "years": "Years",
+      "emailPlaceholder": "your@company.com",
+      "group": "Group Accommodation",
+      "submitting": "提交ting...",
+      "jobTitle": "Job 标题",
+      "selectDuration": "Select",
+      "selectUnits": "Select",
+      "requirementsPlaceholder": "Please describe your accommodation needs, preferred locations, special requirements, timeline, and any other details that would help us create the perfect solution for your organization...",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "numberOfUnits": "Number of Units",
+      "title": "Request a Custom Quote",
+      "selectBudget": "Select budget range",
+      "projectTeam": "Project Team",
+      "subtitle": "Tell us about your requirements and our team will create a customized solution for your organization.",
+      "requirements": "Specific 要求",
+      "unit": "Unit",
+      "contactNamePlaceholder": "Your full name",
+      "months": "Months",
+      "submit": "Request Quote",
+      "companyName": "公司 姓名",
+      "longTerm": "长租 Stay",
+      "budget": "月租 预算 Range",
+      "companyNamePlaceholder": "Your company name",
+      "duration": "Expected Duration",
+      "individual": "Individual Travel",
+      "phone": "电话 Number",
+      "jobTitlePlaceholder": "Your job title",
+      "accommodationType": "Accommodation 类型"
+    },
+    "advantages": {
+      "subtitle": "Transform your corporate accommodation strategy with our comprehensive business solutions.",
+      "title": "为什么选择 StayNeos for 商务"
+    },
+    "features": {
+      "subtitle": "Enterprise-grade features designed to simplify corporate accommodation management.",
+      "title": "商务-First 特色"
+    },
+    "hero": {
+      "ctaQuote": "Request a Quote",
+      "ctaBrowse": "Explore Solutions",
+      "subtitle": "Streamlined accommodation solutions for business travelers, employee relocations, and project teams. 保存 costs, reduce complexity, and provide premium housing for your organization.",
+      "title": "企业 Housing Solutions"
+    },
+    "solutions": {
+      "subtitle": "From individual business travelers to large project teams, we have the perfect accommodation solution for your organization.",
+      "title": "Solutions for Every Need"
     }
   },
   "longterm": {
     "title": "长期居住",
     "subtitle": "月租省 20%",
     "desc": "不只是路过？安心住下来。公寓里什么都有——碗碟、床品，连咖啡机都备好了。你只需要带上自己。",
-    "cta": "浏览长租房源"
+    "cta": "浏览长租房源",
+    "hero": {
+      "cta": "Get Quote",
+      "savingsCta": "See Savings",
+      "subtitle": "保存 significantly on extended stays with our flexible long-term lease options. Choose 3, 6, or 12-month terms and enjoy up to 30% off monthly rates in 多伦多's premium furnished apartments.",
+      "title": "长租方案 Rental Discounts"
+    },
+    "advantages": {
+      "title": "为什么选择 长租方案 with StayNeos",
+      "subtitle": "Beyond just savings, long-term stays offer stability, convenience, and a true home-away-from-home experience."
+    },
+    "form": {
+      "submit": "Get My Quote & Savings",
+      "message": "Tell us about your requirements",
+      "bedroom": "卧室",
+      "firstName": "First 姓名",
+      "title": "Get Your 长租方案 Rental Quote",
+      "bedrooms": "卧室s",
+      "subtitle": "Tell us about your long-term housing needs and we'll create a custom proposal with your savings breakdown.",
+      "phone": "电话 Number",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "studio": "Studio",
+      "selectLocation": "Select area",
+      "moveInDate": "Desired Move-in 日期",
+      "messagePlaceholder": "Please describe your long-term housing needs, any specific requirements, reasons for extended stay, and any questions about our long-term rental program...",
+      "location": "Preferred Area",
+      "firstNamePlaceholder": "Enter your first name",
+      "submitting": "提交ting...",
+      "emailPlaceholder": "your@email.com",
+      "lastName": "Last 姓名",
+      "propertyType": "物业 类型",
+      "success": {
+        "message": "Thank you for your interest in long-term rentals! Our team will prepare a detailed quote with your exact savings breakdown and contact you within 24 hours.",
+        "title": "Quote Request 提交ted!"
+      },
+      "selectBudget": "Select budget",
+      "email": "邮箱 地址",
+      "leaseDuration": "Preferred 租约 Duration",
+      "selectType": "Select type",
+      "lastNamePlaceholder": "Enter your last name",
+      "months": "Months",
+      "budget": "月租 预算"
+    },
+    "testimonials": {
+      "title": "长租方案 Resident Stories",
+      "subtitle": "See how our long-term residents have saved money and enjoyed their extended 多伦多 stays."
+    },
+    "usecases": {
+      "title": "Perfect For Your Situation",
+      "subtitle": "长租 rentals work for a variety of life and business situations requiring extended 多伦多 stays."
+    },
+    "pricing": {
+      "select": "Select This Plan",
+      "title": "Choose Your Savings Level",
+      "subtitle": "The longer you stay, the more you save. All options include the same premium amenities and services."
+    },
+    "benefits": {
+      "title": "Everything Included",
+      "subtitle": "All long-term rentals include premium amenities and services at no additional cost."
+    }
   },
   "relocation": {
     "title": "搬迁过渡",
@@ -363,7 +478,11 @@
     "properties": "浏览房源",
     "owners": "业主合作",
     "academicProfessionals": "学术与医疗专业人士",
-    "trustSignalsLine": "全面承保 · 支持企业发票 · 所有房源均位于礼宾服务楼宇"
+    "trustSignalsLine": "全面承保 · 支持企业发票 · 所有房源均位于礼宾服务楼宇",
+    "students": "学生s",
+    "marketInsights": "市场洞察",
+    "hosts": "房东合作",
+    "neighborhoods": "社区指南"
   },
   "language": {
     "title": "语言",
@@ -2904,7 +3023,9 @@
       "culture": {
         "title": "商务文化",
         "desc": "专业且多元文化的环境"
-      }
+      },
+      "title": "多伦多 Quick Facts",
+      "subtitle": "Essential information for executive travelers and business professionals."
     },
     "data": {
       "downtown": {
@@ -3046,6 +3167,12 @@
     "hero": {
       "title": "多伦多真实社区指南",
       "subtitle": "我们目前聚焦3个真实运营社区。"
+    },
+    "cta": {
+      "title": "Ready to Find Your Perfect 多伦多 Home?",
+      "contact": "联系 我们的团队",
+      "browse": "浏览 所有物业",
+      "subtitle": "浏览 our curated selection of executive apartments in these premium 多伦多 neighborhoods."
     }
   },
   "students": {
@@ -3096,7 +3223,47 @@
       "success": {
         "title": "已收到您的需求",
         "message": "团队将在24小时内联系您。"
-      }
+      },
+      "oneBed": "1-卧室",
+      "duration": "租约 Duration",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "subtitle": "Ready to secure your 多伦多 student housing? Complete the application below and our team will contact you within 24 hours.",
+      "lastNamePlaceholder": "Enter your last name",
+      "selectUniversity": "Select your school",
+      "selectDuration": "Select",
+      "months": "Months",
+      "flexible": "Flexible",
+      "studio": "Private Studio",
+      "uoft": "University of 多伦多",
+      "cc": "Centennial College",
+      "moveInDate": "Move-in 日期",
+      "ocad": "OCAD University",
+      "shared": "Shared Room",
+      "gbc": "George Brown College",
+      "title": "Apply for 学生 Housing",
+      "selectBudget": "Select budget",
+      "programPlaceholder": "e.g. Computer Science",
+      "program": "Program/Major",
+      "emailPlaceholder": "your@email.com",
+      "other": "Other",
+      "messagePlaceholder": "Tell us about yourself, any special requirements, roommate preferences, or questions you have about student housing with StayNeos...",
+      "roomType": "Preferred Room 类型",
+      "tmu": "多伦多 Metropolitan University",
+      "firstNamePlaceholder": "Enter your first name",
+      "budget": "月租 预算",
+      "seneca": "Seneca Polytechnic"
+    },
+    "features": {
+      "title": "学生-Focused 设施",
+      "subtitle": "Every space is designed with student success in mind, from study areas to social spaces."
+    },
+    "testimonials": {
+      "subtitle": "Hear from current and former residents about their StayNeos experience.",
+      "title": "What 学生s Say"
+    },
+    "universities": {
+      "subtitle": "Strategically located near 多伦多's top educational institutions for easy access to campus and academic resources.",
+      "title": "Partner Universities & Colleges"
     }
   },
   "homePaths": {
@@ -3109,6 +3276,129 @@
       "title": "我负责搬迁安置",
       "description": "面向搬迁公司、企业HR及保险安置团队的企业住房方案。",
       "cta": "查看企业方案"
+    }
+  },
+  "hosts": {
+    "form": {
+      "condo": "Condo",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "lastNamePlaceholder": "Enter your last name",
+      "monthlyRent": "Current 月租 Rent",
+      "subtitle": "Complete the form below and our team will contact you within 24 hours to discuss your property.",
+      "selectBedrooms": "Select",
+      "bedrooms": "卧室s",
+      "submitting": "提交ting...",
+      "propertyType": "物业 类型",
+      "house": "House",
+      "message": "Tell us about your property",
+      "propertyAddressPlaceholder": "Enter property address",
+      "lastName": "Last 姓名",
+      "propertyAddress": "物业 地址",
+      "submit": "提交 Application",
+      "phone": "电话 Number",
+      "firstNamePlaceholder": "Enter your first name",
+      "success": {
+        "title": "Application 提交ted!",
+        "message": "Thank you for your interest! Our team will review your application and contact you within 24 hours to discuss next steps and answer any questions you may have."
+      },
+      "messagePlaceholder": "Describe your property, current condition, furnishing status, and any questions you have about our program...",
+      "title": "List Your 物业 Today",
+      "email": "邮箱 地址",
+      "selectType": "Select type",
+      "emailPlaceholder": "your@email.com",
+      "studio": "Studio",
+      "bedroom": "卧室",
+      "rentPlaceholder": "Optional",
+      "firstName": "First 姓名",
+      "apartment": "公寓"
+    },
+    "calculator": {
+      "title": "Calculate Your Potential Earnings",
+      "guarantee": "月租 payments regardless of occupancy, plus professional management included.",
+      "subtitle": "See how much more you could earn with StayNeos compared to traditional rentals.",
+      "currentRent": "Current 月租 Rent",
+      "occupancyRate": "Current 入住率 费率"
+    },
+    "process": {
+      "subtitle": "Get started in four simple steps and begin earning guaranteed income from your property.",
+      "title": "How It Works"
+    },
+    "hero": {
+      "cta": "立即开始",
+      "calculateCta": "Calculate Your Earnings",
+      "title": "List Your 物业",
+      "subtitle": "Earn guaranteed monthly income with zero vacancy risk. Join 多伦多's premium executive housing platform and let us handle everything while you collect steady payments."
+    },
+    "advantages": {
+      "title": "为什么选择 StayNeos",
+      "subtitle": "Join hundreds of property owners who've transformed their real estate investments into hassle-free income streams."
+    },
+    "benefits": {
+      "subtitle": "More reasons why property owners choose StayNeos for their investment properties.",
+      "title": "Additional 优势"
+    }
+  },
+  "marketInsights": {
+    "charts": {
+      "occupancyRatesDesc": "Comparative occupancy rates across 多伦多's primary executive housing districts.",
+      "demandSourcesDesc": "企业 housing demand breakdown by industry sector and company size.",
+      "demandSources": "需求 by Industry",
+      "title": "市场 Data Visualization",
+      "rentalTrends": "Rental 费率 趋势s",
+      "subtitle": "Interactive charts and graphs showing market trends, pricing patterns, and demand analytics.",
+      "occupancyRates": "入住率 by 社区",
+      "rentalTrendsDesc": "24-month historical rental rate progression across different property types and neighborhoods.",
+      "forecastModelDesc": "Predictive modeling for rental rates, occupancy, and market demand through 2025.",
+      "forecastModel": "12-Month 预测"
+    },
+    "form": {
+      "jobTitlePlaceholder": "Your job title",
+      "subtitle": "Access our comprehensive market analysis including detailed charts, forecasts, and investment insights.",
+      "firstName": "First 姓名",
+      "company": "公司",
+      "lastNamePlaceholder": "Enter your last name",
+      "success": {
+        "message": "Thank you! Your market report is being prepared and will be emailed to you within the next few minutes. Check your inbox for the download link.",
+        "title": "Report Download Ready!",
+        "checkEmail": "Check Your 邮箱"
+      },
+      "emailPlaceholder": "your@email.com",
+      "interests": "Areas of Interest",
+      "reportType": "Preferred Report 类型",
+      "custom": "Custom Research",
+      "submit": "Download 市场 Report",
+      "companyPlaceholder": "Your company name",
+      "title": "Download Complete 市场 Report",
+      "firstNamePlaceholder": "Enter your first name",
+      "submitting": "Processing...",
+      "annual": "年租 Analysis",
+      "email": "邮箱 地址",
+      "jobTitle": "Job 标题",
+      "lastName": "Last 姓名",
+      "quarterly": "季租 Report",
+      "selectReport": "Select report type"
+    },
+    "stats": {
+      "subtitle": "Latest data from 多伦多's premium executive housing market as of Q3 2024.",
+      "title": "Key 市场 Metrics"
+    },
+    "neighborhoods": {
+      "title": "社区 Performance",
+      "subtitle": "Comparative analysis of 多伦多's premium neighborhoods for executive housing investment and occupancy."
+    },
+    "insights": {
+      "title": "Key 市场洞察",
+      "subtitle": "Expert analysis of current market conditions and emerging trends affecting 多伦多's executive housing sector."
+    },
+    "hero": {
+      "title": "多伦多 Real Estate 市场洞察",
+      "downloadCta": "Download Report",
+      "viewCta": "查看 洞察",
+      "subtitle": "Comprehensive market analysis and trends for 多伦多's executive housing market. Data-driven insights to inform your investment and housing decisions."
+    },
+    "forecasts": {
+      "subtitle": "Expert predictions and analysis for 多伦多's executive housing market outlook.",
+      "title": "市场 预测s"
     }
   }
 }

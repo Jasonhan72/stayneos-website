@@ -302,12 +302,14 @@
     "cta": "Découvrir les offres entreprise",
     "cases": {
       "title": "Scénarios types",
-      "typical": "Scénario type"
+      "typical": "Scénario type",
+      "subtitle": "See how leading companies have transformed their accommodation strategies with StayNeos."
     },
     "stats": {
       "companies": "Support opérationnel",
       "stays": "Portefeuille flexible",
-      "satisfaction": "Support dédié"
+      "satisfaction": "Support dédié",
+      "savings": "Average Savings vs Hotels"
     },
     "trust": {
       "insured": "Entièrement assuré — 2 M$ de responsabilité civile commerciale",
@@ -322,14 +324,127 @@
         "15kTo30k": "15 000 $ - 30 000 $",
         "30kTo50k": "30 000 $ - 50 000 $",
         "50kPlus": "50 000 $+"
-      }
+      },
+      "selectType": "Select type",
+      "contactName": "Contact Name",
+      "units": "Units",
+      "email": "Email Address",
+      "success": {
+        "title": "Quote Request Soumettreted!",
+        "message": "Thank you for your interest! Our business development team will analyze your requirements and contact you within 24 hours with a customized proposal and pricing."
+      },
+      "years": "Years",
+      "emailPlaceholder": "your@company.com",
+      "group": "Group Accommodation",
+      "submitting": "Soumettreting...",
+      "jobTitle": "Job Title",
+      "selectDuration": "Select",
+      "selectUnits": "Select",
+      "requirementsPlaceholder": "Please describe your accommodation needs, preferred locations, special requirements, timeline, and any other details that would help us create the perfect solution for your organization...",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "numberOfUnits": "Number of Units",
+      "title": "Request a Custom Quote",
+      "selectBudget": "Select budget range",
+      "projectTeam": "Project Team",
+      "subtitle": "Tell us about your requirements and our team will create a customized solution for your organization.",
+      "requirements": "Specific Requirements",
+      "unit": "Unit",
+      "contactNamePlaceholder": "Your full name",
+      "months": "Months",
+      "submit": "Request Quote",
+      "companyName": "Company Name",
+      "longTerm": "Long-term Stay",
+      "budget": "Monthly Budget Range",
+      "companyNamePlaceholder": "Your company name",
+      "duration": "Expected Duration",
+      "individual": "Individual Travel",
+      "phone": "Phone Number",
+      "jobTitlePlaceholder": "Your job title",
+      "accommodationType": "Accommodation Type"
+    },
+    "advantages": {
+      "subtitle": "Transform your corporate accommodation strategy with our comprehensive business solutions.",
+      "title": "Pourquoi choisir StayNeos for Business"
+    },
+    "features": {
+      "subtitle": "Enterprise-grade features designed to simplify corporate accommodation management.",
+      "title": "Business-First Features"
+    },
+    "hero": {
+      "ctaQuote": "Request a Quote",
+      "ctaBrowse": "Explore Solutions",
+      "subtitle": "Streamlined accommodation solutions for business travelers, employee relocations, and project teams. Save costs, reduce complexity, and provide premium housing for your organization.",
+      "title": "Corporate Housing Solutions"
+    },
+    "solutions": {
+      "subtitle": "From individual business travelers to large project teams, we have the perfect accommodation solution for your organization.",
+      "title": "Solutions for Every Need"
     }
   },
   "longterm": {
     "title": "Séjour prolongé",
     "subtitle": "Économisez 20 % par mois",
     "desc": "Pas juste de passage ? Installez-vous. Tout est là — vaisselle, draps, cafetière. Amenez juste vous-même.",
-    "cta": "Voir les logements longue durée"
+    "cta": "Voir les logements longue durée",
+    "hero": {
+      "cta": "Get Quote",
+      "savingsCta": "See Savings",
+      "subtitle": "Save significantly on extended stays with our flexible long-term lease options. Choose 3, 6, or 12-month terms and enjoy up to 30% off monthly rates in Toronto's premium furnished apartments.",
+      "title": "Long terme Rental Discounts"
+    },
+    "advantages": {
+      "title": "Pourquoi choisir Long terme with StayNeos",
+      "subtitle": "Beyond just savings, long-term stays offer stability, convenience, and a true home-away-from-home experience."
+    },
+    "form": {
+      "submit": "Get My Quote & Savings",
+      "message": "Tell us about your requirements",
+      "bedroom": "Bedroom",
+      "firstName": "First Name",
+      "title": "Get Your Long terme Rental Quote",
+      "bedrooms": "Bedrooms",
+      "subtitle": "Tell us about your long-term housing needs and we'll create a custom proposal with your savings breakdown.",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "studio": "Studio",
+      "selectLocation": "Select area",
+      "moveInDate": "Desired Move-in Date",
+      "messagePlaceholder": "Please describe your long-term housing needs, any specific requirements, reasons for extended stay, and any questions about our long-term rental program...",
+      "location": "Preferred Area",
+      "firstNamePlaceholder": "Enter your first name",
+      "submitting": "Soumettreting...",
+      "emailPlaceholder": "your@email.com",
+      "lastName": "Last Name",
+      "propertyType": "Property Type",
+      "success": {
+        "message": "Thank you for your interest in long-term rentals! Our team will prepare a detailed quote with your exact savings breakdown and contact you within 24 hours.",
+        "title": "Quote Request Soumettreted!"
+      },
+      "selectBudget": "Select budget",
+      "email": "Email Address",
+      "leaseDuration": "Preferred Lease Duration",
+      "selectType": "Select type",
+      "lastNamePlaceholder": "Enter your last name",
+      "months": "Months",
+      "budget": "Monthly Budget"
+    },
+    "testimonials": {
+      "title": "Long terme Resident Stories",
+      "subtitle": "See how our long-term residents have saved money and enjoyed their extended Toronto stays."
+    },
+    "usecases": {
+      "title": "Perfect For Your Situation",
+      "subtitle": "Long-term rentals work for a variety of life and business situations requiring extended Toronto stays."
+    },
+    "pricing": {
+      "select": "Select This Plan",
+      "title": "Choose Your Savings Level",
+      "subtitle": "The longer you stay, the more you save. All options include the same premium amenities and services."
+    },
+    "benefits": {
+      "title": "Everything Included",
+      "subtitle": "All long-term rentals include premium amenities and services at no additional cost."
+    }
   },
   "relocation": {
     "title": "Relocalisation",
@@ -363,7 +478,11 @@
     "agents": "Pour Agents",
     "owners": "Pour Propriétaires",
     "academicProfessionals": "Pour les professionnels académiques et médicaux",
-    "trustSignalsLine": "Entièrement assuré · Facturation d’entreprise disponible · Immeubles avec conciergerie"
+    "trustSignalsLine": "Entièrement assuré · Facturation d’entreprise disponible · Immeubles avec conciergerie",
+    "students": "Students",
+    "marketInsights": "Aperçu du marché",
+    "hosts": "Pour les propriétaires",
+    "neighborhoods": "Quartiers"
   },
   "language": {
     "title": "Langue",
@@ -2904,7 +3023,9 @@
       "culture": {
         "title": "Culture d'affaires",
         "desc": "Environnement professionnel et multiculturel"
-      }
+      },
+      "title": "Toronto Quick Facts",
+      "subtitle": "Essential information for executive travelers and business professionals."
     },
     "data": {
       "downtown": {
@@ -3046,6 +3167,12 @@
     "hero": {
       "title": "Guide des quartiers réels de Toronto",
       "subtitle": "Nous nous concentrons actuellement sur 3 quartiers réels."
+    },
+    "cta": {
+      "title": "Ready to Find Your Perfect Toronto Home?",
+      "contact": "Contact Our Team",
+      "browse": "Parcourir Toutes les propriétés",
+      "subtitle": "Parcourir our curated selection of executive apartments in these premium Toronto neighborhoods."
     }
   },
   "students": {
@@ -3096,7 +3223,47 @@
       "success": {
         "title": "Demande reçue",
         "message": "Notre équipe vous contactera sous 24 h."
-      }
+      },
+      "oneBed": "1-Bedroom",
+      "duration": "Lease Duration",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "subtitle": "Ready to secure your Toronto student housing? Complete the application below and our team will contact you within 24 hours.",
+      "lastNamePlaceholder": "Enter your last name",
+      "selectUniversity": "Select your school",
+      "selectDuration": "Select",
+      "months": "Months",
+      "flexible": "Flexible",
+      "studio": "Private Studio",
+      "uoft": "University of Toronto",
+      "cc": "Centennial College",
+      "moveInDate": "Move-in Date",
+      "ocad": "OCAD University",
+      "shared": "Shared Room",
+      "gbc": "George Brown College",
+      "title": "Apply for Student Housing",
+      "selectBudget": "Select budget",
+      "programPlaceholder": "e.g. Computer Science",
+      "program": "Program/Major",
+      "emailPlaceholder": "your@email.com",
+      "other": "Other",
+      "messagePlaceholder": "Tell us about yourself, any special requirements, roommate preferences, or questions you have about student housing with StayNeos...",
+      "roomType": "Preferred Room Type",
+      "tmu": "Toronto Metropolitan University",
+      "firstNamePlaceholder": "Enter your first name",
+      "budget": "Monthly Budget",
+      "seneca": "Seneca Polytechnic"
+    },
+    "features": {
+      "title": "Student-Focused Amenities",
+      "subtitle": "Every space is designed with student success in mind, from study areas to social spaces."
+    },
+    "testimonials": {
+      "subtitle": "Hear from current and former residents about their StayNeos experience.",
+      "title": "What Students Say"
+    },
+    "universities": {
+      "subtitle": "Strategically located near Toronto's top educational institutions for easy access to campus and academic resources.",
+      "title": "Partner Universities & Colleges"
     }
   },
   "homePaths": {
@@ -3109,6 +3276,129 @@
       "title": "Je gère des relocalisations",
       "description": "Pour les sociétés de relocalisation, équipes RH et dossiers d’hébergement d’assurance.",
       "cta": "Découvrir les solutions entreprises"
+    }
+  },
+  "hosts": {
+    "form": {
+      "condo": "Condo",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "lastNamePlaceholder": "Enter your last name",
+      "monthlyRent": "Current Monthly Rent",
+      "subtitle": "Complete the form below and our team will contact you within 24 hours to discuss your property.",
+      "selectBedrooms": "Select",
+      "bedrooms": "Bedrooms",
+      "submitting": "Soumettreting...",
+      "propertyType": "Property Type",
+      "house": "House",
+      "message": "Tell us about your property",
+      "propertyAddressPlaceholder": "Enter property address",
+      "lastName": "Last Name",
+      "propertyAddress": "Property Address",
+      "submit": "Soumettre Application",
+      "phone": "Phone Number",
+      "firstNamePlaceholder": "Enter your first name",
+      "success": {
+        "title": "Application Soumettreted!",
+        "message": "Thank you for your interest! Our team will review your application and contact you within 24 hours to discuss next steps and answer any questions you may have."
+      },
+      "messagePlaceholder": "Describe your property, current condition, furnishing status, and any questions you have about our program...",
+      "title": "List Your Property Today",
+      "email": "Email Address",
+      "selectType": "Select type",
+      "emailPlaceholder": "your@email.com",
+      "studio": "Studio",
+      "bedroom": "Bedroom",
+      "rentPlaceholder": "Optional",
+      "firstName": "First Name",
+      "apartment": "Apartment"
+    },
+    "calculator": {
+      "title": "Calculate Your Potential Earnings",
+      "guarantee": "Monthly payments regardless of occupancy, plus professional management included.",
+      "subtitle": "See how much more you could earn with StayNeos compared to traditional rentals.",
+      "currentRent": "Current Monthly Rent",
+      "occupancyRate": "Current Occupancy Rate"
+    },
+    "process": {
+      "subtitle": "Get started in four simple steps and begin earning guaranteed income from your property.",
+      "title": "How It Works"
+    },
+    "hero": {
+      "cta": "Commencer",
+      "calculateCta": "Calculate Your Earnings",
+      "title": "List Your Property",
+      "subtitle": "Earn guaranteed monthly income with zero vacancy risk. Join Toronto's premium executive housing platform and let us handle everything while you collect steady payments."
+    },
+    "advantages": {
+      "title": "Pourquoi choisir StayNeos",
+      "subtitle": "Join hundreds of property owners who've transformed their real estate investments into hassle-free income streams."
+    },
+    "benefits": {
+      "subtitle": "More reasons why property owners choose StayNeos for their investment properties.",
+      "title": "Additional Benefits"
+    }
+  },
+  "marketInsights": {
+    "charts": {
+      "occupancyRatesDesc": "Comparative occupancy rates across Toronto's primary executive housing districts.",
+      "demandSourcesDesc": "Corporate housing demand breakdown by industry sector and company size.",
+      "demandSources": "Demand by Industry",
+      "title": "Market Data Visualization",
+      "rentalTrends": "Rental Rate Trends",
+      "subtitle": "Interactive charts and graphs showing market trends, pricing patterns, and demand analytics.",
+      "occupancyRates": "Occupancy by Neighborhood",
+      "rentalTrendsDesc": "24-month historical rental rate progression across different property types and neighborhoods.",
+      "forecastModelDesc": "Predictive modeling for rental rates, occupancy, and market demand through 2025.",
+      "forecastModel": "12-Month Forecast"
+    },
+    "form": {
+      "jobTitlePlaceholder": "Your job title",
+      "subtitle": "Access our comprehensive market analysis including detailed charts, forecasts, and investment insights.",
+      "firstName": "First Name",
+      "company": "Company",
+      "lastNamePlaceholder": "Enter your last name",
+      "success": {
+        "message": "Thank you! Your market report is being prepared and will be emailed to you within the next few minutes. Check your inbox for the download link.",
+        "title": "Report Download Ready!",
+        "checkEmail": "Check Your Email"
+      },
+      "emailPlaceholder": "your@email.com",
+      "interests": "Areas of Interest",
+      "reportType": "Preferred Report Type",
+      "custom": "Custom Research",
+      "submit": "Download Market Report",
+      "companyPlaceholder": "Your company name",
+      "title": "Download Complete Market Report",
+      "firstNamePlaceholder": "Enter your first name",
+      "submitting": "Processing...",
+      "annual": "Annual Analysis",
+      "email": "Email Address",
+      "jobTitle": "Job Title",
+      "lastName": "Last Name",
+      "quarterly": "Quarterly Report",
+      "selectReport": "Select report type"
+    },
+    "stats": {
+      "subtitle": "Latest data from Toronto's premium executive housing market as of Q3 2024.",
+      "title": "Key Market Metrics"
+    },
+    "neighborhoods": {
+      "title": "Neighborhood Performance",
+      "subtitle": "Comparative analysis of Toronto's premium neighborhoods for executive housing investment and occupancy."
+    },
+    "insights": {
+      "title": "Key Aperçu du marché",
+      "subtitle": "Expert analysis of current market conditions and emerging trends affecting Toronto's executive housing sector."
+    },
+    "hero": {
+      "title": "Toronto Real Estate Aperçu du marché",
+      "downloadCta": "Download Report",
+      "viewCta": "Voir Insights",
+      "subtitle": "Comprehensive market analysis and trends for Toronto's executive housing market. Data-driven insights to inform your investment and housing decisions."
+    },
+    "forecasts": {
+      "subtitle": "Expert predictions and analysis for Toronto's executive housing market outlook.",
+      "title": "Market Forecasts"
     }
   }
 }
