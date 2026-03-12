@@ -73,6 +73,13 @@ const sortOptions = [
 // 每页数量
 const ITEMS_PER_PAGE = 6;
 
+const PROPERTY_PRICING_TIERS: Record<string, string> = {
+  '1': 'Monthly $8,000-10,000 · Quarterly $7,500-9,000 · Annual $6,500-8,000',
+  '2': 'Monthly $6,500-8,000 · Quarterly $6,000-7,000 · Annual $5,500-6,500',
+  '3': 'Monthly $5,500-7,000 · Quarterly $5,000-6,000 · Annual $4,500-5,500',
+};
+
+
 export default function PropertiesPage() {
   const { t, locale } = useI18n();
   
@@ -680,12 +687,16 @@ function PropertyGridCard({
             <span>{t('property.max')} {property.maxGuests} {t('property.guests')}</span>
           </div>
           
+          {PROPERTY_PRICING_TIERS[property.id] && (
+            <p className="text-xs text-neutral-600 mb-3">{PROPERTY_PRICING_TIERS[property.id]}</p>
+          )}
+
           <div className="flex items-baseline justify-between pt-3 border-t border-neutral-200">
             <div className="flex items-baseline gap-1">
               <span className="text-xl font-bold text-neutral-900">
                 ${property.price.toLocaleString()}
               </span>
-              <span className="text-sm text-neutral-500">{t('property.perNight')}</span>
+              <span className="text-sm text-neutral-500">/month</span>
             </div>
             <span className="text-xs text-neutral-400">{property.reviewCount} {t('property.reviews')}</span>
           </div>
@@ -782,12 +793,16 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
             </div>
           </div>
           
+          {PROPERTY_PRICING_TIERS[property.id] && (
+            <p className="text-xs text-neutral-600 mt-4">{PROPERTY_PRICING_TIERS[property.id]}</p>
+          )}
+
           <div className="flex items-baseline justify-between mt-4 pt-4 border-t border-neutral-200">
             <div className="flex items-baseline gap-1">
               <span className="text-2xl font-bold text-neutral-900">
                 ${property.price.toLocaleString()}
               </span>
-              <span className="text-neutral-500">{t('property.perNight')}</span>
+              <span className="text-neutral-500">/month</span>
             </div>
             <span className="text-sm text-neutral-400">{property.reviewCount} {t('property.reviews')}</span>
           </div>

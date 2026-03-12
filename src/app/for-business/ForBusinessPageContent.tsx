@@ -19,7 +19,11 @@ import {
   Award,
   Calendar,
   CreditCard,
-  Phone
+  Phone,
+  ShieldCheck,
+  FileText,
+  Lock,
+  Timer
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { submitInquiry } from "@/lib/inquiry-client";
@@ -65,6 +69,15 @@ export default function ForBusinessPageContent() {
       setIsSubmitting(false);
     }
   };
+
+
+
+  const trustSignals = [
+    { key: 'insured', icon: ShieldCheck, text: t('business.trust.insured') },
+    { key: 'invoicing', icon: FileText, text: t('business.trust.invoicing') },
+    { key: 'secure', icon: Lock, text: t('business.trust.secure') },
+    { key: 'response', icon: Timer, text: t('business.trust.response') },
+  ];
 
   const solutions = [
     {
@@ -193,6 +206,21 @@ export default function ForBusinessPageContent() {
           </div>
         </Container>
         <div className="absolute -bottom-1 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent"></div>
+      </Section>
+
+
+
+      <Section className="py-10 bg-white border-b border-neutral-200">
+        <Container>
+          <div className="grid md:grid-cols-2 gap-4">
+            {trustSignals.map((item) => (
+              <div key={item.key} className="flex items-start gap-3 bg-neutral-50 border border-neutral-200 p-4">
+                <item.icon className="w-5 h-5 text-blue-700 mt-0.5" />
+                <p className="text-neutral-800 font-medium">{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </Container>
       </Section>
 
       {/* Solutions Section */}

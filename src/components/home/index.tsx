@@ -153,6 +153,46 @@ export function HeroSection() {
   );
 }
 
+
+
+export function DualPathCTASection() {
+  const { t } = useI18n();
+
+  const paths = [
+    {
+      title: t('homePaths.housing.title'),
+      description: t('homePaths.housing.description'),
+      href: '/properties',
+      cta: t('homePaths.housing.cta'),
+    },
+    {
+      title: t('homePaths.relocation.title'),
+      description: t('homePaths.relocation.description'),
+      href: '/for-business',
+      cta: t('homePaths.relocation.cta'),
+    },
+  ];
+
+  return (
+    <Section bg="white" className="py-12">
+      <Container>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {paths.map((path) => (
+            <Card key={path.href} className="p-8 border border-neutral-200 hover:border-primary/40 transition-colors">
+              <h3 className="text-2xl font-semibold text-neutral-900 mb-3">{path.title}</h3>
+              <p className="text-neutral-600 mb-6">{path.description}</p>
+              <Link href={path.href} className="inline-flex items-center gap-2 text-primary font-semibold hover:underline">
+                {path.cta}
+                <ArrowRight size={18} />
+              </Link>
+            </Card>
+          ))}
+        </div>
+      </Container>
+    </Section>
+  );
+}
+
 // ============================================================
 // Value Proposition - 四大价值支柱
 // ============================================================

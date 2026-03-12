@@ -149,24 +149,27 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="bg-primary-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-5 md:py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-primary-200 text-center sm:text-left">
-              {t("footer.copyright", { year: currentYear })}
-            </p>
-            
-            {/* Social Links */}
-            <div className="flex items-center gap-2">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  className="w-10 h-10 rounded-lg flex items-center justify-center text-primary-200 hover:text-accent hover:bg-primary-700/50 transition-all duration-200"
-                  aria-label={social.label}
-                >
-                  <social.icon className="w-5 h-5" />
-                </a>
-              ))}
+          <div className="py-5 md:py-6 flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <p className="text-sm text-primary-200 text-center sm:text-left">
+                {t("footer.copyright", { year: currentYear })}
+              </p>
+              
+              {/* Social Links */}
+              <div className="flex items-center gap-2">
+                {socialLinks.map((social) => (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    className="w-10 h-10 rounded-lg flex items-center justify-center text-primary-200 hover:text-accent hover:bg-primary-700/50 transition-all duration-200"
+                    aria-label={social.label}
+                  >
+                    <social.icon className="w-5 h-5" />
+                  </a>
+                ))}
+              </div>
             </div>
+            <p className="text-xs text-primary-200 text-center">{t('footer.trustSignalsLine')}</p>
           </div>
         </div>
       </div>

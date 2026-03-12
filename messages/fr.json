@@ -287,6 +287,12 @@
       "companies": "Support opérationnel",
       "stays": "Portefeuille flexible",
       "satisfaction": "Support dédié"
+    },
+    "trust": {
+      "insured": "Entièrement assuré — 2 M$ de responsabilité civile commerciale",
+      "invoicing": "Facturation d’entreprise avec modalités de paiement net-30",
+      "secure": "Toutes les propriétés sont dans des immeubles sécurisés avec conciergerie",
+      "response": "Gestionnaire de compte dédié avec garantie de réponse en 2 heures"
     }
   },
   "longterm": {
@@ -326,7 +332,8 @@
     "properties": "Parcourir les Propriétés",
     "agents": "Pour Agents",
     "owners": "Pour Propriétaires",
-    "academicProfessionals": "Pour les professionnels académiques et médicaux"
+    "academicProfessionals": "Pour les professionnels académiques et médicaux",
+    "trustSignalsLine": "Entièrement assuré · Facturation d’entreprise disponible · Immeubles avec conciergerie"
   },
   "language": {
     "title": "Langue",
@@ -505,7 +512,8 @@
       "desc": "Si vous êtes un locataire actuel et avez besoin d'une assistance immédiate, veuillez appeler notre ligne d'urgence 24h/24"
     },
     "responseTime": "Nous répondons généralement sous 24 heures",
-    "visitUs": "Nous rendre visite"
+    "visitUs": "Nous rendre visite",
+    "responseWithin2Hours": "Nous répondons sous 2 heures pendant les heures ouvrables"
   },
   "form": {
     "title": "Contactez-nous",
@@ -2508,7 +2516,23 @@
     "sq2": "Problème ?",
     "sa2": "Support 24/7.",
     "sq3": "Entreprise ?",
-    "sa3": "Oui, conditions flexibles."
+    "sa3": "Oui, conditions flexibles.",
+    "b2bq1": "Quelle est la durée minimale de séjour ?",
+    "b2ba1": "La durée minimale est de 30 jours.",
+    "b2bq2": "Quelle est votre politique d’annulation ?",
+    "b2ba2": "Annulation flexible — annulation gratuite jusqu’à 30 jours avant l’arrivée.",
+    "b2bq3": "Fournissez-vous des factures d’entreprise ?",
+    "b2ba3": "Oui. Nous fournissons des factures d’entreprise et prenons en charge le net-30.",
+    "b2bq4": "Les animaux sont-ils autorisés ?",
+    "b2ba4": "La politique varie selon la propriété et doit être confirmée à l’avance.",
+    "b2bq5": "Le stationnement est-il disponible ?",
+    "b2ba5": "Certaines propriétés offrent un stationnement, à réserver séparément.",
+    "b2bq6": "Quelle couverture d’assurance avez-vous ?",
+    "b2ba6": "Nous disposons de 2 M$ de responsabilité civile commerciale.",
+    "b2bq7": "Comment se déroulent l’arrivée et le départ ?",
+    "b2ba7": "Arrivée autonome par serrure intelligente, sans attente.",
+    "b2bq8": "Que comprend l’offre tout inclus ?",
+    "b2ba8": "WiFi, services publics, ménage, draps/serviettes et équipement de cuisine."
   },
   "helpPage": {
     "title": "Centre d'Aide",
@@ -3027,6 +3051,18 @@
         "title": "Demande reçue",
         "message": "Notre équipe vous contactera sous 24 h."
       }
+    }
+  },
+  "homePaths": {
+    "housing": {
+      "title": "J’ai besoin d’un logement",
+      "description": "Pour les locataires individuels et les familles en relocalisation cherchant un logement prêt à emménager à Toronto.",
+      "cta": "Voir les logements"
+    },
+    "relocation": {
+      "title": "Je gère des relocalisations",
+      "description": "Pour les sociétés de relocalisation, équipes RH et dossiers d’hébergement d’assurance.",
+      "cta": "Découvrir les solutions entreprises"
     }
   }
 }

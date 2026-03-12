@@ -23,8 +23,11 @@ export default function ContactPageContent() {
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
               {t("contact.pageTitle")}
             </h1>
-            <p className="text-lg text-primary-100">
+            <p className="text-lg text-primary-100 mb-4">
               {t("contact.pageSubtitle")}
+            </p>
+            <p className="text-base text-primary-100/90 font-medium">
+              {t("contact.responseWithin2Hours")}
             </p>
           </div>
         </Container>

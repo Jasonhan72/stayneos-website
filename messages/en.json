@@ -341,6 +341,12 @@
         "title": "Quote Request Submitted!",
         "message": "Thank you for your interest! Our business development team will analyze your requirements and contact you within 24 hours with a customized proposal and pricing."
       }
+    },
+    "trust": {
+      "insured": "Fully insured — $2M commercial general liability",
+      "invoicing": "Corporate invoicing with net-30 payment terms available",
+      "secure": "All properties in secure, concierge-serviced buildings",
+      "response": "Dedicated account manager with 2-hour response guarantee"
     }
   },
   "longterm": {
@@ -439,7 +445,8 @@
     "services": "Our Services",
     "properties": "Browse Properties",
     "owners": "For Property Owners",
-    "academicProfessionals": "For Academic & Medical Professionals"
+    "academicProfessionals": "For Academic & Medical Professionals",
+    "trustSignalsLine": "Fully insured · Corporate invoicing available · All properties in concierge-serviced buildings"
   },
   "language": {
     "title": "Language",
@@ -618,7 +625,8 @@
       "desc": "If you are a current tenant and need immediate assistance, please call our 24/7 emergency hotline"
     },
     "responseTime": "We typically respond within 24 hours",
-    "visitUs": "Visit Us"
+    "visitUs": "Visit Us",
+    "responseWithin2Hours": "We respond within 2 hours during business hours"
   },
   "form": {
     "title": "Contact Us",
@@ -3131,7 +3139,23 @@
     "sq2": "Issue during stay?",
     "sa2": "24/7 support with emergency contacts.",
     "sq3": "Corporate housing?",
-    "sa3": "Yes, flexible terms and centralized billing."
+    "sa3": "Yes, flexible terms and centralized billing.",
+    "b2bq1": "What is the minimum stay duration?",
+    "b2ba1": "The minimum stay is 30 days.",
+    "b2bq2": "What is your cancellation policy?",
+    "b2ba2": "Flexible cancellation — free cancellation up to 30 days before move-in.",
+    "b2bq3": "Do you provide corporate invoice formats?",
+    "b2ba3": "Yes. We provide corporate invoices and support net-30 payment terms.",
+    "b2bq4": "Are pets allowed?",
+    "b2ba4": "Pet policy depends on the property and must be confirmed in advance.",
+    "b2bq5": "Is parking available?",
+    "b2ba5": "Some properties offer parking and it must be reserved separately.",
+    "b2bq6": "What insurance coverage do you carry?",
+    "b2ba6": "We carry $2M commercial general liability insurance.",
+    "b2bq7": "How does check-in and check-out work?",
+    "b2ba7": "Smart-lock self check-in is available, so no waiting is required.",
+    "b2bq8": "What is included in all-inclusive pricing?",
+    "b2ba8": "WiFi, utilities, housekeeping, linens/towels, and kitchen essentials are included."
   },
   "helpPage": {
     "title": "Help Center",
@@ -3312,5 +3336,17 @@
     "apartments": "Apartments",
     "cities": "Cities",
     "satisfaction": "Satisfaction"
+  },
+  "homePaths": {
+    "housing": {
+      "title": "I need housing",
+      "description": "For individual renters and relocating families who need a move-in ready Toronto home.",
+      "cta": "Browse homes"
+    },
+    "relocation": {
+      "title": "I manage relocations",
+      "description": "For relocation companies, corporate HR teams, and insurance housing coordinators.",
+      "cta": "Explore business solutions"
+    }
   }
 }

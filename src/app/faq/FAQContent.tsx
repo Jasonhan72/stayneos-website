@@ -30,6 +30,14 @@ export default function FAQContent() {
     { category: t('faqPage.cat_support'), questions: [
       { q: t('faqPage.sq1'), a: t('faqPage.sa1') }, { q: t('faqPage.sq2'), a: t('faqPage.sa2') },
       { q: t('faqPage.sq3'), a: t('faqPage.sa3') },
+      { q: t('faqPage.b2bq1'), a: t('faqPage.b2ba1') },
+      { q: t('faqPage.b2bq2'), a: t('faqPage.b2ba2') },
+      { q: t('faqPage.b2bq3'), a: t('faqPage.b2ba3') },
+      { q: t('faqPage.b2bq4'), a: t('faqPage.b2ba4') },
+      { q: t('faqPage.b2bq5'), a: t('faqPage.b2ba5') },
+      { q: t('faqPage.b2bq6'), a: t('faqPage.b2ba6') },
+      { q: t('faqPage.b2bq7'), a: t('faqPage.b2ba7') },
+      { q: t('faqPage.b2bq8'), a: t('faqPage.b2ba8') },
     ]},
   ];
 
