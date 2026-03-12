@@ -12,15 +12,14 @@ export default function Footer() {
   const footerLinks = {
     company: [
       { label: t("footer.about"), href: "/about" },
-      { label: t("footer.landlords"), href: "/landlords" },
+      { label: t("footer.owners") || "For Property Owners", href: "/for-hosts" },
       { label: t("footer.agents") || "For Agents", href: "/for-agents" },
-      { label: t("footer.hosts") || "For Hosts", href: "/for-hosts" },
       { label: t("footer.contact"), href: "/contact" },
     ],
     services: [
-      { label: t("footer.neighborhoods") || "Neighborhoods", href: "/neighborhoods" },
+      { label: t("footer.properties") || "Properties", href: "/properties" },
       { label: t("footer.corporate"), href: "/for-business" },
-      { label: t("footer.students") || "Students", href: "/for-students" },
+      { label: t("footer.academicProfessionals") || "For Academic & Medical Professionals", href: "/for-students" },
       { label: t("footer.longTerm") || "Long-term", href: "/long-term" },
       { label: t("footer.properties"), href: "/properties" },
     ],

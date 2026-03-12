@@ -131,6 +131,7 @@ export default function ForBusinessPageContent() {
   const caseStudies = [
     {
       company: "Tech Startup",
+      label: "Typical Scenario",
       challenge: "Needed 15 units for 6-month project team relocation to Toronto",
       solution: "Provided furnished apartments in downtown core with meeting spaces",
       result: "Saved $180,000 compared to hotels while improving team productivity",
@@ -138,6 +139,7 @@ export default function ForBusinessPageContent() {
     },
     {
       company: "Consulting Firm",
+      label: "Typical Scenario",
       challenge: "Executive travel program with unpredictable durations",
       solution: "Flexible booking system with premium downtown suites",
       result: "Reduced accommodation costs by 35% with improved executive satisfaction",
@@ -145,6 +147,7 @@ export default function ForBusinessPageContent() {
     },
     {
       company: "Manufacturing Corp",
+      label: "Typical Scenario",
       challenge: "Employee relocation program for new Toronto office",
       solution: "Staged move-in process with temporary housing for 50+ employees",
       result: "Smooth transition with 95% employee satisfaction rating",
@@ -285,12 +288,13 @@ export default function ForBusinessPageContent() {
             {caseStudies.map((study, index) => (
               <div key={index} className="bg-white p-8 shadow-lg hover:shadow-xl transition-shadow duration-200">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold text-gray-900">{study.company}</h3>
+                  <h3 className="text-xl font-bold text-gray-900"><span>{study.company}</span></h3>
                   <span className="bg-green-100 text-green-800 px-3 py-1 text-sm font-bold">
                     {study.savings} saved
                   </span>
                 </div>
                 
+                <p className="text-xs uppercase tracking-wide text-blue-700 font-semibold mb-3">{study.label || t("business.cases.typical", "Typical Scenario")}</p>
                 <div className="space-y-4">
                   <div>
                     <h4 className="font-semibold text-gray-700 mb-1">Challenge:</h4>
@@ -348,20 +352,20 @@ export default function ForBusinessPageContent() {
         <Container>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-4xl md:text-5xl font-bold mb-2">500+</div>
-              <div className="text-blue-100">{t("business.stats.companies", "Companies Served")}</div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">—</div>
+              <div className="text-blue-100">{t("business.stats.companies", "Operational Support") }</div>
             </div>
             <div>
-              <div className="text-4xl md:text-5xl font-bold mb-2">10,000+</div>
-              <div className="text-blue-100">{t("business.stats.stays", "Corporate Stays")}</div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">—</div>
+              <div className="text-blue-100">{t("business.stats.stays", "Flexible Portfolio") }</div>
             </div>
             <div>
-              <div className="text-4xl md:text-5xl font-bold mb-2">40%</div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">30-40%</div>
               <div className="text-blue-100">{t("business.stats.savings", "Average Savings vs Hotels")}</div>
             </div>
             <div>
-              <div className="text-4xl md:text-5xl font-bold mb-2">98%</div>
-              <div className="text-blue-100">{t("business.stats.satisfaction", "Client Satisfaction Rate")}</div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">24/7</div>
+              <div className="text-blue-100">{t("business.stats.satisfaction", "Dedicated Account Support") }</div>
             </div>
           </div>
         </Container>

@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import ForStudentsPageContent from "./ForStudentsPageContent";
 
 export const metadata: Metadata = {
-  title: "Student Housing Toronto | StayNeos for Students",
-  description: "Premium student housing near University of Toronto, Ryerson, and other Toronto campuses. Fully furnished apartments, flexible leases, and vibrant student community.",
+  title: "Academic & Medical Professionals Housing | StayNeos",
+  description: "Premium furnished apartments for visiting scholars, medical fellows/residents, parents of international students, and conference participants in downtown Toronto.",
 };
 
 export default function ForStudentsPage() {

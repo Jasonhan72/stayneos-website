@@ -22,6 +22,7 @@ export default function AboutContent() {
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">{t('aboutPage.title')}</h1>
             <p className="text-lg md:text-xl text-primary-100 leading-relaxed">{t('aboutPage.heroSubtitle')}</p>
+            <p className="text-sm text-primary-200 mt-4">{t("aboutPage.imageDisclaimer", "Note: Some photos on this page are illustrative stock images.")}</p>
           </div>
         </Container>
       </section>

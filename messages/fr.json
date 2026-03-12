@@ -4,9 +4,9 @@
     "description": "StayNeos est une plateforme d'appartements exécutifs premium pour professionnels, offrant des propriétés de qualité, des baux flexibles et un service de conciergerie 24h/24."
   },
   "nav": {
-    "home": "Explorer",
-    "explore": "Explorer",
-    "properties": "Appartements",
+    "home": "Propriétés",
+    "explore": "Propriétés",
+    "properties": "Propriétés",
     "services": "Entreprises",
     "about": "À Notre Sujet",
     "login": "Connexion",
@@ -75,7 +75,7 @@
   "hero": {
     "title": "Votre chez-vous vous attend",
     "highlight": "Arrivez aujourd'hui. Sentez-vous chez vous ce soir.",
-    "subtitle": "Appartements meublés au cœur de la ville. Prêts à vivre. Un mois, une saison ou un an.",
+    "subtitle": "Appartements meublés premium au centre-ville de Toronto. 30 jours à 12 mois. Prêts à emménager.",
     "cta": "Listez Votre Propriété",
     "ctaQuote": "Demander un Devis",
     "ctaBrowse": "Parcourir les Propriétés"
@@ -278,7 +278,16 @@
     "title": "Séjours d'affaires",
     "subtitle": "Tarifs entreprise",
     "desc": "Vous êtes en déplacement pour un projet de 3 mois. On s'assure que le reste de votre vie ne s'arrête pas. Votre propre cuisine, et un quartier d'affaires accessible.",
-    "cta": "Découvrir les offres entreprise"
+    "cta": "Découvrir les offres entreprise",
+    "cases": {
+      "title": "Scénarios types",
+      "typical": "Scénario type"
+    },
+    "stats": {
+      "companies": "Support opérationnel",
+      "stays": "Portefeuille flexible",
+      "satisfaction": "Support dédié"
+    }
   },
   "longterm": {
     "title": "Séjour prolongé",
@@ -315,7 +324,9 @@
     "landlords": "Pour Propriétaires",
     "services": "Nos Services",
     "properties": "Parcourir les Propriétés",
-    "agents": "Pour Agents"
+    "agents": "Pour Agents",
+    "owners": "Pour Propriétaires",
+    "academicProfessionals": "Pour les professionnels académiques et médicaux"
   },
   "language": {
     "title": "Langue",
@@ -435,7 +446,8 @@
   "cities": {
     "title": "Nos Villes",
     "subtitle": "Appartements meublés premium dans les meilleures villes d'Amérique du Nord",
-    "properties": "Propriétés disponibles"
+    "properties": "Propriétés disponibles",
+    "availableNow": "Disponible maintenant"
   },
   "contact": {
     "pageTitle": "Contactez-nous",
@@ -1869,10 +1881,9 @@
   "supportTitle": "Support",
   "copyright": "© 2024-2026 StayNeos. Tous droits réservés.",
   "trust": {
-    "rating": "4,9/5 Évaluation",
     "verified": "Logements Vérifiés",
     "support": "Support 24/7",
-    "customers": "1000+ Clients Satisfaits"
+    "selection": "Sélection premium"
   },
   "en": "English",
   "fr": "Français",
@@ -2440,7 +2451,8 @@
     "ctaTitle": "Trouvez votre chez-vous ce soir",
     "ctaDesc": "Parcourez des appartements meublés prêts à vivre",
     "ctaBrowse": "Parcourir",
-    "ctaContact": "Nous dire bonjour"
+    "ctaContact": "Nous dire bonjour",
+    "imageDisclaimer": "Remarque : certaines images de cette page sont des photos d’illustration."
   },
   "faqPage": {
     "title": "Questions Fréquentes",
@@ -2826,37 +2838,14 @@
     },
     "data": {
       "downtown": {
-        "name": "Centre-ville",
-        "tagline": "Vivre à Centre-ville",
-        "description": "Découvrez des logements premium à Centre-ville, avec transport pratique et excellents services.",
+        "name": "Downtown Core / Grange Park (238 Simcoe St)",
+        "tagline": "Cœur culturel de Toronto",
         "features": {
-          "1": "Caractéristique 1",
-          "2": "Caractéristique 2",
-          "3": "Caractéristique 3",
-          "4": "Caractéristique 4",
-          "5": "Caractéristique 5"
-        },
-        "transportation": {
-          "1": "Option de transport 1",
-          "2": "Option de transport 2",
-          "3": "Option de transport 3",
-          "4": "Option de transport 4"
-        },
-        "highlights": {
-          "1": "Point fort 1",
-          "2": "Point fort 2",
-          "3": "Point fort 3",
-          "4": "Point fort 4"
-        },
-        "popularWith": {
-          "1": "Groupe 1",
-          "2": "Groupe 2",
-          "3": "Groupe 3"
-        },
-        "pricing": {
-          "studio": "2800",
-          "oneBed": "3500",
-          "twoBed": "4800"
+          "1": "Près de AGO, OCAD, UofT St. George",
+          "2": "Hôpitaux majeurs accessibles à pied",
+          "3": "Toronto General, Mt. Sinai, SickKids, Princess Margaret",
+          "4": "Idéal pour chercheurs et professionnels médicaux",
+          "5": "~3 min à pied de St. Patrick / Osgoode"
         }
       },
       "yorkville": {
@@ -2962,72 +2951,81 @@
         }
       },
       "north-york": {
-        "name": "North York",
-        "tagline": "Vivre à North York",
-        "description": "Découvrez des logements premium à North York, avec transport pratique et excellents services.",
+        "name": "North York / Yonge-Sheppard (28 Avondale Ave)",
+        "tagline": "Sous-centre urbain mature",
         "features": {
-          "1": "Caractéristique 1",
-          "2": "Caractéristique 2",
-          "3": "Caractéristique 3",
-          "4": "Caractéristique 4",
-          "5": "Caractéristique 5"
-        },
-        "transportation": {
-          "1": "Option de transport 1",
-          "2": "Option de transport 2",
-          "3": "Option de transport 3",
-          "4": "Option de transport 4"
-        },
-        "highlights": {
-          "1": "Point fort 1",
-          "2": "Point fort 2",
-          "3": "Point fort 3",
-          "4": "Point fort 4"
-        },
-        "popularWith": {
-          "1": "Groupe 1",
-          "2": "Groupe 2",
-          "3": "Groupe 3"
-        },
-        "pricing": {
-          "studio": "1900",
-          "oneBed": "2400",
-          "twoBed": "3200"
+          "1": "Sheppard station accessible à pied",
+          "2": "~20 min jusqu’au centre-ville",
+          "3": "Idéal pour familles et navetteurs",
+          "4": "Restaurants et commerces le long de Yonge",
+          "5": "Quartier pratique et stable"
         }
       },
       "waterfront": {
-        "name": "Front de lac",
-        "tagline": "Vivre à Front de lac",
-        "description": "Découvrez des logements premium à Front de lac, avec transport pratique et excellents services.",
+        "name": "Waterfront / Sugar Wharf (55 Cooper St)",
+        "tagline": "Nouveau quartier riverain de Toronto",
         "features": {
-          "1": "Caractéristique 1",
-          "2": "Caractéristique 2",
-          "3": "Caractéristique 3",
-          "4": "Caractéristique 4",
-          "5": "Caractéristique 5"
-        },
-        "transportation": {
-          "1": "Option de transport 1",
-          "2": "Option de transport 2",
-          "3": "Option de transport 3",
-          "4": "Option de transport 4"
-        },
-        "highlights": {
-          "1": "Point fort 1",
-          "2": "Point fort 2",
-          "3": "Point fort 3",
-          "4": "Point fort 4"
-        },
-        "popularWith": {
-          "1": "Groupe 1",
-          "2": "Groupe 2",
-          "3": "Groupe 3"
-        },
-        "pricing": {
-          "studio": "2900",
-          "oneBed": "3800",
-          "twoBed": "5200"
+          "1": "Développé par Menkes",
+          "2": "8 min à pied d’Union Station",
+          "3": "5 min du Financial District",
+          "4": "Près de Scotiabank Arena, Rogers Centre, Jack Layton Ferry Terminal",
+          "5": "Appartements avec vue lac au-delà du 55e étage"
         }
+      }
+    },
+    "hero": {
+      "title": "Guide des quartiers réels de Toronto",
+      "subtitle": "Nous nous concentrons actuellement sur 3 quartiers réels."
+    }
+  },
+  "students": {
+    "hero": {
+      "title": "Logements pour professionnels académiques et médicaux",
+      "subtitle": "Pour chercheurs invités, fellows/résidents médicaux, parents d’étudiants internationaux et participants à des conférences.",
+      "pricingCta": "Voir les tarifs",
+      "cta": "Soumettre une demande"
+    },
+    "audience": {
+      "1": "Chercheurs invités et universitaires",
+      "2": "Fellows / résidents médicaux",
+      "3": "Parents d’étudiants internationaux",
+      "4": "Participants à des conférences internationales"
+    },
+    "advantages": {
+      "title": "Profils que nous servons"
+    },
+    "pricing": {
+      "title": "Fourchette de prix réelle",
+      "subtitle": "Nous ne proposons pas de chambre partagée.",
+      "real": {
+        "1": "Emplacements centraux au centre-ville",
+        "2": "Prêt à emménager",
+        "3": "Baux flexibles de 30 jours à 12 mois",
+        "title": "3BR"
+      },
+      "month": "mois"
+    },
+    "location": {
+      "title": "Emplacement clé : 238 Simcoe",
+      "subtitle": "À distance de marche de Toronto General, Mt. Sinai, SickKids et Princess Margaret, près de UofT St. George, AGO et OCAD.",
+      "point1": "St. Patrick / Osgoode à ~3 min à pied",
+      "point2": "Idéal pour les professionnels médicaux",
+      "point3": "Appartements complets haut de gamme",
+      "point4": "Séjours de 30 jours à 12 mois"
+    },
+    "form": {
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Email",
+      "phone": "Téléphone",
+      "university": "Université / institution",
+      "message": "Votre besoin",
+      "validation": "Veuillez compléter les champs requis",
+      "submitting": "Envoi...",
+      "submit": "Envoyer",
+      "success": {
+        "title": "Demande reçue",
+        "message": "Notre équipe vous contactera sous 24 h."
       }
     }
   }

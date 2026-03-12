@@ -4,9 +4,9 @@
     "description": "StayNeos is a premium executive apartment platform for business professionals, offering quality properties, flexible leases, and 24/7 concierge service."
   },
   "nav": {
-    "home": "Explore",
-    "explore": "Explore",
-    "properties": "Apartments",
+    "home": "Properties",
+    "explore": "Properties",
+    "properties": "Properties",
     "neighborhoods": "Neighborhoods",
     "services": "For Business",
     "about": "About Us",
@@ -75,7 +75,7 @@
   "hero": {
     "title": "Your Home Awaits",
     "highlight": "Arrive today. Feel at home tonight.",
-    "subtitle": "Beautifully furnished apartments in prime locations. Move-in ready. Stay a month, a season, or a year.",
+    "subtitle": "Premium furnished apartments in downtown Toronto. 30 days to 12 months. Move-in ready.",
     "cta": "List Your Property",
     "ctaQuote": "Request a Quote",
     "ctaBrowse": "Browse Properties"
@@ -290,18 +290,19 @@
       "subtitle": "Transform your corporate accommodation strategy with our comprehensive business solutions."
     },
     "cases": {
-      "title": "Success Stories",
-      "subtitle": "See how leading companies have transformed their accommodation strategies with StayNeos."
+      "title": "Typical Scenarios",
+      "subtitle": "See how leading companies have transformed their accommodation strategies with StayNeos.",
+      "typical": "Typical Scenario"
     },
     "features": {
       "title": "Business-First Features",
       "subtitle": "Enterprise-grade features designed to simplify corporate accommodation management."
     },
     "stats": {
-      "companies": "Companies Served",
-      "stays": "Corporate Stays",
+      "companies": "Operational Support",
+      "stays": "Flexible Portfolio",
       "savings": "Average Savings vs Hotels",
-      "satisfaction": "Client Satisfaction Rate"
+      "satisfaction": "Dedicated Account Support"
     },
     "form": {
       "title": "Request a Custom Quote",
@@ -436,7 +437,9 @@
     "students": "Students",
     "marketInsights": "Market Insights",
     "services": "Our Services",
-    "properties": "Browse Properties"
+    "properties": "Browse Properties",
+    "owners": "For Property Owners",
+    "academicProfessionals": "For Academic & Medical Professionals"
   },
   "language": {
     "title": "Language",
@@ -556,7 +559,8 @@
   "cities": {
     "title": "Our Cities",
     "subtitle": "Premium furnished apartments in top cities across North America",
-    "properties": "Properties available"
+    "properties": "Properties available",
+    "availableNow": "Available now"
   },
   "contact": {
     "pageTitle": "Contact Us",
@@ -1384,8 +1388,8 @@
   },
   "neighborhoods": {
     "hero": {
-      "title": "Toronto Neighborhoods Guide",
-      "subtitle": "Discover the perfect neighborhood for your Toronto stay. From the bustling Financial District to trendy Liberty Village, find your ideal location with insider insights on transit, amenities, and pricing."
+      "title": "Toronto Neighborhood Guide",
+      "subtitle": "We currently focus on 3 real operating neighborhoods."
     },
     "cta": {
       "title": "Ready to Find Your Perfect Toronto Home?",
@@ -1432,37 +1436,14 @@
     },
     "data": {
       "downtown": {
-        "name": "Downtown Core",
-        "tagline": "Downtown Core living",
-        "description": "Discover premium stays in Downtown Core with great transit and amenities.",
+        "name": "Downtown Core / Grange Park (238 Simcoe St)",
+        "tagline": "Toronto’s cultural core",
         "features": {
-          "1": "Feature 1",
-          "2": "Feature 2",
-          "3": "Feature 3",
-          "4": "Feature 4",
-          "5": "Feature 5"
-        },
-        "transportation": {
-          "1": "Transit option 1",
-          "2": "Transit option 2",
-          "3": "Transit option 3",
-          "4": "Transit option 4"
-        },
-        "highlights": {
-          "1": "Highlight 1",
-          "2": "Highlight 2",
-          "3": "Highlight 3",
-          "4": "Highlight 4"
-        },
-        "popularWith": {
-          "1": "Group 1",
-          "2": "Group 2",
-          "3": "Group 3"
-        },
-        "pricing": {
-          "studio": "2800",
-          "oneBed": "3500",
-          "twoBed": "4800"
+          "1": "Next to AGO, OCAD, UofT St. George",
+          "2": "Walkable to four major hospitals",
+          "3": "Toronto General, Mt. Sinai, SickKids, Princess Margaret",
+          "4": "Ideal for visiting scholars and medical professionals",
+          "5": "~3-minute walk to St. Patrick / Osgoode subway"
         }
       },
       "yorkville": {
@@ -1568,85 +1549,38 @@
         }
       },
       "north-york": {
-        "name": "North York",
-        "tagline": "North York living",
-        "description": "Discover premium stays in North York with great transit and amenities.",
+        "name": "North York / Yonge-Sheppard (28 Avondale Ave)",
+        "tagline": "Established urban sub-centre",
         "features": {
-          "1": "Feature 1",
-          "2": "Feature 2",
-          "3": "Feature 3",
-          "4": "Feature 4",
-          "5": "Feature 5"
-        },
-        "transportation": {
-          "1": "Transit option 1",
-          "2": "Transit option 2",
-          "3": "Transit option 3",
-          "4": "Transit option 4"
-        },
-        "highlights": {
-          "1": "Highlight 1",
-          "2": "Highlight 2",
-          "3": "Highlight 3",
-          "4": "Highlight 4"
-        },
-        "popularWith": {
-          "1": "Group 1",
-          "2": "Group 2",
-          "3": "Group 3"
-        },
-        "pricing": {
-          "studio": "1900",
-          "oneBed": "2400",
-          "twoBed": "3200"
+          "1": "Walkable to Sheppard subway station",
+          "2": "~20 minutes to downtown",
+          "3": "Great for families and commuting professionals",
+          "4": "Rich dining and shopping along Yonge",
+          "5": "Convenient and stable neighborhood"
         }
       },
       "waterfront": {
-        "name": "Waterfront",
-        "tagline": "Waterfront living",
-        "description": "Discover premium stays in Waterfront with great transit and amenities.",
+        "name": "Waterfront / Sugar Wharf (55 Cooper St)",
+        "tagline": "Toronto’s newest waterfront community",
         "features": {
-          "1": "Feature 1",
-          "2": "Feature 2",
-          "3": "Feature 3",
-          "4": "Feature 4",
-          "5": "Feature 5"
-        },
-        "transportation": {
-          "1": "Transit option 1",
-          "2": "Transit option 2",
-          "3": "Transit option 3",
-          "4": "Transit option 4"
-        },
-        "highlights": {
-          "1": "Highlight 1",
-          "2": "Highlight 2",
-          "3": "Highlight 3",
-          "4": "Highlight 4"
-        },
-        "popularWith": {
-          "1": "Group 1",
-          "2": "Group 2",
-          "3": "Group 3"
-        },
-        "pricing": {
-          "studio": "2900",
-          "oneBed": "3800",
-          "twoBed": "5200"
+          "1": "Menkes-developed waterfront district",
+          "2": "8-minute walk to Union Station",
+          "3": "5-minute walk to the Financial District",
+          "4": "Near Scotiabank Arena, Rogers Centre, Jack Layton Ferry Terminal",
+          "5": "Lake-view apartments above the 55th floor"
         }
       }
     }
   },
   "students": {
     "hero": {
-      "title": "Student Housing Made Simple",
-      "subtitle": "Premium furnished apartments near Toronto's top universities. Move in ready with flexible leases, vibrant student community, and everything you need to succeed academically.",
+      "title": "For Academic & Medical Professionals",
+      "subtitle": "Designed for visiting scholars, medical fellows/residents, parents of international students, and conference attendees.",
       "pricingCta": "View Pricing",
-      "cta": "Apply Now"
+      "cta": "Request Availability"
     },
     "advantages": {
-      "title": "Why Students Choose StayNeos",
-      "subtitle": "Focus on your studies while we take care of your housing needs with purpose-built student living solutions."
+      "title": "Who We Serve"
     },
     "universities": {
       "title": "Partner Universities & Colleges",
@@ -1657,9 +1591,15 @@
       "subtitle": "Every space is designed with student success in mind, from study areas to social spaces."
     },
     "pricing": {
-      "title": "Student-Friendly Pricing",
-      "subtitle": "Flexible options to fit every student budget with all-inclusive pricing and no hidden fees.",
-      "select": "Select Plan"
+      "title": "Realistic Pricing",
+      "subtitle": "We do not offer shared-room products.",
+      "real": {
+        "1": "Prime downtown locations",
+        "2": "Move-in ready furnished homes",
+        "3": "Flexible stays from 30 days to 12 months",
+        "title": "3BR"
+      },
+      "month": "month"
     },
     "testimonials": {
       "title": "What Students Say",
@@ -1668,15 +1608,15 @@
     "form": {
       "title": "Apply for Student Housing",
       "subtitle": "Ready to secure your Toronto student housing? Complete the application below and our team will contact you within 24 hours.",
-      "firstName": "First Name",
+      "firstName": "First name",
       "firstNamePlaceholder": "Enter your first name",
-      "lastName": "Last Name",
+      "lastName": "Last name",
       "lastNamePlaceholder": "Enter your last name",
-      "email": "Email Address",
+      "email": "Email",
       "emailPlaceholder": "your@email.com",
-      "phone": "Phone Number",
+      "phone": "Phone",
       "phonePlaceholder": "+1 (555) 000-0000",
-      "university": "University/College",
+      "university": "University / Institution",
       "selectUniversity": "Select your school",
       "uoft": "University of Toronto",
       "tmu": "Toronto Metropolitan University",
@@ -1698,14 +1638,29 @@
       "shared": "Shared Room",
       "studio": "Private Studio",
       "oneBed": "1-Bedroom",
-      "message": "Additional Information",
+      "message": "Your housing requirements",
       "messagePlaceholder": "Tell us about yourself, any special requirements, roommate preferences, or questions you have about student housing with StayNeos...",
       "submitting": "Submitting...",
-      "submit": "Submit Application",
+      "submit": "Submit inquiry",
       "success": {
-        "title": "Application Submitted!",
-        "message": "Thank you for your application! Our student housing team will review your information and contact you within 24 hours to discuss available options and next steps."
-      }
+        "title": "Request received",
+        "message": "Our team will contact you within 24 hours."
+      },
+      "validation": "Please complete required fields"
+    },
+    "audience": {
+      "1": "Visiting scholars and researchers",
+      "2": "Medical fellows and residents",
+      "3": "Parents visiting international students",
+      "4": "International conference participants"
+    },
+    "location": {
+      "title": "Prime Location: 238 Simcoe",
+      "subtitle": "Walkable to Toronto General, Mt. Sinai, SickKids, Princess Margaret, and close to UofT St. George, AGO, and OCAD.",
+      "point1": "~3-minute walk to St. Patrick / Osgoode subway",
+      "point2": "Ideal for medical professionals",
+      "point3": "High-quality full apartments, move-in ready",
+      "point4": "30-day to 12-month options"
     }
   },
   "marketInsights": {
@@ -2549,10 +2504,9 @@
   "supportTitle": "Support",
   "copyright": "© 2024-2026 StayNeos. All rights reserved.",
   "trust": {
-    "rating": "4.9/5 Rating",
     "verified": "Verified Homes",
     "support": "24/7 Support",
-    "customers": "1000+ Happy Guests"
+    "selection": "Premium Selection"
   },
   "en": "English",
   "fr": "Français",
@@ -3120,7 +3074,8 @@
     "ctaTitle": "Find Your Home Tonight",
     "ctaDesc": "Browse furnished apartments ready for move-in.",
     "ctaBrowse": "Browse Apartments",
-    "ctaContact": "Say Hello"
+    "ctaContact": "Say Hello",
+    "imageDisclaimer": "Note: Some photos on this page are illustrative stock images."
   },
   "faqPage": {
     "title": "Frequently Asked Questions",

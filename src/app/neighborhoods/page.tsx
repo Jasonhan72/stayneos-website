@@ -3,7 +3,7 @@ import NeighborhoodsPageContent from "./NeighborhoodsPageContent";
 
 export const metadata: Metadata = {
   title: "Toronto Neighborhoods Guide | StayNeos",
-  description: "Discover Toronto's best neighborhoods for executive living. Detailed guides to Downtown, Midtown, North York, Yorkville, Liberty Village and more with transit, amenities, and pricing info.",
+  description: "Real neighborhood guide focused on Waterfront/Sugar Wharf, Downtown Core/Grange Park, and North York/Yonge-Sheppard.",
 };
 
 export default function NeighborhoodsPage() {

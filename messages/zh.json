@@ -4,9 +4,9 @@
     "description": "StayNeos是专为商务人士打造的高端行政公寓平台，提供优质房源、灵活租期、24小时管家服务。"
   },
   "nav": {
-    "home": "探索房源",
-    "explore": "探索房源",
-    "properties": "精选公寓",
+    "home": "房源",
+    "explore": "房源",
+    "properties": "房源",
     "services": "企业服务",
     "about": "关于 StayNeos",
     "login": "登录",
@@ -75,7 +75,7 @@
   "hero": {
     "title": "您的家，已准备就绪",
     "highlight": "今天到达，今晚回家",
-    "subtitle": "核心地段精装公寓，拎包即住。住一个月、一季、或一年。",
+    "subtitle": "多伦多市中心高端精装公寓。30天到12个月。拎包入住。",
     "cta": "发布房源",
     "ctaQuote": "获取报价",
     "ctaBrowse": "浏览房源"
@@ -278,7 +278,16 @@
     "title": "商务出差",
     "subtitle": "企业优惠价",
     "desc": "您因项目在此驻留三个月。我们确保您的生活品质不受影响。步行即达商务区，在精心配备的厨房中烹饪家的味道。",
-    "cta": "了解企业方案"
+    "cta": "了解企业方案",
+    "cases": {
+      "title": "典型场景",
+      "typical": "典型场景"
+    },
+    "stats": {
+      "companies": "运营支持",
+      "stays": "灵活房源组合",
+      "satisfaction": "专属客户支持"
+    }
   },
   "longterm": {
     "title": "长期居住",
@@ -315,7 +324,9 @@
     "landlords": "房东合作",
     "agents": "经纪人合作",
     "services": "我们的服务",
-    "properties": "浏览房源"
+    "properties": "浏览房源",
+    "owners": "业主合作",
+    "academicProfessionals": "学术与医疗专业人士"
   },
   "language": {
     "title": "语言",
@@ -435,7 +446,8 @@
   "cities": {
     "title": "我们的城市",
     "subtitle": "北美顶级城市的高端精装公寓",
-    "properties": "可预订房源"
+    "properties": "可预订房源",
+    "availableNow": "现可入住"
   },
   "contact": {
     "pageTitle": "联系我们",
@@ -1979,10 +1991,9 @@
   "supportTitle": "支持",
   "copyright": "© 2024-2026 StayNeos. 版权所有",
   "trust": {
-    "rating": "4.9/5 评分",
     "verified": "真实房源认证",
     "support": "24/7 专属支持",
-    "customers": "1000+ 满意客户"
+    "selection": "精选房源"
   },
   "en": "English",
   "fr": "Français",
@@ -2550,7 +2561,8 @@
     "ctaTitle": "今晚，找到您的理想居所",
     "ctaDesc": "浏览可立即入住的精装公寓",
     "ctaBrowse": "浏览公寓",
-    "ctaContact": "跟我们聊聊"
+    "ctaContact": "跟我们聊聊",
+    "imageDisclaimer": "说明：本页部分图片为示意图库存图。"
   },
   "faqPage": {
     "title": "常见问题",
@@ -2826,37 +2838,14 @@
     },
     "data": {
       "downtown": {
-        "name": "多伦多市中心",
-        "tagline": "多伦多市中心生活方式",
-        "description": "在多伦多市中心发现高品质房源，交通便利，配套完善。",
+        "name": "Downtown Core / Grange Park（238 Simcoe St）",
+        "tagline": "多伦多文化心脏地带",
         "features": {
-          "1": "特色 1",
-          "2": "特色 2",
-          "3": "特色 3",
-          "4": "特色 4",
-          "5": "特色 5"
-        },
-        "transportation": {
-          "1": "交通方式 1",
-          "2": "交通方式 2",
-          "3": "交通方式 3",
-          "4": "交通方式 4"
-        },
-        "highlights": {
-          "1": "亮点 1",
-          "2": "亮点 2",
-          "3": "亮点 3",
-          "4": "亮点 4"
-        },
-        "popularWith": {
-          "1": "人群 1",
-          "2": "人群 2",
-          "3": "人群 3"
-        },
-        "pricing": {
-          "studio": "2800",
-          "oneBed": "3500",
-          "twoBed": "4800"
+          "1": "紧邻 AGO、OCAD、UofT St. George",
+          "2": "步行可达四大医院",
+          "3": "Toronto General、Mt. Sinai、SickKids、Princess Margaret",
+          "4": "适合访问学者与医疗专业人士",
+          "5": "St. Patrick / Osgoode 地铁步行约3分钟"
         }
       },
       "yorkville": {
@@ -2962,72 +2951,81 @@
         }
       },
       "north-york": {
-        "name": "北约克",
-        "tagline": "北约克生活方式",
-        "description": "在北约克发现高品质房源，交通便利，配套完善。",
+        "name": "North York / Yonge-Sheppard（28 Avondale Ave）",
+        "tagline": "成熟城市副中心",
         "features": {
-          "1": "特色 1",
-          "2": "特色 2",
-          "3": "特色 3",
-          "4": "特色 4",
-          "5": "特色 5"
-        },
-        "transportation": {
-          "1": "交通方式 1",
-          "2": "交通方式 2",
-          "3": "交通方式 3",
-          "4": "交通方式 4"
-        },
-        "highlights": {
-          "1": "亮点 1",
-          "2": "亮点 2",
-          "3": "亮点 3",
-          "4": "亮点 4"
-        },
-        "popularWith": {
-          "1": "人群 1",
-          "2": "人群 2",
-          "3": "人群 3"
-        },
-        "pricing": {
-          "studio": "1900",
-          "oneBed": "2400",
-          "twoBed": "3200"
+          "1": "步行可达 Sheppard 地铁站",
+          "2": "约20分钟到 downtown",
+          "3": "适合家庭与通勤专业人士",
+          "4": "Yonge街沿线餐饮购物丰富",
+          "5": "生活便利，社区成熟稳定"
         }
       },
       "waterfront": {
-        "name": "湖滨区",
-        "tagline": "湖滨区生活方式",
-        "description": "在湖滨区发现高品质房源，交通便利，配套完善。",
+        "name": "Waterfront / Sugar Wharf（55 Cooper St）",
+        "tagline": "多伦多最新湖滨社区",
         "features": {
-          "1": "特色 1",
-          "2": "特色 2",
-          "3": "特色 3",
-          "4": "特色 4",
-          "5": "特色 5"
-        },
-        "transportation": {
-          "1": "交通方式 1",
-          "2": "交通方式 2",
-          "3": "交通方式 3",
-          "4": "交通方式 4"
-        },
-        "highlights": {
-          "1": "亮点 1",
-          "2": "亮点 2",
-          "3": "亮点 3",
-          "4": "亮点 4"
-        },
-        "popularWith": {
-          "1": "人群 1",
-          "2": "人群 2",
-          "3": "人群 3"
-        },
-        "pricing": {
-          "studio": "2900",
-          "oneBed": "3800",
-          "twoBed": "5200"
+          "1": "Menkes 开发的滨水社区",
+          "2": "步行到 Union Station 8 分钟",
+          "3": "步行到金融区 5 分钟",
+          "4": "邻近 Scotiabank Arena、Rogers Centre、Jack Layton Ferry Terminal",
+          "5": "55层以上湖景公寓"
         }
+      }
+    },
+    "hero": {
+      "title": "多伦多真实社区指南",
+      "subtitle": "我们目前聚焦3个真实运营社区。"
+    }
+  },
+  "students": {
+    "hero": {
+      "title": "面向学术与医疗专业人士的住房方案",
+      "subtitle": "服务访问学者、医疗 Fellow/Resident、留学生家长和国际会议参与者。市中心拎包入住。",
+      "pricingCta": "查看价格",
+      "cta": "提交需求"
+    },
+    "audience": {
+      "1": "访问学者与研究人员",
+      "2": "医疗 Fellow / Resident",
+      "3": "留学生家长短住陪同",
+      "4": "国际会议与学术活动参与者"
+    },
+    "advantages": {
+      "title": "适合人群"
+    },
+    "pricing": {
+      "title": "实际价格区间",
+      "subtitle": "我们目前提供完整住宅产品，不提供 Shared Room。",
+      "real": {
+        "1": "市中心核心地段",
+        "2": "拎包入住，含基础配置",
+        "3": "30天-12个月灵活租期",
+        "title": "3BR"
+      },
+      "month": "月"
+    },
+    "location": {
+      "title": "238 Simcoe 核心区位",
+      "subtitle": "步行可达 Toronto General、Mt. Sinai、SickKids、Princess Margaret，邻近 UofT St. George、AGO、OCAD。",
+      "point1": "St. Patrick / Osgoode 地铁站步行约3分钟",
+      "point2": "医疗专业人士通勤便捷",
+      "point3": "高品质整套公寓，拎包入住",
+      "point4": "30天至12个月可选"
+    },
+    "form": {
+      "firstName": "名",
+      "lastName": "姓",
+      "email": "Email",
+      "phone": "电话",
+      "university": "学校/机构",
+      "message": "需求说明",
+      "validation": "请完整填写必填信息",
+      "submitting": "提交中...",
+      "submit": "提交咨询",
+      "success": {
+        "title": "已收到您的需求",
+        "message": "团队将在24小时内联系您。"
       }
     }
   }
