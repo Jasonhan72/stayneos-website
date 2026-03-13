@@ -70,7 +70,7 @@ export default function ForgotPasswordForm() {
           <Link href="/" className="mb-4">
             <Image
               src="/logo.png"
-              alt="StayNeos"
+              alt="NEOS"
               width={200}
               height={70}
               className="h-16 w-auto object-contain"

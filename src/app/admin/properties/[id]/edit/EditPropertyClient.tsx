@@ -19,7 +19,7 @@ const mockHosts: HostOption[] = [
   },
   {
     id: 'host-2',
-    displayName: 'StayNeos Team',
+    displayName: 'NEOS Team',
     avatarUrl: undefined,
     totalProperties: 12,
     status: 'active',

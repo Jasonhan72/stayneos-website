@@ -19,6 +19,7 @@ import { AirbnbCalendar } from '@/components/booking';
 import { useI18n } from '@/lib/i18n';
 import { useFeaturedProperties } from '@/hooks/useProperties';
 import { PropertyCardData } from '@/types';
+import { formatMonthlyListingPrice } from '@/lib/utils/property-transform';
 
 // Export WelcomeBanner
 export { WelcomeBanner } from './WelcomeBanner';
@@ -198,26 +199,22 @@ export function DualPathCTASection() {
 // ============================================================
 const valueProps = [
   {
-    // Curated Homes — 精致公寓内饰
-    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&q=80',
+    emoji: '🏠',
     titleKey: 'features.quality',
     descKey: 'features.qualityDesc'
   },
   {
-    // Flexible Lease — 现代公寓钥匙/入住
-    image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&q=80',
+    emoji: '📋',
     titleKey: 'features.flexible',
     descKey: 'features.flexibleDesc'
   },
   {
-    // Concierge Service — 酒店级服务
-    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=80',
+    emoji: '🛎️',
     titleKey: 'features.service',
     descKey: 'features.serviceDesc'
   },
   {
-    // 24/7 Support — 专业客服支持
-    image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&q=80',
+    emoji: '💰',
     titleKey: 'features.support',
     descKey: 'features.supportDesc'
   }
@@ -240,14 +237,8 @@ export function ValuePropositionSection() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {valueProps.map((prop) => (
           <div key={prop.titleKey} className="text-center p-8 bg-white border border-neutral-200">
-            <div className="w-full h-32 mx-auto mb-6 overflow-hidden rounded-lg">
-              <Image
-                src={prop.image}
-                alt={t(prop.titleKey)}
-                width={200}
-                height={128}
-                className="w-full h-full object-cover"
-              />
+            <div className="flex h-32 items-center justify-center text-6xl leading-none">
+              <span aria-hidden="true">{prop.emoji}</span>
             </div>
             <h3 className="text-xl font-semibold mb-3 text-neutral-900">{t(prop.titleKey)}</h3>
             <p className="text-neutral-600">{t(prop.descKey)}</p>
@@ -268,7 +259,7 @@ const segments = [
     descKey: 'segments.business.desc',
     ctaKey: 'segments.business.cta',
     href: '/corporate',
-    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80'
+    emoji: '💼'
   },
   {
     titleKey: 'segments.longterm.title',
@@ -276,7 +267,7 @@ const segments = [
     descKey: 'segments.longterm.desc',
     ctaKey: 'segments.longterm.cta',
     href: '/properties',
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80'
+    emoji: '🏡'
   },
   {
     titleKey: 'segments.relocation.title',
@@ -284,7 +275,7 @@ const segments = [
     descKey: 'segments.relocation.desc',
     ctaKey: 'segments.relocation.cta',
     href: '/properties',
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80'
+    emoji: '✈️'
   }
 ];
 
@@ -305,14 +296,8 @@ export function MarketSegmentsSection() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {segments.map((segment) => (
           <Card key={segment.titleKey} className="group">
-            <div className="aspect-[4/3] overflow-hidden">
-              <Image
-                src={segment.image}
-                alt={t(segment.titleKey)}
-                width={800}
-                height={600}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
+            <div className="flex aspect-[4/3] items-center justify-center bg-neutral-50 text-7xl transition-transform duration-500 group-hover:scale-[1.02]">
+              <span aria-hidden="true">{segment.emoji}</span>
             </div>
             
             <div className="p-6">
@@ -433,10 +418,12 @@ export function FeaturedPropertiesSection() {
                     <h3 className="text-lg font-semibold text-neutral-900 group-hover:text-primary transition-colors line-clamp-1">
                       {getLocalizedTitle(property)}
                     </h3>
-                    <div className="flex items-center gap-1 shrink-0">
-                      <Star size={14} className="text-accent fill-accent" />
-                      <span className="text-sm font-medium">{property.rating}</span>
-                    </div>
+                    {property.reviewCount > 0 && (
+                      <div className="flex items-center gap-1 shrink-0">
+                        <Star size={14} className="text-accent fill-accent" />
+                        <span className="text-sm font-medium">{property.rating}</span>
+                      </div>
+                    )}
                   </div>
                   
                   <div className="flex items-center gap-1 text-neutral-500 mb-4">
@@ -447,20 +434,18 @@ export function FeaturedPropertiesSection() {
                   <div className="flex items-center gap-3 text-sm text-neutral-500 mb-4">
                     <span>{property.bedrooms} {t('property.bedroomsShort')}</span>
                     <span>·</span>
-                    <span>{property.area}m²</span>
+                    <span>{property.area} sqft</span>
                     <span>·</span>
                     <span>{t('properties.maxGuests', { count: property.maxGuests })}</span>
                   </div>
                   
                   <div className="flex items-baseline justify-between pt-4 border-t border-neutral-200">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-bold text-neutral-900">
-                        ${property.price.toLocaleString()}
-                      </span>
-                      <span className="text-neutral-500">CAD{t('properties.perNight')}</span>
-                    </div>
-                    
-                    <span className="text-sm text-neutral-400">{property.reviewCount} {t('properties.reviews')}</span>
+                    <span className="text-2xl font-bold text-neutral-900">
+                      {formatMonthlyListingPrice(property.price, property.priceUnit)}
+                    </span>
+                    {property.reviewCount > 0 && (
+                      <span className="text-sm text-neutral-400">{property.reviewCount} {t('properties.reviews')}</span>
+                    )}
                   </div>
                 </div>
               </Link>

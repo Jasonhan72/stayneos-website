@@ -325,11 +325,13 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-medium text-neutral-900 leading-tight line-clamp-2 text-sm">{localizedTitle}</h3>
-                    <div className="flex items-center gap-1 mt-1">
-                      <Star className="w-3.5 h-3.5 text-black fill-black" />
-                      <span className="text-sm font-medium">{property.rating}</span>
-                      <span className="text-sm text-neutral-500">({property.reviewCount})</span>
-                    </div>
+                    {property.reviewCount > 0 && (
+                      <div className="flex items-center gap-1 mt-1">
+                        <Star className="w-3.5 h-3.5 text-black fill-black" />
+                        <span className="text-sm font-medium">{property.rating}</span>
+                        <span className="text-sm text-neutral-500">({property.reviewCount})</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -341,7 +343,7 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
                       <span className="text-neutral-600">
-                        ${pricePerNight.toLocaleString()} {isMonthly ? (t('property.monthlyPrice') || 'CAD/month') : (t('property.perNight') || 'CAD/night')} x {nights} {nights === 1 ? (t('common.night') || 'night') : (t('common.nights') || 'nights')}
+                        ${pricePerNight.toLocaleString()} {isMonthly ? (t('property.monthlyPrice') || 'CAD/month') : (t('property.perNight') || 'CAD/mo')} x {nights} {nights === 1 ? (t('common.night') || 'night') : (t('common.nights') || 'nights')}
                       </span>
                       <span>${subtotal.toLocaleString()} CAD</span>
                     </div>

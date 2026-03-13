@@ -1,14 +1,14 @@
 {
   "metadata": {
-    "title": "StayNeos | 高端行政公寓出租平台",
-    "description": "StayNeos是专为商务人士打造的高端行政公寓平台，提供优质房源、灵活租期、24小时管家服务。"
+    "title": "NEOS | 高端行政公寓出租平台",
+    "description": "NEOS是专为商务人士打造的高端行政公寓平台，提供优质房源、灵活租期、24小时管家服务。"
   },
   "nav": {
     "home": "房源",
     "explore": "房源",
     "properties": "房源",
     "services": "企业服务",
-    "about": "关于 StayNeos",
+    "about": "关于 NEOS",
     "login": "登录",
     "register": "注册",
     "account": "我的预订",
@@ -113,7 +113,7 @@
     "next": "下一页"
   },
   "features": {
-    "title": "为何选择 StayNeos",
+    "title": "为何选择 NEOS",
     "subtitle": "您的居所，比您更早准备就绪。没有意外，没有隐藏费用——只有一处为您精心打造的温馨空间。",
     "quality": "逐一精选",
     "qualityDesc": "每套公寓都经过我们团队实地看房、审核、把关。不够好的，不会上线。",
@@ -121,8 +121,8 @@
     "flexibleDesc": "住一个月或十二个月。随时延长或缩短。您的计划会变，住的地方不该成为麻烦。",
     "service": "全天候专属支持",
     "serviceDesc": "随时致电，真人接听。无论白天黑夜，工作日或周末，我们始终在线。",
-    "support": "全天候守护",
-    "supportDesc": "深夜遇到门锁问题？需要维修协助？我们一直都在。",
+    "support": "全包式定价",
+    "supportDesc": "每次入住都包含水电网和保洁。没有隐藏费用，没有意外支出。",
     "utilities": "包含所有公用事业费用",
     "wifi": "高速WiFi",
     "housekeeping": "家政服务",
@@ -152,7 +152,7 @@
     "reviews": "条评价",
     "maxGuests": "最多 {count} 人",
     "area": "{area}平方米",
-    "perNight": "/晚",
+    "perNight": "/月",
     "minNights": "{count} 天起租",
     "monthlyDiscount": "月租享 {percent}% 折扣",
     "view": "视图",
@@ -161,7 +161,7 @@
     "mapView": "地图视图",
     "searchPlaceholder": "搜索位置、房源名称...",
     "filter": "筛选",
-    "priceRange": "价格范围 (加元/晚)",
+    "priceRange": "价格范围 (加元/月)",
     "resetFilters": "重置筛选",
     "applyFilters": "应用筛选",
     "showing": "显示",
@@ -303,7 +303,7 @@
     "cases": {
       "title": "典型场景",
       "typical": "典型场景",
-      "subtitle": "See how leading companies have transformed their accommodation strategies with StayNeos."
+      "subtitle": "See how leading companies have transformed their accommodation strategies with NEOS."
     },
     "stats": {
       "companies": "运营支持",
@@ -364,7 +364,7 @@
     },
     "advantages": {
       "subtitle": "Transform your corporate accommodation strategy with our comprehensive business solutions.",
-      "title": "为什么选择 StayNeos for 商务"
+      "title": "为什么选择 NEOS for 商务"
     },
     "features": {
       "subtitle": "Enterprise-grade features designed to simplify corporate accommodation management.",
@@ -393,7 +393,7 @@
       "title": "长租方案 Rental Discounts"
     },
     "advantages": {
-      "title": "为什么选择 长租方案 with StayNeos",
+      "title": "为什么选择 长租方案 with NEOS",
       "subtitle": "Beyond just savings, long-term stays offer stability, convenience, and a true home-away-from-home experience."
     },
     "form": {
@@ -469,7 +469,7 @@
     "companyTitle": "公司",
     "servicesTitle": "服务",
     "supportTitle": "支持",
-    "copyright": "© 2024-2026 StayNeos. 版权所有",
+    "copyright": "© 2024-2026 NEOS. 版权所有",
     "trust": "🔒 安全支付 · ✓ 真实房源 · 24/7 客服支持",
     "terms": "服务条款",
     "landlords": "房东合作",
@@ -543,7 +543,7 @@
     "taxHST": "税费 (13% HST)",
     "total": "总价",
     "nightsCount": "{count}晚",
-    "perNight": "/晚",
+    "perNight": "/月",
     "propertyInfo": "房源信息",
     "night": "晚",
     "nights": "晚",
@@ -597,7 +597,7 @@
   },
   "testimonials": {
     "title": "客人评价",
-    "subtitle": "阅读我们满意客户的真实评价，了解StayNeos的服务差异"
+    "subtitle": "阅读我们满意客户的真实评价，了解NEOS的服务差异"
   },
   "cities": {
     "title": "我们的城市",
@@ -921,9 +921,9 @@
     "monthlyDiscountLabel": "月租享 {percent}% 折扣",
     "monthlyPrice": "月租价",
     "originalPrice": "原价",
-    "perNight": "/晚",
+    "perNight": "/月",
     "serviceFee": "服务费",
-    "areaUnit": "m²",
+    "areaUnit": "sqft",
     "aboutPlace": "关于此房源",
     "whatOffers": "房源设施",
     "whereYouBe": "房源位置",
@@ -944,13 +944,13 @@
     "guestInfo": "{maxGuests} 位房客 · {bedrooms} 间卧室 · {beds} 张床 · {bathrooms} 间浴室",
     "mapLoading": "地图加载中...",
     "linkCopied": "链接已复制！",
-    "shareText": "在 StayNeos 上查看此房源",
+    "shareText": "在 NEOS 上查看此房源",
     "sqft": "平方英尺",
     "guestFavourite": "房客最爱",
     "rareFind": "稀有好房",
     "roomIn": "位于",
     "top10": "Top 10",
-    "top10Desc": "StayNeos 最受欢迎的房源之一",
+    "top10Desc": "NEOS 最受欢迎的房源之一",
     "reportListing": "举报此房源",
     "showMore": "显示更多",
     "loadingMap": "地图加载中...",
@@ -1077,7 +1077,7 @@
     "modify": "修改",
     "enable": "开启",
     "updateSuccess": "个人信息已更新！",
-    "memberNote": "🌟 您是尊贵的 StayNeos 会员",
+    "memberNote": "🌟 您是尊贵的 NEOS 会员",
     "accountSettings": "账户设置",
     "noBookingsTitle": "还没有预订",
     "checkIn": "入住",
@@ -1106,7 +1106,7 @@
     "security": "安全",
     "phoneVerify": "手机验证",
     "twoFactorOff": "未开启",
-    "priceUnit": "/晚",
+    "priceUnit": "/月",
     "guestsCount": "{count} 位房客",
     "bookNow": "立即预订",
     "removeFavorite": "取消收藏",
@@ -1142,7 +1142,7 @@
   "landlords": {
     "hero": {
       "title": "最大化您的租金收入",
-      "subtitle": "与 StayNeos 合作，从您的房产中赚取高达 30% 的额外收入。我们处理一切事务，让您享受被动收入。",
+      "subtitle": "与 NEOS 合作，从您的房产中赚取高达 30% 的额外收入。我们处理一切事务，让您享受被动收入。",
       "cta": "发布房源"
     },
     "benefits": {
@@ -1193,7 +1193,7 @@
     },
     "cta": {
       "title": "准备好开始赚取更多收入了吗？",
-      "subtitle": "加入数百位信任 StayNeos 的房东行列。",
+      "subtitle": "加入数百位信任 NEOS 的房东行列。",
       "button": "立即开始"
     }
   },
@@ -1275,7 +1275,7 @@
   },
   "agents": {
     "hero": {
-      "title": "成为 StayNeos 合作伙伴",
+      "title": "成为 NEOS 合作伙伴",
       "subtitle": "加入我们的房地产专业人士网络，通过推荐房源、代理租客或推荐客人入住我们的高端行政公寓，赚取丰厚佣金。",
       "cta": "立即成为合作伙伴"
     },
@@ -1285,7 +1285,7 @@
       "commission": "佣金",
       "property": {
         "title": "推荐房源",
-        "desc": "推荐房东将其带家具公寓上架 StayNeos。每个成功上架的房源都能赚取佣金。"
+        "desc": "推荐房东将其带家具公寓上架 NEOS。每个成功上架的房源都能赚取佣金。"
       },
       "tenant": {
         "title": "代理租客",
@@ -1293,7 +1293,7 @@
       },
       "guest": {
         "title": "推荐客人",
-        "desc": "向商务旅客、异地员工或项目团队推荐 StayNeos，每笔成功预订都能获得奖励。"
+        "desc": "向商务旅客、异地员工或项目团队推荐 NEOS，每笔成功预订都能获得奖励。"
       }
     },
     "process": {
@@ -1337,8 +1337,8 @@
       }
     },
     "benefits": {
-      "title": "为什么选择 StayNeos",
-      "subtitle": "加入数百位信任 StayNeos 的房地产专业人士行列。",
+      "title": "为什么选择 NEOS",
+      "subtitle": "加入数百位信任 NEOS 的房地产专业人士行列。",
       "commission": {
         "title": "丰厚佣金",
         "desc": "房源推荐佣金高达50%，代理租客服务享有极具竞争力的佣金比例。"
@@ -1374,7 +1374,7 @@
       "partnershipType": "合作类型",
       "selectType": "选择合作类型",
       "message": "留言",
-      "messagePlaceholder": "请介绍您的业务以及您希望如何与 StayNeos 合作...",
+      "messagePlaceholder": "请介绍您的业务以及您希望如何与 NEOS 合作...",
       "privacyNote": "您的信息将被严格保密，仅用于合作伙伴沟通。",
       "submit": "提交申请",
       "submitting": "提交中...",
@@ -1436,7 +1436,7 @@
     "heroTitle": "企业差旅住房方案",
     "heroSubtitle": "为出差团队、项目驻场、企业搬迁提供灵活的高端公寓解决方案<br>降低成本 · 提升员工满意度 · 简化管理流程",
     "ctaButton": "获取企业报价",
-    "valueTitle": "为什么选择 StayNeos 企业服务",
+    "valueTitle": "为什么选择 NEOS 企业服务",
     "costSaving": "降低 30% 住宿成本",
     "costSavingDesc": "相比传统酒店，我们的企业客户平均节省 30% 住宿费用，同时获得更大空间和更好体验",
     "flexible": "灵活的租期方案",
@@ -1621,10 +1621,10 @@
     "desc": "从主要城市起步，扩展至商务带您去的每一座城市。一个平台，始终如一的品质。"
   },
   "about": {
-    "title": "关于 StayNeos",
+    "title": "关于 NEOS",
     "hero": {
-      "title": "关于 StayNeos",
-      "subtitle": "我们知道来到一座新城市、需要一个家——而不只是一间房——是什么感觉。所以我们创建了 StayNeos。"
+      "title": "关于 NEOS",
+      "subtitle": "我们知道来到一座新城市、需要一个家——而不只是一间房——是什么感觉。所以我们创建了 NEOS。"
     },
     "mission": {
       "label": "我们的使命",
@@ -1666,7 +1666,7 @@
     "heroSubtitle": "在一座还不属于自己的城市，找一个真正的家",
     "storyTitle": "如何开始的",
     "storyOrigin": "这始于一次令人崩溃的找房经历。创始人因工作搬到陌生城市，面对和每个人一样的选择：没有厨房的酒店小房间，或者要签12个月租约的空荡公寓。两个都不合理。于是我们打造了第三种选择。",
-    "storyMission": "2024 年，StayNeos 带着一个简单的想法上线：漂亮的精装公寓，明天就能搬进去。每套房子都是精心挑选、设施齐全，而且都在您真正想住的社区。",
+    "storyMission": "2024 年，NEOS 带着一个简单的想法上线：漂亮的精装公寓，明天就能搬进去。每套房子都是精心挑选、设施齐全，而且都在您真正想住的社区。",
     "storyToday": "如今，我们是专业人士找家的首选。技术主管、咨询顾问、住院医生、搬迁家庭——他们选择我们，因为我们认真对待每一次入住。因为每一次都很重要。",
     "valuesTitle": "我们的信念",
     "peopleFirst": "真实的人，不是交易",
@@ -1683,7 +1683,7 @@
     "partnersCount": "50+ 企业合作伙伴",
     "rating": "4.9/5 住客评分",
     "coverage": "覆盖主要核心城市",
-    "ctaTitle": "回家，到 StayNeos",
+    "ctaTitle": "回家，到 NEOS",
     "ctaSubtitle": "无论您住一个月还是一年，我们让每一座城市都成为您的城市。",
     "ctaBrowse": "浏览公寓",
     "ctaContact": "跟我们聊聊"
@@ -1796,7 +1796,7 @@
     "secureCheckout": "安全结算",
     "sslProtection": "🔒 256位SSL加密保护",
     "payButton": "立即支付",
-    "successTitle": "欢迎入住 StayNeos！",
+    "successTitle": "欢迎入住 NEOS！",
     "successDesc": "我们已收到您的预订。入住指南将发送至您的邮箱，礼宾团队随时为您服务。",
     "viewMyBooking": "查看我的预订",
     "selectPaymentMethod": "选择支付方式",
@@ -1914,7 +1914,7 @@
   "auth": {
     "loginLeftTitle": "开启您的品质旅居",
     "loginLeftDesc": "登录即可管理预订、收藏心仪房源、享受会员专属优惠",
-    "loginWelcome": "欢迎回到 StayNeos",
+    "loginWelcome": "欢迎回到 NEOS",
     "emailPlaceholder": "name@example.com",
     "passwordPlaceholder": "密码",
     "loginButton": "立即登录",
@@ -1927,7 +1927,7 @@
     "registerLeftTitle": "开启品质旅居新体验",
     "registerLeftDesc": "✓ 首次预订享 9 折优惠<br>✓ 收藏心仪房源，随时查看<br>✓ 专属客户经理一对一服务",
     "registerTitle": "创建账户",
-    "registerSubtitle": "加入 StayNeos，开启高端旅居体验",
+    "registerSubtitle": "加入 NEOS，开启高端旅居体验",
     "namePlaceholder": "您的姓名",
     "workEmailPlaceholder": "工作邮箱（推荐）",
     "createPasswordPlaceholder": "设置密码（至少8位）",
@@ -1939,7 +1939,7 @@
     "termsNote": "创建账户即表示您同意《服务条款》和《隐私政策》",
     "haveAccount": "已有账户？",
     "signInNow": "立即登录",
-    "registerSuccessTitle": "🎉 欢迎加入 StayNeos！",
+    "registerSuccessTitle": "🎉 欢迎加入 NEOS！",
     "registerSuccessDesc": "验证邮件已发送，请查收并激活您的账户",
     "emailRequired": "请输入邮箱",
     "invalidEmail": "请输入有效的邮箱地址",
@@ -2056,7 +2056,7 @@
     "groundRulesDesc": "请遵守以下简单规则",
     "treatHome": "像对待自己家一样对待房东的房子",
     "followHouseRules": "遵守房屋规定",
-    "agreement": "点击下方的按钮，即表示我同意房屋规定、取消政策以及 StayNeos 服务条款"
+    "agreement": "点击下方的按钮，即表示我同意房屋规定、取消政策以及 NEOS 服务条款"
   },
   "cancel": {
     "title": "支付已取消",
@@ -2079,14 +2079,14 @@
     "beds": "{count} 室",
     "baths": "{count} 卫",
     "reviews": "{count} 条评价",
-    "priceUnit": "/晚",
+    "priceUnit": "/月",
     "bookNow": "立即预订",
     "viewDetails": "查看详情",
     "remove": "取消收藏",
     "browseAll": "浏览全部房源",
     "moreOptions": "更多选择"
   },
-  "title": "StayNeos | 高端行政公寓出租平台",
+  "title": "NEOS | 高端行政公寓出租平台",
   "home": "探索房源",
   "login": "登录",
   "register": "注册",
@@ -2119,20 +2119,21 @@
   "flexibleDesc": "住一个月或十二个月。随时延长或缩短。你的计划会变，住的地方不该成为麻烦。",
   "service": "随时有人罩着你",
   "serviceDesc": "打电话过来，接听的是真人。白天黑夜，工作日周末，都在。",
-  "supportDesc": "半夜锁门外了？需要维修？我们在。一直都在。",
+  "support": "全包式定价",
+  "supportDesc": "每次入住都包含水电网和保洁。没有隐藏费用，没有意外支出。",
   "viewAll": "查看全部房源",
   "featured": "精选",
   "reviews": "条评价",
   "maxGuests": "最多 {count} 人",
   "area": "{area}平方米",
-  "perNight": "/晚",
+  "perNight": "/月",
   "minNights": "{count} 天起租",
   "monthlyDiscount": "月租享 {percent}% 折扣",
   "gridView": "网格视图",
   "listView": "列表视图",
   "mapView": "地图视图",
   "searchPlaceholder": "搜索位置、房源名称...",
-  "priceRange": "价格范围 (加元/晚)",
+  "priceRange": "价格范围 (加元/月)",
   "resetFilters": "重置筛选",
   "applyFilters": "应用筛选",
   "showing": "显示",
@@ -2162,7 +2163,7 @@
   "companyTitle": "公司",
   "servicesTitle": "服务",
   "supportTitle": "支持",
-  "copyright": "© 2024-2026 StayNeos. 版权所有",
+  "copyright": "© 2024-2026 NEOS. 版权所有",
   "trust": {
     "verified": "真实房源认证",
     "support": "24/7 专属支持",
@@ -2375,7 +2376,7 @@
   "modify": "修改",
   "enable": "开启",
   "updateSuccess": "个人信息已更新！",
-  "memberNote": "🌟 您是尊贵的 StayNeos 会员",
+  "memberNote": "🌟 您是尊贵的 NEOS 会员",
   "accountSettings": "账户设置",
   "noBookingsTitle": "还没有预订",
   "needHelp": "需要帮助？",
@@ -2411,7 +2412,7 @@
   "heroTitle": "企业差旅住房方案",
   "heroSubtitle": "为出差团队、项目驻场、企业搬迁提供灵活的高端公寓解决方案<br>降低成本 · 提升员工满意度 · 简化管理流程",
   "ctaButton": "获取企业报价",
-  "valueTitle": "为什么选择 StayNeos 企业服务",
+  "valueTitle": "为什么选择 NEOS 企业服务",
   "costSaving": "降低 30% 住宿成本",
   "costSavingDesc": "相比传统酒店，我们的企业客户平均节省 30% 住宿费用，同时获得更大空间和更好体验",
   "scenariosTitle": "为企业各种场景提供解决方案",
@@ -2456,7 +2457,7 @@
   "browse": "浏览房源",
   "storyTitle": "如何开始的",
   "storyOrigin": "这始于一次令人崩溃的找房经历。创始人因工作搬到陌生城市，面对和每个人一样的选择：没有厨房的酒店小房间，或者要签12个月租约的空荡公寓。两个都不合理。于是我们打造了第三种选择。",
-  "storyMission": "2024 年，StayNeos 带着一个简单的想法上线：漂亮的精装公寓，明天就能搬进去。每套房子都是精心挑选、设施齐全，而且都在您真正想住的社区。",
+  "storyMission": "2024 年，NEOS 带着一个简单的想法上线：漂亮的精装公寓，明天就能搬进去。每套房子都是精心挑选、设施齐全，而且都在您真正想住的社区。",
   "storyToday": "如今，我们是专业人士找家的首选。技术主管、咨询顾问、住院医生、搬迁家庭——他们选择我们，因为我们认真对待每一次入住。因为每一次都很重要。",
   "valuesTitle": "我们的信念",
   "peopleFirst": "真实的人，不是交易",
@@ -2493,12 +2494,12 @@
   "secureCheckout": "安全结算",
   "sslProtection": "🔒 256位SSL加密保护",
   "payButton": "立即支付",
-  "successTitle": "欢迎入住 StayNeos！",
+  "successTitle": "欢迎入住 NEOS！",
   "successDesc": "我们已收到您的预订。入住指南将发送至您的邮箱，礼宾团队随时为您服务。",
   "viewMyBooking": "查看我的预订",
   "loginLeftTitle": "开启您的品质旅居",
   "loginLeftDesc": "登录即可管理预订、收藏心仪房源、享受会员专属优惠",
-  "loginWelcome": "欢迎回到 StayNeos",
+  "loginWelcome": "欢迎回到 NEOS",
   "passwordPlaceholder": "密码",
   "loginButton": "立即登录",
   "keepSignedIn": "保持登录状态",
@@ -2510,7 +2511,7 @@
   "registerLeftTitle": "开启品质旅居新体验",
   "registerLeftDesc": "✓ 首次预订享 9 折优惠<br>✓ 收藏心仪房源，随时查看<br>✓ 专属客户经理一对一服务",
   "registerTitle": "创建账户",
-  "registerSubtitle": "加入 StayNeos，开启高端旅居体验",
+  "registerSubtitle": "加入 NEOS，开启高端旅居体验",
   "workEmailPlaceholder": "工作邮箱（推荐）",
   "createPasswordPlaceholder": "设置密码（至少8位）",
   "confirmPasswordPlaceholder": "确认密码",
@@ -2521,7 +2522,7 @@
   "termsNote": "创建账户即表示您同意《服务条款》和《隐私政策》",
   "haveAccount": "已有账户？",
   "signInNow": "立即登录",
-  "registerSuccessTitle": "🎉 欢迎加入 StayNeos！",
+  "registerSuccessTitle": "🎉 欢迎加入 NEOS！",
   "registerSuccessDesc": "验证邮件已发送，请查收并激活您的账户",
   "back": "返回",
   "goBack": "返回",
@@ -2546,7 +2547,7 @@
   "max": "最多",
   "maxGuestsValue": "最多 {count} 人",
   "minNightsLabel": "最少 {count} 晚",
-  "areaUnit": "m²",
+  "areaUnit": "sqft",
   "aboutPlace": "关于此房源",
   "whatOffers": "房源设施",
   "whereYouBe": "房源位置",
@@ -2564,7 +2565,7 @@
   "favourite": "收藏",
   "mapLoading": "地图加载中...",
   "linkCopied": "链接已复制！",
-  "shareText": "在 StayNeos 上查看此房源",
+  "shareText": "在 NEOS 上查看此房源",
   "sqft": "平方英尺",
   "bookingNumberLabel": "预订 #{number}",
   "confirmText": "确定要取消预订 {number} 吗？",
@@ -2593,7 +2594,7 @@
   "groundRulesDesc": "请遵守以下简单规则",
   "treatHome": "像对待自己家一样对待房东的房子",
   "followHouseRules": "遵守房屋规定",
-  "agreement": "点击下方的按钮，即表示我同意房屋规定、取消政策以及 StayNeos 服务条款",
+  "agreement": "点击下方的按钮，即表示我同意房屋规定、取消政策以及 NEOS 服务条款",
   "selectPaymentMethod": "选择支付方式",
   "paymentMethod": "支付方式",
   "cardDescription": "Visa、Mastercard、Amex、Discover",
@@ -2664,7 +2665,7 @@
   "security": "安全",
   "phoneVerify": "手机验证",
   "twoFactorOff": "未开启",
-  "priceUnit": "/晚",
+  "priceUnit": "/月",
   "removeFavorite": "取消收藏",
   "saved": "个人资料已保存",
   "emptyTitle": "您的心愿单为空",
@@ -2684,8 +2685,8 @@
   "applePay": "Apple Pay",
   "googlePay": "Google Pay",
   "aboutPage": {
-    "title": "关于 StayNeos",
-    "heroSubtitle": "我们知道在一座还不属于自己的城市需要一个家是什么感觉。所以我们创建了 StayNeos。",
+    "title": "关于 NEOS",
+    "heroSubtitle": "我们知道在一座还不属于自己的城市需要一个家是什么感觉。所以我们创建了 NEOS。",
     "missionLabel": "OUR MISSION",
     "missionTitle": "驱动我们的是什么",
     "missionDesc": "每个人都值得拥有一个真正的家——即使远在他乡。",
@@ -2707,7 +2708,7 @@
     "story2Desc": "空间小，没厨房，毫无归属感。",
     "story3Title": "长租也不行",
     "story3Desc": "签一年合同，空荡荡的房子，好几周才能住进去。",
-    "story4Title": "于是有了 StayNeos",
+    "story4Title": "于是有了 NEOS",
     "story4Desc": "精装、灵活，你到了就能住。",
     "whyLabel": "WHY CHOOSE US",
     "whyTitle": "为什么大家选我们",
@@ -2848,9 +2849,9 @@
     "title": "服务条款",
     "lastUpdated": "最后更新：2026年2月7日",
     "s1Title": "1. 条款同意",
-    "s1Text": "使用 StayNeos 即表示同意本条款。",
+    "s1Text": "使用 NEOS 即表示同意本条款。",
     "s2Title": "2. 服务描述",
-    "s2Text": "StayNeos 提供精装公寓和企业住宿预订平台。",
+    "s2Text": "NEOS 提供精装公寓和企业住宿预订平台。",
     "s3Title": "3. 预订与付款",
     "s3_1": "3.1 预订视可用性而定。",
     "s3_2": "3.2 需付款或定金。",
@@ -2891,7 +2892,7 @@
     "title": "隐私政策",
     "lastUpdated": "最后更新：2026年2月7日",
     "s1Title": "1. 引言",
-    "s1Text": "StayNeos 致力于保护您的隐私。",
+    "s1Text": "NEOS 致力于保护您的隐私。",
     "s2Title": "2. 收集的信息",
     "s2Text": "我们可能收集：",
     "s3Title": "3. 信息使用",
@@ -2946,7 +2947,7 @@
   "serviceAnimalsPage": {
     "title": "服务动物政策",
     "welcome": "欢迎服务动物",
-    "welcomeDesc": "StayNeos 欢迎所有房源中的服务动物。",
+    "welcomeDesc": "NEOS 欢迎所有房源中的服务动物。",
     "noFees": "无额外费用",
     "noFeesDesc": "服务动物不收宠物费或押金。",
     "responsibilities": "住客责任",
@@ -2979,7 +2980,7 @@
     "globalCities": "全球城市",
     "guestRating": "住客评分",
     "loginTitle": "登录",
-    "loginSubtitle": "欢迎回到 StayNeos"
+    "loginSubtitle": "欢迎回到 NEOS"
   },
   "registerPage": {
     "heroTitle": "高端生活，",
@@ -3246,7 +3247,7 @@
       "program": "Program/Major",
       "emailPlaceholder": "your@email.com",
       "other": "Other",
-      "messagePlaceholder": "Tell us about yourself, any special requirements, roommate preferences, or questions you have about student housing with StayNeos...",
+      "messagePlaceholder": "Tell us about yourself, any special requirements, roommate preferences, or questions you have about student housing with NEOS...",
       "roomType": "Preferred Room 类型",
       "tmu": "多伦多 Metropolitan University",
       "firstNamePlaceholder": "Enter your first name",
@@ -3258,7 +3259,7 @@
       "subtitle": "Every space is designed with student success in mind, from study areas to social spaces."
     },
     "testimonials": {
-      "subtitle": "Hear from current and former residents about their StayNeos experience.",
+      "subtitle": "Hear from current and former residents about their NEOS experience.",
       "title": "What 学生s Say"
     },
     "universities": {
@@ -3315,7 +3316,7 @@
     "calculator": {
       "title": "Calculate Your Potential Earnings",
       "guarantee": "月租 payments regardless of occupancy, plus professional management included.",
-      "subtitle": "See how much more you could earn with StayNeos compared to traditional rentals.",
+      "subtitle": "See how much more you could earn with NEOS compared to traditional rentals.",
       "currentRent": "Current 月租 Rent",
       "occupancyRate": "Current 入住率 费率"
     },
@@ -3330,11 +3331,11 @@
       "subtitle": "Earn guaranteed monthly income with zero vacancy risk. Join 多伦多's premium executive housing platform and let us handle everything while you collect steady payments."
     },
     "advantages": {
-      "title": "为什么选择 StayNeos",
+      "title": "为什么选择 NEOS",
       "subtitle": "Join hundreds of property owners who've transformed their real estate investments into hassle-free income streams."
     },
     "benefits": {
-      "subtitle": "More reasons why property owners choose StayNeos for their investment properties.",
+      "subtitle": "More reasons why property owners choose NEOS for their investment properties.",
       "title": "Additional 优势"
     }
   },

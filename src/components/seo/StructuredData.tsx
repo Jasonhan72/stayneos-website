@@ -1,5 +1,6 @@
 import Script from "next/script";
 import { Property } from "@/components/property/PropertyCard";
+import { toMonthlyListingPrice } from "@/lib/utils/property-transform";
 
 interface OrganizationSchemaProps {
   name?: string;
@@ -9,7 +10,7 @@ interface OrganizationSchemaProps {
 }
 
 export function OrganizationSchema({
-  name = "StayNeos",
+  name = "NEOS",
   url = "https://stayneos.com",
   logo = "https://stayneos.com/logo.png",
   description = "Premium furnished apartment platform for business professionals",
@@ -48,7 +49,7 @@ interface WebSiteSchemaProps {
 }
 
 export function WebSiteSchema({
-  name = "StayNeos",
+  name = "NEOS",
   url = "https://stayneos.com",
   searchUrl = "https://stayneos.com/properties?q={search_term_string}",
 }: WebSiteSchemaProps) {
@@ -97,7 +98,7 @@ interface LocalBusinessSchemaProps {
 }
 
 export function LocalBusinessSchema({
-  name = "StayNeos",
+  name = "NEOS",
   description = "Premium furnished apartment rental platform",
   url = "https://stayneos.com",
   telephone = "+1-647-862-6518",
@@ -167,7 +168,7 @@ export function PropertySchema({
     "@context": "https://schema.org",
     "@type": "LodgingReservation",
     name: property.title,
-    description: `${property.title} in ${property.location}, ${property.area} sqm, up to ${property.maxGuests} guests`,
+    description: `${property.title} in ${property.location}, ${property.area} sqft, up to ${property.maxGuests} guests`,
     url: `${baseUrl}/property/${property.id}`,
     image: property.images,
     address: {
@@ -175,12 +176,7 @@ export function PropertySchema({
       streetAddress: property.location,
       addressCountry: "CA",
     },
-    priceRange: `$${property.price} ${property.priceUnit}`,
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: property.rating,
-      reviewCount: property.reviewCount,
-    },
+    priceRange: `From $${toMonthlyListingPrice(property.price, property.priceUnit)}/mo`,
     amenityFeature: property.amenities.map((amenity) => ({
       "@type": "LocationFeatureSpecification",
       name: amenity,
@@ -194,9 +190,19 @@ export function PropertySchema({
     floorSize: {
       "@type": "QuantitativeValue",
       value: property.area,
-      unitCode: "MTK",
+      unitCode: "FTK",
     },
   };
+
+  if (property.reviewCount > 0) {
+    Object.assign(schema, {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: property.rating,
+        reviewCount: property.reviewCount,
+      },
+    });
+  }
 
   return (
     <Script

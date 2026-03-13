@@ -19,10 +19,10 @@ async function getProperty(idOrSlug: string) {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const property = await getProperty(params.id);
-  if (!property) return { title: 'Property Not Found | StayNeos' };
+  if (!property) return { title: 'Property Not Found | NEOS' };
 
   return {
-    title: `${property.title} | StayNeos`,
+    title: `${property.title} | NEOS`,
     description: property.metaDescription || property.description?.slice(0, 160) || '',
   };
 }

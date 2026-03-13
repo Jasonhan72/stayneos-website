@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import CorporatePageContent from "./CorporatePageContent";
 
 export const metadata: Metadata = {
-  title: "For Business - StayNeos",
+  title: "For Business - NEOS",
   description: "Corporate housing solutions for business travelers, relocating employees, and project teams. Flexible, fully-furnished apartments in major cities.",
 };
 

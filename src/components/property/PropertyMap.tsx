@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { MapPin, Star, X } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { formatMonthlyListingPrice, toMonthlyListingPrice } from '@/lib/utils/property-transform';
 
 interface Property {
   id: string;
@@ -146,7 +147,7 @@ export default function PropertyMap({
                onmouseover="this.style.transform='scale(1.05)';this.style.zIndex='10'"
                onmouseout="this.style.transform='scale(1)';this.style.zIndex='1'"
           >
-            $${property.price}
+            From $${toMonthlyListingPrice(property.price, property.priceUnit).toLocaleString()}/mo
           </div>
         `;
 
@@ -247,10 +248,12 @@ export default function PropertyMap({
                   <h4 className="font-semibold text-neutral-900 line-clamp-1">
                     {popupProperty.title}
                   </h4>
-                  <div className="flex items-center gap-1">
-                    <Star size={14} className="text-accent fill-accent" />
-                    <span className="text-sm">{popupProperty.rating}</span>
-                  </div>
+                  {popupProperty.reviewCount > 0 && (
+                    <div className="flex items-center gap-1">
+                      <Star size={14} className="text-accent fill-accent" />
+                      <span className="text-sm">{popupProperty.rating}</span>
+                    </div>
+                  )}
                 </div>
                 
                 <div className="flex items-center gap-1 text-neutral-500 text-sm mb-3">
@@ -261,15 +264,12 @@ export default function PropertyMap({
                 <div className="flex items-center gap-3 text-sm text-neutral-600 mb-3">
                   <span>{popupProperty.bedrooms}室</span>
                   <span>·</span>
-                  <span>{popupProperty.area}m²</span>
+                  <span>{popupProperty.area} sqft</span>
                 </div>
                 
-                <div className="flex items-baseline gap-1">
-                  <span className="text-xl font-bold text-neutral-900">
-                    ${popupProperty.price.toLocaleString()}
-                  </span>
-                  <span className="text-sm text-neutral-500">/{popupProperty.priceUnit}</span>
-                </div>
+                <span className="text-xl font-bold text-neutral-900">
+                  {formatMonthlyListingPrice(popupProperty.price, popupProperty.priceUnit)}
+                </span>
               </div>
             </Link>
           </div>

@@ -13,7 +13,7 @@ import {
 } from '@/components/home';
 
 export const metadata: Metadata = {
-  title: 'StayNeos | Premium Furnished Apartments in Downtown Toronto',
+  title: 'NEOS | Premium Furnished Apartments in Downtown Toronto',
   description: "Move-in ready furnished apartments in Toronto's best neighborhoods. 30 days to 12 months. Corporate housing, relocation, and extended stays.",
 };
 

@@ -229,7 +229,7 @@ export default function ForAgentsPageContent() {
         </Container>
       </Section>
 
-      {/* Why Partner with StayNeos */}
+      {/* Why Partner with NEOS */}
       <Section className="bg-neutral-50 py-16 md:py-24">
         <Container>
           <div className="text-center mb-16">

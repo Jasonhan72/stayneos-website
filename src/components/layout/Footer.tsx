@@ -50,7 +50,7 @@ export default function Footer() {
               <Link href="/" className="inline-block">
                 <Image
                   src="/logo.png"
-                  alt="StayNeos"
+                  alt="NEOS"
                   width={150}
                   height={50}
                   className="h-10 md:h-11 w-auto object-contain"

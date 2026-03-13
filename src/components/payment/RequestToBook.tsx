@@ -175,15 +175,17 @@ export function RequestToBook({
               <h2 className="font-medium text-neutral-900 leading-tight line-clamp-2">
                 {localizedTitle}
               </h2>
-              <div className="flex items-center gap-1.5 mt-1.5">
-                <Star size={14} className="text-black fill-black" />
-                <span className="text-sm font-medium">{property.rating}</span>
-                <span className="text-sm text-neutral-500">({property.reviewCount} {t('properties.reviews') || 'reviews'})</span>
-                <span className="mx-1">·</span>
-                <span className="text-sm font-medium text-rose-600">
-                  {t('property.guestFavourite') || 'Guest favourite'}
-                </span>
-              </div>
+              {property.reviewCount > 0 && (
+                <div className="flex items-center gap-1.5 mt-1.5">
+                  <Star size={14} className="text-black fill-black" />
+                  <span className="text-sm font-medium">{property.rating}</span>
+                  <span className="text-sm text-neutral-500">({property.reviewCount} {t('properties.reviews') || 'reviews'})</span>
+                  <span className="mx-1">·</span>
+                  <span className="text-sm font-medium text-rose-600">
+                    {t('property.guestFavourite') || 'Guest favourite'}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -237,7 +239,7 @@ export function RequestToBook({
             <div className={`space-y-2 text-sm ${showPriceDetails ? '' : 'hidden'}`}>
               <div className="flex justify-between">
                 <span className="text-neutral-600">
-                  ${pricePerNight.toLocaleString()} {t('property.perNight') || 'CAD/night'} x {nights} {nights === 1 ? (t('common.night') || 'night') : (t('common.nights') || 'nights')}
+                  ${pricePerNight.toLocaleString()} {t('property.perNight') || 'CAD/mo'} x {nights} {nights === 1 ? (t('common.night') || 'night') : (t('common.nights') || 'nights')}
                 </span>
                 <span>${subtotal.toLocaleString()} CAD</span>
               </div>

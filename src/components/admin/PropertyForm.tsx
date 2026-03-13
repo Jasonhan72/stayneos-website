@@ -543,7 +543,7 @@ export function PropertyForm({ initialData, mode, hosts = [] }: PropertyFormProp
               <div className="col-span-2">
                 <label className="block text-sm font-medium text-neutral-700 mb-1">
                   <Maximize className="w-4 h-4 inline mr-1" />
-                  Area (m²)
+                  Area (sqft)
                 </label>
                 <input
                   type="number"
@@ -708,7 +708,7 @@ export function PropertyForm({ initialData, mode, hosts = [] }: PropertyFormProp
               {...register('hostId')}
               className="w-full px-4 py-2 border border-neutral-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             >
-              <option value={systemHostId}>StayNeos System (Default)</option>
+              <option value={systemHostId}>NEOS System (Default)</option>
               {hosts.map((host) => (
                 <option key={host.id} value={host.id}>
                   {host.displayName} ({host.totalProperties} properties)
@@ -718,7 +718,7 @@ export function PropertyForm({ initialData, mode, hosts = [] }: PropertyFormProp
             
             <p className="mt-2 text-xs text-neutral-500">
               {watchedHostId === systemHostId 
-                ? 'Using system default host. The property will show as "Hosted by StayNeos".'
+                ? 'Using system default host. The property will show as "Hosted by NEOS".'
                 : `Property will show as hosted by ${hosts.find(h => h.id === watchedHostId)?.displayName || 'selected host'}.`
               }
             </p>
@@ -830,7 +830,7 @@ export function PropertyForm({ initialData, mode, hosts = [] }: PropertyFormProp
             <h3 className="font-semibold text-neutral-900 mb-3">Price Preview</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-neutral-600">Base price/night</span>
+                <span className="text-neutral-600">Base price/month</span>
                 <span className="font-medium">${watch('pricePerNight') || 0}</span>
               </div>
               <div className="flex justify-between">

@@ -1,4 +1,4 @@
-// Layout Components - StayNeos
+// Layout Components - NEOS
 // Blueground Style + Square UI
 
 export { default as Navbar } from './Navbar';

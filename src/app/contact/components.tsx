@@ -406,12 +406,12 @@ export function MapSection() {
         loading="lazy"
         referrerPolicy="no-referrer-when-downgrade"
         className="absolute inset-0"
-        title="StayNeos Office Location"
+        title="NEOS Office Location"
       />
       
       {/* 地图上的信息卡片 */}
       <div className="absolute bottom-4 left-4 bg-white p-4 shadow-lg max-w-xs">
-        <h4 className="font-semibold text-neutral-900 mb-1">StayNeos</h4>
+        <h4 className="font-semibold text-neutral-900 mb-1">NEOS</h4>
         <p className="text-sm text-neutral-600">20 Upjohn Rd, North York, ON</p>
         <a 
           href="https://maps.google.com/?q=20+Upjohn+Rd+North+York+ON+M3B+2V9"

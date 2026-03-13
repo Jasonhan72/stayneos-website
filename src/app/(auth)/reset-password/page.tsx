@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import ResetPasswordForm from "./ResetPasswordForm";
 
 export const metadata: Metadata = {
-  title: "Reset Password - StayNeos",
+  title: "Reset Password - NEOS",
   description: "Set your new password",
 };
 

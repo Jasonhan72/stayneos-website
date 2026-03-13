@@ -44,7 +44,7 @@ async function listBookings(request: NextRequest, statusFilter?: string) {
         status: booking.status,
         payment_status: booking.paymentStatus,
         property_id: booking.propertyId,
-        property_title: property?.title || "StayNeos Property",
+        property_title: property?.title || "NEOS Property",
         guest_name: booking.guestName,
         guest_email: booking.guestEmail,
         created_at: booking.createdAt,

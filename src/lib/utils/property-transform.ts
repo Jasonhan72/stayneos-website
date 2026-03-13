@@ -123,6 +123,27 @@ export function formatPrice(price: number | string, currency = 'CAD'): string {
   }).format(numPrice);
 }
 
+function normalizePriceUnit(priceUnit?: string): string {
+  return (priceUnit || '').toLowerCase().trim();
+}
+
+export function toMonthlyListingPrice(price: number | string, priceUnit?: string): number {
+  const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
+  const unit = normalizePriceUnit(priceUnit);
+  const isMonthlyUnit = ['month', 'monthly', 'mo', '/mo', '月', 'mois'].some((value) => unit.includes(value));
+
+  if (isMonthlyUnit) {
+    return Math.max(0, Math.floor(numericPrice / 100) * 100);
+  }
+
+  return Math.max(0, Math.floor((numericPrice * 30 * 0.8) / 100) * 100);
+}
+
+export function formatMonthlyListingPrice(price: number | string, priceUnit?: string, currency = 'CAD'): string {
+  const monthlyPrice = toMonthlyListingPrice(price, priceUnit);
+  return `From $${monthlyPrice.toLocaleString()}/${currency === 'CAD' ? 'mo' : 'mo'}`;
+}
+
 /**
  * 计算折扣后价格
  */

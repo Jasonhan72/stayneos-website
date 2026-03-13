@@ -65,7 +65,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
             <Link href="/" className="flex items-center shrink-0">
               <Image
                 src="/logo.png"
-                alt="StayNeos"
+                alt="NEOS"
                 width={140}
                 height={48}
                 className="h-9 md:h-10 w-auto object-contain"

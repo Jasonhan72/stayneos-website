@@ -163,7 +163,7 @@ export default function AdminLayout({
         {/* Footer */}
         <footer className="bg-white border-t border-neutral-200 py-4 px-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-neutral-500">
-            <p>© 2024 StayNeos Admin. All rights reserved.</p>
+            <p>© 2024 NEOS Admin. All rights reserved.</p>
             <div className="flex items-center gap-4">
               <Link href="#" className="hover:text-neutral-700">帮助</Link>
               <Link href="#" className="hover:text-neutral-700">设置</Link>

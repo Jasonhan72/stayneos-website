@@ -28,11 +28,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://stayneos.com'),
   title: {
-    default: "StayNeos | Premium Furnished Apartments",
-    template: "%s | StayNeos",
+    default: "NEOS | Premium Furnished Apartments",
+    template: "%s | NEOS",
   },
   description:
-    "StayNeos is a premium executive apartment platform for business professionals, offering quality properties, flexible leases, and 24/7 concierge service across major cities in Canada and North America.",
+    "NEOS is a premium executive apartment platform for business professionals, offering quality properties, flexible leases, and 24/7 concierge service across major cities in Canada and North America.",
   keywords: [
     "executive apartments",
     "premium furnished rentals",
@@ -40,14 +40,14 @@ export const metadata: Metadata = {
     "business travel",
     "short-term rental",
     "luxury apartments",
-    "StayNeos",
+    "NEOS",
     "serviced apartment",
     "luxury apartment",
     "flexible lease",
   ],
-  authors: [{ name: "StayNeos" }],
-  creator: "StayNeos",
-  publisher: "StayNeos",
+  authors: [{ name: "NEOS" }],
+  creator: "NEOS",
+  publisher: "NEOS",
   robots: {
     index: true,
     follow: true,
@@ -63,8 +63,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://stayneos.com",
-    siteName: "StayNeos",
-    title: "StayNeos | Premium Furnished Apartments",
+    siteName: "NEOS",
+    title: "NEOS | Premium Furnished Apartments",
     description:
       "Premium furnished apartment platform for professionals with exceptional living experience and concierge service across major cities",
     images: [
@@ -72,13 +72,13 @@ export const metadata: Metadata = {
         url: "https://stayneos.com/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "StayNeos Premium Executive Apartments",
+        alt: "NEOS Premium Executive Apartments",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "StayNeos | Premium Furnished Apartments",
+    title: "NEOS | Premium Furnished Apartments",
     description:
       "Premium furnished apartment platform for professionals with exceptional living experience and concierge service",
     images: ["https://stayneos.com/og-image.jpg"],
@@ -103,7 +103,7 @@ export const metadata: Metadata = {
     ],
   },
   appleWebApp: {
-    title: "StayNeos",
+    title: "NEOS",
     statusBarStyle: "black-translucent",
   },
   other: {

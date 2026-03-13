@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { LoginForm } from '@/components/auth/LoginForm';
 
 export const metadata: Metadata = {
-  title: 'Log In - StayNeos',
-  description: 'Log in to your StayNeos account to manage bookings and access premium furnished apartments.',
+  title: 'Log In - NEOS',
+  description: 'Log in to your NEOS account to manage bookings and access premium furnished apartments.',
 };
 
 export default function LoginPage({
@@ -23,7 +23,7 @@ export default function LoginPage({
         <div className="relative z-10 flex flex-col justify-between h-full p-12">
           <div>
             <Link href="/" className="inline-block">
-              <Image src="/logo.png" alt="StayNeos" width={180} height={60} className="h-14 w-auto object-contain brightness-0 invert" priority />
+              <Image src="/logo.png" alt="NEOS" width={180} height={60} className="h-14 w-auto object-contain brightness-0 invert" priority />
             </Link>
           </div>
           <div className="max-w-lg">
@@ -37,7 +37,7 @@ export default function LoginPage({
         <div className="w-full max-w-md">
           <div className="lg:hidden flex justify-center mb-8">
             <Link href="/">
-              <Image src="/logo.png" alt="StayNeos" width={150} height={50} className="h-12 w-auto object-contain" priority />
+              <Image src="/logo.png" alt="NEOS" width={150} height={50} className="h-12 w-auto object-contain" priority />
             </Link>
           </div>
 

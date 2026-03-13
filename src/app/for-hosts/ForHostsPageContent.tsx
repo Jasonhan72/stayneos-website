@@ -166,7 +166,7 @@ export default function ForHostsPageContent() {
         <Container>
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              {t("hosts.advantages.title", "Why Choose StayNeos")}
+              {t("hosts.advantages.title", "Why Choose NEOS")}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               {t("hosts.advantages.subtitle", "Join hundreds of property owners who've transformed their real estate investments into hassle-free income streams.")}
@@ -200,7 +200,7 @@ export default function ForHostsPageContent() {
                 {t("hosts.calculator.title", "Calculate Your Potential Earnings")}
               </h2>
               <p className="text-xl text-gray-600">
-                {t("hosts.calculator.subtitle", "See how much more you could earn with StayNeos compared to traditional rentals.")}
+                {t("hosts.calculator.subtitle", "See how much more you could earn with NEOS compared to traditional rentals.")}
               </p>
             </div>
 
@@ -253,7 +253,7 @@ export default function ForHostsPageContent() {
                     <span className="text-lg font-semibold">${traditionalEarnings.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between items-center py-2 border-b border-blue-200">
-                    <span className="text-gray-700">With StayNeos (Annual):</span>
+                    <span className="text-gray-700">With NEOS (Annual):</span>
                     <span className="text-lg font-semibold text-blue-600">${annualEarnings.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between items-center py-2">
@@ -318,7 +318,7 @@ export default function ForHostsPageContent() {
               {t("hosts.benefits.title", "Additional Benefits")}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {t("hosts.benefits.subtitle", "More reasons why property owners choose StayNeos for their investment properties.")}
+              {t("hosts.benefits.subtitle", "More reasons why property owners choose NEOS for their investment properties.")}
             </p>
           </div>
           

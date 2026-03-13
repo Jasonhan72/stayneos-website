@@ -124,13 +124,15 @@ export function ReviewAndContinue({
             </div>
             <div className="flex-1">
               <h3 className="font-medium text-neutral-900 line-clamp-2">{property.title}</h3>
-              <div className="flex items-center gap-2 mt-1">
-                <Star size={14} className="fill-black" />
-                <span className="text-sm">{property.rating} ({property.reviewCount})</span>
-                {property.isGuestFavourite && (
-                  <span className="text-sm text-neutral-600">Guest favourite</span>
-                )}
-              </div>
+              {property.reviewCount > 0 && (
+                <div className="flex items-center gap-2 mt-1">
+                  <Star size={14} className="fill-black" />
+                  <span className="text-sm">{property.rating} ({property.reviewCount})</span>
+                  {property.isGuestFavourite && (
+                    <span className="text-sm text-neutral-600">Guest favourite</span>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -335,10 +337,12 @@ export function ReviewAndContinue({
               </div>
               <div className="flex-1">
                 <h3 className="font-medium text-neutral-900 line-clamp-2">{property.title}</h3>
-                <div className="flex items-center gap-2 mt-1">
-                  <Star size={14} className="fill-black" />
-                  <span className="text-sm">{property.rating} ({property.reviewCount} reviews)</span>
-                </div>
+                {property.reviewCount > 0 && (
+                  <div className="flex items-center gap-2 mt-1">
+                    <Star size={14} className="fill-black" />
+                    <span className="text-sm">{property.rating} ({property.reviewCount} reviews)</span>
+                  </div>
+                )}
                 {property.isGuestFavourite && (
                   <span className="inline-flex items-center gap-1 mt-2 text-sm text-neutral-600">
                     <Diamond size={14} className="text-rose-500" />

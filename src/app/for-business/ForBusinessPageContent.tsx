@@ -268,7 +268,7 @@ export default function ForBusinessPageContent() {
         <Container>
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              {t("business.advantages.title", "Why Choose StayNeos for Business")}
+              {t("business.advantages.title", "Why Choose NEOS for Business")}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               {t("business.advantages.subtitle", "Transform your corporate accommodation strategy with our comprehensive business solutions.")}
@@ -308,7 +308,7 @@ export default function ForBusinessPageContent() {
               {t("business.cases.title", "Success Stories")}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {t("business.cases.subtitle", "See how leading companies have transformed their accommodation strategies with StayNeos.")}
+              {t("business.cases.subtitle", "See how leading companies have transformed their accommodation strategies with NEOS.")}
             </p>
           </div>
           

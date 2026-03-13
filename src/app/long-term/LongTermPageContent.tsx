@@ -337,7 +337,7 @@ export default function LongTermPageContent() {
         <Container>
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              {t("longterm.advantages.title", "Why Choose Long-Term with StayNeos")}
+              {t("longterm.advantages.title", "Why Choose Long-Term with NEOS")}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               {t("longterm.advantages.subtitle", "Beyond just savings, long-term stays offer stability, convenience, and a true home-away-from-home experience.")}

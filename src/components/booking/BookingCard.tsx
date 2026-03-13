@@ -145,11 +145,11 @@ export function BookingCard({ property, className }: BookingCardProps) {
           </div>
 
           {/* Rating */}
-          {(property.rating || property.reviewCount) && (
+          {!!property.reviewCount && (
             <div className="flex items-center gap-1 text-sm">
               <Star size={14} className="fill-black" />
-              <span className="font-medium">{property.rating || '4.9'}</span>
-              <span className="text-neutral-400">· {property.reviewCount || '127'} reviews</span>
+              <span className="font-medium">{property.rating}</span>
+              <span className="text-neutral-400">· {property.reviewCount} reviews</span>
             </div>
           )}
         </div>

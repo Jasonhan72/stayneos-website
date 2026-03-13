@@ -222,11 +222,13 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
             </div>
             <div className="flex-1 min-w-0">
               <h2 className="font-medium text-neutral-900 leading-tight line-clamp-2">{localizedTitle}</h2>
-              <div className="flex items-center gap-1.5 mt-1.5">
-                <Star size={14} className="text-black fill-black" />
-                <span className="text-sm font-medium">{property.rating}</span>
-                <span className="text-sm text-neutral-500">({property.reviewCount} {t('properties.reviews') || 'reviews'})</span>
-              </div>
+              {property.reviewCount > 0 && (
+                <div className="flex items-center gap-1.5 mt-1.5">
+                  <Star size={14} className="text-black fill-black" />
+                  <span className="text-sm font-medium">{property.rating}</span>
+                  <span className="text-sm text-neutral-500">({property.reviewCount} {t('properties.reviews') || 'reviews'})</span>
+                </div>
+              )}
               <p className="text-sm text-neutral-500 mt-1 truncate">{property.location}</p>
             </div>
           </div>

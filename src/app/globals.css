@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  /* StayNeos 品牌色彩系统 */
+  /* NEOS 品牌色彩系统 */
   --primary: #003B5C;
   --primary-light: #E6F0F5;
   --accent: #C9A962;

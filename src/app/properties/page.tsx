@@ -30,7 +30,7 @@ import { ApiErrorAlert } from '@/components/error';
 import { AirbnbCalendar } from '@/components/booking';
 import { useProperties } from '@/hooks/useProperties';
 import { useI18n } from '@/lib/i18n';
-import { getPropertyLocation } from '@/lib/utils/property-transform';
+import { formatMonthlyListingPrice, getPropertyLocation } from '@/lib/utils/property-transform';
 import dynamic from 'next/dynamic';
 
 // 动态导入地图组件
@@ -51,10 +51,10 @@ export default function PropertiesPage() {
   const { t, locale } = useI18n();
   const priceRanges = useMemo(() => ([
     { label: t('properties.filters.price.all', 'All Prices'), min: 0, max: Infinity },
-    { label: '$400-500', min: 400, max: 500 },
-    { label: '$500-600', min: 500, max: 600 },
-    { label: '$600-700', min: 600, max: 700 },
-    { label: '$700+', min: 700, max: Infinity },
+    { label: '$3,000-5,000', min: 3000, max: 5000 },
+    { label: '$5,000-7,000', min: 5000, max: 7000 },
+    { label: '$7,000-9,000', min: 7000, max: 9000 },
+    { label: '$9,000+', min: 9000, max: Infinity },
   ]), [t]);
 
   const bedroomOptions = useMemo(() => ([
@@ -693,10 +693,12 @@ function PropertyGridCard({
             <h3 className="font-semibold text-neutral-900 line-clamp-1 group-hover:text-primary transition-colors">
               {property.title}
             </h3>
-            <div className="flex items-center gap-1 shrink-0">
-              <Star size={14} className="text-accent fill-accent" />
-              <span className="text-sm font-medium">{property.rating}</span>
-            </div>
+            {property.reviewCount > 0 && (
+              <div className="flex items-center gap-1 shrink-0">
+                <Star size={14} className="text-accent fill-accent" />
+                <span className="text-sm font-medium">{property.rating}</span>
+              </div>
+            )}
           </div>
           
           <div className="flex items-center gap-1 text-neutral-500 mb-3">
@@ -709,7 +711,7 @@ function PropertyGridCard({
             <span>·</span>
             <span>{property.bathrooms} {t('property.bathroomsShort')}</span>
             <span>·</span>
-            <span>{property.area} {t('property.areaUnit')}</span>
+            <span>{property.area} sqft</span>
             <span>·</span>
             <span>{t('property.max')} {property.maxGuests} {t('property.guests')}</span>
           </div>
@@ -719,13 +721,12 @@ function PropertyGridCard({
           )}
 
           <div className="flex items-baseline justify-between pt-3 border-t border-neutral-200">
-            <div className="flex items-baseline gap-1">
-              <span className="text-xl font-bold text-neutral-900">
-                ${property.price.toLocaleString()}
-              </span>
-              <span className="text-sm text-neutral-500">/month</span>
-            </div>
-            <span className="text-xs text-neutral-400">{property.reviewCount} {t('property.reviews')}</span>
+            <span className="text-xl font-bold text-neutral-900">
+              {formatMonthlyListingPrice(property.price, property.priceUnit)}
+            </span>
+            {property.reviewCount > 0 && (
+              <span className="text-xs text-neutral-400">{property.reviewCount} {t('property.reviews')}</span>
+            )}
           </div>
         </div>
       </Link>
@@ -782,10 +783,12 @@ function PropertyListCard({ property, pricingTier, isSelected, onClick }: Proper
               <h3 className="text-lg font-semibold text-neutral-900 group-hover:text-primary transition-colors">
                 {property.title}
               </h3>
-              <div className="flex items-center gap-1">
-                <Star size={14} className="text-accent fill-accent" />
-                <span className="text-sm font-medium">{property.rating}</span>
-              </div>
+              {property.reviewCount > 0 && (
+                <div className="flex items-center gap-1">
+                  <Star size={14} className="text-accent fill-accent" />
+                  <span className="text-sm font-medium">{property.rating}</span>
+                </div>
+              )}
             </div>
             
             <div className="flex items-center gap-1 text-neutral-500 mb-3">
@@ -804,7 +807,7 @@ function PropertyListCard({ property, pricingTier, isSelected, onClick }: Proper
               </div>
               <div className="flex items-center gap-1">
                 <Maximize size={14} />
-                <span>{property.area} {t('property.areaUnit')}</span>
+                <span>{property.area} sqft</span>
               </div>
               <div className="flex items-center gap-1">
                 <Users size={14} />
@@ -826,13 +829,12 @@ function PropertyListCard({ property, pricingTier, isSelected, onClick }: Proper
           )}
 
           <div className="flex items-baseline justify-between mt-4 pt-4 border-t border-neutral-200">
-            <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-bold text-neutral-900">
-                ${property.price.toLocaleString()}
-              </span>
-              <span className="text-neutral-500">/month</span>
-            </div>
-            <span className="text-sm text-neutral-400">{property.reviewCount} {t('property.reviews')}</span>
+            <span className="text-2xl font-bold text-neutral-900">
+              {formatMonthlyListingPrice(property.price, property.priceUnit)}
+            </span>
+            {property.reviewCount > 0 && (
+              <span className="text-sm text-neutral-400">{property.reviewCount} {t('property.reviews')}</span>
+            )}
           </div>
         </div>
       </Link>

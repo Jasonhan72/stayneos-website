@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
         userId: user.id,
         propertyId: booking.propertyId,
       },
-      description: `预订 #${booking.bookingNumber} - ${property?.title || "StayNeos Property"}`,
+      description: `预订 #${booking.bookingNumber} - ${property?.title || "NEOS Property"}`,
       receipt_email: user.email || undefined,
     });
 

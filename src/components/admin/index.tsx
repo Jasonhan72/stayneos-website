@@ -1,4 +1,4 @@
-// Admin Components - StayNeos Dashboard
+// Admin Components - NEOS Dashboard
 // Blueground Style + Square UI
 
 export { default as AdminLayout } from './AdminLayout';

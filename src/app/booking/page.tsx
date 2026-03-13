@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "My Bookings | StayNeos",
-  description: "View and manage your bookings at StayNeos",
+  title: "My Bookings | NEOS",
+  description: "View and manage your bookings at NEOS",
 };
 
 // Booking page - redirects to account/bookings

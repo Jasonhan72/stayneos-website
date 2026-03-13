@@ -24,7 +24,7 @@ import { AirbnbCalendar, ReviewAndContinue, PaymentMethod, calculateBookingPrice
 import { useI18n } from '@/lib/i18n';
 import { useProperty } from '@/hooks/useProperties';
 import { PropertyCardData } from '@/types';
-import { getPropertyLocation } from '@/lib/utils/property-transform';
+import { formatMonthlyListingPrice, getPropertyLocation } from '@/lib/utils/property-transform';
 
 interface PropertyDetailClientProps {
   propertyId: string;
@@ -156,7 +156,7 @@ const PROPERTY_FACTS: Record<string, Record<string, PropertyFacts>> = {
 
 
 const mockHost = {
-  name: 'StayNeos',
+  name: 'NEOS',
   avatar: '/logo.png',
   isSuperhost: true,
   yearsHosting: 2,
@@ -333,15 +333,16 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
     <div className={`bg-white border border-neutral-200 rounded-2xl p-6 shadow-lg ${isSticky ? 'sticky top-24' : ''}`}>
       {/* Price Header */}
       <div className="flex items-baseline justify-between mb-4">
-        <div className="flex items-baseline gap-1">
-          <span className="text-2xl font-bold text-neutral-900">${propertyCardData.price.toLocaleString()}</span>
-          <span className="text-neutral-500">CAD / {t('common.night')}</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <Star size={14} className="fill-black" />
-          <span className="font-medium">{propertyCardData.rating}</span>
-          <span className="text-neutral-500">· {propertyCardData.reviewCount} {t('property.reviews')}</span>
-        </div>
+        <span className="text-2xl font-bold text-neutral-900">
+          {formatMonthlyListingPrice(propertyCardData.price, propertyCardData.priceUnit)}
+        </span>
+        {propertyCardData.reviewCount > 0 && (
+          <div className="flex items-center gap-1">
+            <Star size={14} className="fill-black" />
+            <span className="font-medium">{propertyCardData.rating}</span>
+            <span className="text-neutral-500">· {propertyCardData.reviewCount} {t('property.reviews')}</span>
+          </div>
+        )}
       </div>
 
       {/* Date/Guest Selector Box */}
@@ -560,6 +561,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
 
             {/* Info Bar - Mobile Only */}
             <div className="flex md:hidden items-center justify-center gap-6 mb-6 py-4 border-y border-neutral-200">
+              {propertyCardData.reviewCount > 0 && (
               <div className="text-center">
                 <p className="text-lg font-semibold">{propertyCardData.rating}</p>
                 <div className="flex justify-center">
@@ -568,7 +570,8 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                   ))}
                 </div>
               </div>
-              <div className="w-px h-10 bg-neutral-200" />
+              )}
+              {propertyCardData.reviewCount > 0 && <div className="w-px h-10 bg-neutral-200" />}
               <div className="text-center">
                 <div className="flex justify-center gap-1">
                   <Trophy size={14} className="text-neutral-900" />
@@ -576,11 +579,15 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                 </div>
                 <p className="text-sm font-medium">{t('property.guestFavourite')}</p>
               </div>
-              <div className="w-px h-10 bg-neutral-200" />
-              <div className="text-center">
-                <p className="text-lg font-semibold">{propertyCardData.reviewCount}</p>
-                <p className="text-sm underline">{t('property.reviews')}</p>
-              </div>
+              {propertyCardData.reviewCount > 0 && (
+                <>
+                  <div className="w-px h-10 bg-neutral-200" />
+                  <div className="text-center">
+                    <p className="text-lg font-semibold">{propertyCardData.reviewCount}</p>
+                    <p className="text-sm underline">{t('property.reviews')}</p>
+                  </div>
+                </>
+              )}
             </div>
 
             <Divider />
