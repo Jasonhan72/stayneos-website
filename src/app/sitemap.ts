@@ -1,56 +1,29 @@
-import { MetadataRoute } from "next";
-import { mockProperties } from "@/lib/data";
+import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // Use environment variable or fallback to production domain
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://stayneos.com";
-
-  // Static pages
-  const staticPages = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: "daily" as const,
-      priority: 1.0,
-    },
-    {
-      url: `${baseUrl}/properties`,
-      lastModified: new Date(),
-      changeFrequency: "daily" as const,
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/landlords`,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/corporate`,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    },
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://stayneos.com';
+  const lastModified = new Date();
+  const routes = [
+    '/',
+    '/properties',
+    '/contact',
+    '/about',
+    '/for-business',
+    '/for-hosts',
+    '/for-agents',
+    '/for-students',
+    '/long-term',
+    '/market-insights',
+    '/faq',
+    '/help',
+    '/privacy',
+    '/terms',
   ];
 
-  // Dynamic property pages
-  const propertyPages = mockProperties.map((property) => ({
-    url: `${baseUrl}/property/${property.id}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-    images: property.images.map((image) => ({
-      url: image.startsWith("http") ? image : `${baseUrl}${image}`,
-      title: property.title,
-      caption: `${property.title} - ${property.location}`,
-    })),
+  return routes.map((route, index) => ({
+    url: route === '/' ? baseUrl : `${baseUrl}${route}`,
+    lastModified,
+    changeFrequency: route === '/' || route === '/properties' ? 'weekly' : 'monthly',
+    priority: index === 0 ? 1 : route === '/properties' ? 0.9 : 0.7,
   }));
-
-  return [...staticPages, ...propertyPages];
 }

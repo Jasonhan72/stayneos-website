@@ -2,7 +2,6 @@ import { Heart, Star, MapPin, Users, Maximize } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
-import { formatMonthlyListingPrice } from "@/lib/utils/property-transform";
 
 // 扩展 Property 接口以兼容 API 数据结构
 export interface Property {
@@ -13,7 +12,7 @@ export interface Property {
   location: string;
   price: number;
   priceUnit: string;
-  rating: number;
+  rating?: number;
   reviewCount: number;
   images: string[];
   maxGuests: number;
@@ -94,11 +93,9 @@ interface PropertyCardProps {
 export default function PropertyCard({ property }: PropertyCardProps) {
   const { locale, t } = useI18n();
   const title = getLocalizedTitle(property, locale);
-  const price = getPropertyPrice(property);
   const location = getPropertyLocation(property);
   const isFeatured = property.featured || property.isFeatured || false;
   const maxGuests = property.maxGuests || property.maxGuest || 1;
-  const showReviews = property.reviewCount > 0;
   
   return (
     <article 
@@ -162,7 +159,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
               >
                 {title}
               </h3>
-              {showReviews && (
+              {property.reviewCount > 0 && property.rating && (
                 <div 
                   className="flex items-center gap-1 shrink-0 bg-accent/10 px-2 py-1 rounded-full" 
                   aria-label={`Rating ${property.rating}`}
@@ -195,16 +192,19 @@ export default function PropertyCard({ property }: PropertyCardProps) {
                 aria-label={`Area ${property.area} sqft`}
               >
                 <Maximize size={16} aria-hidden="true" />
-                <span>{property.area} sqft</span>
+                <span>{property.area.toLocaleString()} sqft</span>
               </div>
             </div>
 
             {/* Price */}
             <div className="flex items-baseline justify-between pt-4 mt-auto border-t border-neutral-100">
-              <span className="text-xl font-bold text-neutral-900">
-                {formatMonthlyListingPrice(price, property.priceUnit, property.currency || 'CAD')}
-              </span>
-              {showReviews && (
+              <div className="flex items-baseline gap-1">
+                <span className="text-xl font-bold text-neutral-900">
+                  From $12,000 {property.currency || 'CAD'}
+                </span>
+                <span className="text-sm text-neutral-500">/month</span>
+              </div>
+              {property.reviewCount > 0 && (
                 <span 
                   className="text-xs text-neutral-400" 
                   aria-label={`${property.reviewCount} ${t('properties.details.reviews')}`}

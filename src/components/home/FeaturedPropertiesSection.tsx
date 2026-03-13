@@ -1,0 +1,157 @@
+import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowRight, MapPin, Star } from 'lucide-react';
+import { Card, Badge, Section } from '@/components/ui';
+interface FeaturedProperty {
+  id: string;
+  title: string;
+  location: string;
+  price: number;
+  rating: number;
+  reviewCount: number;
+  images: string[];
+  maxGuests: number;
+  area: number;
+  bedrooms: number;
+  featured?: boolean;
+}
+
+const featuredProperties: FeaturedProperty[] = [
+  {
+    id: '1',
+    title: '55 Cooper St (Sugar Wharf) · Premium 3BR Sky Suite',
+    location: '55 Cooper St, Toronto, ON M5E 0G1',
+    price: 12000,
+    rating: 4.9,
+    reviewCount: 42,
+    images: [
+      '/images/cooper-55-c5e8357d.jpg',
+      '/images/cooper-55-e98a880d.jpg',
+      '/images/cooper-55-a12c07ee.jpg',
+    ],
+    maxGuests: 6,
+    area: 1273,
+    bedrooms: 3,
+    featured: true,
+  },
+  {
+    id: '2',
+    title: '238 Simcoe St (Grange Park) · Executive 3BR Suite',
+    location: '238 Simcoe St, Toronto, ON M5T 0A2',
+    price: 6500,
+    rating: 4.8,
+    reviewCount: 38,
+    images: [
+      '/images/simcoe-238-living.jpg',
+      '/images/simcoe-238-kitchen.jpg',
+      '/images/simcoe-238-1.jpg',
+    ],
+    maxGuests: 5,
+    area: 1100,
+    bedrooms: 3,
+    featured: true,
+  },
+];
+
+function formatPropertyTitle(property: FeaturedProperty) {
+  return property.title;
+}
+
+function formatPropertyPrice(property: FeaturedProperty) {
+  return `From $${property.price.toLocaleString()} CAD/month`;
+}
+
+export function FeaturedPropertiesSection() {
+  return (
+    <Section bg="neutral">
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12">
+        <div>
+          <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
+            Featured Toronto residences
+          </h2>
+          <p className="text-lg text-neutral-600 max-w-xl">
+            A server-rendered selection of premium furnished apartments available for monthly stays.
+          </p>
+        </div>
+
+        <Link
+          href="/properties"
+          className="inline-flex items-center text-primary font-medium hover:text-primary-700 transition-colors mt-4 md:mt-0"
+        >
+          View all properties
+          <ArrowRight size={18} className="ml-1" />
+        </Link>
+      </div>
+
+      {featuredProperties.length === 0 ? (
+        <div className="text-center py-12 bg-white rounded-xl border border-neutral-200">
+          <p className="text-neutral-500">No featured properties are available right now.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {featuredProperties.map((property) => (
+            <Card key={property.id} className="group">
+              <Link href={`/property/${property.id}`}>
+                <div className="aspect-[4/3] overflow-hidden relative">
+                  <Image
+                    src={property.images[0] || '/images/placeholder-property.jpg'}
+                    alt={formatPropertyTitle(property)}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+
+                  {property.featured && (
+                    <div className="absolute top-4 left-4 flex gap-2">
+                      <Badge variant="primary">Featured</Badge>
+                    </div>
+                  )}
+
+                  <div className="absolute top-4 right-4 p-2 bg-white/90 hover:bg-white transition-colors rounded-full">
+                    <Star size={18} className="text-neutral-400" />
+                  </div>
+                </div>
+
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="text-lg font-semibold text-neutral-900 group-hover:text-primary transition-colors line-clamp-1">
+                      {formatPropertyTitle(property)}
+                    </h3>
+                    {property.reviewCount > 0 && (
+                      <div className="flex items-center gap-1 shrink-0">
+                        <Star size={14} className="text-accent fill-accent" />
+                        <span className="text-sm font-medium">{property.rating}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-1 text-neutral-500 mb-4">
+                    <MapPin size={14} />
+                    <span className="text-sm truncate">{property.location}</span>
+                  </div>
+
+                  <div className="flex items-center gap-3 text-sm text-neutral-500 mb-4">
+                    <span>{property.bedrooms} beds</span>
+                    <span>·</span>
+                    <span>{property.area.toLocaleString()} sqft</span>
+                    <span>·</span>
+                    <span>Up to {property.maxGuests} guests</span>
+                  </div>
+
+                  <div className="flex items-baseline justify-between pt-4 border-t border-neutral-200">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-2xl font-bold text-neutral-900">{formatPropertyPrice(property)}</span>
+                    </div>
+
+                    {property.reviewCount > 0 && (
+                      <span className="text-sm text-neutral-400">{property.reviewCount} reviews</span>
+                    )}
+                  </div>
+                </div>
+              </Link>
+            </Card>
+          ))}
+        </div>
+      )}
+    </Section>
+  );
+}
