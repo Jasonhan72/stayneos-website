@@ -148,6 +148,7 @@ export default function PropertyEditor({ initial, id }: PropertyEditorProps) {
   const [aiPrompt, setAiPrompt] = useState('');
   const [aiLoading, setAiLoading] = useState<AiAssistType | null>(null);
   const [aiError, setAiError] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   const isEditMode = Boolean(id);
   const imagePreviewUrls = useMemo(
@@ -198,6 +199,35 @@ export default function PropertyEditor({ initial, id }: PropertyEditorProps) {
       setAiError(err instanceof Error ? err.message : 'AI 处理失败');
     } finally {
       setAiLoading(null);
+    }
+  }
+
+
+
+  async function handleUpload(files: FileList | null) {
+    if (!files || files.length === 0) return;
+    setUploading(true);
+    setError('');
+
+    try {
+      const uploaded: string[] = [];
+      for (const file of Array.from(files)) {
+        const fd = new FormData();
+        fd.append('file', file);
+        const response = await fetch('/api/admin/upload-image', { method: 'POST', body: fd });
+        const data = (await response.json()) as { url?: string; error?: string };
+        if (!response.ok || !data.url) throw new Error(data.error || '上传失败');
+        uploaded.push(data.url);
+      }
+
+      const merged = [...imagePreviewUrls, ...uploaded];
+      updateField('imagesText', merged.join('\n'));
+      if (!form.heroImage && merged[0]) updateField('heroImage', merged[0]);
+      setMessage(`图片上传成功：${uploaded.length} 张`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '上传失败');
+    } finally {
+      setUploading(false);
     }
   }
 
@@ -457,6 +487,20 @@ export default function PropertyEditor({ initial, id }: PropertyEditorProps) {
       <section className={sectionClassName}>
         <h2 className="mb-4 text-lg font-semibold text-neutral-900">图片与 SEO</h2>
         <div className="space-y-4">
+          <div className="rounded-lg border border-dashed border-neutral-300 p-4">
+            <p className="text-sm font-medium text-neutral-800">拖拽上传图片（Cloudflare Images）</p>
+            <p className="mt-1 text-xs text-neutral-500">支持多图上传；上传后会自动写入下方图片 URL 列表。</p>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              className="mt-3 block text-sm"
+              onChange={(event) => void handleUpload(event.target.files)}
+              disabled={uploading}
+            />
+            {uploading ? <p className="mt-2 text-xs text-neutral-500">上传中...</p> : null}
+          </div>
+
           <Field label="图片 URL（支持逗号或换行分隔）">
             <textarea
               className={`${inputClassName} min-h-24`}

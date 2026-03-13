@@ -30,8 +30,20 @@ export default function AdminPropertiesPage() {
     mutate();
   }
 
+  async function seed() {
+    if (!confirm('执行 seed 会导入默认两套房源，继续？')) return;
+    const res = await fetch('/api/admin/seed', { method: 'POST' });
+    if (!res.ok) {
+      alert('Seed 失败');
+      return;
+    }
+    const data = await res.json();
+    alert(`Seed 完成: 导入 ${data.count ?? data.inserted ?? 0} 条`);
+    mutate();
+  }
+
   return (
-    <AdminLayout title="Properties" actions={<Link href="/admin/properties/new" className="px-4 py-2 bg-primary text-white rounded-lg">新建物业</Link>}>
+    <AdminLayout title="Properties" actions={<div className="flex gap-2"><button onClick={seed} className="px-4 py-2 border border-neutral-300 rounded-lg bg-white">导入 Seed 数据</button><Link href="/admin/properties/new" className="px-4 py-2 bg-primary text-white rounded-lg">新建物业</Link></div>}>
       <div className="bg-white border border-neutral-200 rounded-xl p-4 space-y-4">
         <div className="flex flex-col md:flex-row gap-3">
           <input className="border rounded-lg px-3 py-2 w-full" placeholder="搜索标题/地址/社区" value={q} onChange={(e) => setQ(e.target.value)} />
