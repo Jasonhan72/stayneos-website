@@ -20,3 +20,7 @@ NEXTAUTH_SECRET = "533221c231edb2db076c354321361997023ee134e34111ea5a4a51882a27c
 binding = "DB"
 database_name = "stayneos-db"
 database_id = "f667afae-6f66-4e4a-960a-37096eabdf03"
+
+# Workers AI Binding (free tier)
+[ai]
+binding = "AI"
