@@ -29,6 +29,18 @@ const nextConfig = {
         : false,
   },
 
+  headers: async () => [
+    {
+      source: '/(.*)',
+      headers: [
+        {
+          key: 'Cache-Control',
+          value: 'public, s-maxage=3600, stale-while-revalidate=60',
+        },
+      ],
+    },
+  ],
+
   poweredByHeader: false,
   compress: true,
 };
