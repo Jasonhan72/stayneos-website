@@ -59,6 +59,37 @@ export const mockProperties: Property[] = [
     minNights: 30,
     monthlyDiscount: 15,
   },
+  {
+    id: "3",
+    title: "22 Wellesley St E (Wellesley on the Park) · Modern 1BR City View",
+    titleZh: "22 Wellesley St E（Wellesley on the Park）· 现代1卧城市景观",
+    titleFr: "22 Wellesley St E (Wellesley on the Park) · Moderne 1 chambre vue sur la ville",
+    location: "22 Wellesley St E, Unit 1607, Toronto, ON",
+    price: 3500,
+    priceUnit: "month",
+    rating: 4.8,
+    reviewCount: 0,
+    images: [
+      "/images/wellesley-1607-living.jpg",
+      "/images/wellesley-1607-bedroom.jpg",
+      "/images/wellesley-1607-kitchen.jpg",
+      "/images/wellesley-1607-bath.jpg",
+      "/images/wellesley-1607-3.jpg",
+      "/images/wellesley-1607-4.jpg",
+      "/images/wellesley-1607-5.jpg"
+    ],
+    maxGuests: 2,
+    area: 550,
+    bedrooms: 1,
+    bathrooms: 1,
+    amenities: ["WiFi", "Utilities included", "Full kitchen", "Smart lock self check-in", "Pool", "Gym", "Party room"],
+    featured: true,
+    description: "Tiered pricing: Monthly $3,500 / Quarterly $3,200 / Annual $2,800. 1BR/1BA on 16th floor with stunning city views. Fully furnished with designer decor including signature slat wall feature, crystal dining chandelier, and modern black/white/grey palette. Full kitchen with granite countertops, stainless steel appliances, and mosaic backsplash. Floor-to-ceiling windows, queen bed, mirrored closet doors. All-inclusive: WiFi, hydro/water/gas/heating, full kitchenware, linens/towels. Building amenities: pool, gym, party room. Walk to Wellesley subway station (Line 1). Near TMU/Ryerson University and Allan Gardens. Minimum stay 30 days.",
+    descriptionZh: "阶梯定价：月租 $3,500 / 季租 $3,200 / 年租 $2,800。1室1卫，16层城市景观。全屋精装家具：标志性木栅格背景墙、水晶餐厅吊灯、现代黑白灰色调。花岗岩台面开放式厨房、不锈钢电器、马赛克后挡板。落地窗采光极佳，Queen大床，镜面衣柜门。全包：WiFi、水电气暖、全套厨具、床品毛巾。楼宇配套：泳池、健身房、Party Room。步行可达Wellesley地铁站(1号线)。毗邻TMU/瑞尔森大学和Allan Gardens。最低入住30天。",
+    descriptionFr: "Tarification par paliers : Mensuel 3 500 $ / Trimestriel 3 200 $ / Annuel 2 800 $. 1 chambre/1 salle de bain au 16e étage avec vue panoramique sur la ville. Entièrement meublé avec décor design incluant mur à lattes signature, lustre en cristal et palette moderne noir/blanc/gris. Cuisine complète avec comptoirs en granit, électroménagers inox et dosseret en mosaïque. Fenêtres du sol au plafond, lit queen, portes de placard miroir. Tout inclus : WiFi, services publics, cuisine équipée, draps/serviettes. Commodités : piscine, gym, salle de réception. À pied du métro Wellesley (ligne 1). Proche de TMU/Ryerson et Allan Gardens. Séjour minimum 30 jours.",
+    minNights: 30,
+    monthlyDiscount: 10,
+  },
 ];
 
 export const getPropertyById = (id: string): Property | undefined => {
