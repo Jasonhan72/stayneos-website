@@ -11,7 +11,7 @@ export const mockProperties: Property[] = [
     price: 12000,
     priceUnit: "month",
     rating: 4.9,
-    reviewCount: 42,
+    reviewCount: 0,
     images: [
       "/images/cooper-55-c5e8357d.jpg",
       "/images/cooper-55-e98a880d.jpg",
@@ -40,7 +40,7 @@ export const mockProperties: Property[] = [
     price: 6500,
     priceUnit: "month",
     rating: 4.8,
-    reviewCount: 38,
+    reviewCount: 0,
     images: [
       "/images/simcoe-238-living.jpg",
       "/images/simcoe-238-kitchen.jpg",

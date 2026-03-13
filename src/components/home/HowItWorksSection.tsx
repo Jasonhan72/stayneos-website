@@ -23,7 +23,7 @@ export function HowItWorksSection() {
     <Section bg="white">
       <div className="text-center mb-16">
         <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
-          How StayNeos works
+          How NEOS works
         </h2>
         <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
           A simple path from discovery to check-in, designed for premium monthly furnished stays.

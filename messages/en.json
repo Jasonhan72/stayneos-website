@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "StayNeos | Premium Executive Apartment Rentals",
-    "description": "StayNeos is a premium executive apartment platform for business professionals, offering quality properties, flexible leases, and 24/7 concierge service."
+    "title": "NEOS | Premium Executive Apartment Rentals",
+    "description": "NEOS is a premium executive apartment platform for business professionals, offering quality properties, flexible leases, and 24/7 concierge service."
   },
   "nav": {
     "home": "Properties",
@@ -307,12 +307,12 @@
       "subtitle": "From individual business travelers to large project teams, we have the perfect accommodation solution for your organization."
     },
     "advantages": {
-      "title": "Why Choose StayNeos for Business",
+      "title": "Why Choose NEOS for Business",
       "subtitle": "Transform your corporate accommodation strategy with our comprehensive business solutions."
     },
     "cases": {
       "title": "Typical Scenarios",
-      "subtitle": "See how leading companies have transformed their accommodation strategies with StayNeos.",
+      "subtitle": "See how leading companies have transformed their accommodation strategies with NEOS.",
       "typical": "Typical Scenario"
     },
     "features": {
@@ -390,7 +390,7 @@
       "select": "Select This Plan"
     },
     "advantages": {
-      "title": "Why Choose Long-Term with StayNeos",
+      "title": "Why Choose Long-Term with NEOS",
       "subtitle": "Beyond just savings, long-term stays offer stability, convenience, and a true home-away-from-home experience."
     },
     "usecases": {
@@ -589,7 +589,7 @@
   },
   "testimonials": {
     "title": "What Our Guests Say",
-    "subtitle": "Read reviews from our satisfied guests who have experienced the StayNeos difference"
+    "subtitle": "Read reviews from our satisfied guests who have experienced the NEOS difference"
   },
   "cities": {
     "title": "Our Cities",
@@ -936,13 +936,13 @@
     "guestInfo": "{maxGuests} guests · {bedrooms} bedrooms · {beds} beds · {bathrooms} baths",
     "mapLoading": "Loading map...",
     "linkCopied": "Link copied!",
-    "shareText": "Check out this property on StayNeos",
+    "shareText": "Check out this property on NEOS",
     "sqft": "sqft",
     "guestFavourite": "Guest favourite",
     "rareFind": "Rare find",
     "roomIn": "Room in",
     "top10": "Top 10",
-    "top10Desc": "One of the most loved homes on StayNeos",
+    "top10Desc": "One of the most loved homes on NEOS",
     "reportListing": "Report this listing",
     "showMore": "Show more",
     "loadingMap": "Loading map...",
@@ -1069,7 +1069,7 @@
     "modify": "Modify",
     "enable": "Enable",
     "updateSuccess": "Profile updated successfully!",
-    "memberNote": "🌟 You're a valued StayNeos member",
+    "memberNote": "🌟 You're a valued NEOS member",
     "accountSettings": "Account Settings",
     "noBookingsTitle": "No bookings yet",
     "checkIn": "Check-in",
@@ -1134,7 +1134,7 @@
   "landlords": {
     "hero": {
       "title": "Maximize Your Rental Income",
-      "subtitle": "Partner with StayNeos and earn up to 30% more from your property. We handle everything while you enjoy passive income.",
+      "subtitle": "Partner with NEOS and earn up to 30% more from your property. We handle everything while you enjoy passive income.",
       "cta": "List Your Property"
     },
     "benefits": {
@@ -1185,7 +1185,7 @@
     },
     "cta": {
       "title": "Ready to Start Earning More?",
-      "subtitle": "Join hundreds of landlords who trust StayNeos with their properties.",
+      "subtitle": "Join hundreds of landlords who trust NEOS with their properties.",
       "button": "Get Started Today"
     }
   },
@@ -1267,7 +1267,7 @@
   },
   "agents": {
     "hero": {
-      "title": "Partner with StayNeos",
+      "title": "Partner with NEOS",
       "subtitle": "Join our network of real estate professionals and earn competitive commissions by referring properties, representing tenants, or referring guests to our premium executive apartments.",
       "cta": "Become a Partner"
     },
@@ -1277,7 +1277,7 @@
       "commission": "Commission",
       "property": {
         "title": "Refer Properties",
-        "desc": "Refer property owners to list their furnished apartments with StayNeos. Earn commission on every successful listing."
+        "desc": "Refer property owners to list their furnished apartments with NEOS. Earn commission on every successful listing."
       },
       "tenant": {
         "title": "Represent Tenants",
@@ -1285,7 +1285,7 @@
       },
       "guest": {
         "title": "Refer Guests",
-        "desc": "Refer business travelers, relocating employees, or project teams to StayNeos and earn for every successful booking."
+        "desc": "Refer business travelers, relocating employees, or project teams to NEOS and earn for every successful booking."
       }
     },
     "process": {
@@ -1329,8 +1329,8 @@
       }
     },
     "benefits": {
-      "title": "Why Partner with StayNeos",
-      "subtitle": "Join hundreds of real estate professionals who trust StayNeos for their clients' housing needs.",
+      "title": "Why Partner with NEOS",
+      "subtitle": "Join hundreds of real estate professionals who trust NEOS for their clients' housing needs.",
       "commission": {
         "title": "Competitive Commission",
         "desc": "Earn up to 50% commission on property referrals and competitive rates on tenant representation."
@@ -1366,7 +1366,7 @@
       "partnershipType": "Partnership Type",
       "selectType": "Select partnership type",
       "message": "Message",
-      "messagePlaceholder": "Tell us about your business and how you'd like to partner with StayNeos...",
+      "messagePlaceholder": "Tell us about your business and how you'd like to partner with NEOS...",
       "privacyNote": "Your information will be kept confidential and used only for partnership communication.",
       "submit": "Submit Application",
       "submitting": "Submitting...",
@@ -1383,12 +1383,12 @@
       "cta": "Get Started"
     },
     "advantages": {
-      "title": "Why Choose StayNeos",
+      "title": "Why Choose NEOS",
       "subtitle": "Join hundreds of property owners who've transformed their real estate investments into hassle-free income streams."
     },
     "calculator": {
       "title": "Calculate Your Potential Earnings",
-      "subtitle": "See how much more you could earn with StayNeos compared to traditional rentals.",
+      "subtitle": "See how much more you could earn with NEOS compared to traditional rentals.",
       "currentRent": "Current Monthly Rent",
       "occupancyRate": "Current Occupancy Rate",
       "guarantee": "Monthly payments regardless of occupancy, plus professional management included."
@@ -1399,7 +1399,7 @@
     },
     "benefits": {
       "title": "Additional Benefits",
-      "subtitle": "More reasons why property owners choose StayNeos for their investment properties."
+      "subtitle": "More reasons why property owners choose NEOS for their investment properties."
     },
     "form": {
       "title": "List Your Property Today",
@@ -1652,7 +1652,7 @@
     },
     "testimonials": {
       "title": "What Students Say",
-      "subtitle": "Hear from current and former residents about their StayNeos experience."
+      "subtitle": "Hear from current and former residents about their NEOS experience."
     },
     "form": {
       "title": "Apply for Student Housing",
@@ -1688,7 +1688,7 @@
       "studio": "Private Studio",
       "oneBed": "1-Bedroom",
       "message": "Your housing requirements",
-      "messagePlaceholder": "Tell us about yourself, any special requirements, roommate preferences, or questions you have about student housing with StayNeos...",
+      "messagePlaceholder": "Tell us about yourself, any special requirements, roommate preferences, or questions you have about student housing with NEOS...",
       "submitting": "Submitting...",
       "submit": "Submit inquiry",
       "success": {
@@ -1828,7 +1828,7 @@
     "heroTitle": "Corporate Housing Solutions",
     "heroSubtitle": "Flexible executive apartments for business travel, project teams, and relocations.<br>Reduce costs. Boost satisfaction. Simplify management.",
     "ctaButton": "Get Corporate Quote",
-    "valueTitle": "Why Companies Choose StayNeos",
+    "valueTitle": "Why Companies Choose NEOS",
     "costSaving": "Save Up to 30%",
     "costSavingDesc": "Compared to hotels, corporate clients save an average of 30% while enjoying more space and better amenities",
     "flexible": "Flexible Lease Terms",
@@ -2013,10 +2013,10 @@
     "desc": "Expanding to cities where business takes you."
   },
   "about": {
-    "title": "About StayNeos",
+    "title": "About NEOS",
     "hero": {
-      "title": "About StayNeos",
-      "subtitle": "We know what it's like to land in a new city and need a home — not just a room. That's why we built StayNeos."
+      "title": "About NEOS",
+      "subtitle": "We know what it's like to land in a new city and need a home — not just a room. That's why we built NEOS."
     },
     "mission": {
       "label": "OUR MISSION",
@@ -2058,7 +2058,7 @@
     "heroSubtitle": "Looking for a real home in a city that wasn't ours yet",
     "storyTitle": "How It Started",
     "storyOrigin": "It started with a frustrating search. A founder relocated for work and faced the same choice everyone does: a tiny hotel room with no kitchen, or a 12-month lease on an empty apartment. Neither made sense. So we built a third option.",
-    "storyMission": "In 2024, StayNeos launched with a simple idea: beautiful, furnished apartments you can move into tomorrow. Every home is hand-picked, fully equipped, and located in neighborhoods where you'd actually want to live.",
+    "storyMission": "In 2024, NEOS launched with a simple idea: beautiful, furnished apartments you can move into tomorrow. Every home is hand-picked, fully equipped, and located in neighborhoods where you'd actually want to live.",
     "storyToday": "Today, we're the go-to choice for professionals who need a real home, not a temporary fix. Tech leads, consultants, medical residents, relocating families — they all stay with us because we treat every stay like it matters. Because it does.",
     "valuesTitle": "What We Stand For",
     "peopleFirst": "Real People, Not Transactions",
@@ -2075,7 +2075,7 @@
     "partnersCount": "50+ Corporate Partners",
     "rating": "4.9/5 Guest Rating",
     "coverage": "Across Major Cities",
-    "ctaTitle": "Come Home to StayNeos",
+    "ctaTitle": "Come Home to NEOS",
     "ctaSubtitle": "Whether you're here for a month or a year, we'll make every city feel like yours.",
     "ctaBrowse": "Browse Apartments",
     "ctaContact": "Say Hello"
@@ -2188,7 +2188,7 @@
     "secureCheckout": "Secure Checkout",
     "sslProtection": "🔒 Protected by 256-bit SSL",
     "payButton": "Complete Payment",
-    "successTitle": "Welcome to StayNeos!",
+    "successTitle": "Welcome to NEOS!",
     "successDesc": "You're all set! Check-in instructions have been sent to your email. Our concierge team is here to help.",
     "viewMyBooking": "View My Booking",
     "selectPaymentMethod": "Select Payment Method",
@@ -2312,14 +2312,14 @@
     "loginButton": "Sign In",
     "keepSignedIn": "Keep me signed in",
     "forgotPassword": "Forgot password?",
-    "noAccount": "New to StayNeos?",
+    "noAccount": "New to NEOS?",
     "joinNow": "Join now",
     "otherLoginMethods": "Or sign in with",
     "secureNote": "🔒 Your information is secure",
-    "registerLeftTitle": "Join StayNeos Today",
+    "registerLeftTitle": "Join NEOS Today",
     "registerLeftDesc": "✓ 10% off your first booking<br>✓ Save favorites for easy access<br>✓ Personal concierge service",
     "registerTitle": "Create Account",
-    "registerSubtitle": "Join thousands of business professionals who choose StayNeos",
+    "registerSubtitle": "Join thousands of business professionals who choose NEOS",
     "namePlaceholder": "Full Name",
     "workEmailPlaceholder": "Work Email (recommended)",
     "createPasswordPlaceholder": "Create password (8+ characters)",
@@ -2331,7 +2331,7 @@
     "termsNote": "By creating an account, you agree to our Terms of Service and Privacy Policy",
     "haveAccount": "Already a member?",
     "signInNow": "Sign in",
-    "registerSuccessTitle": "🎉 Welcome to StayNeos!",
+    "registerSuccessTitle": "🎉 Welcome to NEOS!",
     "registerSuccessDesc": "Please check your email to verify your account",
     "emailRequired": "Email is required",
     "invalidEmail": "Please enter a valid email",
@@ -2448,7 +2448,7 @@
     "groundRulesDesc": "We ask every guest to remember a few simple things",
     "treatHome": "Treat your host's home like your own",
     "followHouseRules": "Follow the house rules",
-    "agreement": "By selecting the button below, I agree to the House Rules, Cancellation Policy, and StayNeos Terms of Service"
+    "agreement": "By selecting the button below, I agree to the House Rules, Cancellation Policy, and NEOS Terms of Service"
   },
   "cancel": {
     "title": "Payment Cancelled",
@@ -2478,7 +2478,7 @@
     "browseAll": "Browse All Properties",
     "moreOptions": "More Options"
   },
-  "title": "StayNeos | Premium Executive Apartment Rentals",
+  "title": "NEOS | Premium Executive Apartment Rentals",
   "home": "Explore",
   "login": "Login",
   "register": "Register",
@@ -2767,7 +2767,7 @@
   "modify": "Modify",
   "enable": "Enable",
   "updateSuccess": "Profile updated successfully!",
-  "memberNote": "🌟 You're a valued StayNeos member",
+  "memberNote": "🌟 You're a valued NEOS member",
   "accountSettings": "Account Settings",
   "noBookingsTitle": "No bookings yet",
   "needHelp": "Need help?",
@@ -2803,7 +2803,7 @@
   "heroTitle": "Corporate Housing Solutions",
   "heroSubtitle": "Flexible executive apartments for business travel, project teams, and relocations.<br>Reduce costs. Boost satisfaction. Simplify management.",
   "ctaButton": "Get Corporate Quote",
-  "valueTitle": "Why Companies Choose StayNeos",
+  "valueTitle": "Why Companies Choose NEOS",
   "costSaving": "Save Up to 30%",
   "costSavingDesc": "Compared to hotels, corporate clients save an average of 30% while enjoying more space and better amenities",
   "scenariosTitle": "Solutions for Every Business Need",
@@ -2848,7 +2848,7 @@
   "browse": "Browse Properties",
   "storyTitle": "How It Started",
   "storyOrigin": "It started with a frustrating search. A founder relocated for work and faced the same choice everyone does: a tiny hotel room with no kitchen, or a 12-month lease on an empty apartment. Neither made sense. So we built a third option.",
-  "storyMission": "In 2024, StayNeos launched with a simple idea: beautiful, furnished apartments you can move into tomorrow. Every home is hand-picked, fully equipped, and located in neighborhoods where you'd actually want to live.",
+  "storyMission": "In 2024, NEOS launched with a simple idea: beautiful, furnished apartments you can move into tomorrow. Every home is hand-picked, fully equipped, and located in neighborhoods where you'd actually want to live.",
   "storyToday": "Today, we're the go-to choice for professionals who need a real home, not a temporary fix. Tech leads, consultants, medical residents, relocating families — they all stay with us because we treat every stay like it matters. Because it does.",
   "valuesTitle": "What We Stand For",
   "peopleFirst": "Real People, Not Transactions",
@@ -2885,7 +2885,7 @@
   "secureCheckout": "Secure Checkout",
   "sslProtection": "🔒 Protected by 256-bit SSL",
   "payButton": "Complete Payment",
-  "successTitle": "Welcome to StayNeos!",
+  "successTitle": "Welcome to NEOS!",
   "successDesc": "You're all set! Check-in instructions have been sent to your email. Our concierge team is here to help.",
   "viewMyBooking": "View My Booking",
   "loginLeftTitle": "Welcome Back",
@@ -2895,14 +2895,14 @@
   "loginButton": "Sign In",
   "keepSignedIn": "Keep me signed in",
   "forgotPassword": "Forgot password?",
-  "noAccount": "New to StayNeos?",
+  "noAccount": "New to NEOS?",
   "joinNow": "Join now",
   "otherLoginMethods": "Or sign in with",
   "secureNote": "🔒 Your information is secure",
-  "registerLeftTitle": "Join StayNeos Today",
+  "registerLeftTitle": "Join NEOS Today",
   "registerLeftDesc": "✓ 10% off your first booking<br>✓ Save favorites for easy access<br>✓ Personal concierge service",
   "registerTitle": "Create Account",
-  "registerSubtitle": "Join thousands of business professionals who choose StayNeos",
+  "registerSubtitle": "Join thousands of business professionals who choose NEOS",
   "workEmailPlaceholder": "Work Email (recommended)",
   "createPasswordPlaceholder": "Create password (8+ characters)",
   "confirmPasswordPlaceholder": "Confirm password",
@@ -2913,7 +2913,7 @@
   "termsNote": "By creating an account, you agree to our Terms of Service and Privacy Policy",
   "haveAccount": "Already a member?",
   "signInNow": "Sign in",
-  "registerSuccessTitle": "🎉 Welcome to StayNeos!",
+  "registerSuccessTitle": "🎉 Welcome to NEOS!",
   "registerSuccessDesc": "Please check your email to verify your account",
   "back": "Back",
   "goBack": "Go Back",
@@ -2956,7 +2956,7 @@
   "favourite": "Favorite",
   "mapLoading": "Loading map...",
   "linkCopied": "Link copied!",
-  "shareText": "Check out this property on StayNeos",
+  "shareText": "Check out this property on NEOS",
   "sqft": "sqft",
   "bookingNumberLabel": "Booking #{number}",
   "confirmText": "Are you sure you want to cancel booking {number}?",
@@ -2985,7 +2985,7 @@
   "groundRulesDesc": "We ask every guest to remember a few simple things",
   "treatHome": "Treat your host's home like your own",
   "followHouseRules": "Follow the house rules",
-  "agreement": "By selecting the button below, I agree to the House Rules, Cancellation Policy, and StayNeos Terms of Service",
+  "agreement": "By selecting the button below, I agree to the House Rules, Cancellation Policy, and NEOS Terms of Service",
   "selectPaymentMethod": "Select Payment Method",
   "paymentMethod": "Payment Method",
   "cardDescription": "Visa, Mastercard, Amex, Discover",
@@ -3076,8 +3076,8 @@
   "serviceAnimal": "Service animal",
   "propertyNotFound": "Property not found",
   "aboutPage": {
-    "title": "About StayNeos",
-    "heroSubtitle": "We know what it's like to need a home in a city that isn't yours yet. That's why we built StayNeos.",
+    "title": "About NEOS",
+    "heroSubtitle": "We know what it's like to need a home in a city that isn't yours yet. That's why we built NEOS.",
     "missionLabel": "OUR MISSION",
     "missionTitle": "What Drives Us",
     "missionDesc": "Everyone deserves a real home — even far from theirs.",
@@ -3099,7 +3099,7 @@
     "story2Desc": "Small rooms, no kitchen, zero sense of belonging.",
     "story3Title": "Leases Weren't Either",
     "story3Desc": "Year-long contracts, empty apartments, weeks of setup.",
-    "story4Title": "So We Built StayNeos",
+    "story4Title": "So We Built NEOS",
     "story4Desc": "Furnished, flexible, and ready when you are.",
     "whyLabel": "WHY CHOOSE US",
     "whyTitle": "Why People Choose Us",
@@ -3240,9 +3240,9 @@
     "title": "Terms of Service",
     "lastUpdated": "Last updated: February 7, 2026",
     "s1Title": "1. Agreement to Terms",
-    "s1Text": "By using StayNeos, you agree to these Terms.",
+    "s1Text": "By using NEOS, you agree to these Terms.",
     "s2Title": "2. Services Description",
-    "s2Text": "StayNeos provides furnished apartment and corporate housing bookings.",
+    "s2Text": "NEOS provides furnished apartment and corporate housing bookings.",
     "s3Title": "3. Booking and Payment",
     "s3_1": "3.1 All bookings subject to availability.",
     "s3_2": "3.2 Payment or deposit required.",
@@ -3283,7 +3283,7 @@
     "title": "Privacy Policy",
     "lastUpdated": "Last updated: February 7, 2026",
     "s1Title": "1. Introduction",
-    "s1Text": "StayNeos is committed to protecting your privacy.",
+    "s1Text": "NEOS is committed to protecting your privacy.",
     "s2Title": "2. Information We Collect",
     "s2Text": "We may collect:",
     "s3Title": "3. How We Use Information",
@@ -3338,7 +3338,7 @@
   "serviceAnimalsPage": {
     "title": "Service Animals Policy",
     "welcome": "Service Animals Welcome",
-    "welcomeDesc": "StayNeos welcomes service animals in all properties.",
+    "welcomeDesc": "NEOS welcomes service animals in all properties.",
     "noFees": "No Additional Fees",
     "noFeesDesc": "No pet fees or deposits for service animals.",
     "responsibilities": "Guest Responsibilities",
@@ -3371,7 +3371,7 @@
     "globalCities": "Global Cities",
     "guestRating": "Guest Rating",
     "loginTitle": "Log in",
-    "loginSubtitle": "Welcome back to StayNeos"
+    "loginSubtitle": "Welcome back to NEOS"
   },
   "registerPage": {
     "heroTitle": "Luxury living,",

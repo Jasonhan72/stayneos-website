@@ -11,7 +11,7 @@ export function CTASection() {
           </h2>
 
           <p className="text-lg text-white/90 mb-10">
-            Browse available residences or contact StayNeos for tailored relocation and business housing support.
+            Browse available residences or contact NEOS for tailored relocation and business housing support.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -23,7 +23,7 @@ export function CTASection() {
 
             <Link href="/contact">
               <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10">
-                Contact StayNeos
+                Contact NEOS
               </Button>
             </Link>
           </div>

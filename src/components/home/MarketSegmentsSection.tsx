@@ -10,7 +10,7 @@ const segments = [
     description: 'Furnished residences for executives, project teams, and consultants who need a dependable downtown base.',
     cta: 'Explore business stays',
     href: '/for-business',
-    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80',
+    image: '/images/cooper-55-dining.jpg',
   },
   {
     title: 'Long-term stays',
@@ -18,7 +18,7 @@ const segments = [
     description: 'Ideal for renovation gaps, temporary housing, and guests who want home-level comfort for longer periods.',
     cta: 'View long-term options',
     href: '/long-term',
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80',
+    image: '/images/simcoe-238-living.jpg',
   },
   {
     title: 'Relocation support',
@@ -26,7 +26,7 @@ const segments = [
     description: 'A smoother landing for employees, families, and international arrivals transitioning into Toronto.',
     cta: 'See relocation-ready homes',
     href: '/properties',
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80',
+    image: '/images/cooper-55-e98a880d.jpg',
   },
 ];
 
@@ -38,7 +38,7 @@ export function MarketSegmentsSection() {
           Built for different stay scenarios
         </h2>
         <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
-          StayNeos supports relocation, business housing, and longer monthly stays with the same premium standard.
+          NEOS supports relocation, business housing, and longer monthly stays with the same premium standard.
         </p>
       </div>
 

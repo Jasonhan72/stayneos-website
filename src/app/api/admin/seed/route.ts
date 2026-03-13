@@ -38,7 +38,7 @@ export async function POST(request: Request) {
       const neighborhood = extractNeighborhood(property.title);
       const heroImage = property.images[0] || null;
       const images = property.images.map((url, index) => ({ url, alt: property.title, order: index }));
-      const metaTitle = `${property.title} | StayNeos`;
+      const metaTitle = `${property.title} | NEOS`;
       const metaDescription = buildMetaDescription(property.description);
 
       await db.prepare(`
