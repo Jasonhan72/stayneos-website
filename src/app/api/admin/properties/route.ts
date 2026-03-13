@@ -1,15 +1,7 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth/admin-api';
 import { getDb } from '@/lib/d1';
-
-function slugify(input: string) {
-  return input
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-}
+import { normalizePropertyInput, slugify } from '@/lib/admin/property';
 
 export async function GET(request: Request) {
   try {
@@ -50,7 +42,7 @@ export async function POST(request: Request) {
   try {
     const user = await requireAdmin(request);
     const db = getDb();
-    const body = await request.json();
+    const body = normalizePropertyInput(await request.json());
 
     if (!body.title || !body.address || !body.neighborhood || !body.bedrooms || !body.bathrooms) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -69,17 +61,17 @@ export async function POST(request: Request) {
         metaTitle, metaDescription, createdAt, updatedAt, createdBy
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'), ?)
     `).bind(
-      id, body.title, body.titleZh || null, body.titleFr || null, slug, body.status || 'DRAFT', body.address,
-      body.neighborhood, body.city || 'Toronto', body.latitude || null, body.longitude || null,
-      body.propertyType || 'APARTMENT', Number(body.bedrooms), Number(body.bathrooms), body.sqft || null,
-      body.floor || null, body.facing || null, body.balconySqft || null, body.buildingYear || null,
-      body.developer || null, body.description || null, body.descriptionZh || null, body.descriptionFr || null,
-      body.priceMonthly || null, body.priceQuarterly || null, body.priceAnnual || null, body.currency || 'CAD',
-      JSON.stringify(body.includedAmenities || []), JSON.stringify(body.buildingAmenities || []),
-      body.nearestSubway || null, body.subwayWalkMinutes || null, JSON.stringify(body.nearbyLandmarks || []),
-      body.minStayDays || 30, body.checkInTime || '15:00', body.checkOutTime || '11:00',
-      body.selfCheckIn ? 1 : 0, JSON.stringify(body.images || []), body.heroImage || null,
-      JSON.stringify(body.idealFor || []), body.metaTitle || null, body.metaDescription || null, user.userId
+      id, body.title, body.titleZh, body.titleFr, slug, body.status, body.address,
+      body.neighborhood, body.city, body.latitude, body.longitude,
+      body.propertyType, body.bedrooms, body.bathrooms, body.sqft,
+      body.floor, body.facing, body.balconySqft, body.buildingYear,
+      body.developer, body.description, body.descriptionZh, body.descriptionFr,
+      body.priceMonthly, body.priceQuarterly, body.priceAnnual, body.currency,
+      JSON.stringify(body.includedAmenities), JSON.stringify(body.buildingAmenities),
+      body.nearestSubway, body.subwayWalkMinutes, JSON.stringify(body.nearbyLandmarks),
+      body.minStayDays, body.checkInTime, body.checkOutTime,
+      body.selfCheckIn ? 1 : 0, JSON.stringify(body.images), body.heroImage,
+      JSON.stringify(body.idealFor), body.metaTitle, body.metaDescription, user.userId
     ).run();
 
     return NextResponse.json({ success: true, id, slug }, { status: 201 });
