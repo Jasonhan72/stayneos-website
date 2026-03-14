@@ -63,11 +63,30 @@ export function parseImages(value: string | null | undefined): Array<{ url: stri
   if (!value) return [];
   try {
     const parsed = JSON.parse(value);
-    return Array.isArray(parsed) ? parsed : [];
+    if (!Array.isArray(parsed)) return [];
+
+    const normalized: Array<{ url: string; alt?: string; order?: number }> = [];
+    parsed.forEach((item, index) => {
+      if (typeof item === 'string') {
+        normalized.push({ url: item, alt: '', order: index });
+        return;
+      }
+      if (item && typeof item === 'object' && typeof (item as { url?: unknown }).url === 'string') {
+        const obj = item as { url: string; alt?: unknown; order?: unknown };
+        normalized.push({
+          url: obj.url,
+          alt: typeof obj.alt === 'string' ? obj.alt : '',
+          order: typeof obj.order === 'number' ? obj.order : index,
+        });
+      }
+    });
+
+    return normalized.filter((item) => Boolean(item.url));
   } catch {
     return [];
   }
 }
+
 
 export function toPublicProperty(property: PropertyRecord) {
   const images = parseImages(property.images);
