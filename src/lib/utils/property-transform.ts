@@ -127,8 +127,9 @@ function normalizePriceUnit(priceUnit?: string): string {
   return (priceUnit || '').toLowerCase().trim();
 }
 
-export function toMonthlyListingPrice(price: number | string, priceUnit?: string): number {
-  const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
+export function toMonthlyListingPrice(price: number | string | undefined | null, priceUnit?: string): number {
+  const parsed = typeof price === 'string' ? parseFloat(price) : (price ?? 0);
+  const numericPrice = Number.isFinite(parsed) ? parsed : 0;
   const unit = normalizePriceUnit(priceUnit);
   const isMonthlyUnit = ['month', 'monthly', 'mo', '/mo', '月', 'mois'].some((value) => unit.includes(value));
 
@@ -139,7 +140,7 @@ export function toMonthlyListingPrice(price: number | string, priceUnit?: string
   return Math.max(0, Math.floor((numericPrice * 30 * 0.8) / 100) * 100);
 }
 
-export function formatMonthlyListingPrice(price: number | string, priceUnit?: string): string {
+export function formatMonthlyListingPrice(price: number | string | undefined | null, priceUnit?: string): string {
   const monthlyPrice = toMonthlyListingPrice(price, priceUnit);
   return `From $${monthlyPrice.toLocaleString()}/Mo`;
 }
