@@ -309,6 +309,13 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
     bathrooms: propertyCardData.bathrooms 
   });
 
+  const tierPrices = (() => {
+    const monthly = propertyCardData?.price || 0;
+    const quarterly = Number((propertyCardData as unknown as { priceQuarterly?: number })?.priceQuarterly || 0) || Math.round(monthly * 0.92);
+    const annual = Number((propertyCardData as unknown as { priceAnnual?: number })?.priceAnnual || 0) || Math.round(monthly * 0.85);
+    return { monthly, quarterly, annual };
+  })();
+
   const handleCheckAvailability = () => {
     if (!checkIn || !checkOut) {
       setShowCalendar(true);
@@ -343,6 +350,12 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             <span className="text-neutral-500">· {propertyCardData.reviewCount} {t('property.reviews')}</span>
           </div>
         )}
+      </div>
+
+      <div className="mb-4 rounded-xl border border-neutral-200 p-3 bg-neutral-50">
+        <div className="flex items-center justify-between text-sm"><span className="text-neutral-600">Monthly</span><span className="font-semibold text-neutral-900">${tierPrices.monthly.toLocaleString()}/Mo</span></div>
+        <div className="flex items-center justify-between text-sm mt-1"><span className="text-neutral-600">Quarterly (3 mo)</span><span className="font-medium text-neutral-900">${tierPrices.quarterly.toLocaleString()}</span></div>
+        <div className="flex items-center justify-between text-sm mt-1"><span className="text-neutral-600">Annual (12 mo)</span><span className="font-medium text-neutral-900">${tierPrices.annual.toLocaleString()}</span></div>
       </div>
 
       {/* Date/Guest Selector Box */}
