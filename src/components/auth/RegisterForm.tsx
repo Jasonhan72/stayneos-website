@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useI18n } from '@/lib/i18n';
 
@@ -10,7 +9,6 @@ const USER_KEY = 'stayneos_user_data';
 
 export function RegisterForm() {
   const { t } = useI18n();
-  const router = useRouter();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');

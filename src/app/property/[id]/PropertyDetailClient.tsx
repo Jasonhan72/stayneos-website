@@ -19,7 +19,7 @@ import {
 import { Container, Divider } from '@/components/ui';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { ApiErrorAlert } from '@/components/error';
-import { AirbnbCalendar, ReviewAndContinue, PaymentMethod, calculateBookingPrice, GuestSelector, type GuestCounts } from '@/components/booking';
+import { AirbnbCalendar, ReviewAndContinue, PaymentMethod, GuestSelector, type GuestCounts } from '@/components/booking';
 // CardDetailsForm removed - PCI compliance: all card input handled by Stripe Elements
 import { useI18n } from '@/lib/i18n';
 import { useProperty } from '@/hooks/useProperties';
@@ -245,16 +245,51 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
     return property.amenities;
   }, [property]);
 
-  // Calculate booking price
+  // Calculate booking price - Monthly rental logic (not nightly)
   const bookingPrice = useMemo(() => {
     if (!propertyCardData || !checkIn || !checkOut) return null;
-    return calculateBookingPrice({
-      basePrice: propertyCardData.price,
-      checkIn,
-      checkOut,
-      monthlyDiscount: propertyCardData.monthlyDiscount,
-      cleaningFee: propertyCardData.cleaningFee || 80,
-    });
+    
+    const start = new Date(checkIn);
+    const end = new Date(checkOut);
+    const nights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (nights < 1) return null;
+    
+    // Calculate tier prices inline
+    const monthly = propertyCardData?.price || 0;
+    const quarterly = Number((propertyCardData as unknown as { priceQuarterly?: number })?.priceQuarterly || 0) || Math.round(monthly * 0.92);
+    const annual = Number((propertyCardData as unknown as { priceAnnual?: number })?.priceAnnual || 0) || Math.round(monthly * 0.85);
+    
+    // Calculate months (ceiling)
+    const months = Math.ceil(nights / 30);
+    
+    // Determine rate tier based on total nights
+    let ratePerMonth: number;
+    let tierName: string;
+    if (nights >= 365) {
+      ratePerMonth = annual;
+      tierName = 'Annual';
+    } else if (nights >= 90) {
+      ratePerMonth = quarterly;
+      tierName = 'Quarterly';
+    } else {
+      ratePerMonth = monthly;
+      tierName = 'Monthly';
+    }
+    
+    const subtotal = months * ratePerMonth;
+    const tax = Math.round(subtotal * 0.13); // 13% HST
+    const total = subtotal + tax;
+    
+    return {
+      nights,
+      months,
+      ratePerMonth,
+      tierName,
+      subtotal,
+      tax,
+      total,
+    };
   }, [propertyCardData, checkIn, checkOut]);
 
   // Loading state
@@ -406,27 +441,20 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
       {bookingPrice && (
         <div className="space-y-3 text-sm border-t border-neutral-100 pt-4">
           <div className="flex justify-between">
-            <span className="text-neutral-600 underline">${propertyCardData.price.toLocaleString()} x {bookingPrice.nights} {t('common.nights', 'nights')}</span>
-            <span className="text-neutral-900">${(propertyCardData.price * bookingPrice.nights).toLocaleString()}</span>
-          </div>
-          {bookingPrice.discount > 0 && (
-            <div className="flex justify-between text-green-600">
-              <span>{t('booking.monthlyDiscount', 'Monthly stay discount')}</span>
-              <span>-${bookingPrice.discount.toLocaleString()}</span>
-            </div>
-          )}
-          <div className="flex justify-between">
-            <span className="text-neutral-600 underline">{t('booking.cleaningFee', 'Cleaning fee')}</span>
-            <span className="text-neutral-900">${bookingPrice.cleaningFee.toLocaleString()}</span>
+            <span className="text-neutral-600 underline">${bookingPrice.ratePerMonth.toLocaleString()} x {bookingPrice.months} {bookingPrice.months === 1 ? 'month' : 'months'} ({bookingPrice.tierName} rate)</span>
+            <span className="text-neutral-900">${bookingPrice.subtotal.toLocaleString()}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-neutral-600 underline">{t('booking.serviceFee', 'Service fee')}</span>
-            <span className="text-neutral-900">${bookingPrice.serviceFee.toLocaleString()}</span>
+            <span className="text-neutral-600">Taxes (13%)</span>
+            <span className="text-neutral-900">${bookingPrice.tax.toLocaleString()}</span>
           </div>
           <div className="flex justify-between pt-3 border-t border-neutral-200">
-            <span className="font-semibold text-neutral-900">{t('property.totalBeforeTaxes', 'Total before taxes')}</span>
+            <span className="font-semibold text-neutral-900">{t('property.totalBeforeTaxes', 'Total')}</span>
             <span className="font-semibold text-neutral-900">${bookingPrice.total.toLocaleString()}</span>
           </div>
+          <p className="text-xs text-neutral-500 text-center pt-2">
+            All-inclusive pricing: WiFi, utilities, cleaning & service fees included
+          </p>
         </div>
       )}
 
@@ -743,7 +771,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             ) : bookingPrice ? (
               <div>
                 <p className="text-lg font-semibold">${bookingPrice.total.toLocaleString()}</p>
-                <p className="text-sm text-neutral-600">{bookingPrice.nights} {t('common.nights')}</p>
+                <p className="text-sm text-neutral-600">{bookingPrice.months} {bookingPrice.months === 1 ? 'month' : 'months'}</p>
               </div>
             ) : (
               <div>
@@ -807,8 +835,8 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           checkOut,
           guests,
           pricePerNight: propertyCardData.price,
-          cleaningFee: bookingPrice?.cleaningFee || 80,
-          serviceFee: bookingPrice?.serviceFee || 0,
+          cleaningFee: 0, // Included in all-inclusive pricing
+          serviceFee: 0,  // Included in all-inclusive pricing
           tax: bookingPrice?.tax || 0,
           total: bookingPrice?.total || 0,
           currency: 'CAD',
