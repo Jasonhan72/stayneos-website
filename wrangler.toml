@@ -21,6 +21,11 @@ binding = "DB"
 database_name = "stayneos-db"
 database_id = "f667afae-6f66-4e4a-960a-37096eabdf03"
 
+# R2 Image Storage
+[[r2_buckets]]
+bucket_name = "stayneos-images"
+binding = "IMAGES"
+
 # Workers AI Binding (free tier)
 [ai]
 binding = "AI"
