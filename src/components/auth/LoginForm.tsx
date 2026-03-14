@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useI18n } from '@/lib/i18n';
 
@@ -14,7 +13,6 @@ const USER_KEY = 'stayneos_user_data';
 
 export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
   const { t } = useI18n();
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -37,6 +35,24 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+
+  const sanitizeCallbackUrl = (url: string) => {
+    if (!url) return '/dashboard';
+    // only allow internal relative paths
+    if (!url.startsWith('/')) return '/dashboard';
+    if (url.startsWith('//')) return '/dashboard';
+    return url;
+  };
+
+  const ensureSessionReady = async () => {
+    for (let i = 0; i < 4; i += 1) {
+      const res = await fetch('/api/auth/session', { credentials: 'include' });
+      if (res.ok) return true;
+      await new Promise((r) => setTimeout(r, 120 * (i + 1)));
+    }
+    return false;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -75,8 +91,16 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
         localStorage.setItem(USER_KEY, JSON.stringify(data.user));
       }
 
-      // Redirect to callback URL or dashboard
-      router.push(callbackUrl !== '/' ? callbackUrl : '/dashboard');
+      // Fallback client cookie to avoid intermittent middleware race on some browsers/platforms
+      if (data.token) {
+        const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+        document.cookie = `stayneos_auth_token=${encodeURIComponent(data.token)}; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Lax${secure}`;
+      }
+
+      const nextUrl = sanitizeCallbackUrl(callbackUrl !== '/' ? callbackUrl : '/dashboard');
+      await ensureSessionReady();
+      // Use hard redirect for reliability so middleware sees latest cookie immediately
+      window.location.assign(nextUrl);
     } catch (error) {
       console.error('Login error:', error);
       setErrors({
