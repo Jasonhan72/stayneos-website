@@ -85,13 +85,16 @@ export function RegisterForm() {
       // Store auth data
       if (data.token) {
         localStorage.setItem(TOKEN_KEY, data.token);
+        // Set client cookie so middleware sees it immediately
+        const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+        document.cookie = `stayneos_auth_token=${encodeURIComponent(data.token)}; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Lax${secure}`;
       }
       if (data.user) {
         localStorage.setItem(USER_KEY, JSON.stringify(data.user));
       }
 
-      // Redirect to dashboard
-      router.push('/dashboard');
+      // Hard redirect to dashboard (ensures middleware sees cookie)
+      window.location.assign('/dashboard');
     } catch (error) {
       console.error('Registration error:', error);
       setErrors({
