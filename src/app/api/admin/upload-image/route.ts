@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth/admin-api';
 
-export const runtime = 'edge';
 
 export async function POST(request: Request) {
   try {
