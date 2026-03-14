@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
-import jwt from "jsonwebtoken";
+import { signToken } from "@/lib/auth/jwt";
 import { userDb, accountDb, getDb } from "@/lib/d1";
 
 export const dynamic = "force-dynamic";
@@ -188,21 +188,12 @@ export async function GET(request: NextRequest) {
       }
     }
     
-    // Step 4: Generate JWT token (same as login route)
-    const JWT_SECRET = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET;
-    if (!JWT_SECRET) {
-      throw new Error('JWT_SECRET or NEXTAUTH_SECRET environment variable is required');
-    }
-    
-    const token = jwt.sign(
-      {
-        userId: user.id,
-        email: user.email,
-        role: user.role,
-      },
-      JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    // Step 4: Generate JWT token (using jose for Cloudflare Workers compatibility)
+    const token = await signToken({
+      userId: user.id,
+      email: user.email,
+      role: user.role,
+    });
     
     // Step 5: Set auth cookie and redirect directly to dashboard
     const response = NextResponse.redirect(`${baseUrl}/dashboard`, 303);

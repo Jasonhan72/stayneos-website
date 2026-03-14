@@ -1,12 +1,7 @@
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { signToken as jwtSign, verifyToken as jwtVerify } from "@/lib/auth/jwt";
 import { cookies } from "next/headers";
 
-function getJwtSecret(): string {
-  const secret = process.env.JWT_SECRET;
-  if (!secret) throw new Error('JWT_SECRET environment variable is required');
-  return secret;
-}
 const JWT_EXPIRES_IN = "7d";
 
 export interface User {
@@ -23,9 +18,9 @@ export interface AuthPayload {
   role?: string;
 }
 
-function verifyAuthToken(token: string): AuthPayload | null {
+async function verifyAuthToken(token: string): Promise<AuthPayload | null> {
   try {
-    return jwt.verify(token, getJwtSecret()) as AuthPayload;
+    return await jwtVerify(token) as unknown as AuthPayload;
   } catch {
     return null;
   }
@@ -66,15 +61,15 @@ export async function comparePassword(
 /**
  * Generate a JWT token
  */
-export function generateToken(payload: AuthPayload): string {
-  return jwt.sign(payload, getJwtSecret(), { expiresIn: JWT_EXPIRES_IN });
+export async function generateToken(payload: AuthPayload): Promise<string> {
+  return jwtSign(payload as unknown as Record<string, unknown>, JWT_EXPIRES_IN);
 }
 
 /**
  * Verify a JWT token
  */
-export function verifyToken(token: string): AuthPayload {
-  return jwt.verify(token, getJwtSecret()) as AuthPayload;
+export async function verifyToken(token: string): Promise<AuthPayload | null> {
+  return jwtVerify(token) as Promise<AuthPayload | null>;
 }
 
 /**
@@ -100,25 +95,25 @@ export function removeAuthCookie(): void {
 /**
  * Get current user from cookie
  */
-export function getCurrentUser(): AuthPayload | null {
+export async function getCurrentUser(): Promise<AuthPayload | null> {
   try {
     const token =
       cookies().get("stayneos_auth_token")?.value ||
       cookies().get("auth-token")?.value ||
       cookies().get("auth_token")?.value;
     if (!token) return null;
-    return verifyToken(token);
+    return await verifyToken(token);
   } catch {
     return null;
   }
 }
 
-export function getCurrentUserFromRequest(request: Request): AuthPayload | null {
+export async function getCurrentUserFromRequest(request: Request): Promise<AuthPayload | null> {
   const authHeader = request.headers.get("authorization");
 
   if (authHeader?.startsWith("Bearer ")) {
     const bearerToken = authHeader.slice(7).trim();
-    const payload = verifyAuthToken(bearerToken);
+    const payload = await verifyAuthToken(bearerToken);
     if (payload) {
       return payload;
     }
@@ -126,7 +121,7 @@ export function getCurrentUserFromRequest(request: Request): AuthPayload | null 
 
   const cookieToken = getTokenFromCookieHeader(request.headers.get("cookie"));
   if (cookieToken) {
-    return verifyAuthToken(cookieToken);
+    return await verifyAuthToken(cookieToken);
   }
 
   return null;
@@ -135,8 +130,8 @@ export function getCurrentUserFromRequest(request: Request): AuthPayload | null 
 /**
  * Check if user is authenticated
  */
-export function isAuthenticated(): boolean {
-  return getCurrentUser() !== null;
+export async function isAuthenticated(): Promise<boolean> {
+  return (await getCurrentUser()) !== null;
 }
 
 /**

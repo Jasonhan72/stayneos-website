@@ -12,7 +12,7 @@ export function generateStaticParams() {
 
 export async function POST(request: NextRequest) {
   try {
-    const currentUser = getCurrentUserFromRequest(request);
+    const currentUser = await getCurrentUserFromRequest(request);
 
     if (!currentUser?.email) {
       return NextResponse.json({ error: "请先登录" }, { status: 401 });

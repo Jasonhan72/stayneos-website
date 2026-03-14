@@ -2,7 +2,7 @@
 // Admin权限验证工具
 
 import { cookies } from 'next/headers';
-import jwt from 'jsonwebtoken';
+import { verifyToken } from '@/lib/auth/jwt';
 import { UserRole } from '@prisma/client';
 
 export interface AdminPayload {
@@ -23,9 +23,8 @@ export async function verifyAdmin(): Promise<AdminPayload | null> {
     
     if (!token) return null;
 
-    const JWT_SECRET = process.env.JWT_SECRET;
-    if (!JWT_SECRET) throw new Error('JWT_SECRET environment variable is required');
-    const payload = jwt.verify(token, JWT_SECRET) as AdminPayload;
+    const payload = await verifyToken(token) as unknown as AdminPayload | null;
+    if (!payload) return null;
     
     // 验证是否为admin角色
     const adminRoles: UserRole[] = [UserRole.ADMIN, UserRole.SUPER_ADMIN];
@@ -76,9 +75,7 @@ export async function getCurrentUser(): Promise<AdminPayload | null> {
     
     if (!token) return null;
 
-    const JWT_SECRET = process.env.JWT_SECRET;
-    if (!JWT_SECRET) throw new Error('JWT_SECRET environment variable is required');
-    return jwt.verify(token, JWT_SECRET) as AdminPayload;
+    return await verifyToken(token) as unknown as AdminPayload | null;
   } catch {
     return null;
   }

@@ -15,7 +15,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const currentUser = getCurrentUserFromRequest(request);
+    const currentUser = await getCurrentUserFromRequest(request);
 
     if (!currentUser?.email) {
       return NextResponse.json({ error: "请先登录" }, { status: 401 });
@@ -54,7 +54,7 @@ async function cancelBooking(
   request: NextRequest,
   params: { id: string }
 ) {
-  const currentUser = getCurrentUserFromRequest(request);
+  const currentUser = await getCurrentUserFromRequest(request);
 
   if (!currentUser?.email) {
     return NextResponse.json({ error: "请先登录" }, { status: 401 });

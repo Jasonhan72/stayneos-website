@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { signToken } from "@/lib/auth/jwt";
 import { userDb, getDb } from "@/lib/d1";
 
 export async function POST(request: Request) {
@@ -84,20 +84,13 @@ export async function POST(request: Request) {
     });
 
 
-    // Generate JWT token
-    const JWT_SECRET = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET;
-    if (!JWT_SECRET) throw new Error('JWT_SECRET or NEXTAUTH_SECRET environment variable is required');
-
-    const token = jwt.sign(
-      {
-        userId: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-      },
-      JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    // Generate JWT token (using jose for Cloudflare Workers compatibility)
+    const token = await signToken({
+      userId: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+    });
 
     const isFormSubmit = contentType.includes("application/x-www-form-urlencoded");
     

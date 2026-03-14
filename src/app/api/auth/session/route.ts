@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
-import jwt from "jsonwebtoken";
+import { verifyToken } from "@/lib/auth/jwt";
 import { userDb, getDb } from "@/lib/d1";
 
 export async function GET(request: NextRequest) {
@@ -21,16 +21,17 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // 验证 token
-    const JWT_SECRET = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET;
-    if (!JWT_SECRET) throw new Error('JWT_SECRET or NEXTAUTH_SECRET environment variable is required');
-    
-    const decoded = jwt.verify(
-      token,
-      JWT_SECRET
-    ) as {
+    // 验证 token (using jose for Cloudflare Workers compatibility)
+    const decoded = await verifyToken(token) as {
       userId: string;
-    };
+    } | null;
+    
+    if (!decoded) {
+      return NextResponse.json(
+        { message: "Token 无效或已过期", user: null },
+        { status: 401 }
+      );
+    }
 
     // 查找用户
     const user = await userDb.findById(db, decoded.userId);

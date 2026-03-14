@@ -10,7 +10,7 @@ export function generateStaticParams() {
 }
 
 async function listBookings(request: NextRequest, statusFilter?: string) {
-  const currentUser = getCurrentUserFromRequest(request);
+  const currentUser = await getCurrentUserFromRequest(request);
 
   if (!currentUser?.email) {
     return NextResponse.json({ error: "请先登录" }, { status: 401 });
