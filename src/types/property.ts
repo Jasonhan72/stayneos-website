@@ -64,6 +64,11 @@ export interface Property {
   
   // 价格信息
   basePrice: number;
+  monthlyPrice?: number;
+  quarterlyPrice?: number;
+  annualPrice?: number;
+  quarterlyDiscountPercent?: number;
+  annualDiscountPercent?: number;
   currency: string;
   cleaningFee?: number;
   serviceFee?: number;
@@ -100,6 +105,11 @@ export interface PropertyListItem {
   city: string;
   neighborhood: string;
   basePrice: number;
+  monthlyPrice?: number;
+  quarterlyPrice?: number;
+  annualPrice?: number;
+  quarterlyDiscountPercent?: number;
+  annualDiscountPercent?: number;
   currency: string;
   bedrooms: number;
   bathrooms: number;
@@ -135,6 +145,11 @@ export interface PropertyCardData {
   minNights?: number;
   monthlyDiscount?: number;
   cleaningFee?: number;
+  monthlyPrice?: number;
+  quarterlyPrice?: number;
+  annualPrice?: number;
+  quarterlyDiscountPercent?: number;
+  annualDiscountPercent?: number;
 }
 
 // 房源查询参数

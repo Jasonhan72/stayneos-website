@@ -10,7 +10,9 @@ interface FeaturedProperty {
   id: string;
   title: string;
   location: string;
-  price: number;
+  monthlyPrice: number;
+  quarterlyPrice: number;
+  annualPrice: number;
   rating: number;
   reviewCount: number;
   images: string[];
@@ -25,7 +27,9 @@ const featuredProperties: FeaturedProperty[] = [
     id: '1',
     title: '55 Cooper St (Sugar Wharf) · Premium 3BR Sky Suite',
     location: '55 Cooper St, Toronto, ON M5E 0G1',
-    price: 12000,
+    monthlyPrice: 12000,
+    quarterlyPrice: 10800,
+    annualPrice: 9600,
     rating: 4.9,
     reviewCount: 42,
     images: [
@@ -42,7 +46,9 @@ const featuredProperties: FeaturedProperty[] = [
     id: '2',
     title: '238 Simcoe St (Grange Park) · Executive 3BR Suite',
     location: '238 Simcoe St, Toronto, ON M5T 0A2',
-    price: 6500,
+    monthlyPrice: 6500,
+    quarterlyPrice: 5850,
+    annualPrice: 5200,
     rating: 4.8,
     reviewCount: 38,
     images: [
@@ -59,7 +65,9 @@ const featuredProperties: FeaturedProperty[] = [
     id: '3',
     title: '22 Wellesley St E · Modern 1BR City View',
     location: '22 Wellesley St E, Toronto, ON',
-    price: 3500,
+    monthlyPrice: 3500,
+    quarterlyPrice: 3150,
+    annualPrice: 2800,
     rating: 4.8,
     reviewCount: 21,
     images: [
@@ -74,12 +82,34 @@ const featuredProperties: FeaturedProperty[] = [
   },
 ];
 
-function formatPropertyPrice(property: FeaturedProperty) {
-  return `From $${property.price.toLocaleString()}/Mo`;
+function getPricingLabels(locale: string) {
+  if (locale === 'zh') return { monthly: '月价', quarterly: '季价', annual: '年价', reviews: '条评价', perMonth: '/月' };
+  if (locale === 'fr') return { monthly: 'Mensuel', quarterly: 'Trimestriel', annual: 'Annuel', reviews: 'avis', perMonth: '/mois' };
+  return { monthly: 'Monthly', quarterly: 'Quarterly', annual: 'Annual', reviews: 'reviews', perMonth: '/Mo' };
+}
+
+function PricingRows({ property, locale }: { property: FeaturedProperty; locale: string }) {
+  const labels = getPricingLabels(locale);
+  const rows = [
+    { label: labels.monthly, value: property.monthlyPrice },
+    { label: labels.quarterly, value: property.quarterlyPrice },
+    { label: labels.annual, value: property.annualPrice },
+  ];
+
+  return (
+    <div className="space-y-2 pt-3 border-t border-neutral-200">
+      {rows.map((row) => (
+        <div key={row.label} className="flex items-center justify-between">
+          <span className="text-sm text-neutral-600">{row.label}</span>
+          <span className="text-base font-semibold text-neutral-900">${row.value.toLocaleString()}<span className="text-xs font-normal text-neutral-500 ml-1">{labels.perMonth}</span></span>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export function FeaturedPropertiesSection() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   return (
     <Section bg="neutral">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-8 md:mb-12 gap-3">
@@ -152,12 +182,10 @@ export function FeaturedPropertiesSection() {
                           <span>{t('property.max', 'Up to')} {property.maxGuests}</span>
                         </div>
 
-                        <div className="flex items-baseline justify-between pt-3 border-t border-neutral-200">
-                          <span className="text-lg font-bold text-neutral-900">{formatPropertyPrice(property)}</span>
-                          {property.reviewCount > 0 && (
-                            <span className="text-xs text-neutral-400">{property.reviewCount} {t('property.reviews', 'reviews')}</span>
-                          )}
-                        </div>
+                        <PricingRows property={property} locale={locale} />
+                        {property.reviewCount > 0 && (
+                          <p className="mt-2 text-xs text-neutral-400">{property.reviewCount} {getPricingLabels(locale).reviews}</p>
+                        )}
                       </div>
                     </Link>
                   </Card>
@@ -214,14 +242,10 @@ export function FeaturedPropertiesSection() {
                       <span>{t('property.max', 'Up to')} {property.maxGuests} {t('property.guests', 'guests')}</span>
                     </div>
 
-                    <div className="flex items-baseline justify-between pt-4 border-t border-neutral-200">
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-2xl font-bold text-neutral-900">{formatPropertyPrice(property)}</span>
-                      </div>
-                      {property.reviewCount > 0 && (
-                        <span className="text-sm text-neutral-400">{property.reviewCount} {t('property.reviews', 'reviews')}</span>
-                      )}
-                    </div>
+                    <PricingRows property={property} locale={locale} />
+                    {property.reviewCount > 0 && (
+                      <p className="mt-2 text-sm text-neutral-400">{property.reviewCount} {getPricingLabels(locale).reviews}</p>
+                    )}
                   </div>
                 </Link>
               </Card>

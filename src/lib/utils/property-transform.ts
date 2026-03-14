@@ -74,6 +74,21 @@ export function toPropertyCardData(property: Property | PropertyListItem): Prope
           ? parseFloat(property.cleaningFee)
           : property.cleaningFee)
       : 80,
+    monthlyPrice: 'monthlyPrice' in property && property.monthlyPrice
+      ? (typeof property.monthlyPrice === 'string' ? parseFloat(property.monthlyPrice) : property.monthlyPrice)
+      : undefined,
+    quarterlyPrice: 'quarterlyPrice' in property && property.quarterlyPrice
+      ? (typeof property.quarterlyPrice === 'string' ? parseFloat(property.quarterlyPrice) : property.quarterlyPrice)
+      : undefined,
+    annualPrice: 'annualPrice' in property && property.annualPrice
+      ? (typeof property.annualPrice === 'string' ? parseFloat(property.annualPrice) : property.annualPrice)
+      : undefined,
+    quarterlyDiscountPercent: 'quarterlyDiscountPercent' in property && property.quarterlyDiscountPercent
+      ? (typeof property.quarterlyDiscountPercent === 'string' ? parseFloat(property.quarterlyDiscountPercent) : property.quarterlyDiscountPercent)
+      : undefined,
+    annualDiscountPercent: 'annualDiscountPercent' in property && property.annualDiscountPercent
+      ? (typeof property.annualDiscountPercent === 'string' ? parseFloat(property.annualDiscountPercent) : property.annualDiscountPercent)
+      : undefined,
   };
 }
 
@@ -161,4 +176,21 @@ export function calculateDiscountedPrice(
     : discountPercent;
   
   return Math.round(price * (100 - discount) / 100);
+}
+
+
+export function resolvePropertyPricingTiers(property: PropertyCardData): { monthly: number; quarterly: number; annual: number } {
+  const monthlyBase = property.monthlyPrice ?? toMonthlyListingPrice(property.price, property.priceUnit);
+
+  const quarterly = property.quarterlyPrice
+    ?? calculateDiscountedPrice(monthlyBase, property.quarterlyDiscountPercent ?? 10);
+
+  const annual = property.annualPrice
+    ?? calculateDiscountedPrice(monthlyBase, property.annualDiscountPercent ?? 20);
+
+  return {
+    monthly: Math.max(0, Math.round(monthlyBase)),
+    quarterly: Math.max(0, Math.round(quarterly)),
+    annual: Math.max(0, Math.round(annual)),
+  };
 }

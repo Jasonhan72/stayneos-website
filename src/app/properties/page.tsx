@@ -30,7 +30,7 @@ import { ApiErrorAlert } from '@/components/error';
 import { AirbnbCalendar } from '@/components/booking';
 import { useProperties } from '@/hooks/useProperties';
 import { useI18n } from '@/lib/i18n';
-import { formatMonthlyListingPrice, getPropertyLocation } from '@/lib/utils/property-transform';
+import { getPropertyLocation, resolvePropertyPricingTiers } from '@/lib/utils/property-transform';
 import dynamic from 'next/dynamic';
 
 // 动态导入地图组件
@@ -82,30 +82,6 @@ export default function PropertiesPage() {
     { value: 'rating', label: 'sort.rating' },
   ];
 
-  const pricingTiers = useMemo<Record<string, string>>(() => {
-    if (locale === 'zh') {
-      return {
-        'prop-55-cooper': '月租 $8,000-10,000 · 季租 $7,500-9,000 · 年租 $6,500-8,000',
-        '55-cooper-st-sugar-wharf': '月租 $8,000-10,000 · 季租 $7,500-9,000 · 年租 $6,500-8,000',
-        'prop-238-simcoe': '月租 $6,500-8,000 · 季租 $6,000-7,000 · 年租 $5,500-6,500',
-        '238-simcoe-st-grange-park': '月租 $6,500-8,000 · 季租 $6,000-7,000 · 年租 $5,500-6,500',
-      };
-    }
-    if (locale === 'fr') {
-      return {
-        'prop-55-cooper': 'Mensuel 8 000-10 000 $ · Trimestriel 7 500-9 000 $ · Annuel 6 500-8 000 $',
-        '55-cooper-st-sugar-wharf': 'Mensuel 8 000-10 000 $ · Trimestriel 7 500-9 000 $ · Annuel 6 500-8 000 $',
-        'prop-238-simcoe': 'Mensuel 6 500-8 000 $ · Trimestriel 6 000-7 000 $ · Annuel 5 500-6 500 $',
-        '238-simcoe-st-grange-park': 'Mensuel 6 500-8 000 $ · Trimestriel 6 000-7 000 $ · Annuel 5 500-6 500 $',
-      };
-    }
-    return {
-      'prop-55-cooper': 'Monthly $8,000-10,000 · Quarterly $7,500-9,000 · Annual $6,500-8,000',
-      '55-cooper-st-sugar-wharf': 'Monthly $8,000-10,000 · Quarterly $7,500-9,000 · Annual $6,500-8,000',
-      'prop-238-simcoe': 'Monthly $6,500-8,000 · Quarterly $6,000-7,000 · Annual $5,500-6,500',
-      '238-simcoe-st-grange-park': 'Monthly $6,500-8,000 · Quarterly $6,000-7,000 · Annual $5,500-6,500',
-    };
-  }, [locale]);
 
   
   // State
@@ -555,14 +531,14 @@ export default function PropertiesPage() {
                   /* List View */
                   <div className="space-y-4">
                     {filteredProperties.map((property) => (
-                      <PropertyListCard key={property.id} property={property} pricingTier={pricingTiers[property.id]} />
+                      <PropertyListCard key={property.id} property={property} />
                     ))}
                   </div>
                 ) : (
                   /* Grid View */
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {filteredProperties.map((property) => (
-                      <PropertyGridCard key={property.id} property={property} pricingTier={pricingTiers[property.id]} />
+                      <PropertyGridCard key={property.id} property={property} />
                     ))}
                   </div>
                 )}
@@ -655,10 +631,8 @@ export default function PropertiesPage() {
 // Property Grid Card Component
 function PropertyGridCard({
   property,
-  pricingTier,
 }: {
   property: PropertyCardData;
-  pricingTier?: string;
 }) {
   const { t } = useI18n();
   const location = getPropertyLocation(property);
@@ -716,18 +690,10 @@ function PropertyGridCard({
             <span>{t('property.max')} {property.maxGuests} {t('property.guests')}</span>
           </div>
           
-          {pricingTier && (
-            <p className="text-xs text-neutral-600 mb-3">{pricingTier}</p>
+          <PropertyPricingTiers property={property} compact />
+          {property.reviewCount > 0 && (
+            <p className="text-xs text-neutral-400 mt-2">{property.reviewCount} {t('property.reviews')}</p>
           )}
-
-          <div className="flex items-baseline justify-between pt-3 border-t border-neutral-200">
-            <span className="text-xl font-bold text-neutral-900">
-              {formatMonthlyListingPrice(property.price, property.priceUnit)}
-            </span>
-            {property.reviewCount > 0 && (
-              <span className="text-xs text-neutral-400">{property.reviewCount} {t('property.reviews')}</span>
-            )}
-          </div>
         </div>
       </Link>
     </Card>
@@ -737,12 +703,11 @@ function PropertyGridCard({
 // Property List Card Component
 interface PropertyListCardProps {
   property: PropertyCardData;
-  pricingTier?: string;
   isSelected?: boolean;
   onClick?: () => void;
 }
 
-function PropertyListCard({ property, pricingTier, isSelected, onClick }: PropertyListCardProps) {
+function PropertyListCard({ property, isSelected, onClick }: PropertyListCardProps) {
   const { t } = useI18n();
   const location = getPropertyLocation(property);
   
@@ -824,20 +789,44 @@ function PropertyListCard({ property, pricingTier, isSelected, onClick }: Proper
             </div>
           </div>
           
-          {pricingTier && (
-            <p className="text-xs text-neutral-600 mt-4">{pricingTier}</p>
-          )}
-
-          <div className="flex items-baseline justify-between mt-4 pt-4 border-t border-neutral-200">
-            <span className="text-2xl font-bold text-neutral-900">
-              {formatMonthlyListingPrice(property.price, property.priceUnit)}
-            </span>
-            {property.reviewCount > 0 && (
-              <span className="text-sm text-neutral-400">{property.reviewCount} {t('property.reviews')}</span>
-            )}
+          <div className="mt-4">
+            <PropertyPricingTiers property={property} />
           </div>
+          {property.reviewCount > 0 && (
+            <p className="text-sm text-neutral-400 mt-2">{property.reviewCount} {t('property.reviews')}</p>
+          )}
         </div>
       </Link>
     </Card>
+  );
+}
+
+
+function PropertyPricingTiers({ property, compact = false }: { property: PropertyCardData; compact?: boolean }) {
+  const { locale } = useI18n();
+  const tiers = resolvePropertyPricingTiers(property);
+  const labels = locale === 'zh'
+    ? { monthly: '月价', quarterly: '季价', annual: '年价', perMonth: '/月' }
+    : locale === 'fr'
+      ? { monthly: 'Mensuel', quarterly: 'Trimestriel', annual: 'Annuel', perMonth: '/mois' }
+      : { monthly: 'Monthly', quarterly: 'Quarterly', annual: 'Annual', perMonth: '/Mo' };
+
+  const rowClass = compact ? 'text-sm' : 'text-base';
+
+  return (
+    <div className={`space-y-2 ${compact ? 'pt-3 border-t border-neutral-200' : 'pt-4 border-t border-neutral-200'}`}>
+      <div className="flex items-center justify-between">
+        <span className="text-neutral-600 text-sm">{labels.monthly}</span>
+        <span className={`${rowClass} font-semibold text-neutral-900`}>${tiers.monthly.toLocaleString()}<span className="text-xs font-normal text-neutral-500 ml-1">{labels.perMonth}</span></span>
+      </div>
+      <div className="flex items-center justify-between">
+        <span className="text-neutral-600 text-sm">{labels.quarterly}</span>
+        <span className={`${rowClass} font-semibold text-neutral-900`}>${tiers.quarterly.toLocaleString()}<span className="text-xs font-normal text-neutral-500 ml-1">{labels.perMonth}</span></span>
+      </div>
+      <div className="flex items-center justify-between">
+        <span className="text-neutral-600 text-sm">{labels.annual}</span>
+        <span className={`${rowClass} font-semibold text-neutral-900`}>${tiers.annual.toLocaleString()}<span className="text-xs font-normal text-neutral-500 ml-1">{labels.perMonth}</span></span>
+      </div>
+    </div>
   );
 }
