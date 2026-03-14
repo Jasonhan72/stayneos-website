@@ -31,6 +31,8 @@ export async function GET() {
     googleOAuthUrl.searchParams.set("response_type", "code");
     googleOAuthUrl.searchParams.set("scope", "openid email profile");
     googleOAuthUrl.searchParams.set("state", state);
+    googleOAuthUrl.searchParams.set("prompt", "consent");
+    googleOAuthUrl.searchParams.set("access_type", "offline");
     
     return NextResponse.redirect(googleOAuthUrl.toString());
   } catch {
