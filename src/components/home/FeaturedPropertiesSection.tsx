@@ -30,8 +30,8 @@ const featuredProperties: FeaturedProperty[] = [
     monthlyPrice: 12000,
     quarterlyPrice: 10800,
     annualPrice: 9600,
-    rating: 4.9,
-    reviewCount: 42,
+    rating: 0,
+    reviewCount: 0,
     images: [
       '/images/cooper-55-c5e8357d.jpg',
       '/images/cooper-55-e98a880d.jpg',
@@ -49,11 +49,11 @@ const featuredProperties: FeaturedProperty[] = [
     monthlyPrice: 6500,
     quarterlyPrice: 5850,
     annualPrice: 5200,
-    rating: 4.8,
-    reviewCount: 38,
+    rating: 0,
+    reviewCount: 0,
     images: [
-      '/images/simcoe-238-living.jpg',
       '/images/simcoe-238-kitchen.jpg',
+      '/images/simcoe-238-living.jpg',
       '/images/simcoe-238-1.jpg',
     ],
     maxGuests: 5,
@@ -68,8 +68,8 @@ const featuredProperties: FeaturedProperty[] = [
     monthlyPrice: 3500,
     quarterlyPrice: 3150,
     annualPrice: 2800,
-    rating: 4.8,
-    reviewCount: 21,
+    rating: 0,
+    reviewCount: 0,
     images: [
       '/images/wellesley-1607-living.jpg',
       '/images/wellesley-1607-bedroom.jpg',
@@ -163,10 +163,12 @@ export function FeaturedPropertiesSection() {
                           <h3 className="text-base font-semibold text-neutral-900 group-hover:text-primary transition-colors line-clamp-2">
                             {property.title}
                           </h3>
-                          <div className="flex items-center gap-1 shrink-0">
-                            <Star size={14} className="text-accent fill-accent" />
-                            <span className="text-sm font-medium">{property.rating}</span>
-                          </div>
+                          {property.reviewCount > 0 && (
+                            <div className="flex items-center gap-1 shrink-0">
+                              <Star size={14} className="text-accent fill-accent" />
+                              <span className="text-sm font-medium">{property.rating}</span>
+                            </div>
+                          )}
                         </div>
 
                         <div className="flex items-center gap-1 text-neutral-500 mb-3">
