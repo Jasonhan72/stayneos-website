@@ -16,13 +16,12 @@ export default function AboutContent() {
       {/* Hero Section */}
       <section className="relative bg-primary py-24 lg:py-32 overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-          <Image src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&q=80" alt="Background" fill className="object-cover" priority />
+          <Image src="/images/cooper-55-e98a880d.jpg" alt="Toronto skyline view from a NEOS property" fill className="object-cover" priority />
         </div>
         <Container className="relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">{t('aboutPage.title')}</h1>
             <p className="text-lg md:text-xl text-primary-100 leading-relaxed">{t('aboutPage.heroSubtitle')}</p>
-            <p className="text-sm text-primary-200 mt-4">{t("aboutPage.imageDisclaimer", "Note: Some photos on this page are illustrative stock images.")}</p>
           </div>
         </Container>
       </section>
@@ -46,7 +45,7 @@ export default function AboutContent() {
             </div>
             <div className="relative">
               <div className="aspect-[4/5] relative">
-                <Image src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80" alt="Modern luxury apartment" fill className="object-cover" />
+                <Image src="/images/cooper-55-c5e8357d.jpg" alt="Living room in a NEOS furnished suite" fill className="object-cover" />
               </div>
               <div className="absolute -bottom-6 -left-6 bg-accent p-6 md:p-8 max-w-xs">
                 <p className="text-3xl md:text-4xl font-bold text-primary mb-2">28+</p>
@@ -66,10 +65,10 @@ export default function AboutContent() {
             <p className="text-neutral-600 text-lg max-w-2xl mx-auto">{t('aboutPage.storyDesc')}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <StoryCard icon={<Lightbulb className="w-8 h-8" />} step="01" title={t('aboutPage.story1Title')} description={t('aboutPage.story1Desc')} image="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80" />
-            <StoryCard icon={<Hotel className="w-8 h-8" />} step="02" title={t('aboutPage.story2Title')} description={t('aboutPage.story2Desc')} image="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80" />
-            <StoryCard icon={<FileText className="w-8 h-8" />} step="03" title={t('aboutPage.story3Title')} description={t('aboutPage.story3Desc')} image="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&q=80" />
-            <StoryCard icon={<Home className="w-8 h-8" />} step="04" title={t('aboutPage.story4Title')} description={t('aboutPage.story4Desc')} image="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80" highlighted />
+            <StoryCard icon={<Lightbulb className="w-8 h-8" />} step="01" title={t('aboutPage.story1Title')} description={t('aboutPage.story1Desc')} image="/images/cooper-55-dining.jpg" />
+            <StoryCard icon={<Hotel className="w-8 h-8" />} step="02" title={t('aboutPage.story2Title')} description={t('aboutPage.story2Desc')} image="/images/simcoe-238-living.jpg" />
+            <StoryCard icon={<FileText className="w-8 h-8" />} step="03" title={t('aboutPage.story3Title')} description={t('aboutPage.story3Desc')} image="/images/wellesley-1607-kitchen.jpg" />
+            <StoryCard icon={<Home className="w-8 h-8" />} step="04" title={t('aboutPage.story4Title')} description={t('aboutPage.story4Desc')} image="/images/cooper-55-b16f7ae9.jpg" highlighted />
           </div>
         </Container>
       </section>
@@ -81,12 +80,12 @@ export default function AboutContent() {
             <div className="order-2 lg:order-1 relative">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-4">
-                  <div className="aspect-square relative"><Image src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600&q=80" alt="Luxury interior" fill className="object-cover" /></div>
-                  <div className="aspect-[4/5] relative"><Image src="https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=600&q=80" alt="Modern living room" fill className="object-cover" /></div>
+                  <div className="aspect-square relative"><Image src="/images/simcoe-238-kitchen.jpg" alt="Kitchen in a NEOS furnished suite" fill className="object-cover" /></div>
+                  <div className="aspect-[4/5] relative"><Image src="/images/cooper-55-a12c07ee.jpg" alt="Living space in a NEOS property" fill className="object-cover" /></div>
                 </div>
                 <div className="space-y-4 pt-8">
-                  <div className="aspect-[4/5] relative"><Image src="https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=600&q=80" alt="Elegant bedroom" fill className="object-cover" /></div>
-                  <div className="aspect-square relative"><Image src="https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=600&q=80" alt="Modern kitchen" fill className="object-cover" /></div>
+                  <div className="aspect-[4/5] relative"><Image src="/images/wellesley-1607-bedroom.jpg" alt="Bedroom in a NEOS furnished suite" fill className="object-cover" /></div>
+                  <div className="aspect-square relative"><Image src="/images/wellesley-1607-bath.jpg" alt="Bathroom in a NEOS furnished suite" fill className="object-cover" /></div>
                 </div>
               </div>
             </div>
@@ -111,7 +110,7 @@ export default function AboutContent() {
       {/* Commitment */}
       <section className="py-20 lg:py-28 bg-primary relative overflow-hidden">
         <div className="absolute inset-0 opacity-5">
-          <Image src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=1920&q=80" alt="Background" fill className="object-cover" />
+          <Image src="/images/cooper-55-cff56997.jpg" alt="Interior detail from a NEOS property" fill className="object-cover" />
         </div>
         <Container className="relative z-10">
           <div className="text-center mb-16">

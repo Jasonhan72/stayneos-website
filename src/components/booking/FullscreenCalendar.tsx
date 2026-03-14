@@ -39,7 +39,7 @@ export function FullscreenCalendar({
   onSelectCheckOut,
   onClearDates,
   pricePerNight = 0,
-  rating = 4.9,
+  rating = 0,
   currency = 'CAD',
 }: FullscreenCalendarProps) {
   const [selectedStart, setSelectedStart] = useState<string>(checkIn);
@@ -68,6 +68,7 @@ export function FullscreenCalendar({
   }, [selectedStart, selectedEnd]);
 
   const totalPrice = nights * pricePerNight;
+  const hasRating = rating > 0;
 
   // Generate months data
   const monthsData = useMemo(() => {
@@ -286,18 +287,22 @@ export function FullscreenCalendar({
             {hasSelection ? (
               <div>
                 <p className="text-lg font-semibold text-neutral-900">${totalPrice.toLocaleString()} {currency}</p>
-                <div className="flex items-center gap-2">
-                  <Star size={14} className="fill-black" />
-                  <span className="text-sm text-neutral-600">{rating}</span>
-                </div>
+                {hasRating && (
+                  <div className="flex items-center gap-2">
+                    <Star size={14} className="fill-black" />
+                    <span className="text-sm text-neutral-600">{rating}</span>
+                  </div>
+                )}
               </div>
             ) : (
               <div>
                 <p className="text-neutral-900">Add dates for prices</p>
-                <div className="flex items-center gap-2 mt-1">
-                  <Star size={14} className="fill-black" />
-                  <span className="text-sm text-neutral-600">{rating}</span>
-                </div>
+                {hasRating && (
+                  <div className="flex items-center gap-2 mt-1">
+                    <Star size={14} className="fill-black" />
+                    <span className="text-sm text-neutral-600">{rating}</span>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -391,9 +396,14 @@ export function FullscreenCalendar({
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <Star size={14} className="fill-black" />
-                <span className="text-sm text-neutral-600">{rating}</span>
-                <span className="text-sm text-neutral-500">· Add dates for prices</span>
+                {hasRating && (
+                  <>
+                    <Star size={14} className="fill-black" />
+                    <span className="text-sm text-neutral-600">{rating}</span>
+                    <span className="text-sm text-neutral-500">·</span>
+                  </>
+                )}
+                <span className="text-sm text-neutral-500">Add dates for prices</span>
               </div>
             )}
           </div>

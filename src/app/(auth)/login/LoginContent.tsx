@@ -11,7 +11,7 @@ export default function LoginContent() {
   return (
     <div className="min-h-screen flex">
       <div className="hidden lg:flex lg:w-[55%] relative">
-        <Image src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1920&q=80" alt="Luxury apartment interior" fill className="object-cover" priority />
+        <Image src="/images/cooper-55-e98a880d.jpg" alt="Toronto skyline view from a NEOS property" fill className="object-cover" priority />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
         <div className="relative z-10 flex flex-col justify-between h-full p-12">
           <div>

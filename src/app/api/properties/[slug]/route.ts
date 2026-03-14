@@ -25,7 +25,7 @@ export async function GET(_request: Request, { params }: { params: { slug: strin
       city: 'Toronto',
       price: mock.priceUnit === 'night' ? Math.floor(mock.price * 30 * 0.8 / 100) * 100 : mock.price,
       priceUnit: 'month',
-      rating: mock.rating || 4.8,
+      rating: mock.reviewCount > 0 ? mock.rating : 0,
       reviewCount: mock.reviewCount || 0,
       images: mock.images,
       maxGuests: mock.maxGuests,

@@ -110,7 +110,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           {/* Image Container */}
           <div className="relative aspect-[4/3] overflow-hidden">
             <Image
-              src={property.images[0] || "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800"}
+              src={property.images[0] || "/images/cooper-55-c5e8357d.jpg"}
               alt={`${title} - Main image`}
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-105"

@@ -101,7 +101,7 @@ export function toPublicProperty(property: PropertyRecord) {
     city: property.city,
     price: property.priceMonthly || 0,
     priceUnit: 'month',
-    rating: 4.9,
+    rating: 0,
     reviewCount: 0,
     images: images.map((img) => img.url).filter(Boolean),
     maxGuests: Math.max(1, (property.bedrooms || 1) * 2),

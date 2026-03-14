@@ -460,7 +460,7 @@ export default function SearchBar() {
           onClose={() => setIsDateOpen(false)}
           onClearDates={() => setSearchData({ ...searchData, checkIn: '', checkOut: '' })}
           minNights={1}
-          rating={4.9}
+          rating={0}
           currency="CAD"
         />
       )}

@@ -291,7 +291,7 @@ export default function BookingContent() {
                     }}
                     pricePerNight={displayPrice}
                     minNights={propertyCardData.minNights}
-                    rating={propertyCardData.rating}
+                    rating={propertyCardData.reviewCount > 0 ? propertyCardData.rating : 0}
                     currency="CAD"
                   />
                 )}

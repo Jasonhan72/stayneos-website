@@ -375,7 +375,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
           }}
           pricePerNight={displayPrice}
           minNights={property.minNights}
-          rating={property.rating}
+          rating={property.reviewCount > 0 ? property.rating : 0}
           currency="CAD"
         />
       )}

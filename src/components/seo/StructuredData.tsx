@@ -139,11 +139,6 @@ export function LocalBusinessSchema({
     })),
     priceRange,
     image: "https://stayneos.com/og-image.jpg",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.8",
-      reviewCount: "600",
-    },
   };
 
   return (

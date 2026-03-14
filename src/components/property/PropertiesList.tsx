@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
+import { mockProperties as listingProperties } from "@/lib/data";
 import { 
   Plus, 
   Search, 
@@ -39,60 +40,27 @@ interface Property {
   updatedAt: string;
 }
 
-// 模拟房源数据
-const mockProperties: Property[] = [
-  {
-    id: "prop-1",
-    title: "市中心豪华公寓",
-    address: "123 Main Street",
-    city: "市中心",
-    basePrice: 180,
-    currency: "CAD",
-    bedrooms: 2,
-    bathrooms: 2,
-    maxGuests: 4,
-    status: "published",
-    imageUrl: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=400&q=80",
-    createdAt: "2024-01-15",
-    updatedAt: "2024-02-20",
-  },
-  {
-    id: "prop-2",
-    title: "现代商务公寓",
-    address: "456 Yonge Street",
-    city: "商务区",
-    basePrice: 150,
-    currency: "CAD",
-    bedrooms: 1,
-    bathrooms: 1,
-    maxGuests: 2,
-    status: "draft",
-    imageUrl: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=400&q=80",
-    createdAt: "2024-02-01",
-    updatedAt: "2024-02-18",
-  },
-  {
-    id: "prop-3",
-    title: "湖景豪华公寓",
-    address: "789 Lakeshore Blvd",
-    city: "景观区",
-    basePrice: 220,
-    currency: "CAD",
-    bedrooms: 3,
-    bathrooms: 2,
-    maxGuests: 6,
-    status: "published",
-    imageUrl: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=400&q=80",
-    createdAt: "2024-01-20",
-    updatedAt: "2024-02-15",
-  },
-];
+const initialProperties: Property[] = listingProperties.map((property, index) => ({
+  id: property.id,
+  title: property.title,
+  address: property.location,
+  city: property.location.split(",")[1]?.trim() || property.location,
+  basePrice: property.price,
+  currency: "CAD",
+  bedrooms: property.bedrooms,
+  bathrooms: property.bathrooms,
+  maxGuests: property.maxGuests,
+  status: property.featured ? "published" : "draft",
+  imageUrl: property.images[0] || "/images/cooper-55-c5e8357d.jpg",
+  createdAt: `2024-01-${String(15 + index).padStart(2, "0")}`,
+  updatedAt: `2024-02-${String(18 + index).padStart(2, "0")}`,
+}));
 
 export function PropertiesList() {
   const { t } = useI18n();
   // router 保留供将来导航使用
   // const router = useRouter();
-  const [properties, setProperties] = useState<Property[]>(mockProperties);
+  const [properties, setProperties] = useState<Property[]>(initialProperties);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<PropertyStatus | "all">("all");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);

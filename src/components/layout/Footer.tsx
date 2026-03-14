@@ -21,7 +21,6 @@ export default function Footer() {
       { label: t("footer.corporate"), href: "/for-business" },
       { label: t("footer.academicProfessionals") || "For Academic & Medical Professionals", href: "/for-students" },
       { label: t("footer.longTerm") || "Long-term", href: "/long-term" },
-      { label: t("footer.properties"), href: "/properties" },
     ],
     support: [
       { label: t("footer.marketInsights") || "Market Insights", href: "/market-insights" },

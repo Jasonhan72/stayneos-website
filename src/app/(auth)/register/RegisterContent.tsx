@@ -11,7 +11,7 @@ export default function RegisterContent() {
   return (
     <div className="min-h-screen flex">
       <div className="hidden lg:flex lg:w-[55%] xl:w-1/2 relative overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center scale-105" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=2000&q=80")' }} />
+        <div className="absolute inset-0 bg-cover bg-center scale-105" style={{ backgroundImage: 'url("/images/cooper-55-e98a880d.jpg")' }} />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-primary/50" />
         <div className="relative z-10 flex flex-col justify-between h-full p-12 xl:p-16">
           <Link href="/" className="inline-block">

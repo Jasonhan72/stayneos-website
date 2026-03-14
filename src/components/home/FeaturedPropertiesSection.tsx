@@ -225,10 +225,12 @@ export function FeaturedPropertiesSection() {
                       <h3 className="text-lg font-semibold text-neutral-900 group-hover:text-primary transition-colors line-clamp-1">
                         {property.title}
                       </h3>
-                      <div className="flex items-center gap-1 shrink-0">
-                        <Star size={14} className="text-accent fill-accent" />
-                        <span className="text-sm font-medium">{property.rating}</span>
-                      </div>
+                      {property.reviewCount > 0 && (
+                        <div className="flex items-center gap-1 shrink-0">
+                          <Star size={14} className="text-accent fill-accent" />
+                          <span className="text-sm font-medium">{property.rating}</span>
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex items-center gap-1 text-neutral-500 mb-4">

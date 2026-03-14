@@ -329,7 +329,7 @@ export function BookingCard({ property, className }: BookingCardProps) {
             : property.price
           }
           minNights={property.minNights}
-          rating={property.rating}
+          rating={property.reviewCount ? property.rating : 0}
           currency="CAD"
         />
       )}

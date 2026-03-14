@@ -353,10 +353,12 @@ function DashboardContent() {
                               </span>
                             </div>
                             <div className="flex items-center justify-between mt-3">
-                              <div className="flex items-center gap-1">
-                                <Star size={16} className="text-amber-400 fill-amber-400" />
-                                <span className="font-medium">{property.rating}</span>
-                              </div>
+                              {property.reviewCount > 0 && (
+                                <div className="flex items-center gap-1">
+                                  <Star size={16} className="text-amber-400 fill-amber-400" />
+                                  <span className="font-medium">{property.rating}</span>
+                                </div>
+                              )}
                               <div className="text-right">
                                 <span className="font-bold text-gray-900">
                                   {"$"}{property.price.toLocaleString()}

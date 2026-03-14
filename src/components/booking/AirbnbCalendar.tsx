@@ -41,7 +41,7 @@ export function AirbnbCalendar({
   pricePerNight = 0,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   minNights,
-  rating = 4.9,
+  rating = 0,
   currency = 'CAD',
   className,
   showFooter = true,
@@ -73,6 +73,7 @@ export function AirbnbCalendar({
   }, [selectedStart, selectedEnd]);
 
   const totalPrice = nights * pricePerNight;
+  const hasRating = rating > 0;
 
   // Generate months data (12 months from current month + offset)
   const monthsData = useMemo(() => {
@@ -313,19 +314,23 @@ export function AirbnbCalendar({
                   <p className="text-lg font-semibold text-neutral-900">
                     ${totalPrice.toLocaleString()} {currency}
                   </p>
-                  <div className="flex items-center gap-2">
-                    <Star size={14} className="fill-black" />
-                    <span className="text-sm text-neutral-600">{rating}</span>
-                  </div>
+                  {hasRating && (
+                    <div className="flex items-center gap-2">
+                      <Star size={14} className="fill-black" />
+                      <span className="text-sm text-neutral-600">{rating}</span>
+                    </div>
+                  )}
                   <p className="text-sm text-neutral-500 underline">For {nights} nights</p>
                 </div>
               ) : (
                 <div>
                   <p className="text-neutral-900">Add dates for prices</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Star size={14} className="fill-black" />
-                    <span className="text-sm text-neutral-600">{rating}</span>
-                  </div>
+                  {hasRating && (
+                    <div className="flex items-center gap-2 mt-1">
+                      <Star size={14} className="fill-black" />
+                      <span className="text-sm text-neutral-600">{rating}</span>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -465,19 +470,23 @@ export function AirbnbCalendar({
                 <p className="text-lg font-semibold text-neutral-900">
                   ${totalPrice.toLocaleString()} {currency}
                 </p>
-                <div className="flex items-center gap-2">
-                  <Star size={14} className="fill-black" />
-                  <span className="text-sm text-neutral-600">{rating}</span>
-                </div>
+                {hasRating && (
+                  <div className="flex items-center gap-2">
+                    <Star size={14} className="fill-black" />
+                    <span className="text-sm text-neutral-600">{rating}</span>
+                  </div>
+                )}
                 <p className="text-sm text-neutral-500 underline">For {nights} nights</p>
               </div>
             ) : (
               <div>
                 <p className="text-neutral-900">Add dates for prices</p>
-                <div className="flex items-center gap-2 mt-1">
-                  <Star size={14} className="fill-black" />
-                  <span className="text-sm text-neutral-600">{rating}</span>
-                </div>
+                {hasRating && (
+                  <div className="flex items-center gap-2 mt-1">
+                    <Star size={14} className="fill-black" />
+                    <span className="text-sm text-neutral-600">{rating}</span>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -592,9 +601,14 @@ export function AirbnbCalendar({
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <Star size={14} className="fill-black" />
-                <span className="text-sm text-neutral-600">{rating}</span>
-                <span className="text-sm text-neutral-500">· Add dates for prices</span>
+                {hasRating && (
+                  <>
+                    <Star size={14} className="fill-black" />
+                    <span className="text-sm text-neutral-600">{rating}</span>
+                    <span className="text-sm text-neutral-500">·</span>
+                  </>
+                )}
+                <span className="text-sm text-neutral-500">Add dates for prices</span>
               </div>
             )}
           </div>

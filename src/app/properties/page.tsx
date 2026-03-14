@@ -332,7 +332,7 @@ export default function PropertiesPage() {
                       setCheckOut('');
                     }}
                     minNights={28}
-                    rating={4.9}
+                    rating={0}
                     currency="CAD"
                   />
                 )}
@@ -643,7 +643,7 @@ function PropertyGridCard({
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden">
           <Image
-            src={property.images[0] || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800'}
+            src={property.images[0] || '/images/cooper-55-c5e8357d.jpg'}
             alt={property.title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -725,7 +725,7 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
         {/* Image */}
         <div className="relative w-full md:w-72 h-48 md:h-auto md:min-h-[200px] flex-shrink-0 overflow-hidden">
           <Image
-            src={property.images[0] || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800'}
+            src={property.images[0] || '/images/cooper-55-c5e8357d.jpg'}
             alt={property.title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"

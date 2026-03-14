@@ -10,7 +10,7 @@ export const mockProperties: Property[] = [
     location: "55 Cooper St, Toronto, ON M5E 0G1",
     price: 12000,
     priceUnit: "month",
-    rating: 4.9,
+    rating: 0,
     reviewCount: 0,
     images: [
       "/images/cooper-55-c5e8357d.jpg",
@@ -39,7 +39,7 @@ export const mockProperties: Property[] = [
     location: "238 Simcoe St, Toronto, ON M5T 0A2",
     price: 6500,
     priceUnit: "month",
-    rating: 4.8,
+    rating: 0,
     reviewCount: 0,
     images: [
       "/images/simcoe-238-living.jpg",
@@ -67,7 +67,7 @@ export const mockProperties: Property[] = [
     location: "22 Wellesley St E, Unit 1607, Toronto, ON",
     price: 3500,
     priceUnit: "month",
-    rating: 4.8,
+    rating: 0,
     reviewCount: 0,
     images: [
       "/images/wellesley-1607-living.jpg",

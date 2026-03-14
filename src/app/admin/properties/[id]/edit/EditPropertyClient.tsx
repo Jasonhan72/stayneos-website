@@ -53,8 +53,8 @@ const mockPropertyData = {
   area: 85,
   amenities: ['wifi', 'ac', 'kitchen', 'washer', 'gym', 'parking'],
   images: [
-    'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800',
-    'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800',
+    '/images/cooper-55-c5e8357d.jpg',
+    '/images/cooper-55-e98a880d.jpg',
   ],
   hostId: 'host-1',
   minNights: 28,

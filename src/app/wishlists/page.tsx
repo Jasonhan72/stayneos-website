@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Button from '@/components/ui/Button';
 import { Container } from '@/components/ui';
 import { useI18n } from '@/lib/i18n';
+import { mockProperties } from '@/lib/data';
 import { 
   Heart, 
   MapPin, 
@@ -30,65 +31,23 @@ interface Property {
   image: string;
 }
 
-// Mock wishlist data
-const mockWishlist: Property[] = [
-  {
-    id: 'prop-1',
-    title: 'Luxury Downtown Condo with City View',
-    location: 'Downtown Toronto, ON',
-    price: 180,
-    currency: 'CAD',
-    priceUnit: 'night',
-    rating: 4.9,
-    reviewCount: 128,
-    bedrooms: 2,
-    bathrooms: 2,
-    image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800',
-  },
-  {
-    id: 'prop-2',
-    title: 'Waterfront Executive Suite',
-    location: 'Vancouver, BC',
-    price: 250,
-    currency: 'CAD',
-    priceUnit: 'night',
-    rating: 4.8,
-    reviewCount: 96,
-    bedrooms: 1,
-    bathrooms: 1,
-    image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800',
-  },
-  {
-    id: 'prop-3',
-    title: 'Modern Yorkville Apartment',
-    location: 'Montreal, QC',
-    price: 220,
-    currency: 'CAD',
-    priceUnit: 'night',
-    rating: 4.95,
-    reviewCount: 156,
-    bedrooms: 2,
-    bathrooms: 2,
-    image: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800',
-  },
-  {
-    id: 'prop-4',
-    title: 'Cozy Midtown Studio',
-    location: 'New York, NY',
-    price: 320,
-    currency: 'USD',
-    priceUnit: 'night',
-    rating: 4.7,
-    reviewCount: 84,
-    bedrooms: 1,
-    bathrooms: 1,
-    image: 'https://images.unsplash.com/photo-1484154218962-a1c002085d2f?w=800',
-  },
-];
-
 export default function WishlistsPage() {
   const { t } = useI18n();
-  const [wishlist, setWishlist] = useState<Property[]>(mockWishlist);
+  const [wishlist, setWishlist] = useState<Property[]>(
+    mockProperties.map((property) => ({
+      id: property.id,
+      title: property.title,
+      location: property.location,
+      price: property.price,
+      currency: 'CAD',
+      priceUnit: property.priceUnit,
+      rating: property.rating || 0,
+      reviewCount: property.reviewCount,
+      bedrooms: property.bedrooms,
+      bathrooms: property.bathrooms,
+      image: property.images[0] || '/images/cooper-55-c5e8357d.jpg',
+    }))
+  );
   const [removingId, setRemovingId] = useState<string | null>(null);
 
   const handleRemove = (propertyId: string) => {
@@ -197,11 +156,13 @@ export default function WishlistsPage() {
                   </div>
 
                   {/* Rating */}
-                  <div className="flex items-center gap-1 mt-2">
-                    <Star size={16} className="text-amber-400 fill-amber-400" />
-                    <span className="font-medium text-neutral-900">{property.rating}</span>
-                    <span className="text-sm text-neutral-500">({t('wishlists.reviews', { count: property.reviewCount })})</span>
-                  </div>
+                  {property.reviewCount > 0 && (
+                    <div className="flex items-center gap-1 mt-2">
+                      <Star size={16} className="text-amber-400 fill-amber-400" />
+                      <span className="font-medium text-neutral-900">{property.rating}</span>
+                      <span className="text-sm text-neutral-500">({t('wishlists.reviews', { count: property.reviewCount })})</span>
+                    </div>
+                  )}
 
                   {/* Amenities */}
                   <div className="flex items-center gap-3 mt-3 text-sm text-neutral-600">

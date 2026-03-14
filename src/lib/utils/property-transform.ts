@@ -26,9 +26,19 @@ export function toPropertyCardData(property: Property | PropertyListItem): Prope
     ? property.address 
     : `${property.city}, ${property.neighborhood}`;
 
-  // 处理评分和评论数
-  const rating = 4.8; // 默认评分，可以从 API 获取
-  const reviewCount = property._count?.reviews || 0;
+  // 没有真实评价数据时不注入默认评分
+  let reviewCount = 0;
+  if (property._count && typeof property._count === 'object' && 'reviews' in property._count) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const rc = (property._count as any).reviews;
+    if (typeof rc === 'number') reviewCount = rc;
+  }
+  if (!reviewCount && 'reviewCount' in property && typeof property.reviewCount === 'number') {
+    reviewCount = property.reviewCount;
+  }
+  const rating = reviewCount > 0 && 'rating' in property && typeof property.rating === 'number'
+    ? property.rating
+    : 0;
 
   // 处理 amenities - API 返回的是对象数组
   const amenities = 'amenities' in property && property.amenities

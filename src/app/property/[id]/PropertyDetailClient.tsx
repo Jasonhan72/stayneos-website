@@ -733,10 +733,12 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             {!checkIn || !checkOut ? (
               <div>
                 <p className="text-neutral-900">{t('property.addDates')}</p>
-                <div className="flex items-center gap-1">
-                  <Star size={14} className="fill-black" />
-                  <span className="text-sm">{propertyCardData.rating}</span>
-                </div>
+                {propertyCardData.reviewCount > 0 && (
+                  <div className="flex items-center gap-1">
+                    <Star size={14} className="fill-black" />
+                    <span className="text-sm">{propertyCardData.rating}</span>
+                  </div>
+                )}
               </div>
             ) : bookingPrice ? (
               <div>
@@ -746,10 +748,12 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             ) : (
               <div>
                 <p className="text-neutral-900">{t('property.addDates')}</p>
-                <div className="flex items-center gap-1">
-                  <Star size={14} className="fill-black" />
-                  <span className="text-sm">{propertyCardData.rating}</span>
-                </div>
+                {propertyCardData.reviewCount > 0 && (
+                  <div className="flex items-center gap-1">
+                    <Star size={14} className="fill-black" />
+                    <span className="text-sm">{propertyCardData.rating}</span>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -777,7 +781,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           }}
           pricePerNight={propertyCardData.price}
           minNights={propertyCardData.minNights || 1}
-          rating={propertyCardData.rating}
+          rating={propertyCardData.reviewCount > 0 ? propertyCardData.rating : 0}
           currency="CAD"
         />
       )}

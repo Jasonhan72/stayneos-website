@@ -61,8 +61,7 @@ export default function ForgotPasswordForm() {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage:
-              'url("https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=80")',
+            backgroundImage: 'url("/images/cooper-55-e98a880d.jpg")',
           }}
         />
         <div className="absolute inset-0 bg-[#003B5C]/60" />
