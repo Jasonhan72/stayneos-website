@@ -354,8 +354,8 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
 
       <div className="mb-4 rounded-xl border border-neutral-200 p-3 bg-neutral-50">
         <div className="flex items-center justify-between text-sm"><span className="text-neutral-600">Monthly</span><span className="font-semibold text-neutral-900">${tierPrices.monthly.toLocaleString()}/Mo</span></div>
-        <div className="flex items-center justify-between text-sm mt-1"><span className="text-neutral-600">Quarterly (3 mo)</span><span className="font-medium text-neutral-900">${tierPrices.quarterly.toLocaleString()}</span></div>
-        <div className="flex items-center justify-between text-sm mt-1"><span className="text-neutral-600">Annual (12 mo)</span><span className="font-medium text-neutral-900">${tierPrices.annual.toLocaleString()}</span></div>
+        <div className="flex items-center justify-between text-sm mt-1"><span className="text-neutral-600">Quarterly (3 mo)</span><span className="font-medium text-neutral-900">${tierPrices.quarterly.toLocaleString()}/Mo</span></div>
+        <div className="flex items-center justify-between text-sm mt-1"><span className="text-neutral-600">Annual (12 mo)</span><span className="font-medium text-neutral-900">${tierPrices.annual.toLocaleString()}/Mo</span></div>
       </div>
 
       {/* Date/Guest Selector Box */}
