@@ -1,32 +1,37 @@
-import { Section } from '@/components/ui';
+'use client';
 
-const steps = [
-  {
-    number: '01',
-    title: 'Explore homes',
-    description: 'Review furnished apartments, compare locations, and shortlist the right monthly stay.',
-  },
-  {
-    number: '02',
-    title: 'Confirm your dates',
-    description: 'Choose the stay window that matches your project, move, or temporary housing timeline.',
-  },
-  {
-    number: '03',
-    title: 'Move in smoothly',
-    description: 'Arrive to a fully set up home with utilities, furnishings, and support already in place.',
-  },
-];
+import { Section } from '@/components/ui';
+import { useI18n } from '@/lib/i18n';
 
 export function HowItWorksSection() {
+  const { t } = useI18n();
+
+  const steps = [
+    {
+      number: '01',
+      title: t('howItWorks.step1.title', 'Explore homes'),
+      description: t('howItWorks.step1.description', 'Review furnished apartments, compare locations, and shortlist the right monthly stay.'),
+    },
+    {
+      number: '02',
+      title: t('howItWorks.step2.title', 'Confirm your dates'),
+      description: t('howItWorks.step2.description', 'Choose the stay window that matches your project, move, or temporary housing timeline.'),
+    },
+    {
+      number: '03',
+      title: t('howItWorks.step3.title', 'Move in smoothly'),
+      description: t('howItWorks.step3.description', 'Arrive to a fully set up home with utilities, furnishings, and support already in place.'),
+    },
+  ];
+
   return (
     <Section bg="white">
       <div className="text-center mb-16">
         <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
-          How NEOS works
+          {t('howItWorks.title', 'How NEOS works')}
         </h2>
         <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
-          A simple path from discovery to check-in, designed for premium monthly furnished stays.
+          {t('howItWorks.subtitle', 'A simple path from discovery to check-in, designed for premium monthly furnished stays.')}
         </p>
       </div>
 

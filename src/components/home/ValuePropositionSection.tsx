@@ -1,38 +1,43 @@
+'use client';
+
 import Image from 'next/image';
 import { Section } from '@/components/ui';
-
-const valueProps = [
-  {
-    image: '/images/cooper-55-c5e8357d.jpg',
-    title: 'Curated homes',
-    description: 'Thoughtfully furnished apartments with premium finishes, natural light, and design-led interiors.',
-  },
-  {
-    image: '/images/cooper-55-c38824ec.jpg',
-    title: 'Flexible terms',
-    description: 'Stay 30 days or longer with lease structures built for relocation, projects, and extended travel.',
-  },
-  {
-    image: '/images/cooper-55-a12c07ee.jpg',
-    title: 'Concierge-level service',
-    description: 'Utilities, housekeeping, and guest care are handled so every stay feels seamless from day one.',
-  },
-  {
-    image: '/images/cooper-55-e62f3e96.jpg',
-    title: 'Responsive support',
-    description: 'Our team stays available before arrival, during the stay, and whenever plans need to change.',
-  },
-];
+import { useI18n } from '@/lib/i18n';
 
 export function ValuePropositionSection() {
+  const { t } = useI18n();
+
+  const valueProps = [
+    {
+      image: '/images/cooper-55-c5e8357d.jpg',
+      title: t('valueProposition.curated.title', 'Curated homes'),
+      description: t('valueProposition.curated.description', 'Thoughtfully furnished apartments with premium finishes, natural light, and design-led interiors.'),
+    },
+    {
+      image: '/images/cooper-55-c38824ec.jpg',
+      title: t('valueProposition.flexible.title', 'Flexible terms'),
+      description: t('valueProposition.flexible.description', 'Stay 30 days or longer with lease structures built for relocation, projects, and extended travel.'),
+    },
+    {
+      image: '/images/cooper-55-a12c07ee.jpg',
+      title: t('valueProposition.concierge.title', 'Concierge-level service'),
+      description: t('valueProposition.concierge.description', 'Utilities, housekeeping, and guest care are handled so every stay feels seamless from day one.'),
+    },
+    {
+      image: '/images/cooper-55-e62f3e96.jpg',
+      title: t('valueProposition.support.title', 'Responsive support'),
+      description: t('valueProposition.support.description', 'Our team stays available before arrival, during the stay, and whenever plans need to change.'),
+    },
+  ];
+
   return (
     <Section bg="neutral">
       <div className="text-center mb-16">
         <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
-          Why guests choose NEOS
+          {t('valueProposition.title', 'Why guests choose NEOS')}
         </h2>
         <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
-          Premium Toronto residences with the operational reliability required for extended stays.
+          {t('valueProposition.subtitle', 'Premium Toronto residences with the operational reliability required for extended stays.')}
         </p>
       </div>
 

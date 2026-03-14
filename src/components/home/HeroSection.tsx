@@ -1,20 +1,24 @@
+'use client';
+
 import Image from 'next/image';
 import { Container } from '@/components/ui';
 import { HeroSearchBox } from './HeroSearchBox';
-
-const heroCopy = {
-  title: 'Premium Furnished Apartments',
-  highlight: 'In Downtown Toronto',
-  subtitle:
-    'Move-in ready homes for monthly stays, relocation, corporate housing, and extended visits.',
-  stats: [
-    { value: '2+', label: 'Luxury residences' },
-    { value: '100%', label: 'Fully managed stays' },
-    { value: '24/7', label: 'Guest support' },
-  ],
-};
+import { useI18n } from '@/lib/i18n';
 
 export function HeroSection() {
+  const { t } = useI18n();
+
+  const heroCopy = {
+    title: t('hero.title', 'Your Home Awaits'),
+    highlight: t('hero.highlight', 'Arrive today. Feel at home tonight.'),
+    subtitle: t('hero.subtitle', 'Premium furnished apartments in downtown Toronto. 30 days to 12 months. Move-in ready.'),
+    stats: [
+      { value: '2+', label: t('hero.stats.residences', 'Luxury residences') },
+      { value: '100%', label: t('hero.stats.managed', 'Fully managed stays') },
+      { value: '24/7', label: t('hero.stats.support', 'Guest support') },
+    ],
+  };
+
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center">
       <div className="absolute inset-0">

@@ -727,7 +727,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               </div>
             ) : bookingPrice ? (
               <div>
-                <p className="text-lg font-semibold">${bookingPrice.total.toLocaleString()} CAD</p>
+                <p className="text-lg font-semibold">${bookingPrice.total.toLocaleString()}</p>
                 <p className="text-sm text-neutral-600">{bookingPrice.nights} {t('common.nights')}</p>
               </div>
             ) : (

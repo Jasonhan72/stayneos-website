@@ -1,7 +1,10 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, MapPin, Star } from 'lucide-react';
 import { Card, Badge, Section } from '@/components/ui';
+import { useI18n } from '@/lib/i18n';
 
 interface FeaturedProperty {
   id: string;
@@ -72,19 +75,20 @@ const featuredProperties: FeaturedProperty[] = [
 ];
 
 function formatPropertyPrice(property: FeaturedProperty) {
-  return `From $${property.price.toLocaleString()} CAD/month`;
+  return `From $${property.price.toLocaleString()}/Mo`;
 }
 
 export function FeaturedPropertiesSection() {
+  const { t } = useI18n();
   return (
     <Section bg="neutral">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-8 md:mb-12 gap-3">
         <div>
           <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-3 md:mb-4">
-            Featured Toronto residences
+            {t('properties.featured', 'Featured Toronto residences')}
           </h2>
           <p className="text-base md:text-lg text-neutral-600 max-w-xl">
-            A server-rendered selection of premium furnished apartments available for monthly stays.
+            {t('properties.subtitle', 'A curated selection of premium furnished apartments available for monthly stays.')}
           </p>
         </div>
 
@@ -92,14 +96,14 @@ export function FeaturedPropertiesSection() {
           href="/properties"
           className="inline-flex items-center text-primary font-medium hover:text-primary-700 transition-colors"
         >
-          View all properties
+          {t('properties.viewAll', 'View all properties')}
           <ArrowRight size={18} className="ml-1" />
         </Link>
       </div>
 
       {featuredProperties.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-xl border border-neutral-200">
-          <p className="text-neutral-500">No featured properties are available right now.</p>
+          <p className="text-neutral-500">{t('properties.empty', 'No featured properties are available right now.')}</p>
         </div>
       ) : (
         <>
@@ -119,7 +123,7 @@ export function FeaturedPropertiesSection() {
                         />
                         {property.featured && (
                           <div className="absolute top-4 left-4 flex gap-2">
-                            <Badge variant="primary">Featured</Badge>
+                            <Badge variant="primary">{t('properties.featured', 'Featured')}</Badge>
                           </div>
                         )}
                       </div>
@@ -141,16 +145,18 @@ export function FeaturedPropertiesSection() {
                         </div>
 
                         <div className="flex items-center gap-2 text-xs text-neutral-500 mb-3">
-                          <span>{property.bedrooms} beds</span>
+                          <span>{property.bedrooms} {t('property.bedroomsShort', 'beds')}</span>
                           <span>·</span>
-                          <span>{property.area.toLocaleString()} sqft</span>
+                          <span>{property.area.toLocaleString()} {t('property.sqft', 'sqft')}</span>
                           <span>·</span>
-                          <span>Up to {property.maxGuests}</span>
+                          <span>{t('property.max', 'Up to')} {property.maxGuests}</span>
                         </div>
 
                         <div className="flex items-baseline justify-between pt-3 border-t border-neutral-200">
                           <span className="text-lg font-bold text-neutral-900">{formatPropertyPrice(property)}</span>
-                          <span className="text-xs text-neutral-400">{property.reviewCount} reviews</span>
+                          {property.reviewCount > 0 && (
+                            <span className="text-xs text-neutral-400">{property.reviewCount} {t('property.reviews', 'reviews')}</span>
+                          )}
                         </div>
                       </div>
                     </Link>
@@ -175,7 +181,7 @@ export function FeaturedPropertiesSection() {
 
                     {property.featured && (
                       <div className="absolute top-4 left-4 flex gap-2">
-                        <Badge variant="primary">Featured</Badge>
+                        <Badge variant="primary">{t('properties.featured', 'Featured')}</Badge>
                       </div>
                     )}
 
@@ -201,18 +207,20 @@ export function FeaturedPropertiesSection() {
                     </div>
 
                     <div className="flex items-center gap-3 text-sm text-neutral-500 mb-4">
-                      <span>{property.bedrooms} beds</span>
+                      <span>{property.bedrooms} {t('property.bedroomsShort', 'beds')}</span>
                       <span>·</span>
-                      <span>{property.area.toLocaleString()} sqft</span>
+                      <span>{property.area.toLocaleString()} {t('property.sqft', 'sqft')}</span>
                       <span>·</span>
-                      <span>Up to {property.maxGuests} guests</span>
+                      <span>{t('property.max', 'Up to')} {property.maxGuests} {t('property.guests', 'guests')}</span>
                     </div>
 
                     <div className="flex items-baseline justify-between pt-4 border-t border-neutral-200">
                       <div className="flex items-baseline gap-1">
                         <span className="text-2xl font-bold text-neutral-900">{formatPropertyPrice(property)}</span>
                       </div>
-                      <span className="text-sm text-neutral-400">{property.reviewCount} reviews</span>
+                      {property.reviewCount > 0 && (
+                        <span className="text-sm text-neutral-400">{property.reviewCount} {t('property.reviews', 'reviews')}</span>
+                      )}
                     </div>
                   </div>
                 </Link>

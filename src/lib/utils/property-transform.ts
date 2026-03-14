@@ -139,9 +139,9 @@ export function toMonthlyListingPrice(price: number | string, priceUnit?: string
   return Math.max(0, Math.floor((numericPrice * 30 * 0.8) / 100) * 100);
 }
 
-export function formatMonthlyListingPrice(price: number | string, priceUnit?: string, currency = 'CAD'): string {
+export function formatMonthlyListingPrice(price: number | string, priceUnit?: string): string {
   const monthlyPrice = toMonthlyListingPrice(price, priceUnit);
-  return `From $${monthlyPrice.toLocaleString()}/${currency === 'CAD' ? 'mo' : 'mo'}`;
+  return `From $${monthlyPrice.toLocaleString()}/Mo`;
 }
 
 /**

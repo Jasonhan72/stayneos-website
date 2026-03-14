@@ -78,7 +78,12 @@
     "subtitle": "Premium furnished apartments in downtown Toronto. 30 days to 12 months. Move-in ready.",
     "cta": "List Your Property",
     "ctaQuote": "Request a Quote",
-    "ctaBrowse": "Browse Properties"
+    "ctaBrowse": "Browse Properties",
+    "stats": {
+      "residences": "Luxury residences",
+      "managed": "Fully managed stays",
+      "support": "Guest support"
+    }
   },
   "search": {
     "location": "Location",
@@ -237,7 +242,19 @@
   },
   "howItWorks": {
     "title": "Three Steps to Home",
-    "subtitle": "Pick a place. Book it. Move in. That's it."
+    "subtitle": "Pick a place. Book it. Move in. That's it.",
+    "step1": {
+      "title": "Explore homes",
+      "description": "Review furnished apartments, compare locations, and shortlist the right monthly stay."
+    },
+    "step2": {
+      "title": "Confirm your dates",
+      "description": "Choose the stay window that matches your project, move, or temporary housing timeline."
+    },
+    "step3": {
+      "title": "Move in smoothly",
+      "description": "Arrive to a fully set up home with utilities, furnishings, and support already in place."
+    }
   },
   "steps": {
     "search": {
@@ -3391,6 +3408,60 @@
       "title": "I manage relocations",
       "description": "For relocation companies, corporate HR teams, and insurance housing coordinators.",
       "cta": "Explore business solutions"
+    }
+  },
+  "dualPath": {
+    "browse": {
+      "title": "Browse premium furnished apartments",
+      "description": "Explore move-in ready residences designed for executives, families, and longer stays in Toronto.",
+      "cta": "View available homes"
+    },
+    "business": {
+      "title": "Plan relocation or business housing",
+      "description": "Get tailored support for project teams, temporary assignments, and managed corporate stays.",
+      "cta": "See business solutions"
+    }
+  },
+  "valueProposition": {
+    "title": "Why guests choose NEOS",
+    "subtitle": "Premium Toronto residences with the operational reliability required for extended stays.",
+    "curated": {
+      "title": "Curated homes",
+      "description": "Thoughtfully furnished apartments with premium finishes, natural light, and design-led interiors."
+    },
+    "flexible": {
+      "title": "Flexible terms",
+      "description": "Stay 30 days or longer with lease structures built for relocation, projects, and extended travel."
+    },
+    "concierge": {
+      "title": "Concierge-level service",
+      "description": "Utilities, housekeeping, and guest care are handled so every stay feels seamless from day one."
+    },
+    "support": {
+      "title": "Responsive support",
+      "description": "Our team stays available before arrival, during the stay, and whenever plans need to change."
+    }
+  },
+  "marketSegments": {
+    "title": "Built for different stay scenarios",
+    "subtitle": "NEOS supports relocation, business housing, and longer monthly stays with the same premium standard.",
+    "business": {
+      "title": "Business travel",
+      "subtitle": "Corporate-ready",
+      "description": "Furnished residences for executives, project teams, and consultants who need a dependable downtown base.",
+      "cta": "Explore business stays"
+    },
+    "longTerm": {
+      "title": "Long-term stays",
+      "subtitle": "30+ day living",
+      "description": "Ideal for renovation gaps, temporary housing, and guests who want home-level comfort for longer periods.",
+      "cta": "View long-term options"
+    },
+    "relocation": {
+      "title": "Relocation support",
+      "subtitle": "Move with certainty",
+      "description": "A smoother landing for employees, families, and international arrivals transitioning into Toronto.",
+      "cta": "See relocation-ready homes"
     }
   }
 }

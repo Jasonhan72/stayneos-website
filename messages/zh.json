@@ -78,7 +78,12 @@
     "subtitle": "多伦多市中心高端精装公寓。30天到12个月。拎包入住。",
     "cta": "发布房源",
     "ctaQuote": "获取报价",
-    "ctaBrowse": "浏览房源"
+    "ctaBrowse": "浏览房源",
+    "stats": {
+      "residences": "精选豪华公寓",
+      "managed": "全托管式服务",
+      "support": "全天候支持"
+    }
   },
   "search": {
     "location": "位置",
@@ -236,8 +241,20 @@
     "browse": "浏览公寓"
   },
   "howItWorks": {
-    "title": "三步回家",
-    "subtitle": "选房、下单、入住。就这么简单。"
+    "title": "NEOS 如何运作",
+    "subtitle": "从发现到入住的简单流程，专为高端月租精装公寓设计。",
+    "step1": {
+      "title": "探索房源",
+      "description": "浏览精装公寓，比较地段，筛选适合的月租房源。"
+    },
+    "step2": {
+      "title": "确认日期",
+      "description": "选择符合您项目、搬迁或临时住房需求的入住时间。"
+    },
+    "step3": {
+      "title": "轻松入住",
+      "description": "抵达后即可入住配备齐全的公寓，水电、家具、服务均已就绪。"
+    }
   },
   "steps": {
     "search": {
@@ -3399,6 +3416,60 @@
     "forecasts": {
       "subtitle": "Expert predictions and analysis for 多伦多's executive housing market outlook.",
       "title": "市场 预测s"
+    }
+  },
+  "dualPath": {
+    "browse": {
+      "title": "浏览高端精装公寓",
+      "description": "探索专为商务人士、家庭和长期住客打造的拎包入住公寓。",
+      "cta": "查看可用房源"
+    },
+    "business": {
+      "title": "规划搬迁或商务住宿",
+      "description": "为项目团队、临时派遣和企业住宿提供定制化支持。",
+      "cta": "查看商务方案"
+    }
+  },
+  "valueProposition": {
+    "title": "为何选择 NEOS",
+    "subtitle": "多伦多高端公寓，为长期住宿提供可靠的运营保障。",
+    "curated": {
+      "title": "精选房源",
+      "description": "精心装修的公寓，高端装饰、充足采光、设计感满满的室内空间。"
+    },
+    "flexible": {
+      "title": "灵活租期",
+      "description": "30天起租，租约结构适配搬迁、项目和长期出差需求。"
+    },
+    "concierge": {
+      "title": "管家式服务",
+      "description": "水电、保洁、住客关怀一站式服务，入住第一天就感受到无缝体验。"
+    },
+    "support": {
+      "title": "随时响应",
+      "description": "从入住前到住宿期间，我们的团队随时待命，为您的计划变更提供支持。"
+    }
+  },
+  "marketSegments": {
+    "title": "满足多种住宿场景",
+    "subtitle": "NEOS 为搬迁、商务住宿和长期月租提供同样的高端标准。",
+    "business": {
+      "title": "商务出行",
+      "subtitle": "企业级标准",
+      "description": "为高管、项目团队和顾问提供可靠的市中心精装公寓。",
+      "cta": "探索商务住宿"
+    },
+    "longTerm": {
+      "title": "长期住宿",
+      "subtitle": "30天以上",
+      "description": "适合装修过渡、临时住房和追求家一般舒适体验的长住客人。",
+      "cta": "查看长租选项"
+    },
+    "relocation": {
+      "title": "搬迁支持",
+      "subtitle": "安心搬迁",
+      "description": "为员工、家庭和国际新移民提供更顺畅的多伦多落脚方案。",
+      "cta": "查看搬迁房源"
     }
   }
 }

@@ -200,9 +200,9 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             <div className="flex items-baseline justify-between pt-4 mt-auto border-t border-neutral-100">
               <div className="flex items-baseline gap-1">
                 <span className="text-xl font-bold text-neutral-900">
-                  From $12,000 {property.currency || 'CAD'}
+                  From ${getPropertyPrice(property).toLocaleString()}
                 </span>
-                <span className="text-sm text-neutral-500">/month</span>
+                <span className="text-sm text-neutral-500">/Mo</span>
               </div>
               {property.reviewCount > 0 && (
                 <span 

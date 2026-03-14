@@ -1,25 +1,28 @@
+'use client';
+
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Card, Container, Section } from '@/components/ui';
-
-const paths = [
-  {
-    title: 'Browse premium furnished apartments',
-    description:
-      'Explore move-in ready residences designed for executives, families, and longer stays in Toronto.',
-    href: '/properties',
-    cta: 'View available homes',
-  },
-  {
-    title: 'Plan relocation or business housing',
-    description:
-      'Get tailored support for project teams, temporary assignments, and managed corporate stays.',
-    href: '/for-business',
-    cta: 'See business solutions',
-  },
-];
+import { useI18n } from '@/lib/i18n';
 
 export function DualPathCTASection() {
+  const { t } = useI18n();
+
+  const paths = [
+    {
+      title: t('dualPath.browse.title', 'Browse premium furnished apartments'),
+      description: t('dualPath.browse.description', 'Explore move-in ready residences designed for executives, families, and longer stays in Toronto.'),
+      href: '/properties',
+      cta: t('dualPath.browse.cta', 'View available homes'),
+    },
+    {
+      title: t('dualPath.business.title', 'Plan relocation or business housing'),
+      description: t('dualPath.business.description', 'Get tailored support for project teams, temporary assignments, and managed corporate stays.'),
+      href: '/for-business',
+      cta: t('dualPath.business.cta', 'See business solutions'),
+    },
+  ];
+
   return (
     <Section bg="white" className="py-12">
       <Container>

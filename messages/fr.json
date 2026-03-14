@@ -78,7 +78,12 @@
     "subtitle": "Appartements meublés premium au centre-ville de Toronto. 30 jours à 12 mois. Prêts à emménager.",
     "cta": "Listez Votre Propriété",
     "ctaQuote": "Demander un Devis",
-    "ctaBrowse": "Parcourir les Propriétés"
+    "ctaBrowse": "Parcourir les Propriétés",
+    "stats": {
+      "residences": "Résidences de luxe",
+      "managed": "Séjours entièrement gérés",
+      "support": "Assistance 24/7"
+    }
   },
   "search": {
     "location": "Emplacement",
@@ -236,8 +241,20 @@
     "browse": "Parcourir les appartements"
   },
   "howItWorks": {
-    "title": "Trois étapes vers chez vous",
-    "subtitle": "Choisissez. Réservez. Emménagez. C'est tout."
+    "title": "Comment fonctionne NEOS",
+    "subtitle": "Un parcours simple de la découverte à l'emménagement, conçu pour les séjours mensuels premium.",
+    "step1": {
+      "title": "Explorez les logements",
+      "description": "Parcourez les appartements meublés, comparez les emplacements et sélectionnez le séjour mensuel idéal."
+    },
+    "step2": {
+      "title": "Confirmez vos dates",
+      "description": "Choisissez la période de séjour correspondant à votre projet, déménagement ou besoin de logement temporaire."
+    },
+    "step3": {
+      "title": "Emménagez en douceur",
+      "description": "Arrivez dans un logement entièrement équipé avec services publics, mobilier et assistance déjà en place."
+    }
   },
   "steps": {
     "search": {
@@ -3399,6 +3416,60 @@
     "forecasts": {
       "subtitle": "Expert predictions and analysis for Toronto's executive housing market outlook.",
       "title": "Market Forecasts"
+    }
+  },
+  "dualPath": {
+    "browse": {
+      "title": "Parcourir les appartements meublés premium",
+      "description": "Explorez des résidences prêtes à emménager conçues pour les cadres, les familles et les séjours prolongés à Toronto.",
+      "cta": "Voir les logements disponibles"
+    },
+    "business": {
+      "title": "Planifier une relocalisation ou un logement d'entreprise",
+      "description": "Bénéficiez d'un accompagnement sur mesure pour les équipes projet, les missions temporaires et les séjours corporate gérés.",
+      "cta": "Voir les solutions entreprise"
+    }
+  },
+  "valueProposition": {
+    "title": "Pourquoi choisir NEOS",
+    "subtitle": "Des résidences premium à Toronto avec la fiabilité opérationnelle requise pour les séjours prolongés.",
+    "curated": {
+      "title": "Logements sélectionnés",
+      "description": "Appartements soigneusement meublés avec des finitions premium, lumière naturelle et intérieurs design."
+    },
+    "flexible": {
+      "title": "Conditions flexibles",
+      "description": "Séjours de 30 jours ou plus avec des baux adaptés à la relocalisation, aux projets et aux voyages prolongés."
+    },
+    "concierge": {
+      "title": "Service de conciergerie",
+      "description": "Services publics, ménage et soins aux résidents sont pris en charge pour un séjour fluide dès le premier jour."
+    },
+    "support": {
+      "title": "Support réactif",
+      "description": "Notre équipe reste disponible avant l'arrivée, pendant le séjour et à chaque changement de plan."
+    }
+  },
+  "marketSegments": {
+    "title": "Conçu pour différents scénarios de séjour",
+    "subtitle": "NEOS soutient la relocalisation, le logement d'entreprise et les séjours mensuels prolongés avec le même standard premium.",
+    "business": {
+      "title": "Voyages d'affaires",
+      "subtitle": "Prêt pour l'entreprise",
+      "description": "Résidences meublées pour cadres, équipes projet et consultants qui ont besoin d'une base fiable au centre-ville.",
+      "cta": "Explorer les séjours d'affaires"
+    },
+    "longTerm": {
+      "title": "Séjours longue durée",
+      "subtitle": "30+ jours",
+      "description": "Idéal pour les périodes de rénovation, le logement temporaire et les résidents qui souhaitent un confort de type résidentiel.",
+      "cta": "Voir les options longue durée"
+    },
+    "relocation": {
+      "title": "Aide à la relocalisation",
+      "subtitle": "Déménagez sereinement",
+      "description": "Un atterrissage en douceur pour les employés, les familles et les nouveaux arrivants internationaux à Toronto.",
+      "cta": "Voir les logements relocalisation"
     }
   }
 }
