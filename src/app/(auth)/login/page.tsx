@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 export default function LoginPage({
   searchParams,
 }: {
-  searchParams?: { callbackUrl?: string; callback?: string };
+  searchParams?: { callbackUrl?: string; callback?: string; redirect?: string };
 }) {
-  const callbackUrl = searchParams?.callbackUrl || searchParams?.callback || '/dashboard';
+  const callbackUrl = searchParams?.redirect || searchParams?.callbackUrl || searchParams?.callback || '/dashboard';
 
   return (
     <div className="min-h-screen flex">

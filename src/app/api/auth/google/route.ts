@@ -1,11 +1,22 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { getDb } from "@/lib/d1";
 
-export async function GET() {
+const DEFAULT_REDIRECT = "/dashboard";
+
+function sanitizeRedirect(redirect: string | null) {
+  if (!redirect || !redirect.startsWith("/") || redirect.startsWith("//")) {
+    return DEFAULT_REDIRECT;
+  }
+  return redirect;
+}
+
+export async function GET(request: NextRequest) {
   try {
     const clientId = process.env.GOOGLE_CLIENT_ID;
     const baseUrl = process.env.NEXTAUTH_URL || "https://stayneos.com";
+    const redirect = sanitizeRedirect(new URL(request.url).searchParams.get("redirect"));
     
     if (!clientId) {
       return NextResponse.json(
@@ -15,13 +26,14 @@ export async function GET() {
     }
 
     // Generate state and store in D1 (cookies unreliable in Cloudflare cross-origin redirects)
-    const state = crypto.randomUUID();
+    const nonce = crypto.randomUUID();
+    const state = JSON.stringify({ nonce, redirect });
     const expiresAt = new Date(Date.now() + 600000).toISOString(); // 10 min
 
     const db = getDb();
     await db
       .prepare("INSERT INTO OAuthState (id, state, expiresAt) VALUES (?, ?, ?)")
-      .bind(crypto.randomUUID(), state, expiresAt)
+      .bind(crypto.randomUUID(), nonce, expiresAt)
       .run();
     
     // Build Google OAuth URL

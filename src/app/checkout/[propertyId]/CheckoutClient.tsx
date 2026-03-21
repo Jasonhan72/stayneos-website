@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -10,7 +10,8 @@ import {
   X,
   Plus,
   Minus,
-  Shield
+  Shield,
+  User
 } from 'lucide-react';
 import { Container } from '@/components/ui';
 import { AirbnbCalendar } from '@/components/booking';
@@ -38,10 +39,25 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
   const [children, setChildren] = useState(parseInt(searchParams.get('children') || '0'));
   const [infants, setInfants] = useState(parseInt(searchParams.get('infants') || '0'));
   const [pets, setPets] = useState(parseInt(searchParams.get('pets') || '0'));
+  const [guestName, setGuestName] = useState(searchParams.get('name') || '');
+  const [guestEmail, setGuestEmail] = useState(searchParams.get('email') || '');
+  const [guestPhone, setGuestPhone] = useState(searchParams.get('phone') || '');
+  const [showGuestForm, setShowGuestForm] = useState(!isAuthenticated);
   
   // Modals state
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showGuestPicker, setShowGuestPicker] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      setGuestName(user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || '');
+      setGuestEmail(user.email || '');
+      setGuestPhone(user.phone || '');
+      setShowGuestForm(false);
+      return;
+    }
+    setShowGuestForm(true);
+  }, [isAuthenticated, user]);
 
   if (isPropertyLoading) {
     return (
@@ -117,24 +133,6 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
     return formatDate(deadline.toISOString().split('T')[0]);
   };
 
-  // Get guest info for booking
-  const getGuestInfo = () => {
-    if (isAuthenticated && user) {
-      return {
-        guestName: user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Guest',
-        guestEmail: user.email || '',
-        guestPhone: user.phone || '',
-        userId: user.id,
-      };
-    }
-    return {
-      guestName: searchParams.get('name') || 'Guest',
-      guestEmail: searchParams.get('email') || '',
-      guestPhone: searchParams.get('phone') || '',
-      userId: undefined,
-    };
-  };
-
   // Handle proceed to payment
   const handleProceedToPayment = () => {
     if (!checkIn || !checkOut) {
@@ -142,10 +140,9 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
       return;
     }
 
-    const guestInfo = getGuestInfo();
-    
-    if (!guestInfo.guestName || !guestInfo.guestEmail) {
-      router.push(`/login?redirect=/checkout/${propertyId}`);
+    // Require name and email - from logged-in user or guest form
+    if (!guestName.trim() || !guestEmail.trim()) {
+      setShowGuestForm(true);
       return;
     }
 
@@ -154,13 +151,14 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
     params.set('checkIn', checkIn);
     params.set('checkOut', checkOut);
     params.set('amount', finalPrice.toString());
-    params.set('guestName', guestInfo.guestName);
-    params.set('guestEmail', guestInfo.guestEmail);
+    params.set('guestName', guestName.trim());
+    params.set('guestEmail', guestEmail.trim());
     params.set('adults', adults.toString());
     params.set('children', children.toString());
     params.set('infants', infants.toString());
     params.set('pets', pets.toString());
-    if (guestInfo.guestPhone) params.set('guestPhone', guestInfo.guestPhone);
+    if (guestPhone.trim()) params.set('guestPhone', guestPhone.trim());
+    if (isAuthenticated && user) params.set('userId', user.id);
     
     router.push(`/payment/${propertyId}?${params.toString()}`);
   };
@@ -267,6 +265,73 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
                 {t('common.change') || 'Change'}
               </button>
             </div>
+          </div>
+
+          {/* Contact Information */}
+          <div className="py-4 border-b border-neutral-200 mb-6">
+            <div className="flex items-center gap-2 mb-4">
+              <User className="w-5 h-5" />
+              <h3 className="font-medium">{t('checkout.contactInfo') || 'Contact information'}</h3>
+            </div>
+            {isAuthenticated && user && !showGuestForm ? (
+              <div className="text-sm text-neutral-700 space-y-1">
+                <p>{user.name || guestName}</p>
+                <p className="text-neutral-500">{user.email || guestEmail}</p>
+                {(user.phone || guestPhone) && <p className="text-neutral-500">{user.phone || guestPhone}</p>}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-neutral-700 mb-1">
+                    {t('checkout.fullName') || 'Full name'} <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={guestName}
+                    onChange={(e) => setGuestName(e.target.value)}
+                    placeholder={t('checkout.fullNamePlaceholder') || 'Enter your full name'}
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-neutral-700 mb-1">
+                    {t('checkout.email') || 'Email'} <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    value={guestEmail}
+                    onChange={(e) => setGuestEmail(e.target.value)}
+                    placeholder={t('checkout.emailPlaceholder') || 'Enter your email'}
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-neutral-700 mb-1">
+                    {t('checkout.phone') || 'Phone number'}
+                  </label>
+                  <input
+                    type="tel"
+                    value={guestPhone}
+                    onChange={(e) => setGuestPhone(e.target.value)}
+                    placeholder={t('checkout.phonePlaceholder') || 'Enter your phone number'}
+                    className="w-full px-4 py-3 border border-neutral-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                  />
+                </div>
+                {!isAuthenticated && (
+                  <p className="text-sm text-neutral-500">
+                    {t('checkout.orSignIn') || 'Already have an account?'}{' '}
+                    <Link
+                      href={`/login?redirect=${encodeURIComponent(`/checkout/${propertyId}?checkIn=${checkIn}&checkOut=${checkOut}&adults=${adults}`)}`}
+                      className="text-black underline font-medium"
+                    >
+                      {t('checkout.signIn') || 'Sign in'}
+                    </Link>
+                  </p>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Free Cancellation */}

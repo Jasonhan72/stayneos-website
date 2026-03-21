@@ -112,7 +112,8 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = '/api/auth/google';
+    const nextUrl = sanitizeCallbackUrl(callbackUrl !== '/' ? callbackUrl : '/dashboard');
+    window.location.href = `/api/auth/google?redirect=${encodeURIComponent(nextUrl)}`;
   };
 
   const handleFacebookLogin = () => {

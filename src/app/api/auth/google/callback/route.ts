@@ -4,6 +4,39 @@ import { signToken } from "@/lib/auth/jwt";
 import { userDb, accountDb, getDb } from "@/lib/d1";
 
 export const dynamic = "force-dynamic";
+const DEFAULT_REDIRECT = "/dashboard";
+
+interface OAuthStatePayload {
+  nonce: string;
+  redirect?: string;
+}
+
+function sanitizeRedirect(redirect: string | undefined) {
+  if (!redirect || !redirect.startsWith("/") || redirect.startsWith("//")) {
+    return DEFAULT_REDIRECT;
+  }
+  return redirect;
+}
+
+function parseOAuthState(state: string | null) {
+  if (!state) return null;
+  try {
+    const parsed = JSON.parse(state) as OAuthStatePayload;
+    return parsed?.nonce ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function buildLoginRedirect(baseUrl: string, errorCode: string, redirect?: string) {
+  const loginUrl = new URL("/login", baseUrl);
+  loginUrl.searchParams.set("error", errorCode);
+  const safeRedirect = sanitizeRedirect(redirect);
+  if (safeRedirect !== DEFAULT_REDIRECT) {
+    loginUrl.searchParams.set("redirect", safeRedirect);
+  }
+  return NextResponse.redirect(loginUrl.toString());
+}
 
 interface GoogleTokenResponse {
   access_token: string;
@@ -27,50 +60,49 @@ interface GoogleUserInfo {
 
 export async function GET(request: NextRequest) {
   try {
+    const baseUrl = process.env.NEXTAUTH_URL || "https://stayneos.com";
     const { searchParams } = new URL(request.url);
     const code = searchParams.get("code");
     const state = searchParams.get("state");
     const error = searchParams.get("error");
+    const parsedState = parseOAuthState(state);
 
     // Check for OAuth error
     if (error) {
       console.error("Google OAuth error from provider:", error);
-      return NextResponse.redirect(
-        `${process.env.NEXTAUTH_URL || "https://stayneos.com"}/login?error=oauth_error&error_detail=${encodeURIComponent(error)}`
-      );
+      return buildLoginRedirect(baseUrl, "oauth_error", parsedState?.redirect);
     }
 
     // Verify required parameters
     if (!code || !state) {
-      return NextResponse.redirect(
-        `${process.env.NEXTAUTH_URL || "https://stayneos.com"}/login?error=missing_params`
-      );
+      return buildLoginRedirect(baseUrl, "missing_params", parsedState?.redirect);
+    }
+
+    if (!parsedState?.nonce) {
+      return buildLoginRedirect(baseUrl, "invalid_state");
     }
 
     // Verify state parameter via D1 (cookies unreliable in Cloudflare cross-origin redirects)
     const db = getDb();
     const stateRow = await db
       .prepare("SELECT id FROM OAuthState WHERE state = ? AND expiresAt > ?")
-      .bind(state, new Date().toISOString())
+      .bind(parsedState.nonce, new Date().toISOString())
       .first<{ id: string }>();
 
     if (!stateRow) {
-      return NextResponse.redirect(
-        `${process.env.NEXTAUTH_URL || "https://stayneos.com"}/login?error=invalid_state`
-      );
+      return buildLoginRedirect(baseUrl, "invalid_state", parsedState.redirect);
     }
 
     // Delete used state (single-use)
-    await db.prepare("DELETE FROM OAuthState WHERE state = ?").bind(state).run();
+    await db.prepare("DELETE FROM OAuthState WHERE state = ?").bind(parsedState.nonce).run();
 
     // Get environment variables
     const clientId = process.env.GOOGLE_CLIENT_ID;
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-    const baseUrl = process.env.NEXTAUTH_URL || "https://stayneos.com";
 
     if (!clientId || !clientSecret) {
       console.error("Missing Google OAuth credentials");
-      return NextResponse.redirect(`${baseUrl}/login?error=config_error`);
+      return buildLoginRedirect(baseUrl, "config_error", parsedState.redirect);
     }
 
     // Step 1: Exchange code for access token
@@ -92,7 +124,7 @@ export async function GET(request: NextRequest) {
     if (!tokenResponse.ok) {
       const errorText = await tokenResponse.text();
       console.error("Google token exchange failed:", errorText);
-      return NextResponse.redirect(`${baseUrl}/login?error=token_exchange_failed&detail=${encodeURIComponent(errorText.slice(0, 200))}`);
+      return buildLoginRedirect(baseUrl, "token_exchange_failed", parsedState.redirect);
     }
 
     const tokenData: GoogleTokenResponse = await tokenResponse.json();
@@ -111,14 +143,14 @@ export async function GET(request: NextRequest) {
     if (!userInfoResponse.ok) {
       const errorText = await userInfoResponse.text();
       console.error("Failed to fetch Google user info:", errorText);
-      return NextResponse.redirect(`${baseUrl}/login?error=user_info_failed&detail=${encodeURIComponent(errorText.slice(0, 200))}`);
+      return buildLoginRedirect(baseUrl, "user_info_failed", parsedState.redirect);
     }
 
     const googleUser: GoogleUserInfo = await userInfoResponse.json();
     console.log("User info received:", googleUser.email, googleUser.name);
 
     if (!googleUser.verified_email) {
-      return NextResponse.redirect(`${baseUrl}/login?error=email_not_verified`);
+      return buildLoginRedirect(baseUrl, "email_not_verified", parsedState.redirect);
     }
 
     // Step 3: Handle user in database (reuse db from state check)
@@ -141,7 +173,7 @@ export async function GET(request: NextRequest) {
       user = await userDb.findById(db, existingAccount.userId);
       if (!user) {
         console.error("User not found for existing Google account:", existingAccount.userId);
-        return NextResponse.redirect(`${baseUrl}/login?error=user_not_found`);
+        return buildLoginRedirect(baseUrl, "user_not_found", parsedState.redirect);
       }
       console.log("Existing user found:", user.email, user.name);
       userId = user.id;
@@ -211,9 +243,9 @@ export async function GET(request: NextRequest) {
     });
     console.log("JWT token generated successfully");
 
-    // Step 5: Set auth cookie and redirect directly to dashboard
-    console.log("Step 5: Setting auth cookie and redirecting to dashboard...");
-    const response = NextResponse.redirect(`${baseUrl}/dashboard`, 303);
+    // Step 5: Set auth cookie and redirect to requested path
+    console.log("Step 5: Setting auth cookie and redirecting...");
+    const response = NextResponse.redirect(`${baseUrl}${sanitizeRedirect(parsedState.redirect)}`, 303);
 
     // Clear the oauth state cookie
     response.cookies.delete("oauth_state");
@@ -231,9 +263,9 @@ export async function GET(request: NextRequest) {
 
   } catch (err) {
     console.error("Google OAuth callback error:", err);
-    const errorMessage = err instanceof Error ? err.message : "unknown_error";
-    return NextResponse.redirect(
-      `${process.env.NEXTAUTH_URL || "https://stayneos.com"}/login?error=callback_failed&error_detail=${encodeURIComponent(errorMessage)}`
+    return buildLoginRedirect(
+      process.env.NEXTAUTH_URL || "https://stayneos.com",
+      "callback_failed"
     );
   }
 }
