@@ -962,7 +962,7 @@
     "top10": "Top 10",
     "top10Desc": "One of the most loved homes on NEOS",
     "reportListing": "Report this listing",
-    "fromPrice": "From ${{price}}/Mo",
+    "fromPrice": "From ${price}/Mo",
     "monthly": "Monthly",
     "quarterly": "Quarterly",
     "annual": "Annual",

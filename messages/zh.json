@@ -970,7 +970,7 @@
     "top10": "Top 10",
     "top10Desc": "NEOS 最受欢迎的房源之一",
     "reportListing": "举报此房源",
-    "fromPrice": "${{price}}/月起",
+    "fromPrice": "${price}/月起",
     "monthly": "月租",
     "quarterly": "季租",
     "annual": "年租",

@@ -376,7 +376,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
       {/* Price Header */}
       <div className="flex items-baseline justify-between mb-4">
         <span className="text-2xl font-bold text-neutral-900">
-          {t('property.fromPrice', 'From ${{price}}/Mo', { price: propertyCardData.price.toLocaleString() })}
+          {t('property.fromPrice', 'From ${price}/Mo', { price: propertyCardData.price.toLocaleString() })}
         </span>
         {propertyCardData.reviewCount > 0 && (
           <div className="flex items-center gap-1">

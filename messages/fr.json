@@ -970,7 +970,7 @@
     "top10": "Top 10",
     "top10Desc": "L'une des maisons les plus appréciées sur NEOS",
     "reportListing": "Signaler cette annonce",
-    "fromPrice": "À partir de ${{price}}/mois",
+    "fromPrice": "À partir de ${price}/mois",
     "monthly": "Mensuel",
     "quarterly": "Trimestriel",
     "annual": "Annuel",
