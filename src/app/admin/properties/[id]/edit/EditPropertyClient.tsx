@@ -1,95 +1,39 @@
 'use client';
 
-// Client Component - Admin Property Edit Page
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { PropertyForm } from '@/components/admin/PropertyForm';
 import AdminLayout from '@/components/admin/AdminLayout';
-import { HostOption } from '@/types/host';
-import { PropertyStatus, PropertyType } from '@prisma/client';
-
-// 模拟Host数据
-const mockHosts: HostOption[] = [
-  {
-    id: 'host-1',
-    displayName: 'Nazli',
-    avatarUrl: '/images/host-avatar.jpg',
-    totalProperties: 5,
-    status: 'active',
-  },
-  {
-    id: 'host-2',
-    displayName: 'NEOS Team',
-    avatarUrl: undefined,
-    totalProperties: 12,
-    status: 'active',
-  },
-];
-
-// 模拟房源数据
-const mockPropertyData = {
-  id: 'prop-1',
-  title: { 
-    zh: '市中心豪华公寓', 
-    en: 'Luxury Downtown Apartment' 
-  },
-  description: { 
-    zh: '这套精致的行政公寓位于市中心，专为追求品质生活的商务人士打造。步行可达金融区、购物中心和顶级餐厅。', 
-    en: 'This exquisite executive apartment is located in the heart of downtown, designed for business professionals seeking quality living. Walking distance to the Financial District, shopping centers, and top restaurants.' 
-  },
-  address: '123 Main Street',
-  city: 'Downtown',
-  province: 'Ontario',
-  postalCode: 'M5V 3A8',
-  country: 'Canada',
-  propertyType: PropertyType.APARTMENT,
-  pricePerNight: 180,
-  cleaningFee: 80,
-  serviceFee: 40,
-  maxGuests: 4,
-  bedrooms: 2,
-  beds: 2,
-  bathrooms: 2,
-  area: 85,
-  amenities: ['wifi', 'ac', 'kitchen', 'washer', 'gym', 'parking'],
-  images: [
-    '/images/cooper-55-c5e8357d.jpg',
-    '/images/cooper-55-e98a880d.jpg',
-  ],
-  hostId: 'host-1',
-  minNights: 28,
-  maxNights: 365,
-  isInstantBook: false,
-  status: PropertyStatus.PUBLISHED,
-};
+import PropertyEditor from '@/components/admin/PropertyEditor';
 
 export default function EditPropertyClient() {
   const params = useParams();
   const propertyId = params.id as string;
-  
-  const [property, setProperty] = useState<typeof mockPropertyData | null>(null);
-  const [hosts, setHosts] = useState<HostOption[]>([]);
+
+  const [property, setProperty] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchProperty = async () => {
       try {
         setLoading(true);
-        
-        // 模拟API调用获取房源详情
-        setTimeout(() => {
-          setProperty(mockPropertyData);
-          setHosts(mockHosts);
-          setLoading(false);
-        }, 500);
+        const res = await fetch(`/api/admin/properties/${propertyId}`, {
+          credentials: 'include',
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || `Failed to load property (${res.status})`);
+        }
+        const data = await res.json();
+        setProperty(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load property');
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchProperty();
   }, [propertyId]);
 
   if (loading) {
@@ -119,19 +63,17 @@ export default function EditPropertyClient() {
     );
   }
 
+  const title = (property.title as string) || (property.titleZh as string) || 'Untitled';
+
   return (
-    <AdminLayout 
-      title={`Edit: ${property.title.en}`}
+    <AdminLayout
+      title={`Edit: ${title}`}
       breadcrumbs={[
         { label: 'Properties', href: '/admin/properties' },
         { label: 'Edit' },
       ]}
     >
-      <PropertyForm 
-        mode="edit" 
-        initialData={property}
-        hosts={hosts}
-      />
+      <PropertyEditor initial={property} id={propertyId} />
     </AdminLayout>
   );
 }
