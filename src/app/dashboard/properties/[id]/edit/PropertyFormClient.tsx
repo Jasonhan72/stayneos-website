@@ -1,42 +1,95 @@
 "use client";
 
-import { PropertyForm } from "@/components/property/PropertyForm";
+import { useEffect, useState } from "react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-
-// 模拟获取房源数据
-const mockPropertyData = {
-  id: "prop-1",
-  title: "市中心豪华公寓",
-  description: "这套精致的行政公寓位于市中心，专为追求品质生活的商务人士打造。",
-  address: "123 Main Street",
-  city: "市中心",
-  basePrice: 180,
-  bedrooms: 2,
-  bathrooms: 2,
-  maxGuests: 4,
-  area: 85,
-  propertyType: "apartment",
-  amenities: ["WiFi", "空调", "厨房", "洗衣机", "健身房"],
-  images: [],
-};
+import PropertyEditor from "@/components/admin/PropertyEditor";
 
 interface PropertyFormClientProps {
   propertyId: string;
 }
 
 export function PropertyFormClient({ propertyId }: PropertyFormClientProps) {
-  // 实际项目中应该根据 propertyId 从 API 获取数据
-  // const { data: property, isLoading } = useProperty(propertyId);
-  void propertyId;
+  const [property, setProperty] = useState<Record<string, unknown> | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProperty = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(`/api/admin/properties/${propertyId}`, {
+          credentials: "include",
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(
+            data.error || `Failed to load property (${res.status})`
+          );
+        }
+        const data = await res.json();
+        setProperty(data);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Failed to load property"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperty();
+  }, [propertyId]);
+
+  if (loading) {
+    return (
+      <ProtectedRoute>
+        <main className="min-h-screen bg-gray-50 pt-24 pb-12">
+          <div className="container mx-auto px-4 max-w-6xl flex items-center justify-center py-20">
+            <div className="w-8 h-8 border-4 border-black border-t-transparent rounded-full animate-spin" />
+          </div>
+        </main>
+      </ProtectedRoute>
+    );
+  }
+
+  if (error || !property) {
+    return (
+      <ProtectedRoute>
+        <main className="min-h-screen bg-gray-50 pt-24 pb-12">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="bg-white rounded-xl p-8 text-center border border-neutral-200">
+              <h2 className="text-xl font-semibold text-neutral-900 mb-2">
+                Property Not Found
+              </h2>
+              <p className="text-neutral-500 mb-6">
+                {error || "The property you are looking for does not exist."}
+              </p>
+              <a
+                href="/dashboard"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-neutral-800 transition-colors"
+              >
+                Back to Dashboard
+              </a>
+            </div>
+          </div>
+        </main>
+      </ProtectedRoute>
+    );
+  }
+
+  const title =
+    (property.title as string) ||
+    (property.titleZh as string) ||
+    "Untitled";
 
   return (
     <ProtectedRoute>
       <main className="min-h-screen bg-gray-50 pt-24 pb-12">
         <div className="container mx-auto px-4 max-w-6xl">
-          <PropertyForm 
-            mode="edit" 
-            initialData={mockPropertyData}
-          />
+          <h1 className="text-2xl font-bold text-neutral-900 mb-6">
+            Edit: {title}
+          </h1>
+          <PropertyEditor initial={property} id={propertyId} />
         </div>
       </main>
     </ProtectedRoute>
