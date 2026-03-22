@@ -612,47 +612,69 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           </div>
         </div>
 
-        {/* Desktop: Grid Gallery */}
-        <div className="hidden md:block max-w-6xl mx-auto px-6 py-6">
+        {/* Desktop: Grid Gallery - Airbnb adaptive layout */}
+        <div className="hidden md:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="relative">
-            <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[400px] rounded-xl overflow-hidden">
-            {/* Main Large Image */}
-              <div className="col-span-2 row-span-2 relative cursor-pointer hover:opacity-95 transition-opacity"
+            {imageUrls.length === 1 ? (
+              /* 1 image: full width */
+              <div className="h-[400px] rounded-xl overflow-hidden relative cursor-pointer hover:opacity-95 transition-opacity"
                 onClick={() => setShowGallery(true)}
               >
-                <Image 
-                  src={imageUrls[0]} 
-                  alt={localizedTitle}
-                  fill 
-                  priority 
-                  className="object-cover" 
-                />
+                <Image src={imageUrls[0]} alt={localizedTitle} fill priority className="object-cover" />
               </div>
-              {/* Side Images */}
-              {imageUrls.slice(1, 5).map((img, idx) => (
-                <div 
-                  key={idx}
-                  className="relative cursor-pointer hover:opacity-95 transition-opacity"
-                  onClick={() => { setCurrentImageIndex(idx + 1); setShowGallery(true); }}
-                >
-                  <Image 
-                    src={img} 
-                    alt={`${localizedTitle} - ${idx + 2}`}
-                    fill 
-                    className="object-cover" 
-                  />
-                  {/* Show all photos button on last visible image */}
-                  {idx === Math.min(3, imageUrls.length - 2) && (
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setShowGallery(true); }}
-                      className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-lg border border-neutral-900 bg-white px-4 py-2 text-sm font-medium text-neutral-900 shadow-sm transition-colors hover:bg-neutral-50 z-10"
-                    >
-                      {t('property.showAllPhotos', 'Show all photos')}
-                    </button>
-                  )}
+            ) : imageUrls.length === 2 ? (
+              /* 2 images: side by side */
+              <div className="grid grid-cols-2 gap-2 h-[400px] rounded-xl overflow-hidden">
+                {imageUrls.slice(0, 2).map((img, idx) => (
+                  <div key={idx} className="relative cursor-pointer hover:opacity-95 transition-opacity"
+                    onClick={() => { setCurrentImageIndex(idx); setShowGallery(true); }}>
+                    <Image src={img} alt={`${localizedTitle} - ${idx + 1}`} fill className="object-cover" priority={idx === 0} />
+                  </div>
+                ))}
+              </div>
+            ) : imageUrls.length <= 4 ? (
+              /* 3-4 images: 1 large left + stacked right */
+              <div className="grid grid-cols-2 gap-2 h-[400px] rounded-xl overflow-hidden">
+                <div className="relative cursor-pointer hover:opacity-95 transition-opacity"
+                  onClick={() => setShowGallery(true)}>
+                  <Image src={imageUrls[0]} alt={localizedTitle} fill priority className="object-cover" />
                 </div>
-              ))}
-            </div>
+                <div className={`grid ${imageUrls.length === 3 ? 'grid-rows-2' : 'grid-cols-2 grid-rows-2'} gap-2`}>
+                  {imageUrls.slice(1).map((img, idx) => (
+                    <div key={idx} className={`relative cursor-pointer hover:opacity-95 transition-opacity ${imageUrls.length === 4 ? '' : idx === 0 ? '' : ''}`}
+                      onClick={() => { setCurrentImageIndex(idx + 1); setShowGallery(true); }}>
+                      <Image src={img} alt={`${localizedTitle} - ${idx + 2}`} fill className="object-cover" />
+                      {idx === imageUrls.length - 2 && (
+                        <button onClick={(e) => { e.stopPropagation(); setShowGallery(true); }}
+                          className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-lg border border-neutral-900 bg-white px-4 py-2 text-sm font-medium text-neutral-900 shadow-sm transition-colors hover:bg-neutral-50 z-10">
+                          {t('property.showAllPhotos', 'Show all photos')}
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              /* 5+ images: Airbnb classic - 1 large left (2x2) + 4 right */
+              <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[400px] rounded-xl overflow-hidden">
+                <div className="col-span-2 row-span-2 relative cursor-pointer hover:opacity-95 transition-opacity"
+                  onClick={() => setShowGallery(true)}>
+                  <Image src={imageUrls[0]} alt={localizedTitle} fill priority className="object-cover" />
+                </div>
+                {imageUrls.slice(1, 5).map((img, idx) => (
+                  <div key={idx} className="relative cursor-pointer hover:opacity-95 transition-opacity"
+                    onClick={() => { setCurrentImageIndex(idx + 1); setShowGallery(true); }}>
+                    <Image src={img} alt={`${localizedTitle} - ${idx + 2}`} fill className="object-cover" />
+                    {idx === 3 && (
+                      <button onClick={(e) => { e.stopPropagation(); setShowGallery(true); }}
+                        className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-lg border border-neutral-900 bg-white px-4 py-2 text-sm font-medium text-neutral-900 shadow-sm transition-colors hover:bg-neutral-50 z-10">
+                        {t('property.showAllPhotos', 'Show all photos')}
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
