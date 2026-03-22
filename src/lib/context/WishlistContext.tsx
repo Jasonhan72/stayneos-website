@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useSyncExternalStore } from 'react';
 
 const STORAGE_KEY = 'stayneos_wishlist';
 
@@ -30,31 +30,39 @@ function saveWishlist(ids: string[]) {
   } catch {}
 }
 
-export function WishlistProvider({ children }: { children: React.ReactNode }) {
-  const [wishlist, setWishlist] = useState<string[]>([]);
-  const [hydrated, setHydrated] = useState(false);
+function subscribe(callback: () => void) {
+  if (typeof window === 'undefined') return () => {};
+  const handleStorage = (e: StorageEvent) => {
+    if (e.key === STORAGE_KEY) callback();
+  };
+  window.addEventListener('storage', handleStorage);
+  return () => window.removeEventListener('storage', handleStorage);
+}
 
-  useEffect(() => {
-    setWishlist(loadWishlist());
-    setHydrated(true);
-  }, []);
+function getSnapshot(): string[] {
+  return loadWishlist();
+}
+
+export function WishlistProvider({ children }: { children: React.ReactNode }) {
+  const wishlist = useSyncExternalStore(subscribe, getSnapshot, () => []);
 
   const isWishlisted = useCallback(
-    (id: string) => hydrated && wishlist.includes(id),
-    [wishlist, hydrated]
+    (id: string) => wishlist.includes(id),
+    [wishlist]
   );
 
   const toggleWishlist = useCallback((id: string) => {
-    setWishlist((prev) => {
-      const next = prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id];
-      saveWishlist(next);
-      return next;
-    });
-  }, []);
+    const next = wishlist.includes(id) 
+      ? wishlist.filter((x) => x !== id) 
+      : [...wishlist, id];
+    saveWishlist(next);
+    // Trigger storage event for other tabs
+    window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }));
+  }, [wishlist]);
 
   const clearWishlist = useCallback(() => {
-    setWishlist([]);
     saveWishlist([]);
+    window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }));
   }, []);
 
   return (
