@@ -1068,7 +1068,9 @@
     "neighborhoodSubway": "最近的地铁站是{station}，步行仅需{minutes}分钟。",
     "neighborhoodLandmarks": "附近的亮点包括{landmarks}。",
     "neighborhoodDefaultHighlights": "步行范围内有众多优质餐厅、咖啡馆和购物场所。伊顿中心、皇后街购物娱乐区以及金融区都近在咫尺。",
-    "neighborhoodGrocery": "超市、药店和日常用品店步行即达，非常方便。"
+    "neighborhoodGrocery": "超市、药店和日常用品店步行即达，非常方便。",
+    "neighborhoodTitle": "社区亮点",
+    "showAllPhotos": "查看全部照片"
   },
   "filter": {
     "all": "全部状态"
@@ -1627,7 +1629,31 @@
     "title": "设施推荐",
     "placeholder": "根据房源描述推荐配套设施...",
     "button": "推荐设施",
-    "tip": "AI 会分析您的描述并推荐适合的设施"
+    "tip": "AI 会分析您的描述并推荐适合的设施",
+    "Fitness center": "健身中心",
+    "Lobby concierge": "大堂礼宾",
+    "Mail room": "邮件室",
+    "Pool": "游泳池",
+    "Gym": "健身房",
+    "24-hour concierge": "24小时礼宾",
+    "Visitor parking": "访客停车位",
+    "Party room": "派对室",
+    "Air conditioning": "空调",
+    "Kitchen": "厨房",
+    "Washer": "洗衣机",
+    "Dryer": "烘干机",
+    "TV": "电视",
+    "Elevator": "电梯",
+    "Balcony": "阳台",
+    "Parking": "停车位",
+    "Dishwasher": "洗碗机",
+    "Microwave": "微波炉",
+    "In-suite laundry": "室内洗衣",
+    "Storage locker": "储物柜",
+    "Rooftop terrace": "屋顶露台",
+    "BBQ area": "烧烤区",
+    "Workspace": "办公区",
+    "Pet friendly": "可带宠物"
   },
   "errors": {
     "generic": "发生错误，请稍后重试",

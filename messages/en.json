@@ -1060,7 +1060,9 @@
     "neighborhoodSubway": "The nearest subway station is {station}, just a {minutes}-minute walk away.",
     "neighborhoodLandmarks": "Nearby highlights include {landmarks}.",
     "neighborhoodDefaultHighlights": "You'll discover great restaurants, cafes, and shopping within walking distance. The Eaton Centre, Queen Street shopping and entertainment, and the Financial District are all close by.",
-    "neighborhoodGrocery": "For groceries, pharmacies, and daily essentials, there are multiple options within a short walk."
+    "neighborhoodGrocery": "For groceries, pharmacies, and daily essentials, there are multiple options within a short walk.",
+    "neighborhoodTitle": "Neighborhood highlights",
+    "showAllPhotos": "Show all photos"
   },
   "filter": {
     "all": "All Status"

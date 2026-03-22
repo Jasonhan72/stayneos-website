@@ -641,16 +641,18 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                     fill 
                     className="object-cover" 
                   />
+                  {/* Show all photos button on last visible image */}
+                  {idx === Math.min(3, imageUrls.length - 2) && (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setShowGallery(true); }}
+                      className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-lg border border-neutral-900 bg-white px-4 py-2 text-sm font-medium text-neutral-900 shadow-sm transition-colors hover:bg-neutral-50 z-10"
+                    >
+                      {t('property.showAllPhotos', 'Show all photos')}
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
-
-            <button
-              onClick={() => setShowGallery(true)}
-              className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-lg border border-neutral-900 bg-white px-4 py-2 text-sm font-medium text-neutral-900 shadow-sm transition-colors hover:bg-neutral-50"
-            >
-              {t('property.showAllPhotos', 'Show all photos')}
-            </button>
           </div>
         </div>
       </div>
@@ -773,7 +775,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                 {amenities.slice(0, 6).map((item) => (
                   <div key={item} className="flex items-center gap-3 text-neutral-700">
                     <Check size={18} className="text-neutral-900" />
-                    {item}
+                    {t(`amenities.${item}`, item)}
                   </div>
                 ))}
               </div>

@@ -1068,7 +1068,9 @@
     "neighborhoodSubway": "La station de métro la plus proche est {station}, à seulement {minutes} minutes à pied.",
     "neighborhoodLandmarks": "Les points d'intérêt à proximité incluent {landmarks}.",
     "neighborhoodDefaultHighlights": "Vous découvrirez d'excellents restaurants, cafés et commerces à distance de marche. Le Eaton Centre, le shopping et divertissement de Queen Street, et le quartier financier sont tous à proximité.",
-    "neighborhoodGrocery": "Pour l'épicerie, les pharmacies et les produits essentiels, plusieurs options sont accessibles à pied."
+    "neighborhoodGrocery": "Pour l'épicerie, les pharmacies et les produits essentiels, plusieurs options sont accessibles à pied.",
+    "neighborhoodTitle": "Points forts du quartier",
+    "showAllPhotos": "Afficher toutes les photos"
   },
   "filter": {
     "all": "Tous les Statuts"
@@ -1517,7 +1519,31 @@
     "title": "Recommandations",
     "placeholder": "Recommander des équipements selon la description...",
     "button": "Recommander",
-    "tip": "L'IA analysera votre description et recommandera des équipements"
+    "tip": "L'IA analysera votre description et recommandera des équipements",
+    "Fitness center": "Centre de fitness",
+    "Lobby concierge": "Conciergerie",
+    "Mail room": "Salle de courrier",
+    "Pool": "Piscine",
+    "Gym": "Salle de sport",
+    "24-hour concierge": "Conciergerie 24h",
+    "Visitor parking": "Parking visiteurs",
+    "Party room": "Salle de réception",
+    "Air conditioning": "Climatisation",
+    "Kitchen": "Cuisine",
+    "Washer": "Lave-linge",
+    "Dryer": "Sèche-linge",
+    "TV": "TV",
+    "Elevator": "Ascenseur",
+    "Balcony": "Balcon",
+    "Parking": "Parking",
+    "Dishwasher": "Lave-vaisselle",
+    "Microwave": "Micro-ondes",
+    "In-suite laundry": "Buanderie privée",
+    "Storage locker": "Casier de rangement",
+    "Rooftop terrace": "Terrasse sur le toit",
+    "BBQ area": "Espace BBQ",
+    "Workspace": "Espace de travail",
+    "Pet friendly": "Animaux acceptés"
   },
   "errors": {
     "generic": "Une erreur s'est produite. Veuillez réessayer.",
