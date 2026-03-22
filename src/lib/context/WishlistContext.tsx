@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useSyncExternalStore } from 'react';
+import { createContext, useCallback, useContext, useSyncExternalStore, useEffect, useState } from 'react';
 
 const STORAGE_KEY = 'stayneos_wishlist';
 
@@ -30,13 +30,29 @@ function saveWishlist(ids: string[]) {
   } catch {}
 }
 
-function subscribe(callback: () => void) {
-  if (typeof window === 'undefined') return () => {};
-  const handleStorage = (e: StorageEvent) => {
-    if (e.key === STORAGE_KEY) callback();
+// Custom store for useSyncExternalStore
+let listeners: (() => void)[] = [];
+
+function subscribe(listener: () => void) {
+  listeners = [...listeners, listener];
+  return () => {
+    listeners = listeners.filter(l => l !== listener);
   };
-  window.addEventListener('storage', handleStorage);
-  return () => window.removeEventListener('storage', handleStorage);
+}
+
+function emitChange() {
+  for (const listener of listeners) {
+    listener();
+  }
+}
+
+// Also listen to storage events from other tabs
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (e) => {
+    if (e.key === STORAGE_KEY) {
+      emitChange();
+    }
+  });
 }
 
 function getSnapshot(): string[] {
@@ -56,13 +72,12 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
       ? wishlist.filter((x) => x !== id) 
       : [...wishlist, id];
     saveWishlist(next);
-    // Trigger storage event for other tabs
-    window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }));
+    emitChange(); // Notify all subscribers
   }, [wishlist]);
 
   const clearWishlist = useCallback(() => {
     saveWishlist([]);
-    window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY }));
+    emitChange();
   }, []);
 
   return (
