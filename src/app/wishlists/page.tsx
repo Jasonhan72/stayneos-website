@@ -1,11 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Button from '@/components/ui/Button';
 import { Container } from '@/components/ui';
 import { useI18n } from '@/lib/i18n';
-import { useWishlist } from '@/lib/context/WishlistContext';
 import { mockProperties } from '@/lib/data';
 import { 
   Heart, 
@@ -16,25 +16,50 @@ import {
   Home
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+
+interface Property {
+  id: string;
+  title: string;
+  location: string;
+  price: number;
+  currency: string;
+  priceUnit: string;
+  rating: number;
+  reviewCount: number;
+  bedrooms: number;
+  bathrooms: number;
+  image: string;
+}
 
 export default function WishlistsPage() {
   const { t } = useI18n();
-  const { wishlist, toggleWishlist } = useWishlist();
+  const [wishlist, setWishlist] = useState<Property[]>(
+    mockProperties.map((property) => ({
+      id: property.id,
+      title: property.title,
+      location: property.location,
+      price: property.price,
+      currency: 'CAD',
+      priceUnit: property.priceUnit,
+      rating: property.rating || 0,
+      reviewCount: property.reviewCount,
+      bedrooms: property.bedrooms,
+      bathrooms: property.bathrooms,
+      image: property.images[0] || '/images/cooper-55-c5e8357d.jpg',
+    }))
+  );
   const [removingId, setRemovingId] = useState<string | null>(null);
-
-  // Get full property data for wishlisted IDs
-  const wishlistProperties = mockProperties.filter((p) => wishlist.includes(p.id));
 
   const handleRemove = (propertyId: string) => {
     setRemovingId(propertyId);
+    // Add a small delay for visual feedback
     setTimeout(() => {
-      toggleWishlist(propertyId);
+      setWishlist(prev => prev.filter(p => p.id !== propertyId));
       setRemovingId(null);
     }, 300);
   };
 
-  if (wishlistProperties.length === 0) {
+  if (wishlist.length === 0) {
     return (
       <main className="min-h-screen bg-neutral-50">
         <div className="pt-20 pb-12">
@@ -70,13 +95,13 @@ export default function WishlistsPage() {
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-neutral-900">{t('wishlists.title')}</h1>
             <p className="text-neutral-600 mt-2">
-              {t('wishlists.savedCount', { count: wishlistProperties.length })}
+              {t('wishlists.savedCount', { count: wishlist.length })}
             </p>
           </div>
 
           {/* Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {wishlistProperties.map((property) => (
+            {wishlist.map((property) => (
               <div
                 key={property.id}
                 className={cn(
@@ -89,7 +114,7 @@ export default function WishlistsPage() {
                 {/* Image */}
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <Image
-                    src={property.images[0] || '/images/cooper-55-c5e8357d.jpg'}
+                    src={property.image}
                     alt={property.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -108,7 +133,7 @@ export default function WishlistsPage() {
 
                   {/* Price Badge */}
                   <div className="absolute bottom-3 left-3 px-3 py-1.5 bg-white/95 rounded-lg shadow-sm">
-                    <span className="font-bold text-neutral-900">${property.price.toLocaleString()}</span>
+                    <span className="font-bold text-neutral-900">${property.price}</span>
                     <span className="text-sm text-neutral-500">/{t('wishlists.priceUnit')}</span>
                   </div>
                 </div>

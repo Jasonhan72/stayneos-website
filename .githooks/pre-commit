@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+scripts/security/check-secrets.sh
+npm run lint -- --max-warnings=0 >/dev/null
