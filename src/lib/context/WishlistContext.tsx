@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useSyncExternalStore, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useSyncExternalStore } from 'react';
 
 const STORAGE_KEY = 'stayneos_wishlist';
 
