@@ -63,7 +63,8 @@
     "loading": "Chargement...",
     "backToList": "Retour à la liste",
     "optional": "Optionnel",
-    "or": "ou"
+    "or": "ou",
+    "month": "mois"
   },
   "greeting": {
     "morning": "Bonjour",
@@ -1142,7 +1143,9 @@
       "upcoming": "À venir",
       "completed": "Terminées",
       "cancelled": "Annulées"
-    }
+    },
+    "propertyManagement": "Gestion des propriétés",
+    "propertyManagementDesc": "Gérez toutes vos propriétés, ajoutez de nouvelles annonces ou modifiez les existantes"
   },
   "wishlist": {
     "title": "Ma liste de souhaits",

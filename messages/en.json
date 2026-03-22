@@ -63,7 +63,8 @@
     "loading": "Loading...",
     "backToList": "Back to property list",
     "optional": "Optional",
-    "or": "or"
+    "or": "or",
+    "month": "Mo"
   },
   "greeting": {
     "morning": "Good morning",
@@ -1134,7 +1135,9 @@
       "upcoming": "Upcoming",
       "completed": "Completed",
       "cancelled": "Cancelled"
-    }
+    },
+    "propertyManagement": "Property Management",
+    "propertyManagementDesc": "Manage all your properties, add new listings or edit existing ones"
   },
   "wishlist": {
     "title": "My Wishlist",

@@ -251,7 +251,7 @@ export function PropertiesList() {
                       <div className="flex items-center gap-1 font-medium text-gray-900">
                         <DollarSign className="w-4 h-4" />
                         {property.basePrice}
-                        <span className="text-sm text-gray-500 font-normal">/{t("common.night")}</span>
+                        <span className="text-sm text-gray-500 font-normal">/{t("common.month")}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
@@ -329,7 +329,7 @@ export function PropertiesList() {
                       <div className="flex items-center gap-1 font-medium text-gray-900">
                         <DollarSign className="w-4 h-4" />
                         {property.basePrice}
-                        <span className="text-xs text-gray-500 font-normal">/{t("common.night")}</span>
+                        <span className="text-xs text-gray-500 font-normal">/{t("common.month")}</span>
                       </div>
                       {getStatusBadge(property.status)}
                     </div>

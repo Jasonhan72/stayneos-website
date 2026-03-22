@@ -63,7 +63,8 @@
     "loading": "加载中...",
     "backToList": "返回房源列表",
     "optional": "可选",
-    "or": "或"
+    "or": "或",
+    "month": "月"
   },
   "greeting": {
     "morning": "早上好",
@@ -1142,7 +1143,9 @@
       "upcoming": "即将入住",
       "completed": "已完成",
       "cancelled": "已取消"
-    }
+    },
+    "propertyManagement": "房源管理",
+    "propertyManagementDesc": "管理您的所有房源，添加新房源或编辑现有房源"
   },
   "wishlist": {
     "title": "我的心愿单",
