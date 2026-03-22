@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     if (!token) {
       return NextResponse.json(
         { message: "未登录", user: null },
-        { status: 401 }
+        { status: 200 }
       );
     }
 

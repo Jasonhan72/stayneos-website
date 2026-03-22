@@ -31,6 +31,7 @@ import { AirbnbCalendar } from '@/components/booking';
 import { useProperties } from '@/hooks/useProperties';
 import { useI18n } from '@/lib/i18n';
 import { useWishlist } from '@/lib/context/WishlistContext';
+import { useCurrency } from '@/hooks/useCurrency';
 import { getPropertyLocation, resolvePropertyPricingTiers } from '@/lib/utils/property-transform';
 import dynamic from 'next/dynamic';
 
@@ -786,6 +787,7 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
 
 function PropertyPricingTiers({ property, compact = false }: { property: PropertyCardData; compact?: boolean }) {
   const { locale } = useI18n();
+  const { formatPrice } = useCurrency();
   const tiers = resolvePropertyPricingTiers(property);
   const labels = locale === 'zh'
     ? { monthly: '月价', quarterly: '季价', annual: '年价', perMonth: '/月' }
@@ -799,15 +801,15 @@ function PropertyPricingTiers({ property, compact = false }: { property: Propert
     <div className={`space-y-2 ${compact ? 'pt-3 border-t border-neutral-200' : 'pt-4 border-t border-neutral-200'}`}>
       <div className="flex items-center justify-between">
         <span className="text-neutral-600 text-sm">{labels.monthly}</span>
-        <span className={`${rowClass} font-semibold text-neutral-900`}>${tiers.monthly.toLocaleString()}<span className="text-xs font-normal text-neutral-500 ml-1">{labels.perMonth}</span></span>
+        <span className={`${rowClass} font-semibold text-neutral-900`}>{formatPrice(tiers.monthly)}<span className="text-xs font-normal text-neutral-500 ml-1">{labels.perMonth}</span></span>
       </div>
       <div className="flex items-center justify-between">
         <span className="text-neutral-600 text-sm">{labels.quarterly}</span>
-        <span className={`${rowClass} font-semibold text-neutral-900`}>${tiers.quarterly.toLocaleString()}<span className="text-xs font-normal text-neutral-500 ml-1">{labels.perMonth}</span></span>
+        <span className={`${rowClass} font-semibold text-neutral-900`}>{formatPrice(tiers.quarterly)}<span className="text-xs font-normal text-neutral-500 ml-1">{labels.perMonth}</span></span>
       </div>
       <div className="flex items-center justify-between">
         <span className="text-neutral-600 text-sm">{labels.annual}</span>
-        <span className={`${rowClass} font-semibold text-neutral-900`}>${tiers.annual.toLocaleString()}<span className="text-xs font-normal text-neutral-500 ml-1">{labels.perMonth}</span></span>
+        <span className={`${rowClass} font-semibold text-neutral-900`}>{formatPrice(tiers.annual)}<span className="text-xs font-normal text-neutral-500 ml-1">{labels.perMonth}</span></span>
       </div>
     </div>
   );

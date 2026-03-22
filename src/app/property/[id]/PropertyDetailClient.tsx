@@ -23,6 +23,7 @@ import { AirbnbCalendar, ReviewAndContinue, PaymentMethod, GuestSelector, type G
 // CardDetailsForm removed - PCI compliance: all card input handled by Stripe Elements
 import { useI18n } from '@/lib/i18n';
 import { useWishlist } from '@/lib/context/WishlistContext';
+import { useCurrency } from '@/hooks/useCurrency';
 import { useProperty } from '@/hooks/useProperties';
 import { PropertyCardData } from '@/types';
 import { getPropertyLocation } from '@/lib/utils/property-transform';
@@ -173,6 +174,7 @@ const mockHost = {
 
 export default function PropertyDetailClient({ propertyId }: PropertyDetailClientProps) {
   const { t, locale } = useI18n();
+  const { formatPrice: fp } = useCurrency();
   const router = useRouter();
   const { property, isLoading, error } = useProperty(propertyId);
   
@@ -425,7 +427,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
       {/* Price Header */}
       <div className="flex items-baseline justify-between mb-4">
         <span className="text-2xl font-bold text-neutral-900">
-          {t('property.fromPrice', 'From ${price}/Mo', { price: propertyCardData.price.toLocaleString() })}
+          {t('property.fromPrice', 'From ${price}/Mo', { price: fp(propertyCardData.price).replace(/[$€¥]/, '') })}
         </span>
         {propertyCardData.reviewCount > 0 && (
           <div className="flex items-center gap-1">
@@ -437,9 +439,9 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
       </div>
 
       <div className="mb-4 rounded-xl border border-neutral-200 p-3 bg-neutral-50">
-        <div className="flex items-center justify-between text-sm"><span className="text-neutral-600">{t('property.monthly', 'Monthly')}</span><span className="font-semibold text-neutral-900">${tierPrices.monthly.toLocaleString()}/Mo</span></div>
-        <div className="flex items-center justify-between text-sm mt-1"><span className="text-neutral-600">{t('property.quarterly', 'Quarterly')} (3 {t('common.months', 'mo')})</span><span className="font-medium text-neutral-900">${tierPrices.quarterly.toLocaleString()}/Mo</span></div>
-        <div className="flex items-center justify-between text-sm mt-1"><span className="text-neutral-600">{t('property.annual', 'Annual')} (12 {t('common.months', 'mo')})</span><span className="font-medium text-neutral-900">${tierPrices.annual.toLocaleString()}/Mo</span></div>
+        <div className="flex items-center justify-between text-sm"><span className="text-neutral-600">{t('property.monthly', 'Monthly')}</span><span className="font-semibold text-neutral-900">{fp(tierPrices.monthly)}/Mo</span></div>
+        <div className="flex items-center justify-between text-sm mt-1"><span className="text-neutral-600">{t('property.quarterly', 'Quarterly')} (3 {t('common.months', 'mo')})</span><span className="font-medium text-neutral-900">{fp(tierPrices.quarterly)}/Mo</span></div>
+        <div className="flex items-center justify-between text-sm mt-1"><span className="text-neutral-600">{t('property.annual', 'Annual')} (12 {t('common.months', 'mo')})</span><span className="font-medium text-neutral-900">{fp(tierPrices.annual)}/Mo</span></div>
       </div>
 
       {/* Date/Guest Selector Box */}
@@ -490,16 +492,16 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
       {bookingPrice && (
         <div className="space-y-3 text-sm border-t border-neutral-100 pt-4">
           <div className="flex justify-between">
-            <span className="text-neutral-600 underline">${bookingPrice.ratePerMonth.toLocaleString()} x {bookingPrice.months} {t('booking.months', { count: bookingPrice.months })} ({bookingPrice.tierName})</span>
-            <span className="text-neutral-900">${bookingPrice.subtotal.toLocaleString()}</span>
+            <span className="text-neutral-600 underline">{fp(bookingPrice.ratePerMonth)} x {bookingPrice.months} {t('booking.months', { count: bookingPrice.months })} ({bookingPrice.tierName})</span>
+            <span className="text-neutral-900">{fp(bookingPrice.subtotal)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-neutral-600">{t('booking.taxes', 'Taxes')} (13%)</span>
-            <span className="text-neutral-900">${bookingPrice.tax.toLocaleString()}</span>
+            <span className="text-neutral-900">{fp(bookingPrice.tax)}</span>
           </div>
           <div className="flex justify-between pt-3 border-t border-neutral-200">
             <span className="font-semibold text-neutral-900">{t('property.totalBeforeTaxes', 'Total')}</span>
-            <span className="font-semibold text-neutral-900">${bookingPrice.total.toLocaleString()}</span>
+            <span className="font-semibold text-neutral-900">{fp(bookingPrice.total)}</span>
           </div>
           <p className="text-xs text-neutral-500 text-center pt-2">
             {t('booking.allInclusive', 'All-inclusive pricing: WiFi, utilities, cleaning & service fees included')}
@@ -606,6 +608,36 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
             ))}
           </div>
           
+          {/* Mobile Carousel Arrows */}
+          {imageUrls.length > 1 && (
+            <>
+              <button
+                onClick={() => {
+                  if (scrollContainerRef.current) {
+                    const w = scrollContainerRef.current.offsetWidth;
+                    scrollContainerRef.current.scrollTo({ left: (currentImageIndex - 1) * w, behavior: 'smooth' });
+                  }
+                }}
+                className={`absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 shadow flex items-center justify-center ${currentImageIndex === 0 ? 'opacity-0 pointer-events-none' : ''}`}
+                aria-label="Previous image"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button
+                onClick={() => {
+                  if (scrollContainerRef.current) {
+                    const w = scrollContainerRef.current.offsetWidth;
+                    scrollContainerRef.current.scrollTo({ left: (currentImageIndex + 1) * w, behavior: 'smooth' });
+                  }
+                }}
+                className={`absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 shadow flex items-center justify-center ${currentImageIndex === imageUrls.length - 1 ? 'opacity-0 pointer-events-none' : ''}`}
+                aria-label="Next image"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </>
+          )}
+
           {/* Image Counter */}
           <div className="absolute bottom-4 right-4 px-3 py-1.5 bg-black/70 text-white text-sm rounded-lg">
             {currentImageIndex + 1} / {imageUrls.length}
