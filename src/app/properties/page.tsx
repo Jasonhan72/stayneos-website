@@ -30,6 +30,7 @@ import { ApiErrorAlert } from '@/components/error';
 import { AirbnbCalendar } from '@/components/booking';
 import { useProperties } from '@/hooks/useProperties';
 import { useI18n } from '@/lib/i18n';
+import { useWishlist } from '@/lib/context/WishlistContext';
 import { getPropertyLocation, resolvePropertyPricingTiers } from '@/lib/utils/property-transform';
 import dynamic from 'next/dynamic';
 
@@ -635,6 +636,8 @@ function PropertyGridCard({
   property: PropertyCardData;
 }) {
   const { t } = useI18n();
+  const { isWishlisted, toggleWishlist } = useWishlist();
+  const liked = isWishlisted(property.id);
   const location = getPropertyLocation(property);
   
   return (
@@ -655,9 +658,9 @@ function PropertyGridCard({
           
           <button 
             className="absolute top-3 right-3 p-2 bg-white/90 hover:bg-white transition-colors rounded-full"
-            onClick={(e) => e.preventDefault()}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlist(property.id); }}
           >
-            <Heart size={18} className="text-neutral-400" />
+            <Heart size={18} className={liked ? 'fill-rose-500 text-rose-500' : 'text-neutral-400 hover:text-rose-500'} />
           </button>
         </div>
         
@@ -709,6 +712,8 @@ interface PropertyListCardProps {
 
 function PropertyListCard({ property, isSelected, onClick }: PropertyListCardProps) {
   const { t } = useI18n();
+  const { isWishlisted, toggleWishlist } = useWishlist();
+  const liked = isWishlisted(property.id);
   const location = getPropertyLocation(property);
   
   return (
@@ -735,9 +740,9 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
           )}
           <button 
             className="absolute top-3 right-3 p-2 bg-white/90 hover:bg-white transition-colors rounded-full"
-            onClick={(e) => e.preventDefault()}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlist(property.id); }}
           >
-            <Heart size={18} className="text-neutral-400" />
+            <Heart size={18} className={liked ? 'fill-rose-500 text-rose-500' : 'text-neutral-400 hover:text-rose-500'} />
           </button>
         </div>
         
