@@ -98,9 +98,9 @@ function getClientLocale(): Locale {
   return 'en';
 }
 
-export function I18nProvider({ children }: { children: React.ReactNode }) {
-  // Always start with 'en' to match SSR
-  const [locale, setLocaleState] = useState<Locale>('en');
+export function I18nProvider({ children, initialLocale = 'en' }: { children: React.ReactNode; initialLocale?: Locale }) {
+  // Use server-detected locale to avoid SSR/client mismatch flash
+  const [locale, setLocaleState] = useState<Locale>(initialLocale);
   const [isHydrated, setIsHydrated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
