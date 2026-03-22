@@ -683,7 +683,10 @@
     "entireHome": "整套房屋",
     "payWith": "支付方式",
     "termsNotice": "点击下方按钮，我同意服务条款和隐私政策",
-    "yourTrip": "您的行程"
+    "yourTrip": "您的行程",
+    "months": "{count} 个月",
+    "taxes": "税费",
+    "allInclusive": "全包价格：含WiFi、水电、保洁及服务费"
   },
   "testimonials": {
     "title": "客人评价",

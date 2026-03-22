@@ -683,7 +683,10 @@
     "entireHome": "Logement entier",
     "payWith": "Payer avec",
     "termsNotice": "En sélectionnant le bouton ci-dessous, j'accepte les Conditions d'utilisation et la Politique de confidentialité",
-    "yourTrip": "Votre voyage"
+    "yourTrip": "Votre voyage",
+    "months": "{count} mois",
+    "taxes": "Taxes",
+    "allInclusive": "Tarif tout compris : WiFi, services publics, ménage et frais de service inclus"
   },
   "testimonials": {
     "title": "Ce que disent nos clients",

@@ -675,7 +675,10 @@
     "entireHome": "Entire home",
     "payWith": "Pay with",
     "termsNotice": "By selecting the button below, I agree to the Terms of Service and Privacy Policy",
-    "yourTrip": "Your trip"
+    "yourTrip": "Your trip",
+    "months": "{count} months",
+    "taxes": "Taxes",
+    "allInclusive": "All-inclusive pricing: WiFi, utilities, cleaning & service fees included"
   },
   "testimonials": {
     "title": "What Our Guests Say",

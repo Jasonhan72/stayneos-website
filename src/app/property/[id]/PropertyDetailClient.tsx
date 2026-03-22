@@ -490,11 +490,11 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
       {bookingPrice && (
         <div className="space-y-3 text-sm border-t border-neutral-100 pt-4">
           <div className="flex justify-between">
-            <span className="text-neutral-600 underline">${bookingPrice.ratePerMonth.toLocaleString()} x {bookingPrice.months} {bookingPrice.months === 1 ? 'month' : 'months'} ({bookingPrice.tierName} rate)</span>
+            <span className="text-neutral-600 underline">${bookingPrice.ratePerMonth.toLocaleString()} x {bookingPrice.months} {t('booking.months', { count: bookingPrice.months })} ({bookingPrice.tierName})</span>
             <span className="text-neutral-900">${bookingPrice.subtotal.toLocaleString()}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-neutral-600">Taxes (13%)</span>
+            <span className="text-neutral-600">{t('booking.taxes', 'Taxes')} (13%)</span>
             <span className="text-neutral-900">${bookingPrice.tax.toLocaleString()}</span>
           </div>
           <div className="flex justify-between pt-3 border-t border-neutral-200">
@@ -502,7 +502,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             <span className="font-semibold text-neutral-900">${bookingPrice.total.toLocaleString()}</span>
           </div>
           <p className="text-xs text-neutral-500 text-center pt-2">
-            All-inclusive pricing: WiFi, utilities, cleaning & service fees included
+            {t('booking.allInclusive', 'All-inclusive pricing: WiFi, utilities, cleaning & service fees included')}
           </p>
         </div>
       )}
@@ -846,7 +846,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             ) : bookingPrice ? (
               <div>
                 <p className="text-lg font-semibold">${bookingPrice.total.toLocaleString()}</p>
-                <p className="text-sm text-neutral-600">{bookingPrice.months} {bookingPrice.months === 1 ? 'month' : 'months'}</p>
+                <p className="text-sm text-neutral-600">{bookingPrice.months} {t('booking.months', { count: bookingPrice.months })}</p>
               </div>
             ) : (
               <div>
