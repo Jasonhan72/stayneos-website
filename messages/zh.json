@@ -322,7 +322,26 @@
     "cases": {
       "title": "典型场景",
       "typical": "典型场景",
-      "subtitle": "See how leading companies have transformed their accommodation strategies with NEOS."
+      "subtitle": "See how leading companies have transformed their accommodation strategies with NEOS.",
+      "label": "典型场景",
+      "tech": {
+        "company": "科技初创公司",
+        "challenge": "需要15套房源用于6个月的项目团队搬迁至多伦多",
+        "solution": "在市中心核心区域提供精装公寓及会议空间",
+        "result": "相比酒店节省18万加元，同时提升团队生产力"
+      },
+      "consulting": {
+        "company": "咨询公司",
+        "challenge": "高管差旅项目，行程时间不固定",
+        "solution": "灵活预订系统配合市中心高端套房",
+        "result": "住宿成本降低35%，高管满意度提升"
+      },
+      "manufacturing": {
+        "company": "制造企业",
+        "challenge": "新多伦多办公室的员工安置计划",
+        "solution": "分阶段入住流程，为50+员工提供临时住房",
+        "result": "平稳过渡，员工满意度达95%"
+      }
     },
     "stats": {
       "companies": "运营支持",
@@ -383,7 +402,27 @@
     },
     "advantages": {
       "subtitle": "Transform your corporate accommodation strategy with our comprehensive business solutions.",
-      "title": "为什么选择 NEOS for 商务"
+      "title": "为什么选择 NEOS for 商务",
+      "flexible": {
+        "title": "灵活条款",
+        "description": "按月签约，无长期约束。根据业务需求灵活增减房源。",
+        "stat": "最短30天"
+      },
+      "cost": {
+        "title": "节省成本",
+        "description": "长期住宿比酒店节省30-40%。全包价格，无隐藏费用。",
+        "stat": "最高省40%"
+      },
+      "manager": {
+        "title": "专属客户经理",
+        "description": "专属客户经理为您提供无缝预订、账单管理和全程支持。",
+        "stat": "24/7全天候"
+      },
+      "billing": {
+        "title": "便捷账单",
+        "description": "统一月度发票，详细报告和费用追踪，轻松对账。",
+        "stat": "一张发票"
+      }
     },
     "features": {
       "subtitle": "Enterprise-grade features designed to simplify corporate accommodation management.",
@@ -397,7 +436,39 @@
     },
     "solutions": {
       "subtitle": "From individual business travelers to large project teams, we have the perfect accommodation solution for your organization.",
-      "title": "Solutions for Every Need"
+      "title": "Solutions for Every Need",
+      "individual": {
+        "title": "商务差旅",
+        "description": "为高管和商务旅客提供高端住宿，配备优质设施和24/7礼宾服务。",
+        "f1": "行政套房",
+        "f2": "机场接送",
+        "f3": "礼宾服务",
+        "f4": "灵活入住"
+      },
+      "relocation": {
+        "title": "员工安置",
+        "description": "为调迁员工提供临时住房，拎包入住的公寓配备本地指导服务。",
+        "f1": "精装全配",
+        "f2": "费用全含",
+        "f3": "本地指引",
+        "f4": "灵活租期"
+      },
+      "group": {
+        "title": "团队住宿",
+        "description": "为培训项目、会议或项目团队提供多套房源，统一账单和协调管理。",
+        "f1": "团体折扣",
+        "f2": "团队协调",
+        "f3": "统一账单",
+        "f4": "会议空间"
+      },
+      "longterm": {
+        "title": "长期项目",
+        "description": "为项目团队或长期派遣提供延期住宿，享受高性价比的月租费率和专属支持。",
+        "f1": "长租优惠",
+        "f2": "项目协调",
+        "f3": "定期保洁",
+        "f4": "专属客户经理"
+      }
     }
   },
   "longterm": {

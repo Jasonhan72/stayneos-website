@@ -83,30 +83,30 @@ export default function ForBusinessPageContent() {
     {
       key: "individual",
       icon: Users,
-      title: "Business Travel",
-      description: "Individual accommodations for executives and business travelers with premium amenities and 24/7 concierge support.",
-      features: ["Executive suites", "Airport transfers", "Concierge service", "Flexible check-in"]
+      title: t("business.solutions.individual.title", "Business Travel"),
+      description: t("business.solutions.individual.description", "Individual accommodations for executives and business travelers with premium amenities and 24/7 concierge support."),
+      features: [t("business.solutions.individual.f1", "Executive suites"), t("business.solutions.individual.f2", "Airport transfers"), t("business.solutions.individual.f3", "Concierge service"), t("business.solutions.individual.f4", "Flexible check-in")]
     },
     {
       key: "relocation",
       icon: Building2,
-      title: "Employee Relocation",
-      description: "Temporary housing for relocating employees with move-in ready apartments and local orientation support.",
-      features: ["Fully furnished", "Utilities included", "Local orientation", "Flexible terms"]
+      title: t("business.solutions.relocation.title", "Employee Relocation"),
+      description: t("business.solutions.relocation.description", "Temporary housing for relocating employees with move-in ready apartments and local orientation support."),
+      features: [t("business.solutions.relocation.f1", "Fully furnished"), t("business.solutions.relocation.f2", "Utilities included"), t("business.solutions.relocation.f3", "Local orientation"), t("business.solutions.relocation.f4", "Flexible terms")]
     },
     {
       key: "group",
       icon: Globe,
-      title: "Group Accommodations",
-      description: "Multiple units for training programs, conferences, or project teams with centralized billing and coordination.",
-      features: ["Bulk booking discounts", "Team coordination", "Centralized billing", "Meeting spaces"]
+      title: t("business.solutions.group.title", "Group Accommodations"),
+      description: t("business.solutions.group.description", "Multiple units for training programs, conferences, or project teams with centralized billing and coordination."),
+      features: [t("business.solutions.group.f1", "Bulk booking discounts"), t("business.solutions.group.f2", "Team coordination"), t("business.solutions.group.f3", "Centralized billing"), t("business.solutions.group.f4", "Meeting spaces")]
     },
     {
       key: "longterm",
       icon: Calendar,
-      title: "Long-term Projects",
-      description: "Extended stays for project teams or extended assignments with cost-effective monthly rates and dedicated support.",
-      features: ["Extended stay rates", "Project coordination", "Regular housekeeping", "Dedicated account manager"]
+      title: t("business.solutions.longterm.title", "Long-term Projects"),
+      description: t("business.solutions.longterm.description", "Extended stays for project teams or extended assignments with cost-effective monthly rates and dedicated support."),
+      features: [t("business.solutions.longterm.f1", "Extended stay rates"), t("business.solutions.longterm.f2", "Project coordination"), t("business.solutions.longterm.f3", "Regular housekeeping"), t("business.solutions.longterm.f4", "Dedicated account manager")]
     }
   ];
 
@@ -114,56 +114,56 @@ export default function ForBusinessPageContent() {
     {
       key: "flexible",
       icon: Clock,
-      title: "Flexible Terms",
-      description: "Month-to-month agreements with no long-term commitments. Scale up or down based on your business needs.",
-      stat: "30-day minimum"
+      title: t("business.advantages.flexible.title", "Flexible Terms"),
+      description: t("business.advantages.flexible.description", "Month-to-month agreements with no long-term commitments. Scale up or down based on your business needs."),
+      stat: t("business.advantages.flexible.stat", "30-day minimum")
     },
     {
       key: "cost",
       icon: TrendingDown,
-      title: "Cost Savings",
-      description: "Save 30-40% compared to hotels for extended stays. All-inclusive pricing with no hidden fees.",
-      stat: "Up to 40% savings"
+      title: t("business.advantages.cost.title", "Cost Savings"),
+      description: t("business.advantages.cost.description", "Save 30-40% compared to hotels for extended stays. All-inclusive pricing with no hidden fees."),
+      stat: t("business.advantages.cost.stat", "Up to 40% savings")
     },
     {
       key: "manager",
       icon: Headphones,
-      title: "Dedicated Account Manager",
-      description: "Personal account manager for seamless booking, billing, and ongoing support throughout your partnership.",
-      stat: "24/7 support"
+      title: t("business.advantages.manager.title", "Dedicated Account Manager"),
+      description: t("business.advantages.manager.description", "Personal account manager for seamless booking, billing, and ongoing support throughout your partnership."),
+      stat: t("business.advantages.manager.stat", "24/7 support")
     },
     {
       key: "billing",
       icon: CreditCard,
-      title: "Streamlined Billing",
-      description: "Consolidated monthly invoicing with detailed reporting and expense tracking for easy reconciliation.",
-      stat: "Single invoice"
+      title: t("business.advantages.billing.title", "Streamlined Billing"),
+      description: t("business.advantages.billing.description", "Consolidated monthly invoicing with detailed reporting and expense tracking for easy reconciliation."),
+      stat: t("business.advantages.billing.stat", "Single invoice")
     }
   ];
 
   const caseStudies = [
     {
-      company: "Tech Startup",
-      label: "Typical Scenario",
-      challenge: "Needed 15 units for 6-month project team relocation to Toronto",
-      solution: "Provided furnished apartments in downtown core with meeting spaces",
-      result: "Saved $180,000 compared to hotels while improving team productivity",
+      company: t("business.cases.tech.company", "Tech Startup"),
+      label: t("business.cases.label", "Typical Scenario"),
+      challenge: t("business.cases.tech.challenge", "Needed 15 units for 6-month project team relocation to Toronto"),
+      solution: t("business.cases.tech.solution", "Provided furnished apartments in downtown core with meeting spaces"),
+      result: t("business.cases.tech.result", "Saved $180,000 compared to hotels while improving team productivity"),
       savings: "60%"
     },
     {
-      company: "Consulting Firm",
-      label: "Typical Scenario",
-      challenge: "Executive travel program with unpredictable durations",
-      solution: "Flexible booking system with premium downtown suites",
-      result: "Reduced accommodation costs by 35% with improved executive satisfaction",
+      company: t("business.cases.consulting.company", "Consulting Firm"),
+      label: t("business.cases.label", "Typical Scenario"),
+      challenge: t("business.cases.consulting.challenge", "Executive travel program with unpredictable durations"),
+      solution: t("business.cases.consulting.solution", "Flexible booking system with premium downtown suites"),
+      result: t("business.cases.consulting.result", "Reduced accommodation costs by 35% with improved executive satisfaction"),
       savings: "35%"
     },
     {
-      company: "Manufacturing Corp",
-      label: "Typical Scenario",
-      challenge: "Employee relocation program for new Toronto office",
-      solution: "Staged move-in process with temporary housing for 50+ employees",
-      result: "Smooth transition with 95% employee satisfaction rating",
+      company: t("business.cases.manufacturing.company", "Manufacturing Corp"),
+      label: t("business.cases.label", "Typical Scenario"),
+      challenge: t("business.cases.manufacturing.challenge", "Employee relocation program for new Toronto office"),
+      solution: t("business.cases.manufacturing.solution", "Staged move-in process with temporary housing for 50+ employees"),
+      result: t("business.cases.manufacturing.result", "Smooth transition with 95% employee satisfaction rating"),
       savings: "45%"
     }
   ];

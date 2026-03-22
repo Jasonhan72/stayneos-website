@@ -323,16 +323,87 @@
     },
     "solutions": {
       "title": "Solutions for Every Need",
-      "subtitle": "From individual business travelers to large project teams, we have the perfect accommodation solution for your organization."
+      "subtitle": "From individual business travelers to large project teams, we have the perfect accommodation solution for your organization.",
+      "individual": {
+        "title": "Business Travel",
+        "description": "Individual accommodations for executives and business travelers with premium amenities and 24/7 concierge support.",
+        "f1": "Executive suites",
+        "f2": "Airport transfers",
+        "f3": "Concierge service",
+        "f4": "Flexible check-in"
+      },
+      "relocation": {
+        "title": "Employee Relocation",
+        "description": "Temporary housing for relocating employees with move-in ready apartments and local orientation support.",
+        "f1": "Fully furnished",
+        "f2": "Utilities included",
+        "f3": "Local orientation",
+        "f4": "Flexible terms"
+      },
+      "group": {
+        "title": "Group Accommodations",
+        "description": "Multiple units for training programs, conferences, or project teams with centralized billing and coordination.",
+        "f1": "Bulk booking discounts",
+        "f2": "Team coordination",
+        "f3": "Centralized billing",
+        "f4": "Meeting spaces"
+      },
+      "longterm": {
+        "title": "Long-term Projects",
+        "description": "Extended stays for project teams or extended assignments with cost-effective monthly rates and dedicated support.",
+        "f1": "Extended stay rates",
+        "f2": "Project coordination",
+        "f3": "Regular housekeeping",
+        "f4": "Dedicated account manager"
+      }
     },
     "advantages": {
       "title": "Why Choose NEOS for Business",
-      "subtitle": "Transform your corporate accommodation strategy with our comprehensive business solutions."
+      "subtitle": "Transform your corporate accommodation strategy with our comprehensive business solutions.",
+      "flexible": {
+        "title": "Flexible Terms",
+        "description": "Month-to-month agreements with no long-term commitments. Scale up or down based on your business needs.",
+        "stat": "30-day minimum"
+      },
+      "cost": {
+        "title": "Cost Savings",
+        "description": "Save 30-40% compared to hotels for extended stays. All-inclusive pricing with no hidden fees.",
+        "stat": "Up to 40% savings"
+      },
+      "manager": {
+        "title": "Dedicated Account Manager",
+        "description": "Personal account manager for seamless booking, billing, and ongoing support throughout your partnership.",
+        "stat": "24/7 support"
+      },
+      "billing": {
+        "title": "Streamlined Billing",
+        "description": "Consolidated monthly invoicing with detailed reporting and expense tracking for easy reconciliation.",
+        "stat": "Single invoice"
+      }
     },
     "cases": {
       "title": "Typical Scenarios",
       "subtitle": "See how leading companies have transformed their accommodation strategies with NEOS.",
-      "typical": "Typical Scenario"
+      "typical": "Typical Scenario",
+      "label": "Typical Scenario",
+      "tech": {
+        "company": "Tech Startup",
+        "challenge": "Needed 15 units for 6-month project team relocation to Toronto",
+        "solution": "Provided furnished apartments in downtown core with meeting spaces",
+        "result": "Saved $180,000 compared to hotels while improving team productivity"
+      },
+      "consulting": {
+        "company": "Consulting Firm",
+        "challenge": "Executive travel program with unpredictable durations",
+        "solution": "Flexible booking system with premium downtown suites",
+        "result": "Reduced accommodation costs by 35% with improved executive satisfaction"
+      },
+      "manufacturing": {
+        "company": "Manufacturing Corp",
+        "challenge": "Employee relocation program for new Toronto office",
+        "solution": "Staged move-in process with temporary housing for 50+ employees",
+        "result": "Smooth transition with 95% employee satisfaction rating"
+      }
     },
     "features": {
       "title": "Business-First Features",

@@ -322,7 +322,26 @@
     "cases": {
       "title": "Scénarios types",
       "typical": "Scénario type",
-      "subtitle": "See how leading companies have transformed their accommodation strategies with NEOS."
+      "subtitle": "See how leading companies have transformed their accommodation strategies with NEOS.",
+      "label": "Scénario type",
+      "tech": {
+        "company": "Startup tech",
+        "challenge": "Besoin de 15 unités pour une relocalisation d'équipe de 6 mois à Toronto",
+        "solution": "Appartements meublés au centre-ville avec espaces de réunion",
+        "result": "180 000 $ économisés par rapport aux hôtels"
+      },
+      "consulting": {
+        "company": "Cabinet de conseil",
+        "challenge": "Programme de voyage exécutif avec durées imprévisibles",
+        "solution": "Système de réservation flexible avec suites premium",
+        "result": "Coûts d'hébergement réduits de 35%"
+      },
+      "manufacturing": {
+        "company": "Corp. manufacturière",
+        "challenge": "Programme de relocalisation pour nouveau bureau Toronto",
+        "solution": "Processus d'emménagement par étapes pour 50+ employés",
+        "result": "Transition fluide avec 95% de satisfaction"
+      }
     },
     "stats": {
       "companies": "Support opérationnel",
@@ -383,7 +402,27 @@
     },
     "advantages": {
       "subtitle": "Transform your corporate accommodation strategy with our comprehensive business solutions.",
-      "title": "Pourquoi choisir NEOS for Business"
+      "title": "Pourquoi choisir NEOS for Business",
+      "flexible": {
+        "title": "Conditions flexibles",
+        "description": "Contrats au mois sans engagement long terme. Adaptez selon vos besoins.",
+        "stat": "Minimum 30 jours"
+      },
+      "cost": {
+        "title": "Économies",
+        "description": "Économisez 30-40% par rapport aux hôtels pour les séjours prolongés. Tarifs tout compris.",
+        "stat": "Jusqu'à 40% d'économies"
+      },
+      "manager": {
+        "title": "Gestionnaire de compte dédié",
+        "description": "Un gestionnaire personnel pour la réservation, la facturation et le support continu.",
+        "stat": "Support 24/7"
+      },
+      "billing": {
+        "title": "Facturation simplifiée",
+        "description": "Facturation mensuelle consolidée avec rapports détaillés et suivi des dépenses.",
+        "stat": "Une seule facture"
+      }
     },
     "features": {
       "subtitle": "Enterprise-grade features designed to simplify corporate accommodation management.",
@@ -397,7 +436,39 @@
     },
     "solutions": {
       "subtitle": "From individual business travelers to large project teams, we have the perfect accommodation solution for your organization.",
-      "title": "Solutions for Every Need"
+      "title": "Solutions for Every Need",
+      "individual": {
+        "title": "Voyages d'affaires",
+        "description": "Hébergements individuels pour cadres et voyageurs d'affaires avec équipements premium et conciergerie 24/7.",
+        "f1": "Suites exécutives",
+        "f2": "Transferts aéroport",
+        "f3": "Service de conciergerie",
+        "f4": "Check-in flexible"
+      },
+      "relocation": {
+        "title": "Relocalisation d'employés",
+        "description": "Logements temporaires pour les employés en relocalisation avec appartements prêts à vivre et support d'orientation locale.",
+        "f1": "Entièrement meublé",
+        "f2": "Charges incluses",
+        "f3": "Orientation locale",
+        "f4": "Conditions flexibles"
+      },
+      "group": {
+        "title": "Hébergement de groupe",
+        "description": "Plusieurs unités pour programmes de formation, conférences ou équipes de projet avec facturation centralisée.",
+        "f1": "Réductions groupe",
+        "f2": "Coordination d'équipe",
+        "f3": "Facturation centralisée",
+        "f4": "Espaces de réunion"
+      },
+      "longterm": {
+        "title": "Projets long terme",
+        "description": "Séjours prolongés pour équipes de projet avec tarifs mensuels compétitifs et support dédié.",
+        "f1": "Tarifs long séjour",
+        "f2": "Coordination de projet",
+        "f3": "Ménage régulier",
+        "f4": "Gestionnaire de compte dédié"
+      }
     }
   },
   "longterm": {
