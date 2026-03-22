@@ -16,6 +16,7 @@ import {
 interface PropertyEditorProps {
   initial?: unknown;
   id?: string;
+  apiBase?: string; // defaults to '/api/admin/properties'
 }
 
 type AiAssistType = 'parse' | 'translate' | 'seo';
@@ -138,7 +139,7 @@ function Field({
   );
 }
 
-export default function PropertyEditor({ initial, id }: PropertyEditorProps) {
+export default function PropertyEditor({ initial, id, apiBase = '/api/admin/properties' }: PropertyEditorProps) {
   const router = useRouter();
   const [form, setForm] = useState<PropertyFormState>(toPropertyFormState((initial ?? null) as Record<string, unknown> | null));
   const [saving, setSaving] = useState(false);
@@ -248,7 +249,7 @@ export default function PropertyEditor({ initial, id }: PropertyEditorProps) {
     setSaving(true);
 
     try {
-      const response = await fetch(id ? `/api/admin/properties/${id}` : '/api/admin/properties', {
+      const response = await fetch(id ? `${apiBase}/${id}` : apiBase, {
         method: id ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

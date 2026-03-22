@@ -17,7 +17,7 @@ export function PropertyFormClient({ propertyId }: PropertyFormClientProps) {
     const fetchProperty = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/admin/properties/${propertyId}`, {
+        const res = await fetch(`/api/dashboard/properties/${propertyId}`, {
           credentials: "include",
         });
         if (!res.ok) {
@@ -89,7 +89,7 @@ export function PropertyFormClient({ propertyId }: PropertyFormClientProps) {
           <h1 className="text-2xl font-bold text-neutral-900 mb-6">
             Edit: {title}
           </h1>
-          <PropertyEditor initial={property} id={propertyId} />
+          <PropertyEditor initial={property} id={propertyId} apiBase="/api/dashboard/properties" />
         </div>
       </main>
     </ProtectedRoute>
