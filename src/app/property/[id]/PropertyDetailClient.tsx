@@ -550,8 +550,8 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
       {/* Spacer for fixed nav */}
       <div className="h-14" />
 
-      <Container className="pt-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+      <Container className="pt-6 pb-2">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between mb-6">
           <div className="min-w-0">
             <h1 className="text-2xl md:text-3xl font-bold text-neutral-900">{localizedTitle}</h1>
             <p className="mt-2 text-sm md:text-base text-neutral-600">
@@ -612,8 +612,8 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           </div>
         </div>
 
-        {/* Desktop: Grid Gallery - Airbnb adaptive layout */}
-        <div className="hidden md:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Desktop: Grid Gallery */}
+        <Container className="hidden md:block">
           <div className="relative">
             {imageUrls.length === 1 ? (
               /* 1 image: full width */
@@ -676,7 +676,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               </div>
             )}
           </div>
-        </div>
+        </Container>
       </div>
 
       {/* Main Content - Two Column Layout on Desktop */}
