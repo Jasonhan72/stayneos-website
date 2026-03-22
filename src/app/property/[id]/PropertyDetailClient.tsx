@@ -22,6 +22,7 @@ import { ApiErrorAlert } from '@/components/error';
 import { AirbnbCalendar, ReviewAndContinue, PaymentMethod, GuestSelector, type GuestCounts } from '@/components/booking';
 // CardDetailsForm removed - PCI compliance: all card input handled by Stripe Elements
 import { useI18n } from '@/lib/i18n';
+import { useWishlist } from '@/lib/context/WishlistContext';
 import { useProperty } from '@/hooks/useProperties';
 import { PropertyCardData } from '@/types';
 import { getPropertyLocation } from '@/lib/utils/property-transform';
@@ -178,7 +179,8 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   });
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isLiked, setIsLiked] = useState(false);
+  const { isWishlisted, toggleWishlist } = useWishlist();
+  const isLiked = isWishlisted(propertyId);
   const [showGallery, setShowGallery] = useState(false);
   
   // Mobile carousel scroll ref
@@ -533,7 +535,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                 <Share size={20} className="text-neutral-900" />
               </button>
               <button 
-                onClick={() => setIsLiked(!isLiked)} 
+                onClick={() => toggleWishlist(propertyId)} 
                 className="p-2.5 hover:bg-neutral-100 rounded-full transition-colors"
                 aria-label={isLiked ? 'Remove from favorites' : 'Add to favorites'}
               >
@@ -569,7 +571,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               <span>{t('property.share', 'Share')}</span>
             </button>
             <button
-              onClick={() => setIsLiked(!isLiked)}
+              onClick={() => toggleWishlist(propertyId)}
               className="inline-flex items-center gap-2 text-sm font-medium text-neutral-900 underline underline-offset-2"
               aria-label={isLiked ? 'Remove from favorites' : 'Add to favorites'}
             >

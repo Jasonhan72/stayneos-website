@@ -2,6 +2,7 @@ import { Heart, Star, MapPin, Users, Maximize } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
+import { useWishlist } from "@/lib/context/WishlistContext";
 
 // 扩展 Property 接口以兼容 API 数据结构
 export interface Property {
@@ -92,6 +93,8 @@ interface PropertyCardProps {
 
 export default function PropertyCard({ property }: PropertyCardProps) {
   const { locale, t } = useI18n();
+  const { isWishlisted, toggleWishlist } = useWishlist();
+  const liked = isWishlisted(property.id);
   const title = getLocalizedTitle(property, locale);
   const location = getPropertyLocation(property);
   const isFeatured = property.featured || property.isFeatured || false;
@@ -126,12 +129,13 @@ export default function PropertyCard({ property }: PropertyCardProps) {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
+                toggleWishlist(property.id);
               }}
               className="absolute top-3 right-3 p-2.5 rounded-full bg-white/95 backdrop-blur-sm hover:bg-white transition-all duration-200 shadow-md hover:shadow-lg hover:scale-110 focus:outline-none focus:ring-2 focus:ring-accent min-w-[44px] min-h-[44px] flex items-center justify-center"
-              aria-label={`Favorite ${title}`}
+              aria-label={liked ? t('wishlists.remove', 'Remove from wishlist') : t('wishlists.addToWishlist', 'Add to wishlist')}
               type="button"
             >
-              <Heart size={20} className="text-neutral-500 hover:text-error transition-colors" aria-hidden="true" />
+              <Heart size={20} className={liked ? 'fill-rose-500 text-rose-500' : 'text-neutral-500 hover:text-rose-500'} aria-hidden="true" />
             </button>
 
             {/* Featured Badge */}
