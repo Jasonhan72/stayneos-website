@@ -15,11 +15,6 @@ import {
   Trophy,
   Waves,
   Check,
-  Train,
-  UtensilsCrossed,
-  ShoppingBag,
-  TreePine,
-  Hospital
 } from 'lucide-react';
 import { Container, Divider } from '@/components/ui';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -403,40 +398,26 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
     }
   };
 
-  const neighborhoodTitle = [propertyDetails.neighborhood, propertyDetails.city].filter(Boolean).join(', ') || locationShort;
-  const nearestSubway = propertyDetails.nearestSubway || (propertyDetails.neighborhood?.toLowerCase().includes('waterfront') ? 'Union Station' : 'Union Station');
-  const subwayWalkMinutes = propertyDetails.subwayWalkMinutes ?? (propertyDetails.neighborhood?.toLowerCase().includes('waterfront') ? 8 : 10);
+  const neighborhoodName = propertyDetails.neighborhood || 'Downtown Toronto';
+  const nearestSubway = propertyDetails.nearestSubway || 'Union Station';
+  const subwayWalkMinutes = propertyDetails.subwayWalkMinutes ?? 10;
   const nearbyLandmarks = propertyDetails.nearbyLandmarks?.filter(Boolean) || [];
-  const landmarkSummary = nearbyLandmarks.length > 0
-    ? nearbyLandmarks.slice(0, 2).join(' · ')
-    : t('property.neighborhoodDowntownLandmarks', 'Downtown Toronto dining and daily essentials nearby');
-  const neighborhoodHighlights = [
-    {
-      icon: Train,
-      title: t('property.neighborhoodTransit', 'Nearest subway'),
-      description: `${nearestSubway} (${subwayWalkMinutes} ${t('common.minutes', 'min')} ${t('property.walk', 'walk')})`,
-    },
-    {
-      icon: UtensilsCrossed,
-      title: t('property.neighborhoodDining', 'Restaurants & cafes nearby'),
-      description: nearbyLandmarks[0] || t('property.neighborhoodDiningDesc', 'Walkable spots for coffee, dining, and casual meetups'),
-    },
-    {
-      icon: ShoppingBag,
-      title: t('property.neighborhoodShopping', 'Grocery stores within walking distance'),
-      description: nearbyLandmarks[1] || t('property.neighborhoodShoppingDesc', 'Easy access to groceries, pharmacies, and essentials'),
-    },
-    {
-      icon: TreePine,
-      title: t('property.neighborhoodParks', 'Parks and recreation nearby'),
-      description: nearbyLandmarks[2] || t('property.neighborhoodParksDesc', 'Harbourfront trails, green space, and weekend walks nearby'),
-    },
-    {
-      icon: Hospital,
-      title: t('property.neighborhoodHealthcare', 'Healthcare facilities nearby'),
-      description: nearbyLandmarks[3] || t('property.neighborhoodHealthcareDesc', 'Major clinics and hospitals are accessible from this location'),
-    },
-  ];
+
+  // Build a natural paragraph like Airbnb
+  const neighborhoodParagraph = (() => {
+    const parts: string[] = [];
+    parts.push(t('property.neighborhoodIntro', 'At this location, you\'ll find all that {neighborhood} has to offer right outside your door.', { neighborhood: neighborhoodName }));
+    if (nearestSubway) {
+      parts.push(t('property.neighborhoodSubway', 'The nearest subway station is {station}, just a {minutes}-minute walk away.', { station: nearestSubway, minutes: String(subwayWalkMinutes) }));
+    }
+    if (nearbyLandmarks.length > 0) {
+      parts.push(t('property.neighborhoodLandmarks', 'Nearby highlights include {landmarks}.', { landmarks: nearbyLandmarks.join(', ') }));
+    } else {
+      parts.push(t('property.neighborhoodDefaultHighlights', 'You\'ll discover great restaurants, cafes, and shopping within walking distance. The Eaton Centre, Queen Street shopping and entertainment, and the Financial District are all close by.'));
+    }
+    parts.push(t('property.neighborhoodGrocery', 'For groceries, pharmacies, and daily essentials, there are multiple options within a short walk.'));
+    return parts.join(' ');
+  })();
 
   // Desktop Booking Card Component
   const BookingCard = ({ isSticky = false }: { isSticky?: boolean }) => (
@@ -804,20 +785,16 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             <Divider />
 
             <div className="py-6">
-              <h2 className="text-xl font-semibold mb-2">{t('property.neighborhoodTitle', 'Neighborhood Highlights')}</h2>
-              <p className="text-neutral-600 mb-6">{neighborhoodTitle} · {landmarkSummary}</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {neighborhoodHighlights.map((highlight) => {
-                  const Icon = highlight.icon;
-                  return (
-                    <div key={highlight.title} className="rounded-2xl border border-neutral-200 p-5">
-                      <Icon size={20} className="text-neutral-900 mb-3" />
-                      <h3 className="font-medium text-neutral-900">{highlight.title}</h3>
-                      <p className="mt-2 text-sm leading-6 text-neutral-600">{highlight.description}</p>
-                    </div>
-                  );
-                })}
-              </div>
+              <h2 className="text-xl font-semibold mb-4">{t('property.neighborhoodTitle', 'Neighborhood highlights')}</h2>
+              <p className="text-neutral-600 leading-relaxed line-clamp-4">
+                {neighborhoodParagraph}
+              </p>
+              <button
+                onClick={() => {/* TODO: expand full text */}}
+                className="mt-3 text-neutral-900 font-medium underline underline-offset-4 flex items-center gap-1 hover:text-neutral-700 transition-colors"
+              >
+                {t('property.showMore', 'Show more')} <span className="text-lg">›</span>
+              </button>
             </div>
 
             <Divider />

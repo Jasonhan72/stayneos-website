@@ -1060,7 +1060,12 @@
       "location": "Emplacement",
       "stayTerms": "Conditions de séjour",
       "buildingInfo": "Infos immeuble"
-    }
+    },
+    "neighborhoodIntro": "À cet emplacement, vous trouverez tout ce que {neighborhood} a à offrir juste devant votre porte.",
+    "neighborhoodSubway": "La station de métro la plus proche est {station}, à seulement {minutes} minutes à pied.",
+    "neighborhoodLandmarks": "Les points d'intérêt à proximité incluent {landmarks}.",
+    "neighborhoodDefaultHighlights": "Vous découvrirez d'excellents restaurants, cafés et commerces à distance de marche. Le Eaton Centre, le shopping et divertissement de Queen Street, et le quartier financier sont tous à proximité.",
+    "neighborhoodGrocery": "Pour l'épicerie, les pharmacies et les produits essentiels, plusieurs options sont accessibles à pied."
   },
   "filter": {
     "all": "Tous les Statuts"

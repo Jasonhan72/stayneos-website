@@ -1052,7 +1052,12 @@
       "location": "Location",
       "stayTerms": "Stay terms",
       "buildingInfo": "Building info"
-    }
+    },
+    "neighborhoodIntro": "At this location, you'll find all that {neighborhood} has to offer right outside your door.",
+    "neighborhoodSubway": "The nearest subway station is {station}, just a {minutes}-minute walk away.",
+    "neighborhoodLandmarks": "Nearby highlights include {landmarks}.",
+    "neighborhoodDefaultHighlights": "You'll discover great restaurants, cafes, and shopping within walking distance. The Eaton Centre, Queen Street shopping and entertainment, and the Financial District are all close by.",
+    "neighborhoodGrocery": "For groceries, pharmacies, and daily essentials, there are multiple options within a short walk."
   },
   "filter": {
     "all": "All Status"

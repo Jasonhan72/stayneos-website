@@ -1046,7 +1046,7 @@
     "monthly": "月租",
     "quarterly": "季租",
     "annual": "年租",
-    "showMore": "显示更多",
+    "showMore": "展开更多",
     "loadingMap": "地图加载中...",
     "reserve": "预订",
     "totalBeforeTaxes": "税前总计",
@@ -1060,7 +1060,12 @@
       "location": "位置",
       "stayTerms": "入住条款",
       "buildingInfo": "楼宇信息"
-    }
+    },
+    "neighborhoodIntro": "在这个位置，{neighborhood}的一切精彩就在您的门外。",
+    "neighborhoodSubway": "最近的地铁站是{station}，步行仅需{minutes}分钟。",
+    "neighborhoodLandmarks": "附近的亮点包括{landmarks}。",
+    "neighborhoodDefaultHighlights": "步行范围内有众多优质餐厅、咖啡馆和购物场所。伊顿中心、皇后街购物娱乐区以及金融区都近在咫尺。",
+    "neighborhoodGrocery": "超市、药店和日常用品店步行即达，非常方便。"
   },
   "filter": {
     "all": "全部状态"
