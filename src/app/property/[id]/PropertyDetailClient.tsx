@@ -14,7 +14,12 @@ import {
   X,
   Trophy,
   Waves,
-  Check
+  Check,
+  Train,
+  UtensilsCrossed,
+  ShoppingBag,
+  TreePine,
+  Hospital
 } from 'lucide-react';
 import { Container, Divider } from '@/components/ui';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -41,6 +46,14 @@ type PropertyFacts = {
   location: string;
   minimumStay: string;
   extra?: string;
+};
+
+type PropertyLocationDetails = PropertyCardData & {
+  city?: string;
+  neighborhood?: string;
+  nearestSubway?: string | null;
+  subwayWalkMinutes?: number | null;
+  nearbyLandmarks?: string[];
 };
 
 const PROPERTY_FACTS: Record<string, Record<string, PropertyFacts>> = {
@@ -245,6 +258,8 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
     return property.amenities;
   }, [property]);
 
+  const propertyDetails = propertyCardData as PropertyLocationDetails;
+
   // Calculate booking price - Monthly rental logic (not nightly)
   const bookingPrice = useMemo(() => {
     if (!propertyCardData || !checkIn || !checkOut) return null;
@@ -370,6 +385,59 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
     ? property.images.filter(Boolean)
     : ['/images/placeholder-property.jpg'];
 
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/property/${propertyId}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: localizedTitle,
+          text: `Check out this property: ${localizedTitle} - ${locationShort}`,
+          url: shareUrl,
+        });
+      } catch {}
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        alert(t('property.linkCopied'));
+      } catch {}
+    }
+  };
+
+  const neighborhoodTitle = [propertyDetails.neighborhood, propertyDetails.city].filter(Boolean).join(', ') || locationShort;
+  const nearestSubway = propertyDetails.nearestSubway || (propertyDetails.neighborhood?.toLowerCase().includes('waterfront') ? 'Union Station' : 'Union Station');
+  const subwayWalkMinutes = propertyDetails.subwayWalkMinutes ?? (propertyDetails.neighborhood?.toLowerCase().includes('waterfront') ? 8 : 10);
+  const nearbyLandmarks = propertyDetails.nearbyLandmarks?.filter(Boolean) || [];
+  const landmarkSummary = nearbyLandmarks.length > 0
+    ? nearbyLandmarks.slice(0, 2).join(' · ')
+    : t('property.neighborhoodDowntownLandmarks', 'Downtown Toronto dining and daily essentials nearby');
+  const neighborhoodHighlights = [
+    {
+      icon: Train,
+      title: t('property.neighborhoodTransit', 'Nearest subway'),
+      description: `${nearestSubway} (${subwayWalkMinutes} ${t('common.minutes', 'min')} ${t('property.walk', 'walk')})`,
+    },
+    {
+      icon: UtensilsCrossed,
+      title: t('property.neighborhoodDining', 'Restaurants & cafes nearby'),
+      description: nearbyLandmarks[0] || t('property.neighborhoodDiningDesc', 'Walkable spots for coffee, dining, and casual meetups'),
+    },
+    {
+      icon: ShoppingBag,
+      title: t('property.neighborhoodShopping', 'Grocery stores within walking distance'),
+      description: nearbyLandmarks[1] || t('property.neighborhoodShoppingDesc', 'Easy access to groceries, pharmacies, and essentials'),
+    },
+    {
+      icon: TreePine,
+      title: t('property.neighborhoodParks', 'Parks and recreation nearby'),
+      description: nearbyLandmarks[2] || t('property.neighborhoodParksDesc', 'Harbourfront trails, green space, and weekend walks nearby'),
+    },
+    {
+      icon: Hospital,
+      title: t('property.neighborhoodHealthcare', 'Healthcare facilities nearby'),
+      description: nearbyLandmarks[3] || t('property.neighborhoodHealthcareDesc', 'Major clinics and hospitals are accessible from this location'),
+    },
+  ];
+
   // Desktop Booking Card Component
   const BookingCard = ({ isSticky = false }: { isSticky?: boolean }) => (
     <div className={`bg-white border border-neutral-200 rounded-2xl p-6 shadow-lg ${isSticky ? 'sticky top-24' : ''}`}>
@@ -477,23 +545,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             
             <div className="flex items-center gap-2">
               <button 
-                onClick={async () => {
-                  const shareUrl = `${window.location.origin}/property/${propertyId}`;
-                  if (navigator.share) {
-                    try { 
-                      await navigator.share({ 
-                        title: localizedTitle, 
-                        text: `Check out this property: ${localizedTitle} - ${locationShort}`, 
-                        url: shareUrl 
-                      }); 
-                    } catch {}
-                  } else {
-                    try {
-                      await navigator.clipboard.writeText(shareUrl);
-                      alert(t('property.linkCopied'));
-                    } catch {}
-                  }
-                }}
+                onClick={handleShare}
                 className="p-2.5 hover:bg-neutral-100 rounded-full transition-colors"
                 aria-label="Share property"
               >
@@ -516,6 +568,36 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
 
       {/* Spacer for fixed nav */}
       <div className="h-14" />
+
+      <Container className="pt-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div className="min-w-0">
+            <h1 className="text-2xl md:text-3xl font-bold text-neutral-900">{localizedTitle}</h1>
+            <p className="mt-2 text-sm md:text-base text-neutral-600">
+              {locationShort} · {propertyType}
+            </p>
+            <p className="mt-1 text-sm md:text-base text-neutral-600">{guestInfo}</p>
+          </div>
+
+          <div className="flex items-center gap-4 md:gap-6 shrink-0">
+            <button
+              onClick={handleShare}
+              className="inline-flex items-center gap-2 text-sm font-medium text-neutral-900 underline underline-offset-2"
+            >
+              <Share size={16} />
+              <span>{t('property.share', 'Share')}</span>
+            </button>
+            <button
+              onClick={() => setIsLiked(!isLiked)}
+              className="inline-flex items-center gap-2 text-sm font-medium text-neutral-900 underline underline-offset-2"
+              aria-label={isLiked ? 'Remove from favorites' : 'Add to favorites'}
+            >
+              <Heart size={16} className={isLiked ? 'fill-rose-500 text-rose-500' : 'text-neutral-900'} />
+              <span>{t('property.save', 'Save')}</span>
+            </button>
+          </div>
+        </div>
+      </Container>
 
       {/* Full Width Image Gallery - Desktop Grid / Mobile Carousel */}
       <div className="relative">
@@ -551,39 +633,43 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
 
         {/* Desktop: Grid Gallery */}
         <div className="hidden md:block max-w-6xl mx-auto px-6 py-6">
-          <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[400px] rounded-xl overflow-hidden">
+          <div className="relative">
+            <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[400px] rounded-xl overflow-hidden">
             {/* Main Large Image */}
-            <div className="col-span-2 row-span-2 relative cursor-pointer hover:opacity-95 transition-opacity"
-              onClick={() => setShowGallery(true)}
-            >
-              <Image 
-                src={imageUrls[0]} 
-                alt={localizedTitle}
-                fill 
-                priority 
-                className="object-cover" 
-              />
-            </div>
-            {/* Side Images */}
-            {imageUrls.slice(1, 5).map((img, idx) => (
-              <div 
-                key={idx}
-                className="relative cursor-pointer hover:opacity-95 transition-opacity"
-                onClick={() => { setCurrentImageIndex(idx + 1); setShowGallery(true); }}
+              <div className="col-span-2 row-span-2 relative cursor-pointer hover:opacity-95 transition-opacity"
+                onClick={() => setShowGallery(true)}
               >
                 <Image 
-                  src={img} 
-                  alt={`${localizedTitle} - ${idx + 2}`}
+                  src={imageUrls[0]} 
+                  alt={localizedTitle}
                   fill 
+                  priority 
                   className="object-cover" 
                 />
-                {idx === 3 && imageUrls.length > 5 && (
-                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                    <span className="text-white font-medium">+{imageUrls.length - 5} {t('property.photos', 'photos')}</span>
-                  </div>
-                )}
               </div>
-            ))}
+              {/* Side Images */}
+              {imageUrls.slice(1, 5).map((img, idx) => (
+                <div 
+                  key={idx}
+                  className="relative cursor-pointer hover:opacity-95 transition-opacity"
+                  onClick={() => { setCurrentImageIndex(idx + 1); setShowGallery(true); }}
+                >
+                  <Image 
+                    src={img} 
+                    alt={`${localizedTitle} - ${idx + 2}`}
+                    fill 
+                    className="object-cover" 
+                  />
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setShowGallery(true)}
+              className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-lg border border-neutral-900 bg-white px-4 py-2 text-sm font-medium text-neutral-900 shadow-sm transition-colors hover:bg-neutral-50"
+            >
+              {t('property.showAllPhotos', 'Show all photos')}
+            </button>
           </div>
         </div>
       </div>
@@ -593,13 +679,6 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Left Column - Property Details */}
           <div className="lg:col-span-2">
-            {/* Title Section */}
-            <div className="mb-6">
-              <h1 className="text-2xl md:text-3xl font-bold text-neutral-900 mb-2">{localizedTitle}</h1>
-              <p className="text-neutral-600">{propertyType} · {locationShort}</p>
-              <p className="text-neutral-600 mt-1">{guestInfo}</p>
-            </div>
-
             {/* Info Bar - Mobile Only */}
             <div className="flex md:hidden items-center justify-center gap-6 mb-6 py-4 border-y border-neutral-200">
               {propertyCardData.reviewCount > 0 && (
@@ -720,6 +799,25 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               <button className="mt-6 px-6 py-3 border border-neutral-900 rounded-xl font-medium text-neutral-900">
                 {t('property.showAllAmenities', { count: amenities.length })}
               </button>
+            </div>
+
+            <Divider />
+
+            <div className="py-6">
+              <h2 className="text-xl font-semibold mb-2">{t('property.neighborhoodTitle', 'Neighborhood Highlights')}</h2>
+              <p className="text-neutral-600 mb-6">{neighborhoodTitle} · {landmarkSummary}</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {neighborhoodHighlights.map((highlight) => {
+                  const Icon = highlight.icon;
+                  return (
+                    <div key={highlight.title} className="rounded-2xl border border-neutral-200 p-5">
+                      <Icon size={20} className="text-neutral-900 mb-3" />
+                      <h3 className="font-medium text-neutral-900">{highlight.title}</h3>
+                      <p className="mt-2 text-sm leading-6 text-neutral-600">{highlight.description}</p>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             <Divider />
