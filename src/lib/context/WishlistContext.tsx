@@ -1,11 +1,11 @@
 'use client';
 
-import { createContext, useCallback, useContext, useSyncExternalStore } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 const STORAGE_KEY = 'stayneos_wishlist';
 
 interface WishlistContextType {
-  wishlist: string[]; // array of property IDs
+  wishlist: string[];
   isWishlisted: (id: string) => boolean;
   toggleWishlist: (id: string) => void;
   clearWishlist: () => void;
@@ -30,37 +30,24 @@ function saveWishlist(ids: string[]) {
   } catch {}
 }
 
-// Custom store for useSyncExternalStore
-let listeners: (() => void)[] = [];
-
-function subscribe(listener: () => void) {
-  listeners = [...listeners, listener];
-  return () => {
-    listeners = listeners.filter(l => l !== listener);
-  };
-}
-
-function emitChange() {
-  for (const listener of listeners) {
-    listener();
-  }
-}
-
-// Also listen to storage events from other tabs
-if (typeof window !== 'undefined') {
-  window.addEventListener('storage', (e) => {
-    if (e.key === STORAGE_KEY) {
-      emitChange();
-    }
-  });
-}
-
-function getSnapshot(): string[] {
-  return loadWishlist();
-}
-
 export function WishlistProvider({ children }: { children: React.ReactNode }) {
-  const wishlist = useSyncExternalStore(subscribe, getSnapshot, () => []);
+  const [wishlist, setWishlist] = useState<string[]>([]);
+
+  // Load from localStorage on mount (client-side only)
+  useEffect(() => {
+    setWishlist(loadWishlist());
+  }, []);
+
+  // Listen to storage events from other tabs
+  useEffect(() => {
+    const handler = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEY) {
+        setWishlist(loadWishlist());
+      }
+    };
+    window.addEventListener('storage', handler);
+    return () => window.removeEventListener('storage', handler);
+  }, []);
 
   const isWishlisted = useCallback(
     (id: string) => wishlist.includes(id),
@@ -68,16 +55,18 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
   );
 
   const toggleWishlist = useCallback((id: string) => {
-    const next = wishlist.includes(id) 
-      ? wishlist.filter((x) => x !== id) 
-      : [...wishlist, id];
-    saveWishlist(next);
-    emitChange(); // Notify all subscribers
-  }, [wishlist]);
+    setWishlist(prev => {
+      const next = prev.includes(id)
+        ? prev.filter((x) => x !== id)
+        : [...prev, id];
+      saveWishlist(next);
+      return next;
+    });
+  }, []);
 
   const clearWishlist = useCallback(() => {
     saveWishlist([]);
-    emitChange();
+    setWishlist([]);
   }, []);
 
   return (

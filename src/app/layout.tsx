@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { I18nProvider } from "@/lib/i18n";
 import { UserProvider } from "@/lib/context/UserContext";
+import { WishlistProvider } from "@/lib/context/WishlistContext";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
@@ -123,6 +124,7 @@ export default function RootLayout({
     >
       <body className="font-sans antialiased">
         <UserProvider>
+          <WishlistProvider>
           <I18nProvider>
             <a
               href="#main-content"
@@ -134,6 +136,7 @@ export default function RootLayout({
             {children}
             <Footer />
           </I18nProvider>
+          </WishlistProvider>
         </UserProvider>
       </body>
     </html>
