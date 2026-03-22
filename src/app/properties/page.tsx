@@ -44,8 +44,8 @@ const GooglePropertyMap = dynamic(() => import('@/components/property/GoogleProp
   ),
 });
 
-// 每页数量
-const ITEMS_PER_PAGE = 6;
+// 每页数量 (暂时未使用)
+// const ITEMS_PER_PAGE = 6;
 
 
 export default function PropertiesPage() {
@@ -102,36 +102,13 @@ export default function PropertiesPage() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   
   // 构建 API 查询参数
-  const queryParams = useMemo(() => {
-    // 处理 sortBy 以符合 PropertyQueryParams 类型
-    let sortByValue: 'price' | 'createdAt' | 'rating' | undefined;
-    let sortOrderValue: 'asc' | 'desc' = 'asc';
-    
-    if (sortBy === 'price-low') {
-      sortByValue = 'price';
-      sortOrderValue = 'asc';
-    } else if (sortBy === 'price-high') {
-      sortByValue = 'price';
-      sortOrderValue = 'desc';
-    } else if (sortBy === 'rating') {
-      sortByValue = 'rating';
-      sortOrderValue = 'desc';
-    }
-    
-    return {
-      page: currentPage,
-      limit: ITEMS_PER_PAGE,
-      city: searchQuery || undefined,
-      minPrice: selectedPriceRange.min > 0 ? selectedPriceRange.min : undefined,
-      maxPrice: selectedPriceRange.max !== Infinity ? selectedPriceRange.max : undefined,
-      bedrooms: selectedBedrooms !== 'any' ? parseInt(selectedBedrooms) : undefined,
-      sortBy: sortByValue,
-      sortOrder: sortOrderValue,
-    };
-  }, [currentPage, searchQuery, selectedPriceRange, selectedBedrooms, sortBy]);
+  // 暂时禁用过滤参数
+  // const queryParams = useMemo(() => {
+  //   return {};
+  // }, []);
   
   // 使用 API 获取房源
-  const { properties, pagination, isLoading, error } = useProperties(queryParams);
+  const { properties, pagination, isLoading, error } = useProperties();
   
   // 转换 API 数据
   const propertyList = useMemo(() => properties, [properties]);

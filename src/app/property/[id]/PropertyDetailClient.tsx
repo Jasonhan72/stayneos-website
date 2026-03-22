@@ -171,12 +171,10 @@ const mockHost = {
   yearsHosting: 2,
 };
 
-export default function PropertyDetailClient({ propertyId, initialProperty }: PropertyDetailClientProps) {
+export default function PropertyDetailClient({ propertyId }: PropertyDetailClientProps) {
   const { t, locale } = useI18n();
   const router = useRouter();
-  const { property, isLoading, error } = useProperty(propertyId, {
-    fallbackData: initialProperty,
-  });
+  const { property, isLoading, error } = useProperty(propertyId);
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { isWishlisted, toggleWishlist } = useWishlist();

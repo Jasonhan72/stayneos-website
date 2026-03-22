@@ -1,63 +1,93 @@
 'use client';
 
-import useSWR, { SWRConfiguration } from 'swr';
+import { useState, useEffect } from 'react';
 import { PropertyCardData } from '@/types';
 
-const fetcher = async (url: string) => {
-  const res = await fetch(url, { credentials: 'include' });
-  if (!res.ok) throw new Error('Failed to fetch');
-  return res.json();
-};
+export function useProperties() {
+  const [properties, setProperties] = useState<PropertyCardData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-export function useProperties(_params?: Record<string, unknown>, config?: SWRConfiguration) {
-  const { data, error, isLoading, mutate } = useSWR('/api/properties', fetcher, {
-    revalidateOnFocus: false,
-    ...config,
-  });
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        setIsLoading(true);
+        const res = await fetch('/api/properties', { credentials: 'include' });
+        if (!res.ok) throw new Error('Failed to fetch properties');
+        const data = await res.json();
+        setProperties(data.properties || []);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('Unknown error'));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProperties();
+  }, []);
 
   return {
-    properties: (data?.properties || []) as PropertyCardData[],
-    pagination: data?.properties
-      ? { totalPages: 1, currentPage: 1, total: data.properties.length }
+    properties,
+    pagination: properties.length
+      ? { totalPages: 1, currentPage: 1, total: properties.length }
       : undefined,
     isLoading,
     error,
-    mutate,
+    mutate: () => {}, // Simple stub for compatibility
   };
 }
 
-export function useProperty(idOrSlug: string | null, config?: SWRConfiguration) {
-  const { data, error, isLoading, mutate } = useSWR(
-    idOrSlug ? `/api/properties/${idOrSlug}` : null,
-    fetcher,
-    { revalidateOnFocus: false, ...config }
-  );
+export function useProperty(idOrSlug: string | null) {
+  const [property, setProperty] = useState<PropertyCardData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    if (!idOrSlug) {
+      setIsLoading(false);
+      return;
+    }
+
+    const fetchProperty = async () => {
+      try {
+        setIsLoading(true);
+        const res = await fetch(`/api/properties/${idOrSlug}`, { credentials: 'include' });
+        if (!res.ok) throw new Error('Failed to fetch property');
+        const data = await res.json();
+        setProperty(data.property || null);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('Unknown error'));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProperty();
+  }, [idOrSlug]);
 
   return {
-    property: (data?.property || null) as PropertyCardData | null,
+    property,
     isLoading,
     error,
-    mutate,
+    mutate: () => {}, // Simple stub for compatibility
   };
 }
 
-export function useFeaturedProperties(limit = 6, config?: SWRConfiguration) {
-  const { data, error, isLoading, mutate } = useSWR('/api/properties', fetcher, {
-    revalidateOnFocus: false,
-    ...config,
-  });
+export function useFeaturedProperties(limit = 6) {
+  const { properties, isLoading, error } = useProperties();
+  const featuredProperties = properties.slice(0, limit);
 
-  const properties = ((data?.properties || []) as PropertyCardData[]).slice(0, limit);
-
-  return { properties, isLoading, error, mutate };
+  return { properties: featuredProperties, isLoading, error, mutate: () => {} };
 }
 
 export async function fetchProperty(idOrSlug: string) {
-  const data = await fetcher(`/api/properties/${idOrSlug}`);
+  const res = await fetch(`/api/properties/${idOrSlug}`, { credentials: 'include' });
+  const data = await res.json();
   return data?.property || null;
 }
 
 export async function fetchProperties() {
-  const data = await fetcher('/api/properties');
+  const res = await fetch('/api/properties', { credentials: 'include' });
+  const data = await res.json();
   return data?.properties || [];
 }
