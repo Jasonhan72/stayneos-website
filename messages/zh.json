@@ -1020,7 +1020,7 @@
     "diveIn": "深入了解",
     "diveInDesc": "体验当地文化和景点",
     "hostedBy": "房东：{name}",
-    "superhostYears": "{years} 年 hosting 经验",
+    "superhostYears": "{years} 年房东经验",
     "showAllAmenities": "显示全部 {count} 项设施",
     "checkAvailability": "查看可订状态",
     "addDates": "添加日期",
@@ -2649,7 +2649,7 @@
   "diveIn": "深入了解",
   "diveInDesc": "体验当地文化和景点",
   "hostedBy": "房东：{name}",
-  "superhostYears": "{years} 年 hosting 经验",
+  "superhostYears": "{years} 年房东经验",
   "showAllAmenities": "显示全部 {count} 项设施",
   "checkAvailability": "查看可订状态",
   "addDates": "添加日期",
@@ -3550,5 +3550,10 @@
       "description": "为员工、家庭和国际新移民提供更顺畅的多伦多落脚方案。",
       "cta": "查看搬迁房源"
     }
+  },
+  "host": {
+    "properties": "套房源",
+    "yearsHosting": "{count} 年房东经验",
+    "responseRate": "回复率"
   }
 }

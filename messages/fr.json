@@ -3550,5 +3550,10 @@
       "description": "Un atterrissage en douceur pour les employés, les familles et les nouveaux arrivants internationaux à Toronto.",
       "cta": "Voir les logements relocalisation"
     }
+  },
+  "host": {
+    "properties": "propriétés",
+    "yearsHosting": "{count} ans d'hébergement",
+    "responseRate": "taux de réponse"
   }
 }

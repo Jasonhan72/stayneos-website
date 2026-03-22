@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Shield, Star, MessageCircle, Award, Calendar } from 'lucide-react';
 import { HostPublicProfile, HostLevel } from '@/types/host';
+import { useI18n } from '@/lib/i18n';
 
 interface HostCardProps {
   host: HostPublicProfile;
@@ -36,6 +37,7 @@ const hostLevelConfig: Record<HostLevel, { label: string; color: string; icon: R
 };
 
 export function HostCard({ host, variant = 'full', showContact = true }: HostCardProps) {
+  const { t } = useI18n();
   const levelConfig = hostLevelConfig[host.hostLevel];
   
   if (variant === 'compact') {
@@ -117,14 +119,14 @@ export function HostCard({ host, variant = 'full', showContact = true }: HostCar
         {/* Stats */}
         <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-neutral-600">
           {host.totalProperties > 0 && (
-            <span>{host.totalProperties} {host.totalProperties === 1 ? 'property' : 'properties'}</span>
+            <span>{host.totalProperties} {t('host.properties', 'properties')}</span>
           )}
           <span>·</span>
-          <span>{host.yearsHosting} {host.yearsHosting === 1 ? 'year' : 'years'} hosting</span>
+          <span>{host.yearsHosting} {t('host.yearsHosting', { count: host.yearsHosting })}</span>
           {host.responseRate > 0 && (
             <>
               <span>·</span>
-              <span>{host.responseRate}% response rate</span>
+              <span>{host.responseRate}% {t('host.responseRate', 'response rate')}</span>
             </>
           )}
         </div>

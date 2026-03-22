@@ -561,7 +561,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                 alt={localizedTitle}
                 fill 
                 priority 
-                className="object-contain" 
+                className="object-cover" 
               />
             </div>
             {/* Side Images */}
@@ -575,7 +575,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                   src={img} 
                   alt={`${localizedTitle} - ${idx + 2}`}
                   fill 
-                  className="object-contain" 
+                  className="object-cover" 
                 />
                 {idx === 3 && imageUrls.length > 5 && (
                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
@@ -640,7 +640,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                   src={mockHost.avatar} 
                   alt={mockHost.name}
                   fill
-                  className="object-contain"
+                  className="object-cover"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${mockHost.name}&background=random`;
                   }}
@@ -934,7 +934,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                 src={imageUrls[currentImageIndex]} 
                 alt={`${localizedTitle} - Image ${currentImageIndex + 1}`} 
                 fill 
-                className="object-contain" 
+                className="object-cover" 
               />
               <button 
                 onClick={prevImage} 
@@ -966,7 +966,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                         : 'opacity-50 hover:opacity-100'
                     }`}
                   >
-                    <Image src={image} alt={`Thumbnail ${index + 1}`} fill className="object-contain" />
+                    <Image src={image} alt={`Thumbnail ${index + 1}`} fill className="object-cover" />
                   </button>
                 ))}
               </div>
