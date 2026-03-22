@@ -11,6 +11,21 @@ export function generateStaticParams() {
   return [];
 }
 
+function normalizeBookingRow<T extends Record<string, unknown>>(row: T) {
+  const r = row as Record<string, unknown>;
+  return {
+    ...r,
+    id: (r.id as string) || "",
+    propertyId: (r.propertyId as string) || (r.property_id as string) || "",
+    checkIn: (r.checkIn as string) || (r.check_in as string) || "",
+    checkOut: (r.checkOut as string) || (r.check_out as string) || "",
+    bookingNumber: (r.bookingNumber as string) || (r.booking_number as string) || "",
+    totalPrice: Number((r.totalPrice as number) ?? (r.total_price as number) ?? 0),
+    paymentStatus: (r.paymentStatus as string) || (r.payment_status as string) || "PENDING",
+    status: (r.status as string) || "PENDING",
+  };
+}
+
 export async function POST(request: NextRequest) {
   try {
     const currentUser = await getCurrentUserFromRequest(request);
@@ -105,7 +120,9 @@ export async function GET(request: NextRequest) {
     const bookings = await bookingDb.findByUserId(db, user.id);
 
     const now = new Date();
-    const filtered = bookings.filter((booking) => {
+    const normalizedBookings = bookings.map((b) => normalizeBookingRow(b as unknown as Record<string, unknown>));
+
+    const filtered = normalizedBookings.filter((booking) => {
       const checkIn = new Date(booking.checkIn);
       // checkOut reserved for future date-range filtering
       void new Date(booking.checkOut);
@@ -131,7 +148,7 @@ export async function GET(request: NextRequest) {
 
     const bookingsWithDetails = await Promise.all(
       filtered.map(async (booking) => {
-        const property = getPropertySnapshot(booking.propertyId);
+        const property = getPropertySnapshot(booking.propertyId || "");
         const payments = await paymentDb.findByBookingId(db, booking.id);
         const paidAmount = payments
           .filter((payment) => payment.status === "COMPLETED")

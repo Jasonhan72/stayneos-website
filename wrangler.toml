@@ -12,7 +12,8 @@ directory = ".open-next/assets"
 RESEND_FROM_EMAIL = "hello@stayneos.com"
 NODE_ENV = "production"
 NEXTAUTH_URL = "https://stayneos.com"
-NEXTAUTH_SECRET = "533221c231edb2db076c354321361997023ee134e34111ea5a4a51882a27ca24"
+NEXTAUTH_SECRET = ""
+# SECURITY: NEXTAUTH_SECRET 已轮换，必须通过 `wrangler secret put NEXTAUTH_SECRET` 注入
 # Google OAuth credentials are stored as secrets - use wrangler secret put
 
 # D1 Database Binding

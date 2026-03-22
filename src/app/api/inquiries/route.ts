@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/lib/d1";
 import { inquiryDb, InquiryType } from "@/lib/inquiry-db";
+import { getDb } from "@/lib/d1";
+import { APIError, safeApiHandler } from "@/lib/utils/error-handler";
 
 const VALID_TYPES = new Set<InquiryType>([
   "agents",
@@ -11,6 +12,12 @@ const VALID_TYPES = new Set<InquiryType>([
   "contact",
   "market_insights",
 ]);
+
+const JSON_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
 
 function buildInquiryRecord(type: InquiryType, payload: Record<string, unknown>) {
   switch (type) {
@@ -80,9 +87,12 @@ function buildInquiryRecord(type: InquiryType, payload: Record<string, unknown>)
   }
 }
 
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: JSON_HEADERS });
+}
+
 export async function POST(request: Request) {
-  try {
-    const db = getDb();
+  return safeApiHandler(async () => {
     const body = (await request.json()) as {
       type?: InquiryType;
       payload?: Record<string, unknown>;
@@ -90,7 +100,7 @@ export async function POST(request: Request) {
     };
 
     if (!body.type || !VALID_TYPES.has(body.type)) {
-      return NextResponse.json({ error: "Invalid inquiry type" }, { status: 400 });
+      throw new APIError("Invalid inquiry type", 400, "BAD_REQUEST");
     }
 
     const normalizedPayload =
@@ -99,14 +109,16 @@ export async function POST(request: Request) {
         : (body as Record<string, unknown>);
 
     if (!normalizedPayload || typeof normalizedPayload !== "object") {
-      return NextResponse.json({ error: "Invalid inquiry payload" }, { status: 400 });
+      throw new APIError("Invalid inquiry payload", 400, "BAD_REQUEST");
     }
 
     const inquiry = buildInquiryRecord(body.type, normalizedPayload);
 
     if (!inquiry.email) {
-      return NextResponse.json({ error: "Email is required" }, { status: 400 });
+      throw new APIError("Email is required", 400, "BAD_REQUEST");
     }
+
+    const db = getDb();
 
     await inquiryDb.create(db, {
       type: body.type,
@@ -114,10 +126,6 @@ export async function POST(request: Request) {
       metadata: normalizedPayload,
     });
 
-    return NextResponse.json({ success: true }, { status: 201 });
-  } catch (error) {
-    console.error("Inquiry submission error:", error);
-    return NextResponse.json({ error: "Failed to submit inquiry" }, { status: 500 });
-  }
+    return NextResponse.json({ success: true }, { status: 201, headers: JSON_HEADERS });
+  });
 }
-

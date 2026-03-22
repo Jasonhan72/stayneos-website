@@ -37,7 +37,7 @@
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.563.0",
     "mapbox-gl": "^3.18.1",
-    "next": "^14.2.23",
+    "next": "14.2.35",
     "next-auth": "^4.24.13",
     "next-intl": "^4.8.2",
     "prisma": "^5.22.0",

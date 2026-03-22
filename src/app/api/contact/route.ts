@@ -1,10 +1,20 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/d1";
 import { inquiryDb } from "@/lib/inquiry-db";
+import { APIError, safeApiHandler } from "@/lib/utils/error-handler";
+
+const JSON_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: JSON_HEADERS });
+}
 
 export async function POST(request: Request) {
-  try {
-    const db = getDb();
+  return safeApiHandler(async () => {
     const body = (await request.json()) as {
       name?: string;
       email?: string;
@@ -14,8 +24,10 @@ export async function POST(request: Request) {
     };
 
     if (!body.name || !body.email || !body.message) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+      throw new APIError("Missing required fields", 400, "BAD_REQUEST");
     }
+
+    const db = getDb();
 
     await inquiryDb.create(db, {
       type: "contact",
@@ -27,10 +39,6 @@ export async function POST(request: Request) {
       metadata: body,
     });
 
-    return NextResponse.json({ success: true }, { status: 201 });
-  } catch (error) {
-    console.error("Contact submission error:", error);
-    return NextResponse.json({ error: "Failed to submit contact form" }, { status: 500 });
-  }
+    return NextResponse.json({ success: true }, { status: 201, headers: JSON_HEADERS });
+  });
 }
-

@@ -137,13 +137,20 @@ export function handleError(error: unknown): NextResponse<ErrorResponse> {
     }
   }
   
-  // 处理其他错误
-  const message = error instanceof Error ? error.message : '未知错误';
-  return createErrorResponse(message, 500, 'INTERNAL_ERROR');
+  // 处理其他错误（避免泄露内部细节，如 D1_TYPE_ERROR 等）
+  return createErrorResponse('服务器内部错误，请稍后重试', 500, 'INTERNAL_ERROR');
 }
 
 // 异步请求包装器
 export function withErrorHandler<T>(
+  handler: () => Promise<NextResponse<T>>
+): Promise<NextResponse<T | ErrorResponse>> {
+  return handler().catch(handleError) as Promise<NextResponse<T | ErrorResponse>>;
+}
+
+
+// 统一包装 API Handler，确保错误响应结构一致且不暴露内部错误细节
+export function safeApiHandler<T>(
   handler: () => Promise<NextResponse<T>>
 ): Promise<NextResponse<T | ErrorResponse>> {
   return handler().catch(handleError) as Promise<NextResponse<T | ErrorResponse>>;

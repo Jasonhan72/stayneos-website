@@ -26,28 +26,53 @@ async function listBookings(request: NextRequest, statusFilter?: string) {
   const bookings = await bookingDb.findByUserId(db, user.id);
   const payload = bookings
     .filter((booking) => {
+      const bookingStatus = booking.status || (booking as unknown as { status?: string; booking_status?: string }).booking_status;
       if (!statusFilter || statusFilter === "all") return true;
-      return booking.status === statusFilter;
+      return bookingStatus === statusFilter;
     })
     .map((booking) => {
-      const property = getPropertySnapshot(booking.propertyId);
+      const record = booking as unknown as {
+        id?: string;
+        bookingNumber?: string;
+        booking_number?: string;
+        checkIn?: string;
+        check_in?: string;
+        checkOut?: string;
+        check_out?: string;
+        totalPrice?: number;
+        total_price?: number;
+        paymentStatus?: string;
+        payment_status?: string;
+        propertyId?: string;
+        property_id?: string;
+        guestName?: string;
+        guest_name?: string;
+        guestEmail?: string;
+        guest_email?: string;
+        createdAt?: string;
+        created_at?: string;
+        status?: string;
+      };
+
+      const propertyId = record.propertyId || record.property_id || "";
+      const property = getPropertySnapshot(propertyId);
 
       return {
-        id: booking.id,
-        booking_number: booking.bookingNumber,
-        check_in: booking.checkIn,
-        check_out: booking.checkOut,
+        id: record.id,
+        booking_number: record.bookingNumber || record.booking_number,
+        check_in: record.checkIn || record.check_in,
+        check_out: record.checkOut || record.check_out,
         nights: booking.nights,
         guests: booking.guests,
-        total_price: booking.totalPrice,
+        total_price: record.totalPrice ?? record.total_price,
         currency: booking.currency,
-        status: booking.status,
-        payment_status: booking.paymentStatus,
-        property_id: booking.propertyId,
+        status: record.status,
+        payment_status: record.paymentStatus || record.payment_status,
+        property_id: propertyId,
         property_title: property?.title || "NEOS Property",
-        guest_name: booking.guestName,
-        guest_email: booking.guestEmail,
-        created_at: booking.createdAt,
+        guest_name: record.guestName || record.guest_name,
+        guest_email: record.guestEmail || record.guest_email,
+        created_at: record.createdAt || record.created_at,
       };
     });
 
