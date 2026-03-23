@@ -99,6 +99,7 @@ export async function POST(request: Request) {
       const baseUrl = process.env.NEXTAUTH_URL || "https://stayneos.com";
       const response = NextResponse.redirect(`${baseUrl}/dashboard`, 303);
       response.cookies.set('stayneos_auth_token', token, {
+        domain: '.stayneos.com',
         path: '/',
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -125,6 +126,7 @@ export async function POST(request: Request) {
 
     // Set auth cookie for middleware
     response.cookies.set('stayneos_auth_token', token, {
+        domain: '.stayneos.com',
       path: '/',
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

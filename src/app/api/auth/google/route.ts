@@ -1,7 +1,6 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
-import { getDb } from "@/lib/d1";
 
 const DEFAULT_REDIRECT = "/dashboard";
 
@@ -12,10 +11,20 @@ function sanitizeRedirect(redirect: string | null) {
   return redirect;
 }
 
+async function hmacSign(data: string, secret: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw", encoder.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+  );
+  const sig = await crypto.subtle.sign("HMAC", key, encoder.encode(data));
+  return Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 export async function GET(request: NextRequest) {
   try {
     const clientId = process.env.GOOGLE_CLIENT_ID;
     const baseUrl = process.env.NEXTAUTH_URL || "https://stayneos.com";
+    const jwtSecret = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET || "fallback-secret";
     const redirect = sanitizeRedirect(new URL(request.url).searchParams.get("redirect"));
     
     if (!clientId) {
@@ -25,16 +34,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Generate state and store in D1 (cookies unreliable in Cloudflare cross-origin redirects)
+    // Generate state with HMAC signature (no D1 dependency)
     const nonce = crypto.randomUUID();
+    const expires = Date.now() + 600000; // 10 min
+    const stateData = `${nonce}:${expires}`;
+    const signature = await hmacSign(stateData, jwtSecret);
+    const signedState = `${stateData}:${signature}`;
+    
     const state = JSON.stringify({ nonce, redirect });
-    const expiresAt = new Date(Date.now() + 600000).toISOString(); // 10 min
-
-    const db = getDb();
-    await db
-      .prepare("INSERT INTO OAuthState (id, state, expiresAt) VALUES (?, ?, ?)")
-      .bind(crypto.randomUUID(), nonce, expiresAt)
-      .run();
     
     // Build Google OAuth URL
     const googleOAuthUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
@@ -46,9 +53,21 @@ export async function GET(request: NextRequest) {
     googleOAuthUrl.searchParams.set("prompt", "consent");
     googleOAuthUrl.searchParams.set("access_type", "offline");
     
-    return NextResponse.redirect(googleOAuthUrl.toString());
-  } catch {
-    console.error("Google OAuth error");
+    const response = NextResponse.redirect(googleOAuthUrl.toString());
+    
+    // Store signed state in cookie for verification on callback
+    response.cookies.set("oauth_state", signedState, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      maxAge: 600, // 10 min
+      path: "/",
+      domain: ".stayneos.com", // accessible from both www and apex
+    });
+    
+    return response;
+  } catch (err) {
+    console.error("Google OAuth error:", err);
     return NextResponse.json(
       { message: "OAuth initialization failed" },
       { status: 500 }
