@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button } from '@/components/ui';
+import { Button, Modal } from '@/components/ui';
 import { useI18n } from '@/lib/i18n';
 import { 
   ChevronLeft, 
@@ -111,6 +111,10 @@ export default function BookingDetailClient() {
   const [booking, setBooking] = useState<BookingDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState('');
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
 
   const fetchBookingDetail = useCallback(async () => {
     setIsLoading(true);
@@ -134,6 +138,40 @@ export default function BookingDetailClient() {
   useEffect(() => {
     fetchBookingDetail();
   }, [fetchBookingDetail]);
+
+  const handleSubmitReview = async () => {
+    if (!booking) return;
+
+    const comment = reviewComment.trim();
+    if (!comment) {
+      alert(t('bookings.reviewPlaceholder'));
+      return;
+    }
+
+    try {
+      setIsSubmittingReview(true);
+      const response = await fetch(`/api/bookings/${bookingId}/review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rating: reviewRating, comment }),
+      });
+
+      const data = await response.json() as { error?: string };
+      if (!response.ok) {
+        throw new Error(data.error || t('bookingDetail.error.fetchFailed'));
+      }
+
+      setShowReviewModal(false);
+      setReviewComment('');
+      setReviewRating(5);
+      await fetchBookingDetail();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : t('bookingDetail.error.fetchFailed');
+      alert(msg);
+    } finally {
+      setIsSubmittingReview(false);
+    }
+  };
 
   // 格式化日期
   const formatDate = (dateString: string) => {
@@ -415,7 +453,7 @@ export default function BookingDetailClient() {
             </Button>
 
             {booking.status === 'CHECKED_OUT' && !booking.review && (
-              <Button>
+              <Button onClick={() => setShowReviewModal(true)}>
                 <Star size={18} className="mr-2" />
                 {t('bookingDetail.writeReview')}
               </Button>
@@ -423,6 +461,47 @@ export default function BookingDetailClient() {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={showReviewModal}
+        onClose={() => {
+          setShowReviewModal(false);
+          setReviewComment('');
+          setReviewRating(5);
+        }}
+        title={t('bookingDetail.writeReview')}
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-neutral-700 mb-2">{t('bookings.rating')}</label>
+            <div className="flex gap-2">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <button key={i} onClick={() => setReviewRating(i + 1)} className="p-1" type="button">
+                  <Star size={24} className={i < reviewRating ? 'text-amber-400 fill-amber-400' : 'text-neutral-300'} />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-neutral-700 mb-2">{t('bookings.writeReview')}</label>
+            <textarea
+              value={reviewComment}
+              onChange={(e) => setReviewComment(e.target.value)}
+              placeholder={t('bookings.reviewPlaceholder')}
+              rows={4}
+              className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:border-primary focus:outline-none"
+            />
+          </div>
+
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" onClick={() => setShowReviewModal(false)}>{t('common.cancel')}</Button>
+            <Button onClick={handleSubmitReview} disabled={isSubmittingReview}>
+              {isSubmittingReview ? <Loader2 size={16} className="animate-spin mr-2" /> : null}
+              {t('bookings.submitReview')}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </main>
   );
 }

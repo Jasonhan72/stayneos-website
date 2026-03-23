@@ -3,6 +3,7 @@ import { getCurrentUserFromRequest } from "@/lib/auth";
 import { userDb, getDb } from "@/lib/d1";
 import { bookingDb } from "@/lib/booking-db";
 import { paymentDb } from "@/lib/payment-db";
+import { reviewDb } from "@/lib/review-db";
 import { getPropertySnapshot } from "@/lib/property-catalog";
 import { stripe } from "@/lib/stripe";
 
@@ -34,13 +35,14 @@ export async function GET(
 
     const property = getPropertySnapshot(booking.propertyId);
     const payments = await paymentDb.findByBookingId(db, booking.id);
+    const review = await reviewDb.findByBookingId(db, booking.id);
 
     return NextResponse.json({
       success: true,
       booking: {
         ...booking,
         property,
-        review: null,
+        review,
         payments,
       },
     });

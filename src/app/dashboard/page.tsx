@@ -271,22 +271,14 @@ function DashboardContent() {
                             <div className="flex gap-2 mt-4">
                               {booking.status === "upcoming" && (
                                 <>
-                                  <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
-                                    {t('dashboard.viewDetails')}
-                                  </button>
-                                  <button className="px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors">
-                                    {t('dashboard.cancelBooking')}
-                                  </button>
+                                  <Link href="/dashboard/bookings" className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">{t('dashboard.viewDetails')}</Link>
+                                  <Link href="/dashboard/bookings" className="px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors">{t('dashboard.cancelBooking')}</Link>
                                 </>
                               )}
                               {booking.status === "completed" && (
                                 <>
-                                  <button className="px-4 py-2 bg-amber-500 text-white text-sm rounded-lg hover:bg-amber-600 transition-colors">
-                                    {t('dashboard.writeReview')}
-                                  </button>
-                                  <button className="px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors">
-                                    {t('dashboard.bookAgain')}
-                                  </button>
+                                  <Link href="/dashboard/bookings" className="px-4 py-2 bg-amber-500 text-white text-sm rounded-lg hover:bg-amber-600 transition-colors">{t('dashboard.writeReview')}</Link>
+                                  <Link href={`/property/${booking.property.id}`} className="px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors">{t('dashboard.bookAgain')}</Link>
                                 </>
                               )}
                             </div>
