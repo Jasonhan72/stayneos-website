@@ -403,11 +403,31 @@
         "challenge": "Employee relocation program for new Toronto office",
         "solution": "Staged move-in process with temporary housing for 50+ employees",
         "result": "Smooth transition with 95% employee satisfaction rating"
-      }
+      },
+      "saved": "saved",
+      "challengeLabel": "Challenge:",
+      "solutionLabel": "Solution:",
+      "resultLabel": "Result:"
     },
     "features": {
       "title": "Business-First Features",
-      "subtitle": "Enterprise-grade features designed to simplify corporate accommodation management."
+      "subtitle": "Enterprise-grade features designed to simplify corporate accommodation management.",
+      "booking": {
+        "title": "Easy Booking",
+        "description": "Online platform for easy reservations and modifications"
+      },
+      "reporting": {
+        "title": "Expense Reporting",
+        "description": "Detailed reporting for expense management and budgeting"
+      },
+      "support": {
+        "title": "24/7 Support",
+        "description": "Round-the-clock support for urgent needs and modifications"
+      },
+      "quality": {
+        "title": "Quality Guarantee",
+        "description": "Vetted properties meeting corporate standards"
+      }
     },
     "stats": {
       "companies": "Operational Support",

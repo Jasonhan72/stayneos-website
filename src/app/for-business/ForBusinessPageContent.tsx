@@ -169,10 +169,30 @@ export default function ForBusinessPageContent() {
   ];
 
   const features = [
-    { key: "booking", icon: Calendar, title: "Easy Booking", description: "Online platform for easy reservations and modifications" },
-    { key: "reporting", icon: BarChart3, title: "Expense Reporting", description: "Detailed reporting for expense management and budgeting" },
-    { key: "support", icon: Phone, title: "24/7 Support", description: "Round-the-clock support for urgent needs and modifications" },
-    { key: "quality", icon: Award, title: "Quality Guarantee", description: "Vetted properties meeting corporate standards" },
+    {
+      key: "booking",
+      icon: Calendar,
+      title: t("business.features.booking.title", "Easy Booking"),
+      description: t("business.features.booking.description", "Online platform for easy reservations and modifications"),
+    },
+    {
+      key: "reporting",
+      icon: BarChart3,
+      title: t("business.features.reporting.title", "Expense Reporting"),
+      description: t("business.features.reporting.description", "Detailed reporting for expense management and budgeting"),
+    },
+    {
+      key: "support",
+      icon: Phone,
+      title: t("business.features.support.title", "24/7 Support"),
+      description: t("business.features.support.description", "Round-the-clock support for urgent needs and modifications"),
+    },
+    {
+      key: "quality",
+      icon: Award,
+      title: t("business.features.quality.title", "Quality Guarantee"),
+      description: t("business.features.quality.description", "Vetted properties meeting corporate standards"),
+    },
   ];
 
   return (
@@ -318,24 +338,24 @@ export default function ForBusinessPageContent() {
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-bold text-gray-900"><span>{study.company}</span></h3>
                   <span className="bg-green-100 text-green-800 px-3 py-1 text-sm font-bold">
-                    {study.savings} saved
+                    {study.savings} {t("business.cases.saved", "saved")}
                   </span>
                 </div>
                 
                 <p className="text-xs uppercase tracking-wide text-blue-700 font-semibold mb-3">{study.label || t("business.cases.typical", "Typical Scenario")}</p>
                 <div className="space-y-4">
                   <div>
-                    <h4 className="font-semibold text-gray-700 mb-1">Challenge:</h4>
+                    <h4 className="font-semibold text-gray-700 mb-1">{t("business.cases.challengeLabel", "Challenge:")}</h4>
                     <p className="text-sm text-gray-600">{study.challenge}</p>
                   </div>
                   
                   <div>
-                    <h4 className="font-semibold text-gray-700 mb-1">Solution:</h4>
+                    <h4 className="font-semibold text-gray-700 mb-1">{t("business.cases.solutionLabel", "Solution:")}</h4>
                     <p className="text-sm text-gray-600">{study.solution}</p>
                   </div>
                   
                   <div className="border-t pt-4">
-                    <h4 className="font-semibold text-blue-600 mb-1">Result:</h4>
+                    <h4 className="font-semibold text-blue-600 mb-1">{t("business.cases.resultLabel", "Result:")}</h4>
                     <p className="text-sm text-gray-900 font-medium">{study.result}</p>
                   </div>
                 </div>

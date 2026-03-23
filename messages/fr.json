@@ -320,9 +320,9 @@
     "desc": "Vous êtes en déplacement pour un projet de 3 mois. On s'assure que le reste de votre vie ne s'arrête pas. Votre propre cuisine, et un quartier d'affaires accessible.",
     "cta": "Découvrir les offres entreprise",
     "cases": {
-      "title": "Scénarios types",
+      "title": "Histoires de réussite",
       "typical": "Scénario type",
-      "subtitle": "See how leading companies have transformed their accommodation strategies with NEOS.",
+      "subtitle": "Découvrez comment des entreprises de premier plan ont transformé leur stratégie d’hébergement avec NEOS.",
       "label": "Scénario type",
       "tech": {
         "company": "Startup tech",
@@ -341,13 +341,17 @@
         "challenge": "Programme de relocalisation pour nouveau bureau Toronto",
         "solution": "Processus d'emménagement par étapes pour 50+ employés",
         "result": "Transition fluide avec 95% de satisfaction"
-      }
+      },
+      "saved": "économisés",
+      "challengeLabel": "Défi :",
+      "solutionLabel": "Solution :",
+      "resultLabel": "Résultat :"
     },
     "stats": {
       "companies": "Support opérationnel",
       "stays": "Portefeuille flexible",
       "satisfaction": "Support dédié",
-      "savings": "Average Savings vs Hotels"
+      "savings": "Économies moyennes vs hôtels"
     },
     "trust": {
       "insured": "Entièrement assuré — 2 M$ de responsabilité civile commerciale",
@@ -363,46 +367,46 @@
         "30kTo50k": "30 000 $ - 50 000 $",
         "50kPlus": "50 000 $+"
       },
-      "selectType": "Select type",
-      "contactName": "Contact Name",
-      "units": "Units",
-      "email": "Email Address",
+      "selectType": "Sélectionner un type",
+      "contactName": "Nom du contact",
+      "units": "Unités",
+      "email": "Adresse e-mail",
       "success": {
-        "title": "Quote Request Soumettreted!",
-        "message": "Thank you for your interest! Our business development team will analyze your requirements and contact you within 24 hours with a customized proposal and pricing."
+        "title": "Demande de devis envoyée !",
+        "message": "Merci de votre intérêt ! Notre équipe analysera vos besoins et vous contactera sous 24 heures avec une proposition et une tarification personnalisées."
       },
-      "years": "Years",
-      "emailPlaceholder": "your@company.com",
-      "group": "Group Accommodation",
-      "submitting": "Soumettreting...",
-      "jobTitle": "Job Title",
-      "selectDuration": "Select",
-      "selectUnits": "Select",
-      "requirementsPlaceholder": "Please describe your accommodation needs, preferred locations, special requirements, timeline, and any other details that would help us create the perfect solution for your organization...",
+      "years": "Ans",
+      "emailPlaceholder": "vous@entreprise.com",
+      "group": "Hébergement de groupe",
+      "submitting": "Envoi en cours...",
+      "jobTitle": "Poste",
+      "selectDuration": "Sélectionner",
+      "selectUnits": "Sélectionner",
+      "requirementsPlaceholder": "Décrivez vos besoins d’hébergement, zones préférées, exigences spéciales, échéancier et tout détail utile pour créer la meilleure solution pour votre organisation...",
       "phonePlaceholder": "+1 (555) 000-0000",
-      "numberOfUnits": "Number of Units",
-      "title": "Request a Custom Quote",
-      "selectBudget": "Select budget range",
-      "projectTeam": "Project Team",
-      "subtitle": "Tell us about your requirements and our team will create a customized solution for your organization.",
-      "requirements": "Specific Requirements",
-      "unit": "Unit",
-      "contactNamePlaceholder": "Your full name",
-      "months": "Months",
-      "submit": "Request Quote",
-      "companyName": "Company Name",
-      "longTerm": "Long-term Stay",
-      "budget": "Monthly Budget Range",
-      "companyNamePlaceholder": "Your company name",
-      "duration": "Expected Duration",
-      "individual": "Individual Travel",
-      "phone": "Phone Number",
-      "jobTitlePlaceholder": "Your job title",
-      "accommodationType": "Accommodation Type"
+      "numberOfUnits": "Nombre d’unités",
+      "title": "Demander un devis personnalisé",
+      "selectBudget": "Sélectionner une fourchette",
+      "projectTeam": "Équipe projet",
+      "subtitle": "Parlez-nous de vos besoins et notre équipe créera une solution sur mesure pour votre organisation.",
+      "requirements": "Exigences spécifiques",
+      "unit": "Unité",
+      "contactNamePlaceholder": "Votre nom complet",
+      "months": "Mois",
+      "submit": "Demander un devis",
+      "companyName": "Nom de l’entreprise",
+      "longTerm": "Séjour longue durée",
+      "budget": "Fourchette de budget mensuel",
+      "companyNamePlaceholder": "Nom de votre entreprise",
+      "duration": "Durée prévue",
+      "individual": "Voyage individuel",
+      "phone": "Numéro de téléphone",
+      "jobTitlePlaceholder": "Votre poste",
+      "accommodationType": "Type d’hébergement"
     },
     "advantages": {
-      "subtitle": "Transform your corporate accommodation strategy with our comprehensive business solutions.",
-      "title": "Pourquoi choisir NEOS for Business",
+      "subtitle": "Transformez votre stratégie d’hébergement d’entreprise avec nos solutions complètes.",
+      "title": "Pourquoi choisir NEOS pour votre entreprise",
       "flexible": {
         "title": "Conditions flexibles",
         "description": "Contrats au mois sans engagement long terme. Adaptez selon vos besoins.",
@@ -425,18 +429,34 @@
       }
     },
     "features": {
-      "subtitle": "Enterprise-grade features designed to simplify corporate accommodation management.",
-      "title": "Business-First Features"
+      "title": "Fonctionnalités pensées pour les entreprises",
+      "subtitle": "Des fonctionnalités de niveau entreprise conçues pour simplifier la gestion de l’hébergement corporate.",
+      "booking": {
+        "title": "Réservation simple",
+        "description": "Plateforme en ligne pour réserver et modifier facilement."
+      },
+      "reporting": {
+        "title": "Rapports de dépenses",
+        "description": "Rapports détaillés pour la gestion des dépenses et des budgets."
+      },
+      "support": {
+        "title": "Support 24/7",
+        "description": "Assistance 24h/24 et 7j/7 pour les demandes urgentes et les modifications."
+      },
+      "quality": {
+        "title": "Garantie qualité",
+        "description": "Biens vérifiés conformes aux standards des entreprises."
+      }
     },
     "hero": {
-      "ctaQuote": "Request a Quote",
-      "ctaBrowse": "Explore Solutions",
-      "subtitle": "Streamlined accommodation solutions for business travelers, employee relocations, and project teams. Save costs, reduce complexity, and provide premium housing for your organization.",
-      "title": "Corporate Housing Solutions"
+      "title": "Solutions de logement d’entreprise",
+      "subtitle": "Solutions d’hébergement simplifiées pour les voyageurs d’affaires, les relocalisations d’employés et les équipes projet. Réduisez les coûts, simplifiez la gestion et offrez des logements premium à votre organisation.",
+      "ctaQuote": "Demander un devis",
+      "ctaBrowse": "Voir les solutions"
     },
     "solutions": {
-      "subtitle": "From individual business travelers to large project teams, we have the perfect accommodation solution for your organization.",
-      "title": "Solutions for Every Need",
+      "subtitle": "Des voyageurs d’affaires individuels aux grandes équipes projet, nous avons la solution d’hébergement idéale pour votre organisation.",
+      "title": "Des solutions pour chaque besoin",
       "individual": {
         "title": "Voyages d'affaires",
         "description": "Hébergements individuels pour cadres et voyageurs d'affaires avec équipements premium et conciergerie 24/7.",

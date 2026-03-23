@@ -320,9 +320,9 @@
     "desc": "您因项目在此驻留三个月。我们确保您的生活品质不受影响。步行即达商务区，在精心配备的厨房中烹饪家的味道。",
     "cta": "了解企业方案",
     "cases": {
-      "title": "典型场景",
+      "title": "成功案例",
       "typical": "典型场景",
-      "subtitle": "See how leading companies have transformed their accommodation strategies with NEOS.",
+      "subtitle": "看看领先企业如何通过 NEOS 优化住宿策略。",
       "label": "典型场景",
       "tech": {
         "company": "科技初创公司",
@@ -341,13 +341,17 @@
         "challenge": "新多伦多办公室的员工安置计划",
         "solution": "分阶段入住流程，为50+员工提供临时住房",
         "result": "平稳过渡，员工满意度达95%"
-      }
+      },
+      "saved": "节省",
+      "challengeLabel": "挑战：",
+      "solutionLabel": "方案：",
+      "resultLabel": "结果："
     },
     "stats": {
       "companies": "运营支持",
       "stays": "灵活房源组合",
       "satisfaction": "专属客户支持",
-      "savings": "Average Savings vs Hotels"
+      "savings": "相较酒店的平均节省"
     },
     "trust": {
       "insured": "全面承保 — 200万加元商业综合责任险",
@@ -363,46 +367,46 @@
         "30kTo50k": "$30,000 - $50,000",
         "50kPlus": "$50,000+"
       },
-      "selectType": "Select type",
-      "contactName": "联系 姓名",
-      "units": "Units",
-      "email": "邮箱 地址",
+      "selectType": "请选择类型",
+      "contactName": "联系人姓名",
+      "units": "套",
+      "email": "电子邮箱",
       "success": {
-        "title": "Quote Request 提交ted!",
-        "message": "Thank you for your interest! Our business development team will analyze your requirements and contact you within 24 hours with a customized proposal and pricing."
+        "title": "报价申请已提交！",
+        "message": "感谢您的咨询！我们的商务团队将在 24 小时内分析您的需求，并与您联系提供定制方案与报价。"
       },
-      "years": "Years",
+      "years": "年",
       "emailPlaceholder": "your@company.com",
-      "group": "Group Accommodation",
-      "submitting": "提交ting...",
-      "jobTitle": "Job 标题",
-      "selectDuration": "Select",
-      "selectUnits": "Select",
-      "requirementsPlaceholder": "Please describe your accommodation needs, preferred locations, special requirements, timeline, and any other details that would help us create the perfect solution for your organization...",
+      "group": "团队住宿",
+      "submitting": "提交中...",
+      "jobTitle": "职位",
+      "selectDuration": "请选择",
+      "selectUnits": "请选择",
+      "requirementsPlaceholder": "请描述您的住宿需求、偏好区域、特殊要求、时间安排及其他有助于我们制定方案的信息…",
       "phonePlaceholder": "+1 (555) 000-0000",
-      "numberOfUnits": "Number of Units",
-      "title": "Request a Custom Quote",
-      "selectBudget": "Select budget range",
-      "projectTeam": "Project Team",
-      "subtitle": "Tell us about your requirements and our team will create a customized solution for your organization.",
-      "requirements": "Specific 要求",
-      "unit": "Unit",
-      "contactNamePlaceholder": "Your full name",
-      "months": "Months",
-      "submit": "Request Quote",
-      "companyName": "公司 姓名",
-      "longTerm": "长租 Stay",
-      "budget": "月租 预算 Range",
-      "companyNamePlaceholder": "Your company name",
-      "duration": "Expected Duration",
-      "individual": "Individual Travel",
-      "phone": "电话 Number",
-      "jobTitlePlaceholder": "Your job title",
-      "accommodationType": "Accommodation 类型"
+      "numberOfUnits": "房源数量",
+      "title": "申请定制报价",
+      "selectBudget": "请选择预算范围",
+      "projectTeam": "项目团队",
+      "subtitle": "告诉我们您的需求，我们的团队将为您的组织提供定制化解决方案。",
+      "requirements": "具体需求",
+      "unit": "套",
+      "contactNamePlaceholder": "请输入您的姓名",
+      "months": "个月",
+      "submit": "申请报价",
+      "companyName": "公司名称",
+      "longTerm": "长期入住",
+      "budget": "月度预算范围",
+      "companyNamePlaceholder": "请输入公司名称",
+      "duration": "预计时长",
+      "individual": "个人差旅",
+      "phone": "联系电话",
+      "jobTitlePlaceholder": "请输入您的职位",
+      "accommodationType": "住宿类型"
     },
     "advantages": {
-      "subtitle": "Transform your corporate accommodation strategy with our comprehensive business solutions.",
-      "title": "为什么选择 NEOS for 商务",
+      "subtitle": "通过我们完整的企业住宿方案，全面升级您的住宿管理策略。",
+      "title": "为什么企业选择 NEOS",
       "flexible": {
         "title": "灵活条款",
         "description": "按月签约，无长期约束。根据业务需求灵活增减房源。",
@@ -425,18 +429,34 @@
       }
     },
     "features": {
-      "subtitle": "Enterprise-grade features designed to simplify corporate accommodation management.",
-      "title": "商务-First 特色"
+      "title": "面向企业的核心功能",
+      "subtitle": "企业级功能设计，帮助您更高效地管理企业住宿。",
+      "booking": {
+        "title": "便捷预订",
+        "description": "在线平台支持快速预订与变更。"
+      },
+      "reporting": {
+        "title": "费用报表",
+        "description": "提供详细报表，便于费用管理与预算控制。"
+      },
+      "support": {
+        "title": "7×24 支持",
+        "description": "全天候响应紧急需求与行程变更。"
+      },
+      "quality": {
+        "title": "品质保障",
+        "description": "严选房源，符合企业住宿标准。"
+      }
     },
     "hero": {
-      "ctaQuote": "Request a Quote",
-      "ctaBrowse": "Explore Solutions",
-      "subtitle": "Streamlined accommodation solutions for business travelers, employee relocations, and project teams. 保存 costs, reduce complexity, and provide premium housing for your organization.",
-      "title": "企业 Housing Solutions"
+      "title": "企业住房解决方案",
+      "subtitle": "为商务出行、员工异地安置和项目团队提供一体化住宿方案。节省成本、降低管理复杂度，并为您的组织提供高品质住房。",
+      "ctaQuote": "申请报价",
+      "ctaBrowse": "查看方案"
     },
     "solutions": {
-      "subtitle": "From individual business travelers to large project teams, we have the perfect accommodation solution for your organization.",
-      "title": "Solutions for Every Need",
+      "subtitle": "从个人商务差旅到大型项目团队，我们都能为您的组织提供合适的住宿方案。",
+      "title": "覆盖各类需求的解决方案",
       "individual": {
         "title": "商务差旅",
         "description": "为高管和商务旅客提供高端住宿，配备优质设施和24/7礼宾服务。",
