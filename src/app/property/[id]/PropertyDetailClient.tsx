@@ -939,6 +939,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
             setCheckOut('');
           }}
           pricePerNight={propertyCardData.price}
+          priceIsMonthly={true}
           minNights={propertyCardData.minNights || 1}
           rating={propertyCardData.reviewCount > 0 ? propertyCardData.rating : 0}
           currency="CAD"

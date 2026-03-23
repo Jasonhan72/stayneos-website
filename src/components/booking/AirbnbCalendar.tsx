@@ -12,6 +12,8 @@ export interface AirbnbCalendarProps {
   onClose?: () => void;
   onClearDates?: () => void;
   pricePerNight?: number;
+  /** When true, pricePerNight is actually a monthly rate (not nightly) */
+  priceIsMonthly?: boolean;
   minNights?: number;
   rating?: number;
   currency?: string;
@@ -39,6 +41,7 @@ export function AirbnbCalendar({
   onClose,
   onClearDates,
   pricePerNight = 0,
+  priceIsMonthly = false,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   minNights,
   rating = 0,
@@ -72,7 +75,13 @@ export function AirbnbCalendar({
     return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
   }, [selectedStart, selectedEnd]);
 
-  const totalPrice = nights * pricePerNight;
+  // Calculate total price: if monthly rate, multiply by months; otherwise by nights
+  const months = Math.max(1, Math.ceil(nights / 30));
+  const totalPrice = priceIsMonthly
+    ? months * pricePerNight
+    : nights * pricePerNight;
+  const displayUnit = priceIsMonthly ? 'months' : 'nights';
+  const displayCount = priceIsMonthly ? months : nights;
   const hasRating = rating > 0;
 
   // Generate months data (12 months from current month + offset)
@@ -280,7 +289,7 @@ export function AirbnbCalendar({
         {/* Header with selection info */}
         <div className="mb-4">
           <h2 className="text-2xl font-semibold text-neutral-900">
-            {hasSelection ? `${nights} nights` : 'Select check-in date'}
+            {hasSelection ? `${displayCount} ${displayUnit}` : 'Select check-in date'}
           </h2>
           <p className="text-neutral-500 mt-1">
             {hasSelection ? formatDateRange() : 'Add dates for prices'}
@@ -320,7 +329,7 @@ export function AirbnbCalendar({
                       <span className="text-sm text-neutral-600">{rating}</span>
                     </div>
                   )}
-                  <p className="text-sm text-neutral-500 underline">For {nights} nights</p>
+                  <p className="text-sm text-neutral-500 underline">For {displayCount} {displayUnit}</p>
                 </div>
               ) : (
                 <div>
@@ -388,7 +397,7 @@ export function AirbnbCalendar({
       {/* Title */}
       <div className="px-4 pt-6 pb-4 shrink-0">
         <h2 className="text-2xl font-semibold text-neutral-900">
-          {hasSelection ? `${nights} nights` : 'Select check-in date'}
+          {hasSelection ? `${displayCount} ${displayUnit}` : 'Select check-in date'}
         </h2>
         <p className="text-neutral-500 mt-1">
           {hasSelection ? formatDateRange() : 'Prices on calendar do not include taxes and fees'}
@@ -476,7 +485,7 @@ export function AirbnbCalendar({
                     <span className="text-sm text-neutral-600">{rating}</span>
                   </div>
                 )}
-                <p className="text-sm text-neutral-500 underline">For {nights} nights</p>
+                <p className="text-sm text-neutral-500 underline">For {displayCount} {displayUnit}</p>
               </div>
             ) : (
               <div>
@@ -530,7 +539,7 @@ export function AirbnbCalendar({
           
           <div className="text-center">
             <h2 className="text-lg font-semibold text-neutral-900">
-              {hasSelection ? `${nights} nights` : 'Select dates'}
+              {hasSelection ? `${displayCount} ${displayUnit}` : 'Select dates'}
             </h2>
             {hasSelection && (
               <p className="text-sm text-neutral-500">{formatDateRange()}</p>
@@ -596,7 +605,7 @@ export function AirbnbCalendar({
                   ${totalPrice.toLocaleString()} {currency}
                 </span>
                 <span className="text-sm text-neutral-500">
-                  for {nights} nights
+                  for {displayCount} {displayUnit}
                 </span>
               </div>
             ) : (

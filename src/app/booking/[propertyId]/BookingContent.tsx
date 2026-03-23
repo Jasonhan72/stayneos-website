@@ -370,6 +370,18 @@ export default function BookingContent() {
                         {t('common.edit') || 'Edit'}
                       </Link>
                     </div>
+                    {/* Show phone input if user has no phone on file */}
+                    {!guestPhone && (
+                      <div className="mt-3">
+                        <Input
+                          label={t('booking.phoneNumber') || 'Phone Number *'}
+                          value={guestPhone}
+                          onChange={(e) => setGuestPhone(e.target.value)}
+                          placeholder="+1 (xxx) xxx-xxxx"
+                          required
+                        />
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="space-y-4">
