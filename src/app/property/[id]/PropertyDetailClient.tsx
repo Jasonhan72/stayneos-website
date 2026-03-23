@@ -27,6 +27,7 @@ import { useCurrency } from '@/hooks/useCurrency';
 import { useProperty } from '@/hooks/useProperties';
 import { PropertyCardData } from '@/types';
 import { getPropertyLocation } from '@/lib/utils/property-transform';
+import { calculateBookingPrice } from '@/lib/booking';
 
 interface PropertyDetailClientProps {
   propertyId: string;
@@ -257,51 +258,10 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
 
   const propertyDetails = propertyCardData as PropertyLocationDetails;
 
-  // Calculate booking price - Monthly rental logic (not nightly)
+  // Calculate booking price from single source of truth
   const bookingPrice = useMemo(() => {
     if (!propertyCardData || !checkIn || !checkOut) return null;
-    
-    const start = new Date(checkIn);
-    const end = new Date(checkOut);
-    const nights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-    
-    if (nights < 1) return null;
-    
-    // Calculate tier prices inline
-    const monthly = propertyCardData?.price || 0;
-    const quarterly = Number((propertyCardData as unknown as { priceQuarterly?: number })?.priceQuarterly || 0) || Math.round(monthly * 0.92);
-    const annual = Number((propertyCardData as unknown as { priceAnnual?: number })?.priceAnnual || 0) || Math.round(monthly * 0.85);
-    
-    // Calculate months (ceiling)
-    const months = Math.ceil(nights / 30);
-    
-    // Determine rate tier based on total nights
-    let ratePerMonth: number;
-    let tierName: string;
-    if (nights >= 365) {
-      ratePerMonth = annual;
-      tierName = 'Annual';
-    } else if (nights >= 90) {
-      ratePerMonth = quarterly;
-      tierName = 'Quarterly';
-    } else {
-      ratePerMonth = monthly;
-      tierName = 'Monthly';
-    }
-    
-    const subtotal = months * ratePerMonth;
-    const tax = Math.round(subtotal * 0.13); // 13% HST
-    const total = subtotal + tax;
-    
-    return {
-      nights,
-      months,
-      ratePerMonth,
-      tierName,
-      subtotal,
-      tax,
-      total,
-    };
+    return calculateBookingPrice(propertyCardData, checkIn, checkOut);
   }, [propertyCardData, checkIn, checkOut]);
 
   // Loading state
@@ -938,8 +898,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
             setCheckIn('');
             setCheckOut('');
           }}
-          pricePerNight={propertyCardData.price}
-          priceIsMonthly={true}
+          totalPrice={bookingPrice?.total || 0}
           minNights={propertyCardData.minNights || 1}
           rating={propertyCardData.reviewCount > 0 ? propertyCardData.rating : 0}
           currency="CAD"
@@ -966,7 +925,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
           checkIn,
           checkOut,
           guests,
-          pricePerNight: propertyCardData.price,
+          pricePerNight: bookingPrice?.ratePerMonth || propertyCardData.price,
           cleaningFee: 0, // Included in all-inclusive pricing
           serviceFee: 0,  // Included in all-inclusive pricing
           tax: bookingPrice?.tax || 0,

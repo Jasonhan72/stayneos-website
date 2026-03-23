@@ -129,18 +129,14 @@ export default function BookingContent() {
     ? calculateBookingPrice(propertyCardData, checkIn, checkOut)
     : null;
 
+  const nights = priceCalc?.nights || 0;
+  const months = priceCalc?.months || 0;
+
   // Validate dates
   const dateValidation = checkIn && checkOut
     ? validateBookingDates(checkIn, checkOut, propertyCardData.minNights)
     : { valid: true };
 
-  // Calculate discounted price for display
-  const nights = priceCalc?.nights || 0;
-  const months = priceCalc?.months || 0;
-  const isMonthly = nights >= 28;
-  const displayPrice = isMonthly && propertyCardData.monthlyDiscount 
-    ? Math.round(propertyCardData.price * (100 - propertyCardData.monthlyDiscount) / 100)
-    : propertyCardData.price;
 
   // Format date display
   const formatDateDisplay = (dateStr: string) => {
@@ -290,7 +286,7 @@ export default function BookingContent() {
                       setCheckOut('');
                       setError('');
                     }}
-                    pricePerNight={displayPrice}
+                    totalPrice={priceCalc?.total || 0}
                     minNights={propertyCardData.minNights}
                     rating={propertyCardData.reviewCount > 0 ? propertyCardData.rating : 0}
                     currency="CAD"

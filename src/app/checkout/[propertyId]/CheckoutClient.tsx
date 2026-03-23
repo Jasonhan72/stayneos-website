@@ -15,7 +15,8 @@ import {
 } from 'lucide-react';
 import { Container } from '@/components/ui';
 import { AirbnbCalendar } from '@/components/booking';
-import { BookingPriceCalculator, calculateBookingPrice } from '@/components/booking';
+import { BookingPriceCalculator } from '@/components/booking';
+import { calculateBookingPrice } from '@/lib/booking';
 import { useProperty } from '@/hooks/useProperties';
 import { getLocalizedTitle } from '@/components/property/PropertyCard';
 import { useI18n } from '@/lib/i18n';
@@ -86,14 +87,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
   const localizedTitle = getLocalizedTitle(property, locale);
 
   // Calculate pricing with Airbnb style breakdown
-  const priceCalc = calculateBookingPrice({
-    basePrice: property.price,
-    checkIn,
-    checkOut,
-    monthlyDiscount: property.monthlyDiscount,
-    cleaningFee: property.cleaningFee || 80,
-    serviceFeeRate: 0.12,
-  });
+  const priceCalc = checkIn && checkOut ? calculateBookingPrice(property, checkIn, checkOut) : null;
 
   const nights = priceCalc?.nights || 0;
   // months available via priceCalc?.months if needed
@@ -178,11 +172,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
     return parts.join(', ');
   };
 
-  // Calculate discounted price for display
   const isMonthly = nights >= 28;
-  const displayPrice = isMonthly && property.monthlyDiscount 
-    ? Math.round(property.price * (100 - property.monthlyDiscount) / 100)
-    : property.price;
 
   return (
     <main className="min-h-screen bg-white pb-32">
@@ -439,7 +429,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
             setCheckIn('');
             setCheckOut('');
           }}
-          pricePerNight={displayPrice}
+          totalPrice={priceCalc?.total || 0}
           minNights={property.minNights}
           rating={property.reviewCount > 0 ? property.rating : 0}
           currency="CAD"

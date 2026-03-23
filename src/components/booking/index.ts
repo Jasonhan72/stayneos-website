@@ -1,7 +1,7 @@
 // Booking Components Export
 
 export { BookingCard } from './BookingCard';
-export { BookingPriceCalculator, calculateBookingPrice } from './BookingPriceCalculator';
+export { BookingPriceCalculator } from './BookingPriceCalculator';
 export { InlineCalendar } from './InlineCalendar';
 export { AirbnbCalendar } from './AirbnbCalendar';
 export { FullscreenCalendar } from './FullscreenCalendar';

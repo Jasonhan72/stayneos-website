@@ -4,6 +4,8 @@ export interface BookingCalculation {
   nights: number;
   months: number;
   basePrice: number;
+  ratePerMonth: number;
+  tierName: 'Monthly' | 'Quarterly' | 'Annual';
   subtotal: number;
   cleaningFee: number;
   serviceFee: number;
@@ -33,48 +35,59 @@ export function calculateBookingPrice(
   const start = new Date(checkIn);
   const end = new Date(checkOut);
   const nights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-  
+
   const minNights = property.minNights || 28;
   const meetsMinNights = nights >= minNights;
   const isMonthly = nights >= 28;
-  
-  // 基础价格
-  const basePrice = property.price;
-  
-  // 月租折扣
+
+  // 月租模型：basePrice 是每月价格
+  const basePrice = Number(property.price || 0);
+  const months = Math.max(1, Math.ceil(nights / 30));
+
+  // Tier 价格：年租 >= 365 天；季租 >= 90 天；否则月租
+  const pricingProperty = property as Property & { priceQuarterly?: number; priceAnnual?: number };
+  const quarterlyPrice = Number(pricingProperty.priceQuarterly || 0) || Math.round(basePrice * 0.92);
+  const annualPrice = Number(pricingProperty.priceAnnual || 0) || Math.round(basePrice * 0.85);
+
+  let ratePerMonth = basePrice;
+  let tierName: 'Monthly' | 'Quarterly' | 'Annual' = 'Monthly';
+
+  if (nights >= 365) {
+    ratePerMonth = annualPrice;
+    tierName = 'Annual';
+  } else if (nights >= 90) {
+    ratePerMonth = quarterlyPrice;
+    tierName = 'Quarterly';
+  }
+
+  // monthlyDiscount 仅在 Monthly tier 生效，避免与季度/年度 tier 叠加
   let discountRate = 1;
   let discountPercentage = 0;
-  
-  if (isMonthly && property.monthlyDiscount) {
+  if (tierName === 'Monthly' && isMonthly && property.monthlyDiscount) {
     discountPercentage = property.monthlyDiscount;
     discountRate = (100 - property.monthlyDiscount) / 100;
   }
-  
-  // Monthly rental: basePrice is per month
-  const months = Math.max(1, Math.ceil(nights / 30));
-  const discountedPrice = Math.round(basePrice * discountRate);
-  const subtotal = months * discountedPrice;
-  
-  // 清洁费（从属性中获取或使用默认值）
+
+  const discountedRatePerMonth = Math.round(ratePerMonth * discountRate);
+  const subtotal = months * discountedRatePerMonth;
+
   const cleaningFee = property.cleaningFee || 80;
-  
-  // 服务费（10%）
   const serviceFee = Math.round(subtotal * 0.1);
-  
-  // 折扣金额
-  const discount = months * basePrice - subtotal;
-  
-  // 税费（13% HST）
+
+  const originalSubtotal = months * ratePerMonth;
+  const discount = originalSubtotal - subtotal;
+
   const taxableAmount = subtotal + cleaningFee + serviceFee;
   const tax = Math.round(taxableAmount * 0.13);
-  
-  // 总计
+
   const total = subtotal + cleaningFee + serviceFee + tax;
-  
+
   return {
     nights,
     months,
     basePrice,
+    ratePerMonth,
+    tierName,
     subtotal,
     cleaningFee,
     serviceFee,

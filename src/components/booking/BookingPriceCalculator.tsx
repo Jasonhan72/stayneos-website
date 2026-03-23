@@ -1,29 +1,12 @@
 // Booking Price Calculator Component - Airbnb Style
-// Real-time price breakdown with long-term rental discounts
+// Display-only breakdown based on src/lib/booking.ts single source of truth
 
 'use client';
 
 import { useMemo } from 'react';
 import { Sparkles, Info } from 'lucide-react';
+import { calculateBookingPrice, type BookingCalculation } from '@/lib/booking';
 import { cn } from '@/lib/utils';
-
-export interface PriceBreakdown {
-  nights: number;
-  months: number;
-  basePrice: number;
-  originalSubtotal: number;
-  discountedPrice: number;
-  subtotal: number;
-  cleaningFee: number;
-  serviceFee: number;
-  serviceFeeAmount: number;
-  discount: number;
-  discountPercentage: number;
-  tax: number;
-  total: number;
-  isMonthly: boolean;
-  savings: number;
-}
 
 interface BookingPriceCalculatorProps {
   basePrice: number;
@@ -31,69 +14,41 @@ interface BookingPriceCalculatorProps {
   checkOut: string;
   monthlyDiscount?: number;
   cleaningFee?: number;
-  serviceFeeRate?: number;
-  taxRate?: number;
   currency?: string;
   className?: string;
   compact?: boolean;
 }
 
-export function calculateBookingPrice({
+function buildPriceCalculation({
   basePrice,
   checkIn,
   checkOut,
   monthlyDiscount = 0,
   cleaningFee = 0,
-  serviceFeeRate = 0.12, // Airbnb typically charges ~12-14% service fee
-  taxRate = 0.13, // HST for Canada
-}: Omit<BookingPriceCalculatorProps, 'currency' | 'className' | 'compact'>): PriceBreakdown | null {
+}: Omit<BookingPriceCalculatorProps, 'currency' | 'className' | 'compact'>): BookingCalculation | null {
   if (!checkIn || !checkOut) return null;
 
-  const start = new Date(checkIn);
-  const end = new Date(checkOut);
-  const nights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-
-  // Require at least 1 night - same day checkout is not allowed
-  if (nights < 1) return null;
-
-  // Monthly rental model: basePrice is per-month, not per-night
-  const months = Math.max(1, Math.ceil(nights / 30));
-  const isMonthly = nights >= 28;
-  const discountPercentage = isMonthly && monthlyDiscount ? monthlyDiscount : 0;
-  const discountRate = (100 - discountPercentage) / 100;
-
-  const originalSubtotal = months * basePrice;
-  const discountedPrice = Math.round(basePrice * discountRate);
-  const subtotal = months * discountedPrice;
-  const discount = originalSubtotal - subtotal;
-
-  // Service fee calculation (typically percentage of subtotal)
-  const serviceFeeAmount = Math.round(subtotal * serviceFeeRate);
-  
-  // Tax calculation (on subtotal + cleaning + service fee)
-  const taxableAmount = subtotal + cleaningFee + serviceFeeAmount;
-  const tax = Math.round(taxableAmount * taxRate);
-  
-  // Total
-  const total = subtotal + cleaningFee + serviceFeeAmount + tax;
-
-  return {
-    nights,
-    months,
-    basePrice,
-    originalSubtotal,
-    discountedPrice,
-    subtotal,
-    cleaningFee,
-    serviceFee: serviceFeeAmount,
-    serviceFeeAmount,
-    discount,
-    discountPercentage,
-    tax,
-    total,
-    isMonthly,
-    savings: discount,
-  };
+  return calculateBookingPrice(
+    {
+      id: 'pricing-preview',
+      title: 'Pricing Preview',
+      location: '',
+      price: basePrice,
+      priceUnit: 'month',
+      reviewCount: 0,
+      images: [],
+      maxGuests: 1,
+      area: 0,
+      bedrooms: 0,
+      bathrooms: 0,
+      amenities: [],
+      monthlyDiscount,
+      cleaningFee,
+      minNights: 1,
+    },
+    checkIn,
+    checkOut
+  );
 }
 
 export function BookingPriceCalculator({
@@ -102,57 +57,39 @@ export function BookingPriceCalculator({
   checkOut,
   monthlyDiscount = 0,
   cleaningFee = 0,
-  serviceFeeRate = 0.12,
-  taxRate = 0.13,
   currency = 'CAD',
   className,
   compact = false,
 }: BookingPriceCalculatorProps) {
-  const price = useMemo(() => 
-    calculateBookingPrice({
-      basePrice,
-      checkIn,
-      checkOut,
-      monthlyDiscount,
-      cleaningFee,
-      serviceFeeRate,
-      taxRate,
-    }),
-    [basePrice, checkIn, checkOut, monthlyDiscount, cleaningFee, serviceFeeRate, taxRate]
+  const price = useMemo(
+    () => buildPriceCalculation({ basePrice, checkIn, checkOut, monthlyDiscount, cleaningFee }),
+    [basePrice, checkIn, checkOut, monthlyDiscount, cleaningFee]
   );
 
   if (!price) {
-    return (
-      <div className={cn("text-center py-4 text-neutral-500", className)}>
-        Select dates to see pricing
-      </div>
-    );
+    return <div className={cn('text-center py-4 text-neutral-500', className)}>Select dates to see pricing</div>;
   }
 
-  const formatCurrency = (amount: number) => {
-    return `$${amount.toLocaleString()} ${currency}`;
-  };
+  const formatCurrency = (amount: number) => `$${amount.toLocaleString()} ${currency}`;
 
-  // Compact view - used in booking card and checkout summary
   if (compact) {
     return (
-      <div className={cn("space-y-3", className)}>
-        {/* Room rate */}
+      <div className={cn('space-y-3', className)}>
         <div className="flex justify-between items-baseline text-sm">
           <span className="text-neutral-600 underline decoration-dotted cursor-help">
-            {price.isMonthly ? (
+            {price.discount > 0 ? (
               <>
-                <span className="line-through text-neutral-400">${price.basePrice.toLocaleString()}</span>
-                {' '}${price.discountedPrice.toLocaleString()}
+                <span className="line-through text-neutral-400">${price.ratePerMonth.toLocaleString()}</span>{' '}
+                ${Math.round(price.ratePerMonth * price.discountRate).toLocaleString()}
               </>
             ) : (
-              `$${price.basePrice.toLocaleString()}`
-            )} x {price.months} {price.months === 1 ? 'month' : 'months'}
+              `$${price.ratePerMonth.toLocaleString()}`
+            )}{' '}
+            x {price.months} {price.months === 1 ? 'month' : 'months'} ({price.tierName})
           </span>
           <span className="text-neutral-900">{formatCurrency(price.subtotal)}</span>
         </div>
-        
-        {/* Monthly discount */}
+
         {price.discount > 0 && (
           <div className="flex justify-between items-center text-sm text-rose-600">
             <span className="flex items-center gap-1">
@@ -162,137 +99,80 @@ export function BookingPriceCalculator({
             <span>-{formatCurrency(price.discount)}</span>
           </div>
         )}
-        
-        {/* Cleaning fee - NEW */}
+
         {price.cleaningFee > 0 && (
           <div className="flex justify-between text-sm">
-            <span className="text-neutral-600 underline decoration-dotted cursor-help">
-              Cleaning fee
-            </span>
+            <span className="text-neutral-600 underline decoration-dotted cursor-help">Cleaning fee</span>
             <span className="text-neutral-900">{formatCurrency(price.cleaningFee)}</span>
           </div>
         )}
-        
-        {/* Service fee */}
+
         <div className="flex justify-between text-sm">
           <span className="text-neutral-600 underline decoration-dotted cursor-help flex items-center gap-1">
-            Service fee
-            <Info size={12} className="text-neutral-400" />
+            Service fee <Info size={12} className="text-neutral-400" />
           </span>
           <span className="text-neutral-900">{formatCurrency(price.serviceFee)}</span>
         </div>
-        
-        {/* Taxes */}
+
         <div className="flex justify-between text-sm">
-          <span className="text-neutral-600">Taxes ({Math.round(taxRate * 100)}%)</span>
+          <span className="text-neutral-600">Taxes (13%)</span>
           <span className="text-neutral-900">{formatCurrency(price.tax)}</span>
         </div>
-        
-        {/* Total */}
+
         <div className="pt-3 border-t border-neutral-200">
           <div className="flex justify-between items-baseline">
             <span className="font-semibold text-neutral-900">Total <span className="text-sm font-normal">({currency})</span></span>
             <span className="font-bold text-xl text-neutral-900">{formatCurrency(price.total)}</span>
           </div>
         </div>
-        
-        {/* Savings message */}
-        {price.savings > 0 && (
-          <div className="text-center pt-1">
-            <span className="text-sm text-rose-600 font-medium">
-              You save {formatCurrency(price.savings)} with monthly rate!
-            </span>
-          </div>
-        )}
       </div>
     );
   }
 
-  // Full view
   return (
-    <div className={cn("bg-neutral-50 rounded-xl p-4 space-y-3", className)}>
-      {/* Header - Price per night */}
+    <div className={cn('bg-neutral-50 rounded-xl p-4 space-y-3', className)}>
       <div className="flex items-baseline gap-2">
-        {price.isMonthly ? (
-          <>
-            <span className="text-3xl font-bold text-neutral-900">
-              ${price.discountedPrice.toLocaleString()}
-            </span>
-            <span className="text-lg text-neutral-400 line-through">
-              ${price.basePrice.toLocaleString()}
-            </span>
-          </>
-        ) : (
-          <span className="text-3xl font-bold text-neutral-900">
-            ${price.basePrice.toLocaleString()}
-          </span>
-        )}
-        <span className="text-neutral-500">{currency} / month</span>
+        <span className="text-3xl font-bold text-neutral-900">${price.ratePerMonth.toLocaleString()}</span>
+        <span className="text-neutral-500">{currency} / month ({price.tierName})</span>
       </div>
 
-      {/* Monthly Discount Badge */}
-      {price.isMonthly && monthlyDiscount > 0 && (
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-rose-100 text-rose-800 rounded-full text-sm font-medium">
-          <Sparkles size={14} />
-          <span>Monthly rate: {monthlyDiscount}% off applied</span>
-        </div>
-      )}
-
-      {/* Price Breakdown */}
       <div className="space-y-2 pt-3 border-t border-neutral-200">
-        {/* Base price */}
         <div className="flex justify-between text-sm">
           <span className="text-neutral-600 underline decoration-dotted cursor-help">
-            {price.isMonthly ? (
-              <>
-                <span className="line-through">${price.basePrice.toLocaleString()}</span>
-                {' '}${price.discountedPrice.toLocaleString()} x {price.months} months
-              </>
-            ) : (
-              `$${price.basePrice.toLocaleString()} x ${price.months} months`
-            )}
+            ${price.ratePerMonth.toLocaleString()} x {price.months} months
           </span>
           <span className="text-neutral-900">{formatCurrency(price.subtotal)}</span>
         </div>
 
-        {/* Discount */}
         {price.discount > 0 && (
           <div className="flex justify-between text-sm text-rose-600">
             <span className="flex items-center gap-1">
-              <Sparkles size={14} />
-              Monthly discount ({price.discountPercentage}% off)
+              <Sparkles size={14} /> Monthly discount ({price.discountPercentage}% off)
             </span>
             <span>-{formatCurrency(price.discount)}</span>
           </div>
         )}
 
-        {/* Cleaning fee - NEW */}
         {price.cleaningFee > 0 && (
           <div className="flex justify-between text-sm">
-            <span className="text-neutral-600 underline decoration-dotted cursor-help">
-              Cleaning fee
-            </span>
+            <span className="text-neutral-600 underline decoration-dotted cursor-help">Cleaning fee</span>
             <span className="text-neutral-900">{formatCurrency(price.cleaningFee)}</span>
           </div>
         )}
 
-        {/* Service fee */}
         <div className="flex justify-between text-sm">
           <span className="text-neutral-600 flex items-center gap-1 underline decoration-dotted cursor-help">
-            Service fee
-            <Info size={14} className="text-neutral-400" />
+            Service fee <Info size={14} className="text-neutral-400" />
           </span>
           <span className="text-neutral-900">{formatCurrency(price.serviceFee)}</span>
         </div>
 
-        {/* Tax */}
         <div className="flex justify-between text-sm">
-          <span className="text-neutral-600">Taxes ({Math.round(taxRate * 100)}%)</span>
+          <span className="text-neutral-600">Taxes (13%)</span>
           <span className="text-neutral-900">{formatCurrency(price.tax)}</span>
         </div>
       </div>
 
-      {/* Total */}
       <div className="pt-3 border-t border-neutral-200">
         <div className="flex justify-between items-baseline">
           <span className="font-semibold text-neutral-900">Total</span>
@@ -302,15 +182,6 @@ export function BookingPriceCalculator({
           </div>
         </div>
       </div>
-
-      {/* Savings message */}
-      {price.savings > 0 && (
-        <div className="pt-2 text-center">
-          <span className="text-sm text-rose-600 font-medium">
-            You save {formatCurrency(price.savings)} with monthly rate!
-          </span>
-        </div>
-      )}
     </div>
   );
 }

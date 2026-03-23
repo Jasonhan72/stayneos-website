@@ -21,6 +21,7 @@ import { getLocalizedTitle } from '@/components/property/PropertyCard';
 import { useI18n } from '@/lib/i18n';
 import StripeProvider from '@/components/payment/StripeProvider';
 import PaymentForm from '@/components/payment/PaymentForm';
+import { calculateBookingPrice } from '@/lib/booking';
 
 interface PaymentClientProps {
   propertyId: string;
@@ -53,23 +54,15 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
   const infants = parseInt(searchParams.get('infants') || '0');
   const bookingId = searchParams.get('bookingId') || '';
 
-  // Calculate pricing
-  const calculateNights = () => {
-    if (!checkIn || !checkOut) return 0;
-    const start = new Date(checkIn);
-    const end = new Date(checkOut);
-    const diff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-    return diff > 0 ? diff : 0;
-  };
-
-  const nights = calculateNights();
-  const months = Math.max(1, Math.ceil(nights / 30));
-  const isMonthly = nights >= 28;
-  const discountRate = isMonthly && property?.monthlyDiscount ? (100 - property.monthlyDiscount) / 100 : 1;
-  const pricePerNight = property ? Math.round(property.price * discountRate) : 0;
-  const subtotal = months * pricePerNight;
-  const taxes = nights > 0 ? Math.round((subtotal - promoDiscount) * 0.13) : 0;
-  const total = subtotal - promoDiscount + taxes;
+  // Calculate pricing from unified source
+  const priceCalc = property && checkIn && checkOut ? calculateBookingPrice(property, checkIn, checkOut) : null;
+  const nights = priceCalc?.nights || 0;
+  const months = priceCalc?.months || 0;
+  const isMonthly = priceCalc?.isMonthly || false;
+  const subtotal = priceCalc?.subtotal || 0;
+  const taxes = priceCalc ? Math.round((subtotal - promoDiscount + priceCalc.cleaningFee + priceCalc.serviceFee) * 0.13) : 0;
+  const total = priceCalc ? subtotal - promoDiscount + priceCalc.cleaningFee + priceCalc.serviceFee + taxes : 0;
+  const ratePerMonth = priceCalc?.ratePerMonth || 0;
 
   const localizedTitle = property ? getLocalizedTitle(property, locale) : t('property.notFound') || 'Property';
 
@@ -344,15 +337,15 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
                       <span className="text-neutral-600">
-                        ${pricePerNight.toLocaleString()} CAD/month x {months} {months === 1 ? 'month' : 'months'}
+                        ${ratePerMonth.toLocaleString()} CAD/month x {months} {months === 1 ? 'month' : 'months'}
                       </span>
                       <span>${subtotal.toLocaleString()} CAD</span>
                     </div>
                     
-                    {isMonthly && property?.monthlyDiscount && (
+                    {priceCalc && priceCalc.discount > 0 && (
                       <div className="flex justify-between text-rose-600">
-                        <span>{t('properties.monthlyDiscount', { percent: property.monthlyDiscount })}</span>
-                        <span>-${Math.round(property.price * nights - subtotal).toLocaleString()} CAD</span>
+                        <span>{t('properties.monthlyDiscount', { percent: priceCalc.discountPercentage })}</span>
+                        <span>-${priceCalc.discount.toLocaleString()} CAD</span>
                       </div>
                     )}
 

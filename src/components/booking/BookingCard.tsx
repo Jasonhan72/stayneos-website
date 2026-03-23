@@ -16,7 +16,8 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { AirbnbCalendar } from './AirbnbCalendar';
-import { BookingPriceCalculator, calculateBookingPrice } from './BookingPriceCalculator';
+import { BookingPriceCalculator } from './BookingPriceCalculator';
+import { calculateBookingPrice } from '@/lib/booking';
 import { cn } from '@/lib/utils';
 
 interface BookingCardProps {
@@ -46,13 +47,23 @@ export function BookingCard({ property, className }: BookingCardProps) {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   // Calculate price with cleaning fee
-  const price = calculateBookingPrice({
-    basePrice: property.price,
-    checkIn,
-    checkOut,
-    monthlyDiscount: property.monthlyDiscount,
-    cleaningFee: property.cleaningFee || 80, // Default cleaning fee
-  });
+  const price = checkIn && checkOut
+    ? calculateBookingPrice(
+        {
+          ...property,
+          location: '',
+          priceUnit: 'month',
+          reviewCount: property.reviewCount || 0,
+          images: [],
+          area: 0,
+          bedrooms: 0,
+          bathrooms: 0,
+          amenities: [],
+        },
+        checkIn,
+        checkOut
+      )
+    : null;
 
   const nights = price?.nights || 0;
   const qualifiesForDiscount = nights >= 28 && property.monthlyDiscount;
@@ -324,10 +335,7 @@ export function BookingCard({ property, className }: BookingCardProps) {
             setCheckIn('');
             setCheckOut('');
           }}
-          pricePerNight={qualifiesForDiscount 
-            ? Math.round(property.price * (100 - (property.monthlyDiscount || 0)) / 100)
-            : property.price
-          }
+          totalPrice={price?.total || 0}
           minNights={property.minNights}
           rating={property.reviewCount ? property.rating : 0}
           currency="CAD"

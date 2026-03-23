@@ -11,9 +11,7 @@ export interface AirbnbCalendarProps {
   onSelectCheckOut: (date: string) => void;
   onClose?: () => void;
   onClearDates?: () => void;
-  pricePerNight?: number;
-  /** When true, pricePerNight is actually a monthly rate (not nightly) */
-  priceIsMonthly?: boolean;
+  totalPrice?: number;
   minNights?: number;
   rating?: number;
   currency?: string;
@@ -40,8 +38,7 @@ export function AirbnbCalendar({
   onSelectCheckOut,
   onClose,
   onClearDates,
-  pricePerNight = 0,
-  priceIsMonthly = false,
+  totalPrice = 0,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   minNights,
   rating = 0,
@@ -75,13 +72,9 @@ export function AirbnbCalendar({
     return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
   }, [selectedStart, selectedEnd]);
 
-  // Calculate total price: if monthly rate, multiply by months; otherwise by nights
   const months = Math.max(1, Math.ceil(nights / 30));
-  const totalPrice = priceIsMonthly
-    ? months * pricePerNight
-    : nights * pricePerNight;
-  const displayUnit = priceIsMonthly ? 'months' : 'nights';
-  const displayCount = priceIsMonthly ? months : nights;
+  const displayUnit = 'nights';
+  const displayCount = nights;
   const hasRating = rating > 0;
 
   // Generate months data (12 months from current month + offset)
