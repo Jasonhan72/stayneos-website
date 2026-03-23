@@ -69,7 +69,9 @@ export function ReviewAndContinue({
     return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
   }, [checkIn, checkOut]);
 
-  const subtotal = nights * pricePerNight;
+  // Monthly rental: pricePerNight is actually price per month
+  const months = Math.max(1, Math.ceil(nights / 30));
+  const subtotal = months * pricePerNight;
 
   const formatDateRange = () => {
     const start = new Date(checkIn);
@@ -196,7 +198,7 @@ export function ReviewAndContinue({
             {showPriceDetails && (
               <div className="mt-4 space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-neutral-600 underline">${pricePerNight.toLocaleString()} x {nights} nights</span>
+                  <span className="text-neutral-600 underline">${pricePerNight.toLocaleString()} x {months} months</span>
                   <span className="text-neutral-900">${subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
@@ -389,7 +391,7 @@ export function ReviewAndContinue({
             <h2 className="text-lg font-semibold text-neutral-900 mb-4">Price details</h2>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
-                <span className="text-neutral-600 underline">${pricePerNight.toLocaleString()} x {nights} nights</span>
+                <span className="text-neutral-600 underline">${pricePerNight.toLocaleString()} x {months} months</span>
                 <span className="text-neutral-900">${subtotal.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">

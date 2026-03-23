@@ -136,6 +136,7 @@ export default function BookingContent() {
 
   // Calculate discounted price for display
   const nights = priceCalc?.nights || 0;
+  const months = priceCalc?.months || 0;
   const isMonthly = nights >= 28;
   const displayPrice = isMonthly && propertyCardData.monthlyDiscount 
     ? Math.round(propertyCardData.price * (100 - propertyCardData.monthlyDiscount) / 100)
@@ -257,7 +258,7 @@ export default function BookingContent() {
                         {formatDateDisplay(checkIn)} – {formatDateDisplay(checkOut)}
                         {nights > 0 && (
                           <span className="text-neutral-400 ml-1">
-                            · {nights} {nights === 1 ? 'night' : 'nights'}
+                            · {months} {months === 1 ? 'month' : 'months'}
                           </span>
                         )}
                       </p>

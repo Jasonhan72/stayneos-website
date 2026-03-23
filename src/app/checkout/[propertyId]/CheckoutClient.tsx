@@ -96,6 +96,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
   });
 
   const nights = priceCalc?.nights || 0;
+  // months available via priceCalc?.months if needed
   const finalPrice = priceCalc?.total || 0;
 
   // Format date for display

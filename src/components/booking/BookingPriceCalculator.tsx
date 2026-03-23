@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 
 export interface PriceBreakdown {
   nights: number;
+  months: number;
   basePrice: number;
   originalSubtotal: number;
   discountedPrice: number;
@@ -55,13 +56,15 @@ export function calculateBookingPrice({
   // Require at least 1 night - same day checkout is not allowed
   if (nights < 1) return null;
 
+  // Monthly rental model: basePrice is per-month, not per-night
+  const months = Math.max(1, Math.ceil(nights / 30));
   const isMonthly = nights >= 28;
   const discountPercentage = isMonthly && monthlyDiscount ? monthlyDiscount : 0;
   const discountRate = (100 - discountPercentage) / 100;
 
-  const originalSubtotal = nights * basePrice;
+  const originalSubtotal = months * basePrice;
   const discountedPrice = Math.round(basePrice * discountRate);
-  const subtotal = nights * discountedPrice;
+  const subtotal = months * discountedPrice;
   const discount = originalSubtotal - subtotal;
 
   // Service fee calculation (typically percentage of subtotal)
@@ -76,6 +79,7 @@ export function calculateBookingPrice({
 
   return {
     nights,
+    months,
     basePrice,
     originalSubtotal,
     discountedPrice,
@@ -143,7 +147,7 @@ export function BookingPriceCalculator({
               </>
             ) : (
               `$${price.basePrice.toLocaleString()}`
-            )} x {price.nights} {price.nights === 1 ? 'night' : 'nights'}
+            )} x {price.months} {price.months === 1 ? 'month' : 'months'}
           </span>
           <span className="text-neutral-900">{formatCurrency(price.subtotal)}</span>
         </div>
@@ -223,7 +227,7 @@ export function BookingPriceCalculator({
             ${price.basePrice.toLocaleString()}
           </span>
         )}
-        <span className="text-neutral-500">{currency} / night</span>
+        <span className="text-neutral-500">{currency} / month</span>
       </div>
 
       {/* Monthly Discount Badge */}
@@ -242,10 +246,10 @@ export function BookingPriceCalculator({
             {price.isMonthly ? (
               <>
                 <span className="line-through">${price.basePrice.toLocaleString()}</span>
-                {' '}${price.discountedPrice.toLocaleString()} x {price.nights} nights
+                {' '}${price.discountedPrice.toLocaleString()} x {price.months} months
               </>
             ) : (
-              `$${price.basePrice.toLocaleString()} x ${price.nights} nights`
+              `$${price.basePrice.toLocaleString()} x ${price.months} months`
             )}
           </span>
           <span className="text-neutral-900">{formatCurrency(price.subtotal)}</span>

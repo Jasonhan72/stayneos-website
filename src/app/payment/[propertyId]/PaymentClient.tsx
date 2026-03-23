@@ -63,10 +63,11 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
   };
 
   const nights = calculateNights();
+  const months = Math.max(1, Math.ceil(nights / 30));
   const isMonthly = nights >= 28;
   const discountRate = isMonthly && property?.monthlyDiscount ? (100 - property.monthlyDiscount) / 100 : 1;
   const pricePerNight = property ? Math.round(property.price * discountRate) : 0;
-  const subtotal = nights * pricePerNight;
+  const subtotal = months * pricePerNight;
   const taxes = nights > 0 ? Math.round((subtotal - promoDiscount) * 0.13) : 0;
   const total = subtotal - promoDiscount + taxes;
 
@@ -343,7 +344,7 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
                       <span className="text-neutral-600">
-                        ${pricePerNight.toLocaleString()} {isMonthly ? (t('property.monthlyPrice') || 'CAD/month') : (t('property.perNight') || 'CAD/mo')} x {nights} {nights === 1 ? (t('common.night') || 'night') : (t('common.nights') || 'nights')}
+                        ${pricePerNight.toLocaleString()} CAD/month x {months} {months === 1 ? 'month' : 'months'}
                       </span>
                       <span>${subtotal.toLocaleString()} CAD</span>
                     </div>

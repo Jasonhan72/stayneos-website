@@ -2,6 +2,7 @@ import { Property } from "@/components/property/PropertyCard";
 
 export interface BookingCalculation {
   nights: number;
+  months: number;
   basePrice: number;
   subtotal: number;
   cleaningFee: number;
@@ -49,8 +50,10 @@ export function calculateBookingPrice(
     discountRate = (100 - property.monthlyDiscount) / 100;
   }
   
+  // Monthly rental: basePrice is per month
+  const months = Math.max(1, Math.ceil(nights / 30));
   const discountedPrice = Math.round(basePrice * discountRate);
-  const subtotal = nights * discountedPrice;
+  const subtotal = months * discountedPrice;
   
   // 清洁费（从属性中获取或使用默认值）
   const cleaningFee = property.cleaningFee || 80;
@@ -59,7 +62,7 @@ export function calculateBookingPrice(
   const serviceFee = Math.round(subtotal * 0.1);
   
   // 折扣金额
-  const discount = nights * basePrice - subtotal;
+  const discount = months * basePrice - subtotal;
   
   // 税费（13% HST）
   const taxableAmount = subtotal + cleaningFee + serviceFee;
@@ -70,6 +73,7 @@ export function calculateBookingPrice(
   
   return {
     nights,
+    months,
     basePrice,
     subtotal,
     cleaningFee,
