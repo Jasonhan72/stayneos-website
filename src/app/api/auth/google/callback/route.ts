@@ -153,56 +153,112 @@ export async function GET(request: NextRequest) {
 
     // Handle user in database
     const db = getDb();
-    const existingAccount = await accountDb.findByProviderAccountId(db, "google", googleUser.id);
+    
+    // Log for debugging
+    console.log("Google OAuth callback - User info:", {
+      email: googleUser.email,
+      googleId: googleUser.id,
+      name: googleUser.name
+    });
+    
+    let existingAccount;
+    try {
+      existingAccount = await accountDb.findByProviderAccountId(db, "google", googleUser.id);
+      console.log("Existing account check result:", existingAccount ? "found" : "not found");
+    } catch (err) {
+      console.error("Error checking existing account:", err);
+      return buildLoginRedirect(baseUrl, "db_error", parsedState.redirect);
+    }
 
     let user;
     let userId;
 
     if (existingAccount) {
-      user = await userDb.findById(db, existingAccount.userId);
+      try {
+        user = await userDb.findById(db, existingAccount.userId);
+        console.log("Found existing user:", user?.email);
+      } catch (err) {
+        console.error("Error finding user by ID:", err);
+        return buildLoginRedirect(baseUrl, "db_error", parsedState.redirect);
+      }
+      
       if (!user) {
+        console.error("User not found for existing Google account:", existingAccount.userId);
         return buildLoginRedirect(baseUrl, "user_not_found", parsedState.redirect);
       }
       userId = user.id;
     } else {
-      const existingUser = await userDb.findByEmail(db, googleUser.email);
+      console.log("No existing account, checking by email:", googleUser.email);
+      let existingUser;
+      try {
+        existingUser = await userDb.findByEmail(db, googleUser.email);
+        console.log("Existing user by email:", existingUser ? "found" : "not found");
+      } catch (err) {
+        console.error("Error finding user by email:", err);
+        return buildLoginRedirect(baseUrl, "db_error", parsedState.redirect);
+      }
 
       if (existingUser) {
+        console.log("Linking Google account to existing user:", existingUser.email);
         userId = existingUser.id;
         user = existingUser;
-        await accountDb.create(db, {
-          userId: existingUser.id,
-          type: "oauth",
-          provider: "google",
-          providerAccountId: googleUser.id,
-          access_token: tokenData.access_token,
-          refresh_token: tokenData.refresh_token,
-          expires_at: tokenData.expires_in ? Math.floor(Date.now() / 1000) + tokenData.expires_in : null,
-          token_type: tokenData.token_type,
-          scope: tokenData.scope,
-          id_token: tokenData.id_token,
-        });
+        try {
+          await accountDb.create(db, {
+            userId: existingUser.id,
+            type: "oauth",
+            provider: "google",
+            providerAccountId: googleUser.id,
+            access_token: tokenData.access_token,
+            refresh_token: tokenData.refresh_token,
+            expires_at: tokenData.expires_in ? Math.floor(Date.now() / 1000) + tokenData.expires_in : null,
+            token_type: tokenData.token_type,
+            scope: tokenData.scope,
+            id_token: tokenData.id_token,
+          });
+          console.log("Account linked successfully");
+        } catch (err) {
+          console.error("Error linking account:", err);
+          return buildLoginRedirect(baseUrl, "db_error", parsedState.redirect);
+        }
       } else {
+        console.log("Creating new user for:", googleUser.email);
         userId = crypto.randomUUID();
-        user = await userDb.create(db, {
-          id: userId,
-          email: googleUser.email,
-          name: googleUser.name,
-          avatar: googleUser.picture,
-          role: "GUEST",
-        });
-        await accountDb.create(db, {
-          userId: userId,
-          type: "oauth",
-          provider: "google",
-          providerAccountId: googleUser.id,
-          access_token: tokenData.access_token,
-          refresh_token: tokenData.refresh_token,
-          expires_at: tokenData.expires_in ? Math.floor(Date.now() / 1000) + tokenData.expires_in : null,
-          token_type: tokenData.token_type,
-          scope: tokenData.scope,
-          id_token: tokenData.id_token,
-        });
+        try {
+          user = await userDb.create(db, {
+            id: userId,
+            email: googleUser.email,
+            name: googleUser.name,
+            avatar: googleUser.picture,
+            role: "GUEST",
+          });
+          console.log("New user created:", user.email, user.id);
+        } catch (err) {
+          console.error("Error creating user:", err);
+          return buildLoginRedirect(baseUrl, "db_error", parsedState.redirect);
+        }
+        
+        try {
+          await accountDb.create(db, {
+            userId: userId,
+            type: "oauth",
+            provider: "google",
+            providerAccountId: googleUser.id,
+            access_token: tokenData.access_token,
+            refresh_token: tokenData.refresh_token,
+            expires_at: tokenData.expires_in ? Math.floor(Date.now() / 1000) + tokenData.expires_in : null,
+            token_type: tokenData.token_type,
+            scope: tokenData.scope,
+            id_token: tokenData.id_token,
+          });
+          console.log("Account created successfully");
+        } catch (err) {
+          console.error("Error creating account:", err);
+          // Try to delete the user we just created
+          try {
+            await db.prepare("DELETE FROM User WHERE id = ?").bind(userId).run();
+          } catch {}
+          return buildLoginRedirect(baseUrl, "db_error", parsedState.redirect);
+        }
       }
     }
 
@@ -213,21 +269,34 @@ export async function GET(request: NextRequest) {
       role: user.role,
     });
 
-    // Set cookie and redirect
+    // Set cookie and redirect to dashboard
+    // UserContext will read cookie and sync to localStorage
     const response = NextResponse.redirect(`${baseUrl}${sanitizeRedirect(parsedState.redirect)}`, 303);
-    response.cookies.delete({ name: "oauth_state", domain: ".stayneos.com", path: "/" });
+    response.cookies.delete("oauth_state");
     response.cookies.set("stayneos_auth_token", token, {
       httpOnly: true,
       secure: true,
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60,
       path: "/",
-      domain: ".stayneos.com",
     });
 
     return response;
   } catch (err) {
     console.error("Google OAuth callback error:", err);
+    // 返回具体错误信息以便调试
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    console.error("Error details:", errorMsg);
+    
+    // 如果是数据库错误，返回db_error
+    if (errorMsg.includes("D1") || errorMsg.includes("database") || errorMsg.includes("SQL")) {
+      return buildLoginRedirect(baseUrl, "db_error");
+    }
+    // 如果是JWT错误
+    if (errorMsg.includes("JWT") || errorMsg.includes("token") || errorMsg.includes("sign")) {
+      return buildLoginRedirect(baseUrl, "jwt_error");
+    }
+    
     return buildLoginRedirect(baseUrl, "callback_failed");
   }
 }

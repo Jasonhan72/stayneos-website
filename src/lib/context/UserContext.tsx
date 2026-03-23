@@ -76,6 +76,39 @@ export function UserProvider({ children }: { children: ReactNode }) {
         const storedUser = localStorage.getItem(USER_KEY);
         const storedToken = localStorage.getItem(TOKEN_KEY);
 
+        // If no localStorage but we have a cookie, try to sync
+        if ((!storedUser || !storedToken) && typeof document !== 'undefined') {
+          const cookies = document.cookie.split(';').map(c => c.trim());
+          const authCookie = cookies.find(c => c.startsWith('stayneos_auth_token='));
+          
+          if (authCookie) {
+            const token = authCookie.split('=')[1];
+            // Try to decode JWT to get user info
+            try {
+              const payload = JSON.parse(atob(token.split('.')[1]));
+              const userFromToken: UserProfile = {
+                id: payload.userId || 'unknown',
+                firstName: payload.name?.split(' ')[0] || '',
+                lastName: payload.name?.split(' ').slice(1).join(' ') || '',
+                name: payload.name || 'User',
+                email: payload.email || '',
+                preferences: defaultPreferences,
+                memberSince: new Date().toISOString().split('T')[0],
+                memberLevel: 'Standard',
+                role: payload.role || 'GUEST',
+              };
+              
+              localStorage.setItem(USER_KEY, JSON.stringify(userFromToken));
+              localStorage.setItem(TOKEN_KEY, token);
+              setUser(userFromToken);
+              setIsLoading(false);
+              return;
+            } catch (e) {
+              console.log("Could not decode JWT from cookie:", e);
+            }
+          }
+        }
+
         if (storedUser && storedToken) {
           const parsedUser = JSON.parse(storedUser);
           // Ensure preferences exist
