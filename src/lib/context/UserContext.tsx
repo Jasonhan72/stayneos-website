@@ -62,67 +62,72 @@ const USER_KEY = "stayneos_user_data";
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
+function toUserProfile(user: {
+  id: string;
+  name?: string | null;
+  email: string;
+  role?: string | null;
+  avatar?: string | null;
+}): UserProfile {
+  const name = (user.name || user.email?.split('@')[0] || 'User').trim();
+  const parts = name.split(/\s+/).filter(Boolean);
+
+  return {
+    id: user.id,
+    firstName: parts[0] || '',
+    lastName: parts.slice(1).join(' '),
+    name,
+    email: user.email,
+    image: user.avatar || undefined,
+    avatar: user.avatar || undefined,
+    preferences: defaultPreferences,
+    memberSince: new Date().toISOString().split('T')[0],
+    memberLevel: 'Standard',
+    role: user.role || 'GUEST',
+  };
+}
+
+
 export function UserProvider({ children }: { children: ReactNode }) {
   // Always start with null to match SSR
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load user from localStorage after hydration
+  // Load user from localStorage/cookie-backed session after hydration
   useEffect(() => {
-    const loadUserFromStorage = () => {
+    const loadUserFromStorage = async () => {
       if (typeof window === 'undefined') return;
-      
+
       try {
         const storedUser = localStorage.getItem(USER_KEY);
-        const storedToken = localStorage.getItem(TOKEN_KEY);
-
-        // If no localStorage but we have a cookie, try to sync
-        if ((!storedUser || !storedToken) && typeof document !== 'undefined') {
-          const cookies = document.cookie.split(';').map(c => c.trim());
-          const authCookie = cookies.find(c => c.startsWith('stayneos_auth_token='));
-          
-          if (authCookie) {
-            const token = authCookie.split('=')[1];
-            // Try to decode JWT to get user info
-            try {
-              const payload = JSON.parse(atob(token.split('.')[1]));
-              const userFromToken: UserProfile = {
-                id: payload.userId || 'unknown',
-                firstName: payload.name?.split(' ')[0] || '',
-                lastName: payload.name?.split(' ').slice(1).join(' ') || '',
-                name: payload.name || 'User',
-                email: payload.email || '',
-                preferences: defaultPreferences,
-                memberSince: new Date().toISOString().split('T')[0],
-                memberLevel: 'Standard',
-                role: payload.role || 'GUEST',
-              };
-              
-              localStorage.setItem(USER_KEY, JSON.stringify(userFromToken));
-              localStorage.setItem(TOKEN_KEY, token);
-              setUser(userFromToken);
-              setIsLoading(false);
-              return;
-            } catch (e) {
-              console.log("Could not decode JWT from cookie:", e);
-            }
-          }
-        }
-
-        if (storedUser && storedToken) {
+        if (storedUser) {
           const parsedUser = JSON.parse(storedUser);
-          // Ensure preferences exist
           if (!parsedUser.preferences) {
             parsedUser.preferences = defaultPreferences;
           }
           setUser(parsedUser);
+          return;
+        }
+
+        // OAuth flow uses HttpOnly cookie, so bootstrap user from server session API
+        const token = localStorage.getItem(TOKEN_KEY);
+        const response = await fetch('/api/auth/session', {
+          credentials: 'include',
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+          cache: 'no-store',
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data?.user) {
+            const profile = toUserProfile(data.user);
+            setUser(profile);
+            localStorage.setItem(USER_KEY, JSON.stringify(profile));
+          }
         }
       } catch (error) {
-        console.error("Error loading user from storage:", error);
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem(USER_KEY);
-          localStorage.removeItem(TOKEN_KEY);
-        }
+        console.error('Error loading user session:', error);
+        localStorage.removeItem(USER_KEY);
       } finally {
         setIsLoading(false);
       }
@@ -249,35 +254,29 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const refreshUser = useCallback(async () => {
     try {
       const token = localStorage.getItem(TOKEN_KEY);
-      if (!token) return;
-
-      const response = await fetch("/api/auth/session", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await fetch('/api/auth/session', {
+        credentials: 'include',
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        cache: 'no-store',
       });
 
       if (response.ok) {
-        const userData = await response.json();
-        setUser(prev => {
-          if (!prev) return null;
-          const updated = { ...prev, ...userData };
-          localStorage.setItem(USER_KEY, JSON.stringify(updated));
-          return updated;
-        });
+        const data = await response.json();
+        if (data?.user) {
+          const profile = toUserProfile(data.user);
+          setUser(profile);
+          localStorage.setItem(USER_KEY, JSON.stringify(profile));
+        }
       } else if (response.status === 401) {
         await logout();
       }
     } catch (error) {
-      console.error("Error refreshing user:", error);
+      console.error('Error refreshing user:', error);
     }
   }, [logout]);
 
-  // Validate token periodically
+  // Validate active session periodically
   useEffect(() => {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (!token) return;
-
     const interval = setInterval(() => {
       refreshUser();
     }, 5 * 60 * 1000);

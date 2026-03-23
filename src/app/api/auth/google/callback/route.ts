@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { signToken } from "@/lib/auth/jwt";
 import { userDb, accountDb, getDb } from "@/lib/d1";
+import { getAuthSecret, getPublicBaseUrl } from "@/lib/config/env";
 
 export const dynamic = "force-dynamic";
 const DEFAULT_REDIRECT = "/dashboard";
@@ -71,9 +72,26 @@ interface GoogleUserInfo {
   locale: string;
 }
 
+
+
+function getAuthCookieOptions(request: NextRequest) {
+  const url = new URL(request.url);
+  const isHttps = url.protocol === "https:";
+  const isLocalhost = ["localhost", "127.0.0.1", "::1"].includes(url.hostname);
+  const isStayneosDomain = url.hostname === "stayneos.com" || url.hostname.endsWith(".stayneos.com");
+
+  return {
+    httpOnly: true as const,
+    secure: isHttps,
+    sameSite: "lax" as const,
+    maxAge: 7 * 24 * 60 * 60,
+    path: "/",
+    ...(!isLocalhost && isStayneosDomain ? { domain: ".stayneos.com" } : {}),
+  };
+}
 export async function GET(request: NextRequest) {
-  const baseUrl = process.env.NEXTAUTH_URL || "https://stayneos.com";
-  const jwtSecret = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET || "fallback-secret";
+  const baseUrl = getPublicBaseUrl();
+  const jwtSecret = getAuthSecret();
   
   try {
     const { searchParams } = new URL(request.url);
@@ -271,15 +289,18 @@ export async function GET(request: NextRequest) {
 
     // Set cookie and redirect to dashboard
     // UserContext will read cookie and sync to localStorage
-    const response = NextResponse.redirect(`${baseUrl}${sanitizeRedirect(parsedState.redirect)}`, 303);
-    response.cookies.delete("oauth_state");
-    response.cookies.set("stayneos_auth_token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60,
-      path: "/",
+    const redirectUrl = `${baseUrl}${sanitizeRedirect(parsedState.redirect)}`;
+    console.log("Google OAuth successful! Redirecting to:", redirectUrl);
+    console.log("User:", user.email, "ID:", user.id);
+    console.log("Token generated:", token.substring(0, 50) + "...");
+    
+    const response = NextResponse.redirect(redirectUrl, 303);
+    const authCookieOptions = getAuthCookieOptions(request);
+    response.cookies.set("oauth_state", "", {
+      ...authCookieOptions,
+      maxAge: 0,
     });
+    response.cookies.set("stayneos_auth_token", token, authCookieOptions);
 
     return response;
   } catch (err) {

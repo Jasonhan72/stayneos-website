@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
+import { getAuthSecret } from '@/lib/config/env';
 
 export type Locale = 'en' | 'fr' | 'zh';
 export type UserRole = 'GUEST' | 'HOST' | 'ADMIN' | 'SUPER_ADMIN';
@@ -115,8 +116,7 @@ interface JWTPayload {
 // 验证 JWT token 并返回解码后的信息
 async function verifyToken(token: string): Promise<{ valid: boolean; payload?: JWTPayload }> {
   try {
-    const secret = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET;
-    if (!secret) return { valid: false };
+    const secret = getAuthSecret();
 
     const { payload } = await jwtVerify(
       token,

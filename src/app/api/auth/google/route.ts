@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
+import { getAuthSecret, getPublicBaseUrl } from "@/lib/config/env";
 
 const DEFAULT_REDIRECT = "/dashboard";
 
@@ -20,11 +21,28 @@ async function hmacSign(data: string, secret: string): Promise<string> {
   return Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
+
+
+function getCookieOptions(request: NextRequest) {
+  const url = new URL(request.url);
+  const isHttps = url.protocol === "https:";
+  const isLocalhost = ["localhost", "127.0.0.1", "::1"].includes(url.hostname);
+  const isStayneosDomain = url.hostname === "stayneos.com" || url.hostname.endsWith(".stayneos.com");
+
+  return {
+    httpOnly: true as const,
+    secure: isHttps,
+    sameSite: "lax" as const,
+    maxAge: 600, // 10 min
+    path: "/",
+    ...(!isLocalhost && isStayneosDomain ? { domain: ".stayneos.com" } : {}),
+  };
+}
 export async function GET(request: NextRequest) {
   try {
     const clientId = process.env.GOOGLE_CLIENT_ID;
-    const baseUrl = process.env.NEXTAUTH_URL || "https://stayneos.com";
-    const jwtSecret = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET || "fallback-secret";
+    const baseUrl = getPublicBaseUrl();
+    const jwtSecret = getAuthSecret();
     const redirect = sanitizeRedirect(new URL(request.url).searchParams.get("redirect"));
     
     if (!clientId) {
@@ -56,14 +74,7 @@ export async function GET(request: NextRequest) {
     const response = NextResponse.redirect(googleOAuthUrl.toString());
     
     // Store signed state in cookie for verification on callback
-    response.cookies.set("oauth_state", signedState, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-      maxAge: 600, // 10 min
-      path: "/",
-      domain: ".stayneos.com", // accessible from both www and apex
-    });
+    response.cookies.set("oauth_state", signedState, getCookieOptions(request));
     
     return response;
   } catch (err) {

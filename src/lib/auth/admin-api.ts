@@ -1,4 +1,5 @@
 import { jwtVerify } from 'jose';
+import { getAuthSecret } from '@/lib/config/env';
 
 export type UserRole = 'GUEST' | 'HOST' | 'ADMIN' | 'SUPER_ADMIN';
 
@@ -9,11 +10,7 @@ interface TokenPayload {
 }
 
 function getSecret() {
-  const secret = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET;
-  if (!secret) {
-    throw new Error('JWT secret is not configured');
-  }
-  return new TextEncoder().encode(secret);
+  return new TextEncoder().encode(getAuthSecret());
 }
 
 function extractToken(request: Request): string | null {
