@@ -11,6 +11,30 @@ export default function LoginFormClient() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
+    // Show OAuth error if redirected back from Google
+    const error = searchParams?.get('error');
+    if (error) {
+      const errorMessages: Record<string, string> = {
+        invalid_state: 'Google login session expired. Please try again.',
+        token_exchange_failed: 'Failed to complete Google login. Please try again.',
+        config_error: 'Google login is not configured properly.',
+        callback_failed: 'Google login failed. Please try again.',
+        oauth_error: 'Google login was cancelled or denied.',
+        user_info_failed: 'Could not retrieve Google account info.',
+        email_not_verified: 'Your Google email is not verified.',
+      };
+      const msg = errorMessages[error] || `Login error: ${error}`;
+      const container = document.querySelector('.space-y-6, form')?.parentElement;
+      if (container) {
+        const existing = container.querySelector('.oauth-error');
+        if (existing) existing.remove();
+        const div = document.createElement('div');
+        div.className = 'oauth-error bg-red-50 border border-red-200 rounded-lg p-3 mb-4';
+        div.innerHTML = `<p class="text-sm text-red-600">${msg}</p>`;
+        container.prepend(div);
+      }
+    }
+
     // Enhanced form functionality using Progressive Enhancement
     const form = document.querySelector('form[action="/api/auth/login"]') as HTMLFormElement;
     if (!form) return;
