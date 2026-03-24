@@ -14,7 +14,7 @@ export default function ImageUploader({ propertyId, images, onChange }: ImageUpl
   const [error, setError] = useState('');
   const [urlInput, setUrlInput] = useState('');
 
-  const uploadFile = async (file: File) => {
+  const uploadFile = useCallback(async (file: File) => {
     const formData = new FormData();
     formData.append('file', file);
     if (propertyId) formData.append('propertyId', propertyId);
@@ -31,7 +31,7 @@ export default function ImageUploader({ propertyId, images, onChange }: ImageUpl
 
     const data = await res.json();
     return data.url as string;
-  };
+  }, [propertyId]);
 
   const handleFiles = useCallback(async (files: FileList | File[]) => {
     setError('');
