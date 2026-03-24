@@ -26,8 +26,6 @@ async function hmacSign(data: string, secret: string): Promise<string> {
 function getCookieOptions(request: NextRequest) {
   const url = new URL(request.url);
   const isHttps = url.protocol === "https:";
-  const isLocalhost = ["localhost", "127.0.0.1", "::1"].includes(url.hostname);
-  const isStayneosDomain = url.hostname === "stayneos.com" || url.hostname.endsWith(".stayneos.com");
 
   return {
     httpOnly: true as const,
@@ -35,7 +33,7 @@ function getCookieOptions(request: NextRequest) {
     sameSite: "lax" as const,
     maxAge: 600, // 10 min
     path: "/",
-    ...(!isLocalhost && isStayneosDomain ? { domain: ".stayneos.com" } : {}),
+    ...((url.hostname === "stayneos.com" || url.hostname.endsWith(".stayneos.com")) ? { domain: ".stayneos.com" } : {}),
   };
 }
 export async function GET(request: NextRequest) {

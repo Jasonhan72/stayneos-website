@@ -4,10 +4,18 @@ const AUTH_COOKIE_MAX_AGE = 7 * 24 * 60 * 60;
 
 export const AUTH_COOKIE_NAME = "stayneos_auth_token";
 
+function resolveCookieDomain(hostname?: string): string | undefined {
+  const target = hostname || "stayneos.com";
+  const isLocalhost = ["localhost", "127.0.0.1", "::1"].includes(target);
+  if (isLocalhost) return undefined;
+  if (target === "stayneos.com" || target.endsWith(".stayneos.com")) return ".stayneos.com";
+  return undefined;
+}
+
 export function getAuthCookieOptions(request?: NextRequest) {
   if (!request) {
     return {
-      domain: ".stayneos.com",
+      domain: resolveCookieDomain(),
       path: "/",
       httpOnly: true as const,
       secure: process.env.NODE_ENV === "production",
@@ -18,8 +26,7 @@ export function getAuthCookieOptions(request?: NextRequest) {
 
   const url = new URL(request.url);
   const isHttps = url.protocol === "https:";
-  const isLocalhost = ["localhost", "127.0.0.1", "::1"].includes(url.hostname);
-  const isStayneosDomain = url.hostname === "stayneos.com" || url.hostname.endsWith(".stayneos.com");
+  const domain = resolveCookieDomain(url.hostname);
 
   return {
     path: "/",
@@ -27,7 +34,7 @@ export function getAuthCookieOptions(request?: NextRequest) {
     secure: isHttps,
     sameSite: "lax" as const,
     maxAge: AUTH_COOKIE_MAX_AGE,
-    ...(!isLocalhost && isStayneosDomain ? { domain: ".stayneos.com" } : {}),
+    ...(domain ? { domain } : {}),
   };
 }
 

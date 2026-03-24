@@ -97,14 +97,14 @@ export default function BookingsPage() {
     
     try {
       // 通过用户ID获取预订
-      const response = await fetch(`/api/bookings/list?userId=${user.id}`);
+      const response = await fetch(`/api/bookings`);
       
       if (!response.ok) {
         throw new Error(t('bookings.error.fetchFailed'));
       }
       
       const data = await response.json();
-      const allBookings = data.bookings || [];
+      const allBookings = data?.data?.bookings || [];
       
       // 根据标签筛选预订
       const today = new Date();
@@ -131,7 +131,6 @@ export default function BookingsPage() {
       
       setBookings(filteredBookings);
     } catch (err) {
-      console.error('Error fetching bookings:', err);
       setError(t('bookings.error.loadFailed'));
     } finally {
       setIsLoading(false);

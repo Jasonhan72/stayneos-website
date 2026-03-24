@@ -47,6 +47,22 @@ export const paymentDb = {
     return result.results || [];
   },
 
+
+
+  async findByBookingIds(db: ReturnType<typeof getDb>, bookingIds: string[]): Promise<Payment[]> {
+    if (bookingIds.length === 0) {
+      return [];
+    }
+
+    const placeholders = bookingIds.map(() => '?').join(', ');
+    const result = await db
+      .prepare(`SELECT * FROM Payment WHERE bookingId IN (${placeholders}) ORDER BY createdAt DESC`)
+      .bind(...bookingIds)
+      .all<Payment>();
+
+    return result.results || [];
+  },
+
   async findLatestByBookingId(db: ReturnType<typeof getDb>, bookingId: string): Promise<Payment | null> {
     return (
       (await db

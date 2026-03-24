@@ -7,12 +7,15 @@ import { UserProvider } from "@/lib/context/UserContext";
 import { WishlistProvider } from "@/lib/context/WishlistContext";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { getBaseUrl } from "@/lib/config/env";
 
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
 });
+
+const BASE_URL = getBaseUrl();
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -28,7 +31,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://stayneos.com'),
+  metadataBase: new URL(BASE_URL),
   title: {
     default: "NEOS | Premium Furnished Apartments",
     template: "%s | NEOS",
@@ -64,14 +67,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://stayneos.com",
+    url: BASE_URL,
     siteName: "NEOS",
     title: "NEOS | Premium Furnished Apartments",
     description:
       "Premium furnished apartment platform for professionals with exceptional living experience and concierge service across major cities",
     images: [
       {
-        url: "https://stayneos.com/og-image.jpg",
+        url: `${BASE_URL}/og-image.jpg`,
         width: 1200,
         height: 630,
         alt: "NEOS Premium Executive Apartments",
@@ -83,11 +86,11 @@ export const metadata: Metadata = {
     title: "NEOS | Premium Furnished Apartments",
     description:
       "Premium furnished apartment platform for professionals with exceptional living experience and concierge service",
-    images: ["https://stayneos.com/og-image.jpg"],
+    images: [`${BASE_URL}/og-image.jpg`],
     creator: "@stayneos",
   },
   alternates: {
-    canonical: "https://stayneos.com",
+    canonical: BASE_URL,
   },
   manifest: "/manifest.json",
   icons: {

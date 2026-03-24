@@ -1,11 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUserFromRequest } from "@/lib/auth";
-import { userDb, getDb } from "@/lib/d1";
-import { bookingDb } from "@/lib/booking-db";
-import { validateBookingDates, generateBookingNumber, calculateBookingPrice } from "@/lib/booking";
-import { getPropertyById } from "@/lib/data";
-import { getPropertySnapshot } from "@/lib/property-catalog";
-import { paymentDb } from "@/lib/payment-db";
+import { NextRequest, NextResponse } from 'next/server';
+import { getCurrentUserFromRequest } from '@/lib/auth';
+import { userDb, getDb } from '@/lib/d1';
+import { bookingDb } from '@/lib/booking-db';
+import { validateBookingDates, generateBookingNumber, calculateBookingPrice } from '@/lib/booking';
+import { getPropertyById } from '@/lib/data';
+import { getPropertySnapshot } from '@/lib/property-catalog';
+import { paymentDb } from '@/lib/payment-db';
+import { apiError } from '@/lib/api/response';
 
 export function generateStaticParams() {
   return [];
@@ -15,50 +16,38 @@ function normalizeBookingRow<T extends Record<string, unknown>>(row: T) {
   const r = row as Record<string, unknown>;
   return {
     ...r,
-    id: (r.id as string) || "",
-    propertyId: (r.propertyId as string) || (r.property_id as string) || "",
-    checkIn: (r.checkIn as string) || (r.check_in as string) || "",
-    checkOut: (r.checkOut as string) || (r.check_out as string) || "",
-    bookingNumber: (r.bookingNumber as string) || (r.booking_number as string) || "",
+    id: (r.id as string) || '',
+    propertyId: (r.propertyId as string) || (r.property_id as string) || '',
+    checkIn: (r.checkIn as string) || (r.check_in as string) || '',
+    checkOut: (r.checkOut as string) || (r.check_out as string) || '',
+    bookingNumber: (r.bookingNumber as string) || (r.booking_number as string) || '',
     totalPrice: Number((r.totalPrice as number) ?? (r.total_price as number) ?? 0),
-    paymentStatus: (r.paymentStatus as string) || (r.payment_status as string) || "PENDING",
-    status: (r.status as string) || "PENDING",
+    paymentStatus: (r.paymentStatus as string) || (r.payment_status as string) || 'PENDING',
+    status: (r.status as string) || 'PENDING',
   };
 }
 
 export async function POST(request: NextRequest) {
   try {
     const currentUser = await getCurrentUserFromRequest(request);
-
-    if (!currentUser?.email) {
-      return NextResponse.json({ error: "请先登录" }, { status: 401 });
-    }
+    if (!currentUser?.email) return apiError('请先登录', 401, 'UNAUTHORIZED');
 
     const db = getDb();
     const body = await request.json();
     const { propertyId, checkIn, checkOut, guests, guestName, guestEmail, guestPhone, specialRequests } = body;
 
-    if (!propertyId || !checkIn || !checkOut || !guests) {
-      return NextResponse.json({ error: "请填写所有必填字段" }, { status: 400 });
-    }
+    if (!propertyId || !checkIn || !checkOut || !guests) return apiError('请填写所有必填字段', 400, 'VALIDATION_ERROR');
 
     const property = getPropertyById(propertyId);
-    if (!property) {
-      return NextResponse.json({ error: "房源不存在" }, { status: 404 });
-    }
+    if (!property) return apiError('房源不存在', 404, 'PROPERTY_NOT_FOUND');
 
     const user = await userDb.findByEmail(db, currentUser.email);
-    if (!user) {
-      return NextResponse.json({ error: "用户不存在" }, { status: 404 });
-    }
+    if (!user) return apiError('用户不存在', 404, 'USER_NOT_FOUND');
 
     const dateValidation = validateBookingDates(checkIn, checkOut, property.minNights);
-    if (!dateValidation.valid) {
-      return NextResponse.json({ error: dateValidation.error }, { status: 400 });
-    }
+    if (!dateValidation.valid) return apiError(dateValidation.error || '日期无效', 400, 'INVALID_DATES');
 
     const priceCalc = calculateBookingPrice(property, checkIn, checkOut);
-
     const booking = await bookingDb.create(db, {
       bookingNumber: generateBookingNumber(),
       propertyId,
@@ -79,44 +68,37 @@ export async function POST(request: NextRequest) {
       totalPrice: priceCalc.total,
       currency: priceCalc.currency,
       specialRequests: specialRequests || null,
-      status: "PENDING",
-      paymentStatus: "PENDING",
+      status: 'PENDING',
+      paymentStatus: 'PENDING',
       stripePaymentIntentId: null,
       cancelledAt: null,
       cancelReason: null,
     });
 
-    return NextResponse.json({
-      success: true,
-      booking: {
-        id: booking.id,
-        bookingNumber: booking.bookingNumber,
-        totalPrice: booking.totalPrice,
-        currency: booking.currency,
-      },
-    });
-  } catch (error) {
-    console.error("Create booking error:", error);
-    return NextResponse.json({ error: "创建预订失败，请稍后重试" }, { status: 500 });
+    const bookingPayload = {
+      id: booking.id,
+      bookingNumber: booking.bookingNumber,
+      totalPrice: booking.totalPrice,
+      currency: booking.currency,
+    };
+
+    return NextResponse.json({ success: true, booking: bookingPayload, data: { booking: bookingPayload } });
+  } catch {
+    return apiError('创建预订失败，请稍后重试', 500, 'INTERNAL_ERROR');
   }
 }
 
 export async function GET(request: NextRequest) {
   try {
     const currentUser = await getCurrentUserFromRequest(request);
-
-    if (!currentUser?.email) {
-      return NextResponse.json({ error: "请先登录" }, { status: 401 });
-    }
+    if (!currentUser?.email) return apiError('请先登录', 401, 'UNAUTHORIZED');
 
     const db = getDb();
     const user = await userDb.findByEmail(db, currentUser.email);
-    if (!user) {
-      return NextResponse.json({ error: "用户不存在" }, { status: 404 });
-    }
+    if (!user) return apiError('用户不存在', 404, 'USER_NOT_FOUND');
 
     const { searchParams } = new URL(request.url);
-    const status = searchParams.get("status");
+    const status = searchParams.get('status');
     const bookings = await bookingDb.findByUserId(db, user.id);
 
     const now = new Date();
@@ -124,53 +106,32 @@ export async function GET(request: NextRequest) {
 
     const filtered = normalizedBookings.filter((booking) => {
       const checkIn = new Date(booking.checkIn);
-      // checkOut reserved for future date-range filtering
-      void new Date(booking.checkOut);
-
-      if (!status || status === "all") {
-        return true;
-      }
-
-      if (status === "upcoming") {
-        return ["PENDING", "CONFIRMED"].includes(booking.status) && checkIn >= now;
-      }
-
-      if (status === "completed") {
-        return booking.status === "CHECKED_OUT";
-      }
-
-      if (status === "active") {
-        return ["CONFIRMED", "CHECKED_IN"].includes(booking.status);
-      }
-
+      if (!status || status === 'all') return true;
+      if (status === 'upcoming') return ['PENDING', 'CONFIRMED'].includes(booking.status) && checkIn >= now;
+      if (status === 'completed') return booking.status === 'CHECKED_OUT';
+      if (status === 'active') return ['CONFIRMED', 'CHECKED_IN'].includes(booking.status);
       return booking.status === status;
     });
 
-    const bookingsWithDetails = await Promise.all(
-      filtered.map(async (booking) => {
-        const property = getPropertySnapshot(booking.propertyId || "");
-        const payments = await paymentDb.findByBookingId(db, booking.id);
-        const paidAmount = payments
-          .filter((payment) => payment.status === "COMPLETED")
-          .reduce((sum, payment) => sum + Number(payment.amount), 0);
+    const allPayments = await paymentDb.findByBookingIds(db, filtered.map((b) => b.id));
+    const paymentMap = new Map<string, typeof allPayments>();
+    for (const payment of allPayments) {
+      const arr = paymentMap.get(payment.bookingId) || [];
+      arr.push(payment);
+      paymentMap.set(payment.bookingId, arr);
+    }
 
-        return {
-          ...booking,
-          property,
-          review: null,
-          payments,
-          paidAmount,
-        };
-      })
-    );
+    const bookingsWithDetails = filtered.map((booking) => {
+      const payments = paymentMap.get(booking.id) || [];
+      const paidAmount = payments
+        .filter((payment) => payment.status === 'COMPLETED')
+        .reduce((sum, payment) => sum + Number(payment.amount), 0);
 
-    return NextResponse.json({
-      success: true,
-      bookings: bookingsWithDetails,
+      return { ...booking, property: getPropertySnapshot(booking.propertyId || ''), review: null, payments, paidAmount };
     });
-  } catch (error) {
-    console.error("Get bookings error:", error);
-    return NextResponse.json({ error: "获取预订列表失败" }, { status: 500 });
+
+    return NextResponse.json({ success: true, bookings: bookingsWithDetails, data: { bookings: bookingsWithDetails } });
+  } catch {
+    return apiError('获取预订列表失败', 500, 'INTERNAL_ERROR');
   }
 }
-

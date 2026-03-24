@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { signToken } from "@/lib/auth/jwt";
 import { userDb, getDb } from "@/lib/d1";
 import { AUTH_COOKIE_NAME, getAuthCookieOptions } from "@/lib/auth/cookie";
+import { getPublicBaseUrl } from '@/lib/config/env';
 
 export async function POST(request: Request) {
   try {
@@ -44,7 +45,7 @@ export async function POST(request: Request) {
 
     const isFormSubmit = contentType.includes("application/x-www-form-urlencoded");
     if (isFormSubmit) {
-      const baseUrl = process.env.NEXTAUTH_URL || "https://stayneos.com";
+      const baseUrl = getPublicBaseUrl();
       const response = NextResponse.redirect(`${baseUrl}/dashboard`, 303);
       response.cookies.set(AUTH_COOKIE_NAME, token, getAuthCookieOptions());
       return response;
