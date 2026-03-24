@@ -130,7 +130,7 @@ export default function BookingsPage() {
       });
       
       setBookings(filteredBookings);
-    } catch (err) {
+    } catch (_err) {
       setError(t('bookings.error.loadFailed'));
     } finally {
       setIsLoading(false);
@@ -181,8 +181,8 @@ export default function BookingsPage() {
       fetchBookings();
       setShowCancelModal(false);
       setSelectedBooking(null);
-    } catch (err) {
-      if (process.env.NODE_ENV !== 'production') console.error('Error cancelling booking:', err);
+    } catch (_err) {
+      if (process.env.NODE_ENV !== 'production') console.error('Error cancelling booking:', _err);
       alert(t('bookings.error.cancelAlert'));
     }
   };

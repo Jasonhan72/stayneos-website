@@ -25,7 +25,7 @@ const translations = { en, fr, zh };
 const USER_KEY = "stayneos_user_data";
 const PREFERRED_LOCALE_KEY = 'preferred-locale';
 const LOCALE_COOKIE_KEY = 'stayneos_locale';
-const debugI18n = (...args: unknown[]) => {
+const debugI18n = (..._args: unknown[]) => {
   if (process.env.NODE_ENV !== 'production') {
   }
 };

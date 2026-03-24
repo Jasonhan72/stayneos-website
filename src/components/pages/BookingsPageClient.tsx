@@ -110,7 +110,7 @@ export default function BookingsPage() {
       
       const data = await response.json();
       setBookings(data?.data?.bookings || []);
-    } catch (err) {
+    } catch (_err) {
       setError(t('bookings.errorLoading'));
     } finally {
       setIsLoading(false);

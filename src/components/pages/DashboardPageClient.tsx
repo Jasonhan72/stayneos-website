@@ -69,7 +69,8 @@ function DashboardContent() {
         }
         const result = await response.json();
         const data = Array.isArray(result?.data?.bookings) ? result.data.bookings : [];
-        const normalized: DashboardBooking[] = data.map((booking: any) => {
+        const normalized: DashboardBooking[] = data.map(// eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (booking: any) => {
           const checkIn = booking.checkIn || booking.check_in || '';
           const checkOut = booking.checkOut || booking.check_out || '';
           const property = booking.property || {};

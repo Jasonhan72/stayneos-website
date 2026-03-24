@@ -7,13 +7,13 @@ import { paymentDb } from "@/lib/payment-db";
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 const isDev = process.env.NODE_ENV !== "production";
-const debugLog = (...args: unknown[]) => {
+const debugLog = (..._args: unknown[]) => {
   if (isDev) {
   }
 };
-const debugError = (...args: unknown[]) => {
+const debugError = (..._args: unknown[]) => {
   if (isDev) {
-    if (process.env.NODE_ENV !== 'production') console.error(...args);
+    if (process.env.NODE_ENV !== 'production') console.error(..._args);
   }
 };
 

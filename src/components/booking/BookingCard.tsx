@@ -101,7 +101,7 @@ export function BookingCard({ property, className }: BookingCardProps) {
     });
 
     router.push(`/checkout/${property.id}?${params.toString()}`);
-  }, [checkIn, checkOut, guests, nights, property.id, property.minNights, router]);
+  }, [checkIn, checkOut, guests, nights, property.id, property.minNights, router, t]);
 
   // Adjust guests
   const adjustGuests = (delta: number) => {

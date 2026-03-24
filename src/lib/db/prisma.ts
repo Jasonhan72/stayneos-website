@@ -4,7 +4,7 @@
 import { PrismaClient } from '@prisma/client';
 
 const isDev = process.env.NODE_ENV !== 'production';
-const debugLog = (...args: unknown[]) => {
+const debugLog = (..._args: unknown[]) => {
   if (isDev) {
   }
 };
