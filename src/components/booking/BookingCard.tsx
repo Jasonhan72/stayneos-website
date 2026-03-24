@@ -19,6 +19,7 @@ import { AirbnbCalendar } from './AirbnbCalendar';
 import { BookingPriceCalculator } from './BookingPriceCalculator';
 import { calculateBookingPrice } from '@/lib/booking';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 
 interface BookingCardProps {
   property: {
@@ -37,6 +38,7 @@ interface BookingCardProps {
 
 export function BookingCard({ property, className }: BookingCardProps) {
   const router = useRouter();
+  const { t } = useI18n();
   
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
@@ -72,12 +74,19 @@ export function BookingCard({ property, className }: BookingCardProps) {
   const handleReserve = useCallback(async () => {
     if (!checkIn || !checkOut) {
       setShowDatePicker(true);
-      setError('Please select dates');
+      setError(t('booking.validation.selectDates', 'Please select check-in and check-out dates'));
+      return;
+    }
+
+    const startDate = new Date(checkIn);
+    const endDate = new Date(checkOut);
+    if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime()) || endDate <= startDate) {
+      setError(t('booking.validation.invalidRange', 'Check-out must be after check-in'));
       return;
     }
 
     if (property.minNights && nights < property.minNights) {
-      setError(`Minimum ${property.minNights} nights required`);
+      setError(t('booking.validation.minNights', 'Minimum {count} nights required', { count: property.minNights }));
       return;
     }
 
@@ -104,16 +113,16 @@ export function BookingCard({ property, className }: BookingCardProps) {
 
   // Format date for display
   const formatDateDisplay = (dateStr: string) => {
-    if (!dateStr) return 'Add date';
+    if (!dateStr) return t('booking.addDate', 'Add date');
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
 
   // Get reserve button text
   const getReserveButtonText = () => {
-    if (isLoading) return 'Processing...';
-    if (!checkIn || !checkOut) return 'Check availability';
-    return 'Reserve';
+    if (isLoading) return t('booking.processing', 'Processing...');
+    if (!checkIn || !checkOut) return t('property.checkAvailability');
+    return t('property.reserve', 'Reserve');
   };
 
   // Close dropdowns when clicking outside
@@ -152,7 +161,7 @@ export function BookingCard({ property, className }: BookingCardProps) {
                 ${property.price.toLocaleString()}
               </span>
             )}
-            <span className="text-neutral-500"> CAD / night</span>
+            <span className="text-neutral-500"> CAD / {t('common.night')}</span>
           </div>
 
           {/* Rating */}
@@ -171,8 +180,8 @@ export function BookingCard({ property, className }: BookingCardProps) {
             <div className="flex items-center gap-2 text-rose-800">
               <Sparkles size={16} className="shrink-0" />
               <div className="text-sm">
-                <span className="font-semibold">{property.monthlyDiscount}% off</span>
-                {' '}for stays of 28+ nights
+                <span className="font-semibold">{property.monthlyDiscount}% {t('common.off', 'off')}</span>
+                {' '}{t('booking.monthlyDiscountHint', 'for stays of 28+ nights')}
               </div>
             </div>
           </div>
@@ -183,7 +192,7 @@ export function BookingCard({ property, className }: BookingCardProps) {
           <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-xl">
             <div className="flex items-start gap-2 text-amber-800 text-sm">
               <AlertCircle size={16} className="shrink-0 mt-0.5" />
-              <span>Minimum {property.minNights} nights required</span>
+              <span>{t('booking.validation.minNights', 'Minimum {count} nights required', { count: property.minNights })}</span>
             </div>
           </div>
         )}
@@ -199,7 +208,7 @@ export function BookingCard({ property, className }: BookingCardProps) {
               onClick={() => setShowDatePicker(true)}
               className="p-3 text-left hover:bg-neutral-50 transition-colors"
             >
-              <div className="text-xs font-bold text-neutral-900 uppercase">Check-in</div>
+              <div className="text-xs font-bold text-neutral-900 uppercase">{t('booking.checkIn')}</div>
               <div className={cn(
                 "text-sm mt-0.5",
                 checkIn ? 'text-neutral-900 font-medium' : 'text-neutral-500'
@@ -212,7 +221,7 @@ export function BookingCard({ property, className }: BookingCardProps) {
               onClick={() => setShowDatePicker(true)}
               className="p-3 text-left hover:bg-neutral-50 transition-colors"
             >
-              <div className="text-xs font-bold text-neutral-900 uppercase">Checkout</div>
+              <div className="text-xs font-bold text-neutral-900 uppercase">{t('booking.checkOut')}</div>
               <div className={cn(
                 "text-sm mt-0.5",
                 checkOut ? 'text-neutral-900 font-medium' : 'text-neutral-500'
@@ -232,9 +241,9 @@ export function BookingCard({ property, className }: BookingCardProps) {
               className="w-full p-3 text-left hover:bg-neutral-50 transition-colors flex items-center justify-between"
             >
               <div>
-                <div className="text-xs font-bold text-neutral-900 uppercase">Guests</div>
+                <div className="text-xs font-bold text-neutral-900 uppercase">{t('search.guests')}</div>
                 <div className="text-sm mt-0.5 font-medium text-neutral-900">
-                  {guests} {guests === 1 ? 'guest' : 'guests'}
+                  {guests} {guests === 1 ? t('search.guest') : t('search.guests')}
                 </div>
               </div>
               <ChevronDown 
@@ -251,8 +260,8 @@ export function BookingCard({ property, className }: BookingCardProps) {
               <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-neutral-200 rounded-xl shadow-xl p-4 z-20">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium">Guests</p>
-                    <p className="text-sm text-neutral-500">Max {property.maxGuests} guests</p>
+                    <p className="font-medium">{t('search.guests')}</p>
+                    <p className="text-sm text-neutral-500">{t('properties.maxGuests', 'Max {count} guests', { count: property.maxGuests })}</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <button
@@ -311,14 +320,14 @@ export function BookingCard({ property, className }: BookingCardProps) {
         </Button>
 
         <p className="text-center text-sm text-neutral-500 mt-3">
-          You won&apos;t be charged yet
+          {t('booking.youWontBeCharged')}
         </p>
 
         {/* Trust Badges */}
         <div className="mt-6 pt-6 border-t border-neutral-200">
           <div className="flex items-center gap-2 text-sm text-neutral-600">
             <Shield size={16} className="text-neutral-900" />
-            <span>Secure booking · Free cancellation within 24h</span>
+            <span>{t('booking.trustLine', 'Secure booking · Free cancellation within 24h')}</span>
           </div>
         </div>
       </div>

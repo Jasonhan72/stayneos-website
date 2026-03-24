@@ -64,7 +64,8 @@
     "backToList": "Back to property list",
     "optional": "Optional",
     "or": "or",
-    "month": "Mo"
+    "month": "Mo",
+    "off": "off"
   },
   "greeting": {
     "morning": "Good morning",
@@ -698,7 +699,14 @@
     "yourTrip": "Your trip",
     "months": "{count} months",
     "taxes": "Taxes",
-    "allInclusive": "All-inclusive pricing: WiFi, utilities, cleaning & service fees included"
+    "allInclusive": "All-inclusive pricing: WiFi, utilities, cleaning & service fees included",
+    "validation": {
+      "selectDates": "Please select check-in and check-out dates",
+      "invalidRange": "Check-out must be after check-in",
+      "minNights": "Minimum {count} nights required"
+    },
+    "trustLine": "Secure booking · Free cancellation within 24h",
+    "monthlyDiscountHint": "for stays of 28+ nights"
   },
   "testimonials": {
     "title": "What Our Guests Say",
@@ -745,7 +753,8 @@
       "send": "Send Message",
       "errorName": "Please enter your name",
       "errorEmail": "Please enter your email",
-      "errorMessage": "Please enter your message"
+      "errorMessage": "Please enter your message",
+      "submitFailed": "Submission failed. Please try again."
     },
     "success": {
       "title": "Submitted Successfully!",
@@ -2484,7 +2493,12 @@
     "passwordMinPlaceholder": "At least 6 characters",
     "confirmPasswordLabel": "Confirm Password",
     "alreadyHaveAccount": "Already have an account?",
-    "signIn": "Sign in"
+    "signIn": "Sign in",
+    "passwordTooWeak": "Please create a stronger password",
+    "passwordStrengthLength": "At least 8 characters",
+    "passwordStrengthUpper": "One uppercase letter",
+    "passwordStrengthLower": "One lowercase letter",
+    "passwordStrengthNumber": "One number"
   },
   "upcoming": {
     "title": "No upcoming bookings",

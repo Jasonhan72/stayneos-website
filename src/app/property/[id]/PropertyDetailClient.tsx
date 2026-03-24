@@ -207,6 +207,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
   // showCardForm removed - card input now handled by Stripe Elements
   const [showGuestSelector, setShowGuestSelector] = useState(false);
   const [showPaymentNotice, setShowPaymentNotice] = useState<string | null>(null);
+  const [bookingError, setBookingError] = useState<string>('');
   
   // Guest breakdown state for GuestSelector
   const [guestBreakdown, setGuestBreakdown] = useState<GuestCounts>({
@@ -325,16 +326,35 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
 
   const handleCheckAvailability = () => {
     if (!checkIn || !checkOut) {
+      setBookingError(t('booking.validation.selectDates', 'Please select check-in and check-out dates'));
       setShowCalendar(true);
-    } else {
-      // Navigate to the booking page with Stripe payment integration
-      const params = new URLSearchParams({
-        checkIn,
-        checkOut,
-        guests: guests.toString(),
-      });
-      router.push(`/booking/${propertyId}?${params.toString()}`);
+      return;
     }
+
+    const startDate = new Date(checkIn);
+    const endDate = new Date(checkOut);
+    if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime()) || endDate <= startDate) {
+      setBookingError(t('booking.validation.invalidRange', 'Check-out must be after check-in'));
+      setShowCalendar(true);
+      return;
+    }
+
+    const nights = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    const minNights = propertyCardData.minNights || 1;
+    if (nights < minNights) {
+      setBookingError(t('booking.validation.minNights', 'Minimum {count} nights required', { count: minNights }));
+      setShowCalendar(true);
+      return;
+    }
+
+    setBookingError('');
+    // Navigate to the booking page with Stripe payment integration
+    const params = new URLSearchParams({
+      checkIn,
+      checkOut,
+      guests: guests.toString(),
+    });
+    router.push(`/booking/${propertyId}?${params.toString()}`);
   };
 
   // 获取图片 URL 列表 - 使用可选链避免条件调用 hook
@@ -447,6 +467,9 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
       </button>
 
       <p className="text-center text-neutral-500 text-sm mb-6">{t('booking.youWontBeCharged')}</p>
+      {bookingError ? (
+        <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">{bookingError}</p>
+      ) : null}
 
       {/* Price Breakdown */}
       {bookingPrice && (
@@ -513,6 +536,16 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
       <div className="h-14" />
 
       <Container className="pt-6 pb-2">
+        <nav aria-label="Breadcrumb" className="mb-4 text-sm text-neutral-500">
+          <ol className="flex items-center gap-2 flex-wrap">
+            <li><Link href="/" className="hover:text-neutral-800">{t('nav.home')}</Link></li>
+            <li>/</li>
+            <li><Link href="/properties" className="hover:text-neutral-800">{t('nav.properties')}</Link></li>
+            <li>/</li>
+            <li className="text-neutral-800 truncate max-w-[14rem]">{localizedTitle}</li>
+          </ol>
+        </nav>
+
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between mb-6">
           <div className="min-w-0">
             <h1 className="text-2xl md:text-3xl font-bold text-neutral-900">{localizedTitle}</h1>
@@ -891,8 +924,8 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
         <AirbnbCalendar 
           checkIn={checkIn}
           checkOut={checkOut}
-          onSelectCheckIn={setCheckIn}
-          onSelectCheckOut={setCheckOut}
+          onSelectCheckIn={(date) => { setCheckIn(date); setBookingError(''); }}
+          onSelectCheckOut={(date) => { setCheckOut(date); setBookingError(''); }}
           onClose={() => setShowCalendar(false)}
           onClearDates={() => {
             setCheckIn('');

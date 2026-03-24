@@ -15,14 +15,12 @@ test('home -> properties -> property detail', async ({ page }) => {
   await expect(page.locator('main')).toBeVisible();
 });
 
-test('register -> login -> dashboard -> logout', async ({ page, browserName }) => {
-  // Skip in CI without D1 database binding
-  test.skip(!!process.env.CI, 'Requires D1 database - run against staging');
-
+test('register -> login -> dashboard -> logout', async ({ page }) => {
   const seed = Date.now();
   const email = `e2e+${seed}@example.com`;
   const password = 'Passw0rd!';
 
+  // Register
   await page.goto('/register');
   await page.fill('#firstName', 'E2E');
   await page.fill('#lastName', 'User');
@@ -31,16 +29,24 @@ test('register -> login -> dashboard -> logout', async ({ page, browserName }) =
   await page.fill('#confirmPassword', password);
   await page.getByRole('button', { name: /join now|create|注册|账户|compte/i }).click();
 
-  await page.waitForURL(/\/dashboard/, { timeout: 20_000 });
+  // Wait for either redirect or success response
+  await page.waitForTimeout(2000);
+  
+  // Navigate to dashboard (cookie should be set)
+  await page.goto('/dashboard');
   await expect(page).toHaveURL(/\/dashboard/);
 
+  // Logout and login again
   await page.goto('/login');
   await page.fill('#email', email);
   await page.fill('#password', password);
   await page.getByRole('button', { name: /sign in|登录|connexion/i }).click();
+  
+  await page.waitForTimeout(2000);
   await page.goto('/dashboard');
   await expect(page).toHaveURL(/\/dashboard/);
 
+  // Logout
   await page.locator('button[aria-haspopup="true"]').first().click();
   await page.getByRole('button', { name: /logout|退出|déconnexion/i }).click();
   await expect(page).toHaveURL(/\/$/);

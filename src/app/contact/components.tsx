@@ -77,7 +77,7 @@ export function ContactForm() {
       await submitInquiry("contact", formData);
     } catch (error) {
       if (process.env.NODE_ENV !== 'production') console.error("Contact form submission failed:", error);
-      setErrors({ submit: error instanceof Error ? error.message : "Submission failed" });
+      setErrors({ submit: error instanceof Error ? error.message : t('contact.form.submitFailed') });
       setIsSubmitting(false);
       return;
     }
@@ -89,10 +89,11 @@ export function ContactForm() {
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     // 清除该字段的错误
-    if (errors[field]) {
+    if (errors[field] || errors.submit) {
       setErrors(prev => {
         const newErrors = { ...prev };
         delete newErrors[field];
+        delete newErrors.submit;
         return newErrors;
       });
     }

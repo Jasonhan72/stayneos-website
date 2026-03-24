@@ -17,6 +17,15 @@ export function RegisterForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
 
+  const passwordStrengthChecks = [
+    { ok: password.length >= 8, label: t('auth.passwordStrengthLength', 'At least 8 characters') },
+    { ok: /[A-Z]/.test(password), label: t('auth.passwordStrengthUpper', 'One uppercase letter') },
+    { ok: /[a-z]/.test(password), label: t('auth.passwordStrengthLower', 'One lowercase letter') },
+    { ok: /\d/.test(password), label: t('auth.passwordStrengthNumber', 'One number') },
+  ];
+
+  const passwordStrengthScore = passwordStrengthChecks.filter((item) => item.ok).length;
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
@@ -36,8 +45,8 @@ export function RegisterForm() {
 
     if (!password) {
       newErrors.password = t('auth.passwordRequired', 'Password is required');
-    } else if (password.length < 6) {
-      newErrors.password = t('auth.passwordTooShort', 'Password must be at least 6 characters');
+    } else if (passwordStrengthScore < passwordStrengthChecks.length) {
+      newErrors.password = t('auth.passwordTooWeak', 'Please create a stronger password');
     }
 
     if (!confirmPassword) {
@@ -215,6 +224,31 @@ export function RegisterForm() {
         {errors.password && (
           <p className="mt-1 text-sm text-red-600">{errors.password}</p>
         )}
+
+        {password ? (
+          <div className="mt-3 rounded-lg border border-gray-200 p-3">
+            <div className="mb-2 h-2 w-full rounded bg-gray-100 overflow-hidden">
+              <div
+                className={`h-full transition-all ${
+                  passwordStrengthScore <= 1
+                    ? 'bg-red-500 w-1/4'
+                    : passwordStrengthScore === 2
+                      ? 'bg-amber-500 w-2/4'
+                      : passwordStrengthScore === 3
+                        ? 'bg-yellow-500 w-3/4'
+                        : 'bg-green-500 w-full'
+                }`}
+              />
+            </div>
+            <ul className="space-y-1 text-xs text-gray-600">
+              {passwordStrengthChecks.map((check, index) => (
+                <li key={index} className={check.ok ? 'text-green-600' : 'text-gray-500'}>
+                  {check.ok ? '✓' : '•'} {check.label}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </div>
 
       <div>

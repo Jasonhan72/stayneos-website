@@ -1,6 +1,29 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BookingCard } from '@/components/booking/BookingCard';
 
+jest.mock('@/lib/i18n', () => ({
+  useI18n: () => ({
+    t: (key: string, fallback?: string, params?: Record<string, string | number>) => {
+      if (key === 'booking.validation.minNights') {
+        return `Minimum ${params?.count ?? ''} nights required`;
+      }
+      if (key === 'booking.validation.selectDates') return 'Please select dates';
+      if (key === 'property.checkAvailability') return 'Check availability';
+      if (key === 'property.reserve') return 'Reserve';
+      if (key === 'search.guest') return 'guest';
+      if (key === 'search.guests') return 'guests';
+      if (key === 'booking.checkIn') return 'Check-in';
+      if (key === 'booking.checkOut') return 'Checkout';
+      if (key === 'booking.addDate') return 'Add date';
+      if (key === 'booking.processing') return 'Processing...';
+      if (key === 'booking.youWontBeCharged') return "You won't be charged yet";
+      if (key === 'common.night') return 'night';
+      if (fallback) return fallback;
+      return key;
+    },
+  }),
+}));
+
 const push = jest.fn();
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push }),

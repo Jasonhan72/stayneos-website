@@ -64,7 +64,8 @@
     "backToList": "Retour à la liste",
     "optional": "Optionnel",
     "or": "ou",
-    "month": "mois"
+    "month": "mois",
+    "off": "de réduction"
   },
   "greeting": {
     "morning": "Bonjour",
@@ -686,7 +687,7 @@
     },
     "priceBreakdown": "Détail des prix",
     "totalPrice": "Prix total",
-    "addDate": "Ajouter une date",
+    "addDate": "Ajouter des dates",
     "confirmInfo": "Confirmez vos informations",
     "paymentEncrypted": "Vos informations de paiement sont cryptées",
     "selectDatesToSeePrice": "Sélectionnez des dates pour voir les prix",
@@ -706,7 +707,14 @@
     "yourTrip": "Votre voyage",
     "months": "{count} mois",
     "taxes": "Taxes",
-    "allInclusive": "Tarif tout compris : WiFi, services publics, ménage et frais de service inclus"
+    "allInclusive": "Tarif tout compris : WiFi, services publics, ménage et frais de service inclus",
+    "validation": {
+      "selectDates": "Veuillez sélectionner les dates d'arrivée et de départ",
+      "invalidRange": "La date de départ doit être après la date d'arrivée",
+      "minNights": "Séjour minimum de {count} nuits"
+    },
+    "trustLine": "Réservation sécurisée · Annulation gratuite sous 24h",
+    "monthlyDiscountHint": "pour les séjours de 28 nuits et plus"
   },
   "testimonials": {
     "title": "Ce que disent nos clients",
@@ -753,7 +761,8 @@
       "send": "Envoyer",
       "errorName": "Veuillez entrer votre nom",
       "errorEmail": "Veuillez entrer votre email",
-      "errorMessage": "Veuillez entrer votre message"
+      "errorMessage": "Veuillez entrer votre message",
+      "submitFailed": "Échec de l’envoi. Veuillez réessayer."
     },
     "success": {
       "title": "Envoyé Avec Succès!",
@@ -2006,7 +2015,12 @@
     "passwordMinPlaceholder": "Au moins 6 caractères",
     "confirmPasswordLabel": "Confirmer le mot de passe",
     "alreadyHaveAccount": "Vous avez déjà un compte ?",
-    "signIn": "Se connecter"
+    "signIn": "Se connecter",
+    "passwordTooWeak": "Veuillez créer un mot de passe plus fort",
+    "passwordStrengthLength": "Au moins 8 caractères",
+    "passwordStrengthUpper": "Une lettre majuscule",
+    "passwordStrengthLower": "Une lettre minuscule",
+    "passwordStrengthNumber": "Un chiffre"
   },
   "upcoming": {
     "title": "Aucune réservation à venir",

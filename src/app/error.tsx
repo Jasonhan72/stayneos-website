@@ -55,6 +55,12 @@ export default function Error({
             {t('nav.home')}
           </Link>
         </div>
+
+        <div className="mt-8 pt-6 border-t border-gray-200 text-sm text-gray-600 flex flex-wrap items-center justify-center gap-4">
+          <Link href="/properties" className="hover:text-gray-900 hover:underline">{t('nav.properties')}</Link>
+          <Link href="/contact" className="hover:text-gray-900 hover:underline">{t('nav.contact')}</Link>
+          <Link href="/about" className="hover:text-gray-900 hover:underline">{t('nav.about')}</Link>
+        </div>
       </div>
     </div>
   );

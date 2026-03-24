@@ -64,7 +64,8 @@
     "backToList": "返回房源列表",
     "optional": "可选",
     "or": "或",
-    "month": "月"
+    "month": "月",
+    "off": "折扣"
   },
   "greeting": {
     "morning": "早上好",
@@ -706,7 +707,14 @@
     "yourTrip": "您的行程",
     "months": "{count} 个月",
     "taxes": "税费",
-    "allInclusive": "全包价格：含WiFi、水电、保洁及服务费"
+    "allInclusive": "全包价格：含WiFi、水电、保洁及服务费",
+    "validation": {
+      "selectDates": "请选择入住和退房日期",
+      "invalidRange": "退房日期必须晚于入住日期",
+      "minNights": "至少入住 {count} 晚"
+    },
+    "trustLine": "安全预订 · 24小时内可免费取消",
+    "monthlyDiscountHint": "入住 28 晚及以上可享优惠"
   },
   "testimonials": {
     "title": "客人评价",
@@ -753,7 +761,8 @@
       "send": "发送消息",
       "errorName": "请输入您的姓名",
       "errorEmail": "请输入您的邮箱",
-      "errorMessage": "请输入您的消息"
+      "errorMessage": "请输入您的消息",
+      "submitFailed": "提交失败，请稍后重试。"
     },
     "success": {
       "title": "提交成功！",
@@ -2116,7 +2125,12 @@
     "passwordMinPlaceholder": "至少 6 个字符",
     "confirmPasswordLabel": "确认密码",
     "alreadyHaveAccount": "已有账号？",
-    "signIn": "登录"
+    "signIn": "登录",
+    "passwordTooWeak": "请设置更强的密码",
+    "passwordStrengthLength": "至少 8 个字符",
+    "passwordStrengthUpper": "包含一个大写字母",
+    "passwordStrengthLower": "包含一个小写字母",
+    "passwordStrengthNumber": "包含一个数字"
   },
   "upcoming": {
     "title": "暂无即将入住的预订",
