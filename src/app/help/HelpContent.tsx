@@ -66,8 +66,8 @@ export default function HelpContent() {
               <a href="tel:+16478626518" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow">
                 <Phone className="w-5 h-5 text-blue-600" /><span>+1 (647) 862-6518</span>
               </a>
-              <a href="mailto:hello@stayneos.com" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow">
-                <Mail className="w-5 h-5 text-blue-600" /><span>hello@stayneos.com</span>
+              <a href="mailto:hello@neos.rentals" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow">
+                <Mail className="w-5 h-5 text-blue-600" /><span>hello@neos.rentals</span>
               </a>
             </div>
           </div>

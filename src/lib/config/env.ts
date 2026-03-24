@@ -1,6 +1,6 @@
 const SECRET_KEYS = ['NEXTAUTH_SECRET_PROD', 'NEXTAUTH_SECRET', 'JWT_SECRET'] as const;
 
-const DEFAULT_BASE_URL = 'https://stayneos.com';
+const DEFAULT_BASE_URL = 'https://neos.rentals';
 
 export function getAuthSecret(): string {
   for (const key of SECRET_KEYS) {

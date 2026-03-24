@@ -112,7 +112,7 @@ export default function AdminLayout({
               <div className="flex items-center gap-3 pl-4 border-l border-neutral-200">
                 <div className="hidden sm:block text-right">
                   <p className="text-sm font-medium text-neutral-900">管理员</p>
-                  <p className="text-xs text-neutral-500">admin@stayneos.com</p>
+                  <p className="text-xs text-neutral-500">admin@neos.rentals</p>
                 </div>
                 <button
                   type="button"

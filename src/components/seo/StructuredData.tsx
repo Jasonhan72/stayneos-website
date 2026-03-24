@@ -11,8 +11,8 @@ interface OrganizationSchemaProps {
 
 export function OrganizationSchema({
   name = "NEOS",
-  url = "https://stayneos.com",
-  logo = "https://stayneos.com/logo.png",
+  url = "https://neos.rentals",
+  logo = "https://neos.rentals/logo.png",
   description = "Premium furnished apartment platform for business professionals",
 }: OrganizationSchemaProps) {
   const schema = {
@@ -50,8 +50,8 @@ interface WebSiteSchemaProps {
 
 export function WebSiteSchema({
   name = "NEOS",
-  url = "https://stayneos.com",
-  searchUrl = "https://stayneos.com/properties?q={search_term_string}",
+  url = "https://neos.rentals",
+  searchUrl = "https://neos.rentals/properties?q={search_term_string}",
 }: WebSiteSchemaProps) {
   const schema = {
     "@context": "https://schema.org",
@@ -100,7 +100,7 @@ interface LocalBusinessSchemaProps {
 export function LocalBusinessSchema({
   name = "NEOS",
   description = "Premium furnished apartment rental platform",
-  url = "https://stayneos.com",
+  url = "https://neos.rentals",
   telephone = "+1-647-862-6518",
   address = {
     streetAddress: "20 Upjohn Rd",
@@ -138,7 +138,7 @@ export function LocalBusinessSchema({
       closes: hours.split(" ")[1].split("-")[1],
     })),
     priceRange,
-    image: "https://stayneos.com/og-image.jpg",
+    image: "https://neos.rentals/og-image.jpg",
   };
 
   return (
@@ -157,7 +157,7 @@ interface PropertySchemaProps {
 
 export function PropertySchema({
   property,
-  baseUrl = "https://stayneos.com",
+  baseUrl = "https://neos.rentals",
 }: PropertySchemaProps) {
   const schema = {
     "@context": "https://schema.org",

@@ -15,7 +15,7 @@ jobs:
           node-version: 20
       - run: node scripts/monitor/api-health-check.mjs
         env:
-          HEALTHCHECK_URL: https://stayneos.com/api/health
+          HEALTHCHECK_URL: https://neos.rentals/api/health
           HEALTHCHECK_MAX_MS: '1800'
 
   security-events:

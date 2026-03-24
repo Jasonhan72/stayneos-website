@@ -51,7 +51,7 @@ export default function PaymentCancelPage() {
           <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
             <HelpCircle size={16} />
             <span>{t('payment.cancel.help')}</span>
-            <a href="mailto:support@stayneos.com" className="text-amber-600 hover:underline">
+            <a href="mailto:support@neos.rentals" className="text-amber-600 hover:underline">
               {t('payment.cancel.contact')}
             </a>
           </div>

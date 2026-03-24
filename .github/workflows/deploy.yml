@@ -69,6 +69,6 @@ jobs:
 
       - name: Check website
         run: |
-          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://stayneos.com")
-          echo "stayneos.com → HTTP $HTTP_STATUS"
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://neos.rentals")
+          echo "neos.rentals → HTTP $HTTP_STATUS"
           [ "$HTTP_STATUS" = "200" ] && echo "✅ Site is live" || echo "⚠️ Check deployment"

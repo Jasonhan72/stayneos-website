@@ -23,7 +23,7 @@ export default function AdminEmailLogsPage() {
   const [testResult, setTestResult] = useState<{success: boolean; message?: string; error?: string; details?: string} | null>(null);
 
   // 检查是否为管理员
-  const isAdmin = user?.role === 'ADMIN' || user?.email === 'hello@stayneos.com';
+  const isAdmin = user?.role === 'ADMIN' || user?.email === 'hello@neos.rentals';
 
   useEffect(() => {
     if (!isAuthenticated) return;

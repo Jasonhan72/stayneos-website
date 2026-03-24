@@ -15,9 +15,9 @@ directory = ".open-next/assets"
 
 # Environment Variables
 [vars]
-RESEND_FROM_EMAIL = "hello@stayneos.com"
+RESEND_FROM_EMAIL = "hello@neos.rentals"
 NODE_ENV = "production"
-NEXTAUTH_URL = "https://stayneos.com"
+NEXTAUTH_URL = "https://neos.rentals"
 NEXTAUTH_SECRET = ""
 # SECURITY: NEXTAUTH_SECRET 已轮换，必须通过 `wrangler secret put NEXTAUTH_SECRET` 注入
 # Google OAuth credentials are stored as secrets - use wrangler secret put

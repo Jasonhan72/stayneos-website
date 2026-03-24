@@ -243,8 +243,8 @@ export function ContactInfoCard() {
     {
       icon: Mail,
       title: t("contact.emailLabel"),
-      content: "hello@stayneos.com",
-      href: "mailto:hello@stayneos.com",
+      content: "hello@neos.rentals",
+      href: "mailto:hello@neos.rentals",
       description: t("contact.responseTime")
     },
     {
