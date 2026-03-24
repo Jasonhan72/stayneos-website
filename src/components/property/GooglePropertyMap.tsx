@@ -30,20 +30,16 @@ export default function GooglePropertyMap({
     );
   }
 
-  // Calculate map center based on all properties (using first one for now)
-  const centerLocation = encodeURIComponent(properties[0]?.location || 'Downtown');
-  
   return (
     <div className="w-full h-full relative">
       {/* Google Maps Embed - Full height, no overlays */}
       <iframe
-        src={`https://maps.google.com/maps?q=${centerLocation}&t=&z=12&ie=UTF8&iwloc=&output=embed`}
+        src={`https://www.openstreetmap.org/export/embed.html?bbox=-79.5%2C43.6%2C-79.3%2C43.72&layer=mapnik&marker=43.66%2C-79.4`}
         width="100%"
         height="100%"
         style={{ border: 0 }}
         allowFullScreen
         loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
         className="absolute inset-0"
         title="房源地图"
       />

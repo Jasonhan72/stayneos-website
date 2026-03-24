@@ -399,13 +399,12 @@ export function MapSection() {
     <div className="w-full h-[400px] bg-neutral-100 relative overflow-hidden">
       {/* Google Maps 嵌入 */}
       <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2879.6760623391347!2d-79.3456!3d43.7532!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89d4d3b3c8e3c7b9%3A0x7e6e8b3d3d3d3d3d!2s20%20Upjohn%20Rd%2C%20North%20York%2C%20ON%20M3B%202V9%2C%20Canada!5e0!3m2!1sen!2sca!4v1234567890"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=-79.36%2C43.74%2C-79.33%2C43.76&layer=mapnik&marker=43.7532%2C-79.3456"
         width="100%"
         height="100%"
         style={{ border: 0 }}
         allowFullScreen
         loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
         className="absolute inset-0"
         title="NEOS Office Location"
       />

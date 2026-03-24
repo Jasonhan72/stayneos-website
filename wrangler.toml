@@ -3,6 +3,12 @@ compatibility_date = "2026-02-06"
 compatibility_flags = ["nodejs_compat"]
 main = ".open-next/worker.js"
 
+# Pages configuration
+[pages]
+name = "stayneos"
+pages_build_output_dir = "dist"
+production_branch = "main"
+
 # Static assets served from .open-next/assets
 [assets]
 directory = ".open-next/assets"

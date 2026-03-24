@@ -2,7 +2,6 @@ import { Heart, Star, MapPin, Users, Maximize } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
-import { useState, useEffect } from "react"; // 添加客户端检测
 
 // 扩展 Property 接口以兼容 API 数据结构
 export interface Property {
@@ -93,45 +92,10 @@ interface PropertyCardProps {
 
 export default function PropertyCard({ property }: PropertyCardProps) {
   const { locale, t } = useI18n();
-  const [isClient, setIsClient] = useState(false); // 客户端检测状态
-  
-  // 客户端检测 useEffect
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-  
   const title = getLocalizedTitle(property, locale);
   const location = getPropertyLocation(property);
   const isFeatured = property.featured || property.isFeatured || false;
   const maxGuests = property.maxGuests || property.maxGuest || 1;
-  
-  // 只在客户端渲染收藏按钮，避免 hydration mismatch
-  const renderFavoriteButton = () => {
-    if (!isClient) {
-      return (
-        <div className="absolute top-3 right-3 p-2.5 rounded-full bg-white/95 backdrop-blur-sm min-w-[44px] min-h-[44px] flex items-center justify-center">
-          {/* 服务端渲染时显示占位符 */}
-          <div className="w-5 h-5"></div>
-        </div>
-      );
-    }
-    
-    return (
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          // TODO: 实现收藏功能
-          console.log('Toggle favorite for property:', property.id);
-        }}
-        className="absolute top-3 right-3 p-2.5 rounded-full bg-white/95 backdrop-blur-sm hover:bg-white transition-all duration-200 shadow-md hover:shadow-lg hover:scale-110 focus:outline-none focus:ring-2 focus:ring-accent min-w-[44px] min-h-[44px] flex items-center justify-center"
-        aria-label={`Favorite ${title}`}
-        type="button"
-      >
-        <Heart size={20} className="text-neutral-500 hover:text-error transition-colors" aria-hidden="true" />
-      </button>
-    );
-  };
   
   return (
     <article 
@@ -158,7 +122,17 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             
             {/* Favorite Button */}
-            {renderFavoriteButton()}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+              className="absolute top-3 right-3 p-2.5 rounded-full bg-white/95 backdrop-blur-sm hover:bg-white transition-all duration-200 shadow-md hover:shadow-lg hover:scale-110 focus:outline-none focus:ring-2 focus:ring-accent min-w-[44px] min-h-[44px] flex items-center justify-center"
+              aria-label={`Favorite ${title}`}
+              type="button"
+            >
+              <Heart size={20} className="text-neutral-500 hover:text-error transition-colors" aria-hidden="true" />
+            </button>
 
             {/* Featured Badge */}
             {isFeatured && (

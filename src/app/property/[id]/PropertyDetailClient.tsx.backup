@@ -14,7 +14,7 @@ import {
   X,
   Trophy,
   Waves,
-  Check,
+  Check
 } from 'lucide-react';
 import { Container, Divider } from '@/components/ui';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -22,12 +22,9 @@ import { ApiErrorAlert } from '@/components/error';
 import { AirbnbCalendar, ReviewAndContinue, PaymentMethod, GuestSelector, type GuestCounts } from '@/components/booking';
 // CardDetailsForm removed - PCI compliance: all card input handled by Stripe Elements
 import { useI18n } from '@/lib/i18n';
-import { useWishlist } from '@/lib/context/WishlistContext';
-import { useCurrency } from '@/hooks/useCurrency';
 import { useProperty } from '@/hooks/useProperties';
 import { PropertyCardData } from '@/types';
 import { getPropertyLocation } from '@/lib/utils/property-transform';
-import { calculateBookingPrice } from '@/lib/booking';
 
 interface PropertyDetailClientProps {
   propertyId: string;
@@ -44,14 +41,6 @@ type PropertyFacts = {
   location: string;
   minimumStay: string;
   extra?: string;
-};
-
-type PropertyLocationDetails = PropertyCardData & {
-  city?: string;
-  neighborhood?: string;
-  nearestSubway?: string | null;
-  subwayWalkMinutes?: number | null;
-  nearbyLandmarks?: string[];
 };
 
 const PROPERTY_FACTS: Record<string, Record<string, PropertyFacts>> = {
@@ -173,15 +162,15 @@ const mockHost = {
   yearsHosting: 2,
 };
 
-export default function PropertyDetailClient({ propertyId }: PropertyDetailClientProps) {
+export default function PropertyDetailClient({ propertyId, initialProperty }: PropertyDetailClientProps) {
   const { t, locale } = useI18n();
-  const { formatPrice: fp } = useCurrency();
   const router = useRouter();
-  const { property, isLoading, error } = useProperty(propertyId);
+  const { property, isLoading, error } = useProperty(propertyId, {
+    fallbackData: initialProperty,
+  });
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const { isWishlisted, toggleWishlist } = useWishlist();
-  const isLiked = isWishlisted(propertyId);
+  const [isLiked, setIsLiked] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
   
   // Mobile carousel scroll ref
@@ -207,7 +196,6 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
   // showCardForm removed - card input now handled by Stripe Elements
   const [showGuestSelector, setShowGuestSelector] = useState(false);
   const [showPaymentNotice, setShowPaymentNotice] = useState<string | null>(null);
-  const [bookingError, setBookingError] = useState<string>('');
   
   // Guest breakdown state for GuestSelector
   const [guestBreakdown, setGuestBreakdown] = useState<GuestCounts>({
@@ -257,12 +245,51 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
     return property.amenities;
   }, [property]);
 
-  const propertyDetails = propertyCardData as PropertyLocationDetails;
-
-  // Calculate booking price from single source of truth
+  // Calculate booking price - Monthly rental logic (not nightly)
   const bookingPrice = useMemo(() => {
     if (!propertyCardData || !checkIn || !checkOut) return null;
-    return calculateBookingPrice(propertyCardData, checkIn, checkOut);
+    
+    const start = new Date(checkIn);
+    const end = new Date(checkOut);
+    const nights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (nights < 1) return null;
+    
+    // Calculate tier prices inline
+    const monthly = propertyCardData?.price || 0;
+    const quarterly = Number((propertyCardData as unknown as { priceQuarterly?: number })?.priceQuarterly || 0) || Math.round(monthly * 0.92);
+    const annual = Number((propertyCardData as unknown as { priceAnnual?: number })?.priceAnnual || 0) || Math.round(monthly * 0.85);
+    
+    // Calculate months (ceiling)
+    const months = Math.ceil(nights / 30);
+    
+    // Determine rate tier based on total nights
+    let ratePerMonth: number;
+    let tierName: string;
+    if (nights >= 365) {
+      ratePerMonth = annual;
+      tierName = 'Annual';
+    } else if (nights >= 90) {
+      ratePerMonth = quarterly;
+      tierName = 'Quarterly';
+    } else {
+      ratePerMonth = monthly;
+      tierName = 'Monthly';
+    }
+    
+    const subtotal = months * ratePerMonth;
+    const tax = Math.round(subtotal * 0.13); // 13% HST
+    const total = subtotal + tax;
+    
+    return {
+      nights,
+      months,
+      ratePerMonth,
+      tierName,
+      subtotal,
+      tax,
+      total,
+    };
   }, [propertyCardData, checkIn, checkOut]);
 
   // Loading state
@@ -326,35 +353,16 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
 
   const handleCheckAvailability = () => {
     if (!checkIn || !checkOut) {
-      setBookingError(t('booking.validation.selectDates', 'Please select check-in and check-out dates'));
       setShowCalendar(true);
-      return;
+    } else {
+      // Navigate to the booking page with Stripe payment integration
+      const params = new URLSearchParams({
+        checkIn,
+        checkOut,
+        guests: guests.toString(),
+      });
+      router.push(`/booking/${propertyId}?${params.toString()}`);
     }
-
-    const startDate = new Date(checkIn);
-    const endDate = new Date(checkOut);
-    if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime()) || endDate <= startDate) {
-      setBookingError(t('booking.validation.invalidRange', 'Check-out must be after check-in'));
-      setShowCalendar(true);
-      return;
-    }
-
-    const nights = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    const minNights = propertyCardData.minNights || 1;
-    if (nights < minNights) {
-      setBookingError(t('booking.validation.minNights', 'Minimum {count} nights required', { count: minNights }));
-      setShowCalendar(true);
-      return;
-    }
-
-    setBookingError('');
-    // Navigate to the booking page with Stripe payment integration
-    const params = new URLSearchParams({
-      checkIn,
-      checkOut,
-      guests: guests.toString(),
-    });
-    router.push(`/booking/${propertyId}?${params.toString()}`);
   };
 
   // 获取图片 URL 列表 - 使用可选链避免条件调用 hook
@@ -362,52 +370,13 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
     ? property.images.filter(Boolean)
     : ['/images/placeholder-property.jpg'];
 
-  const handleShare = async () => {
-    const shareUrl = `${window.location.origin}/property/${propertyId}`;
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: localizedTitle,
-          text: `Check out this property: ${localizedTitle} - ${locationShort}`,
-          url: shareUrl,
-        });
-      } catch {}
-    } else {
-      try {
-        await navigator.clipboard.writeText(shareUrl);
-        alert(t('property.linkCopied'));
-      } catch {}
-    }
-  };
-
-  const neighborhoodName = propertyDetails.neighborhood || 'Downtown Toronto';
-  const nearestSubway = propertyDetails.nearestSubway || 'Union Station';
-  const subwayWalkMinutes = propertyDetails.subwayWalkMinutes ?? 10;
-  const nearbyLandmarks = propertyDetails.nearbyLandmarks?.filter(Boolean) || [];
-
-  // Build a natural paragraph like Airbnb
-  const neighborhoodParagraph = (() => {
-    const parts: string[] = [];
-    parts.push(t('property.neighborhoodIntro', 'At this location, you\'ll find all that {neighborhood} has to offer right outside your door.', { neighborhood: neighborhoodName }));
-    if (nearestSubway) {
-      parts.push(t('property.neighborhoodSubway', 'The nearest subway station is {station}, just a {minutes}-minute walk away.', { station: nearestSubway, minutes: String(subwayWalkMinutes) }));
-    }
-    if (nearbyLandmarks.length > 0) {
-      parts.push(t('property.neighborhoodLandmarks', 'Nearby highlights include {landmarks}.', { landmarks: nearbyLandmarks.join(', ') }));
-    } else {
-      parts.push(t('property.neighborhoodDefaultHighlights', 'You\'ll discover great restaurants, cafes, and shopping within walking distance. The Eaton Centre, Queen Street shopping and entertainment, and the Financial District are all close by.'));
-    }
-    parts.push(t('property.neighborhoodGrocery', 'For groceries, pharmacies, and daily essentials, there are multiple options within a short walk.'));
-    return parts.join(' ');
-  })();
-
   // Desktop Booking Card Component
   const BookingCard = ({ isSticky = false }: { isSticky?: boolean }) => (
     <div className={`bg-white border border-neutral-200 rounded-2xl p-6 shadow-lg ${isSticky ? 'sticky top-24' : ''}`}>
       {/* Price Header */}
       <div className="flex items-baseline justify-between mb-4">
         <span className="text-2xl font-bold text-neutral-900">
-          {t('property.fromPrice', 'From ${price}/Mo', { price: fp(propertyCardData.price).replace(/[$€¥]/, '') })}
+          {t('property.fromPrice', 'From ${{price}}/Mo', { price: propertyCardData.price.toLocaleString() })}
         </span>
         {propertyCardData.reviewCount > 0 && (
           <div className="flex items-center gap-1">
@@ -419,9 +388,9 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
       </div>
 
       <div className="mb-4 rounded-xl border border-neutral-200 p-3 bg-neutral-50">
-        <div className="flex items-center justify-between text-sm"><span className="text-neutral-600">{t('property.monthly', 'Monthly')}</span><span className="font-semibold text-neutral-900">{fp(tierPrices.monthly)}/Mo</span></div>
-        <div className="flex items-center justify-between text-sm mt-1"><span className="text-neutral-600">{t('property.quarterly', 'Quarterly')} (3 {t('common.months', 'mo')})</span><span className="font-medium text-neutral-900">{fp(tierPrices.quarterly)}/Mo</span></div>
-        <div className="flex items-center justify-between text-sm mt-1"><span className="text-neutral-600">{t('property.annual', 'Annual')} (12 {t('common.months', 'mo')})</span><span className="font-medium text-neutral-900">{fp(tierPrices.annual)}/Mo</span></div>
+        <div className="flex items-center justify-between text-sm"><span className="text-neutral-600">{t('property.monthly', 'Monthly')}</span><span className="font-semibold text-neutral-900">${tierPrices.monthly.toLocaleString()}/Mo</span></div>
+        <div className="flex items-center justify-between text-sm mt-1"><span className="text-neutral-600">{t('property.quarterly', 'Quarterly')} (3 {t('common.months', 'mo')})</span><span className="font-medium text-neutral-900">${tierPrices.quarterly.toLocaleString()}/Mo</span></div>
+        <div className="flex items-center justify-between text-sm mt-1"><span className="text-neutral-600">{t('property.annual', 'Annual')} (12 {t('common.months', 'mo')})</span><span className="font-medium text-neutral-900">${tierPrices.annual.toLocaleString()}/Mo</span></div>
       </div>
 
       {/* Date/Guest Selector Box */}
@@ -467,27 +436,24 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
       </button>
 
       <p className="text-center text-neutral-500 text-sm mb-6">{t('booking.youWontBeCharged')}</p>
-      {bookingError ? (
-        <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">{bookingError}</p>
-      ) : null}
 
       {/* Price Breakdown */}
       {bookingPrice && (
         <div className="space-y-3 text-sm border-t border-neutral-100 pt-4">
           <div className="flex justify-between">
-            <span className="text-neutral-600 underline">{fp(bookingPrice.ratePerMonth)} x {bookingPrice.months} {t('booking.months', { count: bookingPrice.months })} ({bookingPrice.tierName})</span>
-            <span className="text-neutral-900">{fp(bookingPrice.subtotal)}</span>
+            <span className="text-neutral-600 underline">${bookingPrice.ratePerMonth.toLocaleString()} x {bookingPrice.months} {bookingPrice.months === 1 ? 'month' : 'months'} ({bookingPrice.tierName} rate)</span>
+            <span className="text-neutral-900">${bookingPrice.subtotal.toLocaleString()}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-neutral-600">{t('booking.taxes', 'Taxes')} (13%)</span>
-            <span className="text-neutral-900">{fp(bookingPrice.tax)}</span>
+            <span className="text-neutral-600">Taxes (13%)</span>
+            <span className="text-neutral-900">${bookingPrice.tax.toLocaleString()}</span>
           </div>
           <div className="flex justify-between pt-3 border-t border-neutral-200">
             <span className="font-semibold text-neutral-900">{t('property.totalBeforeTaxes', 'Total')}</span>
-            <span className="font-semibold text-neutral-900">{fp(bookingPrice.total)}</span>
+            <span className="font-semibold text-neutral-900">${bookingPrice.total.toLocaleString()}</span>
           </div>
           <p className="text-xs text-neutral-500 text-center pt-2">
-            {t('booking.allInclusive', 'All-inclusive pricing: WiFi, utilities, cleaning & service fees included')}
+            All-inclusive pricing: WiFi, utilities, cleaning & service fees included
           </p>
         </div>
       )}
@@ -511,14 +477,30 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
             
             <div className="flex items-center gap-2">
               <button 
-                onClick={handleShare}
+                onClick={async () => {
+                  const shareUrl = `${window.location.origin}/property/${propertyId}`;
+                  if (navigator.share) {
+                    try { 
+                      await navigator.share({ 
+                        title: localizedTitle, 
+                        text: `Check out this property: ${localizedTitle} - ${locationShort}`, 
+                        url: shareUrl 
+                      }); 
+                    } catch {}
+                  } else {
+                    try {
+                      await navigator.clipboard.writeText(shareUrl);
+                      alert(t('property.linkCopied'));
+                    } catch {}
+                  }
+                }}
                 className="p-2.5 hover:bg-neutral-100 rounded-full transition-colors"
                 aria-label="Share property"
               >
                 <Share size={20} className="text-neutral-900" />
               </button>
               <button 
-                onClick={() => toggleWishlist(propertyId)} 
+                onClick={() => setIsLiked(!isLiked)} 
                 className="p-2.5 hover:bg-neutral-100 rounded-full transition-colors"
                 aria-label={isLiked ? 'Remove from favorites' : 'Add to favorites'}
               >
@@ -534,46 +516,6 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
 
       {/* Spacer for fixed nav */}
       <div className="h-14" />
-
-      <Container className="pt-6 pb-2">
-        <nav aria-label="Breadcrumb" className="mb-4 text-sm text-neutral-500">
-          <ol className="flex items-center gap-2 flex-wrap">
-            <li><Link href="/" className="hover:text-neutral-800">{t('nav.home')}</Link></li>
-            <li>/</li>
-            <li><Link href="/properties" className="hover:text-neutral-800">{t('nav.properties')}</Link></li>
-            <li>/</li>
-            <li className="text-neutral-800 truncate max-w-[14rem]">{localizedTitle}</li>
-          </ol>
-        </nav>
-
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between mb-6">
-          <div className="min-w-0">
-            <h1 className="text-2xl md:text-3xl font-bold text-neutral-900">{localizedTitle}</h1>
-            <p className="mt-2 text-sm md:text-base text-neutral-600">
-              {locationShort} · {propertyType}
-            </p>
-            <p className="mt-1 text-sm md:text-base text-neutral-600">{guestInfo}</p>
-          </div>
-
-          <div className="flex items-center gap-4 md:gap-6 shrink-0">
-            <button
-              onClick={handleShare}
-              className="inline-flex items-center gap-2 text-sm font-medium text-neutral-900 underline underline-offset-2"
-            >
-              <Share size={16} />
-              <span>{t('property.share', 'Share')}</span>
-            </button>
-            <button
-              onClick={() => toggleWishlist(propertyId)}
-              className="inline-flex items-center gap-2 text-sm font-medium text-neutral-900 underline underline-offset-2"
-              aria-label={isLiked ? 'Remove from favorites' : 'Add to favorites'}
-            >
-              <Heart size={16} className={isLiked ? 'fill-rose-500 text-rose-500' : 'text-neutral-900'} />
-              <span>{t('property.save', 'Save')}</span>
-            </button>
-          </div>
-        </div>
-      </Container>
 
       {/* Full Width Image Gallery - Desktop Grid / Mobile Carousel */}
       <div className="relative">
@@ -601,36 +543,6 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
             ))}
           </div>
           
-          {/* Mobile Carousel Arrows */}
-          {imageUrls.length > 1 && (
-            <>
-              <button
-                onClick={() => {
-                  if (scrollContainerRef.current) {
-                    const w = scrollContainerRef.current.offsetWidth;
-                    scrollContainerRef.current.scrollTo({ left: (currentImageIndex - 1) * w, behavior: 'smooth' });
-                  }
-                }}
-                className={`absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 shadow flex items-center justify-center ${currentImageIndex === 0 ? 'opacity-0 pointer-events-none' : ''}`}
-                aria-label="Previous image"
-              >
-                <ChevronLeft size={18} />
-              </button>
-              <button
-                onClick={() => {
-                  if (scrollContainerRef.current) {
-                    const w = scrollContainerRef.current.offsetWidth;
-                    scrollContainerRef.current.scrollTo({ left: (currentImageIndex + 1) * w, behavior: 'smooth' });
-                  }
-                }}
-                className={`absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 shadow flex items-center justify-center ${currentImageIndex === imageUrls.length - 1 ? 'opacity-0 pointer-events-none' : ''}`}
-                aria-label="Next image"
-              >
-                <ChevronRight size={18} />
-              </button>
-            </>
-          )}
-
           {/* Image Counter */}
           <div className="absolute bottom-4 right-4 px-3 py-1.5 bg-black/70 text-white text-sm rounded-lg">
             {currentImageIndex + 1} / {imageUrls.length}
@@ -638,70 +550,42 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
         </div>
 
         {/* Desktop: Grid Gallery */}
-        <Container className="hidden md:block">
-          <div className="relative">
-            {imageUrls.length === 1 ? (
-              /* 1 image: full width */
-              <div className="h-[400px] rounded-xl overflow-hidden relative cursor-pointer hover:opacity-95 transition-opacity"
-                onClick={() => setShowGallery(true)}
+        <div className="hidden md:block max-w-6xl mx-auto px-6 py-6">
+          <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[400px] rounded-xl overflow-hidden">
+            {/* Main Large Image */}
+            <div className="col-span-2 row-span-2 relative cursor-pointer hover:opacity-95 transition-opacity"
+              onClick={() => setShowGallery(true)}
+            >
+              <Image 
+                src={imageUrls[0]} 
+                alt={localizedTitle}
+                fill 
+                priority 
+                className="object-contain" 
+              />
+            </div>
+            {/* Side Images */}
+            {imageUrls.slice(1, 5).map((img, idx) => (
+              <div 
+                key={idx}
+                className="relative cursor-pointer hover:opacity-95 transition-opacity"
+                onClick={() => { setCurrentImageIndex(idx + 1); setShowGallery(true); }}
               >
-                <Image src={imageUrls[0]} alt={localizedTitle} fill priority className="object-cover" />
-              </div>
-            ) : imageUrls.length === 2 ? (
-              /* 2 images: side by side */
-              <div className="grid grid-cols-2 gap-2 h-[400px] rounded-xl overflow-hidden">
-                {imageUrls.slice(0, 2).map((img, idx) => (
-                  <div key={idx} className="relative cursor-pointer hover:opacity-95 transition-opacity"
-                    onClick={() => { setCurrentImageIndex(idx); setShowGallery(true); }}>
-                    <Image src={img} alt={`${localizedTitle} - ${idx + 1}`} fill className="object-cover" priority={idx === 0} />
+                <Image 
+                  src={img} 
+                  alt={`${localizedTitle} - ${idx + 2}`}
+                  fill 
+                  className="object-contain" 
+                />
+                {idx === 3 && imageUrls.length > 5 && (
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                    <span className="text-white font-medium">+{imageUrls.length - 5} {t('property.photos', 'photos')}</span>
                   </div>
-                ))}
+                )}
               </div>
-            ) : imageUrls.length <= 4 ? (
-              /* 3-4 images: 1 large left + stacked right */
-              <div className="grid grid-cols-2 gap-2 h-[400px] rounded-xl overflow-hidden">
-                <div className="relative cursor-pointer hover:opacity-95 transition-opacity"
-                  onClick={() => setShowGallery(true)}>
-                  <Image src={imageUrls[0]} alt={localizedTitle} fill priority className="object-cover" />
-                </div>
-                <div className={`grid ${imageUrls.length === 3 ? 'grid-rows-2' : 'grid-cols-2 grid-rows-2'} gap-2`}>
-                  {imageUrls.slice(1).map((img, idx) => (
-                    <div key={idx} className={`relative cursor-pointer hover:opacity-95 transition-opacity ${imageUrls.length === 4 ? '' : idx === 0 ? '' : ''}`}
-                      onClick={() => { setCurrentImageIndex(idx + 1); setShowGallery(true); }}>
-                      <Image src={img} alt={`${localizedTitle} - ${idx + 2}`} fill className="object-cover" />
-                      {idx === imageUrls.length - 2 && (
-                        <button onClick={(e) => { e.stopPropagation(); setShowGallery(true); }}
-                          className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-lg border border-neutral-900 bg-white px-4 py-2 text-sm font-medium text-neutral-900 shadow-sm transition-colors hover:bg-neutral-50 z-10">
-                          {t('property.showAllPhotos', 'Show all photos')}
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              /* 5+ images: Airbnb classic - 1 large left (2x2) + 4 right */
-              <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[400px] rounded-xl overflow-hidden">
-                <div className="col-span-2 row-span-2 relative cursor-pointer hover:opacity-95 transition-opacity"
-                  onClick={() => setShowGallery(true)}>
-                  <Image src={imageUrls[0]} alt={localizedTitle} fill priority className="object-cover" />
-                </div>
-                {imageUrls.slice(1, 5).map((img, idx) => (
-                  <div key={idx} className="relative cursor-pointer hover:opacity-95 transition-opacity"
-                    onClick={() => { setCurrentImageIndex(idx + 1); setShowGallery(true); }}>
-                    <Image src={img} alt={`${localizedTitle} - ${idx + 2}`} fill className="object-cover" />
-                    {idx === 3 && (
-                      <button onClick={(e) => { e.stopPropagation(); setShowGallery(true); }}
-                        className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-lg border border-neutral-900 bg-white px-4 py-2 text-sm font-medium text-neutral-900 shadow-sm transition-colors hover:bg-neutral-50 z-10">
-                        {t('property.showAllPhotos', 'Show all photos')}
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+            ))}
           </div>
-        </Container>
+        </div>
       </div>
 
       {/* Main Content - Two Column Layout on Desktop */}
@@ -709,6 +593,13 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Left Column - Property Details */}
           <div className="lg:col-span-2">
+            {/* Title Section */}
+            <div className="mb-6">
+              <h1 className="text-2xl md:text-3xl font-bold text-neutral-900 mb-2">{localizedTitle}</h1>
+              <p className="text-neutral-600">{propertyType} · {locationShort}</p>
+              <p className="text-neutral-600 mt-1">{guestInfo}</p>
+            </div>
+
             {/* Info Bar - Mobile Only */}
             <div className="flex md:hidden items-center justify-center gap-6 mb-6 py-4 border-y border-neutral-200">
               {propertyCardData.reviewCount > 0 && (
@@ -749,7 +640,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                   src={mockHost.avatar} 
                   alt={mockHost.name}
                   fill
-                  className="object-cover"
+                  className="object-contain"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${mockHost.name}&background=random`;
                   }}
@@ -822,7 +713,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                 {amenities.slice(0, 6).map((item) => (
                   <div key={item} className="flex items-center gap-3 text-neutral-700">
                     <Check size={18} className="text-neutral-900" />
-                    {t(`amenities.${item}`, item)}
+                    {item}
                   </div>
                 ))}
               </div>
@@ -833,32 +724,18 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
 
             <Divider />
 
-            <div className="py-6">
-              <h2 className="text-xl font-semibold mb-4">{t('property.neighborhoodTitle', 'Neighborhood highlights')}</h2>
-              <p className="text-neutral-600 leading-relaxed line-clamp-4">
-                {neighborhoodParagraph}
-              </p>
-              <button
-                onClick={() => {/* TODO: expand full text */}}
-                className="mt-3 text-neutral-900 font-medium underline underline-offset-4 flex items-center gap-1 hover:text-neutral-700 transition-colors"
-              >
-                {t('property.showMore', 'Show more')} <span className="text-lg">›</span>
-              </button>
-            </div>
-
-            <Divider />
-
             {/* Location Map */}
             <div className="py-6">
               <h2 className="text-xl font-semibold mb-4">{t('property.whereYouBe')}</h2>
               <div className="w-full h-[350px] bg-neutral-100 relative overflow-hidden rounded-2xl">
                 <iframe 
-                  src={`https://www.openstreetmap.org/export/embed.html?bbox=-79.42%2C43.62%2C-79.36%2C43.68&layer=mapnik&marker=43.65%2C-79.39`}
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(locationShort)}&t=&z=15&ie=UTF8&iwloc=&output=embed`} 
                   width="100%" 
                   height="100%" 
                   style={{ border: 0 }} 
                   allowFullScreen 
                   loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade" 
                   className="absolute inset-0" 
                   title={`${localizedTitle} Location`} 
                 />
@@ -894,7 +771,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
             ) : bookingPrice ? (
               <div>
                 <p className="text-lg font-semibold">${bookingPrice.total.toLocaleString()}</p>
-                <p className="text-sm text-neutral-600">{bookingPrice.months} {t('booking.months', { count: bookingPrice.months })}</p>
+                <p className="text-sm text-neutral-600">{bookingPrice.months} {bookingPrice.months === 1 ? 'month' : 'months'}</p>
               </div>
             ) : (
               <div>
@@ -923,14 +800,14 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
         <AirbnbCalendar 
           checkIn={checkIn}
           checkOut={checkOut}
-          onSelectCheckIn={(date) => { setCheckIn(date); setBookingError(''); }}
-          onSelectCheckOut={(date) => { setCheckOut(date); setBookingError(''); }}
+          onSelectCheckIn={setCheckIn}
+          onSelectCheckOut={setCheckOut}
           onClose={() => setShowCalendar(false)}
           onClearDates={() => {
             setCheckIn('');
             setCheckOut('');
           }}
-          totalPrice={bookingPrice?.total || 0}
+          pricePerNight={propertyCardData.price}
           minNights={propertyCardData.minNights || 1}
           rating={propertyCardData.reviewCount > 0 ? propertyCardData.rating : 0}
           currency="CAD"
@@ -957,7 +834,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
           checkIn,
           checkOut,
           guests,
-          pricePerNight: bookingPrice?.ratePerMonth || propertyCardData.price,
+          pricePerNight: propertyCardData.price,
           cleaningFee: 0, // Included in all-inclusive pricing
           serviceFee: 0,  // Included in all-inclusive pricing
           tax: bookingPrice?.tax || 0,
@@ -1057,7 +934,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                 src={imageUrls[currentImageIndex]} 
                 alt={`${localizedTitle} - Image ${currentImageIndex + 1}`} 
                 fill 
-                className="object-cover" 
+                className="object-contain" 
               />
               <button 
                 onClick={prevImage} 
@@ -1089,7 +966,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                         : 'opacity-50 hover:opacity-100'
                     }`}
                   >
-                    <Image src={image} alt={`Thumbnail ${index + 1}`} fill className="object-cover" />
+                    <Image src={image} alt={`Thumbnail ${index + 1}`} fill className="object-contain" />
                   </button>
                 ))}
               </div>
