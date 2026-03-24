@@ -38,3 +38,4 @@ next-env.d.ts
 .wrangler/
 logs/
 test-results/
+_archive/
