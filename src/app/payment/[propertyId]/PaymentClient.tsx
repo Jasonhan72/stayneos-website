@@ -56,9 +56,9 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
 
   // Calculate pricing from unified source
   const priceCalc = property && checkIn && checkOut ? calculateBookingPrice(property, checkIn, checkOut) : null;
-  const nights = priceCalc?.nights || 0;
+  const _nights = priceCalc?.nights || 0; // eslint-disable-line @typescript-eslint/no-unused-vars
   const months = priceCalc?.months || 0;
-  const isMonthly = priceCalc?.isMonthly || false;
+  const _isMonthly = priceCalc?.isMonthly || false; // eslint-disable-line @typescript-eslint/no-unused-vars
   const subtotal = priceCalc?.subtotal || 0;
   const taxes = priceCalc ? Math.round((subtotal - promoDiscount + priceCalc.cleaningFee + priceCalc.serviceFee) * 0.13) : 0;
   const total = priceCalc ? subtotal - promoDiscount + priceCalc.cleaningFee + priceCalc.serviceFee + taxes : 0;

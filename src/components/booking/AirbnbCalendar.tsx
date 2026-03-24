@@ -72,7 +72,7 @@ export function AirbnbCalendar({
     return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
   }, [selectedStart, selectedEnd]);
 
-  const months = Math.max(1, Math.ceil(nights / 30));
+  const _months = Math.max(1, Math.ceil(nights / 30)); // eslint-disable-line @typescript-eslint/no-unused-vars
   const displayUnit = 'nights';
   const displayCount = nights;
   const hasRating = rating > 0;
