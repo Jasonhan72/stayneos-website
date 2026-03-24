@@ -112,7 +112,7 @@ export function I18nProvider({ children, initialLocale = 'en' }: { children: Rea
     }
     setIsHydrated(true);
     setIsLoading(false);
-  }, []); // 只在挂载时运行，不依赖locale
+  }, [locale]); // eslint需要locale依赖
 
   // Listen for locale changes from other components
   useEffect(() => {

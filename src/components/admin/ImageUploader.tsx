@@ -52,7 +52,7 @@ export default function ImageUploader({ propertyId, images, onChange }: ImageUpl
     } finally {
       setUploading(false);
     }
-  }, [images, onChange, propertyId]);
+  }, [images, onChange, propertyId, uploadFile]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
