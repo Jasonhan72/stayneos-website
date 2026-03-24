@@ -8,6 +8,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline' https:",
   "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:",
   "connect-src 'self' https:",
+  "frame-src 'self' https://maps.google.com https://www.google.com",
   "object-src 'none'",
   "form-action 'self'",
 ].join('; ');
