@@ -150,6 +150,22 @@ function hasHostRole(role?: string): boolean {
 }
 
 export async function middleware(request: NextRequest) {
+  // Domain redirect: stayneos.com → neos.rentals (301)
+  const host = request.headers.get('host') || '';
+  if (host === 'stayneos.com' || host === 'www.stayneos.com') {
+    const url = request.nextUrl.clone();
+    url.host = 'neos.rentals';
+    url.port = '';
+    return NextResponse.redirect(url, 301);
+  }
+  // www.neos.rentals → neos.rentals (301)
+  if (host === 'www.neos.rentals') {
+    const url = request.nextUrl.clone();
+    url.host = 'neos.rentals';
+    url.port = '';
+    return NextResponse.redirect(url, 301);
+  }
+
   const { pathname } = request.nextUrl;
   const locale = detectLocale(request);
   
