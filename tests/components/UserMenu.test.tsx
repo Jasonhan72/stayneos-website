@@ -8,7 +8,7 @@ jest.mock('@/lib/i18n', () => ({
   useI18n: () => ({ t: (k: string) => ({ 'nav.login': 'Login', 'nav.signup': 'Sign up', 'nav.logout': 'Logout', 'nav.dashboard': 'Dashboard', 'nav.bookings': 'Bookings', 'nav.manageProperties': 'Manage Properties', 'nav.wishlists': 'Wishlists', 'nav.profile': 'Profile' }[k] || k) }),
 }));
 
-jest.mock('@/lib/UserContext', () => ({
+jest.mock('@/lib/context/UserContext', () => ({
   useAuth: () => ({ user: mockUser, logout, isLoading: false }),
 }));
 

@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { X, User, Home, Heart, KeyRound, Building2, Phone, ChevronRight, SlidersHorizontal, LayoutDashboard , Info } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/lib/UserContext";
+import { useAuth } from "@/lib/context/UserContext";
 import { useI18n } from "@/lib/i18n";
 
 interface MobileMenuProps {

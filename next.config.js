@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // SSR Mode (Cloudflare Pages + Workers via OpenNext)
-  // output: 'export' removed for SSR
-
   experimental: {
     optimizePackageImports: ["lucide-react"],
   },
@@ -23,21 +20,29 @@ const nextConfig = {
   },
 
   compiler: {
-    removeConsole:
-      process.env.NODE_ENV === "production"
-        ? { exclude: ["error"] }
-        : false,
+    removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false,
   },
 
   headers: async () => [
     {
-      source: '/(.*)',
-      headers: [
-        {
-          key: 'Cache-Control',
-          value: 'public, s-maxage=3600, stale-while-revalidate=60',
-        },
-      ],
+      source: "/_next/static/:path*",
+      headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+    },
+    {
+      source: "/:path*.(svg|jpg|jpeg|png|webp|avif|gif|ico|woff|woff2|ttf|otf)",
+      headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+    },
+    {
+      source: "/api/:path*",
+      headers: [{ key: "Cache-Control", value: "no-store, private" }],
+    },
+    {
+      source: "/(login|register|forgot-password|reset-password)",
+      headers: [{ key: "Cache-Control", value: "no-store, private" }],
+    },
+    {
+      source: "/:path*",
+      headers: [{ key: "Cache-Control", value: "public, s-maxage=300, stale-while-revalidate=600" }],
     },
   ],
 

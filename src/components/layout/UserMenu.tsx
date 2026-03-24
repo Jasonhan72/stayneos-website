@@ -14,7 +14,7 @@ import {
   Building2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/lib/UserContext";
+import { useAuth } from "@/lib/context/UserContext";
 
 interface UserMenuProps {
   variant?: "light" | "dark" | "transparent";

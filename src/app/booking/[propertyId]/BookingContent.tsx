@@ -11,7 +11,7 @@ import { Input } from '@/components/ui';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { ApiErrorAlert } from '@/components/error';
 import { calculateBookingPrice, validateBookingDates } from '@/lib/booking';
-import { useAuth } from '@/lib/UserContext';
+import { useAuth } from '@/lib/context/UserContext';
 import { useI18n } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { useProperty } from '@/hooks/useProperties';

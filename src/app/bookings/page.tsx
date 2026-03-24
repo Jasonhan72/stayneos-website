@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { Button, Container, Card, Badge, Divider, Modal } from '@/components/ui';
-import { useAuth } from '@/lib/UserContext';
+import { useAuth } from '@/lib/context/UserContext';
 import { useI18n } from '@/lib/i18n';
 import { 
   Calendar,

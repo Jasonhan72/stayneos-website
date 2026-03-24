@@ -3,16 +3,14 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { verifyToken } from "@/lib/auth/jwt";
 import { userDb, getDb } from "@/lib/d1";
+import { AUTH_COOKIE_NAME } from "@/lib/auth/cookie";
 
 export async function GET(request: NextRequest) {
   try {
     const db = getDb();
     
-    // Get token from cookie (NextRequest) OR Authorization header
-    const cookieToken = request.cookies.get("stayneos_auth_token")?.value;
-    const authHeader = request.headers.get("authorization");
-    const bearerToken = authHeader?.startsWith("Bearer ") ? authHeader.substring(7) : null;
-    const token = cookieToken || bearerToken;
+    // Single auth mechanism: HttpOnly cookie only
+    const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
 
     if (!token) {
       return NextResponse.json(

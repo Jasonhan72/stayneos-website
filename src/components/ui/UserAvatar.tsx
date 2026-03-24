@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { getInitials, getAvatarColor } from "@/lib/UserContext";
+import { getInitials, getAvatarColor } from "@/lib/context/UserContext";
 
 interface UserAvatarProps {
   name: string | null;

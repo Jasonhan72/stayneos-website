@@ -66,7 +66,7 @@ describe('auth routes', () => {
   it('/api/auth/session returns user when token valid', async () => {
     userDb.findById.mockResolvedValue({ id: 'u1', name: 'U', email: 'u@u.com', role: 'USER', avatar: null });
     const req = new NextRequest('http://localhost/api/auth/session', {
-      headers: { authorization: 'Bearer token-123' },
+      headers: { cookie: 'stayneos_auth_token=token-123' },
     });
     const res = await sessionGet(req);
     expect(res.status).toBe(200);

@@ -8,7 +8,6 @@ interface LoginFormProps {
   callbackUrl?: string;
 }
 
-const TOKEN_KEY = 'stayneos_auth_token';
 const USER_KEY = 'stayneos_user_data';
 
 export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
@@ -83,19 +82,11 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
         throw new Error(data.message || 'Login failed');
       }
 
-      // Store auth data
-      if (data.token) {
-        localStorage.setItem(TOKEN_KEY, data.token);
-      }
+      // Store user profile only (auth token is HttpOnly cookie)
       if (data.user) {
         localStorage.setItem(USER_KEY, JSON.stringify(data.user));
       }
 
-      // Fallback client cookie to avoid intermittent middleware race on some browsers/platforms
-      if (data.token) {
-        const secure = window.location.protocol === 'https:' ? '; Secure' : '';
-        document.cookie = `stayneos_auth_token=${encodeURIComponent(data.token)}; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Lax${secure}`;
-      }
 
       const nextUrl = sanitizeCallbackUrl(callbackUrl !== '/' ? callbackUrl : '/dashboard');
       await ensureSessionReady();

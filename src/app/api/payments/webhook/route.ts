@@ -6,6 +6,17 @@ import { bookingDb } from "@/lib/booking-db";
 import { paymentDb } from "@/lib/payment-db";
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+const isDev = process.env.NODE_ENV !== "production";
+const debugLog = (...args: unknown[]) => {
+  if (isDev) {
+    console.log(...args);
+  }
+};
+const debugError = (...args: unknown[]) => {
+  if (isDev) {
+    console.error(...args);
+  }
+};
 
 export function generateStaticParams() {
   return [];
@@ -26,7 +37,7 @@ export async function POST(request: NextRequest) {
       event = stripe.webhooks.constructEvent(payload, signature, webhookSecret);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Invalid signature";
-      console.error("Webhook signature verification failed:", errorMessage);
+      debugError("Webhook signature verification failed:", errorMessage);
       return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
     }
 
@@ -41,12 +52,12 @@ export async function POST(request: NextRequest) {
         await handleRefund(event.data.object as Stripe.Charge);
         break;
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        debugLog(`Unhandled event type: ${event.type}`);
     }
 
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error("Webhook error:", error);
+    debugError("Webhook error:", error);
     return NextResponse.json({ error: "Webhook processing failed" }, { status: 500 });
   }
 }
@@ -56,7 +67,7 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
   const bookingId = paymentIntent.metadata.bookingId;
 
   if (!bookingId) {
-    console.error("No bookingId in payment intent metadata");
+    debugError("No bookingId in payment intent metadata");
     return;
   }
 
@@ -87,7 +98,7 @@ async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
   const bookingId = paymentIntent.metadata.bookingId;
 
   if (!bookingId) {
-    console.error("No bookingId in payment intent metadata");
+    debugError("No bookingId in payment intent metadata");
     return;
   }
 
@@ -125,4 +136,3 @@ async function handleRefund(charge: Stripe.Charge) {
     refundedAt: new Date().toISOString(),
   });
 }
-

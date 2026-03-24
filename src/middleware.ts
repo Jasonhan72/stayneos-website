@@ -160,8 +160,7 @@ export async function middleware(request: NextRequest) {
   requestHeaders.set('x-locale', locale);
   
   // 获取 token
-  const token = request.cookies.get('stayneos_auth_token')?.value || 
-                request.headers.get('authorization')?.replace('Bearer ', '');
+  const token = request.cookies.get('stayneos_auth_token')?.value;
   
   // 验证 token 并获取用户信息
   let userPayload: JWTPayload | null = null;

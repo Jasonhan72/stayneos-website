@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/lib/UserContext';
+import { useAuth } from '@/lib/context/UserContext';
 
 interface EmailLog {
   id: string;

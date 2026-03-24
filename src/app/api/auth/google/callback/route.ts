@@ -3,9 +3,15 @@ import { NextRequest } from "next/server";
 import { signToken } from "@/lib/auth/jwt";
 import { userDb, accountDb, getDb } from "@/lib/d1";
 import { getAuthSecret, getPublicBaseUrl } from "@/lib/config/env";
+import { AUTH_COOKIE_NAME, getAuthCookieOptions, getClearedAuthCookieOptions } from "@/lib/auth/cookie";
 
 export const dynamic = "force-dynamic";
 const DEFAULT_REDIRECT = "/dashboard";
+const isDev = process.env.NODE_ENV !== "production";
+const debugLog = (...args: unknown[]) => {
+  if (isDev) debugLog(...args);
+};
+
 
 function sanitizeRedirect(redirect: string | undefined) {
   if (!redirect || !redirect.startsWith("/") || redirect.startsWith("//")) {
@@ -74,21 +80,6 @@ interface GoogleUserInfo {
 
 
 
-function getAuthCookieOptions(request: NextRequest) {
-  const url = new URL(request.url);
-  const isHttps = url.protocol === "https:";
-  const isLocalhost = ["localhost", "127.0.0.1", "::1"].includes(url.hostname);
-  const isStayneosDomain = url.hostname === "stayneos.com" || url.hostname.endsWith(".stayneos.com");
-
-  return {
-    httpOnly: true as const,
-    secure: isHttps,
-    sameSite: "lax" as const,
-    maxAge: 7 * 24 * 60 * 60,
-    path: "/",
-    ...(!isLocalhost && isStayneosDomain ? { domain: ".stayneos.com" } : {}),
-  };
-}
 export async function GET(request: NextRequest) {
   const baseUrl = getPublicBaseUrl();
   const jwtSecret = getAuthSecret();
@@ -173,7 +164,7 @@ export async function GET(request: NextRequest) {
     const db = getDb();
     
     // Log for debugging
-    console.log("Google OAuth callback - User info:", {
+    debugLog("Google OAuth callback - User info:", {
       email: googleUser.email,
       googleId: googleUser.id,
       name: googleUser.name
@@ -182,7 +173,7 @@ export async function GET(request: NextRequest) {
     let existingAccount;
     try {
       existingAccount = await accountDb.findByProviderAccountId(db, "google", googleUser.id);
-      console.log("Existing account check result:", existingAccount ? "found" : "not found");
+      debugLog("Existing account check result:", existingAccount ? "found" : "not found");
     } catch (err) {
       console.error("Error checking existing account:", err);
       return buildLoginRedirect(baseUrl, "db_error", parsedState.redirect);
@@ -194,7 +185,7 @@ export async function GET(request: NextRequest) {
     if (existingAccount) {
       try {
         user = await userDb.findById(db, existingAccount.userId);
-        console.log("Found existing user:", user?.email);
+        debugLog("Found existing user:", user?.email);
       } catch (err) {
         console.error("Error finding user by ID:", err);
         return buildLoginRedirect(baseUrl, "db_error", parsedState.redirect);
@@ -206,18 +197,18 @@ export async function GET(request: NextRequest) {
       }
       userId = user.id;
     } else {
-      console.log("No existing account, checking by email:", googleUser.email);
+      debugLog("No existing account, checking by email:", googleUser.email);
       let existingUser;
       try {
         existingUser = await userDb.findByEmail(db, googleUser.email);
-        console.log("Existing user by email:", existingUser ? "found" : "not found");
+        debugLog("Existing user by email:", existingUser ? "found" : "not found");
       } catch (err) {
         console.error("Error finding user by email:", err);
         return buildLoginRedirect(baseUrl, "db_error", parsedState.redirect);
       }
 
       if (existingUser) {
-        console.log("Linking Google account to existing user:", existingUser.email);
+        debugLog("Linking Google account to existing user:", existingUser.email);
         userId = existingUser.id;
         user = existingUser;
         try {
@@ -233,13 +224,13 @@ export async function GET(request: NextRequest) {
             scope: tokenData.scope,
             id_token: tokenData.id_token,
           });
-          console.log("Account linked successfully");
+          debugLog("Account linked successfully");
         } catch (err) {
           console.error("Error linking account:", err);
           return buildLoginRedirect(baseUrl, "db_error", parsedState.redirect);
         }
       } else {
-        console.log("Creating new user for:", googleUser.email);
+        debugLog("Creating new user for:", googleUser.email);
         userId = crypto.randomUUID();
         try {
           user = await userDb.create(db, {
@@ -249,7 +240,7 @@ export async function GET(request: NextRequest) {
             avatar: googleUser.picture,
             role: "GUEST",
           });
-          console.log("New user created:", user.email, user.id);
+          debugLog("New user created:", user.email, user.id);
         } catch (err) {
           console.error("Error creating user:", err);
           return buildLoginRedirect(baseUrl, "db_error", parsedState.redirect);
@@ -268,7 +259,7 @@ export async function GET(request: NextRequest) {
             scope: tokenData.scope,
             id_token: tokenData.id_token,
           });
-          console.log("Account created successfully");
+          debugLog("Account created successfully");
         } catch (err) {
           console.error("Error creating account:", err);
           // Try to delete the user we just created
@@ -290,17 +281,14 @@ export async function GET(request: NextRequest) {
     // Set cookie and redirect to dashboard
     // UserContext will read cookie and sync to localStorage
     const redirectUrl = `${baseUrl}${sanitizeRedirect(parsedState.redirect)}`;
-    console.log("Google OAuth successful! Redirecting to:", redirectUrl);
-    console.log("User:", user.email, "ID:", user.id);
-    console.log("Token generated:", token.substring(0, 50) + "...");
+    debugLog("Google OAuth successful! Redirecting to:", redirectUrl);
+    debugLog("User:", user.email, "ID:", user.id);
+    debugLog("Token generated:", token.substring(0, 50) + "...");
     
     const response = NextResponse.redirect(redirectUrl, 303);
     const authCookieOptions = getAuthCookieOptions(request);
-    response.cookies.set("oauth_state", "", {
-      ...authCookieOptions,
-      maxAge: 0,
-    });
-    response.cookies.set("stayneos_auth_token", token, authCookieOptions);
+    response.cookies.set("oauth_state", "", getClearedAuthCookieOptions(request));
+    response.cookies.set(AUTH_COOKIE_NAME, token, authCookieOptions);
 
     return response;
   } catch (err) {

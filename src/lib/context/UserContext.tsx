@@ -57,7 +57,6 @@ const defaultPreferences: UserPreferences = {
   },
 };
 
-const TOKEN_KEY = "stayneos_auth_token";
 const USER_KEY = "stayneos_user_data";
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -110,10 +109,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
         }
 
         // OAuth flow uses HttpOnly cookie, so bootstrap user from server session API
-        const token = localStorage.getItem(TOKEN_KEY);
         const response = await fetch('/api/auth/session', {
           credentials: 'include',
-          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
           cache: 'no-store',
         });
 
@@ -248,7 +245,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
     } catch (e) {
       console.error('Logout API error:', e);
     }
-    localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     setUser(null);
     // Dispatch event to notify other components (like Navbar)
@@ -259,10 +255,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const refreshUser = useCallback(async () => {
     try {
-      const token = localStorage.getItem(TOKEN_KEY);
       const response = await fetch('/api/auth/session', {
         credentials: 'include',
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         cache: 'no-store',
       });
 

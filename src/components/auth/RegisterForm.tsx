@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useI18n } from '@/lib/i18n';
 
-const TOKEN_KEY = 'stayneos_auth_token';
 const USER_KEY = 'stayneos_user_data';
 
 export function RegisterForm() {
@@ -80,13 +79,7 @@ export function RegisterForm() {
         throw new Error(data.message || 'Registration failed');
       }
 
-      // Store auth data
-      if (data.token) {
-        localStorage.setItem(TOKEN_KEY, data.token);
-        // Set client cookie so middleware sees it immediately
-        const secure = window.location.protocol === 'https:' ? '; Secure' : '';
-        document.cookie = `stayneos_auth_token=${encodeURIComponent(data.token)}; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Lax${secure}`;
-      }
+      // Store user profile only (auth token is HttpOnly cookie)
       if (data.user) {
         localStorage.setItem(USER_KEY, JSON.stringify(data.user));
       }

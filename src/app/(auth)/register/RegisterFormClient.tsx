@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-const TOKEN_KEY = 'stayneos_auth_token';
 const USER_KEY = 'stayneos_user_data';
 
 export default function RegisterFormClient() {
@@ -90,10 +89,7 @@ export default function RegisterFormClient() {
           throw new Error(data.message || 'Registration failed');
         }
 
-        // Store auth data
-        if (data.token) {
-          localStorage.setItem(TOKEN_KEY, data.token);
-        }
+        // Store user profile only (auth token is HttpOnly cookie)
         if (data.user) {
           localStorage.setItem(USER_KEY, JSON.stringify(data.user));
         }

@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import { Modal } from '@/components/ui';
-import { useAuth } from '@/lib/UserContext';
+import { useAuth } from '@/lib/context/UserContext';
 import { useI18n } from '@/lib/i18n';
 import { 
   Calendar, 

@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { UserMenu } from "./UserMenu";
 import { LanguageCurrencySelector } from "./LanguageCurrencySelector";
 import { MobileMenu } from "./MobileMenu";
-import { useAuth } from "@/lib/UserContext";
+import { useAuth } from "@/lib/context/UserContext";
 import { useI18n } from "@/lib/i18n";
 
 interface NavbarProps {

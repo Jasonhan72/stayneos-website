@@ -25,6 +25,11 @@ const translations = { en, fr, zh };
 const USER_KEY = "stayneos_user_data";
 const PREFERRED_LOCALE_KEY = 'preferred-locale';
 const LOCALE_COOKIE_KEY = 'stayneos_locale';
+const debugI18n = (...args: unknown[]) => {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(...args);
+  }
+};
 
 // Helper to get cookie value (works on both client and server)
 function getCookie(name: string): string | null {
@@ -67,7 +72,7 @@ function getClientLocale(): Locale {
   // Priority 1: Check preferred locale from localStorage (user's explicit choice)
   const stored = localStorage.getItem(PREFERRED_LOCALE_KEY);
   if (stored === 'zh' || stored === 'en' || stored === 'fr') {
-    console.log('[i18n] Using preferred-locale:', stored);
+    debugI18n('[i18n] Using preferred-locale:', stored);
     return stored;
   }
   
@@ -79,7 +84,7 @@ function getClientLocale(): Locale {
       if (user.preferences?.language) {
         const lang = user.preferences.language;
         if (lang === 'zh' || lang === 'en' || lang === 'fr') {
-          console.log('[i18n] Using user preferences:', lang);
+          debugI18n('[i18n] Using user preferences:', lang);
           return lang;
         }
       }
@@ -89,12 +94,12 @@ function getClientLocale(): Locale {
   // Priority 3: Check cookie
   const cookieLocale = getCookie(LOCALE_COOKIE_KEY);
   if (cookieLocale === 'zh' || cookieLocale === 'en' || cookieLocale === 'fr') {
-    console.log('[i18n] Using cookie:', cookieLocale);
+    debugI18n('[i18n] Using cookie:', cookieLocale);
     return cookieLocale;
   }
   
   // Default to English (do NOT use browser language to avoid unexpected language switches)
-  console.log('[i18n] Defaulting to en');
+  debugI18n('[i18n] Defaulting to en');
   return 'en';
 }
 
@@ -131,10 +136,10 @@ export function I18nProvider({ children, initialLocale = 'en' }: { children: Rea
   }, []);
 
   const setLocale = useCallback((newLocale: Locale) => {
-    console.log('[i18n] setLocale called with:', newLocale, 'current locale:', locale);
+    debugI18n('[i18n] setLocale called with:', newLocale, 'current locale:', locale);
     
     if (newLocale === locale) {
-      console.log('[i18n] Same locale, skipping update');
+      debugI18n('[i18n] Same locale, skipping update');
       return;
     }
     
@@ -159,10 +164,10 @@ export function I18nProvider({ children, initialLocale = 'en' }: { children: Rea
     // Dispatch custom event to notify all components
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('localeChange', { detail: { locale: newLocale } }));
-      console.log('[i18n] localeChange event dispatched');
+      debugI18n('[i18n] localeChange event dispatched');
     }
     
-    console.log('[i18n] Locale updated to:', newLocale);
+    debugI18n('[i18n] Locale updated to:', newLocale);
   }, [locale]);
 
   const t = useCallback(

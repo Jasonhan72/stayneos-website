@@ -20,7 +20,7 @@ import { calculateBookingPrice } from '@/lib/booking';
 import { useProperty } from '@/hooks/useProperties';
 import { getLocalizedTitle } from '@/components/property/PropertyCard';
 import { useI18n } from '@/lib/i18n';
-import { useAuth } from '@/lib/UserContext';
+import { useAuth } from '@/lib/context/UserContext';
 
 interface CheckoutClientProps {
   propertyId: string;
