@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { AirbnbCalendar, BookingPriceCalculator, GuestSelector, type GuestCounts } from '@/components/booking';
+import { BookingPriceCalculator, GuestSelector, type GuestCounts } from '@/components/booking';
 import StripeProvider from '@/components/payment/StripeProvider';
 import PaymentForm from '@/components/payment/PaymentForm';
 import { Input } from '@/components/ui';
@@ -27,6 +28,11 @@ import {
   Home,
   CreditCard
 } from 'lucide-react';
+
+const AirbnbCalendar = dynamic(() => import('@/components/booking').then((mod) => mod.AirbnbCalendar), {
+  ssr: false,
+  loading: () => null,
+});
 
 export default function BookingContent() {
   const params = useParams();

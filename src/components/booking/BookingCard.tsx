@@ -4,6 +4,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { 
   AlertCircle, 
@@ -15,11 +16,15 @@ import {
   Star
 } from 'lucide-react';
 import { Button } from '@/components/ui';
-import { AirbnbCalendar } from './AirbnbCalendar';
 import { BookingPriceCalculator } from './BookingPriceCalculator';
 import { calculateBookingPrice } from '@/lib/booking';
 import { cn } from '@/lib/utils';
 import { useI18n } from '@/lib/i18n';
+
+const AirbnbCalendar = dynamic(() => import('./AirbnbCalendar').then((mod) => mod.AirbnbCalendar), {
+  ssr: false,
+  loading: () => null,
+});
 
 interface BookingCardProps {
   property: {

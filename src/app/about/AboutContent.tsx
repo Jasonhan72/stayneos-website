@@ -16,7 +16,7 @@ export default function AboutContent() {
       {/* Hero Section */}
       <section className="relative bg-primary py-24 lg:py-32 overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-          <Image src="/images/cooper-55-e98a880d.jpg" alt="Toronto skyline view from a NEOS property" fill className="object-cover" priority />
+          <Image src="/images/cooper-55-e98a880d.jpg" alt="Toronto skyline view from a NEOS property" fill className="object-cover" priority={true} />
         </div>
         <Container className="relative z-10">
           <div className="max-w-3xl mx-auto text-center">

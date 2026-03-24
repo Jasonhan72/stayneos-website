@@ -69,7 +69,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
                 width={140}
                 height={48}
                 className="h-9 md:h-10 w-auto object-contain"
-                priority
+                priority={true}
               />
             </Link>
 

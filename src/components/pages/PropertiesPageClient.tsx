@@ -27,7 +27,6 @@ import {
 import { Button, Container, Card, Badge, Input } from '@/components/ui';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { ApiErrorAlert } from '@/components/error';
-import { AirbnbCalendar } from '@/components/booking';
 import { useProperties } from '@/hooks/useProperties';
 import { useI18n } from '@/lib/i18n';
 import { useWishlist } from '@/lib/context/WishlistContext';
@@ -43,6 +42,11 @@ const GooglePropertyMap = dynamic(() => import('@/components/property/GoogleProp
       <div className="text-neutral-400">Loading map...</div>
     </div>
   ),
+});
+
+const AirbnbCalendar = dynamic(() => import('@/components/booking').then((mod) => mod.AirbnbCalendar), {
+  ssr: false,
+  loading: () => null,
 });
 
 // 每页数量 (暂时未使用)

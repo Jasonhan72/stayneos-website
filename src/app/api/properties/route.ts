@@ -38,12 +38,21 @@ export async function GET() {
     const result = await db.prepare("SELECT * FROM Property WHERE status='PUBLISHED' ORDER BY createdAt DESC").all();
     const properties = (result.results || []).map((item) => toPublicProperty(item as never));
     if (properties.length > 0) {
-      return NextResponse.json({ properties });
+      return NextResponse.json(
+        { properties },
+        { headers: { 'Cache-Control': 'public, s-maxage=300' } }
+      );
     }
     // D1 empty, fall back to mock data
-    return NextResponse.json({ properties: mockProperties.map(mockToPublic) });
+    return NextResponse.json(
+      { properties: mockProperties.map(mockToPublic) },
+      { headers: { 'Cache-Control': 'public, s-maxage=300' } }
+    );
   } catch {
     // D1 not available, fall back to mock data
-    return NextResponse.json({ properties: mockProperties.map(mockToPublic) });
+    return NextResponse.json(
+      { properties: mockProperties.map(mockToPublic) },
+      { headers: { 'Cache-Control': 'public, s-maxage=300' } }
+    );
   }
 }

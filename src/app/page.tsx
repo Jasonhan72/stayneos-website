@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   description: "Move-in ready furnished apartments in Toronto's best neighborhoods. 30 days to 12 months. Corporate housing, relocation, and extended stays.",
 };
 
+export const revalidate = 3600;
+
 export default function HomePage() {
   return (
     <main className="min-h-screen">

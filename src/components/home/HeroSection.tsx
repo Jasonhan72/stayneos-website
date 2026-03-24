@@ -26,7 +26,7 @@ export function HeroSection() {
           src="/images/cooper-55-e98a880d.jpg"
           alt="55 Cooper St lakefront view"
           fill
-          priority
+          priority={true}
           className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/70 via-neutral-900/50 to-neutral-900/70" />

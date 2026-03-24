@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   description: 'NEOS policy on service animals and assistance animals.',
 };
 
+export const revalidate = 3600;
+
 export default function ServiceAnimalsPage() {
   return <ServiceAnimalsContent />;
 }

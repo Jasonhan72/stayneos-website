@@ -2,10 +2,15 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { Calendar, ChevronRight, MapPin, Search } from 'lucide-react';
-import { AirbnbCalendar } from '@/components/booking';
 import { Button } from '@/components/ui';
 import { useI18n } from '@/lib/i18n';
+
+const AirbnbCalendar = dynamic(() => import('@/components/booking').then((mod) => mod.AirbnbCalendar), {
+  ssr: false,
+  loading: () => null,
+});
 
 export function HeroSearchBox() {
   const [location, setLocation] = useState('');

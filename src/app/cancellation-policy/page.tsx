@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   description: 'NEOS cancellation and refund policy for apartment bookings.',
 };
 
+export const revalidate = 3600;
+
 export default function CancellationPolicyPage() {
   return <CancellationContent />;
 }

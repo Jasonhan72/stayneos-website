@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   description: 'Find answers to common questions about booking, payments, check-in, and more.',
 };
 
+export const revalidate = 3600;
+
 export default function HelpPage() {
   return <HelpContent />;
 }

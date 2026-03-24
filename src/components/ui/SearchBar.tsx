@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import {
   MapPin,
   Calendar,
@@ -11,8 +12,12 @@ import {
   Plus,
   X
 } from "lucide-react";
-import { AirbnbCalendar } from "@/components/booking";
 import { cn } from "@/lib/utils";
+
+const AirbnbCalendar = dynamic(() => import("@/components/booking").then((mod) => mod.AirbnbCalendar), {
+  ssr: false,
+  loading: () => null,
+});
 
 interface SearchData {
   location: string;

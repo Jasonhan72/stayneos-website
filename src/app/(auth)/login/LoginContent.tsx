@@ -14,12 +14,12 @@ export default function LoginContent() {
   return (
     <div className="min-h-screen flex">
       <div className="hidden lg:flex lg:w-[55%] relative">
-        <Image src="/images/cooper-55-e98a880d.jpg" alt="Toronto skyline view from a NEOS property" fill className="object-cover" priority />
+        <Image src="/images/cooper-55-e98a880d.jpg" alt="Toronto skyline view from a NEOS property" fill className="object-cover" priority={true} />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
         <div className="relative z-10 flex flex-col justify-between h-full p-12">
           <div>
             <Link href="/" className="inline-block">
-              <Image src="/logo.png" alt="NEOS" width={180} height={60} className="h-14 w-auto object-contain brightness-0 invert" priority />
+              <Image src="/logo.png" alt="NEOS" width={180} height={60} className="h-14 w-auto object-contain brightness-0 invert" priority={true} />
             </Link>
           </div>
           <div className="max-w-lg">
@@ -36,7 +36,7 @@ export default function LoginContent() {
       <div className="w-full lg:w-[45%] flex flex-col justify-center items-center p-6 sm:p-8 lg:p-16 bg-white">
         <div className="w-full max-w-md">
           <div className="lg:hidden flex justify-center mb-8">
-            <Link href="/"><Image src="/logo.png" alt="NEOS" width={150} height={50} className="h-12 w-auto object-contain" priority /></Link>
+            <Link href="/"><Image src="/logo.png" alt="NEOS" width={150} height={50} className="h-12 w-auto object-contain" priority={true} /></Link>
           </div>
           <div className="text-center mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 mb-2">{t('loginPage.loginTitle')}</h1>

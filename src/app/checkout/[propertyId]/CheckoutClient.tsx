@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -14,13 +15,17 @@ import {
   User
 } from 'lucide-react';
 import { Container } from '@/components/ui';
-import { AirbnbCalendar } from '@/components/booking';
 import { BookingPriceCalculator } from '@/components/booking';
 import { calculateBookingPrice } from '@/lib/booking';
 import { useProperty } from '@/hooks/useProperties';
 import { getLocalizedTitle } from '@/components/property/PropertyCard';
 import { useI18n } from '@/lib/i18n';
 import { useAuth } from '@/lib/context/UserContext';
+
+const AirbnbCalendar = dynamic(() => import('@/components/booking').then((mod) => mod.AirbnbCalendar), {
+  ssr: false,
+  loading: () => null,
+});
 
 interface CheckoutClientProps {
   propertyId: string;

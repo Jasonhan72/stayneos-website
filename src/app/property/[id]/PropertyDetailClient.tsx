@@ -4,6 +4,7 @@
 import { useState, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { 
   Star,
@@ -19,7 +20,7 @@ import {
 import { Container, Divider } from '@/components/ui';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { ApiErrorAlert } from '@/components/error';
-import { AirbnbCalendar, ReviewAndContinue, PaymentMethod, GuestSelector, type GuestCounts } from '@/components/booking';
+import { ReviewAndContinue, PaymentMethod, GuestSelector, type GuestCounts } from '@/components/booking';
 // CardDetailsForm removed - PCI compliance: all card input handled by Stripe Elements
 import { useI18n } from '@/lib/i18n';
 import { useWishlist } from '@/lib/context/WishlistContext';
@@ -172,6 +173,11 @@ const mockHost = {
   isSuperhost: true,
   yearsHosting: 2,
 };
+
+const AirbnbCalendar = dynamic(() => import('@/components/booking').then((mod) => mod.AirbnbCalendar), {
+  ssr: false,
+  loading: () => null,
+});
 
 export default function PropertyDetailClient({ propertyId }: PropertyDetailClientProps) {
   const { t, locale } = useI18n();
@@ -645,7 +651,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
               <div className="h-[400px] rounded-xl overflow-hidden relative cursor-pointer hover:opacity-95 transition-opacity"
                 onClick={() => setShowGallery(true)}
               >
-                <Image src={imageUrls[0]} alt={localizedTitle} fill priority className="object-cover" />
+                <Image src={imageUrls[0]} alt={localizedTitle} fill priority={true} className="object-cover" />
               </div>
             ) : imageUrls.length === 2 ? (
               /* 2 images: side by side */
@@ -662,7 +668,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
               <div className="grid grid-cols-2 gap-2 h-[400px] rounded-xl overflow-hidden">
                 <div className="relative cursor-pointer hover:opacity-95 transition-opacity"
                   onClick={() => setShowGallery(true)}>
-                  <Image src={imageUrls[0]} alt={localizedTitle} fill priority className="object-cover" />
+                  <Image src={imageUrls[0]} alt={localizedTitle} fill priority={true} className="object-cover" />
                 </div>
                 <div className={`grid ${imageUrls.length === 3 ? 'grid-rows-2' : 'grid-cols-2 grid-rows-2'} gap-2`}>
                   {imageUrls.slice(1).map((img, idx) => (
@@ -684,7 +690,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
               <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[400px] rounded-xl overflow-hidden">
                 <div className="col-span-2 row-span-2 relative cursor-pointer hover:opacity-95 transition-opacity"
                   onClick={() => setShowGallery(true)}>
-                  <Image src={imageUrls[0]} alt={localizedTitle} fill priority className="object-cover" />
+                  <Image src={imageUrls[0]} alt={localizedTitle} fill priority={true} className="object-cover" />
                 </div>
                 {imageUrls.slice(1, 5).map((img, idx) => (
                   <div key={idx} className="relative cursor-pointer hover:opacity-95 transition-opacity"

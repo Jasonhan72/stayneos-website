@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   description: "Corporate furnished apartments for business travel, employee relocation, and insurance housing in downtown Toronto. Net-30 invoicing available.",
 };
 
+export const revalidate = 3600;
+
 export default function ForBusinessPage() {
   return <ForBusinessPageContent />;
 }
