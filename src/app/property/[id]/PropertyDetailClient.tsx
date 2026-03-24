@@ -853,12 +853,13 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
               <h2 className="text-xl font-semibold mb-4">{t('property.whereYouBe')}</h2>
               <div className="w-full h-[350px] bg-neutral-100 relative overflow-hidden rounded-2xl">
                 <iframe 
-                  src={`https://www.openstreetmap.org/export/embed.html?bbox=-79.42%2C43.62%2C-79.36%2C43.68&layer=mapnik&marker=43.65%2C-79.39`}
+                  src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}&q=${encodeURIComponent(locationShort)}&zoom=15`}
                   width="100%" 
                   height="100%" 
                   style={{ border: 0 }} 
                   allowFullScreen 
                   loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
                   className="absolute inset-0" 
                   title={`${localizedTitle} Location`} 
                 />

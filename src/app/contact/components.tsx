@@ -399,12 +399,13 @@ export function MapSection() {
     <div className="w-full h-[400px] bg-neutral-100 relative overflow-hidden">
       {/* Google Maps 嵌入 */}
       <iframe
-        src="https://www.openstreetmap.org/export/embed.html?bbox=-79.36%2C43.74%2C-79.33%2C43.76&layer=mapnik&marker=43.7532%2C-79.3456"
+        src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}&q=20+Upjohn+Rd,+North+York,+ON+M3B+2V9&zoom=15`}
         width="100%"
         height="100%"
         style={{ border: 0 }}
         allowFullScreen
         loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
         className="absolute inset-0"
         title="NEOS Office Location"
       />

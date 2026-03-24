@@ -1,5 +1,5 @@
 // Google Maps Component for Properties Page
-// Shows all properties with red markers
+// Shows all properties with markers
 
 interface Property {
   id: string;
@@ -18,6 +18,8 @@ interface GooglePropertyMapProps {
   onPropertySelect: (id: string) => void;
 }
 
+const MAPS_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
+
 export default function GooglePropertyMap({ 
   properties 
 }: GooglePropertyMapProps) {
@@ -30,16 +32,18 @@ export default function GooglePropertyMap({
     );
   }
 
+  const centerLocation = encodeURIComponent(properties[0]?.location || 'Downtown Toronto');
+  
   return (
     <div className="w-full h-full relative">
-      {/* Google Maps Embed - Full height, no overlays */}
       <iframe
-        src={`https://www.openstreetmap.org/export/embed.html?bbox=-79.5%2C43.6%2C-79.3%2C43.72&layer=mapnik&marker=43.66%2C-79.4`}
+        src={`https://www.google.com/maps/embed/v1/place?key=${MAPS_KEY}&q=${centerLocation}&zoom=12`}
         width="100%"
         height="100%"
         style={{ border: 0 }}
         allowFullScreen
         loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
         className="absolute inset-0"
         title="房源地图"
       />
