@@ -101,7 +101,7 @@ export function createSuccessResponse<T>(
 // 主错误处理器
 export function handleError(error: unknown): NextResponse<ErrorResponse> {
   // 记录错误日志
-  console.error('[API Error]', error);
+  if (process.env.NODE_ENV !== 'production') console.error('[API Error]', error);
   
   // 处理自定义 API 错误
   if (error instanceof APIError) {

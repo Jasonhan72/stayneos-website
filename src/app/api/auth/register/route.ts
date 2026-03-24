@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     try {
       db = getDb();
     } catch {
-      console.error("Failed to get D1 database");
+      if (process.env.NODE_ENV !== 'production') console.error("Failed to get D1 database");
       return NextResponse.json({ message: "数据库连接失败" }, { status: 500 });
     }
 
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
     response.cookies.set(AUTH_COOKIE_NAME, token, getAuthCookieOptions());
     return response;
   } catch {
-    console.error("注册错误");
+    if (process.env.NODE_ENV !== 'production') console.error("注册错误");
     return NextResponse.json({ message: "注册失败，请稍后重试" }, { status: 500 });
   }
 }

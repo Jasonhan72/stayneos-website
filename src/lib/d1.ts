@@ -62,7 +62,7 @@ export function getDb(): D1Database {
     return env.DB;
   }
   
-  console.error("D1 database binding 'DB' not found");
+  if (process.env.NODE_ENV !== 'production') console.error("D1 database binding 'DB' not found");
   throw new Error("D1 database binding 'DB' not found. Make sure DB is bound in wrangler.toml");
 }
 
@@ -76,7 +76,7 @@ export const userDb = {
         .first<User>();
       return result || null;
     } catch (error) {
-      console.error('Error finding user by email:', error);
+      if (process.env.NODE_ENV !== 'production') console.error('Error finding user by email:', error);
       throw error;
     }
   },
@@ -89,7 +89,7 @@ export const userDb = {
         .first<User>();
       return result || null;
     } catch (error) {
-      console.error('Error finding user by id:', error);
+      if (process.env.NODE_ENV !== 'production') console.error('Error finding user by id:', error);
       throw error;
     }
   },
@@ -136,7 +136,7 @@ export const userDb = {
         updatedAt: now,
       };
     } catch (error) {
-      console.error('Error creating user:', error);
+      if (process.env.NODE_ENV !== 'production') console.error('Error creating user:', error);
       throw error;
     }
   },
@@ -164,7 +164,7 @@ export const userDb = {
         .bind(...values)
         .run();
     } catch (error) {
-      console.error('Error updating user:', error);
+      if (process.env.NODE_ENV !== 'production') console.error('Error updating user:', error);
       throw error;
     }
   },
@@ -208,7 +208,7 @@ export const sessionDb = {
         },
       };
     } catch (error) {
-      console.error('Error finding session by token:', error);
+      if (process.env.NODE_ENV !== 'production') console.error('Error finding session by token:', error);
       throw error;
     }
   },
@@ -233,7 +233,7 @@ export const sessionDb = {
         expires: data.expires,
       };
     } catch (error) {
-      console.error('Error creating session:', error);
+      if (process.env.NODE_ENV !== 'production') console.error('Error creating session:', error);
       throw error;
     }
   },
@@ -245,7 +245,7 @@ export const sessionDb = {
         .bind(sessionToken)
         .run();
     } catch (error) {
-      console.error('Error deleting session:', error);
+      if (process.env.NODE_ENV !== 'production') console.error('Error deleting session:', error);
       throw error;
     }
   },
@@ -256,7 +256,7 @@ export const sessionDb = {
         .prepare("DELETE FROM Session WHERE expires < datetime('now')")
         .run();
     } catch (error) {
-      console.error('Error deleting expired sessions:', error);
+      if (process.env.NODE_ENV !== 'production') console.error('Error deleting expired sessions:', error);
       throw error;
     }
   },
@@ -272,7 +272,7 @@ export const accountDb = {
         .first<Account>();
       return result || null;
     } catch (error) {
-      console.error('Error finding account by provider:', error);
+      if (process.env.NODE_ENV !== 'production') console.error('Error finding account by provider:', error);
       throw error;
     }
   },
@@ -285,7 +285,7 @@ export const accountDb = {
         .all<Account>();
       return result.results || [];
     } catch (error) {
-      console.error('Error finding accounts by user id:', error);
+      if (process.env.NODE_ENV !== 'production') console.error('Error finding accounts by user id:', error);
       throw error;
     }
   },
@@ -344,7 +344,7 @@ export const accountDb = {
         session_state: data.session_state || null,
       };
     } catch (error) {
-      console.error('Error creating account:', error);
+      if (process.env.NODE_ENV !== 'production') console.error('Error creating account:', error);
       throw error;
     }
   },

@@ -111,7 +111,7 @@ export default function LoginFormClient() {
         const callbackUrl = searchParams?.get('callbackUrl') || searchParams?.get('callback') || '/dashboard';
         router.push(callbackUrl);
       } catch (error) {
-        console.error('Login error:', error);
+        if (process.env.NODE_ENV !== 'production') console.error('Login error:', error);
         
         // Show error message
         const errorDiv = document.createElement('div');

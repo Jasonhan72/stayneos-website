@@ -27,7 +27,6 @@ const PREFERRED_LOCALE_KEY = 'preferred-locale';
 const LOCALE_COOKIE_KEY = 'stayneos_locale';
 const debugI18n = (...args: unknown[]) => {
   if (process.env.NODE_ENV !== 'production') {
-    console.log(...args);
   }
 };
 
@@ -197,7 +196,7 @@ export function I18nProvider({ children, initialLocale = 'en' }: { children: Rea
       
       // Debug: log if translation not found
       if (text === key && process.env.NODE_ENV === 'development') {
-        console.warn(`[i18n] Translation not found for key: "${key}" in locale: "${locale}"`);
+        if (process.env.NODE_ENV === 'development') console.warn(`[i18n] Translation not found for key: "${key}" in locale: "${locale}"`);
       }
       
       return text;

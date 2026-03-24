@@ -97,7 +97,7 @@ export default function RegisterFormClient() {
         // Redirect to dashboard
         router.push('/dashboard');
       } catch (error) {
-        console.error('Registration error:', error);
+        if (process.env.NODE_ENV !== 'production') console.error('Registration error:', error);
         
         // Show error message
         const errorDiv = document.createElement('div');

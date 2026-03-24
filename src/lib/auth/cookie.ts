@@ -1,15 +1,15 @@
 import type { NextRequest } from "next/server";
+import { getPublicBaseUrl } from "@/lib/config/env";
 
 const AUTH_COOKIE_MAX_AGE = 7 * 24 * 60 * 60;
 
 export const AUTH_COOKIE_NAME = "stayneos_auth_token";
 
 function resolveCookieDomain(hostname?: string): string | undefined {
-  const target = hostname || "stayneos.com";
-  const isLocalhost = ["localhost", "127.0.0.1", "::1"].includes(target);
-  if (isLocalhost) return undefined;
-  if (target === "stayneos.com" || target.endsWith(".stayneos.com")) return ".stayneos.com";
-  return undefined;
+  const baseHostname = new URL(getPublicBaseUrl()).hostname;
+  const target = hostname || baseHostname;
+  if (["localhost", "127.0.0.1", "::1"].includes(target)) return undefined;
+  return `.${baseHostname}`;
 }
 
 export function getAuthCookieOptions(request?: NextRequest) {

@@ -62,7 +62,7 @@ export async function POST(request: Request) {
     response.cookies.set(AUTH_COOKIE_NAME, token, getAuthCookieOptions());
     return response;
   } catch {
-    console.error("登录错误");
+    if (process.env.NODE_ENV !== 'production') console.error("登录错误");
     return NextResponse.json({ message: "登录失败，请稍后重试" }, { status: 500 });
   }
 }

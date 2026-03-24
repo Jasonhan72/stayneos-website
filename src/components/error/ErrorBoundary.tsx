@@ -31,7 +31,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    if (process.env.NODE_ENV !== 'production') console.error('ErrorBoundary caught an error:', error, errorInfo);
     // 这里可以发送错误到日志服务
     // logErrorToService(error, errorInfo);
   }

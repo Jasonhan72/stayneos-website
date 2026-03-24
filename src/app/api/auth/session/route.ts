@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
       }
     }, { status: 200 });
   } catch {
-    console.error("验证会话错误");
+    if (process.env.NODE_ENV !== 'production') console.error("验证会话错误");
     return NextResponse.json(
       { message: "会话已过期", user: null },
       { status: 401 }

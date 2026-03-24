@@ -29,7 +29,7 @@ export default function GlobalError({
 
   useEffect(() => {
     setLocale(getLocale());
-    console.error("Global error:", error);
+    if (process.env.NODE_ENV !== 'production') console.error("Global error:", error);
   }, [error]);
 
   const t = translations[locale];

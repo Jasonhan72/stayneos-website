@@ -105,7 +105,7 @@ export default function BookingsPage() {
       const response = await fetch(`/api/bookings`);
       
       if (!response.ok) {
-        throw new Error('Failed to fetch bookings');
+        throw new Error(t('bookings.fetchFailed', 'Failed to fetch bookings'));
       }
       
       const data = await response.json();

@@ -175,7 +175,7 @@ export async function GET(request: NextRequest) {
       existingAccount = await accountDb.findByProviderAccountId(db, "google", googleUser.id);
       debugLog("Existing account check result:", existingAccount ? "found" : "not found");
     } catch (err) {
-      console.error("Error checking existing account:", err);
+      if (process.env.NODE_ENV !== 'production') console.error("Error checking existing account:", err);
       return buildLoginRedirect(baseUrl, "db_error", parsedState.redirect);
     }
 
@@ -187,12 +187,12 @@ export async function GET(request: NextRequest) {
         user = await userDb.findById(db, existingAccount.userId);
         debugLog("Found existing user:", user?.email);
       } catch (err) {
-        console.error("Error finding user by ID:", err);
+        if (process.env.NODE_ENV !== 'production') console.error("Error finding user by ID:", err);
         return buildLoginRedirect(baseUrl, "db_error", parsedState.redirect);
       }
       
       if (!user) {
-        console.error("User not found for existing Google account:", existingAccount.userId);
+        if (process.env.NODE_ENV !== 'production') console.error("User not found for existing Google account:", existingAccount.userId);
         return buildLoginRedirect(baseUrl, "user_not_found", parsedState.redirect);
       }
       userId = user.id;
@@ -203,7 +203,7 @@ export async function GET(request: NextRequest) {
         existingUser = await userDb.findByEmail(db, googleUser.email);
         debugLog("Existing user by email:", existingUser ? "found" : "not found");
       } catch (err) {
-        console.error("Error finding user by email:", err);
+        if (process.env.NODE_ENV !== 'production') console.error("Error finding user by email:", err);
         return buildLoginRedirect(baseUrl, "db_error", parsedState.redirect);
       }
 
@@ -226,7 +226,7 @@ export async function GET(request: NextRequest) {
           });
           debugLog("Account linked successfully");
         } catch (err) {
-          console.error("Error linking account:", err);
+          if (process.env.NODE_ENV !== 'production') console.error("Error linking account:", err);
           return buildLoginRedirect(baseUrl, "db_error", parsedState.redirect);
         }
       } else {
@@ -242,7 +242,7 @@ export async function GET(request: NextRequest) {
           });
           debugLog("New user created:", user.email, user.id);
         } catch (err) {
-          console.error("Error creating user:", err);
+          if (process.env.NODE_ENV !== 'production') console.error("Error creating user:", err);
           return buildLoginRedirect(baseUrl, "db_error", parsedState.redirect);
         }
         
@@ -261,7 +261,7 @@ export async function GET(request: NextRequest) {
           });
           debugLog("Account created successfully");
         } catch (err) {
-          console.error("Error creating account:", err);
+          if (process.env.NODE_ENV !== 'production') console.error("Error creating account:", err);
           // Try to delete the user we just created
           try {
             await db.prepare("DELETE FROM User WHERE id = ?").bind(userId).run();
@@ -292,10 +292,10 @@ export async function GET(request: NextRequest) {
 
     return response;
   } catch (err) {
-    console.error("Google OAuth callback error:", err);
+    if (process.env.NODE_ENV !== 'production') console.error("Google OAuth callback error:", err);
     // 返回具体错误信息以便调试
     const errorMsg = err instanceof Error ? err.message : String(err);
-    console.error("Error details:", errorMsg);
+    if (process.env.NODE_ENV !== 'production') console.error("Error details:", errorMsg);
     
     // 如果是数据库错误，返回db_error
     if (errorMsg.includes("D1") || errorMsg.includes("database") || errorMsg.includes("SQL")) {

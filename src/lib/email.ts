@@ -18,7 +18,7 @@ export async function sendEmail(payload: EmailPayload): Promise<boolean> {
   const fromEmail = process.env.RESEND_FROM_EMAIL || 'hello@stayneos.com';
 
   if (!apiKey) {
-    console.warn('[email] RESEND_API_KEY not set, skipping email notification');
+    if (process.env.NODE_ENV !== 'production') console.warn('[email] RESEND_API_KEY not set, skipping email notification');
     return false;
   }
 
@@ -40,13 +40,13 @@ export async function sendEmail(payload: EmailPayload): Promise<boolean> {
 
     if (!res.ok) {
       const err = await res.text();
-      console.error('[email] Resend error:', res.status, err);
+      if (process.env.NODE_ENV !== 'production') console.error('[email] Resend error:', res.status, err);
       return false;
     }
 
     return true;
   } catch (error) {
-    console.error('[email] Failed to send:', error);
+    if (process.env.NODE_ENV !== 'production') console.error('[email] Failed to send:', error);
     return false;
   }
 }

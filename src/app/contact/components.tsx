@@ -76,7 +76,7 @@ export function ContactForm() {
     try {
       await submitInquiry("contact", formData);
     } catch (error) {
-      console.error("Contact form submission failed:", error);
+      if (process.env.NODE_ENV !== 'production') console.error("Contact form submission failed:", error);
       setErrors({ submit: error instanceof Error ? error.message : "Submission failed" });
       setIsSubmitting(false);
       return;

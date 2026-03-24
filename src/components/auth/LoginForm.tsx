@@ -93,7 +93,7 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
       // Use hard redirect for reliability so middleware sees latest cookie immediately
       window.location.assign(nextUrl);
     } catch (error) {
-      console.error('Login error:', error);
+      if (process.env.NODE_ENV !== 'production') console.error('Login error:', error);
       setErrors({
         submit: error instanceof Error ? error.message : t('auth.loginFailed', 'Login failed')
       });

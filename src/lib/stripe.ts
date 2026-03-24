@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 // Create a mock stripe instance for build time when env vars are not available
 const createStripeInstance = (): Stripe => {
   if (!process.env.STRIPE_SECRET_KEY) {
-    console.warn('STRIPE_SECRET_KEY is not set - using mock stripe instance');
+    if (process.env.NODE_ENV !== 'production') console.warn('STRIPE_SECRET_KEY is not set - using mock stripe instance');
     // Return a mock object for build time
     return {} as Stripe;
   }

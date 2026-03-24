@@ -52,7 +52,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ message: "密码已重置，请使用新密码登录", success: true });
   } catch {
-    console.error("Reset password error");
+    if (process.env.NODE_ENV !== 'production') console.error("Reset password error");
     return NextResponse.json({ message: "密码重置失败，请稍后重试" }, { status: 500 });
   }
 }

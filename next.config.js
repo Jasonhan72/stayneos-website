@@ -5,6 +5,8 @@ const nextConfig = {
   },
 
   images: {
+    // Cloudflare Pages uses static export; Next.js image optimization server is unavailable there.
+    // Keep unoptimized=true so next/image serves direct image URLs in production.
     unoptimized: true,
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com", port: "", pathname: "/**" },

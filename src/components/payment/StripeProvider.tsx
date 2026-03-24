@@ -7,7 +7,7 @@ import { STRIPE_PUBLISHABLE_KEY } from '@/lib/stripe';
 
 // 确保 publishable key 存在
 if (!STRIPE_PUBLISHABLE_KEY) {
-  console.warn('Stripe publishable key is not set');
+  if (process.env.NODE_ENV !== 'production') console.warn('Stripe publishable key is not set');
 }
 
 // 加载 Stripe

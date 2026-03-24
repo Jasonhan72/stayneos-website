@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next';
+import { getPublicBaseUrl } from '@/lib/config/env';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://stayneos.com';
+  const baseUrl = getPublicBaseUrl();
   const lastModified = new Date();
   const routes = [
     '/',

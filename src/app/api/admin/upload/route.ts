@@ -73,7 +73,7 @@ export async function POST(request: Request) {
     if (error instanceof Error && error.message === 'FORBIDDEN') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
-    console.error('Upload error:', error);
+    if (process.env.NODE_ENV !== 'production') console.error('Upload error:', error);
     return NextResponse.json({ error: '上传失败' }, { status: 500 });
   }
 }

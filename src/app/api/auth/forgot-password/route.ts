@@ -45,7 +45,7 @@ export async function POST(request: Request) {
       success: true,
     });
   } catch {
-    console.error("Forgot password error");
+    if (process.env.NODE_ENV !== 'production') console.error("Forgot password error");
     return NextResponse.json({ message: "操作失败，请稍后重试" }, { status: 500 });
   }
 }

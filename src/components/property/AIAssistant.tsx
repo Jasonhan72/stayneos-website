@@ -34,7 +34,7 @@ export function AIAssistant({
         setResult(description);
       }
     } catch (error) {
-      console.error("AI generation failed:", error);
+      if (process.env.NODE_ENV !== 'production') console.error("AI generation failed:", error);
     } finally {
       setLoading(false);
     }

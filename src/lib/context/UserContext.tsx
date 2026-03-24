@@ -123,7 +123,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
           }
         }
       } catch (error) {
-        console.error('Error loading user session:', error);
+        if (process.env.NODE_ENV !== 'production') console.error('Error loading user session:', error);
         localStorage.removeItem(USER_KEY);
       } finally {
         setIsLoading(false);
@@ -243,7 +243,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     try {
       await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
     } catch (e) {
-      console.error('Logout API error:', e);
+      if (process.env.NODE_ENV !== 'production') console.error('Logout API error:', e);
     }
     localStorage.removeItem(USER_KEY);
     setUser(null);
@@ -271,7 +271,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         await logout();
       }
     } catch (error) {
-      console.error('Error refreshing user:', error);
+      if (process.env.NODE_ENV !== 'production') console.error('Error refreshing user:', error);
     }
   }, [logout]);
 

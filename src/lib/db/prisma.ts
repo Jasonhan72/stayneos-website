@@ -6,7 +6,6 @@ import { PrismaClient } from '@prisma/client';
 const isDev = process.env.NODE_ENV !== 'production';
 const debugLog = (...args: unknown[]) => {
   if (isDev) {
-    console.log(...args);
   }
 };
 
@@ -30,7 +29,7 @@ export async function testConnection(): Promise<boolean> {
     return true;
   } catch (error) {
     if (isDev) {
-      console.error('❌ Database connection failed:', error);
+      if (process.env.NODE_ENV !== 'production') console.error('❌ Database connection failed:', error);
     }
     return false;
   }

@@ -46,7 +46,6 @@ export default function SearchBar() {
   ];
 
   const handleSearch = () => {
-    console.log("Search:", searchData);
     // TODO: Navigate to properties page with search params
   };
 

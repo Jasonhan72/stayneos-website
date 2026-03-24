@@ -39,7 +39,7 @@ export default function AdminEmailLogsPage() {
         setLogs(data.logs || []);
       }
     } catch (err) {
-      console.error('Error fetching logs:', err);
+      if (process.env.NODE_ENV !== 'production') console.error('Error fetching logs:', err);
     }
   };
 
@@ -51,7 +51,7 @@ export default function AdminEmailLogsPage() {
         setConfig(data);
       }
     } catch (err) {
-      console.error('Error fetching config:', err);
+      if (process.env.NODE_ENV !== 'production') console.error('Error fetching config:', err);
     }
   };
 

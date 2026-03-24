@@ -182,7 +182,7 @@ export default function BookingsPage() {
       setShowCancelModal(false);
       setSelectedBooking(null);
     } catch (err) {
-      console.error('Error cancelling booking:', err);
+      if (process.env.NODE_ENV !== 'production') console.error('Error cancelling booking:', err);
       alert(t('bookings.error.cancelAlert'));
     }
   };

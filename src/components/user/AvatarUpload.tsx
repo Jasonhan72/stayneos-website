@@ -70,7 +70,7 @@ export default function AvatarUpload({ size = 'lg', className }: AvatarUploadPro
       // and get the URL back
       await updateAvatar(reader.result as string);
     } catch (error) {
-      console.error('Failed to upload avatar:', error);
+      if (process.env.NODE_ENV !== 'production') console.error('Failed to upload avatar:', error);
       alert('Failed to upload avatar. Please try again.');
       // Revert to previous avatar
       setPreviewUrl(user?.avatar || null);

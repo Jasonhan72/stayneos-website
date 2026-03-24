@@ -59,7 +59,7 @@ export default function ForHostsPageContent() {
       await submitInquiry("hosts", data);
       setIsSubmitted(true);
     } catch (error) {
-      console.error("Submission error:", error);
+      if (typeof window !== 'undefined' && window.location.hostname === 'localhost') console.error("Submission error:", error);
       alert(error instanceof Error ? error.message : "Submission failed");
     } finally {
       setIsSubmitting(false);
@@ -87,7 +87,7 @@ export default function ForHostsPageContent() {
     }
   ];
 
-  const process = [
+  const processSteps = [
     { 
       key: "apply", 
       step: "01",
@@ -286,7 +286,7 @@ export default function ForHostsPageContent() {
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {process.map((step, index) => (
+            {processSteps.map((step, index) => (
               <div key={step.key} className="relative">
                 <div className="bg-white p-8 text-center shadow-lg hover:shadow-xl transition-shadow duration-200 h-full">
                   <div className="w-16 h-16 bg-blue-600 text-white font-bold text-2xl flex items-center justify-center mx-auto mb-6">
@@ -299,7 +299,7 @@ export default function ForHostsPageContent() {
                     {step.description}
                   </p>
                 </div>
-                {index < process.length - 1 && (
+                {index < processSteps.length - 1 && (
                   <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2 text-gray-400">
                     <ArrowRight size={24} />
                   </div>

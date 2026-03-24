@@ -9,12 +9,11 @@ const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 const isDev = process.env.NODE_ENV !== "production";
 const debugLog = (...args: unknown[]) => {
   if (isDev) {
-    console.log(...args);
   }
 };
 const debugError = (...args: unknown[]) => {
   if (isDev) {
-    console.error(...args);
+    if (process.env.NODE_ENV !== 'production') console.error(...args);
   }
 };
 

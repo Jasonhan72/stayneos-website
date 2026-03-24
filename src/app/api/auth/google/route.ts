@@ -5,6 +5,13 @@ import { getAuthSecret, getPublicBaseUrl } from "@/lib/config/env";
 
 const DEFAULT_REDIRECT = "/dashboard";
 
+function resolveCookieDomain(hostname: string): string | undefined {
+  const baseHostname = new URL(getPublicBaseUrl()).hostname;
+  if (["localhost", "127.0.0.1", "::1"].includes(hostname)) return undefined;
+  return `.${baseHostname}`;
+}
+
+
 function sanitizeRedirect(redirect: string | null) {
   if (!redirect || !redirect.startsWith("/") || redirect.startsWith("//")) {
     return DEFAULT_REDIRECT;
@@ -33,7 +40,7 @@ function getCookieOptions(request: NextRequest) {
     sameSite: "lax" as const,
     maxAge: 600, // 10 min
     path: "/",
-    ...((url.hostname === "stayneos.com" || url.hostname.endsWith(".stayneos.com")) ? { domain: ".stayneos.com" } : {}),
+    ...(resolveCookieDomain(url.hostname) ? { domain: resolveCookieDomain(url.hostname) } : {}),
   };
 }
 export async function GET(request: NextRequest) {
@@ -76,7 +83,7 @@ export async function GET(request: NextRequest) {
     
     return response;
   } catch (err) {
-    console.error("Google OAuth error:", err);
+    if (process.env.NODE_ENV !== 'production') console.error("Google OAuth error:", err);
     return NextResponse.json(
       { message: "OAuth initialization failed" },
       { status: 500 }

@@ -103,7 +103,7 @@ export async function POST(request: Request) {
     if (error instanceof Error && error.message === 'FORBIDDEN') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
-    console.error('AI assist error:', error);
+    if (process.env.NODE_ENV !== 'production') console.error('AI assist error:', error);
     return NextResponse.json({ error: 'AI 助手调用失败' }, { status: 500 });
   }
 }

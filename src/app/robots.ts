@@ -1,3 +1,4 @@
+import { getPublicBaseUrl } from '@/lib/config/env';
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
@@ -17,6 +18,6 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: 'https://stayneos.com/sitemap.xml',
+    sitemap: `${getPublicBaseUrl()}/sitemap.xml`,
   };
 }

@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
       hadPassword: !!user.password,
     });
   } catch {
-    console.error("Set password error");
+    if (process.env.NODE_ENV !== 'production') console.error("Set password error");
     return NextResponse.json({ message: "Failed to set password, please try again later" }, { status: 500 });
   }
 }

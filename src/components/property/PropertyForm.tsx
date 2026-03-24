@@ -135,7 +135,7 @@ export function PropertyForm({ initialData, mode = "create" }: PropertyFormProps
       router.push("/dashboard/properties");
       router.refresh();
     } catch (error) {
-      console.error("Failed to save property:", error);
+      if (process.env.NODE_ENV !== 'production') console.error("Failed to save property:", error);
       setErrors({ submit: t("property.saveError") });
     } finally {
       setLoading(false);

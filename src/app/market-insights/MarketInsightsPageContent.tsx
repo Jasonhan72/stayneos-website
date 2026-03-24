@@ -59,7 +59,7 @@ export default function MarketInsightsPageContent() {
       await submitInquiry("market_insights", formData);
       setIsSubmitted(true);
     } catch (error) {
-      console.error("Submission error:", error);
+      if (process.env.NODE_ENV !== 'production') console.error("Submission error:", error);
       alert(error instanceof Error ? error.message : "Submission failed");
     } finally {
       setIsSubmitting(false);

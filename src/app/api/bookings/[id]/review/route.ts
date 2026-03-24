@@ -29,7 +29,7 @@ export async function GET(
     const review = await reviewDb.findByBookingId(db, booking.id);
     return NextResponse.json({ success: true, review });
   } catch (error) {
-    console.error("Get review error:", error);
+    if (process.env.NODE_ENV !== 'production') console.error("Get review error:", error);
     return NextResponse.json({ error: "获取评价失败" }, { status: 500 });
   }
 }
@@ -82,7 +82,7 @@ export async function POST(
 
     return NextResponse.json({ success: true, review });
   } catch (error) {
-    console.error("Submit review error:", error);
+    if (process.env.NODE_ENV !== 'production') console.error("Submit review error:", error);
     return NextResponse.json({ error: "提交评价失败" }, { status: 500 });
   }
 }

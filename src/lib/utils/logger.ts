@@ -59,7 +59,7 @@ class Logger {
     // 例如: Sentry.captureMessage() 或发送到日志服务
     if (entry.level === 'error' && entry.error) {
       // 上报错误
-      console.error('[Production Error]', entry);
+      if (process.env.NODE_ENV !== 'production') console.error('[Production Error]', entry);
     }
   }
   

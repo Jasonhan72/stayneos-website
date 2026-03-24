@@ -87,7 +87,7 @@ export function RegisterForm() {
       // Hard redirect to dashboard (ensures middleware sees cookie)
       window.location.assign('/dashboard');
     } catch (error) {
-      console.error('Registration error:', error);
+      if (process.env.NODE_ENV !== 'production') console.error('Registration error:', error);
       setErrors({
         submit: error instanceof Error ? error.message : t('auth.registerFailed', 'Registration failed')
       });

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
@@ -23,29 +23,23 @@ import {
   Building2,
 } from "lucide-react";
 
-// 模拟预订数据
-const mockBookings = [
-  {
-    id: "booking-1",
-    property: mockProperties[0],
-    checkIn: "2024-03-15",
-    checkOut: "2024-03-18",
-    guests: 2,
-    totalPrice: 1050,
-    status: "upcoming" as const,
-    createdAt: "2024-02-01",
-  },
-  {
-    id: "booking-2",
-    property: mockProperties[1],
-    checkIn: "2024-02-10",
-    checkOut: "2024-02-12",
-    guests: 2,
-    totalPrice: 560,
-    status: "completed" as const,
-    createdAt: "2024-01-20",
-  },
-];
+type BookingStatus = "upcoming" | "completed" | "cancelled";
+
+interface DashboardBooking {
+  id: string;
+  property: {
+    id: string;
+    title: string;
+    images: string[];
+    location: string;
+  };
+  checkIn: string;
+  checkOut: string;
+  guests: number;
+  totalPrice: number;
+  status: BookingStatus;
+  createdAt: string;
+}
 
 // 模拟收藏房源
 const mockFavorites = [mockProperties[0], mockProperties[1]];
@@ -59,8 +53,69 @@ function DashboardContent() {
     name: user?.name || "",
     email: user?.email || "",
     phone: "",
-    memberSince: t('dashboard.memberSince', { date: 'January 2024' }),
+    memberSince: t('dashboard.memberSince', { date: t('common.monthYear.january2024', 'January 2024') }),
   });
+  const [bookings, setBookings] = useState<DashboardBooking[]>([]);
+  const [bookingsLoading, setBookingsLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    const fetchBookings = async () => {
+      setBookingsLoading(true);
+      try {
+        const response = await fetch('/api/bookings', { credentials: 'include' });
+        if (!response.ok) {
+          throw new Error('failed to fetch bookings');
+        }
+        const result = await response.json();
+        const data = Array.isArray(result?.data?.bookings) ? result.data.bookings : [];
+        const normalized: DashboardBooking[] = data.map((booking: any) => {
+          const checkIn = booking.checkIn || booking.check_in || '';
+          const checkOut = booking.checkOut || booking.check_out || '';
+          const property = booking.property || {};
+          const now = new Date();
+          const checkOutDate = checkOut ? new Date(checkOut) : now;
+          const rawStatus = booking.status || 'PENDING';
+          const status: BookingStatus = rawStatus === 'CANCELLED'
+            ? 'cancelled'
+            : checkOutDate < now || rawStatus === 'CHECKED_OUT'
+              ? 'completed'
+              : 'upcoming';
+
+          return {
+            id: booking.id,
+            property: {
+              id: property.id || booking.propertyId || booking.property_id || '',
+              title: property.title || t('dashboard.untitledProperty', 'Property'),
+              images: Array.isArray(property.images) && property.images.length > 0 ? property.images : ['/images/properties/property-1.jpg'],
+              location: property.location || t('dashboard.unknownLocation', 'Unknown location'),
+            },
+            checkIn,
+            checkOut,
+            guests: Number(booking.guests || 1),
+            totalPrice: Number(booking.totalPrice || booking.total_price || 0),
+            status,
+            createdAt: booking.createdAt || booking.created_at || '',
+          };
+        });
+        if (mounted) setBookings(normalized);
+      } catch {
+        if (mounted) setBookings([]);
+      } finally {
+        if (mounted) setBookingsLoading(false);
+      }
+    };
+
+    fetchBookings();
+    return () => {
+      mounted = false;
+    };
+  }, [t]);
+
+  const bookingStats = useMemo(() => ({
+    completed: bookings.filter((booking) => booking.status === 'completed').length,
+    upcoming: bookings.filter((booking) => booking.status === 'upcoming').length,
+  }), [bookings]);
 
   const tabs = [
     { id: "bookings", label: t('dashboard.tabs.bookings'), icon: Calendar },
@@ -70,7 +125,7 @@ function DashboardContent() {
 
   // 房源管理入口（仅对 Host 角色显示）
   const hostTabs = [
-    { id: "properties", label: t('dashboard.tabs.properties') || "我的房源", icon: Building2, href: "/dashboard/properties" },
+    { id: "properties", label: t('dashboard.tabs.properties'), icon: Building2, href: "/dashboard/properties" },
   ];
 
   const getStatusBadge = (status: string) => {
@@ -115,9 +170,9 @@ function DashboardContent() {
               />
               <div className="flex-1">
                 <h1 className="text-2xl font-bold text-gray-900 mb-1">
-                  {t('dashboard.welcome', { name: (user?.name?.split(" ").filter(n => n)[0]) || user?.email?.split("@")[0] || "User" })}
+                  {t('dashboard.welcome', { name: (user?.name?.split(" ").filter(n => n)[0]) || user?.email?.split("@")[0] || t('common.user', 'User') })}
                 </h1>
-                <p className="text-gray-500">{t('dashboard.memberSinceLabel', { date: 'January 2024' })}</p>
+                <p className="text-gray-500">{t('dashboard.memberSinceLabel', { date: t('common.monthYear.january2024', 'January 2024') })}</p>
               </div>
               <div className="flex gap-3">
                 <button
@@ -188,11 +243,11 @@ function DashboardContent() {
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">{t('dashboard.completedBookings')}</span>
-                    <span className="font-semibold">1</span>
+                    <span className="font-semibold">{bookingStats.completed}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">{t('dashboard.upcomingStays')}</span>
-                    <span className="font-semibold">1</span>
+                    <span className="font-semibold">{bookingStats.upcoming}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">{t('dashboard.favorites')}</span>
@@ -207,6 +262,9 @@ function DashboardContent() {
               {/* Bookings Tab */}
               {activeTab === "bookings" && (
                 <div className="space-y-4">
+                  {bookingsLoading && (
+                    <div className="bg-white rounded-xl p-8 text-center text-gray-500">{t('common.loading')}</div>
+                  )}
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold text-gray-900">{t('dashboard.myBookings')}</h2>
                     <Link
@@ -217,8 +275,8 @@ function DashboardContent() {
                     </Link>
                   </div>
 
-                  {mockBookings.length > 0 ? (
-                    mockBookings.map((booking) => (
+                  {!bookingsLoading && bookings.length > 0 ? (
+                    bookings.map((booking) => (
                       <div
                         key={booking.id}
                         className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow"
@@ -232,6 +290,7 @@ function DashboardContent() {
                               src={booking.property.images[0]}
                               alt={booking.property.title}
                               fill
+                              sizes="(max-width: 768px) 100vw, 192px"
                               className="object-cover"
                             />
                           </Link>
@@ -324,6 +383,7 @@ function DashboardContent() {
                               src={property.images[0]}
                               alt={property.title}
                               fill
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                               className="object-cover"
                             />
                             <div className="absolute top-3 right-3 p-2 rounded-full bg-white/90">
