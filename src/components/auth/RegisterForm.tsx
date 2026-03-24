@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useI18n } from '@/lib/i18n';
+import { ensureCsrfToken } from '@/lib/security/csrf-client';
 
 const USER_KEY = 'stayneos_user_data';
 
@@ -64,6 +65,7 @@ export function RegisterForm() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-csrf-token': ensureCsrfToken(),
         },
         body: JSON.stringify({
           firstName: firstName.trim(),

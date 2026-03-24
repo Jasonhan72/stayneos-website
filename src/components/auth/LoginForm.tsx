@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useI18n } from '@/lib/i18n';
+import { ensureCsrfToken } from '@/lib/security/csrf-client';
 
 interface LoginFormProps {
   callbackUrl?: string;
@@ -69,6 +70,7 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-csrf-token': ensureCsrfToken(),
         },
         body: JSON.stringify({
           email: email.trim(),

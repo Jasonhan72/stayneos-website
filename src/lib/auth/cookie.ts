@@ -12,7 +12,7 @@ function resolveCookieDomain(hostname?: string): string | undefined {
   return `.${baseHostname}`;
 }
 
-export function getAuthCookieOptions(request?: NextRequest) {
+export function getAuthCookieOptions(request?: Request | NextRequest) {
   if (!request) {
     return {
       domain: resolveCookieDomain(),
@@ -38,7 +38,7 @@ export function getAuthCookieOptions(request?: NextRequest) {
   };
 }
 
-export function getClearedAuthCookieOptions(request?: NextRequest) {
+export function getClearedAuthCookieOptions(request?: Request | NextRequest) {
   return {
     ...getAuthCookieOptions(request),
     maxAge: 0,

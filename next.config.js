@@ -1,12 +1,23 @@
 /** @type {import('next').NextConfig} */
+const csp = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "frame-ancestors 'none'",
+  "img-src 'self' data: blob: https:",
+  "font-src 'self' https: data:",
+  "style-src 'self' 'unsafe-inline' https:",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:",
+  "connect-src 'self' https:",
+  "object-src 'none'",
+  "form-action 'self'",
+].join('; ');
+
 const nextConfig = {
   experimental: {
     optimizePackageImports: ["lucide-react"],
   },
 
   images: {
-    // Cloudflare Pages uses static export; Next.js image optimization server is unavailable there.
-    // Keep unoptimized=true so next/image serves direct image URLs in production.
     unoptimized: true,
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com", port: "", pathname: "/**" },
@@ -44,7 +55,14 @@ const nextConfig = {
     },
     {
       source: "/:path*",
-      headers: [{ key: "Cache-Control", value: "public, s-maxage=300, stale-while-revalidate=600" }],
+      headers: [
+        { key: "Cache-Control", value: "public, s-maxage=300, stale-while-revalidate=600" },
+        { key: "Content-Security-Policy", value: csp },
+        { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        { key: "X-Content-Type-Options", value: "nosniff" },
+        { key: "X-Frame-Options", value: "DENY" },
+        { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+      ],
     },
   ],
 

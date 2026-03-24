@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { ensureCsrfToken } from '@/lib/security/csrf-client';
 import { useRouter } from 'next/navigation';
 
 const USER_KEY = 'stayneos_user_data';
@@ -74,6 +75,7 @@ export default function RegisterFormClient() {
           credentials: 'same-origin',
             headers: {
             'Content-Type': 'application/json',
+            'x-csrf-token': ensureCsrfToken(),
           },
           body: JSON.stringify({
             firstName,
