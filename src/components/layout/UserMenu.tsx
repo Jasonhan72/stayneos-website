@@ -21,7 +21,7 @@ interface UserMenuProps {
 }
 
 export function UserMenu({ variant = "light" }: UserMenuProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { user, logout, isLoading } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -64,6 +64,8 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
   }
 
   const isDarkStyle = variant === "dark" || variant === "transparent";
+  const userAlt = locale === "zh" ? "用户头像" : locale === "fr" ? "Avatar utilisateur" : "User avatar";
+  const defaultUserName = locale === "zh" ? "用户" : locale === "fr" ? "Utilisateur" : "User";
 
   // Not logged in state - Blueground style
   if (!user) {
@@ -198,7 +200,7 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
           <div className="w-9 h-9 rounded-full overflow-hidden bg-neutral-100">
             <Image
               src={user.avatar || user.image!}
-              alt={user.name || "User"}
+              alt={user.name || userAlt}
               width={36}
               height={36}
               className="w-full h-full object-cover"
@@ -209,7 +211,7 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
             "w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold",
             "bg-[#e3f2fd] text-[#1967d2]"
           )}>
-            {getInitials(user.name || user.email || "User")}
+            {getInitials(user.name || user.email || defaultUserName)}
           </div>
         )}
         {isOpen ? (

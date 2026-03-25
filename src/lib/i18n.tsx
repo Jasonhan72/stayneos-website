@@ -68,14 +68,21 @@ function getClientLocale(): Locale {
   }
   
   // Client-side: Check in order of priority
-  // Priority 1: Check preferred locale from localStorage (user's explicit choice)
+  // Priority 1: Check cookie to match SSR locale on the first hydrated render
+  const cookieLocale = getCookie(LOCALE_COOKIE_KEY);
+  if (cookieLocale === 'zh' || cookieLocale === 'en' || cookieLocale === 'fr') {
+    debugI18n('[i18n] Using cookie:', cookieLocale);
+    return cookieLocale;
+  }
+
+  // Priority 2: Check preferred locale from localStorage
   const stored = localStorage.getItem(PREFERRED_LOCALE_KEY);
   if (stored === 'zh' || stored === 'en' || stored === 'fr') {
     debugI18n('[i18n] Using preferred-locale:', stored);
     return stored;
   }
   
-  // Priority 2: Check user preferences from localStorage
+  // Priority 3: Check user preferences from localStorage
   try {
     const userData = localStorage.getItem(USER_KEY);
     if (userData) {
@@ -89,13 +96,6 @@ function getClientLocale(): Locale {
       }
     }
   } catch {}
-  
-  // Priority 3: Check cookie
-  const cookieLocale = getCookie(LOCALE_COOKIE_KEY);
-  if (cookieLocale === 'zh' || cookieLocale === 'en' || cookieLocale === 'fr') {
-    debugI18n('[i18n] Using cookie:', cookieLocale);
-    return cookieLocale;
-  }
   
   // Default to English (do NOT use browser language to avoid unexpected language switches)
   debugI18n('[i18n] Defaulting to en');
@@ -116,7 +116,13 @@ export function I18nProvider({ children, initialLocale = 'en' }: { children: Rea
     }
     setIsHydrated(true);
     setIsLoading(false);
-  }, [locale]); // eslint需要locale依赖
+  }, [locale]);
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = locale === 'zh' ? 'zh-CN' : locale === 'fr' ? 'fr-CA' : 'en';
+    }
+  }, [locale]);
 
   // Listen for locale changes from other components
   useEffect(() => {

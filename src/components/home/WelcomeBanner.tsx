@@ -14,13 +14,19 @@ interface WelcomeBannerProps {
 
 export function WelcomeBanner({ className }: WelcomeBannerProps) {
   const { user, isAuthenticated, isLoading } = useAuth();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   if (isLoading || !isAuthenticated || !user) {
     return null;
   }
 
   const firstName = user.name?.split(" ").filter(n => n)[0] || user.email?.split("@")[0] || t("common.there");
+  const localizedSubtagline =
+    locale === "zh"
+      ? "体验灵活的租住方式，找到属于您的理想居所"
+      : locale === "fr"
+        ? "Profitez d'une location flexible et trouvez un chez-vous qui vous ressemble"
+        : "Experience flexible stays and find the home that fits you";
 
   return (
     <section 
@@ -58,7 +64,7 @@ export function WelcomeBanner({ className }: WelcomeBannerProps) {
               </h1>
               <p className="text-white/80 text-sm md:text-base max-w-md">
                 {t("welcome.tagline", "Feel at home, free to roam")}
-                <span className="hidden md:inline"> — 体验灵活的租住方式，找到属于您的理想居所</span>
+                <span className="hidden md:inline"> {" - "}{localizedSubtagline}</span>
               </p>
             </div>
           </div>

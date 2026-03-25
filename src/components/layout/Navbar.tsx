@@ -19,7 +19,10 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, isAuthenticated } = useAuth();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const userAlt = locale === "zh" ? "用户头像" : locale === "fr" ? "Avatar utilisateur" : "User avatar";
+  const openMenuLabel = locale === "zh" ? "打开菜单" : locale === "fr" ? "Ouvrir le menu" : "Open menu";
+  const defaultInitial = locale === "zh" ? "用" : locale === "fr" ? "U" : "U";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -119,7 +122,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
                     <div className="w-9 h-9 rounded-full overflow-hidden bg-neutral-100">
                       <Image
                         src={user.avatar || user.image!}
-                        alt={user.name || "User"}
+                        alt={user.name || userAlt}
                         width={36}
                         height={36}
                         className="w-full h-full object-cover"
@@ -132,12 +135,12 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
                         const email = user?.email || "";
                         if (name) {
                           const initials = name.split(" ").filter(n => n).map(n => n[0]).join("").toUpperCase();
-                          return initials.slice(0, 2) || "U";
+                          return initials.slice(0, 2) || defaultInitial;
                         }
                         if (email) {
                           return email.substring(0, 2).toUpperCase();
                         }
-                        return "U";
+                        return defaultInitial;
                       })()}
                     </div>
                   )}
@@ -151,7 +154,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
                     "hover:bg-neutral-100 focus:outline-none",
                     textStyles[currentVariant]
                   )}
-                  aria-label="Open menu"
+                  aria-label={openMenuLabel}
                 >
                   <Menu className="w-6 h-6" />
                 </button>

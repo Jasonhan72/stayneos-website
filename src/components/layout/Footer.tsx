@@ -25,7 +25,7 @@ export default function Footer() {
     support: [
       { label: t("footer.marketInsights") || "Market Insights", href: "/market-insights" },
       { label: t("footer.help") || "Help Center", href: "/help" },
-      { label: "FAQ", href: "/faq" },
+      { label: t("footer.faq") || "FAQ", href: "/faq" },
       { label: t("footer.privacy") || "Privacy", href: "/privacy" },
       { label: t("footer.terms") || "Terms", href: "/terms" },
     ],

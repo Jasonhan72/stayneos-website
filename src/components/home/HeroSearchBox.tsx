@@ -18,6 +18,8 @@ export function HeroSearchBox() {
   const [checkOut, setCheckOut] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const { t, locale } = useI18n();
+  const nightsLabel = t('booking.nights');
+  const addDatesLabel = t('booking.addDates');
 
   const formatDate = (dateStr: string) => {
     if (!dateStr) {
@@ -67,8 +69,8 @@ export function HeroSearchBox() {
                   ? `${Math.ceil(
                       (new Date(checkOut).getTime() - new Date(checkIn).getTime()) /
                         (1000 * 60 * 60 * 24)
-                    )} nights`
-                  : 'Add dates'}
+                    )} ${nightsLabel}`
+                  : addDatesLabel}
               </div>
             </div>
           </div>

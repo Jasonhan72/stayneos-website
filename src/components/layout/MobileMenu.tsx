@@ -40,6 +40,8 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   ];
   
   const selectedLang = languages.find(l => l.code === locale) || languages[0];
+  const userAlt = locale === "zh" ? "用户头像" : locale === "fr" ? "Avatar utilisateur" : "User avatar";
+  const defaultInitial = locale === "zh" ? "用" : locale === "fr" ? "U" : "U";
 
   // Prevent body scroll when menu is open
   useEffect(() => {
@@ -222,7 +224,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   <div className="w-12 h-12 rounded-full overflow-hidden bg-neutral-100">
                     <Image
                       src={user.avatar || user.image!}
-                      alt={user.name || "User"}
+                      alt={user.name || userAlt}
                       width={48}
                       height={48}
                       className="w-full h-full object-cover"
@@ -232,7 +234,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold text-lg">
                     {(() => {
                       const name = user?.name || "";
-                      if (!name) return "U";
+                      if (!name) return defaultInitial;
                       return name.split(" ").filter(n => n).map(n => n[0]).join("").toUpperCase().slice(0, 2);
                     })()}
                   </div>

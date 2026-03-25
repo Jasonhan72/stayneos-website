@@ -83,9 +83,9 @@ const featuredProperties: FeaturedProperty[] = [
 ];
 
 function getPricingLabels(locale: string) {
-  if (locale === 'zh') return { monthly: '月价', quarterly: '季价', annual: '年价', reviews: '条评价', perMonth: '/月' };
+  if (locale === 'zh') return { monthly: '月租', quarterly: '季度价', annual: '年租价', reviews: '条评价', perMonth: '/月' };
   if (locale === 'fr') return { monthly: 'Mensuel', quarterly: 'Trimestriel', annual: 'Annuel', reviews: 'avis', perMonth: '/mois' };
-  return { monthly: 'Monthly', quarterly: 'Quarterly', annual: 'Annual', reviews: 'reviews', perMonth: '/Mo' };
+  return { monthly: 'Monthly', quarterly: 'Quarterly', annual: 'Annual', reviews: 'reviews', perMonth: '/month' };
 }
 
 function PricingRows({ property, locale }: { property: FeaturedProperty; locale: string }) {
