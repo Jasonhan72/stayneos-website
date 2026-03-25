@@ -19,7 +19,7 @@ export default function Footer() {
     services: [
       { label: t("footer.properties") || "Properties", href: "/properties" },
       { label: t("footer.corporate"), href: "/for-business" },
-      { label: t("footer.academicProfessionals") || "For Academic & Medical Professionals", href: "/for-students" },
+      { label: "Medical & Academic Stays", href: "/for-students" },
       { label: t("footer.longTerm") || "Long-term", href: "/long-term" },
     ],
     support: [
@@ -88,7 +88,7 @@ export default function Footer() {
                   <div className="w-10 h-10 rounded-lg bg-primary-700/50 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                     <MapPin className="w-5 h-5" />
                   </div>
-                  <span>20 Upjohn Rd, North York, ON, M3B 2V9</span>
+                  <span>Corporate Office: 20 Upjohn Rd, North York, ON, M3B 2V9</span>
                 </a>
               </div>
             </div>
@@ -151,7 +151,7 @@ export default function Footer() {
           <div className="py-5 md:py-6 flex flex-col gap-4">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <p className="text-sm text-primary-200 text-center sm:text-left">
-                {t("footer.copyright", { year: currentYear })}
+                {`© ${currentYear} NEOS. All rights reserved.`}
               </p>
               
               {/* Social Links */}
@@ -168,7 +168,9 @@ export default function Footer() {
                 ))}
               </div>
             </div>
-            <p className="text-xs text-primary-200 text-center">{t('footer.trustSignalsLine')}</p>
+            <p className="text-xs text-primary-200 text-center">
+              Owner-operated · Fully insured · Corporate invoicing available · All properties in concierge-serviced buildings
+            </p>
           </div>
         </div>
       </div>

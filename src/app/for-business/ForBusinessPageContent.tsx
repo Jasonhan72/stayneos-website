@@ -121,9 +121,9 @@ export default function ForBusinessPageContent() {
     {
       key: "cost",
       icon: TrendingDown,
-      title: t("business.advantages.cost.title", "Cost Savings"),
-      description: t("business.advantages.cost.description", "Save 30-40% compared to hotels for extended stays. All-inclusive pricing with no hidden fees."),
-      stat: t("business.advantages.cost.stat", "Up to 40% savings")
+      title: t("business.advantages.cost.title", "Transparent Pricing"),
+      description: t("business.advantages.cost.description", "Clear, all-inclusive pricing built for extended stays and straightforward budgeting."),
+      stat: t("business.advantages.cost.stat", "No hidden fees")
     },
     {
       key: "manager",
@@ -143,28 +143,25 @@ export default function ForBusinessPageContent() {
 
   const caseStudies = [
     {
-      company: t("business.cases.tech.company", "Tech Startup"),
-      label: t("business.cases.label", "Typical Scenario"),
-      challenge: t("business.cases.tech.challenge", "Needed 15 units for 6-month project team relocation to Toronto"),
-      solution: t("business.cases.tech.solution", "Provided furnished apartments in downtown core with meeting spaces"),
-      result: t("business.cases.tech.result", "Saved $180,000 compared to hotels while improving team productivity"),
-      savings: "60%"
+      company: t("business.cases.projectTeam.company", "Project Team Housing"),
+      label: "🏢",
+      challenge: t("business.cases.projectTeam.challenge", "Furnished apartments for teams on 3-12 month assignments."),
+      solution: t("business.cases.projectTeam.solution", "Centralized billing and flexible headcount support for changing team sizes."),
+      result: t("business.cases.projectTeam.result", "A reliable setup for project teams that need consistent housing and one point of coordination.")
     },
     {
-      company: t("business.cases.consulting.company", "Consulting Firm"),
-      label: t("business.cases.label", "Typical Scenario"),
-      challenge: t("business.cases.consulting.challenge", "Executive travel program with unpredictable durations"),
-      solution: t("business.cases.consulting.solution", "Flexible booking system with premium downtown suites"),
-      result: t("business.cases.consulting.result", "Reduced accommodation costs by 35% with improved executive satisfaction"),
-      savings: "35%"
+      company: t("business.cases.executive.company", "Executive Relocation"),
+      label: "✈️",
+      challenge: t("business.cases.executive.challenge", "Move-in ready homes for executives and families transitioning to Toronto."),
+      solution: t("business.cases.executive.solution", "Local orientation and handoff support to simplify arrival and settling in."),
+      result: t("business.cases.executive.result", "A smoother relocation experience with consistent standards across every stay.")
     },
     {
-      company: t("business.cases.manufacturing.company", "Manufacturing Corp"),
-      label: t("business.cases.label", "Typical Scenario"),
-      challenge: t("business.cases.manufacturing.challenge", "Employee relocation program for new Toronto office"),
-      solution: t("business.cases.manufacturing.solution", "Staged move-in process with temporary housing for 50+ employees"),
-      result: t("business.cases.manufacturing.result", "Smooth transition with 95% employee satisfaction rating"),
-      savings: "45%"
+      company: t("business.cases.insurance.company", "Insurance & Emergency Housing"),
+      label: "🛡️",
+      challenge: t("business.cases.insurance.challenge", "Immediate-availability units for insurance claims, renovation displacement, and urgent corporate needs."),
+      solution: t("business.cases.insurance.solution", "Fast placement into furnished homes with responsive coordination from our team."),
+      result: t("business.cases.insurance.result", "Rapid-response housing that works when timing, flexibility, and reliability matter most.")
     }
   ];
 
@@ -320,29 +317,26 @@ export default function ForBusinessPageContent() {
         </Container>
       </Section>
 
-      {/* Case Studies Section */}
+      {/* Typical Scenarios Section */}
       <Section className="py-20 bg-blue-50">
         <Container>
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              {t("business.cases.title", "Success Stories")}
+              {t("business.cases.title", "Typical Service Scenarios")}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {t("business.cases.subtitle", "See how leading companies have transformed their accommodation strategies with NEOS.")}
+              {t("business.cases.subtitle", "Examples of the business housing needs we support most often.")}
             </p>
           </div>
           
           <div className="grid lg:grid-cols-3 gap-8">
             {caseStudies.map((study, index) => (
               <div key={index} className="bg-white p-8 shadow-lg hover:shadow-xl transition-shadow duration-200">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-2xl" aria-hidden="true">{study.label}</span>
                   <h3 className="text-xl font-bold text-gray-900"><span>{study.company}</span></h3>
-                  <span className="bg-green-100 text-green-800 px-3 py-1 text-sm font-bold">
-                    {study.savings} {t("business.cases.saved", "saved")}
-                  </span>
                 </div>
                 
-                <p className="text-xs uppercase tracking-wide text-blue-700 font-semibold mb-3">{study.label || t("business.cases.typical", "Typical Scenario")}</p>
                 <div className="space-y-4">
                   <div>
                     <h4 className="font-semibold text-gray-700 mb-1">{t("business.cases.challengeLabel", "Challenge:")}</h4>
@@ -355,7 +349,6 @@ export default function ForBusinessPageContent() {
                   </div>
                   
                   <div className="border-t pt-4">
-                    <h4 className="font-semibold text-blue-600 mb-1">{t("business.cases.resultLabel", "Result:")}</h4>
                     <p className="text-sm text-gray-900 font-medium">{study.result}</p>
                   </div>
                 </div>
@@ -408,8 +401,8 @@ export default function ForBusinessPageContent() {
               <div className="text-blue-100">{t("business.stats.stays", "Flexible Portfolio") }</div>
             </div>
             <div>
-              <div className="text-4xl md:text-5xl font-bold mb-2">30-40%</div>
-              <div className="text-blue-100">{t("business.stats.savings", "Average Savings vs Hotels")}</div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">Clear</div>
+              <div className="text-blue-100">{t("business.stats.savings", "Transparent Pricing")}</div>
             </div>
             <div>
               <div className="text-4xl md:text-5xl font-bold mb-2">24/7</div>

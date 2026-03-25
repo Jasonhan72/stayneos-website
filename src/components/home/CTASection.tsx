@@ -6,9 +6,20 @@ import { useI18n } from '@/lib/i18n';
 
 export function CTASection() {
   const { t } = useI18n();
+  const trustItems = [
+    '$2M Commercial Liability Insurance',
+    'All properties in concierge buildings',
+    'Licensed Ontario brokerage',
+  ];
+
   return (
     <section className="py-24 bg-primary">
       <Container>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-10 text-center text-sm text-white/70">
+          {trustItems.map((item) => (
+            <p key={item}>{`✓ ${item}`}</p>
+          ))}
+        </div>
         <div className="text-center max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
             {t('cta.title', 'Ready for a better extended stay in Toronto?')}

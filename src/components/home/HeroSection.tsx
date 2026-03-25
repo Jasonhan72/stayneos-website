@@ -13,9 +13,9 @@ export function HeroSection() {
     highlight: t('hero.highlight', 'Arrive today. Feel at home tonight.'),
     subtitle: t('hero.subtitle', 'Premium furnished apartments in downtown Toronto. 30 days to 12 months. Move-in ready.'),
     stats: [
-      { value: '2+', label: t('hero.stats.residences', 'Luxury residences') },
-      { value: '100%', label: t('hero.stats.managed', 'Fully managed stays') },
-      { value: '24/7', label: t('hero.stats.support', 'Guest support') },
+      t('hero.stats.flexible', '30+ Day Flexible Stays'),
+      t('hero.stats.fees', '$0 Hidden Fees'),
+      t('hero.stats.support', '24/7 Guest Support'),
     ],
   };
 
@@ -48,9 +48,8 @@ export function HeroSection() {
 
           <div className="flex flex-wrap justify-center gap-8 mt-12 text-white">
             {heroCopy.stats.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-3xl font-bold">{stat.value}</div>
-                <div className="text-sm text-white/80">{stat.label}</div>
+              <div key={stat} className="text-center">
+                <div className="text-lg md:text-xl font-semibold text-white/90">{stat}</div>
               </div>
             ))}
           </div>

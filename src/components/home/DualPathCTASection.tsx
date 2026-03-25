@@ -10,8 +10,8 @@ export function DualPathCTASection() {
 
   const paths = [
     {
-      title: t('dualPath.browse.title', 'Browse premium furnished apartments'),
-      description: t('dualPath.browse.description', 'Explore move-in ready residences designed for executives, families, and longer stays in Toronto.'),
+      title: t('dualPath.browse.title', 'A curated collection'),
+      description: t('dualPath.browse.description', "Hand-picked, move-in ready homes in Toronto's finest buildings. Each residence is owner-operated and personally vetted by our team."),
       href: '/properties',
       cta: t('dualPath.browse.cta', 'View available homes'),
     },

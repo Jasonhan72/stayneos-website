@@ -20,8 +20,8 @@ export function ValuePropositionSection() {
     },
     {
       image: '/images/cooper-55-a12c07ee.jpg',
-      title: t('valueProposition.concierge.title', 'Concierge-level service'),
-      description: t('valueProposition.concierge.description', 'Utilities, housekeeping, and guest care are handled so every stay feels seamless from day one.'),
+      title: t('valueProposition.owner.title', 'Owner-Operated'),
+      description: t('valueProposition.owner.description', "We don't just list properties — we own and manage every home in our collection. No middlemen, no surprises."),
     },
     {
       image: '/images/cooper-55-e62f3e96.jpg',
