@@ -103,7 +103,7 @@ export function PropertiesList() {
   // const router = useRouter();
   const [properties, setProperties] = useState<Property[]>(initialProperties);
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<PropertyStatus | "all">("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "listed" | "unlisted">("all");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [propertyToDelete, setPropertyToDelete] = useState<Property | null>(null);
   const [togglingIds, setTogglingIds] = useState<Set<string>>(new Set());
@@ -146,28 +146,12 @@ export function PropertiesList() {
       prop.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
       prop.city.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesStatus = statusFilter === "all" || prop.status === statusFilter;
+    const matchesStatus = statusFilter === "all" 
+      || (statusFilter === "listed" && prop.status === "published")
+      || (statusFilter === "unlisted" && prop.status !== "published");
     
     return matchesSearch && matchesStatus;
   });
-
-  // 获取状态显示
-  const getStatusBadge = (status: PropertyStatus) => {
-    const statusConfig = {
-      draft: { label: t("property.status.draft"), className: "bg-gray-100 text-gray-700" },
-      pending_review: { label: t("property.status.pending"), className: "bg-yellow-100 text-yellow-700" },
-      published: { label: t("property.status.published"), className: "bg-green-100 text-green-700" },
-      paused: { label: t("property.status.paused"), className: "bg-orange-100 text-orange-700" },
-      archived: { label: t("property.status.archived"), className: "bg-red-100 text-red-700" },
-    };
-    
-    const config = statusConfig[status];
-    return (
-      <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${config.className}`}>
-        {config.label}
-      </span>
-    );
-  };
 
   // 处理删除
   const handleDeleteClick = (property: Property) => {
@@ -205,15 +189,12 @@ export function PropertiesList() {
             <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as PropertyStatus | "all")}
+              onChange={(e) => setStatusFilter(e.target.value as "all" | "listed" | "unlisted")}
               className="pl-10 pr-8 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent appearance-none bg-white cursor-pointer"
             >
-              <option value="all">{t("property.filter.all")}</option>
-              <option value="published">{t("property.status.published")}</option>
-              <option value="draft">{t("property.status.draft")}</option>
-              <option value="pending_review">{t("property.status.pending")}</option>
-              <option value="paused">{t("property.status.paused")}</option>
-              <option value="archived">{t("property.status.archived")}</option>
+              <option value="all">{t("property.filter.all", "All")}</option>
+              <option value="listed">Listed</option>
+              <option value="unlisted">Unlisted</option>
             </select>
           </div>
         </div>
@@ -262,9 +243,6 @@ export function PropertiesList() {
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {t("property.table.price")}
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {t("property.table.status")}
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Listing
@@ -329,9 +307,6 @@ export function PropertiesList() {
                         {property.basePrice}
                         <span className="text-sm text-gray-500 font-normal">/{t("common.month")}</span>
                       </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      {getStatusBadge(property.status)}
                     </td>
                     <td className="px-6 py-4">
                       <ListingToggle
@@ -414,9 +389,6 @@ export function PropertiesList() {
                         {property.basePrice}
                         <span className="text-xs text-gray-500 font-normal">/{t("common.month")}</span>
                       </div>
-                      {getStatusBadge(property.status)}
-                    </div>
-                    <div className="mt-3">
                       <ListingToggle
                         isListed={property.status === "published"}
                         isLoading={togglingIds.has(property.id)}

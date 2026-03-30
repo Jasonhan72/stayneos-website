@@ -5,7 +5,6 @@ import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   DEFAULT_PROPERTY_FORM,
-  PROPERTY_STATUS_OPTIONS,
   PROPERTY_TYPE_OPTIONS,
   PropertyFormState,
   normalizePropertyInput,
@@ -348,15 +347,29 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
           <Field label="法文标题">
             <input className={inputClassName} value={form.titleFr} onChange={(event) => updateField('titleFr', event.target.value)} />
           </Field>
-          <Field label="状态">
-            <select className={inputClassName} value={form.status} onChange={(event) => updateField('status', event.target.value as PropertyFormState['status'])}>
-              {PROPERTY_STATUS_OPTIONS.map((status) => (
-                <option key={status} value={status}>
-                  {status}
-                </option>
-              ))}
-            </select>
-          </Field>
+          <div className="block">
+            <span className={labelClassName}>房源状态</span>
+            <div className="flex items-center gap-3 mt-2">
+              <button
+                type="button"
+                onClick={() => updateField('status', form.status === 'PUBLISHED' ? 'PAUSED' : 'PUBLISHED')}
+                className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 cursor-pointer ${
+                  form.status === 'PUBLISHED' ? 'bg-green-500' : 'bg-gray-300'
+                }`}
+                role="switch"
+                aria-checked={form.status === 'PUBLISHED'}
+              >
+                <span
+                  className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform duration-200 ease-in-out shadow-sm ${
+                    form.status === 'PUBLISHED' ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+              <span className={`text-sm font-medium ${form.status === 'PUBLISHED' ? 'text-green-700' : 'text-gray-500'}`}>
+                {form.status === 'PUBLISHED' ? 'Listed（已发布，对租客可见）' : 'Unlisted（已下架，对租客不可见）'}
+              </span>
+            </div>
+          </div>
           <Field label="房源类型">
             <select
               className={inputClassName}
