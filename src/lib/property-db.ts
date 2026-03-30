@@ -1,6 +1,6 @@
 import { getDb } from '@/lib/d1';
 
-export type PropertyStatus = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+export type PropertyStatus = 'DRAFT' | 'PUBLISHED' | 'PAUSED' | 'ARCHIVED';
 
 export interface PropertyRecord {
   id: string;

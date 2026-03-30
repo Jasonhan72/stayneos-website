@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
@@ -18,8 +18,49 @@ import {
   Users,
   DollarSign,
   Image as ImageIcon,
-  AlertCircle
+  AlertCircle,
+  Loader2
 } from "lucide-react";
+
+// Toggle Switch 组件
+function ListingToggle({ 
+  isListed, 
+  isLoading, 
+  onToggle 
+}: { 
+  isListed: boolean; 
+  isLoading: boolean; 
+  onToggle: () => void;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      <button
+        onClick={onToggle}
+        disabled={isLoading}
+        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+          isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+        } ${isListed ? 'bg-green-500' : 'bg-gray-300'}`}
+        role="switch"
+        aria-checked={isListed}
+        aria-label={isListed ? 'Listed' : 'Unlisted'}
+      >
+        <span
+          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ease-in-out shadow-sm ${
+            isListed ? 'translate-x-6' : 'translate-x-1'
+          }`}
+        />
+        {isLoading && (
+          <span className="absolute inset-0 flex items-center justify-center">
+            <Loader2 className="w-3 h-3 animate-spin text-white" />
+          </span>
+        )}
+      </button>
+      <span className={`text-xs font-medium ${isListed ? 'text-green-700' : 'text-gray-500'}`}>
+        {isListed ? 'Listed' : 'Unlisted'}
+      </span>
+    </div>
+  );
+}
 
 // 房源状态类型
 type PropertyStatus = "draft" | "pending_review" | "published" | "paused" | "archived";
@@ -65,6 +106,38 @@ export function PropertiesList() {
   const [statusFilter, setStatusFilter] = useState<PropertyStatus | "all">("all");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [propertyToDelete, setPropertyToDelete] = useState<Property | null>(null);
+  const [togglingIds, setTogglingIds] = useState<Set<string>>(new Set());
+
+  // 切换房源 Listed/Unlisted 状态
+  const handleToggleListing = useCallback(async (property: Property) => {
+    const newStatus = property.status === "published" ? "paused" : "published";
+    
+    setTogglingIds(prev => new Set(prev).add(property.id));
+    
+    try {
+      const res = await fetch(`/api/properties/${property.id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus === "published" ? "PUBLISHED" : "PAUSED" }),
+      });
+
+      if (res.ok) {
+        setProperties(prev => 
+          prev.map(p => p.id === property.id ? { ...p, status: newStatus as PropertyStatus } : p)
+        );
+      } else {
+        console.error('Failed to toggle listing status');
+      }
+    } catch (error) {
+      console.error('Error toggling listing status:', error);
+    } finally {
+      setTogglingIds(prev => {
+        const next = new Set(prev);
+        next.delete(property.id);
+        return next;
+      });
+    }
+  }, []);
 
   // 过滤房源
   const filteredProperties = properties.filter((prop) => {
@@ -193,6 +266,9 @@ export function PropertiesList() {
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {t("property.table.status")}
                   </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Listing
+                  </th>
                   <th className="px-6 py-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {t("common.actions")}
                   </th>
@@ -256,6 +332,13 @@ export function PropertiesList() {
                     </td>
                     <td className="px-6 py-4">
                       {getStatusBadge(property.status)}
+                    </td>
+                    <td className="px-6 py-4">
+                      <ListingToggle
+                        isListed={property.status === "published"}
+                        isLoading={togglingIds.has(property.id)}
+                        onToggle={() => handleToggleListing(property)}
+                      />
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-2">
@@ -332,6 +415,13 @@ export function PropertiesList() {
                         <span className="text-xs text-gray-500 font-normal">/{t("common.month")}</span>
                       </div>
                       {getStatusBadge(property.status)}
+                    </div>
+                    <div className="mt-3">
+                      <ListingToggle
+                        isListed={property.status === "published"}
+                        isLoading={togglingIds.has(property.id)}
+                        onToggle={() => handleToggleListing(property)}
+                      />
                     </div>
                   </div>
                 </div>
