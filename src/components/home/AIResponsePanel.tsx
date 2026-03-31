@@ -143,7 +143,7 @@ export function AIResponsePanel({ state, response, visible }: AIResponsePanelPro
                     </p>
                     <div className="flex gap-3">
                       <Link
-                        href={`/properties/${recommended.id}`}
+                        href={`/property/${recommended.id}`}
                         className="px-5 py-2.5 bg-accent hover:bg-accent/90 text-white font-semibold rounded-lg transition-colors text-sm"
                       >
                         {t('aiConcierge.scheduleViewing', 'Schedule a Viewing')}

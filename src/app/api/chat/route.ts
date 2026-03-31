@@ -156,47 +156,45 @@ function needsWebSearch(query: string): boolean {
   return searchKeywords.some(keyword => lowerQuery.includes(keyword));
 }
 
-// Call web search API
+// Direct web search (shared lib, no HTTP round-trip)
+import { performWebSearch } from '@/lib/web-search';
+
 async function callWebSearch(query: string): Promise<string> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    const webSearchUrl = `${baseUrl}/api/web-search`;
-    
-    const response = await fetch(webSearchUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query, maxResults: 3 }),
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Web search API returned ${response.status}`);
-    }
-    
-    const data = await response.json();
-    
-    if (!data.results || data.results.length === 0) {
-      return 'No relevant web search results found.';
-    }
-    
-    // Format search results for the AI
-    let formattedResults = 'Web search results:\n\n';
-    data.results.forEach((result: { title: string; content: string; url: string; source: string }, index: number) => {
-      formattedResults += `${index + 1}. **${result.title}** (Source: ${result.source})\n`;
-      formattedResults += `   URL: ${result.url}\n`;
-      formattedResults += `   Content: ${result.content.substring(0, 300)}${result.content.length > 300 ? '...' : ''}\n\n`;
-    });
-    
-    return formattedResults;
+    return await performWebSearch(query, 3);
   } catch (error) {
     console.error('Web search error:', error);
     return 'Unable to fetch web search results at this time.';
   }
 }
 
+// Simple IP-based rate limit for public chat (20 req/min)
+const chatRateLimit = new Map<string, { count: number; resetAt: number }>();
+
+function checkChatRateLimit(request: NextRequest): boolean {
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+    || request.headers.get('x-real-ip') || 'unknown';
+  const now = Date.now();
+  const existing = chatRateLimit.get(ip);
+
+  if (!existing || existing.resetAt <= now) {
+    chatRateLimit.set(ip, { count: 1, resetAt: now + 60_000 });
+    return true;
+  }
+  if (existing.count >= 20) return false;
+  existing.count++;
+  return true;
+}
+
 export async function POST(request: NextRequest) {
   try {
+    if (!checkChatRateLimit(request)) {
+      return NextResponse.json(
+        { error: 'Too many messages. Please wait a moment.' },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     const { message, sessionId: providedSessionId } = body;
 

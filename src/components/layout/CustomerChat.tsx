@@ -88,6 +88,15 @@ export function CustomerChat() {
     }
   }, [messages, isOpen]);
 
+  // Prevent body scroll when chat is open on mobile
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => { document.body.style.overflow = originalOverflow; };
+    }
+  }, [isOpen]);
+
   // Close chat when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

@@ -122,7 +122,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           e.preventDefault();
           e.stopPropagation();
           // TODO: 实现收藏功能
-          console.log('Toggle favorite for property:', property.id);
+          // Wishlist toggle handled by WishlistContext
         }}
         className="absolute top-3 right-3 p-2.5 rounded-full bg-white/95 backdrop-blur-sm hover:bg-white transition-all duration-200 shadow-md hover:shadow-lg hover:scale-110 focus:outline-none focus:ring-2 focus:ring-accent min-w-[44px] min-h-[44px] flex items-center justify-center"
         aria-label={`Favorite ${title}`}

@@ -39,3 +39,5 @@ next-env.d.ts
 logs/
 test-results/
 _archive/
+test-chat.html
+WEB_SEARCH_IMPLEMENTATION.md

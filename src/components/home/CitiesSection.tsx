@@ -13,7 +13,7 @@ export function CitiesSection() {
 
   const handleNotify = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('City expansion interest:', email);
+    // TODO: send to backend API for city expansion waitlist
     setEmail('');
   };
 

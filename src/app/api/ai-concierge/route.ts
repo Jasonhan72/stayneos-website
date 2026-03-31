@@ -82,8 +82,33 @@ const FALLBACK_RESPONSES = {
   },
 };
 
+// IP-based rate limit for public concierge (10 req/min)
+const conciergeRateLimit = new Map<string, { count: number; resetAt: number }>();
+
+function checkConciergeRateLimit(request: NextRequest): boolean {
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+    || request.headers.get('x-real-ip') || 'unknown';
+  const now = Date.now();
+  const existing = conciergeRateLimit.get(ip);
+
+  if (!existing || existing.resetAt <= now) {
+    conciergeRateLimit.set(ip, { count: 1, resetAt: now + 60_000 });
+    return true;
+  }
+  if (existing.count >= 10) return false;
+  existing.count++;
+  return true;
+}
+
 export async function POST(request: NextRequest) {
   try {
+    if (!checkConciergeRateLimit(request)) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please wait a moment.' },
+        { status: 429 }
+      );
+    }
+
     const body: ConciergeRequest = await request.json();
 
     if (!body.message || typeof body.message !== 'string') {
