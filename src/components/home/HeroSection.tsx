@@ -30,7 +30,7 @@ export function HeroSection() {
 
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
+      const timeout = setTimeout(() => controller.abort(), 18000);
 
       const res = await fetch('/api/ai-concierge', {
         method: 'POST',

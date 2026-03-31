@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getDb } from '@/lib/d1';
 
 // Type definitions for Cloudflare Workers AI
 interface CloudflareEnv {
@@ -156,6 +157,37 @@ function needsWebSearch(query: string): boolean {
   return searchKeywords.some(keyword => lowerQuery.includes(keyword));
 }
 
+// Fetch live property data from D1
+async function getPropertyContext(): Promise<string> {
+  try {
+    const db = getDb();
+    const result = await db
+      .prepare("SELECT id, title, slug, address, city, neighborhood, priceMonthly, bedrooms, bathrooms, description, status FROM Property WHERE status = 'PUBLISHED' ORDER BY priceMonthly DESC")
+      .all();
+
+    if (!result.results || result.results.length === 0) {
+      return '(No properties currently available in the database)';
+    }
+
+    let context = 'LIVE PROPERTY DATA (from database):\n\n';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (result.results as any[]).forEach((p: any, i: number) => {
+      context += `${i + 1}. ID: ${p.id} — ${p.title}\n`;
+      context += `   Address: ${p.address}, ${p.city}\n`;
+      if (p.neighborhood) context += `   Neighborhood: ${p.neighborhood}\n`;
+      context += `   Bedrooms: ${p.bedrooms}, Bathrooms: ${p.bathrooms}\n`;
+      context += `   Monthly Price: $${p.priceMonthly}\n`;
+      if (p.description) context += `   Description: ${String(p.description).substring(0, 200)}\n`;
+      context += `   Status: ${p.status}\n\n`;
+    });
+
+    return context;
+  } catch (error) {
+    console.error('Failed to fetch property context:', error);
+    return '(Property database temporarily unavailable — use the hardcoded property info in your system prompt)';
+  }
+}
+
 // Direct web search (shared lib, no HTTP round-trip)
 import { performWebSearch } from '@/lib/web-search';
 
@@ -196,7 +228,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { message, sessionId: providedSessionId } = body;
+    const { message, sessionId: providedSessionId, history } = body;
 
     if (!message || typeof message !== 'string') {
       return NextResponse.json(
@@ -223,11 +255,14 @@ export async function POST(request: NextRequest) {
       webSearchResults = await callWebSearch(message);
     }
     
+    // Fetch live property data from database
+    const propertyContext = await getPropertyContext();
+
     // Prepare messages for AI
     const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
       {
         role: 'system' as const,
-        content: SYSTEM_PROMPT
+        content: SYSTEM_PROMPT + '\n\n' + propertyContext
       }
     ];
     
@@ -239,7 +274,19 @@ export async function POST(request: NextRequest) {
       });
     }
     
-    // Add user message
+    // Add conversation history (last 10 messages for context)
+    if (Array.isArray(history) && history.length > 0) {
+      const recentHistory = history.slice(-10);
+      for (const msg of recentHistory) {
+        if (msg.sender === 'user' && msg.text) {
+          messages.push({ role: 'user' as const, content: msg.text });
+        } else if (msg.sender === 'bot' && msg.text && msg.id !== 'welcome') {
+          messages.push({ role: 'assistant' as const, content: msg.text });
+        }
+      }
+    }
+
+    // Add current user message
     messages.push({
       role: 'user' as const,
       content: message.trim()
@@ -248,13 +295,13 @@ export async function POST(request: NextRequest) {
     // Call Cloudflare Workers AI
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
       
       // Access Cloudflare Workers AI binding
       const ai = getAI();
       const aiResponse = await ai.run(model, {
         messages,
-        max_tokens: 256,
+        max_tokens: 512,
         temperature: 0.7,
       });
       

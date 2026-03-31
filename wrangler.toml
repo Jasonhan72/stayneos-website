@@ -17,7 +17,7 @@ directory = ".open-next/assets"
 [vars]
 RESEND_FROM_EMAIL = "hello@neos.rentals"
 NODE_ENV = "production"
-AI_CONCIERGE_MODEL = "@cf/meta/llama-3.1-8b-instruct"
+AI_CONCIERGE_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
 ARIA_CHAT_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
 NEXTAUTH_URL = "https://neos.rentals"
 # SECURITY: NEXTAUTH_SECRET must be injected via `wrangler secret put NEXTAUTH_SECRET` — never set here

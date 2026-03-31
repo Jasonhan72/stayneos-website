@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
     if (ai && typeof ai.run === 'function') {
       try {
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 8000);
+        const timeout = setTimeout(() => controller.abort(), 15000);
 
         const result = await ai.run(model, {
           messages: [

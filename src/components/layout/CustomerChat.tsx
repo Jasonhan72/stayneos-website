@@ -139,7 +139,12 @@ export function CustomerChat() {
         },
         body: JSON.stringify({
           message: inputText,
-          sessionId: sessionId || undefined
+          sessionId: sessionId || undefined,
+          history: messages.slice(-10).map(m => ({
+            id: m.id,
+            text: m.text,
+            sender: m.sender,
+          })),
         }),
       });
       
