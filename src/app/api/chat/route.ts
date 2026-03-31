@@ -93,13 +93,17 @@ Don't use for: personal information, sensitive data, or non-housing topics.
 - Answer questions about properties, pricing, availability
 - Guide users to appropriate pages (/properties, /for-business)
 - Explain booking process and policies
-- Use web search API when you need current market data or competitor information
+- **Answer general Toronto living questions**: weather, transit, neighborhoods, restaurants, hospitals, schools, events, etc.
+- **Be a helpful local concierge**, not just a property FAQ bot
+- Use provided weather data or web search results when available
 - Escalate complex issues to hello@neos.rentals
-- Be professional, warm, concise (2-3 sentences max)
+- Be professional, warm, and helpful. Keep answers concise but complete (3-5 sentences).
 
-If you don't know something, suggest contacting hello@neos.rentals or visiting the relevant page on our website.
-
-Respond in the same language the user writes in.`;
+IMPORTANT RULES:
+- If you have real-time data (weather, search results), use it directly in your answer. Don't say "querying..." or "checking..." — you already have the data.
+- For Toronto questions you can answer from general knowledge (transit routes, popular neighborhoods, hospital locations), answer directly without saying you need to search.
+- If you truly don't know, suggest contacting hello@neos.rentals.
+- Respond in the same language the user writes in.`;
 
 // Improved fallback responses by language
 const FALLBACK_RESPONSES = {
@@ -142,6 +146,40 @@ function getAIModel(): string {
   return process.env.ARIA_CHAT_MODEL || '@cf/meta/llama-3.1-8b-instruct';
 }
 
+// Check if a query needs weather info
+function needsWeather(query: string): boolean {
+  const q = query.toLowerCase();
+  const keywords = ['weather', 'temperature', 'forecast', '天气', '气温', '温度', '预报', 'météo', 'température'];
+  return keywords.some(k => q.includes(k));
+}
+
+// Fetch weather from wttr.in (free, no API key)
+async function getWeather(query: string): Promise<string> {
+  try {
+    // Extract city or default to Toronto
+    let city = 'Toronto';
+    const cityMatch = query.match(/(?:weather|天气|météo).*?(?:in|的|à)\s*(.+?)(?:\?|$|,|\.|。)/i);
+    if (cityMatch) city = cityMatch[1].trim();
+    
+    const res = await fetch(`https://wttr.in/${encodeURIComponent(city)}?format=j1`, {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) throw new Error('Weather API error');
+    const data = await res.json();
+    const current = data.current_condition?.[0];
+    if (!current) return 'Weather data not available.';
+
+    const forecast = data.weather?.[0];
+    return `Current weather in ${city}:
+- Temperature: ${current.temp_C}°C (${current.temp_F}°F), Feels like: ${current.FeelsLikeC}°C
+- Condition: ${current.weatherDesc?.[0]?.value || 'N/A'}
+- Humidity: ${current.humidity}%, Wind: ${current.windspeedKmph} km/h ${current.winddir16Point}
+${forecast ? `- Today's forecast: High ${forecast.maxtempC}°C / Low ${forecast.mintempC}°C` : ''}`;
+  } catch {
+    return 'Unable to fetch weather data right now.';
+  }
+}
+
 // Check if a query needs external web search
 function needsWebSearch(query: string): boolean {
   const lowerQuery = query.toLowerCase();
@@ -151,7 +189,11 @@ function needsWebSearch(query: string): boolean {
     'current rates', 'market rate', 'average rent', 'rental trend',
     'toronto news', 'housing news', 'real estate news', 'competitor pricing',
     'how much', 'what is the price', 'compare prices', 'market analysis',
-    'rental data', 'market data', 'statistics', 'report', 'study'
+    'rental data', 'market data', 'statistics', 'report', 'study',
+    'restaurant', 'food', 'eat', 'bar', 'nightlife', 'event', 'festival',
+    'transit', 'ttc', 'subway', 'bus', 'airport', 'commute',
+    'school', 'university', 'hospital', 'clinic', 'gym', 'park',
+    '餐厅', '美食', '交通', '地铁', '学校', '医院', '公园',
   ];
   
   return searchKeywords.some(keyword => lowerQuery.includes(keyword));
@@ -246,11 +288,14 @@ export async function POST(request: NextRequest) {
     // Get AI model
     const model = getAIModel();
     
-    // Check if we need web search
+    // Check if we need weather or web search
     let webSearchResults = '';
     let usedWebSearch = false;
     
-    if (needsWebSearch(message)) {
+    if (needsWeather(message)) {
+      usedWebSearch = true;
+      webSearchResults = await getWeather(message);
+    } else if (needsWebSearch(message)) {
       usedWebSearch = true;
       webSearchResults = await callWebSearch(message);
     }
@@ -266,11 +311,11 @@ export async function POST(request: NextRequest) {
       }
     ];
     
-    // Add web search results if available
+    // Add real-time data if available (weather, search results)
     if (webSearchResults) {
       messages.push({
         role: 'system' as const,
-        content: `Current web search results for context:\n${webSearchResults}\n\nUse this information to provide accurate, up-to-date answers about Toronto rental market trends, competitor pricing, and local news. Cite sources when appropriate.`
+        content: `REAL-TIME DATA (use this directly in your answer, do NOT say "querying" or "checking"):\n\n${webSearchResults}`
       });
     }
     
