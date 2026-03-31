@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
-import { mockProperties as listingProperties } from "@/lib/data";
 import { 
   Plus, 
   Search, 
@@ -19,7 +18,8 @@ import {
   DollarSign,
   Image as ImageIcon,
   AlertCircle,
-  Loader2
+  Loader2,
+  RefreshCw
 } from "lucide-react";
 
 // Toggle Switch 组件
@@ -81,32 +81,38 @@ interface Property {
   updatedAt: string;
 }
 
-const initialProperties: Property[] = listingProperties.map((property, index) => ({
-  id: property.id,
-  title: property.title,
-  address: property.location,
-  city: property.location.split(",")[1]?.trim() || property.location,
-  basePrice: property.price,
-  currency: "CAD",
-  bedrooms: property.bedrooms,
-  bathrooms: property.bathrooms,
-  maxGuests: property.maxGuests,
-  status: property.featured ? "published" : "draft",
-  imageUrl: property.images[0] || "/images/cooper-55-c5e8357d.jpg",
-  createdAt: `2024-01-${String(15 + index).padStart(2, "0")}`,
-  updatedAt: `2024-02-${String(18 + index).padStart(2, "0")}`,
-}));
-
 export function PropertiesList() {
   const { t } = useI18n();
-  // router 保留供将来导航使用
-  // const router = useRouter();
-  const [properties, setProperties] = useState<Property[]>(initialProperties);
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "listed" | "unlisted">("all");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [propertyToDelete, setPropertyToDelete] = useState<Property | null>(null);
   const [togglingIds, setTogglingIds] = useState<Set<string>>(new Set());
+
+  // 从 API 加载房源数据
+  const fetchProperties = useCallback(async () => {
+    setLoading(true);
+    setFetchError(null);
+    try {
+      const res = await fetch('/api/dashboard/properties', { credentials: 'include' });
+      if (!res.ok) {
+        throw new Error(`Failed to load properties (${res.status})`);
+      }
+      const data = await res.json();
+      setProperties(data.properties || []);
+    } catch (err) {
+      setFetchError(err instanceof Error ? err.message : 'Failed to load properties');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchProperties();
+  }, [fetchProperties]);
 
   // 切换房源 Listed/Unlisted 状态
   const handleToggleListing = useCallback(async (property: Property) => {
@@ -118,6 +124,7 @@ export function PropertiesList() {
       const res = await fetch(`/api/properties/${property.id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ status: newStatus === "published" ? "PUBLISHED" : "PAUSED" }),
       });
 
@@ -143,8 +150,8 @@ export function PropertiesList() {
   const filteredProperties = properties.filter((prop) => {
     const matchesSearch = 
       prop.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      prop.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      prop.city.toLowerCase().includes(searchQuery.toLowerCase());
+      prop.address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      prop.city?.toLowerCase().includes(searchQuery.toLowerCase());
     
     const matchesStatus = statusFilter === "all" 
       || (statusFilter === "listed" && prop.status === "published")
@@ -159,13 +166,49 @@ export function PropertiesList() {
     setDeleteModalOpen(true);
   };
 
-  const confirmDelete = () => {
-    if (propertyToDelete) {
-      setProperties(properties.filter((p) => p.id !== propertyToDelete.id));
-      setDeleteModalOpen(false);
-      setPropertyToDelete(null);
+  const confirmDelete = async () => {
+    if (!propertyToDelete) return;
+    try {
+      const res = await fetch(`/api/dashboard/properties/${propertyToDelete.id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      if (res.ok) {
+        setProperties(prev => prev.filter((p) => p.id !== propertyToDelete.id));
+      }
+    } catch {
+      // silent
     }
+    setDeleteModalOpen(false);
+    setPropertyToDelete(null);
   };
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+      </div>
+    );
+  }
+
+  // Error state
+  if (fetchError) {
+    return (
+      <div className="text-center py-16 bg-gray-50 rounded-xl">
+        <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
+        <h3 className="text-lg font-medium text-gray-900 mb-2">Failed to load properties</h3>
+        <p className="text-gray-500 mb-6">{fetchError}</p>
+        <button
+          onClick={fetchProperties}
+          className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+        >
+          <RefreshCw className="w-4 h-4" />
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

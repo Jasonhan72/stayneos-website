@@ -1,8 +1,15 @@
 import { NextResponse } from 'next/server';
 import { getPropertyDb } from '@/lib/property-db';
+import { verifyRequestAuth } from '@/lib/auth/admin-api';
 
 export async function PATCH(request: Request, { params }: { params: { slug: string } }) {
   try {
+    // Require authenticated user (HOST, ADMIN, or SUPER_ADMIN)
+    const user = await verifyRequestAuth(request);
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await request.json();
     const { status } = body;
 

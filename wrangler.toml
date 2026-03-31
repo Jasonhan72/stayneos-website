@@ -17,8 +17,11 @@ directory = ".open-next/assets"
 [vars]
 RESEND_FROM_EMAIL = "hello@neos.rentals"
 NODE_ENV = "production"
+AI_CONCIERGE_MODEL = "@cf/meta/llama-3.1-8b-instruct"
+ARIA_CHAT_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
 NEXTAUTH_URL = "https://neos.rentals"
-NEXTAUTH_SECRET = ""
+# SECURITY: NEXTAUTH_SECRET must be injected via `wrangler secret put NEXTAUTH_SECRET` — never set here
+OPENCLAW_GATEWAY_URL = "http://localhost:18789"  # Development URL for Aria chat (backward compatibility)
 # SECURITY: NEXTAUTH_SECRET 已轮换，必须通过 `wrangler secret put NEXTAUTH_SECRET` 注入
 # Google OAuth credentials are stored as secrets - use wrangler secret put
 
