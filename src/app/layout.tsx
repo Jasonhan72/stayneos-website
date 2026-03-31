@@ -6,6 +6,8 @@ import { UserProvider } from "@/lib/context/UserContext";
 import { WishlistProvider } from "@/lib/context/WishlistContext";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { CustomerChat } from "@/components/layout/CustomerChat";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { getBaseUrl } from "@/lib/config/env";
 import {
   getHtmlLang,
@@ -154,6 +156,12 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://images.unsplash.com" />
+        {/* Cloudflare Web Analytics */}
+        <script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon='{"token": "d3c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0"}'
+        ></script>
       </head>
       <body className="font-sans antialiased">
         <UserProvider>
@@ -168,6 +176,8 @@ export default async function RootLayout({
             <Navbar />
             {children}
             <Footer />
+            <CustomerChat />
+            <StructuredData pageType="homepage" />
           </I18nProvider>
           </WishlistProvider>
         </UserProvider>

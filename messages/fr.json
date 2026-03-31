@@ -76,8 +76,8 @@
     "title": "Devise"
   },
   "hero": {
-    "title": "Votre chez-vous vous attend",
-    "highlight": "Arrivez aujourd'hui. Sentez-vous chez vous ce soir.",
+    "title": "Découvrez Toronto, sélectionné par l'IA et l'expertise humaine.",
+    "highlight": "Arrêtez de chercher. Commencez à vivre.",
     "subtitle": "Appartements meublés premium au centre-ville de Toronto. 30 jours à 12 mois. Prêts à emménager.",
     "cta": "Listez Votre Propriété",
     "ctaQuote": "Demander un Devis",
@@ -159,7 +159,7 @@
     "rating": "Note",
     "reviews": "avis",
     "maxGuests": "Max {count} invités",
-    "area": "{area} sqft",
+    "area": "{area} pi²",
     "perNight": "/nuit",
     "minNights": "{count} nuits minimum",
     "monthlyDiscount": "{percent}% de réduction pour les séjours mensuels",
@@ -403,7 +403,8 @@
       "individual": "Voyage individuel",
       "phone": "Numéro de téléphone",
       "jobTitlePlaceholder": "Votre poste",
-      "accommodationType": "Type d’hébergement"
+      "accommodationType": "Type d’hébergement",
+      "responseGuarantee": "Garantie de réponse en 2 heures — nous vous répondrons rapidement."
     },
     "advantages": {
       "subtitle": "Transformez votre stratégie d’hébergement d’entreprise avec nos solutions complètes.",
@@ -498,63 +499,63 @@
     "desc": "Pas juste de passage ? Installez-vous. Tout est là — vaisselle, draps, cafetière. Amenez juste vous-même.",
     "cta": "Voir les logements longue durée",
     "hero": {
-      "cta": "Get Quote",
-      "savingsCta": "See Savings",
-      "subtitle": "Save significantly on extended stays with our flexible long-term lease options. Choose 3, 6, or 12-month terms and enjoy up to 30% off monthly rates in Toronto's premium furnished apartments.",
+      "cta": "Obtenir un devis",
+      "savingsCta": "Voir les économies",
+      "subtitle": "Économisez considérablement sur les séjours prolongés avec nos options de bail flexibles à long terme. Choisissez des durées de 3, 6 ou 12 mois et profitez de jusqu'à 30% de réduction sur les tarifs mensuels dans les appartements meublés premium de Toronto.",
       "title": "Long terme Rental Discounts"
     },
     "advantages": {
       "title": "Pourquoi choisir Long terme with NEOS",
-      "subtitle": "Beyond just savings, long-term stays offer stability, convenience, and a true home-away-from-home experience."
+      "subtitle": "Au-delà des économies, les séjours longue durée offrent stabilité, commodité et une véritable expérience de chez-soi."
     },
     "form": {
-      "submit": "Get My Quote & Savings",
-      "message": "Tell us about your requirements",
-      "bedroom": "Bedroom",
-      "firstName": "First Name",
+      "submit": "Obtenir mon devis et économies",
+      "message": "Décrivez vos besoins",
+      "bedroom": "Chambre",
+      "firstName": "Prénom",
       "title": "Get Your Long terme Rental Quote",
-      "bedrooms": "Bedrooms",
-      "subtitle": "Tell us about your long-term housing needs and we'll create a custom proposal with your savings breakdown.",
-      "phone": "Phone Number",
+      "bedrooms": "Chambres",
+      "subtitle": "Décrivez vos besoins en logement longue durée et nous créerons une proposition personnalisée avec le détail de vos économies.",
+      "phone": "Numéro de téléphone",
       "phonePlaceholder": "+1 (555) 000-0000",
       "studio": "Studio",
-      "selectLocation": "Select area",
-      "moveInDate": "Desired Move-in Date",
-      "messagePlaceholder": "Please describe your long-term housing needs, any specific requirements, reasons for extended stay, and any questions about our long-term rental program...",
-      "location": "Preferred Area",
-      "firstNamePlaceholder": "Enter your first name",
+      "selectLocation": "Sélectionner le quartier",
+      "moveInDate": "Date d'emménagement souhaitée",
+      "messagePlaceholder": "Veuillez décrire vos besoins en logement longue durée, exigences particulières, raisons du séjour prolongé et toute question sur notre programme...",
+      "location": "Quartier préféré",
+      "firstNamePlaceholder": "Entrez votre prénom",
       "submitting": "Soumettreting...",
-      "emailPlaceholder": "your@email.com",
-      "lastName": "Last Name",
-      "propertyType": "Property Type",
+      "emailPlaceholder": "votre@email.com",
+      "lastName": "Nom de famille",
+      "propertyType": "Type de propriété",
       "success": {
-        "message": "Thank you for your interest in long-term rentals! Our team will prepare a detailed quote with your exact savings breakdown and contact you within 24 hours.",
+        "message": "Merci pour votre intérêt ! Notre équipe préparera un devis détaillé avec vos économies exactes et vous contactera dans les 24 heures.",
         "title": "Quote Request Soumettreted!"
       },
-      "selectBudget": "Select budget",
-      "email": "Email Address",
-      "leaseDuration": "Preferred Lease Duration",
-      "selectType": "Select type",
-      "lastNamePlaceholder": "Enter your last name",
-      "months": "Months",
-      "budget": "Monthly Budget"
+      "selectBudget": "Sélectionner le budget",
+      "email": "Adresse courriel",
+      "leaseDuration": "Durée de bail préférée",
+      "selectType": "Sélectionner le type",
+      "lastNamePlaceholder": "Entrez votre nom de famille",
+      "months": "Mois",
+      "budget": "Budget mensuel"
     },
     "testimonials": {
       "title": "Long terme Resident Stories",
-      "subtitle": "See how our long-term residents have saved money and enjoyed their extended Toronto stays."
+      "subtitle": "Découvrez comment nos résidents longue durée ont économisé et profité de leur séjour prolongé à Toronto."
     },
     "usecases": {
-      "title": "Perfect For Your Situation",
-      "subtitle": "Long-term rentals work for a variety of life and business situations requiring extended Toronto stays."
+      "title": "Parfait pour votre situation",
+      "subtitle": "Les locations longue durée conviennent à diverses situations nécessitant un séjour prolongé à Toronto."
     },
     "pricing": {
-      "select": "Select This Plan",
-      "title": "Choose Your Savings Level",
-      "subtitle": "The longer you stay, the more you save. All options include the same premium amenities and services."
+      "select": "Sélectionner ce plan",
+      "title": "Choisissez votre niveau d'économies",
+      "subtitle": "Plus vous restez longtemps, plus vous économisez. Toutes les options incluent les mêmes équipements et services premium."
     },
     "benefits": {
-      "title": "Everything Included",
-      "subtitle": "All long-term rentals include premium amenities and services at no additional cost."
+      "title": "Tout est inclus",
+      "subtitle": "Toutes les locations longue durée incluent des équipements et services premium sans frais supplémentaires."
     }
   },
   "relocation": {
@@ -579,7 +580,7 @@
     "description": "Des appartements meublés pour ceux qui veulent vraiment vivre — pas juste séjourner. Conçu pour les voyageurs d'affaires, les expatriés, et tous ceux qui méritent un vrai foyer.",
     "companyTitle": "Entreprise",
     "servicesTitle": "Services",
-    "supportTitle": "Support",
+    "supportTitle": "Assistance",
     "copyright": "© 2024-2026 NEOS. Tous droits réservés.",
     "trust": "🔒 Paiement Sécurisé · ✓ Logements Vérifiés · Assistance 24/7",
     "terms": "Conditions d'utilisation",
@@ -590,10 +591,13 @@
     "owners": "Pour Propriétaires",
     "academicProfessionals": "Pour les professionnels académiques et médicaux",
     "trustSignalsLine": "Entièrement assuré · Facturation d’entreprise disponible · Immeubles avec conciergerie",
-    "students": "Students",
+    "students": "Étudiants",
     "marketInsights": "Aperçu du marché",
     "hosts": "Pour les propriétaires",
-    "neighborhoods": "Quartiers"
+    "neighborhoods": "Quartiers",
+    "medicalAcademic": "Séjours médicaux et académiques",
+    "trustLine": "Géré par le propriétaire · Entièrement assuré · Facturation d'entreprise · Toutes les propriétés dans des immeubles avec conciergerie",
+    "corporateOffice": "Bureau corporatif : 20 Upjohn Rd, North York, ON, M3B 2V9"
   },
   "language": {
     "title": "Langue",
@@ -724,7 +728,17 @@
     "title": "Nos Villes",
     "subtitle": "Appartements meublés premium dans les meilleures villes d'Amérique du Nord",
     "properties": "Propriétés disponibles",
-    "availableNow": "Disponible maintenant"
+    "availableNow": "Disponible maintenant",
+    "subtitleCurrent": "En commençant par Toronto — la capitale des affaires du Canada",
+    "availableNowBadge": "Disponible maintenant",
+    "comingSoon": "Bientôt disponible",
+    "niagaraFalls": "Chutes du Niagara",
+    "niagaraDesc": "Un nouveau marché en développement.",
+    "yourCity": "Votre ville ?",
+    "yourCityNotify": "Soyez informé de notre expansion",
+    "yourCityDesc": "Dites-nous où vous avez besoin de logements meublés premium.",
+    "emailPlaceholder": "Adresse courriel",
+    "notifyMe": "Me notifier"
   },
   "contact": {
     "pageTitle": "Contactez-nous",
@@ -1075,6 +1089,7 @@
     "top10Desc": "L'une des maisons les plus appréciées sur NEOS",
     "reportListing": "Signaler cette annonce",
     "fromPrice": "À partir de ${price}/mois",
+    "hotelEquivalent": "Équivalent hôtel :",
     "monthly": "Mensuel",
     "quarterly": "Trimestriel",
     "annual": "Annuel",
@@ -1099,7 +1114,12 @@
     "neighborhoodDefaultHighlights": "Vous découvrirez d'excellents restaurants, cafés et commerces à distance de marche. Le Eaton Centre, le shopping et divertissement de Queen Street, et le quartier financier sont tous à proximité.",
     "neighborhoodGrocery": "Pour l'épicerie, les pharmacies et les produits essentiels, plusieurs options sont accessibles à pied.",
     "neighborhoodTitle": "Points forts du quartier",
-    "showAllPhotos": "Afficher toutes les photos"
+    "showAllPhotos": "Afficher toutes les photos",
+    "narrative": {
+      "sugarWharf": "Perché au-dessus du nouveau quartier riverain de Toronto, cette suite dans les hauteurs offre des vues panoramiques sur le lac Ontario et la ligne d'horizon de la ville. Sortez pour vous rendre au parc Corktown Common, marchez cinq minutes jusqu'au légendaire marché St. Lawrence, ou prenez l'UP Express à la gare Union — à seulement huit minutes à pied. Le hall concierge, la terrasse sur le toit et la sécurité 24h/24 de Sugar Wharf en font la référence en matière de vie exécutive à Toronto.",
+      "artistAlley": "Niché au cœur du quartier culturel de Toronto, cette suite se trouve directement en face de l'Art Gallery of Ontario et à quelques pas du parc Grange. Le campus de l'Université de Toronto est à dix minutes à pied, et le réseau hospitalier UHN est facilement accessible en tramway. Avec sa culture de café vibrante, ses librairies indépendantes et sa proximité avec Chinatown et Kensington Market, c'est ici que les communautés créatives et académiques de Toronto se sentent chez elles.",
+      "wellesley": "Situé à quelques pas de la station de métro Wellesley sur la ligne Yonge, ce studio moderne met toute la ville à votre porte. Marchez jusqu'aux magasins et restaurants de la rue Yonge, faites du jogging sur les sentiers de la vallée Don, ou rendez-vous au centre-ville en quelques minutes. Idéal pour les professionnels solo qui veulent de l'efficacité sans compromettre l'énergie du quartier."
+    }
   },
   "filter": {
     "all": "Tous les Statuts"
@@ -1541,7 +1561,7 @@
     "洗衣机": "Lave-linge",
     "厨房": "Cuisine",
     "湖景": "Vue sur le lac",
-    "停车位": "Parking",
+    "停车位": "Stationnement",
     "24小时安保": "Sécurité 24h/24",
     "高层景观": "Vue sur la ville",
     "浴缸": "Baignoire",
@@ -1825,7 +1845,12 @@
     "title": "Suggestion de Prix",
     "placeholder": "Obtenir des suggestions de prix...",
     "button": "Obtenir",
-    "tip": "L'IA analyse les prix du marché selon la ville et le type"
+    "tip": "L'IA analyse les prix du marché selon la ville et le type",
+    "monthly": "Mensuel",
+    "quarterly": "Trimestriel",
+    "annual": "Annuel",
+    "reviews": "avis",
+    "perMonth": "/mois"
   },
   "result": {
     "title": "Résultat :"
@@ -2178,7 +2203,7 @@
   "featured": "En Vedette",
   "reviews": "avis",
   "maxGuests": "Max {count} invités",
-  "area": "{area} sqft",
+  "area": "{area} pi²",
   "perNight": "/nuit",
   "minNights": "{count} nuits minimum",
   "monthlyDiscount": "{percent}% de réduction pour les séjours mensuels",
@@ -2215,7 +2240,7 @@
   "privacy": "Politique de Confidentialité",
   "companyTitle": "Entreprise",
   "servicesTitle": "Services",
-  "supportTitle": "Support",
+  "supportTitle": "Assistance",
   "copyright": "© 2024-2026 NEOS. Tous droits réservés.",
   "trust": {
     "verified": "Logements Vérifiés",
@@ -2763,7 +2788,7 @@
     "story3Desc": "Contrat d'un an, appartement vide, semaines d'attente.",
     "story4Title": "Alors on a créé NEOS",
     "story4Desc": "Meublé, flexible, prêt quand vous l'êtes.",
-    "whyLabel": "POURQUOI NOUS",
+    "whyLabel": "POURQUOI NOUS CHOISIR",
     "whyTitle": "Pourquoi nous choisir",
     "whyDesc": "On fait de chaque ville votre ville.",
     "why1Title": "Chaque logement visité",
@@ -2789,7 +2814,8 @@
     "ctaDesc": "Parcourez des appartements meublés prêts à vivre",
     "ctaBrowse": "Parcourir",
     "ctaContact": "Nous dire bonjour",
-    "imageDisclaimer": "Remarque : certaines images de cette page sont des photos d’illustration."
+    "imageDisclaimer": "Remarque : certaines images de cette page sont des photos d’illustration.",
+    "ownerOperatedDesc": "Chaque propriété NEOS est directement détenue et gérée par notre équipe. Cela signifie une réponse de maintenance plus rapide, des normes de qualité constantes et un niveau de soin que les plateformes tierces ne peuvent tout simplement pas égaler."
   },
   "faqPage": {
     "title": "Questions Fréquentes",
@@ -3188,12 +3214,12 @@
         "title": "Culture d'affaires",
         "desc": "Environnement professionnel et multiculturel"
       },
-      "title": "Toronto Quick Facts",
-      "subtitle": "Essential information for executive travelers and business professionals."
+      "title": "Toronto en bref",
+      "subtitle": "Informations essentielles pour les voyageurs d'affaires et professionnels."
     },
     "data": {
       "downtown": {
-        "name": "Downtown Core / Grange Park (238 Simcoe St)",
+        "name": "Centre-ville / Grange Park (238 Simcoe St)",
         "tagline": "Cœur culturel de Toronto",
         "features": {
           "1": "Près de AGO, OCAD, UofT St. George",
@@ -3317,7 +3343,7 @@
         }
       },
       "waterfront": {
-        "name": "Waterfront / Sugar Wharf (55 Cooper St)",
+        "name": "Bord de lac / Sugar Wharf (55 Cooper St)",
         "tagline": "Nouveau quartier riverain de Toronto",
         "features": {
           "1": "Développé par Menkes",
@@ -3333,8 +3359,8 @@
       "subtitle": "Nous nous concentrons actuellement sur 3 quartiers réels."
     },
     "cta": {
-      "title": "Ready to Find Your Perfect Toronto Home?",
-      "contact": "Contact Our Team",
+      "title": "Prêt à trouver votre maison idéale à Toronto ?",
+      "contact": "Contacter notre équipe",
       "browse": "Parcourir Toutes les propriétés",
       "subtitle": "Parcourir our curated selection of executive apartments in these premium Toronto neighborhoods."
     }
@@ -3388,46 +3414,46 @@
         "title": "Demande reçue",
         "message": "Notre équipe vous contactera sous 24 h."
       },
-      "oneBed": "1-Bedroom",
-      "duration": "Lease Duration",
+      "oneBed": "1 chambre",
+      "duration": "Durée du bail",
       "phonePlaceholder": "+1 (555) 000-0000",
-      "subtitle": "Ready to secure your Toronto student housing? Complete the application below and our team will contact you within 24 hours.",
-      "lastNamePlaceholder": "Enter your last name",
-      "selectUniversity": "Select your school",
-      "selectDuration": "Select",
-      "months": "Months",
+      "subtitle": "Prêt à sécuriser votre logement étudiant à Toronto ? Remplissez le formulaire et nous vous contacterons dans les 24 heures.",
+      "lastNamePlaceholder": "Entrez votre nom de famille",
+      "selectUniversity": "Sélectionnez votre école",
+      "selectDuration": "Sélectionner",
+      "months": "Mois",
       "flexible": "Flexible",
-      "studio": "Private Studio",
-      "uoft": "University of Toronto",
-      "cc": "Centennial College",
-      "moveInDate": "Move-in Date",
-      "ocad": "OCAD University",
-      "shared": "Shared Room",
-      "gbc": "George Brown College",
-      "title": "Apply for Student Housing",
-      "selectBudget": "Select budget",
-      "programPlaceholder": "e.g. Computer Science",
-      "program": "Program/Major",
-      "emailPlaceholder": "your@email.com",
+      "studio": "Studio privé",
+      "uoft": "Université de Toronto",
+      "cc": "Collège Centennial",
+      "moveInDate": "Date d'emménagement",
+      "ocad": "Université OCAD",
+      "shared": "Chambre partagée",
+      "gbc": "Collège George Brown",
+      "title": "Demande de logement étudiant",
+      "selectBudget": "Sélectionner le budget",
+      "programPlaceholder": "ex. Informatique",
+      "program": "Programme/Spécialité",
+      "emailPlaceholder": "votre@email.com",
       "other": "Other",
-      "messagePlaceholder": "Tell us about yourself, any special requirements, roommate preferences, or questions you have about student housing with NEOS...",
-      "roomType": "Preferred Room Type",
-      "tmu": "Toronto Metropolitan University",
-      "firstNamePlaceholder": "Enter your first name",
-      "budget": "Monthly Budget",
-      "seneca": "Seneca Polytechnic"
+      "messagePlaceholder": "Parlez-nous de vous, vos exigences particulières, préférences de colocataire ou questions sur le logement étudiant NEOS...",
+      "roomType": "Type de chambre préféré",
+      "tmu": "Université métropolitaine de Toronto",
+      "firstNamePlaceholder": "Entrez votre prénom",
+      "budget": "Budget mensuel",
+      "seneca": "Polytechnique Seneca"
     },
     "features": {
-      "title": "Student-Focused Amenities",
-      "subtitle": "Every space is designed with student success in mind, from study areas to social spaces."
+      "title": "Équipements pour étudiants",
+      "subtitle": "Chaque espace est conçu pour la réussite étudiante, des zones d'étude aux espaces sociaux."
     },
     "testimonials": {
-      "subtitle": "Hear from current and former residents about their NEOS experience.",
-      "title": "What Students Say"
+      "subtitle": "Découvrez les témoignages de résidents actuels et anciens.",
+      "title": "Ce que disent les étudiants"
     },
     "universities": {
-      "subtitle": "Strategically located near Toronto's top educational institutions for easy access to campus and academic resources.",
-      "title": "Partner Universities & Colleges"
+      "subtitle": "Stratégiquement situé près des meilleures institutions éducatives de Toronto.",
+      "title": "Universités et collèges partenaires"
     }
   },
   "homePaths": {
@@ -3446,123 +3472,123 @@
     "form": {
       "condo": "Condo",
       "phonePlaceholder": "+1 (555) 000-0000",
-      "lastNamePlaceholder": "Enter your last name",
-      "monthlyRent": "Current Monthly Rent",
-      "subtitle": "Complete the form below and our team will contact you within 24 hours to discuss your property.",
-      "selectBedrooms": "Select",
-      "bedrooms": "Bedrooms",
+      "lastNamePlaceholder": "Entrez votre nom de famille",
+      "monthlyRent": "Loyer mensuel actuel",
+      "subtitle": "Remplissez le formulaire et notre équipe vous contactera dans les 24 heures.",
+      "selectBedrooms": "Sélectionner",
+      "bedrooms": "Chambres",
       "submitting": "Soumettreting...",
-      "propertyType": "Property Type",
+      "propertyType": "Type de propriété",
       "house": "House",
-      "message": "Tell us about your property",
-      "propertyAddressPlaceholder": "Enter property address",
-      "lastName": "Last Name",
-      "propertyAddress": "Property Address",
+      "message": "Décrivez votre propriété",
+      "propertyAddressPlaceholder": "Entrez l'adresse de la propriété",
+      "lastName": "Nom de famille",
+      "propertyAddress": "Adresse de la propriété",
       "submit": "Soumettre Application",
-      "phone": "Phone Number",
-      "firstNamePlaceholder": "Enter your first name",
+      "phone": "Numéro de téléphone",
+      "firstNamePlaceholder": "Entrez votre prénom",
       "success": {
         "title": "Application Soumettreted!",
-        "message": "Thank you for your interest! Our team will review your application and contact you within 24 hours to discuss next steps and answer any questions you may have."
+        "message": "Merci ! Notre équipe examinera votre demande et vous contactera dans les 24 heures."
       },
-      "messagePlaceholder": "Describe your property, current condition, furnishing status, and any questions you have about our program...",
-      "title": "List Your Property Today",
-      "email": "Email Address",
-      "selectType": "Select type",
-      "emailPlaceholder": "your@email.com",
+      "messagePlaceholder": "Décrivez votre propriété, son état actuel, l'ameublement et vos questions sur notre programme...",
+      "title": "Inscrivez votre propriété aujourd'hui",
+      "email": "Adresse courriel",
+      "selectType": "Sélectionner le type",
+      "emailPlaceholder": "votre@email.com",
       "studio": "Studio",
-      "bedroom": "Bedroom",
-      "rentPlaceholder": "Optional",
-      "firstName": "First Name",
-      "apartment": "Apartment"
+      "bedroom": "Chambre",
+      "rentPlaceholder": "Optionnel",
+      "firstName": "Prénom",
+      "apartment": "Appartement"
     },
     "calculator": {
-      "title": "Calculate Your Potential Earnings",
-      "guarantee": "Monthly payments regardless of occupancy, plus professional management included.",
-      "subtitle": "See how much more you could earn with NEOS compared to traditional rentals.",
-      "currentRent": "Current Monthly Rent",
-      "occupancyRate": "Current Occupancy Rate"
+      "title": "Calculez vos revenus potentiels",
+      "guarantee": "Paiements mensuels garantis indépendamment de l'occupation, gestion professionnelle incluse.",
+      "subtitle": "Voyez combien vous pourriez gagner de plus avec NEOS par rapport aux locations traditionnelles.",
+      "currentRent": "Loyer mensuel actuel",
+      "occupancyRate": "Taux d'occupation actuel"
     },
     "process": {
-      "subtitle": "Get started in four simple steps and begin earning guaranteed income from your property.",
-      "title": "How It Works"
+      "subtitle": "Commencez en quatre étapes simples et gagnez un revenu garanti de votre propriété.",
+      "title": "Comment ça fonctionne"
     },
     "hero": {
       "cta": "Commencer",
-      "calculateCta": "Calculate Your Earnings",
-      "title": "List Your Property",
-      "subtitle": "Earn guaranteed monthly income with zero vacancy risk. Join Toronto's premium executive housing platform and let us handle everything while you collect steady payments."
+      "calculateCta": "Calculez vos revenus",
+      "title": "Inscrivez votre propriété",
+      "subtitle": "Gagnez un revenu mensuel garanti sans risque de vacance. Rejoignez la plateforme premium de logement exécutif de Toronto et laissez-nous tout gérer."
     },
     "advantages": {
       "title": "Pourquoi choisir NEOS",
-      "subtitle": "Join hundreds of property owners who've transformed their real estate investments into hassle-free income streams."
+      "subtitle": "Rejoignez des centaines de propriétaires qui ont transformé leurs investissements immobiliers en flux de revenus sans souci."
     },
     "benefits": {
-      "subtitle": "More reasons why property owners choose NEOS for their investment properties.",
-      "title": "Additional Benefits"
+      "subtitle": "Plus de raisons pour lesquelles les propriétaires choisissent NEOS.",
+      "title": "Avantages supplémentaires"
     }
   },
   "marketInsights": {
     "charts": {
-      "occupancyRatesDesc": "Comparative occupancy rates across Toronto's primary executive housing districts.",
-      "demandSourcesDesc": "Corporate housing demand breakdown by industry sector and company size.",
-      "demandSources": "Demand by Industry",
-      "title": "Market Data Visualization",
-      "rentalTrends": "Rental Rate Trends",
-      "subtitle": "Interactive charts and graphs showing market trends, pricing patterns, and demand analytics.",
-      "occupancyRates": "Occupancy by Neighborhood",
-      "rentalTrendsDesc": "24-month historical rental rate progression across different property types and neighborhoods.",
-      "forecastModelDesc": "Predictive modeling for rental rates, occupancy, and market demand through 2025.",
-      "forecastModel": "12-Month Forecast"
+      "occupancyRatesDesc": "Taux d'occupation comparatifs dans les principaux quartiers de Toronto.",
+      "demandSourcesDesc": "Répartition de la demande de logement d'entreprise par secteur.",
+      "demandSources": "Demande par secteur",
+      "title": "Visualisation des données",
+      "rentalTrends": "Tendances des loyers",
+      "subtitle": "Graphiques interactifs montrant les tendances, prix et analyses de demande.",
+      "occupancyRates": "Taux d'occupation par quartier",
+      "rentalTrendsDesc": "Évolution des loyers sur 24 mois par type de propriété et quartier.",
+      "forecastModelDesc": "Modélisation prédictive des loyers, occupation et demande jusqu'en 2025.",
+      "forecastModel": "Prévisions 12 mois"
     },
     "form": {
-      "jobTitlePlaceholder": "Your job title",
-      "subtitle": "Access our comprehensive market analysis including detailed charts, forecasts, and investment insights.",
-      "firstName": "First Name",
-      "company": "Company",
-      "lastNamePlaceholder": "Enter your last name",
+      "jobTitlePlaceholder": "Votre poste",
+      "subtitle": "Accédez à notre analyse complète du marché avec graphiques détaillés et perspectives d'investissement.",
+      "firstName": "Prénom",
+      "company": "Entreprise",
+      "lastNamePlaceholder": "Entrez votre nom de famille",
       "success": {
-        "message": "Thank you! Your market report is being prepared and will be emailed to you within the next few minutes. Check your inbox for the download link.",
-        "title": "Report Download Ready!",
-        "checkEmail": "Check Your Email"
+        "message": "Merci ! Votre rapport est en préparation et sera envoyé par courriel dans quelques minutes.",
+        "title": "Rapport prêt !",
+        "checkEmail": "Vérifiez votre courriel"
       },
-      "emailPlaceholder": "your@email.com",
-      "interests": "Areas of Interest",
-      "reportType": "Preferred Report Type",
-      "custom": "Custom Research",
-      "submit": "Download Market Report",
-      "companyPlaceholder": "Your company name",
-      "title": "Download Complete Market Report",
-      "firstNamePlaceholder": "Enter your first name",
-      "submitting": "Processing...",
-      "annual": "Annual Analysis",
-      "email": "Email Address",
-      "jobTitle": "Job Title",
-      "lastName": "Last Name",
-      "quarterly": "Quarterly Report",
-      "selectReport": "Select report type"
+      "emailPlaceholder": "votre@email.com",
+      "interests": "Domaines d'intérêt",
+      "reportType": "Type de rapport préféré",
+      "custom": "Recherche personnalisée",
+      "submit": "Télécharger le rapport",
+      "companyPlaceholder": "Nom de votre entreprise",
+      "title": "Télécharger le rapport complet",
+      "firstNamePlaceholder": "Entrez votre prénom",
+      "submitting": "Traitement en cours...",
+      "annual": "Analyse annuelle",
+      "email": "Adresse courriel",
+      "jobTitle": "Poste",
+      "lastName": "Nom de famille",
+      "quarterly": "Rapport trimestriel",
+      "selectReport": "Sélectionner le type de rapport"
     },
     "stats": {
-      "subtitle": "Latest data from Toronto's premium executive housing market as of Q3 2024.",
-      "title": "Key Market Metrics"
+      "subtitle": "Dernières données du marché premium de Toronto, T3 2024.",
+      "title": "Indicateurs clés du marché"
     },
     "neighborhoods": {
-      "title": "Neighborhood Performance",
-      "subtitle": "Comparative analysis of Toronto's premium neighborhoods for executive housing investment and occupancy."
+      "title": "Performance par quartier",
+      "subtitle": "Analyse comparative des quartiers premium de Toronto pour l'investissement en logement exécutif."
     },
     "insights": {
       "title": "Key Aperçu du marché",
-      "subtitle": "Expert analysis of current market conditions and emerging trends affecting Toronto's executive housing sector."
+      "subtitle": "Analyse experte des conditions actuelles et tendances émergentes du marché de Toronto."
     },
     "hero": {
       "title": "Toronto Real Estate Aperçu du marché",
-      "downloadCta": "Download Report",
+      "downloadCta": "Télécharger le rapport",
       "viewCta": "Voir Insights",
-      "subtitle": "Comprehensive market analysis and trends for Toronto's executive housing market. Data-driven insights to inform your investment and housing decisions."
+      "subtitle": "Analyse complète du marché et tendances du logement exécutif à Toronto. Données pour éclairer vos décisions d'investissement et d'hébergement."
     },
     "forecasts": {
-      "subtitle": "Expert predictions and analysis for Toronto's executive housing market outlook.",
-      "title": "Market Forecasts"
+      "subtitle": "Prédictions et analyses pour le marché du logement exécutif à Toronto.",
+      "title": "Prévisions du marché"
     }
   },
   "dualPath": {
@@ -3623,5 +3649,43 @@
     "properties": "propriétés",
     "yearsHosting": "{count} ans d'hébergement",
     "responseRate": "taux de réponse"
+  },
+  "trustBar": {
+    "insurance": "Assurance responsabilité commerciale de 2M$",
+    "concierge": "Toutes les propriétés dans des immeubles avec conciergerie",
+    "licensed": "Courtage agréé en Ontario"
+  },
+  "aiConcierge": {
+    "placeholder": "Parlez-moi de vos projets à Toronto...",
+    "submit": "Demander à NEOS AI",
+    "chip1": "Rotation médicale, 3 mois",
+    "chip2": "Relocalisation professionnelle, famille de 4",
+    "chip3": "Chercheur invité à U of T",
+    "chip4": "Logement d'assurance, immédiat",
+    "fallbackLink": "Ou parcourez notre collection complète →",
+    "loading": "NEOS AI recherche votre match parfait...",
+    "error": "Notre IA prend un moment. Parcourez notre collection ou contactez-nous.",
+    "browseCta": "Parcourir les propriétés",
+    "whatsappCta": "Discuter sur WhatsApp",
+    "scheduleViewing": "Planifier une visite"
+  },
+  "chat": {
+    "title": "Discuter avec le support NEOS",
+    "subtitle": "Aria • Responsable service client",
+    "toggle": "Ouvrir le chat avec le support NEOS",
+    "close": "Fermer le chat",
+    "clear": "Effacer l'historique du chat",
+    "clearConfirm": "Êtes-vous sûr de vouloir effacer l'historique du chat ?",
+    "welcome": "Bonjour ! Je suis Aria, service client NEOS. Comment puis-je vous aider aujourd'hui ?",
+    "placeholder": "Tapez votre message...",
+    "send": "Envoyer",
+    "typing": "Aria est en train d'écrire...",
+    "disclaimer": "Les réponses peuvent prendre quelques instants",
+    "error": "Désolé, une erreur s'est produite lors de l'envoi de votre message. Veuillez réessayer ou nous contacter par email à hello@neos.rentals.",
+    "fallback": {
+      "1": "Pour les demandes de réservation, veuillez visiter notre page de propriétés ou utiliser le concierge IA ci-dessus.",
+      "2": "Pour les questions urgentes, veuillez nous contacter par email à hello@neos.rentals.",
+      "3": "Notre équipe répond généralement dans les 2 heures pendant les heures ouvrables (9h-18h HNE)."
+    }
   }
 }

@@ -11,6 +11,7 @@ import {
   Clock,
   Headphones,
   TrendingDown,
+  CheckCircle,
   CheckCircle2,
   ArrowRight,
   Loader2,
@@ -28,18 +29,13 @@ import {
 import { useI18n } from "@/lib/i18n";
 import { submitInquiry } from "@/lib/inquiry-client";
 
-// Form validation schema
+// Form validation schema - Simplified to 5 required fields
 const businessFormSchema = z.object({
   companyName: z.string().min(2, "Company name is required"),
   contactName: z.string().min(2, "Contact name is required"),
   email: z.string().email("Please enter a valid email"),
   phone: z.string().min(10, "Please enter a valid phone number"),
-  jobTitle: z.string().min(2, "Job title is required"),
-  accommodationType: z.enum(["individual", "group", "long-term", "project-team"]).optional(),
-  numberOfUnits: z.string().optional(),
-  duration: z.string().optional(),
-  budget: z.string().optional(),
-  requirements: z.string().min(20, "Please describe your requirements"),
+  requirements: z.string().min(20, "Please tell us what you need"),
 });
 
 type BusinessFormData = z.infer<typeof businessFormSchema>;
@@ -427,6 +423,12 @@ export default function ForBusinessPageContent() {
                   </p>
                 </div>
 
+                {/* Response Guarantee */}
+                <div className="response-guarantee flex items-center gap-2 text-sm text-neutral-700 mb-4">
+                  <CheckCircle size={20} className="text-green-600" />
+                  <span>{t("business.form.responseGuarantee", "2-hour response guarantee — we'll get back to you fast.")}</span>
+                </div>
+
                 <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-8 md:p-12 shadow-2xl">
                   <div className="grid md:grid-cols-2 gap-6 mb-6">
                     <div>
@@ -490,91 +492,9 @@ export default function ForBusinessPageContent() {
                     </div>
                   </div>
 
-                  <div className="mb-6">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      {t("business.form.jobTitle", "Job Title")} <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      {...register("jobTitle")}
-                      className="w-full px-4 py-3 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-                      placeholder={t("business.form.jobTitlePlaceholder", "Your job title")}
-                    />
-                    {errors.jobTitle && (
-                      <p className="text-red-500 text-sm mt-1">{errors.jobTitle.message}</p>
-                    )}
-                  </div>
-
-                  <div className="grid md:grid-cols-3 gap-6 mb-6">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        {t("business.form.accommodationType", "Accommodation Type")}
-                      </label>
-                      <select
-                        {...register("accommodationType")}
-                        className="w-full px-4 py-3 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-                      >
-                        <option value="">{t("business.form.selectType", "Select type")}</option>
-                        <option value="individual">{t("business.form.individual", "Individual Travel")}</option>
-                        <option value="group">{t("business.form.group", "Group Accommodation")}</option>
-                        <option value="long-term">{t("business.form.longTerm", "Long-term Stay")}</option>
-                        <option value="project-team">{t("business.form.projectTeam", "Project Team")}</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        {t("business.form.numberOfUnits", "Number of Units")}
-                      </label>
-                      <select
-                        {...register("numberOfUnits")}
-                        className="w-full px-4 py-3 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-                      >
-                        <option value="">{t("business.form.selectUnits", "Select")}</option>
-                        <option value="1">1 {t("business.form.unit", "Unit")}</option>
-                        <option value="2-5">2-5 {t("business.form.units", "Units")}</option>
-                        <option value="6-10">6-10 {t("business.form.units", "Units")}</option>
-                        <option value="11-20">11-20 {t("business.form.units", "Units")}</option>
-                        <option value="20+">20+ {t("business.form.units", "Units")}</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        {t("business.form.duration", "Expected Duration")}
-                      </label>
-                      <select
-                        {...register("duration")}
-                        className="w-full px-4 py-3 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-                      >
-                        <option value="">{t("business.form.selectDuration", "Select")}</option>
-                        <option value="1-3months">1-3 {t("business.form.months", "Months")}</option>
-                        <option value="3-6months">3-6 {t("business.form.months", "Months")}</option>
-                        <option value="6-12months">6-12 {t("business.form.months", "Months")}</option>
-                        <option value="1year+">1+ {t("business.form.years", "Years")}</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="mb-6">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      {t("business.form.budget", "Monthly Budget Range")}
-                    </label>
-                    <select
-                      {...register("budget")}
-                      className="w-full px-4 py-3 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-                    >
-                      <option value="">{t("business.form.selectBudget", "Select budget range")}</option>
-                      <option value="under-5k">{t("business.form.budgetOptions.under5k", "Under $5,000")}</option>
-                      <option value="5k-15k">{t("business.form.budgetOptions.5kTo15k", "$5,000 - $15,000")}</option>
-                      <option value="15k-30k">{t("business.form.budgetOptions.15kTo30k", "$15,000 - $30,000")}</option>
-                      <option value="30k-50k">{t("business.form.budgetOptions.30kTo50k", "$30,000 - $50,000")}</option>
-                      <option value="50k+">{t("business.form.budgetOptions.50kPlus", "$50,000+")}</option>
-                    </select>
-                  </div>
-
                   <div className="mb-8">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      {t("business.form.requirements", "Specific Requirements")} <span className="text-red-500">*</span>
+                      {t("business.form.requirements", "Tell us what you need")} <span className="text-red-500">*</span>
                     </label>
                     <textarea
                       {...register("requirements")}

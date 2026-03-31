@@ -1,8 +1,9 @@
 'use client';
 
+import { useState, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, MapPin, Star } from 'lucide-react';
+import { ArrowRight, MapPin, Star, Heart } from 'lucide-react';
 import { Card, Badge, Section } from '@/components/ui';
 import { useI18n } from '@/lib/i18n';
 
@@ -82,14 +83,19 @@ const featuredProperties: FeaturedProperty[] = [
   },
 ];
 
-function getPricingLabels(locale: string) {
-  if (locale === 'zh') return { monthly: '月租', quarterly: '季度价', annual: '年租价', reviews: '条评价', perMonth: '/月' };
-  if (locale === 'fr') return { monthly: 'Mensuel', quarterly: 'Trimestriel', annual: 'Annuel', reviews: 'avis', perMonth: '/mois' };
-  return { monthly: 'Monthly', quarterly: 'Quarterly', annual: 'Annual', reviews: 'reviews', perMonth: '/month' };
+function getPricingLabelsFromT(t: (key: string, fallback?: string) => string) {
+  return {
+    monthly: t('pricing.monthly', 'Monthly'),
+    quarterly: t('pricing.quarterly', 'Quarterly'),
+    annual: t('pricing.annual', 'Annual'),
+    reviews: t('pricing.reviews', 'reviews'),
+    perMonth: t('pricing.perMonth', '/month'),
+  };
 }
 
-function PricingRows({ property, locale }: { property: FeaturedProperty; locale: string }) {
-  const labels = getPricingLabels(locale);
+function PricingRows({ property }: { property: FeaturedProperty }) {
+  const { t } = useI18n();
+  const labels = getPricingLabelsFromT(t);
   const rows = [
     { label: labels.monthly, value: property.monthlyPrice },
     { label: labels.quarterly, value: property.quarterlyPrice },
@@ -108,8 +114,42 @@ function PricingRows({ property, locale }: { property: FeaturedProperty; locale:
   );
 }
 
+function FavoriteButton({ propertyId }: { propertyId: string }) {
+  const [isFav, setIsFav] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      const favs = JSON.parse(localStorage.getItem('neos_favorites') || '[]');
+      return favs.includes(propertyId);
+    } catch { return false; }
+  });
+
+  const toggle = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsFav((prev: boolean) => {
+      const next = !prev;
+      try {
+        const favs: string[] = JSON.parse(localStorage.getItem('neos_favorites') || '[]');
+        const updated = next ? [...favs, propertyId] : favs.filter(id => id !== propertyId);
+        localStorage.setItem('neos_favorites', JSON.stringify(updated));
+      } catch {}
+      return next;
+    });
+  }, [propertyId]);
+
+  return (
+    <button
+      onClick={toggle}
+      className="absolute top-4 right-4 p-2 bg-white/90 hover:bg-white transition-colors rounded-full z-10"
+      aria-label={isFav ? 'Remove from favorites' : 'Add to favorites'}
+    >
+      <Heart size={18} className={isFav ? 'text-red-500 fill-red-500' : 'text-neutral-400'} />
+    </button>
+  );
+}
+
 export function FeaturedPropertiesSection() {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
   return (
     <Section bg="neutral">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-8 md:mb-12 gap-3">
@@ -184,9 +224,18 @@ export function FeaturedPropertiesSection() {
                           <span>{t('property.max', 'Up to')} {property.maxGuests}</span>
                         </div>
 
-                        <PricingRows property={property} locale={locale} />
+                        <PricingRows property={property} />
+                        {/* Hotel Comparison */}
+                        <div className="hotel-comparison mt-1">
+                          <span className="text-xs text-neutral-500">
+                            {t('property.hotelEquivalent', 'Hotel equivalent:')}{' '}
+                            <span className="text-neutral-400 line-through">
+                              {property.id === '1' ? '~$18,000/mo' : property.id === '2' ? '~$10,500/mo' : '~$7,500/mo'}
+                            </span>
+                          </span>
+                        </div>
                         {property.reviewCount > 0 && (
-                          <p className="mt-2 text-xs text-neutral-400">{property.reviewCount} {getPricingLabels(locale).reviews}</p>
+                          <p className="mt-2 text-xs text-neutral-400">{property.reviewCount} {t('pricing.reviews', 'reviews')}</p>
                         )}
                       </div>
                     </Link>
@@ -215,9 +264,7 @@ export function FeaturedPropertiesSection() {
                       </div>
                     )}
 
-                    <div className="absolute top-4 right-4 p-2 bg-white/90 hover:bg-white transition-colors rounded-full">
-                      <Star size={18} className="text-neutral-400" />
-                    </div>
+                    <FavoriteButton propertyId={property.id} />
                   </div>
 
                   <div className="p-6">
@@ -246,9 +293,18 @@ export function FeaturedPropertiesSection() {
                       <span>{t('property.max', 'Up to')} {property.maxGuests} {t('property.guests', 'guests')}</span>
                     </div>
 
-                    <PricingRows property={property} locale={locale} />
+                    <PricingRows property={property} />
+                    {/* Hotel Comparison */}
+                    <div className="hotel-comparison mt-1">
+                      <span className="text-sm text-neutral-500">
+                        {t('property.hotelEquivalent', 'Hotel equivalent:')}{' '}
+                        <span className="text-neutral-400 line-through">
+                          {property.id === '1' ? '~$18,000/mo' : property.id === '2' ? '~$10,500/mo' : '~$7,500/mo'}
+                        </span>
+                      </span>
+                    </div>
                     {property.reviewCount > 0 && (
-                      <p className="mt-2 text-sm text-neutral-400">{property.reviewCount} {getPricingLabels(locale).reviews}</p>
+                      <p className="mt-2 text-sm text-neutral-400">{property.reviewCount} {t('pricing.reviews', 'reviews')}</p>
                     )}
                   </div>
                 </Link>

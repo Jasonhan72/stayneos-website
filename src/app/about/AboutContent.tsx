@@ -118,7 +118,7 @@ export default function AboutContent() {
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">{t('aboutPage.commitTitle')}</h2>
             <p className="text-primary-100 text-lg max-w-2xl mx-auto">{t('aboutPage.commitDesc')}</p>
             <p className="text-primary-100 text-base max-w-3xl mx-auto mt-4">
-              Every NEOS property is directly owned and operated by our team. This means faster maintenance response, consistent quality standards, and a level of care that third-party platforms simply can&apos;t match.
+              {t('aboutPage.ownerOperatedDesc', "Every NEOS property is directly owned and operated by our team. This means faster maintenance response, consistent quality standards, and a level of care that third-party platforms simply can't match.")}
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

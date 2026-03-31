@@ -819,6 +819,19 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
               <button className="mt-4 font-medium underline">{t('property.showMore')}</button>
             </div>
 
+            {/* Property Narrative */}
+            <div className="property-narrative mt-8 mb-8">
+              <p className="text-lg text-neutral-700 leading-relaxed">
+                {propertyId === '1' || propertyId === '55-cooper-st-sugar-wharf' || propertyId === 'prop-55-cooper' 
+                  ? t('property.narrative.sugarWharf', "Perched above Toronto's newest waterfront neighborhood, this sky suite offers panoramic views of Lake Ontario and the city skyline. Step outside to Corktown Common park, walk five minutes to the legendary St. Lawrence Market, or catch the UP Express at Union Station — just eight minutes on foot. Sugar Wharf's concierge lobby, rooftop terrace, and 24-hour security make this the gold standard for executive living in Toronto.")
+                  : propertyId === '2' || propertyId === '238-simcoe-st-grange-park' || propertyId === 'prop-238-simcoe'
+                  ? t('property.narrative.artistAlley', "Nestled in the heart of Toronto's cultural quarter, this suite sits directly across from the Art Gallery of Ontario and steps from Grange Park. The University of Toronto campus is a ten-minute walk, and the UHN hospital network is easily accessible by streetcar. With its vibrant café culture, independent bookshops, and proximity to Chinatown and Kensington Market, this is where Toronto's creative and academic communities call home.")
+                  : propertyId === '3' || propertyId === '22-wellesley-st-e'
+                  ? t('property.narrative.wellesley', "Located steps from Wellesley subway station on the Yonge line, this modern studio puts the entire city at your doorstep. Walk to the shops and restaurants of Yonge Street, jog through the Don Valley trails, or commute downtown in minutes. Ideal for solo professionals who want efficiency without compromising on neighborhood energy.")
+                  : ''}
+              </p>
+            </div>
+
             <Divider />
 
             {/* Amenities */}

@@ -239,6 +239,15 @@ export default function PropertyCard({ property }: PropertyCardProps) {
                 </span>
               )}
             </div>
+            {/* Hotel Comparison */}
+            <div className="hotel-comparison mt-1">
+              <span className="text-xs text-neutral-500">
+                {t('property.hotelEquivalent', 'Hotel equivalent:')}{' '}
+                <span className="text-neutral-400 line-through">
+                  {property.id === '1' ? '~$18,000/mo' : property.id === '2' ? '~$10,500/mo' : property.id === '3' ? '~$7,500/mo' : ''}
+                </span>
+              </span>
+            </div>
           </div>
         </div>
       </Link>

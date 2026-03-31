@@ -76,8 +76,8 @@
     "title": "货币"
   },
   "hero": {
-    "title": "您的家，已准备就绪",
-    "highlight": "今天到达，今晚回家",
+    "title": "体验多伦多，AI 与专业团队为您精选",
+    "highlight": "停止搜索，开始生活",
     "subtitle": "多伦多市中心高端精装公寓。30天到12个月。拎包入住。",
     "cta": "发布房源",
     "ctaQuote": "获取报价",
@@ -403,7 +403,8 @@
       "individual": "个人差旅",
       "phone": "联系电话",
       "jobTitlePlaceholder": "请输入您的职位",
-      "accommodationType": "住宿类型"
+      "accommodationType": "住宿类型",
+      "responseGuarantee": "2小时响应保证 — 我们会尽快回复您。"
     },
     "advantages": {
       "subtitle": "通过我们完整的企业住宿方案，全面升级您的住宿管理策略。",
@@ -498,45 +499,45 @@
     "desc": "不只是路过？安心住下来。公寓里什么都有——碗碟、床品，连咖啡机都备好了。你只需要带上自己。",
     "cta": "浏览长租房源",
     "hero": {
-      "cta": "Get Quote",
-      "savingsCta": "See Savings",
+      "cta": "获取报价",
+      "savingsCta": "查看优惠",
       "subtitle": "保存 significantly on extended stays with our flexible long-term lease options. Choose 3, 6, or 12-month terms and enjoy up to 30% off monthly rates in 多伦多's premium furnished apartments.",
       "title": "长租方案 Rental Discounts"
     },
     "advantages": {
       "title": "为什么选择 长租方案 with NEOS",
-      "subtitle": "Beyond just savings, long-term stays offer stability, convenience, and a true home-away-from-home experience."
+      "subtitle": "除了节省费用，长期入住还能带来稳定性、便利性和真正的家外之家体验。"
     },
     "form": {
-      "submit": "Get My Quote & Savings",
-      "message": "Tell us about your requirements",
+      "submit": "获取报价和优惠",
+      "message": "请告诉我们您的需求",
       "bedroom": "卧室",
       "firstName": "First 姓名",
       "title": "Get Your 长租方案 Rental Quote",
       "bedrooms": "卧室s",
-      "subtitle": "Tell us about your long-term housing needs and we'll create a custom proposal with your savings breakdown.",
+      "subtitle": "告诉我们您的长期住房需求，我们将为您定制一份包含节省明细的方案。",
       "phone": "电话 Number",
       "phonePlaceholder": "+1 (555) 000-0000",
-      "studio": "Studio",
-      "selectLocation": "Select area",
+      "studio": "开间",
+      "selectLocation": "请选择区域",
       "moveInDate": "Desired Move-in 日期",
-      "messagePlaceholder": "Please describe your long-term housing needs, any specific requirements, reasons for extended stay, and any questions about our long-term rental program...",
-      "location": "Preferred Area",
-      "firstNamePlaceholder": "Enter your first name",
+      "messagePlaceholder": "请描述您的长期住房需求、特殊要求、延长住宿的原因，以及关于长租计划的任何问题...",
+      "location": "首选区域",
+      "firstNamePlaceholder": "请输入名字",
       "submitting": "提交ting...",
       "emailPlaceholder": "your@email.com",
       "lastName": "Last 姓名",
       "propertyType": "物业 类型",
       "success": {
-        "message": "Thank you for your interest in long-term rentals! Our team will prepare a detailed quote with your exact savings breakdown and contact you within 24 hours.",
+        "message": "感谢您对长期租赁的关注！我们的团队将准备详细报价和节省明细，并在24小时内与您联系。",
         "title": "Quote Request 提交ted!"
       },
-      "selectBudget": "Select budget",
+      "selectBudget": "请选择预算",
       "email": "邮箱 地址",
       "leaseDuration": "Preferred 租约 Duration",
-      "selectType": "Select type",
-      "lastNamePlaceholder": "Enter your last name",
-      "months": "Months",
+      "selectType": "请选择类型",
+      "lastNamePlaceholder": "请输入姓氏",
+      "months": "个月",
       "budget": "月租 预算"
     },
     "testimonials": {
@@ -544,17 +545,17 @@
       "subtitle": "See how our long-term residents have saved money and enjoyed their extended 多伦多 stays."
     },
     "usecases": {
-      "title": "Perfect For Your Situation",
+      "title": "适合您的场景",
       "subtitle": "长租 rentals work for a variety of life and business situations requiring extended 多伦多 stays."
     },
     "pricing": {
-      "select": "Select This Plan",
-      "title": "Choose Your Savings Level",
-      "subtitle": "The longer you stay, the more you save. All options include the same premium amenities and services."
+      "select": "选择此方案",
+      "title": "选择您的优惠等级",
+      "subtitle": "住得越久，省得越多。所有选项均包含相同的高端设施和服务。"
     },
     "benefits": {
-      "title": "Everything Included",
-      "subtitle": "All long-term rentals include premium amenities and services at no additional cost."
+      "title": "全部包含",
+      "subtitle": "所有长期租赁均包含高端设施和服务，无额外费用。"
     }
   },
   "relocation": {
@@ -593,7 +594,10 @@
     "students": "学生s",
     "marketInsights": "市场洞察",
     "hosts": "房东合作",
-    "neighborhoods": "社区指南"
+    "neighborhoods": "社区指南",
+    "medicalAcademic": "医疗与学术住宿",
+    "trustLine": "自营管理 · 全额保险 · 企业开票 · 所有物业均位于礼宾服务大楼",
+    "corporateOffice": "公司办公室：20 Upjohn Rd, North York, ON, M3B 2V9"
   },
   "language": {
     "title": "语言",
@@ -724,7 +728,17 @@
     "title": "我们的城市",
     "subtitle": "北美顶级城市的高端精装公寓",
     "properties": "可预订房源",
-    "availableNow": "现可入住"
+    "availableNow": "现可入住",
+    "subtitleCurrent": "从多伦多出发 — 加拿大的商业之都",
+    "availableNowBadge": "现可入住",
+    "comingSoon": "即将开放",
+    "niagaraFalls": "尼亚加拉瀑布",
+    "niagaraDesc": "新市场开发中。",
+    "yourCity": "您的城市？",
+    "yourCityNotify": "扩展时通知您",
+    "yourCityDesc": "告诉我们您下一步需要在哪里获得高端精装住房。",
+    "emailPlaceholder": "电子邮箱地址",
+    "notifyMe": "通知我"
   },
   "contact": {
     "pageTitle": "联系我们",
@@ -1071,10 +1085,11 @@
     "guestFavourite": "房客最爱",
     "rareFind": "稀有好房",
     "roomIn": "位于",
-    "top10": "Top 10",
+    "top10": "前十",
     "top10Desc": "NEOS 最受欢迎的房源之一",
     "reportListing": "举报此房源",
     "fromPrice": "${price}/月起",
+    "hotelEquivalent": "酒店同等价位：",
     "monthly": "月租",
     "quarterly": "季租",
     "annual": "年租",
@@ -1099,7 +1114,12 @@
     "neighborhoodDefaultHighlights": "步行范围内有众多优质餐厅、咖啡馆和购物场所。伊顿中心、皇后街购物娱乐区以及金融区都近在咫尺。",
     "neighborhoodGrocery": "超市、药店和日常用品店步行即达，非常方便。",
     "neighborhoodTitle": "社区亮点",
-    "showAllPhotos": "查看全部照片"
+    "showAllPhotos": "查看全部照片",
+    "narrative": {
+      "sugarWharf": "坐落于多伦多最新的滨水社区之上，这套天际套房可俯瞰安大略湖和城市天际线的全景。走出门外便是Corktown Common公园，步行五分钟即可到达传奇的圣劳伦斯市场，或步行八分钟到联合车站搭乘UP Express机场快线。Sugar Wharf的礼宾大堂、屋顶露台和24小时安保，使其成为多伦多行政居住的黄金标准。",
+      "artistAlley": "隐匿于多伦多文化区的中心，这套套房正对安大略美术馆，几步之遥便是格兰奇公园。步行十分钟可达多伦多大学校园，UHN医院网络也可轻松搭乘街车抵达。这里拥有充满活力的咖啡馆文化、独立书店，毗邻唐人街和肯辛顿市场，是多伦多创意和学术社群的家园。",
+      "wellesley": "位于央街Wellesley地铁站旁，这套现代工作室将整座城市置于您的家门口。步行可达央街的商店和餐厅，沿着当河谷步道慢跑，或几分钟通勤至市中心。适合追求效率又不愿牺牲社区活力的单身专业人士。"
+    }
   },
   "filter": {
     "all": "全部状态"
@@ -1935,7 +1955,12 @@
     "title": "定价建议",
     "placeholder": "基于房源信息获取定价建议...",
     "button": "获取建议",
-    "tip": "AI 会根据城市、房型和面积分析市场价格"
+    "tip": "AI 会根据城市、房型和面积分析市场价格",
+    "monthly": "月租",
+    "quarterly": "季度价",
+    "annual": "年租价",
+    "reviews": "条评价",
+    "perMonth": "/月"
   },
   "result": {
     "title": "生成结果："
@@ -2850,7 +2875,7 @@
   "aboutPage": {
     "title": "关于 NEOS",
     "heroSubtitle": "我们知道在一座还不属于自己的城市需要一个家是什么感觉。所以我们创建了 NEOS。",
-    "missionLabel": "OUR MISSION",
+    "missionLabel": "我们的使命",
     "missionTitle": "驱动我们的是什么",
     "missionDesc": "每个人都值得拥有一个真正的家——即使远在他乡。",
     "missionItem1Title": "精选公寓",
@@ -2862,7 +2887,7 @@
     "missionItem4Title": "优越地理位置",
     "missionItem4Desc": "精选核心城市优质社区，每个家都在您想待的地方。",
     "daysFlexible": "天起灵活租期",
-    "storyLabel": "OUR STORY",
+    "storyLabel": "我们的故事",
     "storyTitle": "如何开始的",
     "storyDesc": "一次令人难忘的找房经历",
     "story1Title": "问题所在",
@@ -2873,7 +2898,7 @@
     "story3Desc": "签一年合同，空荡荡的房子，好几周才能住进去。",
     "story4Title": "于是有了 NEOS",
     "story4Desc": "精装、灵活，你到了就能住。",
-    "whyLabel": "WHY CHOOSE US",
+    "whyLabel": "为什么选择我们",
     "whyTitle": "为什么大家选我们",
     "whyDesc": "我们让每一座城市都成为您的城市。",
     "why1Title": "每套房子都去看过",
@@ -2886,7 +2911,7 @@
     "why4Desc": "真人客服，全天候响应。",
     "why5Title": "没有惊喜",
     "why5Desc": "看到的价格就是你要付的价格。",
-    "commitLabel": "OUR COMMITMENT",
+    "commitLabel": "我们的承诺",
     "commitTitle": "我们的承诺",
     "commitDesc": "每次入住都值得分享",
     "commit1Title": "感受得到的品质",
@@ -2899,7 +2924,8 @@
     "ctaDesc": "浏览可立即入住的精装公寓",
     "ctaBrowse": "浏览公寓",
     "ctaContact": "跟我们聊聊",
-    "imageDisclaimer": "说明：本页部分图片为示意图库存图。"
+    "imageDisclaimer": "说明：本页部分图片为示意图库存图。",
+    "ownerOperatedDesc": "每一套 NEOS 物业都由我们的团队直接拥有和运营。这意味着更快的维护响应、一致的质量标准，以及第三方平台无法比拟的用心服务。"
   },
   "faqPage": {
     "title": "常见问题",
@@ -3189,7 +3215,7 @@
         "desc": "专业且多元文化的环境"
       },
       "title": "多伦多 Quick Facts",
-      "subtitle": "Essential information for executive travelers and business professionals."
+      "subtitle": "为高管出行者和商务人士提供的重要信息。"
     },
     "data": {
       "downtown": {
@@ -3392,42 +3418,42 @@
       "duration": "租约 Duration",
       "phonePlaceholder": "+1 (555) 000-0000",
       "subtitle": "Ready to secure your 多伦多 student housing? Complete the application below and our team will contact you within 24 hours.",
-      "lastNamePlaceholder": "Enter your last name",
-      "selectUniversity": "Select your school",
-      "selectDuration": "Select",
-      "months": "Months",
-      "flexible": "Flexible",
-      "studio": "Private Studio",
+      "lastNamePlaceholder": "请输入姓氏",
+      "selectUniversity": "请选择学校",
+      "selectDuration": "请选择",
+      "months": "个月",
+      "flexible": "灵活",
+      "studio": "独立开间",
       "uoft": "University of 多伦多",
-      "cc": "Centennial College",
+      "cc": "百年理工学院",
       "moveInDate": "Move-in 日期",
-      "ocad": "OCAD University",
-      "shared": "Shared Room",
-      "gbc": "George Brown College",
+      "ocad": "OCAD 大学",
+      "shared": "合租房间",
+      "gbc": "乔治布朗学院",
       "title": "Apply for 学生 Housing",
-      "selectBudget": "Select budget",
-      "programPlaceholder": "e.g. Computer Science",
-      "program": "Program/Major",
+      "selectBudget": "请选择预算",
+      "programPlaceholder": "例如：计算机科学",
+      "program": "专业/学科",
       "emailPlaceholder": "your@email.com",
       "other": "Other",
-      "messagePlaceholder": "Tell us about yourself, any special requirements, roommate preferences, or questions you have about student housing with NEOS...",
+      "messagePlaceholder": "介绍您自己、特殊需求、室友偏好，或关于学生住房的问题...",
       "roomType": "Preferred Room 类型",
       "tmu": "多伦多 Metropolitan University",
-      "firstNamePlaceholder": "Enter your first name",
+      "firstNamePlaceholder": "请输入名字",
       "budget": "月租 预算",
-      "seneca": "Seneca Polytechnic"
+      "seneca": "圣力嘉理工学院"
     },
     "features": {
       "title": "学生-Focused 设施",
-      "subtitle": "Every space is designed with student success in mind, from study areas to social spaces."
+      "subtitle": "每个空间都以学生成功为设计理念，从学习区到社交空间。"
     },
     "testimonials": {
-      "subtitle": "Hear from current and former residents about their NEOS experience.",
+      "subtitle": "听听在住和前住客对 NEOS 体验的评价。",
       "title": "What 学生s Say"
     },
     "universities": {
       "subtitle": "Strategically located near 多伦多's top educational institutions for easy access to campus and academic resources.",
-      "title": "Partner Universities & Colleges"
+      "title": "合作院校"
     }
   },
   "homePaths": {
@@ -3446,59 +3472,59 @@
     "form": {
       "condo": "Condo",
       "phonePlaceholder": "+1 (555) 000-0000",
-      "lastNamePlaceholder": "Enter your last name",
+      "lastNamePlaceholder": "请输入姓氏",
       "monthlyRent": "Current 月租 Rent",
-      "subtitle": "Complete the form below and our team will contact you within 24 hours to discuss your property.",
-      "selectBedrooms": "Select",
+      "subtitle": "填写以下表格，我们的团队将在24小时内联系您讨论您的物业。",
+      "selectBedrooms": "请选择",
       "bedrooms": "卧室s",
       "submitting": "提交ting...",
       "propertyType": "物业 类型",
       "house": "House",
-      "message": "Tell us about your property",
-      "propertyAddressPlaceholder": "Enter property address",
+      "message": "介绍您的物业",
+      "propertyAddressPlaceholder": "请输入物业地址",
       "lastName": "Last 姓名",
       "propertyAddress": "物业 地址",
       "submit": "提交 Application",
       "phone": "电话 Number",
-      "firstNamePlaceholder": "Enter your first name",
+      "firstNamePlaceholder": "请输入名字",
       "success": {
         "title": "Application 提交ted!",
-        "message": "Thank you for your interest! Our team will review your application and contact you within 24 hours to discuss next steps and answer any questions you may have."
+        "message": "感谢您的关注！我们的团队将审核您的申请，并在24小时内联系您讨论后续步骤。"
       },
-      "messagePlaceholder": "Describe your property, current condition, furnishing status, and any questions you have about our program...",
+      "messagePlaceholder": "描述您的物业状况、装修情况，以及关于我们计划的任何问题...",
       "title": "List Your 物业 Today",
       "email": "邮箱 地址",
-      "selectType": "Select type",
+      "selectType": "请选择类型",
       "emailPlaceholder": "your@email.com",
-      "studio": "Studio",
+      "studio": "开间",
       "bedroom": "卧室",
-      "rentPlaceholder": "Optional",
+      "rentPlaceholder": "选填",
       "firstName": "First 姓名",
       "apartment": "公寓"
     },
     "calculator": {
-      "title": "Calculate Your Potential Earnings",
+      "title": "计算您的潜在收益",
       "guarantee": "月租 payments regardless of occupancy, plus professional management included.",
-      "subtitle": "See how much more you could earn with NEOS compared to traditional rentals.",
+      "subtitle": "了解与传统租赁相比，NEOS 能为您带来多少额外收入。",
       "currentRent": "Current 月租 Rent",
       "occupancyRate": "Current 入住率 费率"
     },
     "process": {
-      "subtitle": "Get started in four simple steps and begin earning guaranteed income from your property.",
-      "title": "How It Works"
+      "subtitle": "四个简单步骤即可开始，为您的房产赚取稳定收入。",
+      "title": "如何运作"
     },
     "hero": {
       "cta": "立即开始",
-      "calculateCta": "Calculate Your Earnings",
+      "calculateCta": "计算您的收益",
       "title": "List Your 物业",
       "subtitle": "Earn guaranteed monthly income with zero vacancy risk. Join 多伦多's premium executive housing platform and let us handle everything while you collect steady payments."
     },
     "advantages": {
       "title": "为什么选择 NEOS",
-      "subtitle": "Join hundreds of property owners who've transformed their real estate investments into hassle-free income streams."
+      "subtitle": "加入数百位通过 NEOS 将房产投资转化为省心收入的业主行列。"
     },
     "benefits": {
-      "subtitle": "More reasons why property owners choose NEOS for their investment properties.",
+      "subtitle": "更多业主选择 NEOS 管理投资物业的理由。",
       "title": "Additional 优势"
     }
   },
@@ -3509,38 +3535,38 @@
       "demandSources": "需求 by Industry",
       "title": "市场 Data Visualization",
       "rentalTrends": "Rental 费率 趋势s",
-      "subtitle": "Interactive charts and graphs showing market trends, pricing patterns, and demand analytics.",
+      "subtitle": "展示市场趋势、价格走势和需求分析的交互式图表。",
       "occupancyRates": "入住率 by 社区",
-      "rentalTrendsDesc": "24-month historical rental rate progression across different property types and neighborhoods.",
-      "forecastModelDesc": "Predictive modeling for rental rates, occupancy, and market demand through 2025.",
+      "rentalTrendsDesc": "不同物业类型和社区24个月历史租金走势。",
+      "forecastModelDesc": "2025年租金、入住率和市场需求预测模型。",
       "forecastModel": "12-Month 预测"
     },
     "form": {
-      "jobTitlePlaceholder": "Your job title",
-      "subtitle": "Access our comprehensive market analysis including detailed charts, forecasts, and investment insights.",
+      "jobTitlePlaceholder": "职位",
+      "subtitle": "获取包含详细图表、预测和投资洞察的全面市场分析。",
       "firstName": "First 姓名",
       "company": "公司",
-      "lastNamePlaceholder": "Enter your last name",
+      "lastNamePlaceholder": "请输入姓氏",
       "success": {
-        "message": "Thank you! Your market report is being prepared and will be emailed to you within the next few minutes. Check your inbox for the download link.",
-        "title": "Report Download Ready!",
+        "message": "感谢！您的市场报告正在准备中，几分钟内将发送到您的邮箱。",
+        "title": "报告已就绪！",
         "checkEmail": "Check Your 邮箱"
       },
       "emailPlaceholder": "your@email.com",
-      "interests": "Areas of Interest",
+      "interests": "关注领域",
       "reportType": "Preferred Report 类型",
-      "custom": "Custom Research",
+      "custom": "定制研究",
       "submit": "Download 市场 Report",
-      "companyPlaceholder": "Your company name",
+      "companyPlaceholder": "公司名称",
       "title": "Download Complete 市场 Report",
-      "firstNamePlaceholder": "Enter your first name",
-      "submitting": "Processing...",
+      "firstNamePlaceholder": "请输入名字",
+      "submitting": "处理中...",
       "annual": "年租 Analysis",
       "email": "邮箱 地址",
       "jobTitle": "Job 标题",
       "lastName": "Last 姓名",
       "quarterly": "季租 Report",
-      "selectReport": "Select report type"
+      "selectReport": "请选择报告类型"
     },
     "stats": {
       "subtitle": "Latest data from 多伦多's premium executive housing market as of Q3 2024.",
@@ -3556,7 +3582,7 @@
     },
     "hero": {
       "title": "多伦多 Real Estate 市场洞察",
-      "downloadCta": "Download Report",
+      "downloadCta": "下载报告",
       "viewCta": "查看 洞察",
       "subtitle": "Comprehensive market analysis and trends for 多伦多's executive housing market. Data-driven insights to inform your investment and housing decisions."
     },
@@ -3623,5 +3649,43 @@
     "properties": "套房源",
     "yearsHosting": "{count} 年房东经验",
     "responseRate": "回复率"
+  },
+  "trustBar": {
+    "insurance": "200万美元商业责任保险",
+    "concierge": "所有物业均位于礼宾服务大楼",
+    "licensed": "安大略省持牌经纪"
+  },
+  "aiConcierge": {
+    "placeholder": "告诉我您的多伦多计划...",
+    "submit": "咨询 NEOS AI",
+    "chip1": "医疗轮转，3个月",
+    "chip2": "工作搬迁，4口之家",
+    "chip3": "多大访问学者",
+    "chip4": "保险住房，立即入住",
+    "fallbackLink": "或浏览我们的全部房源 →",
+    "loading": "NEOS AI 正在为您寻找最佳匹配...",
+    "error": "AI 正在加载中，请浏览我们的房源或联系我们。",
+    "browseCta": "浏览房源",
+    "whatsappCta": "WhatsApp 咨询",
+    "scheduleViewing": "预约看房"
+  },
+  "chat": {
+    "title": "与 NEOS 客服聊天",
+    "subtitle": "Aria • 客服主管",
+    "toggle": "打开 NEOS 客服聊天",
+    "close": "关闭聊天",
+    "clear": "清除聊天记录",
+    "clearConfirm": "确定要清除聊天记录吗？",
+    "welcome": "您好！我是 Aria，NEOS 客服。今天有什么可以帮您？",
+    "placeholder": "输入您的消息...",
+    "send": "发送",
+    "typing": "Aria 正在输入...",
+    "disclaimer": "回复可能需要一些时间",
+    "error": "抱歉，发送消息时出错。请重试或发送邮件至 hello@neos.rentals 联系我们。",
+    "fallback": {
+      "1": "如需预订咨询，请访问我们的房源页面或使用上方的 AI 礼宾服务。",
+      "2": "紧急事宜请发送邮件至 hello@neos.rentals 联系我们。",
+      "3": "我们的团队通常在营业时间（东部时间上午9点至下午6点）内2小时内回复。"
+    }
   }
 }

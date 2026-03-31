@@ -1,60 +1,114 @@
 'use client';
 
+import { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { Container } from '@/components/ui';
-import { HeroSearchBox } from './HeroSearchBox';
+import { AIConciergeInput } from './AIConciergeInput';
+import { AIResponsePanel } from './AIResponsePanel';
 import { useI18n } from '@/lib/i18n';
 
-export function HeroSection() {
-  const { t } = useI18n();
+type PanelState = 'loading' | 'response' | 'error';
 
-  const heroCopy = {
-    title: t('hero.title', 'Your Home Awaits'),
-    highlight: t('hero.highlight', 'Arrive today. Feel at home tonight.'),
-    subtitle: t('hero.subtitle', 'Premium furnished apartments in downtown Toronto. 30 days to 12 months. Move-in ready.'),
-    stats: [
-      t('hero.stats.flexible', '30+ Day Flexible Stays'),
-      t('hero.stats.fees', '$0 Hidden Fees'),
-      t('hero.stats.support', '24/7 Guest Support'),
-    ],
-  };
+interface AIResponse {
+  text: string;
+  recommended_property_id: number;
+  alternative_property_id: number | null;
+  hotel_comparison: string;
+}
+
+export function HeroSection() {
+  const { t, locale } = useI18n();
+  const [panelVisible, setPanelVisible] = useState(false);
+  const [panelState, setPanelState] = useState<PanelState>('loading');
+  const [aiResponse, setAiResponse] = useState<AIResponse | undefined>();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleAISubmit = useCallback(async (message: string) => {
+    setIsLoading(true);
+    setPanelVisible(true);
+    setPanelState('loading');
+
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 10000);
+
+      const res = await fetch('/api/ai-concierge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, language: locale }),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeout);
+
+      if (!res.ok) throw new Error('API error');
+
+      const data: AIResponse = await res.json();
+      setAiResponse(data);
+      setPanelState('response');
+    } catch {
+      setPanelState('error');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [locale]);
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center">
-      <div className="absolute inset-0">
-        <Image
-          src="/images/cooper-55-e98a880d.jpg"
-          alt="55 Cooper St lakefront view"
-          fill
-          priority={true}
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/70 via-neutral-900/50 to-neutral-900/70" />
-      </div>
+    <>
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background video */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/images/cooper-55-e98a880d.jpg"
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/videos/hero-loop.mp4" type="video/mp4" />
+        </video>
 
-      <Container className="relative z-10 text-center">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-            {heroCopy.title}
-            <br />
-            <span className="text-accent">{heroCopy.highlight}</span>
-          </h1>
-
-          <p className="text-lg md:text-xl text-white/90 mb-12 max-w-2xl mx-auto">
-            {heroCopy.subtitle}
-          </p>
-
-          <HeroSearchBox />
-
-          <div className="flex flex-wrap justify-center gap-8 mt-12 text-white">
-            {heroCopy.stats.map((stat) => (
-              <div key={stat} className="text-center">
-                <div className="text-lg md:text-xl font-semibold text-white/90">{stat}</div>
-              </div>
-            ))}
-          </div>
+        {/* Fallback image with Ken Burns animation */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/cooper-55-e98a880d.jpg"
+            alt="55 Cooper St lakefront view"
+            fill
+            priority={true}
+            className="object-cover animate-ken-burns"
+          />
         </div>
-      </Container>
-    </section>
+
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/60 via-neutral-900/40 to-neutral-900/70 z-[1]" />
+
+        <Container className="relative z-10 text-center">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight">
+              {t('hero.title', 'Experience Toronto, Curated by AI & Human Expertise.')}
+            </h1>
+
+            <p className="text-xl md:text-2xl text-accent font-semibold mb-4">
+              {t('hero.highlight', 'Stop searching. Start living.')}
+            </p>
+
+            <p className="text-lg md:text-xl text-white/90 mb-12 max-w-2xl mx-auto">
+              {t('hero.subtitle', 'Premium furnished apartments in downtown Toronto. 30 days to 12 months. Move-in ready.')}
+            </p>
+
+            <AIConciergeInput onSubmit={handleAISubmit} isLoading={isLoading} />
+          </div>
+
+          {/* AI Response Panel - Inside Hero, below input */}
+          <div className="mt-8 w-full max-w-3xl mx-auto">
+            <AIResponsePanel
+              state={panelState}
+              response={aiResponse}
+              visible={panelVisible}
+            />
+          </div>
+        </Container>
+      </section>
+    </>
   );
 }

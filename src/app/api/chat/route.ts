@@ -1,0 +1,326 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+// Type definitions for Cloudflare Workers AI
+interface CloudflareEnv {
+  AI: {
+    run: (model: string, options: {
+      messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>;
+      max_tokens?: number;
+      temperature?: number;
+    }) => Promise<{ response: string }>;
+  };
+}
+
+// Get Cloudflare context from global symbol
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getCloudflareContext(): any | undefined {
+  const symbol = Symbol.for("__cloudflare-context__");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const context = (globalThis as any)[symbol];
+  return context;
+}
+
+// Get AI binding from Cloudflare environment
+function getAI(): CloudflareEnv['AI'] {
+  // Try to get AI from Cloudflare context (for Cloudflare Workers)
+  const cfContext = getCloudflareContext();
+  if (cfContext?.env?.AI) {
+    return cfContext.env.AI;
+  }
+  
+  // Fallback to process.env (for development/testing)
+  const env = process.env as unknown as { AI?: CloudflareEnv['AI'] };
+  if (env.AI) {
+    return env.AI;
+  }
+  
+  if (process.env.NODE_ENV !== 'production') console.error("AI binding not found");
+  throw new Error("AI binding not found. Make sure AI is bound in wrangler.toml");
+}
+
+// System prompt for Aria
+const SYSTEM_PROMPT = `You are Aria, the Customer Care Lead at NEOS (StayNeos Executive Apartments).
+
+## About NEOS Website
+- Website: neos.rentals (also stayneos.com redirects to neos.rentals)
+- Features: Browse properties, AI Concierge for recommendations, For Business form for corporate housing
+- Languages: English, Chinese, French
+- Contact: hello@neos.rentals, +1 (647) 862-6518
+
+## Booking Process
+1. **Browse**: Visit /properties to see all available apartments
+2. **Inquire**: Use AI Concierge on homepage or contact form for questions
+3. **Book**: For business/corporate: /for-business form (5 fields, 2-hour response guarantee)
+4. **Payment**: Monthly, quarterly, or annual rates available
+5. **Check-in**: Digital key access, welcome package, 24/7 support
+
+## Key Policies
+- Minimum stay: 30 days
+- Included: Fully furnished, utilities, Wi-Fi, housekeeping
+- Insurance: $2M commercial liability coverage
+- Cancellation: 30-day notice for monthly stays
+- Pets: Case-by-case approval (contact for details)
+
+## Current Properties (Toronto)
+1. **55 Cooper St (Sugar Wharf)** - Premium 3BR Sky Suite
+   - Price: $12,000/mo (monthly), $10,800/mo (quarterly), $9,600/mo (annual)
+   - Features: Lake views, 55+ floor, near Union Station (8 min walk)
+   - Best for: Executives, families, luxury seekers
+
+2. **238 Simcoe St (Artist Alley)** - Executive 3BR Suite  
+   - Price: $6,500/mo (monthly), $5,850/mo (quarterly), $5,200/mo (annual)
+   - Features: Near hospitals (Toronto General, Mt. Sinai, SickKids), universities
+   - Best for: Medical professionals, visiting scholars, insurance housing
+
+3. **22 Wellesley St E** - Modern 1BR City View
+   - Price: $3,500/mo (monthly), $3,150/mo (quarterly), $2,800/mo (annual)
+   - Features: Midtown, near Wellesley subway, modern finishes
+   - Best for: Solo professionals, students, budget-conscious stays
+
+## Special Services
+- **Corporate Housing**: Custom solutions for project teams, relocations
+- **Medical Stays**: Proximity to major hospitals, insurance coordination
+- **Academic Housing**: Near UofT, OCAD, Ryerson campuses
+- **Long-term**: 3+ month stays with discounted rates
+
+## Web Search Capability
+If you need current Toronto rental market data, local news, or competitor pricing, you can query external websites through our web search API.
+Use this for: Toronto rental trends, local events affecting housing, competitor pricing comparisons.
+Don't use for: personal information, sensitive data, or non-housing topics.
+
+## Your Role
+- Answer questions about properties, pricing, availability
+- Guide users to appropriate pages (/properties, /for-business)
+- Explain booking process and policies
+- Use web search API when you need current market data or competitor information
+- Escalate complex issues to hello@neos.rentals
+- Be professional, warm, concise (2-3 sentences max)
+
+If you don't know something, suggest contacting hello@neos.rentals or visiting the relevant page on our website.
+
+Respond in the same language the user writes in.`;
+
+// Improved fallback responses by language
+const FALLBACK_RESPONSES = {
+  EN: "Hi! I'm Aria, NEOS Customer Care. For booking inquiries, visit our properties page or use the AI concierge. For urgent help, email us at hello@neos.rentals.",
+  ZH: "您好！我是 Aria，NEOS 客服。预订咨询请访问房源页面或使用 AI 租赁顾问。紧急帮助请发送邮件至 hello@neos.rentals。",
+  FR: "Bonjour ! Je suis Aria, service client NEOS. Pour les demandes de réservation, visitez notre page de propriétés ou utilisez le concierge IA. Pour une aide urgente, écrivez-nous à hello@neos.rentals.",
+  DEFAULT: "Hi! I'm Aria, NEOS Customer Care. For booking inquiries, visit our properties page or use the AI concierge. For urgent help, email us at hello@neos.rentals."
+};
+
+// Generate a session ID if not provided
+function generateSessionId(): string {
+  return `website_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+}
+
+// Simple language detection
+function detectLanguage(text: string): string {
+  const lowerText = text.toLowerCase();
+  
+  // Check for Chinese characters
+  if (/[\u4e00-\u9fff]/.test(text)) {
+    return 'ZH';
+  }
+  
+  // Check for French keywords
+  if (/\b(bonjour|salut|merci|s'il vous plaît|aidez|aide|français|fr)\b/i.test(lowerText)) {
+    return 'FR';
+  }
+  
+  // Default to English
+  return 'EN';
+}
+
+// Get fallback response based on language
+function getFallbackResponse(language: string = 'EN'): string {
+  return FALLBACK_RESPONSES[language as keyof typeof FALLBACK_RESPONSES] || FALLBACK_RESPONSES.DEFAULT;
+}
+
+// Get AI model from environment variable
+function getAIModel(): string {
+  return process.env.ARIA_CHAT_MODEL || '@cf/meta/llama-3.1-8b-instruct';
+}
+
+// Check if a query needs external web search
+function needsWebSearch(query: string): boolean {
+  const lowerQuery = query.toLowerCase();
+  const searchKeywords = [
+    'market', 'trend', 'competitor', 'compare', 'news', 'toronto rental',
+    'rental market', 'housing market', 'price comparison', 'competition',
+    'current rates', 'market rate', 'average rent', 'rental trend',
+    'toronto news', 'housing news', 'real estate news', 'competitor pricing',
+    'how much', 'what is the price', 'compare prices', 'market analysis',
+    'rental data', 'market data', 'statistics', 'report', 'study'
+  ];
+  
+  return searchKeywords.some(keyword => lowerQuery.includes(keyword));
+}
+
+// Call web search API
+async function callWebSearch(query: string): Promise<string> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const webSearchUrl = `${baseUrl}/api/web-search`;
+    
+    const response = await fetch(webSearchUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query, maxResults: 3 }),
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Web search API returned ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    if (!data.results || data.results.length === 0) {
+      return 'No relevant web search results found.';
+    }
+    
+    // Format search results for the AI
+    let formattedResults = 'Web search results:\n\n';
+    data.results.forEach((result: { title: string; content: string; url: string; source: string }, index: number) => {
+      formattedResults += `${index + 1}. **${result.title}** (Source: ${result.source})\n`;
+      formattedResults += `   URL: ${result.url}\n`;
+      formattedResults += `   Content: ${result.content.substring(0, 300)}${result.content.length > 300 ? '...' : ''}\n\n`;
+    });
+    
+    return formattedResults;
+  } catch (error) {
+    console.error('Web search error:', error);
+    return 'Unable to fetch web search results at this time.';
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { message, sessionId: providedSessionId } = body;
+
+    if (!message || typeof message !== 'string') {
+      return NextResponse.json(
+        { error: 'Message is required and must be a string' },
+        { status: 400 }
+      );
+    }
+
+    // Generate or use provided session ID
+    const sessionId = providedSessionId || generateSessionId();
+    
+    // Detect language from user message
+    const language = detectLanguage(message);
+    
+    // Get AI model
+    const model = getAIModel();
+    
+    // Check if we need web search
+    let webSearchResults = '';
+    let usedWebSearch = false;
+    
+    if (needsWebSearch(message)) {
+      usedWebSearch = true;
+      webSearchResults = await callWebSearch(message);
+    }
+    
+    // Prepare messages for AI
+    const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
+      {
+        role: 'system' as const,
+        content: SYSTEM_PROMPT
+      }
+    ];
+    
+    // Add web search results if available
+    if (webSearchResults) {
+      messages.push({
+        role: 'system' as const,
+        content: `Current web search results for context:\n${webSearchResults}\n\nUse this information to provide accurate, up-to-date answers about Toronto rental market trends, competitor pricing, and local news. Cite sources when appropriate.`
+      });
+    }
+    
+    // Add user message
+    messages.push({
+      role: 'user' as const,
+      content: message.trim()
+    });
+
+    // Call Cloudflare Workers AI
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      
+      // Access Cloudflare Workers AI binding
+      const ai = getAI();
+      const aiResponse = await ai.run(model, {
+        messages,
+        max_tokens: 256,
+        temperature: 0.7,
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (aiResponse && aiResponse.response) {
+        return NextResponse.json({
+          text: aiResponse.response,
+          sessionId,
+          source: 'cloudflare-ai',
+          language,
+          usedWebSearch,
+          webSearchQuery: usedWebSearch ? message : undefined
+        });
+      } else {
+        throw new Error('Invalid AI response format');
+      }
+      
+    } catch (aiError) {
+      console.error('Cloudflare AI error:', aiError);
+      
+      // Use language-specific fallback response
+      return NextResponse.json({
+        text: getFallbackResponse(language),
+        sessionId,
+        source: 'fallback-ai-error',
+        language,
+        usedWebSearch,
+        webSearchQuery: usedWebSearch ? message : undefined
+      });
+    }
+
+  } catch (error) {
+    console.error('Error in chat API:', error);
+    
+    // Generate session ID even on error
+    const sessionId = generateSessionId();
+    const language = 'EN'; // Default to English on general errors
+    
+    return NextResponse.json({
+      text: getFallbackResponse(language),
+      sessionId,
+      source: 'error-fallback',
+      language,
+      usedWebSearch: false
+    }, { status: 500 });
+  }
+}
+
+// Optional: Add a GET endpoint for health check
+export async function GET() {
+  const model = getAIModel();
+  
+  return NextResponse.json({
+    status: 'ok',
+    ai: {
+      model,
+      provider: 'cloudflare-workers-ai',
+      binding: 'env.AI'
+    },
+    fallback: {
+      enabled: true,
+      languages: Object.keys(FALLBACK_RESPONSES).length,
+      system_prompt_length: SYSTEM_PROMPT.length
+    }
+  });
+}

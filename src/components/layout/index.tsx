@@ -4,3 +4,5 @@
 export { default as Navbar } from './Navbar';
 export { default as Footer } from './Footer';
 export { default as Sidebar } from './Sidebar';
+export { WhatsAppFAB } from './WhatsAppFAB';
+export { CustomerChat } from './CustomerChat';

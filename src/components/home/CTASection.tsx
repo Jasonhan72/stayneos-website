@@ -7,9 +7,9 @@ import { useI18n } from '@/lib/i18n';
 export function CTASection() {
   const { t } = useI18n();
   const trustItems = [
-    '$2M Commercial Liability Insurance',
-    'All properties in concierge buildings',
-    'Licensed Ontario brokerage',
+    t('trustBar.insurance', '$2M Commercial Liability Insurance'),
+    t('trustBar.concierge', 'All properties in concierge buildings'),
+    t('trustBar.licensed', 'Licensed Ontario brokerage'),
   ];
 
   return (

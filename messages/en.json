@@ -76,8 +76,8 @@
     "title": "Currency"
   },
   "hero": {
-    "title": "Your Home Awaits",
-    "highlight": "Arrive today. Feel at home tonight.",
+    "title": "Experience Toronto, Curated by AI & Human Expertise.",
+    "highlight": "Stop searching. Start living.",
     "subtitle": "Premium furnished apartments in downtown Toronto. 30 days to 12 months. Move-in ready.",
     "cta": "List Your Property",
     "ctaQuote": "Request a Quote",
@@ -439,6 +439,7 @@
     "form": {
       "title": "Request a Custom Quote",
       "subtitle": "Tell us about your requirements and our team will create a customized solution for your organization.",
+      "responseGuarantee": "2-hour response guarantee — we'll get back to you fast.",
       "companyName": "Company Name",
       "companyNamePlaceholder": "Your company name",
       "contactName": "Contact Name",
@@ -585,7 +586,10 @@
     "properties": "Browse Properties",
     "owners": "For Property Owners",
     "academicProfessionals": "For Academic & Medical Professionals",
-    "trustSignalsLine": "Fully insured · Corporate invoicing available · All properties in concierge-serviced buildings"
+    "trustSignalsLine": "Fully insured · Corporate invoicing available · All properties in concierge-serviced buildings",
+    "medicalAcademic": "Medical & Academic Stays",
+    "trustLine": "Owner-operated · Fully insured · Corporate invoicing available · All properties in concierge-serviced buildings",
+    "corporateOffice": "Corporate Office: 20 Upjohn Rd, North York, ON, M3B 2V9"
   },
   "language": {
     "title": "Language",
@@ -716,7 +720,17 @@
     "title": "Our Cities",
     "subtitle": "Premium furnished apartments in top cities across North America",
     "properties": "Properties available",
-    "availableNow": "Available now"
+    "availableNow": "Available now",
+    "subtitleCurrent": "Starting in Toronto — Canada's business capital",
+    "availableNowBadge": "Available Now",
+    "comingSoon": "Coming Soon",
+    "niagaraFalls": "Niagara Falls",
+    "niagaraDesc": "A new market in development.",
+    "yourCity": "Your City?",
+    "yourCityNotify": "Get notified when we expand",
+    "yourCityDesc": "Tell us where you need premium furnished stays next.",
+    "emailPlaceholder": "Email address",
+    "notifyMe": "Notify Me"
   },
   "contact": {
     "pageTitle": "Contact Us",
@@ -1067,6 +1081,7 @@
     "top10Desc": "One of the most loved homes on NEOS",
     "reportListing": "Report this listing",
     "fromPrice": "From ${price}/Mo",
+    "hotelEquivalent": "Hotel equivalent:",
     "monthly": "Monthly",
     "quarterly": "Quarterly",
     "annual": "Annual",
@@ -1091,7 +1106,12 @@
     "neighborhoodDefaultHighlights": "You'll discover great restaurants, cafes, and shopping within walking distance. The Eaton Centre, Queen Street shopping and entertainment, and the Financial District are all close by.",
     "neighborhoodGrocery": "For groceries, pharmacies, and daily essentials, there are multiple options within a short walk.",
     "neighborhoodTitle": "Neighborhood highlights",
-    "showAllPhotos": "Show all photos"
+    "showAllPhotos": "Show all photos",
+    "narrative": {
+      "sugarWharf": "Perched above Toronto's newest waterfront neighborhood, this sky suite offers panoramic views of Lake Ontario and the city skyline. Step outside to Corktown Common park, walk five minutes to the legendary St. Lawrence Market, or catch the UP Express at Union Station — just eight minutes on foot. Sugar Wharf's concierge lobby, rooftop terrace, and 24-hour security make this the gold standard for executive living in Toronto.",
+      "artistAlley": "Nestled in the heart of Toronto's cultural quarter, this suite sits directly across from the Art Gallery of Ontario and steps from Grange Park. The University of Toronto campus is a ten-minute walk, and the UHN hospital network is easily accessible by streetcar. With its vibrant café culture, independent bookshops, and proximity to Chinatown and Kensington Market, this is where Toronto's creative and academic communities call home.",
+      "wellesley": "Located steps from Wellesley subway station on the Yonge line, this modern studio puts the entire city at your doorstep. Walk to the shops and restaurants of Yonge Street, jog through the Don Valley trails, or commute downtown in minutes. Ideal for solo professionals who want efficiency without compromising on neighborhood energy."
+    }
   },
   "filter": {
     "all": "All Status"
@@ -2303,7 +2323,12 @@
     "title": "Pricing Suggestion",
     "placeholder": "Get pricing suggestions based on property info...",
     "button": "Get Suggestion",
-    "tip": "AI analyzes market prices based on city, type, and area"
+    "tip": "AI analyzes market prices based on city, type, and area",
+    "monthly": "Monthly",
+    "quarterly": "Quarterly",
+    "annual": "Annual",
+    "reviews": "reviews",
+    "perMonth": "/month"
   },
   "result": {
     "title": "Result:"
@@ -3267,7 +3292,8 @@
     "ctaDesc": "Browse furnished apartments ready for move-in.",
     "ctaBrowse": "Browse Apartments",
     "ctaContact": "Say Hello",
-    "imageDisclaimer": "Note: Some photos on this page are illustrative stock images."
+    "imageDisclaimer": "Note: Some photos on this page are illustrative stock images.",
+    "ownerOperatedDesc": "Every NEOS property is directly owned and operated by our team. This means faster maintenance response, consistent quality standards, and a level of care that third-party platforms simply can't match."
   },
   "faqPage": {
     "title": "Frequently Asked Questions",
@@ -3591,5 +3617,43 @@
     "properties": "properties",
     "yearsHosting": "{count} years hosting",
     "responseRate": "response rate"
+  },
+  "trustBar": {
+    "insurance": "$2M Commercial Liability Insurance",
+    "concierge": "All properties in concierge buildings",
+    "licensed": "Licensed Ontario brokerage"
+  },
+  "aiConcierge": {
+    "placeholder": "Tell me about your Toronto plans...",
+    "submit": "Ask NEOS AI",
+    "chip1": "Medical rotation, 3 months",
+    "chip2": "Relocating for work, family of 4",
+    "chip3": "Visiting scholar at U of T",
+    "chip4": "Insurance housing, immediate",
+    "fallbackLink": "Or browse our full collection →",
+    "loading": "NEOS AI is finding your perfect match...",
+    "error": "Our AI is taking a moment. Browse our collection or chat with us.",
+    "browseCta": "Browse Properties",
+    "whatsappCta": "Chat on WhatsApp",
+    "scheduleViewing": "Schedule a Viewing"
+  },
+  "chat": {
+    "title": "Chat with NEOS Support",
+    "subtitle": "Aria • Customer Care Lead",
+    "toggle": "Open chat with NEOS Support",
+    "close": "Close chat",
+    "clear": "Clear chat history",
+    "clearConfirm": "Are you sure you want to clear the chat history?",
+    "welcome": "Hi! I'm Aria, NEOS Customer Care. How can I help you today?",
+    "placeholder": "Type your message...",
+    "send": "Send",
+    "typing": "Aria is typing...",
+    "disclaimer": "Responses may take a few moments",
+    "error": "Sorry, there was an error sending your message. Please try again or email us at hello@neos.rentals.",
+    "fallback": {
+      "1": "For booking inquiries, please visit our properties page or use the AI concierge above.",
+      "2": "For urgent matters, please email us at hello@neos.rentals.",
+      "3": "Our team typically responds within 2 hours during business hours (9am-6pm EST)."
+    }
   }
 }

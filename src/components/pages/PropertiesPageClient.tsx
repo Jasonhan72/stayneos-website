@@ -676,6 +676,15 @@ function PropertyGridCard({
           </div>
           
           <PropertyPricingTiers property={property} compact />
+          {/* Hotel Comparison */}
+          <div className="hotel-comparison mt-1">
+            <span className="text-xs text-neutral-500">
+              {t('property.hotelEquivalent', 'Hotel equivalent:')}{' '}
+              <span className="text-neutral-400 line-through">
+                {property.id === '1' ? '~$18,000/mo' : property.id === '2' ? '~$10,500/mo' : property.id === '3' ? '~$7,500/mo' : ''}
+              </span>
+            </span>
+          </div>
           {property.reviewCount > 0 && (
             <p className="text-xs text-neutral-400 mt-2">{property.reviewCount} {t('property.reviews')}</p>
           )}
@@ -778,6 +787,15 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
           
           <div className="mt-4">
             <PropertyPricingTiers property={property} />
+            {/* Hotel Comparison */}
+            <div className="hotel-comparison mt-2">
+              <span className="text-sm text-neutral-500">
+                {t('property.hotelEquivalent', 'Hotel equivalent:')}{' '}
+                <span className="text-neutral-400 line-through">
+                  {property.id === '1' ? '~$18,000/mo' : property.id === '2' ? '~$10,500/mo' : property.id === '3' ? '~$7,500/mo' : ''}
+                </span>
+              </span>
+            </div>
           </div>
           {property.reviewCount > 0 && (
             <p className="text-sm text-neutral-400 mt-2">{property.reviewCount} {t('property.reviews')}</p>

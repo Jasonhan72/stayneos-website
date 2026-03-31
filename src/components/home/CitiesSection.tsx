@@ -22,7 +22,7 @@ export function CitiesSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">{t('cities.title')}</h2>
-          <p className="text-lg text-neutral-600 max-w-2xl mx-auto">{t('cities.subtitle', "Starting in Toronto — Canada's business capital")}</p>
+          <p className="text-lg text-neutral-600 max-w-2xl mx-auto">{t('cities.subtitleCurrent', "Starting in Toronto — Canada's business capital")}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -32,12 +32,12 @@ export function CitiesSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
               <div className="absolute top-4 left-4">
                 <span className="inline-flex rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-neutral-900">
-                  Available Now
+                  {t('cities.availableNowBadge', 'Available Now')}
                 </span>
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-6">
                 <h3 className="text-2xl font-bold text-white mb-1">{cityName}</h3>
-                <p className="text-white/80 text-sm">{t('cities.availableNow') || 'Available now'}</p>
+                <p className="text-white/80 text-sm">{t('cities.availableNow', 'Available now')}</p>
               </div>
               <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                 <div className="bg-white rounded-full p-2"><ArrowRight size={20} className="text-neutral-900" /></div>
@@ -46,16 +46,16 @@ export function CitiesSection() {
           </Link>
 
           <div className="group relative overflow-hidden rounded-xl aspect-[4/5] bg-neutral-900">
-            <Image src="/images/cities/toronto.jpg" alt="Niagara Falls" fill className="object-cover grayscale opacity-50 transition-transform duration-500 group-hover:scale-105" />
+            <Image src="/images/cities/toronto.jpg" alt={t('cities.niagaraFalls', 'Niagara Falls')} fill className="object-cover grayscale opacity-50 transition-transform duration-500 group-hover:scale-105" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
             <div className="absolute top-4 left-4">
               <span className="inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-white ring-1 ring-white/20">
-                Coming Soon
+                {t('cities.comingSoon', 'Coming Soon')}
               </span>
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-6">
-              <h3 className="text-2xl font-bold text-white mb-1">Niagara Falls</h3>
-              <p className="text-white/75 text-sm">A new market in development.</p>
+              <h3 className="text-2xl font-bold text-white mb-1">{t('cities.niagaraFalls', 'Niagara Falls')}</h3>
+              <p className="text-white/75 text-sm">{t('cities.niagaraDesc', 'A new market in development.')}</p>
             </div>
           </div>
 
@@ -64,9 +64,9 @@ export function CitiesSection() {
               <div className="mb-6 flex h-28 items-center justify-center rounded-lg bg-[radial-gradient(circle_at_center,_rgba(23,37,84,0.12),_transparent_60%),linear-gradient(135deg,rgba(15,23,42,0.04),rgba(15,23,42,0.08))]">
                 <span className="text-6xl font-bold text-neutral-400">?</span>
               </div>
-              <h3 className="text-2xl font-bold text-neutral-900 mb-2">Your City?</h3>
-              <p className="text-neutral-600 mb-2">Get notified when we expand</p>
-              <p className="text-sm text-neutral-500">Tell us where you need premium furnished stays next.</p>
+              <h3 className="text-2xl font-bold text-neutral-900 mb-2">{t('cities.yourCity', 'Your City?')}</h3>
+              <p className="text-neutral-600 mb-2">{t('cities.yourCityNotify', 'Get notified when we expand')}</p>
+              <p className="text-sm text-neutral-500">{t('cities.yourCityDesc', 'Tell us where you need premium furnished stays next.')}</p>
             </div>
 
             <form onSubmit={handleNotify} className="mt-6 space-y-3">
@@ -74,7 +74,7 @@ export function CitiesSection() {
                 type="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                placeholder="Email address"
+                placeholder={t('cities.emailPlaceholder', 'Email address')}
                 className="w-full rounded-lg border border-neutral-300 px-4 py-3 text-sm text-neutral-900 outline-none focus:border-primary"
                 required
               />
@@ -82,7 +82,7 @@ export function CitiesSection() {
                 type="submit"
                 className="w-full rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-700"
               >
-                Notify Me
+                {t('cities.notifyMe', 'Notify Me')}
               </button>
             </form>
           </div>
