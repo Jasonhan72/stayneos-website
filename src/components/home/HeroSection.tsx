@@ -55,44 +55,44 @@ export function HeroSection() {
 
   return (
     <>
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background video */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-neutral-900">
+        {/* Background image (always visible, renders first) */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/images/cooper-55-e98a880d.jpg"
+            alt="55 Cooper St lakefront view"
+            fill
+            priority={true}
+            className="object-cover"
+          />
+        </div>
+
+        {/* Background video (overlays image on desktop, may not autoplay on iOS) */}
         <video
           autoPlay
           muted
           loop
           playsInline
           poster="/images/cooper-55-e98a880d.jpg"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover z-0 hidden md:block"
         >
           <source src="/videos/hero-loop.mp4" type="video/mp4" />
         </video>
 
-        {/* Fallback image with Ken Burns animation */}
-        <div className="absolute inset-0">
-          <Image
-            src="/images/cooper-55-e98a880d.jpg"
-            alt="55 Cooper St lakefront view"
-            fill
-            priority={true}
-            className="object-cover animate-ken-burns"
-          />
-        </div>
-
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/60 via-neutral-900/40 to-neutral-900/70 z-[1]" />
 
-        <Container className="relative z-10 text-center">
+        <Container className="relative z-10 text-center pt-20 pb-8 md:pt-0 md:pb-0">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-3 md:mb-4 leading-tight">
               {t('hero.title', 'Experience Toronto, Curated by AI & Human Expertise.')}
             </h1>
 
-            <p className="text-xl md:text-2xl text-accent font-semibold mb-4">
+            <p className="text-lg md:text-2xl text-accent font-semibold mb-3 md:mb-4">
               {t('hero.highlight', 'Stop searching. Start living.')}
             </p>
 
-            <p className="text-lg md:text-xl text-white/90 mb-12 max-w-2xl mx-auto">
+            <p className="text-base md:text-xl text-white/90 mb-8 md:mb-12 max-w-2xl mx-auto">
               {t('hero.subtitle', 'Premium furnished apartments in downtown Toronto. 30 days to 12 months. Move-in ready.')}
             </p>
 

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useI18n } from '@/lib/i18n';
 import Link from 'next/link';
+import { ArrowRight, Loader2 } from 'lucide-react';
 
 interface AIConciergeInputProps {
   onSubmit: (message: string) => void;
@@ -36,43 +37,84 @@ export function AIConciergeInput({ onSubmit, isLoading }: AIConciergeInputProps)
 
   const handleChipClick = (chipText: string) => {
     setInput(chipText);
+    // Auto-submit on chip click
+    if (!isLoading) {
+      onSubmit(chipText);
+    }
   };
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-      {/* Glowing input container */}
+      {/* Input container */}
       <form onSubmit={handleSubmit} className="relative group">
         {/* Breathing glow effect */}
         <div className="absolute -inset-1 bg-gradient-to-r from-accent/40 via-accent/60 to-accent/40 rounded-2xl blur-lg opacity-60 group-hover:opacity-80 animate-breathing-glow transition-opacity duration-500" />
 
-        <div className="relative flex items-center bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl overflow-hidden">
+        {/* Desktop: inline layout */}
+        <div className="relative hidden sm:flex items-center bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl overflow-hidden">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={t('aiConcierge.placeholder', 'Tell me about your Toronto plans...')}
-            className="flex-1 px-6 py-4 text-gray-800 placeholder-gray-400 bg-transparent outline-none text-lg"
+            className="flex-1 px-5 py-4 text-gray-800 placeholder-gray-400 bg-transparent outline-none text-base"
             disabled={isLoading}
           />
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="mr-2 px-6 py-3 bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-all duration-200 whitespace-nowrap"
+            className="mr-2 px-5 py-2.5 bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-all duration-200 whitespace-nowrap flex items-center gap-1.5"
           >
-            {isLoading ? '...' : t('aiConcierge.submit', 'Ask NEOS AI')}
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <>
+                {t('aiConcierge.submit', 'Ask NEOS AI')}
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
           </button>
+        </div>
+
+        {/* Mobile: stacked layout */}
+        <div className="relative sm:hidden bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl overflow-hidden">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={t('aiConcierge.placeholder', 'Tell me about your Toronto plans...')}
+            className="w-full px-4 py-3.5 text-gray-800 placeholder-gray-400 bg-transparent outline-none text-base"
+            disabled={isLoading}
+          />
+          <div className="px-3 pb-3">
+            <button
+              type="submit"
+              disabled={!input.trim() || isLoading}
+              className="w-full py-2.5 bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5"
+            >
+              {isLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <>
+                  {t('aiConcierge.submit', 'Ask NEOS AI')}
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </form>
 
       {/* Prompt chips */}
-      <div className="flex flex-wrap justify-center gap-2 mt-6">
+      <div className="flex flex-wrap justify-center gap-2 mt-5">
         {promptChipKeys.map((key, i) => {
           const chipText = t(key, defaultChips[i]);
           return (
             <button
               key={key}
               onClick={() => handleChipClick(chipText)}
-              className="px-4 py-2 bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white/90 text-sm rounded-full border border-white/20 transition-all duration-200 hover:scale-105"
+              disabled={isLoading}
+              className="px-3 py-1.5 bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white/90 text-xs sm:text-sm rounded-full border border-white/20 transition-all duration-200 hover:scale-105 disabled:opacity-50"
             >
               {chipText}
             </button>
@@ -81,7 +123,7 @@ export function AIConciergeInput({ onSubmit, isLoading }: AIConciergeInputProps)
       </div>
 
       {/* Fallback link */}
-      <div className="mt-6 text-center">
+      <div className="mt-5 text-center">
         <Link
           href="/properties"
           className="text-white/70 hover:text-white text-sm transition-colors duration-200 underline underline-offset-4"
