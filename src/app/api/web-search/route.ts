@@ -3,6 +3,8 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { verifyRequestAuth } from '@/lib/auth/admin-api';
 
+export const dynamic = 'force-dynamic';
+
 // Allowed domains for scraping (Toronto/local sites)
 const ALLOWED_DOMAINS = [
   'toronto.ca',
