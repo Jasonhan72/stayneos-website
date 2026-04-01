@@ -3770,5 +3770,23 @@
       "2": "Pour les questions urgentes, veuillez nous contacter par email à hello@neos.rentals.",
       "3": "Notre équipe répond généralement dans les 2 heures pendant les heures ouvrables (9h-18h HNE)."
     }
+  },
+  "marketHub": {
+    "title": "Centre d'insights du marché",
+    "subtitle": "Rapports du marché immobilier de Toronto, analyse TRREB, tendances locatives et insights d'investissement. Mis à jour régulièrement.",
+    "searchPlaceholder": "Rechercher des rapports...",
+    "catAll": "Tous",
+    "catReport": "Rapports de marché",
+    "catTrreb": "Données TRREB",
+    "catRental": "Tendances locatives",
+    "catNeighborhood": "Quartiers",
+    "catInvestment": "Investissement",
+    "catNews": "Actualités",
+    "noPosts": "Aucun rapport pour le moment",
+    "noPostsDesc": "Les rapports de marché et analyses TRREB apparaîtront ici une fois publiés. Revenez bientôt !",
+    "notFound": "Article introuvable",
+    "backToHub": "← Retour aux insights",
+    "views": "vues",
+    "viewSource": "Voir la source originale"
   }
 }

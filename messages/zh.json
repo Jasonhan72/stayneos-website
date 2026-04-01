@@ -3770,5 +3770,23 @@
       "2": "紧急事宜请发送邮件至 hello@neos.rentals 联系我们。",
       "3": "我们的团队通常在营业时间（东部时间上午9点至下午6点）内2小时内回复。"
     }
+  },
+  "marketHub": {
+    "title": "市场洞察中心",
+    "subtitle": "多伦多房地产市场报告、TRREB 数据分析、租金趋势和投资洞察。定期更新。",
+    "searchPlaceholder": "搜索报告和洞察...",
+    "catAll": "全部",
+    "catReport": "市场报告",
+    "catTrreb": "TRREB 数据",
+    "catRental": "租金趋势",
+    "catNeighborhood": "社区分析",
+    "catInvestment": "投资",
+    "catNews": "行业新闻",
+    "noPosts": "暂无报告",
+    "noPostsDesc": "市场报告和 TRREB 数据分析将在发布后显示在这里。请稍后再来！",
+    "notFound": "未找到该文章",
+    "backToHub": "← 返回市场洞察",
+    "views": "次浏览",
+    "viewSource": "查看原始来源"
   }
 }

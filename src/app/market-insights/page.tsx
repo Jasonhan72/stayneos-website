@@ -1,11 +1,11 @@
 import { Metadata } from "next";
-import MarketInsightsPageContent from "./MarketInsightsPageContent";
+import MarketInsightsHub from "./MarketInsightsHub";
 
 export const metadata: Metadata = {
-  title: "Toronto Real Estate Market Insights 2024 | NEOS Market Report",
-  description: "Comprehensive Toronto real estate market analysis and trends. Download our latest market insights report with rental rates, occupancy data, and forecasts for executive housing.",
+  title: "Toronto Market Insights & Reports | NEOS Knowledge Hub",
+  description: "Toronto real estate market reports, TRREB data analysis, rental trends, and investment insights. Updated regularly with the latest data.",
 };
 
 export default function MarketInsightsPage() {
-  return <MarketInsightsPageContent />;
+  return <MarketInsightsHub />;
 }
