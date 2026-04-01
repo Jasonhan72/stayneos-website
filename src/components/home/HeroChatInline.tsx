@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useI18n } from '@/lib/i18n';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Loader2 } from 'lucide-react';
+import { ArrowRight, Loader2, SendHorizontal } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -23,7 +23,6 @@ interface PropertyRecommendation {
   bedrooms: number;
 }
 
-// Hardcoded properties for recommendation display
 const PROPERTIES: Record<string, PropertyRecommendation> = {
   '1': {
     id: '1',
@@ -65,9 +64,7 @@ const defaultChips = [
   'Insurance housing, immediate',
 ];
 
-// Try to extract a property ID from AI response
 function extractPropertyId(text: string): string | null {
-  // Match property IDs or addresses
   if (/55\s*cooper|sugar\s*wharf/i.test(text)) return '1';
   if (/238\s*simcoe|grange\s*park/i.test(text)) return '2';
   if (/22\s*wellesley/i.test(text)) return '3';
@@ -78,19 +75,24 @@ export function HeroChatInline() {
   const { t } = useI18n();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const [bottomInput, setBottomInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState('');
   const [showChat, setShowChat] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const bottomInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const sid = `hero_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     setSessionId(sid);
   }, []);
 
+  // Scroll only within the chat container, not the page
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
+  }, [messages, isLoading]);
 
   const sendMessage = async (text: string) => {
     const trimmed = text.trim();
@@ -98,6 +100,7 @@ export function HeroChatInline() {
 
     setShowChat(true);
     setInput('');
+    setBottomInput('');
 
     const userMsg: Message = {
       id: `u-${Date.now()}`,
@@ -106,6 +109,9 @@ export function HeroChatInline() {
     };
     setMessages((prev) => [...prev, userMsg]);
     setIsLoading(true);
+
+    // Focus bottom input after sending for easy follow-up
+    setTimeout(() => bottomInputRef.current?.focus(), 100);
 
     try {
       const history = [...messages, userMsg].slice(-10).map((m) => ({
@@ -133,7 +139,6 @@ export function HeroChatInline() {
       const propertyId = extractPropertyId(replyText);
       const property = propertyId ? PROPERTIES[propertyId] || null : null;
 
-      // Extract hotel comparison if present
       let hotelComparison: string | undefined;
       const hotelMatch = replyText.match(/(该区域类似酒店.*?。|Hotel.*?saving.*?\.)/);
       if (hotelMatch) hotelComparison = hotelMatch[0];
@@ -160,15 +165,20 @@ export function HeroChatInline() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleTopSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     void sendMessage(input);
   };
 
+  const handleBottomSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    void sendMessage(bottomInput);
+  };
+
   return (
     <div className="w-full max-w-2xl mx-auto">
-      {/* Input */}
-      <form onSubmit={handleSubmit} className="relative group">
+      {/* Top Input — always visible */}
+      <form onSubmit={handleTopSubmit} className="relative group">
         <div className="absolute -inset-1 bg-gradient-to-r from-accent/40 via-accent/60 to-accent/40 rounded-2xl blur-lg opacity-60 group-hover:opacity-80 animate-breathing-glow transition-opacity duration-500" />
 
         {/* Desktop */}
@@ -226,7 +236,7 @@ export function HeroChatInline() {
         </div>
       </form>
 
-      {/* Prompt chips - only show when no chat started */}
+      {/* Prompt chips — only before first message */}
       {!showChat && (
         <>
           <div className="flex flex-wrap justify-center gap-2 mt-5">
@@ -256,91 +266,112 @@ export function HeroChatInline() {
         </>
       )}
 
-      {/* Conversation area */}
+      {/* Conversation panel */}
       {showChat && (
-        <div className="mt-6 max-h-[400px] overflow-y-auto space-y-4 scrollbar-thin">
-          {messages.map((msg) => (
-            <div key={msg.id}>
-              {/* Message bubble */}
-              <div className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div
-                  className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm md:text-base ${
-                    msg.sender === 'user'
-                      ? 'bg-accent/90 text-white'
-                      : 'bg-white/95 backdrop-blur-sm text-gray-800 border border-white/20'
-                  }`}
-                >
-                  <p className="whitespace-pre-wrap leading-relaxed">{msg.text}</p>
-                </div>
-              </div>
-
-              {/* Property card inline */}
-              {msg.property && (
-                <div className="mt-3 bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden flex flex-col md:flex-row border border-white/10">
-                  <div className="relative w-full md:w-56 h-40 md:h-auto flex-shrink-0">
-                    <Image
-                      src={msg.property.image}
-                      alt={msg.property.title}
-                      fill
-                      className="object-cover"
-                    />
+        <div className="mt-6 bg-neutral-900/80 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden">
+          {/* Messages area — fixed height, internal scroll only */}
+          <div
+            ref={messagesContainerRef}
+            className="max-h-[350px] overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-white/20"
+          >
+            {messages.map((msg) => (
+              <div key={msg.id}>
+                <div className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div
+                    className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm md:text-base ${
+                      msg.sender === 'user'
+                        ? 'bg-accent/90 text-white rounded-br-sm'
+                        : 'bg-white/95 text-gray-800 rounded-bl-sm'
+                    }`}
+                  >
+                    <p className="whitespace-pre-wrap leading-relaxed">{msg.text}</p>
                   </div>
-                  <div className="p-5 flex-1">
-                    <h3 className="text-white font-semibold text-base mb-1">{msg.property.title}</h3>
-                    <p className="text-white/60 text-sm mb-2">{msg.property.location}</p>
-                    <p className="text-accent font-bold text-xl mb-3">
-                      ${msg.property.monthlyPrice.toLocaleString()}/{t('common.month', 'mo')}
-                    </p>
-                    <div className="flex gap-3">
-                      <Link
-                        href={`/property/${msg.property.id}`}
-                        className="px-4 py-2 bg-accent hover:bg-accent/90 text-white font-semibold rounded-lg transition-colors text-sm"
-                      >
-                        {t('aiConcierge.scheduleViewing', 'Schedule a Viewing')}
-                      </Link>
-                      <a
-                        href="https://wa.me/16478626518?text=Hi%2C%20I'm%20interested%20in%20NEOS%20apartments"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-4 py-2 bg-[#25D366] hover:bg-[#20bd5a] text-white font-semibold rounded-lg transition-colors text-sm"
-                      >
-                        WhatsApp
-                      </a>
+                </div>
+
+                {msg.property && (
+                  <div className="mt-3 bg-white/10 rounded-xl overflow-hidden flex flex-col md:flex-row border border-white/10">
+                    <div className="relative w-full md:w-56 h-40 md:h-auto flex-shrink-0">
+                      <Image
+                        src={msg.property.image}
+                        alt={msg.property.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="p-5 flex-1">
+                      <h3 className="text-white font-semibold text-base mb-1">{msg.property.title}</h3>
+                      <p className="text-white/60 text-sm mb-2">{msg.property.location}</p>
+                      <p className="text-accent font-bold text-xl mb-3">
+                        ${msg.property.monthlyPrice.toLocaleString()}/{t('common.month', 'mo')}
+                      </p>
+                      <div className="flex gap-3">
+                        <Link
+                          href={`/property/${msg.property.id}`}
+                          className="px-4 py-2 bg-accent hover:bg-accent/90 text-white font-semibold rounded-lg transition-colors text-sm"
+                        >
+                          {t('aiConcierge.scheduleViewing', 'Schedule a Viewing')}
+                        </Link>
+                        <a
+                          href="https://wa.me/16478626518?text=Hi%2C%20I'm%20interested%20in%20NEOS%20apartments"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-4 py-2 bg-[#25D366] hover:bg-[#20bd5a] text-white font-semibold rounded-lg transition-colors text-sm"
+                        >
+                          WhatsApp
+                        </a>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
-          ))}
+                )}
+              </div>
+            ))}
 
-          {/* Typing indicator */}
-          {isLoading && (
-            <div className="flex justify-start">
-              <div className="bg-white/95 backdrop-blur-sm rounded-2xl px-4 py-3 border border-white/20">
-                <div className="flex items-center space-x-1.5">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="bg-white/95 rounded-2xl rounded-bl-sm px-4 py-3">
+                  <div className="flex items-center space-x-1.5">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
-          <div ref={messagesEndRef} />
-
-          {/* Continue chatting hint + browse link */}
-          {messages.length > 0 && !isLoading && (
-            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-              <span className="text-white/50 text-xs">{t('chat.continueHint', 'Ask a follow-up question above')}</span>
-              <span className="text-white/30">•</span>
+          {/* Bottom input — inside the conversation panel */}
+          <div className="border-t border-white/10 p-3">
+            <form onSubmit={handleBottomSubmit} className="flex items-center gap-2">
+              <input
+                ref={bottomInputRef}
+                type="text"
+                value={bottomInput}
+                onChange={(e) => setBottomInput(e.target.value)}
+                placeholder={t('chat.followUp', 'Ask a follow-up...')}
+                className="flex-1 px-4 py-2.5 bg-white/10 text-white placeholder-white/40 rounded-full border border-white/15 outline-none focus:border-accent/60 focus:bg-white/15 transition-all text-sm"
+                disabled={isLoading}
+              />
+              <button
+                type="submit"
+                disabled={!bottomInput.trim() || isLoading}
+                className="p-2.5 bg-accent hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-full transition-all duration-200 flex-shrink-0"
+              >
+                {isLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <SendHorizontal className="w-4 h-4" />
+                )}
+              </button>
+            </form>
+            <div className="flex items-center justify-center gap-3 mt-2">
               <Link
                 href="/properties"
-                className="text-white/70 hover:text-white text-xs transition-colors underline underline-offset-4"
+                className="text-white/40 hover:text-white/70 text-xs transition-colors underline underline-offset-4"
               >
                 {t('aiConcierge.fallbackLink', 'Browse all properties →')}
               </Link>
             </div>
-          )}
+          </div>
         </div>
       )}
     </div>
