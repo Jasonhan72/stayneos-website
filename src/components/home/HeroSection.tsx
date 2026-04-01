@@ -1,57 +1,12 @@
 'use client';
 
-import { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { Container } from '@/components/ui';
-import { AIConciergeInput } from './AIConciergeInput';
-import { AIResponsePanel } from './AIResponsePanel';
+import { HeroChatInline } from './HeroChatInline';
 import { useI18n } from '@/lib/i18n';
 
-type PanelState = 'loading' | 'response' | 'error';
-
-interface AIResponse {
-  text: string;
-  recommended_property_id: number;
-  alternative_property_id: number | null;
-  hotel_comparison: string;
-}
-
 export function HeroSection() {
-  const { t, locale } = useI18n();
-  const [panelVisible, setPanelVisible] = useState(false);
-  const [panelState, setPanelState] = useState<PanelState>('loading');
-  const [aiResponse, setAiResponse] = useState<AIResponse | undefined>();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleAISubmit = useCallback(async (message: string) => {
-    setIsLoading(true);
-    setPanelVisible(true);
-    setPanelState('loading');
-
-    try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 18000);
-
-      const res = await fetch('/api/ai-concierge', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message, language: locale }),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeout);
-
-      if (!res.ok) throw new Error('API error');
-
-      const data: AIResponse = await res.json();
-      setAiResponse(data);
-      setPanelState('response');
-    } catch {
-      setPanelState('error');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [locale]);
+  const { t } = useI18n();
 
   return (
     <>
@@ -96,16 +51,7 @@ export function HeroSection() {
               {t('hero.subtitle', 'Premium furnished apartments in downtown Toronto. 30 days to 12 months. Move-in ready.')}
             </p>
 
-            <AIConciergeInput onSubmit={handleAISubmit} isLoading={isLoading} />
-          </div>
-
-          {/* AI Response Panel - Inside Hero, below input */}
-          <div className="mt-8 w-full max-w-3xl mx-auto">
-            <AIResponsePanel
-              state={panelState}
-              response={aiResponse}
-              visible={panelVisible}
-            />
+            <HeroChatInline />
           </div>
         </Container>
       </section>
