@@ -30,12 +30,23 @@ interface MarketPost {
   createdAt: string;
 }
 
-function getLocalized(post: MarketPost, field: "title" | "summary" | "content", locale: string): string {
+function getLocalized(post: MarketPost, field: "title" | "summary" | "content", locale: string): { text: string; isTranslated: boolean } {
   const zhKey = `${field}Zh` as keyof MarketPost;
   const frKey = `${field}Fr` as keyof MarketPost;
-  if (locale === "zh" && post[zhKey]) return post[zhKey] as string;
-  if (locale === "fr" && post[frKey]) return post[frKey] as string;
-  return post[field] as string;
+  
+  if (locale === "zh" && post[zhKey]) {
+    return { text: post[zhKey] as string, isTranslated: true };
+  }
+  if (locale === "fr" && post[frKey]) {
+    return { text: post[frKey] as string, isTranslated: true };
+  }
+  
+  // Check if translation exists but is empty
+  if (locale === "zh" || locale === "fr") {
+    return { text: post[field] as string, isTranslated: false };
+  }
+  
+  return { text: post[field] as string, isTranslated: true };
 }
 
 function formatDate(dateStr: string, locale: string): string {
@@ -107,8 +118,11 @@ export default function MarketPostPage({ slug }: { slug: string }) {
     );
   }
 
-  const title = getLocalized(post, "title", locale);
-  const content = getLocalized(post, "content", locale);
+  const titleResult = getLocalized(post, "title", locale);
+  const contentResult = getLocalized(post, "content", locale);
+  const title = titleResult.text;
+  const content = contentResult.text;
+  const isContentTranslated = contentResult.isTranslated;
   const parsedTags: string[] = post.tags ? (() => { try { return JSON.parse(post.tags); } catch { return []; } })() : [];
 
   return (
@@ -169,6 +183,17 @@ export default function MarketPostPage({ slug }: { slug: string }) {
       <Section className="py-12">
         <Container>
           <article className="max-w-4xl mx-auto">
+            {!isContentTranslated && (locale === "zh" || locale === "fr") && (
+              <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-yellow-800 text-sm">
+                  {locale === "zh" 
+                    ? "⚠️ 此内容尚未翻译为中文。显示的是英文原文。"
+                    : "⚠️ Ce contenu n'est pas encore traduit en français. L'original anglais est affiché."
+                  }
+                </p>
+              </div>
+            )}
+            
             <div
               className="prose prose-lg max-w-none"
               dangerouslySetInnerHTML={{

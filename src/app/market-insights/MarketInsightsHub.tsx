@@ -73,12 +73,19 @@ function formatDate(dateStr: string, locale: string): string {
   }
 }
 
-function getLocalizedField(post: MarketPost, field: "title" | "summary", locale: string): string {
+function getLocalizedField(post: MarketPost, field: "title" | "summary", locale: string): { text: string; isTranslated: boolean } {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const p = post as any;
-  if (locale === "zh") return p[`${field}Zh`] || p[field] || "";
-  if (locale === "fr") return p[`${field}Fr`] || p[field] || "";
-  return p[field] || "";
+  
+  if (locale === "zh") {
+    const translated = p[`${field}Zh`];
+    return { text: translated || p[field] || "", isTranslated: !!translated };
+  }
+  if (locale === "fr") {
+    const translated = p[`${field}Fr`];
+    return { text: translated || p[field] || "", isTranslated: !!translated };
+  }
+  return { text: p[field] || "", isTranslated: true };
 }
 
 export default function MarketInsightsHub() {
@@ -119,10 +126,10 @@ export default function MarketInsightsHub() {
   // Filter by search locally
   const filteredPosts = searchQuery
     ? posts.filter((post) => {
-        const title = getLocalizedField(post, "title", locale).toLowerCase();
-        const summary = getLocalizedField(post, "summary", locale).toLowerCase();
+        const titleResult = getLocalizedField(post, "title", locale);
+        const summaryResult = getLocalizedField(post, "summary", locale);
         const q = searchQuery.toLowerCase();
-        return title.includes(q) || summary.includes(q);
+        return titleResult.text.toLowerCase().includes(q) || summaryResult.text.toLowerCase().includes(q);
       })
     : posts;
 
@@ -232,12 +239,22 @@ export default function MarketInsightsHub() {
 
                         {/* Title */}
                         <h3 className="font-bold text-gray-900 text-lg mb-2 group-hover:text-indigo-600 transition-colors line-clamp-2">
-                          {getLocalizedField(post, "title", locale)}
+                          {getLocalizedField(post, "title", locale).text}
+                          {!getLocalizedField(post, "title", locale).isTranslated && (locale === "zh" || locale === "fr") && (
+                            <span className="ml-2 text-xs text-gray-400 font-normal">
+                              {locale === "zh" ? "(英文)" : "(EN)"}
+                            </span>
+                          )}
                         </h3>
 
                         {/* Summary */}
                         <p className="text-gray-600 text-sm line-clamp-3 mb-3">
-                          {getLocalizedField(post, "summary", locale)}
+                          {getLocalizedField(post, "summary", locale).text}
+                          {!getLocalizedField(post, "summary", locale).isTranslated && (locale === "zh" || locale === "fr") && (
+                            <span className="ml-1 text-xs text-gray-400">
+                              {locale === "zh" ? "(英文原文)" : "(Original EN)"}
+                            </span>
+                          )}
                         </p>
 
                         {/* Tags */}
