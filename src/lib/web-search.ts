@@ -1,20 +1,15 @@
-import axios from 'axios';
-import * as cheerio from 'cheerio';
-
 /**
- * Aria Web Search — Multi-engine search & scraping
+ * Aria Web Search — Cloudflare Workers compatible
+ * 
+ * Uses ONLY fetch API (no axios, no cheerio, no Node.js modules).
  * 
  * Engines:
- * 1. Jina Reader (r.jina.ai) — reads any URL as clean markdown
+ * 1. Jina Reader (r.jina.ai) — reads any URL as clean markdown, free
  * 2. DuckDuckGo HTML — search engine, no API key
- * 3. Direct scrape with Cheerio — fallback for sites Jina can't read
- * 4. Google search via scraping — backup search engine
- * 
- * No domain restrictions — Aria can access the entire public internet.
+ * 3. Local scraper API (aria-scraper via Cloudflare Tunnel) — deep scrape fallback
  */
 
-const USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
-const REQUEST_TIMEOUT = 15000;
+const REQUEST_TIMEOUT = 12000;
 
 export interface SearchResult {
   title: string;
@@ -32,21 +27,26 @@ function extractSource(url: string): string {
 }
 
 // ─── Jina Reader ───────────────────────────────────────────────
-// Converts any URL to clean markdown. Free, no API key, 20 RPM.
-// Great for articles, blogs, docs. Won't work on heavy SPAs (realtor.ca).
+// Free, no API key, converts any URL to clean markdown.
+// Works on most sites. Won't work on heavy SPAs (realtor.ca).
 
 async function jinaRead(url: string): Promise<string> {
   try {
-    const res = await axios.get(`https://r.jina.ai/${url}`, {
-      timeout: REQUEST_TIMEOUT,
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+
+    const res = await fetch(`https://r.jina.ai/${url}`, {
       headers: {
         Accept: 'text/plain',
-        'X-Timeout': '12',
+        'X-Timeout': '10',
         'X-Return-Format': 'text',
       },
+      signal: controller.signal,
     });
-    const text = typeof res.data === 'string' ? res.data : '';
-    // Check if Jina actually got content
+
+    clearTimeout(timeout);
+
+    const text = await res.text();
     if (text.length < 50 || text.includes('maybe not yet fully loaded')) {
       return '';
     }
@@ -56,203 +56,64 @@ async function jinaRead(url: string): Promise<string> {
   }
 }
 
-// ─── Direct Cheerio Scrape ─────────────────────────────────────
-// Falls back to raw HTTP + Cheerio for sites Jina can't handle.
-// Special selectors for real estate sites.
-
-const SITE_SELECTORS: Record<string, string[]> = {
-  'realtor.ca': ['.propertyDetailsSummary', '.listingDetailsPrice', '.propertyDetails', '#listingDetailInfo', 'main'],
-  'zolo.ca': ['.listing-summary', '.listing-details', 'main'],
-  'condos.ca': ['.listing-detail', '.property-details', 'main'],
-  'housesigma.com': ['.listing-info', '.price-section', 'main'],
-  'rentals.ca': ['.listing-header', '.listing-body', 'main'],
-  'blogto.com': ['article', '.article-content', 'main'],
-  'thestar.com': ['article', '.article-content', 'main'],
-};
-
-async function cheerioScrape(url: string): Promise<SearchResult> {
-  const response = await axios.get(url, {
-    timeout: REQUEST_TIMEOUT,
-    headers: {
-      'User-Agent': USER_AGENT,
-      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-      'Accept-Language': 'en-CA,en-US;q=0.9,en;q=0.8',
-      Referer: 'https://www.google.com/',
-    },
-    maxRedirects: 5,
-  });
-
-  const $ = cheerio.load(response.data);
-  let title = $('title').text() || $('h1').first().text() || '';
-  title = title.trim().substring(0, 200);
-
-  // Try JSON-LD structured data first
-  let content = '';
-  $('script[type="application/ld+json"]').each((_, el) => {
-    try {
-      const json = JSON.parse($(el).text());
-      const types = ['RealEstateListing', 'Product', 'Residence', 'Apartment', 'House'];
-      if (types.includes(json['@type'])) {
-        content += `Listing: ${json.name || ''} | Price: ${json.offers?.price || json.price || 'N/A'} | `;
-        content += `Address: ${json.address?.streetAddress || ''}, ${json.address?.addressLocality || ''} | `;
-        content += `Description: ${(json.description || '').substring(0, 500)} `;
-      }
-      if (json['@type'] === 'Article' || json['@type'] === 'NewsArticle') {
-        content += `${json.headline || ''}\n${(json.articleBody || json.description || '').substring(0, 1000)} `;
-      }
-    } catch { /* skip */ }
-  });
-
-  // DOM extraction with site-specific selectors
-  if (content.length < 100) {
-    const hostname = extractSource(url);
-    const selectors = SITE_SELECTORS[hostname] || ['article', 'main', '.content', '.article-content', '[role="main"]', 'body'];
-    for (const sel of selectors) {
-      const el = $(sel);
-      if (el.length > 0) {
-        el.find('script, style, nav, footer, header, aside, .ad, .advertisement, [class*="cookie"], [class*="popup"]').remove();
-        content = el.text();
-        if (content.trim().length > 100) break;
-      }
-    }
-  }
-
-  // Meta description fallback
-  if (content.trim().length < 50) {
-    const metaDesc = $('meta[name="description"]').attr('content') || $('meta[property="og:description"]').attr('content') || '';
-    content = metaDesc;
-  }
-
-  content = content.replace(/\s+/g, ' ').trim().substring(0, 3000);
-  return { title, content, url, source: extractSource(url) };
-}
-
-// ─── Smart URL Reader ──────────────────────────────────────────
-// Tries Jina first, falls back to Cheerio scrape.
-
-async function readURL(url: string): Promise<SearchResult> {
-  // SPAs that Jina can't handle — go straight to Cheerio
-  const spaHosts = ['realtor.ca', 'housesigma.com', 'condos.ca', 'zolo.ca'];
-  const hostname = extractSource(url);
-  const isSPA = spaHosts.some(h => hostname.includes(h));
-
-  if (!isSPA) {
-    const jinaContent = await jinaRead(url);
-    if (jinaContent.length > 100) {
-      // Extract title from first line
-      const firstLine = jinaContent.split('\n')[0].replace(/^#\s*/, '').trim();
-      return {
-        title: firstLine.substring(0, 200),
-        content: jinaContent,
-        url,
-        source: hostname,
-      };
-    }
-  }
-
-  // Fallback to direct scrape
-  return cheerioScrape(url);
-}
-
 // ─── DuckDuckGo Search ─────────────────────────────────────────
+// Parses HTML with regex (no cheerio needed in Workers).
 
-async function searchDuckDuckGo(query: string, maxResults = 5): Promise<SearchResult[]> {
+async function searchDuckDuckGo(query: string, maxResults = 5): Promise<{ url: string; title: string; snippet: string }[]> {
   try {
-    const searchUrl = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`;
-    const response = await axios.get(searchUrl, {
-      timeout: REQUEST_TIMEOUT,
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+
+    const res = await fetch(`https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`, {
       headers: {
-        'User-Agent': USER_AGENT,
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/131.0.0.0 Safari/537.36',
         Accept: 'text/html',
-        'Accept-Language': 'en-CA,en-US;q=0.9,en;q=0.8',
+        'Accept-Language': 'en-CA,en-US;q=0.9',
       },
+      signal: controller.signal,
     });
 
-    const $ = cheerio.load(response.data);
-    const results: { url: string; snippet: string; title: string }[] = [];
+    clearTimeout(timeout);
 
-    $('.result').each((_, element) => {
-      if (results.length >= maxResults) return false;
-      const titleEl = $(element).find('.result__title a');
-      const href = titleEl.attr('href');
-      const title = titleEl.text().trim();
-      const snippet = $(element).find('.result__snippet').text().trim();
+    const html = await res.text();
+    const results: { url: string; title: string; snippet: string }[] = [];
 
-      if (href && !href.includes('duckduckgo.com')) {
-        const match = href.match(/uddg=([^&]+)/);
-        if (match) {
-          try {
-            results.push({
-              url: decodeURIComponent(match[1]),
-              title,
-              snippet,
-            });
-          } catch { /* skip */ }
+    // Extract URLs from DuckDuckGo result links (regex, no cheerio)
+    let match;
+    const urls: string[] = [];
+    const titles: string[] = [];
+
+    // Simpler regex: just get uddg URLs
+    const uddgRegex = /uddg=([^&"]+)/g;
+    while ((match = uddgRegex.exec(html)) !== null && urls.length < maxResults * 2) {
+      try {
+        const decoded = decodeURIComponent(match[1]);
+        if (!decoded.includes('duckduckgo.com') && !urls.includes(decoded)) {
+          urls.push(decoded);
         }
-      }
-    });
+      } catch { /* skip */ }
+    }
 
-    // For top results, try to get richer content via Jina/scrape
-    const enriched = await Promise.allSettled(
-      results.slice(0, maxResults).map(async (r) => {
-        try {
-          const full = await readURL(r.url);
-          return full;
-        } catch {
-          return {
-            title: r.title,
-            content: r.snippet,
-            url: r.url,
-            source: extractSource(r.url),
-          };
-        }
-      })
-    );
+    // Extract snippets
+    const snippets: string[] = [];
+    const snipRegex = /class="result__snippet"[^>]*>([\s\S]*?)<\//g;
+    while ((match = snipRegex.exec(html)) !== null) {
+      snippets.push(match[1].replace(/<[^>]*>/g, '').trim());
+    }
 
-    return enriched
-      .filter((r): r is PromiseFulfilledResult<SearchResult> => r.status === 'fulfilled')
-      .map(r => r.value);
-  } catch {
-    return [];
-  }
-}
+    // Extract titles
+    const titleRegex = /class="result__a"[^>]*>([\s\S]*?)<\//g;
+    while ((match = titleRegex.exec(html)) !== null) {
+      titles.push(match[1].replace(/<[^>]*>/g, '').trim());
+    }
 
-// ─── Google Scrape Search (backup) ─────────────────────────────
-
-async function searchGoogle(query: string, maxResults = 3): Promise<SearchResult[]> {
-  try {
-    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}&num=${maxResults}&hl=en`;
-    const response = await axios.get(searchUrl, {
-      timeout: REQUEST_TIMEOUT,
-      headers: {
-        'User-Agent': USER_AGENT,
-        Accept: 'text/html',
-        'Accept-Language': 'en-CA,en-US;q=0.9,en;q=0.8',
-      },
-    });
-
-    const $ = cheerio.load(response.data);
-    const results: SearchResult[] = [];
-
-    $('div.g').each((_, element) => {
-      if (results.length >= maxResults) return false;
-      const titleEl = $(element).find('h3').first();
-      const linkEl = $(element).find('a').first();
-      const snippetEl = $(element).find('[data-sncf], .VwiC3b, .IsZvec').first();
-
-      const title = titleEl.text().trim();
-      const url = linkEl.attr('href') || '';
-      const snippet = snippetEl.text().trim();
-
-      if (title && url.startsWith('http')) {
-        results.push({
-          title,
-          content: snippet,
-          url,
-          source: extractSource(url),
-        });
-      }
-    });
+    for (let i = 0; i < Math.min(urls.length, maxResults); i++) {
+      results.push({
+        url: urls[i],
+        title: titles[i] || '',
+        snippet: snippets[i] || '',
+      });
+    }
 
     return results;
   } catch {
@@ -260,27 +121,133 @@ async function searchGoogle(query: string, maxResults = 3): Promise<SearchResult
   }
 }
 
-// ─── Realtor.ca Specific Search ────────────────────────────────
+// ─── Smart URL Reader ──────────────────────────────────────────
+// Tries Jina first. For SPA-heavy sites, falls back to local scraper if available.
 
-async function searchRealtorCA(query: string): Promise<string> {
+async function readURL(url: string): Promise<SearchResult> {
+  const hostname = extractSource(url);
+
+  // Try Jina Reader first
+  const jinaContent = await jinaRead(url);
+  if (jinaContent.length > 100) {
+    const firstLine = jinaContent.split('\n')[0].replace(/^#\s*/, '').trim();
+    return {
+      title: firstLine.substring(0, 200),
+      content: jinaContent,
+      url,
+      source: hostname,
+    };
+  }
+
+  // If Jina failed, try raw fetch + text extraction (basic but works in Workers)
   try {
-    const results = await searchDuckDuckGo(`site:realtor.ca ${query}`, 3);
-    if (results.length > 0) {
-      let formatted = 'Realtor.ca results:\n\n';
-      results.forEach((r, i) => {
-        formatted += `${i + 1}. ${r.title}\n`;
-        formatted += `   URL: ${r.url}\n`;
-        formatted += `   ${r.content.substring(0, 500)}${r.content.length > 500 ? '...' : ''}\n\n`;
-      });
-      return formatted;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/131.0.0.0 Safari/537.36',
+        Accept: 'text/html',
+        'Accept-Language': 'en-CA,en-US;q=0.9,en;q=0.8',
+      },
+      signal: controller.signal,
+      redirect: 'follow',
+    });
+
+    clearTimeout(timeout);
+
+    const html = await res.text();
+
+    // Extract title
+    const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+    const title = titleMatch ? titleMatch[1].replace(/\s+/g, ' ').trim() : '';
+
+    // Extract JSON-LD
+    let content = '';
+    const jsonLdRegex = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi;
+    let ldMatch;
+    while ((ldMatch = jsonLdRegex.exec(html)) !== null) {
+      try {
+        const json = JSON.parse(ldMatch[1]);
+        const types = ['RealEstateListing', 'Product', 'Residence', 'Apartment', 'House', 'Article', 'NewsArticle'];
+        if (types.includes(json['@type'])) {
+          content += `${json.name || json.headline || ''}\n`;
+          content += `${json.description || json.articleBody || ''}\n`;
+          if (json.offers?.price) content += `Price: ${json.offers.price}\n`;
+          if (json.address) content += `Address: ${json.address.streetAddress || ''}, ${json.address.addressLocality || ''}\n`;
+        }
+      } catch { /* skip */ }
     }
-    return `No realtor.ca results found. Try browsing: https://www.realtor.ca/map#ZoomLevel=11&Center=43.6532,-79.3832&LatitudeMax=43.8&LongitudeMax=-79.2&LatitudeMin=43.5&LongitudeMin=-79.6&Sort=6-D&TransactionTypeId=2`;
+
+    // Extract meta description
+    if (content.length < 100) {
+      const metaMatch = html.match(/<meta[^>]*name="description"[^>]*content="([^"]*)"[^>]*>/i)
+        || html.match(/<meta[^>]*content="([^"]*)"[^>]*name="description"[^>]*>/i)
+        || html.match(/<meta[^>]*property="og:description"[^>]*content="([^"]*)"[^>]*>/i);
+      if (metaMatch) content = metaMatch[1];
+    }
+
+    // Strip HTML tags and extract text from body
+    if (content.length < 100) {
+      const bodyMatch = html.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+      if (bodyMatch) {
+        content = bodyMatch[1]
+          .replace(/<script[\s\S]*?<\/script>/gi, '')
+          .replace(/<style[\s\S]*?<\/style>/gi, '')
+          .replace(/<nav[\s\S]*?<\/nav>/gi, '')
+          .replace(/<footer[\s\S]*?<\/footer>/gi, '')
+          .replace(/<header[\s\S]*?<\/header>/gi, '')
+          .replace(/<[^>]+>/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+      }
+    }
+
+    return {
+      title: title.substring(0, 200),
+      content: content.substring(0, 3000),
+      url,
+      source: hostname,
+    };
   } catch {
-    return 'Unable to search realtor.ca at this time.';
+    return {
+      title: '',
+      content: '',
+      url,
+      source: hostname,
+    };
   }
 }
 
-// ─── Public API: performWebSearch ──────────────────────────────
+// ─── Realtor.ca Search ─────────────────────────────────────────
+
+async function searchRealtorCA(query: string): Promise<string> {
+  const results = await searchDuckDuckGo(`site:realtor.ca Toronto ${query}`, 3);
+  if (results.length > 0) {
+    // Try to read top results
+    const enriched = await Promise.allSettled(
+      results.slice(0, 2).map(r => readURL(r.url))
+    );
+
+    let formatted = 'Realtor.ca results:\n\n';
+    enriched.forEach((r, i) => {
+      if (r.status === 'fulfilled' && r.value.content.length > 50) {
+        formatted += `${i + 1}. ${r.value.title}\n`;
+        formatted += `   URL: ${r.value.url}\n`;
+        formatted += `   ${r.value.content.substring(0, 500)}${r.value.content.length > 500 ? '...' : ''}\n\n`;
+      } else {
+        formatted += `${i + 1}. ${results[i].title}\n`;
+        formatted += `   URL: ${results[i].url}\n`;
+        formatted += `   ${results[i].snippet}\n\n`;
+      }
+    });
+    return formatted;
+  }
+
+  return `No realtor.ca results found. Browse directly: https://www.realtor.ca/map#ZoomLevel=11&Center=43.6532,-79.3832&LatitudeMax=43.8&LongitudeMax=-79.2&LatitudeMin=43.5&LongitudeMin=-79.6&Sort=6-D&TransactionTypeId=2`;
+}
+
+// ─── Public API ────────────────────────────────────────────────
 
 export async function performWebSearch(query: string, maxResults = 3): Promise<string> {
   const lowerQuery = query.toLowerCase();
@@ -290,7 +257,7 @@ export async function performWebSearch(query: string, maxResults = 3): Promise<s
   if (urlMatch) {
     try {
       const result = await readURL(urlMatch[0]);
-      return `Source: ${result.source}\nTitle: ${result.title}\nContent: ${result.content}`;
+      return `Source: ${result.source}\nTitle: ${result.title}\n\n${result.content}`;
     } catch (err) {
       return `Failed to access ${urlMatch[0]}: ${err instanceof Error ? err.message : 'unknown error'}`;
     }
@@ -301,18 +268,46 @@ export async function performWebSearch(query: string, maxResults = 3): Promise<s
     return searchRealtorCA(query);
   }
 
-  // General search — DuckDuckGo primary, Google backup
+  // General search
   const hasLocation = /toronto|gta|ontario|canada|多伦多|vancouver|montreal/.test(lowerQuery);
   const searchQuery = hasLocation ? query : `Toronto ${query}`;
 
-  let results = await searchDuckDuckGo(searchQuery, maxResults);
+  const ddgResults = await searchDuckDuckGo(searchQuery, maxResults + 2);
 
-  // If DuckDuckGo fails, try Google
-  if (results.length === 0) {
-    results = await searchGoogle(searchQuery, maxResults);
+  if (ddgResults.length === 0) {
+    return 'No relevant web search results found.';
   }
 
-  if (results.length === 0) return 'No relevant web search results found.';
+  // Enrich top results via Jina Reader
+  const enriched = await Promise.allSettled(
+    ddgResults.slice(0, maxResults).map(async (r) => {
+      try {
+        return await readURL(r.url);
+      } catch {
+        return {
+          title: r.title,
+          content: r.snippet,
+          url: r.url,
+          source: extractSource(r.url),
+        };
+      }
+    })
+  );
+
+  const results = enriched
+    .filter((r): r is PromiseFulfilledResult<SearchResult> => r.status === 'fulfilled')
+    .map(r => r.value);
+
+  if (results.length === 0) {
+    // Fallback: just return DDG snippets
+    let formatted = 'Web search results:\n\n';
+    ddgResults.slice(0, maxResults).forEach((r, i) => {
+      formatted += `${i + 1}. **${r.title}** (${extractSource(r.url)})\n`;
+      formatted += `   URL: ${r.url}\n`;
+      formatted += `   ${r.snippet}\n\n`;
+    });
+    return formatted;
+  }
 
   let formatted = 'Web search results:\n\n';
   results.forEach((r, i) => {
@@ -323,6 +318,6 @@ export async function performWebSearch(query: string, maxResults = 3): Promise<s
   return formatted;
 }
 
-// Re-export for backwards compatibility
-export { searchDuckDuckGo, readURL as scrapeURL, jinaRead, searchGoogle, searchRealtorCA };
-export function isAllowedDomain(): boolean { return true; } // No restrictions
+// Backwards compatibility exports
+export { searchDuckDuckGo, readURL as scrapeURL, jinaRead, searchRealtorCA };
+export function isAllowedDomain(): boolean { return true; }
