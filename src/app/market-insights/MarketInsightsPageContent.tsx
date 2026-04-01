@@ -25,7 +25,6 @@ import {
 import { useI18n } from "@/lib/i18n";
 import { submitInquiry } from "@/lib/inquiry-client";
 
-// Form validation schema
 const reportFormSchema = z.object({
   firstName: z.string().min(2, "First name is required"),
   lastName: z.string().min(2, "Last name is required"),
@@ -68,63 +67,71 @@ export default function MarketInsightsPageContent() {
 
   const marketStats = [
     {
-      title: "Average Rental Rate",
+      title: t("marketInsights.stats.avgRental", "Average Rental Rate"),
       value: "$3,247",
       change: "+8.3%",
-      trend: "up",
-      description: "Monthly rent for 1BR executive apartments",
+      trend: "up" as const,
+      description: t("marketInsights.stats.avgRentalDesc", "Monthly rent for 1BR executive apartments"),
       icon: DollarSign
     },
     {
-      title: "Occupancy Rate",
+      title: t("marketInsights.stats.occupancy", "Occupancy Rate"),
       value: "94.7%",
-      change: "+2.1%", 
-      trend: "up",
-      description: "Average occupancy across premium properties",
+      change: "+2.1%",
+      trend: "up" as const,
+      description: t("marketInsights.stats.occupancyDesc", "Average occupancy across premium properties"),
       icon: Building2
     },
     {
-      title: "Market Growth",
+      title: t("marketInsights.stats.marketGrowth", "Market Growth"),
       value: "12.4%",
       change: "+1.8%",
-      trend: "up",
-      description: "Year-over-year demand increase",
+      trend: "up" as const,
+      description: t("marketInsights.stats.marketGrowthDesc", "Year-over-year demand increase"),
       icon: TrendingUp
     },
     {
-      title: "Supply Shortage",
+      title: t("marketInsights.stats.supplyShortage", "Supply Shortage"),
       value: "23%",
       change: "-5.2%",
-      trend: "down",
-      description: "Below optimal inventory levels",
+      trend: "down" as const,
+      description: t("marketInsights.stats.supplyShortageDesc", "Below optimal inventory levels"),
       icon: AlertTriangle
     }
   ];
 
   const keyInsights = [
     {
-      title: "Executive Housing Demand Surges",
-      description: "Corporate housing demand has increased by 15.3% year-over-year, driven by hybrid work policies and business travel recovery.",
+      title: t("marketInsights.insights.insight1Title", "Executive Housing Demand Surges"),
+      description: t("marketInsights.insights.insight1Desc", "Corporate housing demand has increased by 15.3% year-over-year, driven by hybrid work policies and business travel recovery."),
       impact: "High",
-      trend: "up"
+      impactLabel: t("marketInsights.insights.highImpact", "High Impact"),
+      trend: "up" as const,
+      trendLabel: t("marketInsights.insights.trendUp", "Trend: Increasing")
     },
     {
-      title: "Supply Constraints Drive Prices",
-      description: "Limited supply of premium furnished apartments has created upward pressure on rental rates, particularly in downtown core.",
-      impact: "High", 
-      trend: "up"
+      title: t("marketInsights.insights.insight2Title", "Supply Constraints Drive Prices"),
+      description: t("marketInsights.insights.insight2Desc", "Limited supply of premium furnished apartments has created upward pressure on rental rates, particularly in downtown core."),
+      impact: "High",
+      impactLabel: t("marketInsights.insights.highImpact", "High Impact"),
+      trend: "up" as const,
+      trendLabel: t("marketInsights.insights.trendUp", "Trend: Increasing")
     },
     {
-      title: "Length of Stay Extending",
-      description: "Average stay duration has increased to 4.2 months, up from 2.8 months pre-pandemic, indicating shifting work patterns.",
+      title: t("marketInsights.insights.insight3Title", "Length of Stay Extending"),
+      description: t("marketInsights.insights.insight3Desc", "Average stay duration has increased to 4.2 months, up from 2.8 months pre-pandemic, indicating shifting work patterns."),
       impact: "Medium",
-      trend: "up"
+      impactLabel: t("marketInsights.insights.mediumImpact", "Medium Impact"),
+      trend: "up" as const,
+      trendLabel: t("marketInsights.insights.trendUp", "Trend: Increasing")
     },
     {
-      title: "Technology Sector Leading Demand",
-      description: "Tech companies account for 34% of corporate housing bookings, followed by financial services at 28%.",
+      title: t("marketInsights.insights.insight4Title", "Technology Sector Leading Demand"),
+      description: t("marketInsights.insights.insight4Desc", "Tech companies account for 34% of corporate housing bookings, followed by financial services at 28%."),
       impact: "Medium",
-      trend: "stable"
+      impactLabel: t("marketInsights.insights.mediumImpact", "Medium Impact"),
+      trend: "stable" as "up" | "down" | "stable",
+      trendLabel: t("marketInsights.insights.trendStable", "Trend: Stable")
     }
   ];
 
@@ -139,60 +146,90 @@ export default function MarketInsightsPageContent() {
 
   const marketForecasts = [
     {
-      period: "Q4 2024",
-      prediction: "Continued strength in executive housing demand with seasonal uptick in corporate relocations.",
+      period: t("marketInsights.forecasts.forecast1Period", "Q4 2024"),
+      prediction: t("marketInsights.forecasts.forecast1Prediction", "Continued strength in executive housing demand with seasonal uptick in corporate relocations."),
       confidence: "High",
-      keyFactors: ["Holiday corporate events", "Year-end relocations", "Budget cycle renewals"]
+      confidenceLabel: t("marketInsights.forecasts.highConfidence", "High Confidence"),
+      keyFactors: [
+        t("marketInsights.forecasts.forecast1Factor1", "Holiday corporate events"),
+        t("marketInsights.forecasts.forecast1Factor2", "Year-end relocations"),
+        t("marketInsights.forecasts.forecast1Factor3", "Budget cycle renewals")
+      ]
     },
     {
-      period: "Q1 2025",
-      prediction: "Moderate growth as new supply enters market, potentially stabilizing rental rate increases.",
+      period: t("marketInsights.forecasts.forecast2Period", "Q1 2025"),
+      prediction: t("marketInsights.forecasts.forecast2Prediction", "Moderate growth as new supply enters market, potentially stabilizing rental rate increases."),
       confidence: "Medium",
-      keyFactors: ["New development completions", "Return-to-office policies", "Economic conditions"]
+      confidenceLabel: t("marketInsights.forecasts.mediumConfidence", "Medium Confidence"),
+      keyFactors: [
+        t("marketInsights.forecasts.forecast2Factor1", "New development completions"),
+        t("marketInsights.forecasts.forecast2Factor2", "Return-to-office policies"),
+        t("marketInsights.forecasts.forecast2Factor3", "Economic conditions")
+      ]
     },
     {
-      period: "2025 Full Year",
-      prediction: "Sustained demand growth of 8-12% with increased focus on premium amenities and flexible terms.",
+      period: t("marketInsights.forecasts.forecast3Period", "2025 Full Year"),
+      prediction: t("marketInsights.forecasts.forecast3Prediction", "Sustained demand growth of 8-12% with increased focus on premium amenities and flexible terms."),
       confidence: "Medium",
-      keyFactors: ["Hybrid work normalization", "Corporate travel recovery", "Supply-demand balance"]
+      confidenceLabel: t("marketInsights.forecasts.mediumConfidence", "Medium Confidence"),
+      keyFactors: [
+        t("marketInsights.forecasts.forecast3Factor1", "Hybrid work normalization"),
+        t("marketInsights.forecasts.forecast3Factor2", "Corporate travel recovery"),
+        t("marketInsights.forecasts.forecast3Factor3", "Supply-demand balance")
+      ]
     }
   ];
 
   const reportTypes = [
     {
       type: "quarterly",
-      title: "Quarterly Market Report",
-      description: "Latest quarterly trends, pricing data, and short-term forecasts",
-      features: ["Current quarter analysis", "Pricing trends", "Occupancy data", "90-day forecast"]
+      title: t("marketInsights.reportTypes.quarterlyTitle", "Quarterly Market Report"),
+      description: t("marketInsights.reportTypes.quarterlyDesc", "Latest quarterly trends, pricing data, and short-term forecasts"),
+      features: [
+        t("marketInsights.reportTypes.quarterlyF1", "Current quarter analysis"),
+        t("marketInsights.reportTypes.quarterlyF2", "Pricing trends"),
+        t("marketInsights.reportTypes.quarterlyF3", "Occupancy data"),
+        t("marketInsights.reportTypes.quarterlyF4", "90-day forecast")
+      ]
     },
     {
-      type: "annual", 
-      title: "Annual Market Analysis",
-      description: "Comprehensive yearly overview with detailed forecasts and trend analysis",
-      features: ["Full year analysis", "Long-term forecasts", "Industry benchmarks", "Strategic insights"]
+      type: "annual",
+      title: t("marketInsights.reportTypes.annualTitle", "Annual Market Analysis"),
+      description: t("marketInsights.reportTypes.annualDesc", "Comprehensive yearly overview with detailed forecasts and trend analysis"),
+      features: [
+        t("marketInsights.reportTypes.annualF1", "Full year analysis"),
+        t("marketInsights.reportTypes.annualF2", "Long-term forecasts"),
+        t("marketInsights.reportTypes.annualF3", "Industry benchmarks"),
+        t("marketInsights.reportTypes.annualF4", "Strategic insights")
+      ]
     },
     {
       type: "custom",
-      title: "Custom Market Research", 
-      description: "Tailored analysis focused on your specific market interests and business needs",
-      features: ["Customized data", "Specific focus areas", "Executive briefing", "Direct analyst access"]
+      title: t("marketInsights.reportTypes.customTitle", "Custom Market Research"),
+      description: t("marketInsights.reportTypes.customDesc", "Tailored analysis focused on your specific market interests and business needs"),
+      features: [
+        t("marketInsights.reportTypes.customF1", "Customized data"),
+        t("marketInsights.reportTypes.customF2", "Specific focus areas"),
+        t("marketInsights.reportTypes.customF3", "Executive briefing"),
+        t("marketInsights.reportTypes.customF4", "Direct analyst access")
+      ]
     }
   ];
 
   const interestOptions = [
-    "Rental Rate Trends",
-    "Occupancy Analytics", 
-    "Neighborhood Analysis",
-    "Corporate Demand Patterns",
-    "Supply & Development",
-    "Competitive Landscape",
-    "Regulatory Changes",
-    "Investment Opportunities"
+    t("marketInsights.interestOptions.rentalRates", "Rental Rate Trends"),
+    t("marketInsights.interestOptions.occupancy", "Occupancy Analytics"),
+    t("marketInsights.interestOptions.neighborhood", "Neighborhood Analysis"),
+    t("marketInsights.interestOptions.corporateDemand", "Corporate Demand Patterns"),
+    t("marketInsights.interestOptions.supply", "Supply & Development"),
+    t("marketInsights.interestOptions.competitive", "Competitive Landscape"),
+    t("marketInsights.interestOptions.regulatory", "Regulatory Changes"),
+    t("marketInsights.interestOptions.investment", "Investment Opportunities")
   ];
 
   const handleInterestToggle = (interest: string) => {
-    setSelectedInterests(prev => 
-      prev.includes(interest) 
+    setSelectedInterests(prev =>
+      prev.includes(interest)
         ? prev.filter(i => i !== interest)
         : [...prev, interest]
     );
@@ -212,14 +249,14 @@ export default function MarketInsightsPageContent() {
               {t("marketInsights.hero.subtitle", "Comprehensive market analysis and trends for Toronto's executive housing market. Data-driven insights to inform your investment and housing decisions.")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button 
+              <button
                 onClick={() => document.getElementById('download')?.scrollIntoView({ behavior: 'smooth' })}
                 className="bg-white text-blue-900 px-8 py-4 text-lg font-semibold hover:bg-blue-50 transition-all duration-200 flex items-center justify-center gap-2"
               >
                 <Download size={20} />
                 {t("marketInsights.hero.downloadCta", "Download Report")}
               </button>
-              <button 
+              <button
                 onClick={() => document.getElementById('insights')?.scrollIntoView({ behavior: 'smooth' })}
                 className="border-2 border-white text-white px-8 py-4 text-lg font-semibold hover:bg-white hover:text-blue-900 transition-all duration-200"
               >
@@ -242,7 +279,7 @@ export default function MarketInsightsPageContent() {
               {t("marketInsights.stats.subtitle", "Latest data from Toronto's premium executive housing market as of Q3 2024.")}
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {marketStats.map((stat, index) => (
               <div key={index} className="bg-white p-8 text-center shadow-lg hover:shadow-xl transition-shadow duration-200">
@@ -277,9 +314,8 @@ export default function MarketInsightsPageContent() {
               {t("marketInsights.charts.subtitle", "Interactive charts and graphs showing market trends, pricing patterns, and demand analytics.")}
             </p>
           </div>
-          
+
           <div className="grid lg:grid-cols-2 gap-12">
-            {/* Chart Placeholder 1 */}
             <div className="bg-gray-50 p-8 border-2 border-dashed border-gray-300 text-center">
               <div className="flex items-center justify-center w-20 h-20 bg-blue-100 text-blue-600 mx-auto mb-6">
                 <LineChart size={40} />
@@ -291,7 +327,7 @@ export default function MarketInsightsPageContent() {
                 {t("marketInsights.charts.rentalTrendsDesc", "24-month historical rental rate progression across different property types and neighborhoods.")}
               </p>
               <div className="bg-white p-4 border">
-                <div className="text-sm text-gray-500 mb-2">Sample Data Preview:</div>
+                <div className="text-sm text-gray-500 mb-2">{t("marketInsights.charts.sampleData", "Sample Data Preview:")}</div>
                 <div className="flex justify-between text-xs">
                   <span>Jan &apos;23: $2,950</span>
                   <span>Jul &apos;24: $3,247</span>
@@ -300,7 +336,6 @@ export default function MarketInsightsPageContent() {
               </div>
             </div>
 
-            {/* Chart Placeholder 2 */}
             <div className="bg-gray-50 p-8 border-2 border-dashed border-gray-300 text-center">
               <div className="flex items-center justify-center w-20 h-20 bg-purple-100 text-purple-600 mx-auto mb-6">
                 <BarChart3 size={40} />
@@ -312,7 +347,7 @@ export default function MarketInsightsPageContent() {
                 {t("marketInsights.charts.occupancyRatesDesc", "Comparative occupancy rates across Toronto's primary executive housing districts.")}
               </p>
               <div className="bg-white p-4 border">
-                <div className="text-sm text-gray-500 mb-2">Current Occupancy:</div>
+                <div className="text-sm text-gray-500 mb-2">{t("marketInsights.charts.currentOccupancy", "Current Occupancy:")}</div>
                 <div className="space-y-1 text-xs text-left">
                   <div className="flex justify-between"><span>Waterfront:</span><span>97.3%</span></div>
                   <div className="flex justify-between"><span>Downtown:</span><span>96.2%</span></div>
@@ -321,7 +356,6 @@ export default function MarketInsightsPageContent() {
               </div>
             </div>
 
-            {/* Chart Placeholder 3 */}
             <div className="bg-gray-50 p-8 border-2 border-dashed border-gray-300 text-center">
               <div className="flex items-center justify-center w-20 h-20 bg-green-100 text-green-600 mx-auto mb-6">
                 <PieChart size={40} />
@@ -333,7 +367,7 @@ export default function MarketInsightsPageContent() {
                 {t("marketInsights.charts.demandSourcesDesc", "Corporate housing demand breakdown by industry sector and company size.")}
               </p>
               <div className="bg-white p-4 border">
-                <div className="text-sm text-gray-500 mb-2">Top Industries:</div>
+                <div className="text-sm text-gray-500 mb-2">{t("marketInsights.charts.topIndustries", "Top Industries:")}</div>
                 <div className="space-y-1 text-xs text-left">
                   <div className="flex justify-between"><span>Technology:</span><span>34%</span></div>
                   <div className="flex justify-between"><span>Financial:</span><span>28%</span></div>
@@ -342,7 +376,6 @@ export default function MarketInsightsPageContent() {
               </div>
             </div>
 
-            {/* Chart Placeholder 4 */}
             <div className="bg-gray-50 p-8 border-2 border-dashed border-gray-300 text-center">
               <div className="flex items-center justify-center w-20 h-20 bg-orange-100 text-orange-600 mx-auto mb-6">
                 <TrendingUp size={40} />
@@ -354,7 +387,7 @@ export default function MarketInsightsPageContent() {
                 {t("marketInsights.charts.forecastModelDesc", "Predictive modeling for rental rates, occupancy, and market demand through 2025.")}
               </p>
               <div className="bg-white p-4 border">
-                <div className="text-sm text-gray-500 mb-2">Projected Growth:</div>
+                <div className="text-sm text-gray-500 mb-2">{t("marketInsights.charts.projectedGrowth", "Projected Growth:")}</div>
                 <div className="space-y-1 text-xs text-left">
                   <div className="flex justify-between"><span>Q4 2024:</span><span>+3.2%</span></div>
                   <div className="flex justify-between"><span>Q2 2025:</span><span>+5.7%</span></div>
@@ -377,7 +410,7 @@ export default function MarketInsightsPageContent() {
               {t("marketInsights.insights.subtitle", "Expert analysis of current market conditions and emerging trends affecting Toronto's executive housing sector.")}
             </p>
           </div>
-          
+
           <div className="grid lg:grid-cols-2 gap-8">
             {keyInsights.map((insight, index) => (
               <div key={index} className="bg-white p-8 shadow-lg hover:shadow-xl transition-shadow duration-200">
@@ -386,26 +419,26 @@ export default function MarketInsightsPageContent() {
                     {insight.title}
                   </h3>
                   <div className={`flex items-center gap-2 px-3 py-1 text-sm font-semibold ${
-                    insight.impact === 'High' ? 'bg-red-100 text-red-800' : 
-                    insight.impact === 'Medium' ? 'bg-yellow-100 text-yellow-800' : 
+                    insight.impact === 'High' ? 'bg-red-100 text-red-800' :
+                    insight.impact === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
                     'bg-green-100 text-green-800'
                   }`}>
                     <Info size={14} />
-                    {insight.impact} Impact
+                    {insight.impactLabel}
                   </div>
                 </div>
-                
+
                 <p className="text-gray-600 leading-relaxed mb-4">
                   {insight.description}
                 </p>
-                
+
                 <div className={`flex items-center gap-2 text-sm font-medium ${
-                  insight.trend === 'up' ? 'text-green-600' : 
+                  insight.trend === 'up' ? 'text-green-600' :
                   insight.trend === 'down' ? 'text-red-600' : 'text-gray-600'
                 }`}>
                   {insight.trend === 'up' && <TrendingUp size={16} />}
                   {insight.trend === 'down' && <TrendingDown size={16} />}
-                  <span>Trend: {insight.trend === 'up' ? 'Increasing' : insight.trend === 'down' ? 'Decreasing' : 'Stable'}</span>
+                  <span>{insight.trendLabel}</span>
                 </div>
               </div>
             ))}
@@ -424,16 +457,17 @@ export default function MarketInsightsPageContent() {
               {t("marketInsights.neighborhoods.subtitle", "Comparative analysis of Toronto's premium neighborhoods for executive housing investment and occupancy.")}
             </p>
           </div>
-          
-          <div className="overflow-x-auto">
+
+          {/* Desktop table */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full bg-white shadow-lg">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Neighborhood</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Avg. Monthly Rate</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Occupancy Rate</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">YoY Growth</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Market Position</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">{t("marketInsights.neighborhoods.name", "Neighborhood")}</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">{t("marketInsights.neighborhoods.avgRate", "Avg. Monthly Rate")}</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">{t("marketInsights.neighborhoods.occupancyRate", "Occupancy Rate")}</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">{t("marketInsights.neighborhoods.yoyGrowth", "YoY Growth")}</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">{t("marketInsights.neighborhoods.marketPosition", "Market Position")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -452,7 +486,7 @@ export default function MarketInsightsPageContent() {
                     </td>
                     <td className="px-6 py-4 text-center">
                       <div className={`inline-flex items-center gap-1 ${
-                        neighborhood.occupancy >= 95 ? 'text-green-600' : 
+                        neighborhood.occupancy >= 95 ? 'text-green-600' :
                         neighborhood.occupancy >= 90 ? 'text-yellow-600' : 'text-red-600'
                       }`}>
                         <span className="font-semibold">{neighborhood.occupancy}%</span>
@@ -470,14 +504,50 @@ export default function MarketInsightsPageContent() {
                         neighborhood.avgRate >= 3000 ? 'bg-blue-100 text-blue-800' :
                         'bg-green-100 text-green-800'
                       }`}>
-                        {neighborhood.avgRate >= 4000 ? 'Luxury' : 
-                         neighborhood.avgRate >= 3000 ? 'Premium' : 'Value'}
+                        {neighborhood.avgRate >= 4000 ? t("marketInsights.neighborhoods.luxury", "Luxury") :
+                         neighborhood.avgRate >= 3000 ? t("marketInsights.neighborhoods.premium", "Premium") :
+                         t("marketInsights.neighborhoods.value", "Value")}
                       </span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile cards */}
+          <div className="md:hidden space-y-4">
+            {neighborhoodData.map((neighborhood, index) => (
+              <div key={index} className="bg-white p-5 shadow-lg">
+                <div className="flex items-center gap-2 mb-3">
+                  <MapPin size={16} className="text-blue-600" />
+                  <span className="font-bold text-gray-900">{neighborhood.name}</span>
+                  <span className={`ml-auto px-2 py-0.5 text-xs font-semibold ${
+                    neighborhood.avgRate >= 4000 ? 'bg-purple-100 text-purple-800' :
+                    neighborhood.avgRate >= 3000 ? 'bg-blue-100 text-blue-800' :
+                    'bg-green-100 text-green-800'
+                  }`}>
+                    {neighborhood.avgRate >= 4000 ? t("marketInsights.neighborhoods.luxury", "Luxury") :
+                     neighborhood.avgRate >= 3000 ? t("marketInsights.neighborhoods.premium", "Premium") :
+                     t("marketInsights.neighborhoods.value", "Value")}
+                  </span>
+                </div>
+                <div className="grid grid-cols-3 gap-3 text-center text-sm">
+                  <div>
+                    <div className="font-bold text-gray-900">${neighborhood.avgRate.toLocaleString()}</div>
+                    <div className="text-xs text-gray-500">{t("marketInsights.neighborhoods.avgRate", "Avg Rate")}</div>
+                  </div>
+                  <div>
+                    <div className={`font-bold ${neighborhood.occupancy >= 95 ? 'text-green-600' : 'text-yellow-600'}`}>{neighborhood.occupancy}%</div>
+                    <div className="text-xs text-gray-500">{t("marketInsights.neighborhoods.occupancyRate", "Occupancy")}</div>
+                  </div>
+                  <div>
+                    <div className="font-bold text-green-600">+{neighborhood.growth}%</div>
+                    <div className="text-xs text-gray-500">{t("marketInsights.neighborhoods.yoyGrowth", "Growth")}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </Container>
       </Section>
@@ -493,7 +563,7 @@ export default function MarketInsightsPageContent() {
               {t("marketInsights.forecasts.subtitle", "Expert predictions and analysis for Toronto's executive housing market outlook.")}
             </p>
           </div>
-          
+
           <div className="space-y-8">
             {marketForecasts.map((forecast, index) => (
               <div key={index} className="bg-white p-8 shadow-lg border-l-4 border-blue-500">
@@ -504,16 +574,16 @@ export default function MarketInsightsPageContent() {
                     forecast.confidence === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
                     'bg-red-100 text-red-800'
                   }`}>
-                    {forecast.confidence} Confidence
+                    {forecast.confidenceLabel}
                   </span>
                 </div>
-                
+
                 <p className="text-gray-700 text-lg leading-relaxed mb-6">
                   {forecast.prediction}
                 </p>
-                
+
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">Key Factors:</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3">{t("marketInsights.forecasts.keyFactors", "Key Factors:")}</h4>
                   <ul className="space-y-2">
                     {forecast.keyFactors.map((factor, i) => (
                       <li key={i} className="flex items-start gap-2">
@@ -544,7 +614,6 @@ export default function MarketInsightsPageContent() {
                   </p>
                 </div>
 
-                {/* Report Types */}
                 <div className="grid lg:grid-cols-3 gap-8 mb-12">
                   {reportTypes.map((report) => (
                     <div key={report.type} className="bg-white/10 backdrop-blur-sm p-6 border border-white/20">
@@ -576,11 +645,8 @@ export default function MarketInsightsPageContent() {
                         className="w-full px-4 py-3 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                         placeholder={t("marketInsights.form.firstNamePlaceholder", "Enter your first name")}
                       />
-                      {errors.firstName && (
-                        <p className="text-red-500 text-sm mt-1">{errors.firstName.message}</p>
-                      )}
+                      {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName.message}</p>}
                     </div>
-
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
                         {t("marketInsights.form.lastName", "Last Name")} <span className="text-red-500">*</span>
@@ -590,9 +656,7 @@ export default function MarketInsightsPageContent() {
                         className="w-full px-4 py-3 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                         placeholder={t("marketInsights.form.lastNamePlaceholder", "Enter your last name")}
                       />
-                      {errors.lastName && (
-                        <p className="text-red-500 text-sm mt-1">{errors.lastName.message}</p>
-                      )}
+                      {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName.message}</p>}
                     </div>
                   </div>
 
@@ -606,9 +670,7 @@ export default function MarketInsightsPageContent() {
                       className="w-full px-4 py-3 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                       placeholder={t("marketInsights.form.emailPlaceholder", "your@email.com")}
                     />
-                    {errors.email && (
-                      <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-                    )}
+                    {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-6 mb-6">
@@ -622,7 +684,6 @@ export default function MarketInsightsPageContent() {
                         placeholder={t("marketInsights.form.companyPlaceholder", "Your company name")}
                       />
                     </div>
-
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
                         {t("marketInsights.form.jobTitle", "Job Title")}
