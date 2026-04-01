@@ -10,7 +10,7 @@ export function HeroSection() {
 
   return (
     <>
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-neutral-900">
+      <section className="relative h-[100svh] min-h-[600px] flex items-center justify-center overflow-hidden bg-neutral-900">
         {/* Background image (always visible, renders first) */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -37,7 +37,7 @@ export function HeroSection() {
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/60 via-neutral-900/40 to-neutral-900/70 z-[1]" />
 
-        <Container className="relative z-10 text-center pt-20 pb-8 md:pt-0 md:pb-0">
+        <Container className="relative z-10 text-center px-4 py-16 md:py-0">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-3 md:mb-4 leading-tight">
               {t('hero.title', 'Experience Toronto, Curated by AI & Human Expertise.')}
