@@ -269,6 +269,52 @@ export function HeroChatInline() {
       {/* Conversation panel */}
       {showChat && (
         <div className="mt-6 bg-neutral-900/80 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden">
+          {/* Header with clear & close buttons */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="text-accent">
+                  <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-white font-semibold text-sm">NEOS AI</h3>
+                <p className="text-white/50 text-xs">Aria · Customer Care</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {/* Clear chat */}
+              <button
+                onClick={() => {
+                  setMessages([]);
+                  setSessionId(`hero_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+                }}
+                className="p-1.5 text-white/40 hover:text-white/80 transition-colors"
+                title={t('chat.clear', 'Clear chat history')}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+              {/* Close panel */}
+              <button
+                onClick={() => {
+                  setShowChat(false);
+                  setMessages([]);
+                  setInput('');
+                  setBottomInput('');
+                  setSessionId(`hero_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+                }}
+                className="p-1.5 text-white/40 hover:text-white/80 transition-colors"
+                title={t('chat.close', 'Close chat')}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
           {/* Messages area — fixed height, internal scroll only */}
           <div
             ref={messagesContainerRef}
