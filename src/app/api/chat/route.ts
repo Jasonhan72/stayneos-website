@@ -184,17 +184,31 @@ ${forecast ? `- Today's forecast: High ${forecast.maxtempC}°C / Low ${forecast.
 function needsWebSearch(query: string): boolean {
   const lowerQuery = query.toLowerCase();
   const searchKeywords = [
+    // Real estate & market
     'market', 'trend', 'competitor', 'compare', 'news', 'toronto rental',
     'rental market', 'housing market', 'price comparison', 'competition',
     'current rates', 'market rate', 'average rent', 'rental trend',
     'toronto news', 'housing news', 'real estate news', 'competitor pricing',
     'how much', 'what is the price', 'compare prices', 'market analysis',
     'rental data', 'market data', 'statistics', 'report', 'study',
+    'realtor', 'mls', 'listing', 'condo', 'apartment', 'lease',
+    'zolo', 'housesigma', 'condos.ca', 'realtor.ca',
+    // Local info
     'restaurant', 'food', 'eat', 'bar', 'nightlife', 'event', 'festival',
     'transit', 'ttc', 'subway', 'bus', 'airport', 'commute',
     'school', 'university', 'hospital', 'clinic', 'gym', 'park',
+    'neighborhood', 'neighbourhood', 'area', 'district',
+    // Chinese keywords
     '餐厅', '美食', '交通', '地铁', '学校', '医院', '公园',
+    '房价', '房源', '租金', '挂牌', '小区', '社区', '公寓',
+    '房产', '楼盘', '二手房', '新房', '出租', '求租',
+    // Direct URL or search intent
+    'search', 'find', 'look up', 'check', 'latest', 'recent', 'current',
+    '搜索', '查找', '查一下', '帮我查', '最新', '最近',
   ];
+
+  // Also trigger on URLs in the message
+  if (/https?:\/\//.test(query)) return true;
   
   return searchKeywords.some(keyword => lowerQuery.includes(keyword));
 }
