@@ -374,6 +374,10 @@ export async function POST(request: NextRequest) {
           language,
           usedWebSearch,
           webSearchQuery: usedWebSearch ? message : undefined
+        }, {
+          headers: {
+            'Cache-Control': 'no-store, no-cache, must-revalidate',
+          }
         });
       } else {
         throw new Error('Invalid AI response format');
@@ -390,6 +394,10 @@ export async function POST(request: NextRequest) {
         language,
         usedWebSearch,
         webSearchQuery: usedWebSearch ? message : undefined
+      }, {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate',
+        }
       });
     }
 
@@ -406,7 +414,12 @@ export async function POST(request: NextRequest) {
       source: 'error-fallback',
       language,
       usedWebSearch: false
-    }, { status: 500 });
+    }, {
+      status: 500,
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+      }
+    });
   }
 }
 
