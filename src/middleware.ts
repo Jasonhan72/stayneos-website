@@ -37,15 +37,35 @@ const HOST_PREFIXES = [
   '/host/',
 ];
 
-// Detect user's preferred locale from Accept-Language header
+const VALID_LOCALES: Locale[] = ['en', 'fr', 'zh'];
+
+// Extract locale from URL path prefix (e.g., /zh/about → 'zh')
+function getLocaleFromPath(pathname: string): Locale | null {
+  const segments = pathname.split('/');
+  if (segments.length >= 2) {
+    const candidate = segments[1] as Locale;
+    if (VALID_LOCALES.includes(candidate)) {
+      return candidate;
+    }
+  }
+  return null;
+}
+
+// Detect user's preferred locale from URL, Cookie, or Accept-Language
 function detectLocale(request: NextRequest): Locale {
-  // 1. Check cookie first (user's explicit preference)
+  // 1. Check URL path prefix first (highest priority)
+  const pathLocale = getLocaleFromPath(request.nextUrl.pathname);
+  if (pathLocale) {
+    return pathLocale;
+  }
+  
+  // 2. Check cookie (user's explicit preference)
   const cookieLocale = request.cookies.get('stayneos_locale')?.value;
   if (cookieLocale === 'zh' || cookieLocale === 'en' || cookieLocale === 'fr') {
     return cookieLocale;
   }
   
-  // 2. Check Accept-Language header
+  // 3. Check Accept-Language header
   const acceptLanguage = request.headers.get('accept-language');
   if (acceptLanguage) {
     const languages = acceptLanguage.split(',').map(lang => lang.split(';')[0].trim().toLowerCase());
@@ -57,7 +77,7 @@ function detectLocale(request: NextRequest): Locale {
     }
   }
   
-  // 3. Default to English
+  // 4. Default to English
   return 'en';
 }
 
@@ -272,12 +292,21 @@ export async function middleware(request: NextRequest) {
     },
   });
   
-  // Set cookie if not already set (first visit)
+  // Always sync cookie with URL locale (URL prefix takes priority)
+  const pathLocale = getLocaleFromPath(pathname);
   const existingCookie = request.cookies.get('stayneos_locale')?.value;
-  if (!existingCookie) {
+  if (pathLocale && pathLocale !== existingCookie) {
+    // URL has explicit locale prefix → update cookie to match
+    response.cookies.set('stayneos_locale', pathLocale, {
+      path: '/',
+      maxAge: 365 * 24 * 60 * 60,
+      sameSite: 'lax',
+    });
+  } else if (!existingCookie) {
+    // First visit, no cookie → set detected locale
     response.cookies.set('stayneos_locale', locale, {
       path: '/',
-      maxAge: 365 * 24 * 60 * 60, // 1 year
+      maxAge: 365 * 24 * 60 * 60,
       sameSite: 'lax',
     });
   }
