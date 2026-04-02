@@ -5,6 +5,7 @@ import { ReactNode } from 'react';
 import { getMessages } from 'next-intl/server';
 import { isValidLocale } from '@/i18n.config';
 import IntlProvider from '@/components/providers/IntlProvider';
+import { I18nProvider } from "@/lib/i18n";
 import { UserProvider } from "@/lib/context/UserContext";
 import { WishlistProvider } from "@/lib/context/WishlistContext";
 import Navbar from "@/components/layout/Navbar";
@@ -137,19 +138,21 @@ export default async function LocaleLayout({
           timeZone={timeZone}
           now={now}
         >
-          <UserProvider>
-            <WishlistProvider>
-              <div className="flex min-h-screen flex-col">
-                <Navbar locale={locale} />
-                <main className="flex-1">
-                  {children}
-                </main>
-                <Footer locale={locale} />
-                <CustomerChat />
-                <StructuredData locale={locale} />
-              </div>
-            </WishlistProvider>
-          </UserProvider>
+          <I18nProvider>
+            <UserProvider>
+              <WishlistProvider>
+                <div className="flex min-h-screen flex-col">
+                  <Navbar locale={locale} />
+                  <main className="flex-1">
+                    {children}
+                  </main>
+                  <Footer locale={locale} />
+                  <CustomerChat />
+                  <StructuredData locale={locale} />
+                </div>
+              </WishlistProvider>
+            </UserProvider>
+          </I18nProvider>
         </IntlProvider>
       </body>
     </html>
