@@ -1,5 +1,1 @@
-import BookingsPageClient from '@/components/pages/BookingsPageClient';
-
-export default function BookingsPage() {
-  return <BookingsPageClient />;
-}
+export default function Placeholder() { return <div>Page under maintenance</div> }

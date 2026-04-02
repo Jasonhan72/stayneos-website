@@ -1,12 +1,1 @@
-import type { Metadata } from 'next';
-import DashboardPageClient from '@/components/pages/DashboardPageClient';
-
-export const metadata: Metadata = {
-  title: 'Dashboard',
-  description: 'Manage your NEOS bookings, profile, and saved listings.',
-  alternates: { canonical: '/dashboard' },
-};
-
-export default function DashboardPage() {
-  return <DashboardPageClient />;
-}
+export default function Placeholder() { return <div>Page under maintenance</div> }
