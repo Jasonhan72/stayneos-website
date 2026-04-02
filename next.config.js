@@ -72,6 +72,19 @@ const nextConfig = {
     },
   ],
 
+  redirects: async () => [
+    {
+      source: '/listings',
+      destination: '/properties',
+      permanent: true,
+    },
+    {
+      source: '/listings/:path*',
+      destination: '/properties/:path*',
+      permanent: true,
+    },
+  ],
+
   poweredByHeader: false,
   compress: true,
 };
