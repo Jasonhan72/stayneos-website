@@ -28,7 +28,7 @@ export const localeDirections: Record<Locale, 'ltr' | 'rtl'> = {
 // 获取请求配置
 export default getRequestConfig(async ({ locale }) => {
   // 验证语言代码
-  if (!isValidLocale(locale)) {
+  if (!locale || !isValidLocale(locale)) {
     notFound();
   }
 
@@ -36,6 +36,7 @@ export default getRequestConfig(async ({ locale }) => {
   const messages = (await import(`../messages/${locale}.json`)).default;
 
   return {
+    locale,
     messages,
     timeZone: 'America/Toronto',
     now: new Date()

@@ -22,7 +22,7 @@ export function StructuredData({ pageType = 'homepage', propertyData, locale }: 
     '@context': 'https://schema.org',
     '@type': 'RealEstateAgent',
     name: 'NEOS Executive Apartments',
-    description: t('description', 'Premium executive apartment rentals in downtown Toronto'),
+    description: t('description', { defaultValue: 'Premium executive apartment rentals in downtown Toronto' }),
     url: 'https://neos.rentals',
     logo: 'https://neos.rentals/logo.png',
     telephone: '+1-647-862-6518',

@@ -7,7 +7,7 @@ import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserMenu } from "./UserMenu";
 import LanguageSwitcher from "./LanguageSwitcher";
-import { MobileMenu } from "./MobileMenu";
+import MobileMenu from "./MobileMenu";
 import { useAuth } from "@/lib/context/UserContext";
 import { useTranslations, useLocale } from 'next-intl';
 
