@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useTranslations } from 'next-intl';
+import { useI18n } from "@/lib/i18n";
 import { 
   User, 
   Home, 
@@ -18,11 +18,10 @@ import { useAuth } from "@/lib/context/UserContext";
 
 interface UserMenuProps {
   variant?: "light" | "dark" | "transparent";
-  locale: string;
 }
 
-export function UserMenu({ variant = "light", locale }: UserMenuProps) {
-  const t = useTranslations('nav');
+export function UserMenu({ variant = "light" }: UserMenuProps) {
+  const { t, locale } = useI18n();
   const { user, logout, isLoading } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -53,184 +52,231 @@ export function UserMenu({ variant = "light", locale }: UserMenuProps) {
     }
   }, [isOpen]);
 
-  const textStyles = {
-    light: "text-neutral-700 hover:text-neutral-900",
-    dark: "text-white/90 hover:text-white",
-    transparent: "text-white hover:text-white/80",
+  const handleLogout = async () => {
+    setIsOpen(false);
+    await logout();
   };
-
-  const menuItemStyles = {
-    light: "text-neutral-700 hover:bg-neutral-100",
-    dark: "text-white/90 hover:bg-white/10",
-    transparent: "text-white hover:bg-white/10",
-  };
-
-  const menuBgStyles = {
-    light: "bg-white border-neutral-200",
-    dark: "bg-primary border-primary-dark",
-    transparent: "bg-primary border-primary-dark",
-  };
-
-  const userInitial = user?.firstName?.[0] || user?.name?.[0] || "U";
-
-  const menuItems = [
-    {
-      icon: LayoutDashboard,
-      label: t('dashboard'),
-      href: "/dashboard",
-      requiresAuth: true,
-    },
-    {
-      icon: Home,
-      label: t('bookings'),
-      href: "/dashboard/bookings",
-      requiresAuth: true,
-    },
-    {
-      icon: Heart,
-      label: t('wishlists'),
-      href: "/dashboard/wishlists",
-      requiresAuth: true,
-    },
-    {
-      icon: User,
-      label: t('profile'),
-      href: "/dashboard/profile",
-      requiresAuth: true,
-    },
-    {
-      icon: Building2,
-      label: t('becomeHost'),
-      href: "/become-host",
-      requiresAuth: false,
-    },
-  ];
 
   if (isLoading) {
     return (
-      <div className="flex items-center gap-2">
-        <div className="h-8 w-8 rounded-full bg-neutral-200 animate-pulse" />
-        <div className="hidden md:block">
-          <div className="h-4 w-20 bg-neutral-200 animate-pulse rounded" />
+      <div className="w-10 h-10 rounded-full bg-gray-200 animate-pulse" />
+    );
+  }
+
+  const isDarkStyle = variant === "dark" || variant === "transparent";
+  const userAlt = locale === "zh" ? "用户头像" : locale === "fr" ? "Avatar utilisateur" : "User avatar";
+  const defaultUserName = locale === "zh" ? "用户" : locale === "fr" ? "Utilisateur" : "User";
+
+  // Not logged in state - Blueground style
+  if (!user) {
+    return (
+      <div className="relative" ref={menuRef}>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={cn(
+            "flex items-center gap-1 p-2 rounded-full transition-all duration-200",
+            "hover:bg-black/5 focus:outline-none",
+            isOpen && "bg-black/5"
+          )}
+          aria-expanded={isOpen}
+          aria-haspopup="true"
+        >
+          <User 
+            className={cn(
+              "w-5 h-5",
+              isDarkStyle ? "text-white" : "text-neutral-700"
+            )} 
+          />
+          {isOpen ? (
+            <ChevronUp 
+              className={cn(
+                "w-4 h-4",
+                isDarkStyle ? "text-white/60" : "text-neutral-500"
+              )} 
+            />
+          ) : (
+            <ChevronDown 
+              className={cn(
+                "w-4 h-4",
+                isDarkStyle ? "text-white/60" : "text-neutral-500"
+              )} 
+            />
+          )}
+        </button>
+
+        {/* Dropdown Menu - Not Logged In */}
+        <div
+          className={cn(
+            "absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-xl border border-neutral-100",
+            "transition-all duration-200 origin-top-right z-50",
+            isOpen 
+              ? "opacity-100 scale-100 translate-y-0 pointer-events-auto" 
+              : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
+          )}
+        >
+          <div className="py-1">
+            <Link
+              href="/register"
+              onClick={() => setIsOpen(false)}
+              className={cn(
+                "block px-4 py-2.5 text-sm text-neutral-700",
+                "hover:bg-neutral-50 hover:text-primary transition-colors duration-150"
+              )}
+            >
+              {t('nav.signup')}
+            </Link>
+            <Link
+              href="/login"
+              onClick={() => setIsOpen(false)}
+              className={cn(
+                "block px-4 py-2.5 text-sm text-neutral-700",
+                "hover:bg-neutral-50 hover:text-primary transition-colors duration-150"
+              )}
+            >
+              {t('nav.login')}
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
-  if (!user) {
-    return (
-      <div className="flex items-center gap-3">
-        <Link
-          href={`/${locale}/login`}
-          className={cn(
-            "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
-            variant === "dark" || variant === "transparent"
-              ? "text-white/90 hover:text-white hover:bg-white/10"
-              : "text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100"
-          )}
-        >
-          {t('login')}
-        </Link>
-        <Link
-          href={`/${locale}/register`}
-          className={cn(
-            "px-4 py-2 rounded-lg text-sm font-medium bg-primary text-white hover:bg-primary-dark transition-colors"
-          )}
-        >
-          {t('signup')}
-        </Link>
-      </div>
-    );
-  }
+  // Logged in state - Blueground style menu
+  const menuItems = [
+    {
+      label: t("nav.dashboard"),
+      href: "/dashboard",
+      icon: LayoutDashboard,
+    },
+    {
+      label: t("nav.bookings"),
+      href: "/dashboard/bookings",
+      icon: Home,
+    },
+    {
+      label: t("nav.manageProperties"),
+      href: "/dashboard/properties",
+      icon: Building2,
+    },
+    {
+      label: t("nav.wishlists"),
+      href: "/wishlists",
+      icon: Heart,
+    },
+    {
+      label: t("nav.profile"),
+      href: "/profile",
+      icon: User,
+    },
+  ];
+
+  // Get initials from user name
+  const getInitials = (name: string) => {
+    if (!name || name.trim() === '') return '?';
+    return name
+      .split(" ")
+      .filter(n => n && n.length > 0)
+      .map((n) => n.charAt(0))
+      .join("")
+      .toUpperCase()
+      .slice(0, 2) || '?';
+  };
 
   return (
     <div className="relative" ref={menuRef}>
+      {/* Avatar Button - Blueground Style */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "flex items-center gap-2 px-3 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2",
-          textStyles[variant]
+          "flex items-center gap-2 pl-1 pr-2 py-1 rounded-full transition-all duration-200",
+          "hover:bg-black/5 focus:outline-none",
+          isOpen && "bg-black/5"
         )}
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-          {user.avatar ? (
+        {/* Avatar - Show image if available, otherwise initials */}
+        {user?.avatar || user?.image ? (
+          <div className="w-9 h-9 rounded-full overflow-hidden bg-neutral-100">
             <Image
-              src={user.avatar}
-              alt={user.name || "User"}
-              width={32}
-              height={32}
-              className="rounded-full"
+              src={user.avatar || user.image!}
+              alt={user.name || userAlt}
+              width={36}
+              height={36}
+              className="w-full h-full object-cover"
             />
-          ) : (
-            <span className="text-primary font-medium">{userInitial}</span>
-          )}
-        </div>
-        <div className="hidden md:block text-left">
-          <div className="text-sm font-medium">
-            {user.firstName || user.name || "User"}
           </div>
-          <div className="text-xs opacity-70">
-            {user.role === "HOST" ? t('host') : t('guest')}
-          </div>
-        </div>
-        {isOpen ? (
-          <ChevronUp size={16} className="opacity-70" />
         ) : (
-          <ChevronDown size={16} className="opacity-70" />
+          <div className={cn(
+            "w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold",
+            "bg-[#e3f2fd] text-[#1967d2]"
+          )}>
+            {getInitials(user.name || user.email || defaultUserName)}
+          </div>
+        )}
+        {isOpen ? (
+          <ChevronUp 
+            className={cn(
+              "w-4 h-4",
+              isDarkStyle ? "text-white/60" : "text-neutral-400"
+            )} 
+          />
+        ) : (
+          <ChevronDown 
+            className={cn(
+              "w-4 h-4",
+              isDarkStyle ? "text-white/60" : "text-neutral-400"
+            )} 
+          />
         )}
       </button>
 
-      {isOpen && (
-        <div
-          className={cn(
-            "absolute right-0 mt-2 w-56 rounded-lg shadow-lg border py-1 z-50",
-            menuBgStyles[variant]
-          )}
-        >
-          <div className="px-4 py-3 border-b border-neutral-200/50">
-            <div className="font-medium">{user.name}</div>
-            <div className="text-sm opacity-70">{user.email}</div>
-          </div>
-
-          <div className="py-1">
-            {menuItems.map((item) => {
-              if (item.requiresAuth && !user) return null;
-              
-              return (
-                <Link
-                  key={item.href}
-                  href={`/${locale}${item.href}`}
-                  className={cn(
-                    "flex items-center gap-3 px-4 py-2 text-sm transition-colors",
-                    menuItemStyles[variant]
-                  )}
-                  onClick={() => setIsOpen(false)}
-                >
-                  <item.icon size={16} className="opacity-70" />
-                  {item.label}
-                </Link>
-              );
-            })}
-          </div>
-
-          <div className="border-t border-neutral-200/50 pt-1">
-            <button
-              onClick={async () => {
-                await logout();
-                setIsOpen(false);
-              }}
+      {/* Dropdown Menu - Logged In */}
+      <div
+        className={cn(
+          "absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-neutral-100",
+          "transition-all duration-200 origin-top-right z-50",
+          isOpen 
+            ? "opacity-100 scale-100 translate-y-0 pointer-events-auto" 
+            : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
+        )}
+      >
+        {/* Menu Items with Icons */}
+        <div className="py-2">
+          {menuItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setIsOpen(false)}
               className={cn(
-                "w-full flex items-center gap-3 px-4 py-2 text-sm transition-colors",
-                menuItemStyles[variant]
+                "flex items-center gap-3 px-4 py-3 text-sm text-neutral-700",
+                "hover:bg-neutral-50 transition-colors duration-150"
               )}
             >
-              <span>{t('logout')}</span>
-            </button>
-          </div>
+              <item.icon className="w-5 h-5 text-neutral-500" />
+              {item.label}
+            </Link>
+          ))}
         </div>
-      )}
+
+        {/* Divider */}
+        <div className="border-t border-neutral-100" />
+
+        {/* Logout */}
+        <div className="py-2">
+          <button
+            onClick={handleLogout}
+            className={cn(
+              "w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600",
+              "hover:bg-red-50 transition-colors duration-150"
+            )}
+          >
+            {t('nav.logout')}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
+
+export default UserMenu;

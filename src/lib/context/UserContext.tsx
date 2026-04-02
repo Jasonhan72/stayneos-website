@@ -298,20 +298,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
 
-export function useUser(): UserContextType {
+export function useUser() {
   const context = useContext(UserContext);
   if (context === undefined) {
-    // 构建时安全回退（SSG prerender 时没有 Provider）
-    return {
-      user: null,
-      isAuthenticated: false,
-      isLoading: false,
-      updateProfile: async () => {},
-      updatePreferences: async () => {},
-      updateAvatar: async () => {},
-      logout: async () => {},
-      refreshUser: async () => {},
-    };
+    throw new Error('useUser must be used within a UserProvider');
   }
   return context;
 }

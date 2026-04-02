@@ -6,22 +6,23 @@ import Image from "next/image";
 import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserMenu } from "./UserMenu";
-import LanguageSwitcher from "./LanguageSwitcher";
-import MobileMenu from "./MobileMenu";
+import { LanguageCurrencySelector } from "./LanguageCurrencySelector";
+import { MobileMenu } from "./MobileMenu";
 import { useAuth } from "@/lib/context/UserContext";
-import { useTranslations, useLocale } from 'next-intl';
+import { useI18n } from "@/lib/i18n";
 
 interface NavbarProps {
   variant?: "light" | "dark" | "transparent";
-  locale: string;
 }
 
-export default function Navbar({ variant = "light", locale }: NavbarProps) {
+export default function Navbar({ variant = "light" }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { user: _user, isAuthenticated: _isAuthenticated } = useAuth();
-  const t = useTranslations('nav');
-  const currentLocale = useLocale();
+  const { user, isAuthenticated } = useAuth();
+  const { t, locale } = useI18n();
+  const userAlt = locale === "zh" ? "用户头像" : locale === "fr" ? "Avatar utilisateur" : "User avatar";
+  const openMenuLabel = locale === "zh" ? "打开菜单" : locale === "fr" ? "Ouvrir le menu" : "Open menu";
+  const defaultInitial = locale === "zh" ? "用" : locale === "fr" ? "U" : "U";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,10 +33,10 @@ export default function Navbar({ variant = "light", locale }: NavbarProps) {
   }, []);
 
   const navLinks = [
-    { href: "/properties", label: t('properties') },
-    { href: "/for-business", label: t('business') },
-    { href: "/about", label: t('about') },
-    { href: "/contact", label: t('contact') },
+    { href: "/properties", label: t("nav.properties") },
+    { href: "/for-business", label: t("nav.business") },
+    { href: "/about", label: t("nav.about") },
+    { href: "/contact", label: t("nav.contact") },
   ];
 
   const bgStyles = {
@@ -47,103 +48,124 @@ export default function Navbar({ variant = "light", locale }: NavbarProps) {
   const textStyles = {
     light: "text-neutral-700 hover:text-neutral-900",
     dark: "text-white/90 hover:text-white",
-    transparent: isScrolled ? "text-neutral-700 hover:text-neutral-900" : "text-white hover:text-white/80",
+    transparent: isScrolled ? "text-neutral-700 hover:text-neutral-900" : "text-white/90 hover:text-white",
   };
 
-  const logoTextStyles = {
-    light: "text-neutral-900",
-    dark: "text-white",
-    transparent: isScrolled ? "text-neutral-900" : "text-white",
-  };
-
-  const menuButtonStyles = {
-    light: "text-neutral-700 hover:text-neutral-900",
-    dark: "text-white/90 hover:text-white",
-    transparent: isScrolled ? "text-neutral-700 hover:text-neutral-900" : "text-white hover:text-white/80",
-  };
+  const currentVariant = isScrolled ? "light" : variant;
 
   return (
     <>
-      <header
+      {/* Main Navigation */}
+      <nav
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-          bgStyles[variant],
-          isScrolled ? "py-3" : "py-4"
+          "sticky top-0 z-50 transition-all duration-300",
+          bgStyles[currentVariant]
         )}
       >
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
-            <div className="flex items-center">
-              <Link href={`/${locale}`} className="flex items-center gap-3">
-                <div className="relative h-10 w-10">
-                  <Image
-                    src="/logo.png"
-                    alt="NEOS Logo"
-                    fill
-                    className="object-contain"
-                    sizes="40px"
-                    priority
-                  />
-                </div>
-                <span
-                  className={cn(
-                    "text-2xl font-bold tracking-tight",
-                    logoTextStyles[variant]
-                  )}
-                >
-                  NEOS
-                </span>
-              </Link>
-            </div>
+            <Link href="/" className="flex items-center shrink-0">
+              <Image
+                src="/logo.png"
+                alt="NEOS"
+                width={140}
+                height={48}
+                className="h-9 md:h-10 w-auto object-contain"
+                priority={true}
+              />
+            </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-8">
+            <div className="hidden lg:flex items-center gap-8">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
-                  href={`/${locale}${link.href}`}
+                  href={link.href}
                   className={cn(
-                    "text-sm font-medium transition-colors",
-                    textStyles[variant]
+                    "text-sm font-medium transition-colors duration-200 py-2",
+                    textStyles[currentVariant]
                   )}
                 >
                   {link.label}
                 </Link>
               ))}
-            </nav>
+            </div>
 
-            {/* Right Side Actions */}
-            <div className="flex items-center space-x-4">
-              {/* Language Switcher */}
-              <LanguageSwitcher locale={currentLocale} isScrolled={isScrolled} />
-
-              {/* User Menu / Auth Buttons */}
-              <UserMenu locale={locale} />
-
-              {/* Mobile Menu Button */}
-              <button
-                onClick={() => setIsMobileMenuOpen(true)}
+            {/* Desktop - Language/Currency + Partner With Us + User Menu */}
+            <div className="hidden lg:flex items-center gap-2">
+              <LanguageCurrencySelector variant={currentVariant as "light" | "dark" | "transparent"} />
+              
+              {/* Partner With Us button */}
+              <Link
+                href="/for-agents"
                 className={cn(
-                  "md:hidden p-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2",
-                  menuButtonStyles[variant]
+                  "text-sm font-medium px-3 py-2 rounded-full transition-all duration-200",
+                  "hover:bg-black/5",
+                  textStyles[currentVariant]
                 )}
-                aria-label={t('openMenu')}
               >
-                <Menu size={24} />
-              </button>
+                {t("nav.partnerWithUs")}
+              </Link>
+              
+              <UserMenu variant={currentVariant as "light" | "dark" | "transparent"} />
+            </div>
+
+            {/* Mobile - User Avatar when logged in, Hamburger when logged out */}
+            <div className="lg:hidden flex items-center gap-2">
+              {isAuthenticated && user ? (
+                <button
+                  onClick={() => setIsMobileMenuOpen(true)}
+                  className="flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full hover:bg-black/5 transition-all"
+                >
+                  {user?.avatar || user?.image ? (
+                    <div className="w-9 h-9 rounded-full overflow-hidden bg-neutral-100">
+                      <Image
+                        src={user.avatar || user.image!}
+                        alt={user.name || userAlt}
+                        width={36}
+                        height={36}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold bg-[#e3f2fd] text-[#1967d2]">
+                      {(() => {
+                        const name = user?.name || "";
+                        const email = user?.email || "";
+                        if (name) {
+                          const initials = name.split(" ").filter(n => n).map(n => n[0]).join("").toUpperCase();
+                          return initials.slice(0, 2) || defaultInitial;
+                        }
+                        if (email) {
+                          return email.substring(0, 2).toUpperCase();
+                        }
+                        return defaultInitial;
+                      })()}
+                    </div>
+                  )}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsMobileMenuOpen(true)}
+                  className={cn(
+                    "p-2 rounded-lg transition-colors duration-200",
+                    "hover:bg-neutral-100 focus:outline-none",
+                    textStyles[currentVariant]
+                  )}
+                  aria-label={openMenuLabel}
+                >
+                  <Menu className="w-6 h-6" />
+                </button>
+              )}
             </div>
           </div>
         </div>
-      </header>
+      </nav>
 
-      {/* Mobile Menu */}
-      <MobileMenu
-        isOpen={isMobileMenuOpen}
-        onClose={() => setIsMobileMenuOpen(false)}
-        locale={locale}
-        variant={variant}
-      />
+      {/* Mobile Menu Drawer */}
+      <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
     </>
   );
 }
