@@ -3656,22 +3656,45 @@
       "3": "Our team typically responds within 2 hours during business hours (9am-6pm EST)."
     }
   },
-  "marketHub": {
-    "title": "Market Insights Hub",
-    "subtitle": "Toronto real estate market reports, TRREB data analysis, rental trends, and investment insights. Updated regularly.",
-    "searchPlaceholder": "Search reports and insights...",
-    "catAll": "All",
-    "catReport": "Market Reports",
-    "catTrreb": "TRREB Data",
-    "catRental": "Rental Trends",
-    "catNeighborhood": "Neighborhoods",
-    "catInvestment": "Investment",
-    "catNews": "Industry News",
-    "noPosts": "No reports yet",
+  "marketInsights": {
+    "title": "Toronto Market Insights & Reports | NEOS Knowledge Hub",
+    "description": "Toronto real estate market reports, TRREB data analysis, rental trends, and investment insights. Updated regularly with the latest data.",
+    "hero": {
+      "title": "Toronto Market Insights",
+      "subtitle": "Data-driven real estate analysis, TRREB reports, and rental market trends"
+    },
+    "search": {
+      "placeholder": "Search market reports, TRREB data, rental trends..."
+    },
+    "categories": {
+      "all": "All Categories",
+      "rentalTrends": "Rental Trends",
+      "marketReports": "Market Reports",
+      "investment": "Investment Insights",
+      "policy": "Policy & Regulations",
+      "neighborhoods": "Neighborhoods"
+    },
+    "stats": {
+      "totalReports": "Total Reports",
+      "monthlyGrowth": "Monthly Growth",
+      "avgRent": "Avg. 1BR Rent",
+      "activeListings": "Active Listings"
+    },
+    "loading": "Loading market insights...",
+    "noPosts": "No market reports found",
     "noPostsDesc": "Market reports and TRREB data analysis will appear here as they are published. Check back soon!",
-    "notFound": "Post not found",
-    "backToHub": "← Back to Market Insights",
-    "views": "views",
-    "viewSource": "View original source"
+    "recentReports": "Recent Reports",
+    "downloadAll": "Download All Reports",
+    "readMore": "Read Report",
+    "newsletter": {
+      "title": "Stay Informed",
+      "description": "Get monthly market insights, rental trends, and investment analysis delivered to your inbox.",
+      "placeholder": "Your email address",
+      "subscribe": "Subscribe",
+      "privacy": "We respect your privacy. Unsubscribe at any time."
+    }
+  },
+  "nav": {
+    "openMenu": "Open menu"
   }
 }

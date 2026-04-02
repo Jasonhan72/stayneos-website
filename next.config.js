@@ -14,6 +14,11 @@ const csp = [
 ].join('; ');
 
 const nextConfig = {
+  i18n: {
+    locales: ['en', 'fr', 'zh'],
+    defaultLocale: 'en',
+    localeDetection: false, // 禁用自动检测，使用中间件
+  },
   experimental: {
     optimizePackageImports: ["lucide-react"],
   },

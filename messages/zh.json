@@ -3771,22 +3771,45 @@
       "3": "我们的团队通常在营业时间（东部时间上午9点至下午6点）内2小时内回复。"
     }
   },
-  "marketHub": {
-    "title": "市场洞察中心",
-    "subtitle": "多伦多房地产市场报告、TRREB 数据分析、租金趋势和投资洞察。定期更新。",
-    "searchPlaceholder": "搜索报告和洞察...",
-    "catAll": "全部",
-    "catReport": "市场报告",
-    "catTrreb": "TRREB 数据",
-    "catRental": "租金趋势",
-    "catNeighborhood": "社区分析",
-    "catInvestment": "投资",
-    "catNews": "行业新闻",
-    "noPosts": "暂无报告",
+  "marketInsights": {
+    "title": "多伦多市场洞察与报告 | NEOS 知识中心",
+    "description": "多伦多房地产市场报告、TRREB 数据分析、租金趋势和投资洞察。定期更新最新数据。",
+    "hero": {
+      "title": "多伦多市场洞察",
+      "subtitle": "数据驱动的房地产分析、TRREB 报告和租赁市场趋势"
+    },
+    "search": {
+      "placeholder": "搜索市场报告、TRREB 数据、租金趋势..."
+    },
+    "categories": {
+      "all": "全部分类",
+      "rentalTrends": "租金趋势",
+      "marketReports": "市场报告",
+      "investment": "投资洞察",
+      "policy": "政策法规",
+      "neighborhoods": "社区分析"
+    },
+    "stats": {
+      "totalReports": "报告总数",
+      "monthlyGrowth": "月度增长",
+      "avgRent": "一居室平均租金",
+      "activeListings": "活跃房源"
+    },
+    "loading": "正在加载市场洞察...",
+    "noPosts": "未找到市场报告",
     "noPostsDesc": "市场报告和 TRREB 数据分析将在发布后显示在这里。请稍后再来！",
-    "notFound": "未找到该文章",
-    "backToHub": "← 返回市场洞察",
-    "views": "次浏览",
-    "viewSource": "查看原始来源"
+    "recentReports": "近期报告",
+    "downloadAll": "下载所有报告",
+    "readMore": "阅读报告",
+    "newsletter": {
+      "title": "保持信息畅通",
+      "description": "每月获取市场洞察、租金趋势和投资分析，直接发送到您的收件箱。",
+      "placeholder": "您的邮箱地址",
+      "subscribe": "订阅",
+      "privacy": "我们尊重您的隐私。可随时取消订阅。"
+    }
+  },
+  "nav": {
+    "openMenu": "打开菜单"
   }
 }

@@ -3771,22 +3771,45 @@
       "3": "Notre équipe répond généralement dans les 2 heures pendant les heures ouvrables (9h-18h HNE)."
     }
   },
-  "marketHub": {
-    "title": "Centre d'insights du marché",
-    "subtitle": "Rapports du marché immobilier de Toronto, analyse TRREB, tendances locatives et insights d'investissement. Mis à jour régulièrement.",
-    "searchPlaceholder": "Rechercher des rapports...",
-    "catAll": "Tous",
-    "catReport": "Rapports de marché",
-    "catTrreb": "Données TRREB",
-    "catRental": "Tendances locatives",
-    "catNeighborhood": "Quartiers",
-    "catInvestment": "Investissement",
-    "catNews": "Actualités",
-    "noPosts": "Aucun rapport pour le moment",
+  "marketInsights": {
+    "title": "Insights et rapports du marché de Toronto | Centre de connaissances NEOS",
+    "description": "Rapports du marché immobilier de Toronto, analyse TRREB, tendances locatives et insights d'investissement. Mis à jour régulièrement avec les dernières données.",
+    "hero": {
+      "title": "Insights du marché de Toronto",
+      "subtitle": "Analyse immobilière basée sur les données, rapports TRREB et tendances du marché locatif"
+    },
+    "search": {
+      "placeholder": "Rechercher des rapports de marché, données TRREB, tendances locatives..."
+    },
+    "categories": {
+      "all": "Toutes catégories",
+      "rentalTrends": "Tendances locatives",
+      "marketReports": "Rapports de marché",
+      "investment": "Insights d'investissement",
+      "policy": "Politiques et régulations",
+      "neighborhoods": "Quartiers"
+    },
+    "stats": {
+      "totalReports": "Rapports totaux",
+      "monthlyGrowth": "Croissance mensuelle",
+      "avgRent": "Loyer moyen 1 chambre",
+      "activeListings": "Annonces actives"
+    },
+    "loading": "Chargement des insights du marché...",
+    "noPosts": "Aucun rapport de marché trouvé",
     "noPostsDesc": "Les rapports de marché et analyses TRREB apparaîtront ici une fois publiés. Revenez bientôt !",
-    "notFound": "Article introuvable",
-    "backToHub": "← Retour aux insights",
-    "views": "vues",
-    "viewSource": "Voir la source originale"
+    "recentReports": "Rapports récents",
+    "downloadAll": "Télécharger tous les rapports",
+    "readMore": "Lire le rapport",
+    "newsletter": {
+      "title": "Restez informé",
+      "description": "Recevez chaque mois des insights du marché, tendances locatives et analyses d'investissement directement dans votre boîte de réception.",
+      "placeholder": "Votre adresse email",
+      "subscribe": "S'abonner",
+      "privacy": "Nous respectons votre vie privée. Désabonnez-vous à tout moment."
+    }
+  },
+  "nav": {
+    "openMenu": "Ouvrir le menu"
   }
 }
