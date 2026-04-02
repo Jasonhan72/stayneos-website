@@ -62,8 +62,8 @@ const intlMiddleware = createMiddleware({
     '/help': '/help',
   },
   
-  // 默认区域设置前缀
-  localePrefix: 'as-needed',
+  // 所有语言都带前缀（/en/, /zh/, /fr/）
+  localePrefix: 'always',
   
   // 备用语言
   alternateLinks: true,
