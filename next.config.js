@@ -14,9 +14,6 @@ const csp = [
 ].join('; ');
 
 const nextConfig = {
-  // 禁用静态导出，使用动态渲染
-  output: 'standalone',
-  
   i18n: {
     locales: ['en', 'fr', 'zh'],
     defaultLocale: 'en',

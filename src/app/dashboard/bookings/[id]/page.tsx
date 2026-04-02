@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import BookingDetailClient from './BookingDetailClient';
 import { mockProperties } from '@/lib/data';
 
