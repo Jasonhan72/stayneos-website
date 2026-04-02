@@ -39,13 +39,23 @@ const HOST_PREFIXES = [
 
 // Detect user's preferred locale from Accept-Language header
 function detectLocale(request: NextRequest): Locale {
-  // 1. Check cookie first (user's explicit preference)
+  const { pathname } = request.nextUrl;
+  
+  // 1. Check URL path for language prefix (for direct links)
+  if (pathname.startsWith('/zh/') || pathname === '/zh') {
+    return 'zh';
+  }
+  if (pathname.startsWith('/fr/') || pathname === '/fr') {
+    return 'fr';
+  }
+  
+  // 2. Check cookie (user's explicit preference)
   const cookieLocale = request.cookies.get('stayneos_locale')?.value;
   if (cookieLocale === 'zh' || cookieLocale === 'en' || cookieLocale === 'fr') {
     return cookieLocale;
   }
   
-  // 2. Check Accept-Language header
+  // 3. Check Accept-Language header
   const acceptLanguage = request.headers.get('accept-language');
   if (acceptLanguage) {
     const languages = acceptLanguage.split(',').map(lang => lang.split(';')[0].trim().toLowerCase());
@@ -57,7 +67,7 @@ function detectLocale(request: NextRequest): Locale {
     }
   }
   
-  // 3. Default to English
+  // 4. Default to English
   return 'en';
 }
 
@@ -167,6 +177,39 @@ export async function middleware(request: NextRequest) {
   }
 
   const { pathname } = request.nextUrl;
+  
+  // Handle language prefix URLs: /zh/..., /fr/...
+  let localeFromPath: Locale | null = null;
+  let newPathname = pathname;
+  
+  if (pathname.startsWith('/zh/')) {
+    localeFromPath = 'zh';
+    newPathname = pathname.replace(/^\/zh\//, '/');
+  } else if (pathname.startsWith('/fr/')) {
+    localeFromPath = 'fr';
+    newPathname = pathname.replace(/^\/fr\//, '/');
+  } else if (pathname === '/zh') {
+    localeFromPath = 'zh';
+    newPathname = '/';
+  } else if (pathname === '/fr') {
+    localeFromPath = 'fr';
+    newPathname = '/';
+  }
+  
+  // If we found a locale in the path, redirect to root with cookie
+  if (localeFromPath) {
+    const url = request.nextUrl.clone();
+    url.pathname = newPathname;
+    
+    const response = NextResponse.redirect(url, 302);
+    response.cookies.set('stayneos_locale', localeFromPath, {
+      path: '/',
+      maxAge: 365 * 24 * 60 * 60,
+      sameSite: 'lax',
+    });
+    return response;
+  }
+  
   const locale = detectLocale(request);
   
   // Clone the request headers
@@ -287,7 +330,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Skip all internal paths (_next, api, static files)
-    '/((?!_next|api|favicon.ico|robots.txt|sitemap.xml|.*\\.).*)',
+    // Match all paths except internal ones
+    '/((?!_next/|api/|favicon\\.ico|robots\\.txt|sitemap\\.xml|.*\\..*).*)',
   ],
 };
