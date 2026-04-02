@@ -1,0 +1,70 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    name: Deploy to Cloudflare Pages
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: 'stayneos'
+          directory: '.'
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+          wranglerVersion: '4'
+
+  verify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for deployment
+        run: sleep 60
+
+      - name: Verify deployment
+        run: |
+          echo "Checking deployment status..."
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://neos.rentals")
+          echo "neos.rentals → HTTP $HTTP_STATUS"
+          
+          if [ "$HTTP_STATUS" = "200" ]; then
+            echo "✅ Site is live"
+            
+            # 检查国际化路由
+            echo "Checking internationalization routes..."
+            for lang in en zh fr; do
+              LANG_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://neos.rentals/$lang/market-insights")
+              echo "  /$lang/market-insights → HTTP $LANG_STATUS"
+            done
+          else
+            echo "⚠️ Site may not be deployed correctly"
+            exit 1
+          fi

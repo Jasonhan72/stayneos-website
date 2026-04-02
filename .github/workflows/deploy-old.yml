@@ -54,11 +54,15 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Build for Cloudflare
-        run: npx opennextjs-cloudflare build --dangerouslyUseUnsupportedNextVersion || true
+      - name: Build for Cloudflare Pages
+        run: npm run build
 
-      - name: Deploy to Cloudflare Workers
-        run: npx wrangler deploy
+      - name: Deploy to Cloudflare Pages
+        run: |
+          npx wrangler pages deploy ./out \
+            --project-name=stayneos \
+            --branch=main \
+            --commit-hash=${{ github.sha }}
 
   verify:
     needs: deploy
