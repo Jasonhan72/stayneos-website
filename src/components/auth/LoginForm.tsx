@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
+import { ensureCsrfToken } from '@/lib/security/csrf-client';
 
 interface LoginFormProps {
   callbackUrl?: string;
@@ -13,6 +15,7 @@ const USER_KEY = 'stayneos_user_data';
 
 export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
   const { t } = useI18n();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -75,7 +78,9 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-csrf-token': ensureCsrfToken(),
         },
+        credentials: 'same-origin',
         body: JSON.stringify({
           email: email.trim(),
           password,
@@ -126,6 +131,23 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
     // Facebook login not implemented yet
     setErrors({ submit: t('auth.facebookComingSoon', 'Facebook login coming soon!') });
   };
+
+  const oauthError = (() => {
+    const error = searchParams?.get('error');
+    if (!error) return null;
+
+    const errorMessages: Record<string, string> = {
+      invalid_state: 'Google login session expired. Please try again.',
+      token_exchange_failed: 'Failed to complete Google login. Please try again.',
+      config_error: 'Google login is not configured properly.',
+      callback_failed: 'Google login failed. Please try again.',
+      oauth_error: 'Google login was cancelled or denied.',
+      user_info_failed: 'Could not retrieve Google account info.',
+      email_not_verified: 'Your Google email is not verified',
+    };
+
+    return errorMessages[error] || `Login error: ${error}`;
+  })();
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -203,6 +225,12 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
       </div>
 
       {/* Error Messages */}
+      {oauthError && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+          <p className="text-sm text-red-600">{oauthError}</p>
+        </div>
+      )}
+
       {errors.submit && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-3">
           <p className="text-sm text-red-600">{errors.submit}</p>

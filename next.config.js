@@ -6,7 +6,7 @@ const csp = [
   "img-src 'self' data: blob: https:",
   "font-src 'self' https: data:",
   "style-src 'self' 'unsafe-inline' https:",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:",
+  "script-src 'self' 'unsafe-inline' https:",
   "connect-src 'self' https:",
   "frame-src 'self' https://www.google.com https://maps.google.com",
   "object-src 'none'",
@@ -24,7 +24,7 @@ const nextConfig = {
   },
 
   images: {
-    unoptimized: true,
+    unoptimized: false,
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com", port: "", pathname: "/**" },
       { protocol: "https", hostname: "*.unsplash.com", port: "", pathname: "/**" },

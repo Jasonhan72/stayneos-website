@@ -71,7 +71,7 @@ describe('booking date validation', () => {
   });
 
   it('rejects below min nights', () => {
-    const result = validateBookingDates('2026-04-01', '2026-04-10', 28);
+    const result = validateBookingDates('2099-04-01', '2099-04-10', 28);
     expect(result.valid).toBe(false);
     expect(result.error).toContain('28');
   });

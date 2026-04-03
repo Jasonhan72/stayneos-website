@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Fragment, type ReactNode, useState, useEffect } from "react";
 import Link from "next/link";
 import { Container, Section } from "@/components/ui";
 import { ArrowLeft, Calendar, Eye, ExternalLink, Loader2, Tag } from "lucide-react";
@@ -60,19 +60,150 @@ function formatDate(dateStr: string, locale: string): string {
   }
 }
 
-// Simple markdown-like rendering (bold, links, headers, lists)
-function renderContent(text: string): string {
-  return text
-    .replace(/^### (.+)$/gm, '<h3 class="text-xl font-bold text-gray-900 mt-8 mb-3">$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2 class="text-2xl font-bold text-gray-900 mt-10 mb-4">$1</h2>')
-    .replace(/^# (.+)$/gm, '<h1 class="text-3xl font-bold text-gray-900 mt-10 mb-4">$1</h1>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener" class="text-indigo-600 hover:underline">$1</a>')
-    .replace(/^- (.+)$/gm, '<li class="ml-4 list-disc text-gray-700">$1</li>')
-    .replace(/^(\d+)\. (.+)$/gm, '<li class="ml-4 list-decimal text-gray-700">$2</li>')
-    .replace(/\n\n/g, '</p><p class="text-gray-700 leading-relaxed mb-4">')
-    .replace(/\n/g, '<br/>');
+function sanitizeExternalUrl(url: string): string | null {
+  try {
+    const parsed = new URL(url, "https://neos.rentals");
+    return parsed.protocol === "http:" || parsed.protocol === "https:" ? parsed.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
+function renderInline(text: string): ReactNode[] {
+  return text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)]+\))/g).filter(Boolean).map((part, index) => {
+    const boldMatch = part.match(/^\*\*([^*]+)\*\*$/);
+    if (boldMatch) return <strong key={index}>{boldMatch[1]}</strong>;
+
+    const italicMatch = part.match(/^\*([^*]+)\*$/);
+    if (italicMatch) return <em key={index}>{italicMatch[1]}</em>;
+
+    const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    if (linkMatch) {
+      const safeUrl = sanitizeExternalUrl(linkMatch[2]);
+      if (!safeUrl) return <Fragment key={index}>{linkMatch[1]}</Fragment>;
+      return (
+        <a
+          key={index}
+          href={safeUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-indigo-600 hover:underline"
+        >
+          {linkMatch[1]}
+        </a>
+      );
+    }
+
+    return <Fragment key={index}>{part}</Fragment>;
+  });
+}
+
+function renderContent(text: string): ReactNode[] {
+  const elements: ReactNode[] = [];
+  const paragraphLines: string[] = [];
+  let listType: "ul" | "ol" | null = null;
+  let listItems: string[] = [];
+
+  const flushParagraph = () => {
+    if (!paragraphLines.length) return;
+    elements.push(
+      <p key={`p-${elements.length}`} className="text-gray-700 leading-relaxed mb-4">
+        {renderInline(paragraphLines.join(" "))}
+      </p>
+    );
+    paragraphLines.length = 0;
+  };
+
+  const flushList = () => {
+    if (!listType || !listItems.length) return;
+    const Tag = listType;
+    elements.push(
+      <Tag
+        key={`list-${elements.length}`}
+        className={listType === "ul" ? "mb-4 ml-6 list-disc text-gray-700" : "mb-4 ml-6 list-decimal text-gray-700"}
+      >
+        {listItems.map((item, index) => (
+          <li key={index} className="mb-2">
+            {renderInline(item)}
+          </li>
+        ))}
+      </Tag>
+    );
+    listType = null;
+    listItems = [];
+  };
+
+  for (const rawLine of text.split(/\r?\n/)) {
+    const line = rawLine.trim();
+    const unorderedMatch = line.match(/^- (.+)$/);
+    const orderedMatch = line.match(/^\d+\. (.+)$/);
+
+    if (!line) {
+      flushParagraph();
+      flushList();
+      continue;
+    }
+
+    if (line.startsWith("### ")) {
+      flushParagraph();
+      flushList();
+      elements.push(
+        <h3 key={`h3-${elements.length}`} className="text-xl font-bold text-gray-900 mt-8 mb-3">
+          {renderInline(line.slice(4))}
+        </h3>
+      );
+      continue;
+    }
+
+    if (line.startsWith("## ")) {
+      flushParagraph();
+      flushList();
+      elements.push(
+        <h2 key={`h2-${elements.length}`} className="text-2xl font-bold text-gray-900 mt-10 mb-4">
+          {renderInline(line.slice(3))}
+        </h2>
+      );
+      continue;
+    }
+
+    if (line.startsWith("# ")) {
+      flushParagraph();
+      flushList();
+      elements.push(
+        <h1 key={`h1-${elements.length}`} className="text-3xl font-bold text-gray-900 mt-10 mb-4">
+          {renderInline(line.slice(2))}
+        </h1>
+      );
+      continue;
+    }
+
+    if (unorderedMatch) {
+      flushParagraph();
+      if (listType !== "ul") {
+        flushList();
+        listType = "ul";
+      }
+      listItems.push(unorderedMatch[1]);
+      continue;
+    }
+
+    if (orderedMatch) {
+      flushParagraph();
+      if (listType !== "ol") {
+        flushList();
+        listType = "ol";
+      }
+      listItems.push(orderedMatch[1]);
+      continue;
+    }
+
+    flushList();
+    paragraphLines.push(line);
+  }
+
+  flushParagraph();
+  flushList();
+  return elements;
 }
 
 export default function MarketPostPage({ slug }: { slug: string }) {
@@ -194,12 +325,7 @@ export default function MarketPostPage({ slug }: { slug: string }) {
               </div>
             )}
             
-            <div
-              className="prose prose-lg max-w-none"
-              dangerouslySetInnerHTML={{
-                __html: `<p class="text-gray-700 leading-relaxed mb-4">${renderContent(content)}</p>`,
-              }}
-            />
+            <div className="prose prose-lg max-w-none">{renderContent(content)}</div>
 
             {/* Tags */}
             {parsedTags.length > 0 && (

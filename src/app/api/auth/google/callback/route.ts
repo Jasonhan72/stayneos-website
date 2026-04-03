@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 const DEFAULT_REDIRECT = "/dashboard";
 const isDev = process.env.NODE_ENV !== "production";
 const debugLog = (...args: unknown[]) => {
-  if (isDev) debugLog(...args);
+  if (isDev) console.log(...args);
 };
 
 

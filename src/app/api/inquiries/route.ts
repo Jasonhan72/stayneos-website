@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { inquiryDb, InquiryType } from "@/lib/inquiry-db";
 import { getDb } from "@/lib/d1";
 import { APIError, safeApiHandler } from "@/lib/utils/error-handler";
+import { checkRateLimit } from "@/lib/security/rate-limit";
+import { validateCsrf } from "@/lib/security/csrf";
+import { apiError } from "@/lib/api/response";
 
 const VALID_TYPES = new Set<InquiryType>([
   "agents",
@@ -16,7 +19,7 @@ const VALID_TYPES = new Set<InquiryType>([
 const JSON_HEADERS = {
   "Access-Control-Allow-Origin": "https://neos.rentals",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Headers": "Content-Type, x-csrf-token",
 };
 
 function buildInquiryRecord(type: InquiryType, payload: Record<string, unknown>) {
@@ -92,6 +95,11 @@ export async function OPTIONS() {
 }
 
 export async function POST(request: Request) {
+  const rate = checkRateLimit(request, 'inquiries:create', { limit: 10, windowMs: 60_000 });
+  if (!rate.allowed) return apiError('Too many inquiry submissions', 429, 'RATE_LIMITED');
+
+  if (!validateCsrf(request)) return apiError('Invalid CSRF token', 403, 'CSRF_INVALID');
+
   return safeApiHandler(async () => {
     const body = (await request.json()) as {
       type?: InquiryType;

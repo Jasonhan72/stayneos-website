@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUserFromRequest } from '@/lib/auth';
+import { checkRateLimit } from '@/lib/security/rate-limit';
+import { validateCsrf } from '@/lib/security/csrf';
+import { apiError } from '@/lib/api/response';
 
 // GET /api/wishlist - 获取用户收藏列表
 export async function GET(request: NextRequest) {
@@ -33,6 +36,11 @@ export async function GET(request: NextRequest) {
 // POST /api/wishlist - 添加或删除收藏
 export async function POST(request: NextRequest) {
   try {
+    const rate = checkRateLimit(request, 'wishlist:update', { limit: 30, windowMs: 60_000 });
+    if (!rate.allowed) return apiError('Too many wishlist updates', 429, 'RATE_LIMITED');
+
+    if (!validateCsrf(request)) return apiError('Invalid CSRF token', 403, 'CSRF_INVALID');
+
     const currentUser = await getCurrentUserFromRequest(request);
     
     if (!currentUser?.email) {

@@ -33,26 +33,25 @@ function mockToPublic(p: typeof mockProperties[0]) {
 }
 
 export async function GET() {
+  const headers = { 'Cache-Control': 'public, s-maxage=300' };
+
   try {
     const db = getPropertyDb();
     const result = await db.prepare("SELECT * FROM Property WHERE status='PUBLISHED' ORDER BY createdAt DESC").all();
     const properties = (result.results || []).map((item) => toPublicProperty(item as never));
-    if (properties.length > 0) {
-      return NextResponse.json(
-        { properties },
-        { headers: { 'Cache-Control': 'public, s-maxage=300' } }
-      );
+    return NextResponse.json({ properties }, { headers });
+  } catch (error) {
+    // D1 unavailable (build-time or local dev) → fall back to mock data
+    const isD1Missing = error instanceof Error
+      && error.message.includes("D1 database binding 'DB' not found");
+
+    if (!isD1Missing) {
+      throw error;
     }
-    // D1 empty, fall back to mock data
+
     return NextResponse.json(
       { properties: mockProperties.map(mockToPublic) },
-      { headers: { 'Cache-Control': 'public, s-maxage=300' } }
-    );
-  } catch {
-    // D1 not available, fall back to mock data
-    return NextResponse.json(
-      { properties: mockProperties.map(mockToPublic) },
-      { headers: { 'Cache-Control': 'public, s-maxage=300' } }
+      { headers }
     );
   }
 }

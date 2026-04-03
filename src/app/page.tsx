@@ -11,6 +11,7 @@ import {
   HowItWorksSection,
   CTASection
 } from '@/components/home';
+import { StructuredData } from '@/components/seo/StructuredData';
 import { getOgLocale, resolveRequestLocale } from '@/lib/i18n-server';
 
 const homeMetadata = {
@@ -64,6 +65,7 @@ export const revalidate = 3600;
 export default function HomePage() {
   return (
     <main className="min-h-screen">
+      <StructuredData pageType="homepage" />
       <HeroSection />
       <DualPathCTASection />
       <TrustBadgesSection />

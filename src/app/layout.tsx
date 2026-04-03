@@ -7,7 +7,6 @@ import { WishlistProvider } from "@/lib/context/WishlistContext";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { CustomerChat } from "@/components/layout/CustomerChat";
-import { StructuredData } from "@/components/seo/StructuredData";
 import { getBaseUrl } from "@/lib/config/env";
 import {
   getHtmlLang,
@@ -177,7 +176,6 @@ export default async function RootLayout({
             {children}
             <Footer />
             <CustomerChat />
-            <StructuredData pageType="homepage" />
           </I18nProvider>
           </WishlistProvider>
         </UserProvider>

@@ -3,10 +3,11 @@ import { getCurrentUserFromRequest } from '@/lib/auth';
 import { userDb, getDb } from '@/lib/d1';
 import { bookingDb } from '@/lib/booking-db';
 import { validateBookingDates, generateBookingNumber, calculateBookingPrice } from '@/lib/booking';
-import { getPropertyById } from '@/lib/data';
-import { getPropertySnapshot } from '@/lib/property-catalog';
 import { paymentDb } from '@/lib/payment-db';
 import { apiError } from '@/lib/api/response';
+import { checkRateLimit } from '@/lib/security/rate-limit';
+import { validateCsrf } from '@/lib/security/csrf';
+import { type PropertyRecord, toPublicProperty } from '@/lib/property-db';
 
 export function generateStaticParams() {
   return [];
@@ -27,8 +28,62 @@ function normalizeBookingRow<T extends Record<string, unknown>>(row: T) {
   };
 }
 
+function toPropertySnapshot(row: PropertyRecord) {
+  const property = toPublicProperty(row);
+  return {
+    id: property.id,
+    title: property.title,
+    address: property.address || property.location,
+    city: property.city || 'Toronto',
+    description: property.description,
+    images: property.images.map((url, index) => ({
+      url,
+      alt: `${property.title} image ${index + 1}`,
+    })),
+    amenities: property.amenities.map((name) => ({
+      amenity: {
+        name,
+        icon: null,
+      },
+    })),
+  };
+}
+
+async function findPublishedProperty(db: D1Database, propertyId: string) {
+  const row = await db
+    .prepare("SELECT * FROM Property WHERE (id = ? OR slug = ?) AND status = 'PUBLISHED' LIMIT 1")
+    .bind(propertyId, propertyId)
+    .first<PropertyRecord>();
+
+  return row ? toPublicProperty(row) : null;
+}
+
+async function findPropertySnapshotMap(db: D1Database, propertyIds: string[]) {
+  if (propertyIds.length === 0) return new Map<string, ReturnType<typeof toPropertySnapshot>>();
+
+  const uniqueIds = Array.from(new Set(propertyIds.filter(Boolean)));
+  const placeholders = uniqueIds.map(() => '?').join(', ');
+  const result = await db
+    .prepare(`SELECT * FROM Property WHERE id IN (${placeholders}) OR slug IN (${placeholders})`)
+    .bind(...uniqueIds, ...uniqueIds)
+    .all<PropertyRecord>();
+
+  const map = new Map<string, ReturnType<typeof toPropertySnapshot>>();
+  for (const row of result.results || []) {
+    const snapshot = toPropertySnapshot(row);
+    map.set(row.id, snapshot);
+    map.set(row.slug, snapshot);
+  }
+  return map;
+}
+
 export async function POST(request: NextRequest) {
   try {
+    const rate = checkRateLimit(request, 'booking:create', { limit: 10, windowMs: 60_000 });
+    if (!rate.allowed) return apiError('Too many booking attempts', 429, 'RATE_LIMITED');
+
+    if (!validateCsrf(request)) return apiError('Invalid CSRF token', 403, 'CSRF_INVALID');
+
     const currentUser = await getCurrentUserFromRequest(request);
     if (!currentUser?.email) return apiError('请先登录', 401, 'UNAUTHORIZED');
 
@@ -38,7 +93,7 @@ export async function POST(request: NextRequest) {
 
     if (!propertyId || !checkIn || !checkOut || !guests) return apiError('请填写所有必填字段', 400, 'VALIDATION_ERROR');
 
-    const property = getPropertyById(propertyId);
+    const property = await findPublishedProperty(db, propertyId);
     if (!property) return apiError('房源不存在', 404, 'PROPERTY_NOT_FOUND');
 
     const user = await userDb.findByEmail(db, currentUser.email);
@@ -121,13 +176,21 @@ export async function GET(request: NextRequest) {
       paymentMap.set(payment.bookingId, arr);
     }
 
+    const propertySnapshotMap = await findPropertySnapshotMap(db, filtered.map((booking) => booking.propertyId || ''));
+
     const bookingsWithDetails = filtered.map((booking) => {
       const payments = paymentMap.get(booking.id) || [];
       const paidAmount = payments
         .filter((payment) => payment.status === 'COMPLETED')
         .reduce((sum, payment) => sum + Number(payment.amount), 0);
 
-      return { ...booking, property: getPropertySnapshot(booking.propertyId || ''), review: null, payments, paidAmount };
+      return {
+        ...booking,
+        property: propertySnapshotMap.get(booking.propertyId || '') || null,
+        review: null,
+        payments,
+        paidAmount,
+      };
     });
 
     return NextResponse.json({ success: true, bookings: bookingsWithDetails, data: { bookings: bookingsWithDetails } });

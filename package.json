@@ -27,11 +27,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:e2e": "playwright test",
-    "typecheck": "tsc --noEmit",
-    "test:security": "echo \"test:security placeholder\"",
-    "test:regression": "echo \"test:regression placeholder\"",
-    "test:performance": "echo \"test:performance placeholder\"",
-    "security:scan": "echo \"security:scan placeholder\""
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
