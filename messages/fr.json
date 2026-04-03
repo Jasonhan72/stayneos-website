@@ -4,36 +4,23 @@
     "description": "NEOS est une plateforme d'appartements exécutifs premium pour professionnels, offrant des propriétés de qualité, des baux flexibles et un service de conciergerie 24h/24."
   },
   "nav": {
-    "home": "Propriétés",
-    "explore": "Propriétés",
+    "openMenu": "Ouvrir le menu",
     "properties": "Propriétés",
-    "services": "Entreprises",
-    "about": "À Notre Sujet",
-    "login": "Connexion",
-    "register": "S'inscrire",
-    "account": "Mes Réservations",
+    "business": "Entreprises",
+    "about": "À propos",
+    "contact": "Contact",
+    "partnerWithUs": "Devenir partenaire",
     "signup": "S'inscrire",
-    "landlords": "Pour Propriétaires",
-    "business": "Pour Entreprises",
-    "contact": "Contactez-Nous",
-    "bookings": "Mes Réservations",
-    "personalDetails": "Détails Personnels",
+    "login": "Se connecter",
+    "logout": "Se déconnecter",
+    "dashboard": "Tableau de bord",
+    "bookings": "Mes réservations",
+    "manageProperties": "Gérer les propriétés",
+    "personalDetails": "Détails personnels",
     "preferences": "Préférences",
     "wishlists": "Favoris",
-    "logout": "Déconnexion",
-    "becomeHost": "Devenir hôte",
-    "listProperty": "Publier votre propriété",
-    "manageProperties": "Gérer les propriétés",
-    "dashboard": "Tableau de bord",
-    "partnerWithUs": "Devenez Partenaire",
-    "agents": "Pour Agents",
-    "neighborhoods": "Quartiers",
-    "hosts": "Hôtes",
-    "longTerm": "Location longue durée",
-    "marketInsights": "Aperçu du marché",
-    "students": "Logement étudiant",
-    "profile": "Profil",
-    "myBookings": "Mes réservations"
+    "landlords": "Propriétaires",
+    "profile": "Profil"
   },
   "common": {
     "view": "Voir",
@@ -3529,149 +3516,41 @@
     }
   },
   "marketInsights": {
+    "title": "Insights et rapports du marché de Toronto | Centre de connaissances NEOS",
+    "description": "Rapports du marché immobilier de Toronto, analyse TRREB, tendances locatives et insights d'investissement. Mis à jour régulièrement avec les dernières données.",
     "hero": {
-      "title": "Aperçu du marché immobilier de Toronto",
-      "subtitle": "Analyse complète du marché et tendances du logement exécutif à Toronto. Des insights basés sur les données pour éclairer vos décisions.",
-      "downloadCta": "Télécharger le rapport",
-      "viewCta": "Voir les insights"
+      "title": "Insights du marché de Toronto",
+      "subtitle": "Analyse immobilière basée sur les données, rapports TRREB et tendances du marché locatif"
+    },
+    "search": {
+      "placeholder": "Rechercher des rapports de marché, données TRREB, tendances locatives..."
+    },
+    "categories": {
+      "all": "Toutes catégories",
+      "rentalTrends": "Tendances locatives",
+      "marketReports": "Rapports de marché",
+      "investment": "Insights d'investissement",
+      "policy": "Politiques et régulations",
+      "neighborhoods": "Quartiers"
     },
     "stats": {
-      "title": "Indicateurs clés du marché",
-      "subtitle": "Données récentes du marché du logement exécutif haut de gamme de Toronto (T3 2024).",
-      "avgRental": "Loyer moyen",
-      "avgRentalDesc": "Loyer mensuel pour un appartement exécutif 1 chambre",
-      "occupancy": "Taux d'occupation",
-      "occupancyDesc": "Occupation moyenne des propriétés premium",
-      "marketGrowth": "Croissance du marché",
-      "marketGrowthDesc": "Augmentation de la demande en glissement annuel",
-      "supplyShortage": "Pénurie d'offre",
-      "supplyShortageDesc": "En dessous des niveaux d'inventaire optimaux"
+      "totalReports": "Rapports totaux",
+      "monthlyGrowth": "Croissance mensuelle",
+      "avgRent": "Loyer moyen 1 chambre",
+      "activeListings": "Annonces actives"
     },
-    "charts": {
-      "title": "Visualisation des données du marché",
-      "subtitle": "Graphiques interactifs montrant les tendances du marché, les schémas de prix et les analyses de demande.",
-      "rentalTrends": "Tendances des loyers",
-      "rentalTrendsDesc": "Progression historique des loyers sur 24 mois par type de propriété et quartier.",
-      "occupancyRates": "Occupation par quartier",
-      "occupancyRatesDesc": "Taux d'occupation comparatifs dans les principaux quartiers de Toronto.",
-      "demandSources": "Demande par industrie",
-      "demandSourcesDesc": "Répartition de la demande de logement d'entreprise par secteur et taille.",
-      "forecastModel": "Prévisions sur 12 mois",
-      "forecastModelDesc": "Modélisation prédictive des loyers, de l'occupation et de la demande jusqu'en 2025.",
-      "sampleData": "Aperçu des données :",
-      "currentOccupancy": "Occupation actuelle :",
-      "topIndustries": "Industries principales :",
-      "projectedGrowth": "Croissance projetée :"
-    },
-    "insights": {
-      "title": "Insights clés du marché",
-      "subtitle": "Analyse experte des conditions actuelles et des tendances émergentes du marché du logement exécutif.",
-      "highImpact": "Impact élevé",
-      "mediumImpact": "Impact moyen",
-      "lowImpact": "Impact faible",
-      "trendUp": "Tendance : hausse",
-      "trendDown": "Tendance : baisse",
-      "trendStable": "Tendance : stable",
-      "insight1Title": "La demande de logement exécutif explose",
-      "insight1Desc": "La demande a augmenté de 15,3 % en glissement annuel, portée par le travail hybride et la reprise des voyages d'affaires.",
-      "insight2Title": "Les contraintes d'offre poussent les prix",
-      "insight2Desc": "L'offre limitée d'appartements meublés premium exerce une pression à la hausse sur les loyers, surtout au centre-ville.",
-      "insight3Title": "Allongement de la durée de séjour",
-      "insight3Desc": "La durée moyenne est passée à 4,2 mois contre 2,8 avant la pandémie, reflétant l'évolution des modes de travail.",
-      "insight4Title": "Le secteur technologique en tête",
-      "insight4Desc": "Les entreprises tech représentent 34 % des réservations de logement d'entreprise, suivies par les services financiers à 28 %."
-    },
-    "neighborhoods": {
-      "title": "Performance par quartier",
-      "subtitle": "Analyse comparative des quartiers premium de Toronto pour le logement exécutif.",
-      "name": "Quartier",
-      "avgRate": "Loyer mensuel moyen",
-      "occupancyRate": "Taux d'occupation",
-      "yoyGrowth": "Croissance annuelle",
-      "marketPosition": "Positionnement",
-      "luxury": "Luxe",
-      "premium": "Premium",
-      "value": "Rapport qualité-prix"
-    },
-    "forecasts": {
-      "title": "Prévisions du marché",
-      "subtitle": "Prédictions et analyses pour les perspectives du marché du logement exécutif de Toronto.",
-      "highConfidence": "Confiance élevée",
-      "mediumConfidence": "Confiance moyenne",
-      "lowConfidence": "Confiance faible",
-      "keyFactors": "Facteurs clés :",
-      "forecast1Period": "T4 2024",
-      "forecast1Prediction": "Demande soutenue avec une hausse saisonnière des relocalisations d'entreprise.",
-      "forecast1Factor1": "Événements d'entreprise de fin d'année",
-      "forecast1Factor2": "Relocalisations de fin d'année",
-      "forecast1Factor3": "Renouvellements budgétaires",
-      "forecast2Period": "T1 2025",
-      "forecast2Prediction": "Croissance modérée avec l'arrivée de nouvelles offres, stabilisant potentiellement les hausses de loyers.",
-      "forecast2Factor1": "Livraisons de nouveaux développements",
-      "forecast2Factor2": "Politiques de retour au bureau",
-      "forecast2Factor3": "Conditions économiques",
-      "forecast3Period": "Année 2025",
-      "forecast3Prediction": "Croissance soutenue de 8-12 % avec un accent sur les équipements premium et les conditions flexibles.",
-      "forecast3Factor1": "Normalisation du travail hybride",
-      "forecast3Factor2": "Reprise des voyages d'affaires",
-      "forecast3Factor3": "Équilibre offre-demande"
-    },
-    "form": {
-      "title": "Télécharger le rapport complet",
-      "subtitle": "Accédez à notre analyse de marché avec graphiques détaillés, prévisions et insights d'investissement.",
-      "firstName": "Prénom",
-      "firstNamePlaceholder": "Votre prénom",
-      "lastName": "Nom",
-      "lastNamePlaceholder": "Votre nom de famille",
-      "email": "Adresse e-mail",
-      "emailPlaceholder": "votre@email.com",
-      "company": "Entreprise",
-      "companyPlaceholder": "Nom de votre entreprise",
-      "jobTitle": "Poste",
-      "jobTitlePlaceholder": "Votre poste",
-      "reportType": "Type de rapport",
-      "selectReport": "Sélectionner le type de rapport",
-      "quarterly": "Rapport trimestriel",
-      "annual": "Analyse annuelle",
-      "custom": "Recherche personnalisée",
-      "interests": "Centres d'intérêt",
-      "submitting": "Traitement...",
-      "submit": "Télécharger le rapport",
-      "success": {
-        "title": "Rapport prêt !",
-        "message": "Merci ! Votre rapport est en préparation et vous sera envoyé par e-mail dans quelques minutes.",
-        "checkEmail": "Vérifier vos e-mails"
-      }
-    },
-    "interestOptions": {
-      "rentalRates": "Tendances des loyers",
-      "occupancy": "Analyse d'occupation",
-      "neighborhood": "Analyse par quartier",
-      "corporateDemand": "Modèles de demande d'entreprise",
-      "supply": "Offre et développement",
-      "competitive": "Paysage concurrentiel",
-      "regulatory": "Changements réglementaires",
-      "investment": "Opportunités d'investissement"
-    },
-    "reportTypes": {
-      "quarterlyTitle": "Rapport trimestriel",
-      "quarterlyDesc": "Dernières tendances trimestrielles, données de prix et prévisions à court terme",
-      "quarterlyF1": "Analyse du trimestre",
-      "quarterlyF2": "Tendances des prix",
-      "quarterlyF3": "Données d'occupation",
-      "quarterlyF4": "Prévisions à 90 jours",
-      "annualTitle": "Analyse annuelle du marché",
-      "annualDesc": "Vue d'ensemble annuelle avec prévisions détaillées et analyse des tendances",
-      "annualF1": "Analyse complète",
-      "annualF2": "Prévisions à long terme",
-      "annualF3": "Références sectorielles",
-      "annualF4": "Insights stratégiques",
-      "customTitle": "Recherche personnalisée",
-      "customDesc": "Analyse sur mesure selon vos intérêts et besoins spécifiques",
-      "customF1": "Données personnalisées",
-      "customF2": "Domaines spécifiques",
-      "customF3": "Briefing exécutif",
-      "customF4": "Accès direct aux analystes"
+    "loading": "Chargement des insights du marché...",
+    "noPosts": "Aucun rapport de marché trouvé",
+    "noPostsDesc": "Les rapports de marché et analyses TRREB apparaîtront ici une fois publiés. Revenez bientôt !",
+    "recentReports": "Rapports récents",
+    "downloadAll": "Télécharger tous les rapports",
+    "readMore": "Lire le rapport",
+    "newsletter": {
+      "title": "Restez informé",
+      "description": "Recevez chaque mois des insights du marché, tendances locatives et analyses d'investissement directement dans votre boîte de réception.",
+      "placeholder": "Votre adresse email",
+      "subscribe": "S'abonner",
+      "privacy": "Nous respectons votre vie privée. Désabonnez-vous à tout moment."
     }
   },
   "dualPath": {
@@ -3770,46 +3649,5 @@
       "2": "Pour les questions urgentes, veuillez nous contacter par email à hello@neos.rentals.",
       "3": "Notre équipe répond généralement dans les 2 heures pendant les heures ouvrables (9h-18h HNE)."
     }
-  },
-  "marketInsights": {
-    "title": "Insights et rapports du marché de Toronto | Centre de connaissances NEOS",
-    "description": "Rapports du marché immobilier de Toronto, analyse TRREB, tendances locatives et insights d'investissement. Mis à jour régulièrement avec les dernières données.",
-    "hero": {
-      "title": "Insights du marché de Toronto",
-      "subtitle": "Analyse immobilière basée sur les données, rapports TRREB et tendances du marché locatif"
-    },
-    "search": {
-      "placeholder": "Rechercher des rapports de marché, données TRREB, tendances locatives..."
-    },
-    "categories": {
-      "all": "Toutes catégories",
-      "rentalTrends": "Tendances locatives",
-      "marketReports": "Rapports de marché",
-      "investment": "Insights d'investissement",
-      "policy": "Politiques et régulations",
-      "neighborhoods": "Quartiers"
-    },
-    "stats": {
-      "totalReports": "Rapports totaux",
-      "monthlyGrowth": "Croissance mensuelle",
-      "avgRent": "Loyer moyen 1 chambre",
-      "activeListings": "Annonces actives"
-    },
-    "loading": "Chargement des insights du marché...",
-    "noPosts": "Aucun rapport de marché trouvé",
-    "noPostsDesc": "Les rapports de marché et analyses TRREB apparaîtront ici une fois publiés. Revenez bientôt !",
-    "recentReports": "Rapports récents",
-    "downloadAll": "Télécharger tous les rapports",
-    "readMore": "Lire le rapport",
-    "newsletter": {
-      "title": "Restez informé",
-      "description": "Recevez chaque mois des insights du marché, tendances locatives et analyses d'investissement directement dans votre boîte de réception.",
-      "placeholder": "Votre adresse email",
-      "subscribe": "S'abonner",
-      "privacy": "Nous respectons votre vie privée. Désabonnez-vous à tout moment."
-    }
-  },
-  "nav": {
-    "openMenu": "Ouvrir le menu"
   }
 }

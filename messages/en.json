@@ -4,36 +4,23 @@
     "description": "NEOS is a premium executive apartment platform for business professionals, offering quality properties, flexible leases, and 24/7 concierge service."
   },
   "nav": {
-    "home": "Properties",
-    "explore": "Properties",
+    "openMenu": "Open menu",
     "properties": "Properties",
-    "neighborhoods": "Neighborhoods",
-    "services": "For Business",
-    "about": "About Us",
-    "login": "Login",
-    "register": "Register",
-    "account": "My Bookings",
-    "signup": "Sign Up",
-    "landlords": "For Landlords",
-    "agents": "For Agents",
-    "hosts": "For Hosts",
     "business": "For Business",
-    "students": "Students",
-    "longTerm": "Long-term",
-    "marketInsights": "Market Insights",
-    "contact": "Contact Us",
+    "about": "About",
+    "contact": "Contact",
+    "partnerWithUs": "Partner With Us",
+    "signup": "Sign Up",
+    "login": "Log In",
+    "logout": "Log Out",
+    "dashboard": "Dashboard",
     "bookings": "My Bookings",
+    "manageProperties": "Manage Properties",
     "personalDetails": "Personal Details",
     "preferences": "Preferences",
     "wishlists": "Wishlists",
-    "logout": "Log Out",
-    "becomeHost": "Become a Host",
-    "listProperty": "List your property",
-    "manageProperties": "Manage Properties",
-    "dashboard": "Dashboard",
-    "partnerWithUs": "Partner With Us",
-    "profile": "Profile",
-    "myBookings": "My Bookings"
+    "landlords": "For Landlords",
+    "profile": "Profile"
   },
   "common": {
     "view": "View",
@@ -1868,66 +1855,41 @@
     }
   },
   "marketInsights": {
+    "title": "Toronto Market Insights & Reports | NEOS Knowledge Hub",
+    "description": "Toronto real estate market reports, TRREB data analysis, rental trends, and investment insights. Updated regularly with the latest data.",
     "hero": {
-      "title": "Toronto Real Estate Market Insights",
-      "subtitle": "Comprehensive market analysis and trends for Toronto's executive housing market. Data-driven insights to inform your investment and housing decisions.",
-      "downloadCta": "Download Report",
-      "viewCta": "View Insights"
+      "title": "Toronto Market Insights",
+      "subtitle": "Data-driven real estate analysis, TRREB reports, and rental market trends"
+    },
+    "search": {
+      "placeholder": "Search market reports, TRREB data, rental trends..."
+    },
+    "categories": {
+      "all": "All Categories",
+      "rentalTrends": "Rental Trends",
+      "marketReports": "Market Reports",
+      "investment": "Investment Insights",
+      "policy": "Policy & Regulations",
+      "neighborhoods": "Neighborhoods"
     },
     "stats": {
-      "title": "Key Market Metrics",
-      "subtitle": "Latest data from Toronto's premium executive housing market as of Q3 2024."
+      "totalReports": "Total Reports",
+      "monthlyGrowth": "Monthly Growth",
+      "avgRent": "Avg. 1BR Rent",
+      "activeListings": "Active Listings"
     },
-    "charts": {
-      "title": "Market Data Visualization",
-      "subtitle": "Interactive charts and graphs showing market trends, pricing patterns, and demand analytics.",
-      "rentalTrends": "Rental Rate Trends",
-      "rentalTrendsDesc": "24-month historical rental rate progression across different property types and neighborhoods.",
-      "occupancyRates": "Occupancy by Neighborhood",
-      "occupancyRatesDesc": "Comparative occupancy rates across Toronto's primary executive housing districts.",
-      "demandSources": "Demand by Industry",
-      "demandSourcesDesc": "Corporate housing demand breakdown by industry sector and company size.",
-      "forecastModel": "12-Month Forecast",
-      "forecastModelDesc": "Predictive modeling for rental rates, occupancy, and market demand through 2025."
-    },
-    "insights": {
-      "title": "Key Market Insights",
-      "subtitle": "Expert analysis of current market conditions and emerging trends affecting Toronto's executive housing sector."
-    },
-    "neighborhoods": {
-      "title": "Neighborhood Performance",
-      "subtitle": "Comparative analysis of Toronto's premium neighborhoods for executive housing investment and occupancy."
-    },
-    "forecasts": {
-      "title": "Market Forecasts",
-      "subtitle": "Expert predictions and analysis for Toronto's executive housing market outlook."
-    },
-    "form": {
-      "title": "Download Complete Market Report",
-      "subtitle": "Access our comprehensive market analysis including detailed charts, forecasts, and investment insights.",
-      "firstName": "First Name",
-      "firstNamePlaceholder": "Enter your first name",
-      "lastName": "Last Name",
-      "lastNamePlaceholder": "Enter your last name",
-      "email": "Email Address",
-      "emailPlaceholder": "your@email.com",
-      "company": "Company",
-      "companyPlaceholder": "Your company name",
-      "jobTitle": "Job Title",
-      "jobTitlePlaceholder": "Your job title",
-      "reportType": "Preferred Report Type",
-      "selectReport": "Select report type",
-      "quarterly": "Quarterly Report",
-      "annual": "Annual Analysis",
-      "custom": "Custom Research",
-      "interests": "Areas of Interest",
-      "submitting": "Processing...",
-      "submit": "Download Market Report",
-      "success": {
-        "title": "Report Download Ready!",
-        "message": "Thank you! Your market report is being prepared and will be emailed to you within the next few minutes. Check your inbox for the download link.",
-        "checkEmail": "Check Your Email"
-      }
+    "loading": "Loading market insights...",
+    "noPosts": "No market reports found",
+    "noPostsDesc": "Market reports and TRREB data analysis will appear here as they are published. Check back soon!",
+    "recentReports": "Recent Reports",
+    "downloadAll": "Download All Reports",
+    "readMore": "Read Report",
+    "newsletter": {
+      "title": "Stay Informed",
+      "description": "Get monthly market insights, rental trends, and investment analysis delivered to your inbox.",
+      "placeholder": "Your email address",
+      "subscribe": "Subscribe",
+      "privacy": "We respect your privacy. Unsubscribe at any time."
     }
   },
   "corporate": {
@@ -3655,46 +3617,5 @@
       "2": "For urgent matters, please email us at hello@neos.rentals.",
       "3": "Our team typically responds within 2 hours during business hours (9am-6pm EST)."
     }
-  },
-  "marketInsights": {
-    "title": "Toronto Market Insights & Reports | NEOS Knowledge Hub",
-    "description": "Toronto real estate market reports, TRREB data analysis, rental trends, and investment insights. Updated regularly with the latest data.",
-    "hero": {
-      "title": "Toronto Market Insights",
-      "subtitle": "Data-driven real estate analysis, TRREB reports, and rental market trends"
-    },
-    "search": {
-      "placeholder": "Search market reports, TRREB data, rental trends..."
-    },
-    "categories": {
-      "all": "All Categories",
-      "rentalTrends": "Rental Trends",
-      "marketReports": "Market Reports",
-      "investment": "Investment Insights",
-      "policy": "Policy & Regulations",
-      "neighborhoods": "Neighborhoods"
-    },
-    "stats": {
-      "totalReports": "Total Reports",
-      "monthlyGrowth": "Monthly Growth",
-      "avgRent": "Avg. 1BR Rent",
-      "activeListings": "Active Listings"
-    },
-    "loading": "Loading market insights...",
-    "noPosts": "No market reports found",
-    "noPostsDesc": "Market reports and TRREB data analysis will appear here as they are published. Check back soon!",
-    "recentReports": "Recent Reports",
-    "downloadAll": "Download All Reports",
-    "readMore": "Read Report",
-    "newsletter": {
-      "title": "Stay Informed",
-      "description": "Get monthly market insights, rental trends, and investment analysis delivered to your inbox.",
-      "placeholder": "Your email address",
-      "subscribe": "Subscribe",
-      "privacy": "We respect your privacy. Unsubscribe at any time."
-    }
-  },
-  "nav": {
-    "openMenu": "Open menu"
   }
 }
