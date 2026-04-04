@@ -35,6 +35,8 @@ jobs:
 
       - name: Build for Cloudflare
         run: npx --yes opennextjs-cloudflare build --dangerouslyUseUnsupportedNextVersion || echo "OpenNext build skipped/failed, using standard build"
+        env:
+          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
 
       - name: Deploy to Cloudflare
         run: npx --yes wrangler deploy
