@@ -20,7 +20,7 @@ jest.mock('@/lib/d1', () => ({
 }));
 
 jest.mock('@/lib/config/env', () => ({
-  getPublicBaseUrl: () => 'https://stayneos.com',
+  getPublicBaseUrl: () => 'https://neos.rentals',
   getAuthSecret: () => 'secret-key',
 }));
 
@@ -75,7 +75,7 @@ describe('auth routes', () => {
   });
 
   it('/api/auth/google redirects to oauth provider and sets oauth_state cookie', async () => {
-    const req = new NextRequest('https://stayneos.com/api/auth/google?redirect=/dashboard');
+    const req = new NextRequest('https://neos.rentals/api/auth/google?redirect=/dashboard');
     const res = await googleGet(req);
     expect(res.status).toBe(307);
     expect(res.headers.get('location')).toContain('accounts.google.com/o/oauth2/v2/auth');

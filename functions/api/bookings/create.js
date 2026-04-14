@@ -170,7 +170,7 @@ async function sendBookingConfirmationEmail({ env, to, booking }) {
       <p>如有疑问，请联系我们：</p>
       <ul>
         <li>电话：+1 (647) 862-6518</li>
-        <li>邮箱：hello@stayneos.com</li>
+        <li>邮箱：hello@neos.rentals</li>
       </ul>
       
       <p>祝您入住愉快！<br/>StayNeos 团队</p>
@@ -223,7 +223,7 @@ async function sendAdminNotificationEmail({ env, booking }) {
 
     const emailResult = await sendEmail({
       env,
-      to: 'hello@stayneos.com', // 管理员邮箱
+      to: 'hello@neos.rentals', // 管理员邮箱
       subject,
       html: htmlContent,
       template: 'ADMIN_NOTIFICATION',
@@ -248,7 +248,7 @@ async function sendEmail({ env, to, subject, html, template }) {
           'Authorization': `Bearer ${env.RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: 'StayNeos <hello@stayneos.com>',
+          from: 'StayNeos <hello@neos.rentals>',
           to,
           subject,
           html,

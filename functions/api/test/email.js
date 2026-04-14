@@ -33,7 +33,7 @@ export async function onRequestPost(context) {
         'Authorization': `Bearer ${env.RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'StayNeos <hello@stayneos.com>',
+        from: 'StayNeos <hello@neos.rentals>',
         to,
         subject: 'StayNeos 邮件系统测试',
         html: `
@@ -87,7 +87,7 @@ export async function onRequestGet(context) {
   
   const config = {
     resendApiKeyConfigured: !!env.RESEND_API_KEY,
-    resendFromEmail: env.RESEND_FROM_EMAIL || 'hello@stayneos.com',
+    resendFromEmail: env.RESEND_FROM_EMAIL || 'hello@neos.rentals',
     timestamp: new Date().toISOString(),
   };
   

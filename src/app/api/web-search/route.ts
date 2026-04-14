@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       },
       {
         title: 'StayNeos Properties',
-        url: 'https://stayneos.com/properties',
+        url: 'https://neos.rentals/properties',
         snippet: 'Browse current furnished apartment inventory.',
       },
     ];

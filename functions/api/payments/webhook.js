@@ -190,7 +190,7 @@ async function sendPaymentConfirmationEmail(env, booking) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      from: env.RESEND_FROM_EMAIL || 'hello@stayneos.com',
+      from: env.RESEND_FROM_EMAIL || 'hello@neos.rentals',
       to: booking.guest_email,
       subject: `支付确认 - 预订 #${booking.booking_number}`,
       html: emailHtml,

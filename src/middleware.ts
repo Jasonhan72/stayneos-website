@@ -178,10 +178,10 @@ export async function middleware(request: NextRequest) {
     url.port = '';
     return NextResponse.redirect(url, 301);
   }
-  // www.neos.rentals → neos.rentals (301)
-  if (host === 'www.neos.rentals') {
+  // neos.rentals → www.neos.rentals (301) - 统一使用 www 版本
+  if (host === 'neos.rentals') {
     const url = request.nextUrl.clone();
-    url.host = 'neos.rentals';
+    url.host = 'www.neos.rentals';
     url.port = '';
     return NextResponse.redirect(url, 301);
   }
