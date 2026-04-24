@@ -46,7 +46,7 @@ export function CitiesSection() {
           </Link>
 
           <div className="group relative overflow-hidden rounded-xl aspect-[4/5] bg-neutral-900">
-            <Image src="/images/cities/toronto.jpg" alt={t('cities.niagaraFalls', 'Niagara Falls')} fill className="object-cover grayscale opacity-50 transition-transform duration-500 group-hover:scale-105" />
+            <Image src="/images/cities/niagara.jpg" alt={t('cities.niagaraFalls', 'Niagara Falls')} fill className="object-cover grayscale opacity-50 transition-transform duration-500 group-hover:scale-105" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
             <div className="absolute top-4 left-4">
               <span className="inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-white ring-1 ring-white/20">
