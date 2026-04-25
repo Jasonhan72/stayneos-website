@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import {
   MapPin,
@@ -50,8 +51,16 @@ export default function SearchBar() {
     "Boston",
   ];
 
+  const router = useRouter();
+
   const handleSearch = () => {
-    // TODO: Navigate to properties page with search params
+    const params = new URLSearchParams();
+    if (searchData.location) params.set("city", searchData.location);
+    if (searchData.checkIn) params.set("checkIn", searchData.checkIn);
+    if (searchData.checkOut) params.set("checkOut", searchData.checkOut);
+    if (searchData.guests > 1) params.set("guests", String(searchData.guests));
+    const qs = params.toString();
+    router.push(qs ? `/properties?${qs}` : "/properties");
   };
 
   const formatDate = (dateStr: string) => {

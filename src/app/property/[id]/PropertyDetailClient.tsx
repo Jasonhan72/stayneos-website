@@ -210,6 +210,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
   const [guests, setGuests] = useState(1);
   const [showCalendar, setShowCalendar] = useState(false);
   const [showReview, setShowReview] = useState(false);
+  const [expandedNeighborhood, setExpandedNeighborhood] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   // showCardForm removed - card input now handled by Stripe Elements
   const [showGuestSelector, setShowGuestSelector] = useState(false);
@@ -876,14 +877,14 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
 
             <div className="py-6">
               <h2 className="text-xl font-semibold mb-4">{t('property.neighborhoodTitle', 'Neighborhood highlights')}</h2>
-              <p className="text-neutral-600 leading-relaxed line-clamp-4">
+              <p className={`text-neutral-600 leading-relaxed ${expandedNeighborhood ? '' : 'line-clamp-4'}`}>
                 {neighborhoodParagraph}
               </p>
               <button
-                onClick={() => {/* TODO: expand full text */}}
+                onClick={() => setExpandedNeighborhood(!expandedNeighborhood)}
                 className="mt-3 text-neutral-900 font-medium underline underline-offset-4 flex items-center gap-1 hover:text-neutral-700 transition-colors"
               >
-                {t('property.showMore', 'Show more')} <span className="text-lg">›</span>
+                {expandedNeighborhood ? t('property.showLess', 'Show less') : t('property.showMore', 'Show more')} <span className="text-lg">{expandedNeighborhood ? '‹' : '›'}</span>
               </button>
             </div>
 

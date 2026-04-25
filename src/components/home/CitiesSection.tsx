@@ -11,10 +11,30 @@ export function CitiesSection() {
   const cityName = locale === 'zh' ? '多伦多' : locale === 'fr' ? 'Toronto' : 'Toronto';
   const [email, setEmail] = useState('');
 
-  const handleNotify = (event: FormEvent<HTMLFormElement>) => {
+  const [notifyStatus, setNotifyStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
+
+  const handleNotify = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // TODO: send to backend API for city expansion waitlist
-    setEmail('');
+    setNotifyStatus('sending');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'City Waitlist Subscriber',
+          email,
+          subject: 'City expansion waitlist',
+          message: `Interested in seeing NEOS rentals in my city. Email: ${email}`,
+        }),
+      });
+      if (!res.ok) throw new Error('Submission failed');
+      setNotifyStatus('done');
+      setEmail('');
+      setTimeout(() => setNotifyStatus('idle'), 3000);
+    } catch {
+      setNotifyStatus('error');
+      setTimeout(() => setNotifyStatus('idle'), 4000);
+    }
   };
 
   return (
@@ -80,9 +100,14 @@ export function CitiesSection() {
               />
               <button
                 type="submit"
-                className="w-full rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-700"
+                disabled={notifyStatus === 'sending' || notifyStatus === 'done'}
+                className={`w-full rounded-lg px-4 py-3 text-sm font-semibold text-white transition-colors ${
+                  notifyStatus === 'done'
+                    ? 'bg-emerald-600 hover:bg-emerald-700'
+                    : 'bg-primary hover:bg-primary-700'
+                } disabled:opacity-60`}
               >
-                {t('cities.notifyMe', 'Notify Me')}
+                {notifyStatus === 'sending' ? 'Sending...' : notifyStatus === 'done' ? 'Done ✓' : t('cities.notifyMe', 'Notify Me')}
               </button>
             </form>
           </div>

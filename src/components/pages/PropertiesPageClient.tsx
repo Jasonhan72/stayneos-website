@@ -3,6 +3,7 @@
 import { PropertyCardData } from '@/types';
 
 import { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { 
@@ -55,6 +56,7 @@ const AirbnbCalendar = dynamic(() => import('@/components/booking').then((mod) =
 
 export default function PropertiesPage() {
   const { t, locale } = useI18n();
+  const urlParams = useSearchParams();
   const priceRanges = useMemo(() => ([
     { label: t('properties.filters.price.all', 'All Prices'), min: 0, max: Infinity },
     { label: '$3,000-5,000', min: 3000, max: 5000 },
@@ -90,11 +92,17 @@ export default function PropertiesPage() {
 
 
   
+  // Hydrate initial state from search params (coming from SearchBar navigation)
+  const initSearchQuery = urlParams?.get('city') ?? '';
+  const initCheckIn = urlParams?.get('checkIn') ?? '';
+  const initCheckOut = urlParams?.get('checkOut') ?? '';
+  const _initGuests = Number(urlParams?.get('guests')) || 1;
+
   // State
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
   const [sortBy, setSortBy] = useState('recommended');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(initSearchQuery);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
   
@@ -102,8 +110,8 @@ export default function PropertiesPage() {
   const [selectedPriceRange, setSelectedPriceRange] = useState(priceRanges[0]);
   const [selectedBedrooms, setSelectedBedrooms] = useState('any');
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
-  const [checkIn, setCheckIn] = useState('');
-  const [checkOut, setCheckOut] = useState('');
+  const [checkIn, setCheckIn] = useState(initCheckIn);
+  const [checkOut, setCheckOut] = useState(initCheckOut);
   const [showDatePicker, setShowDatePicker] = useState(false);
   
   // 构建 API 查询参数

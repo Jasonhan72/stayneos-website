@@ -2,6 +2,7 @@ import { Heart, Star, MapPin, Users, Maximize } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
+import { useWishlist } from "@/lib/context/WishlistContext";
 import { useState, useEffect } from "react"; // 添加客户端检测
 
 // 扩展 Property 接口以兼容 API 数据结构
@@ -93,6 +94,7 @@ interface PropertyCardProps {
 
 export default function PropertyCard({ property }: PropertyCardProps) {
   const { locale, t } = useI18n();
+  const { isWishlisted, toggleWishlist } = useWishlist();
   const [isClient, setIsClient] = useState(false); // 客户端检测状态
   
   // 客户端检测 useEffect
@@ -121,14 +123,17 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          // TODO: 实现收藏功能
-          // Wishlist toggle handled by WishlistContext
+          toggleWishlist(property.id);
         }}
         className="absolute top-3 right-3 p-2.5 rounded-full bg-white/95 backdrop-blur-sm hover:bg-white transition-all duration-200 shadow-md hover:shadow-lg hover:scale-110 focus:outline-none focus:ring-2 focus:ring-accent min-w-[44px] min-h-[44px] flex items-center justify-center"
         aria-label={`Favorite ${title}`}
         type="button"
       >
-        <Heart size={20} className="text-neutral-500 hover:text-error transition-colors" aria-hidden="true" />
+        <Heart
+          size={20}
+          className={`transition-colors ${isWishlisted(property.id) ? 'fill-red-500 text-red-500' : 'text-neutral-500 hover:text-red-500'}`}
+          aria-hidden="true"
+        />
       </button>
     );
   };
