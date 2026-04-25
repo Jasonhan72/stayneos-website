@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { PropertyCardData } from '@/types';
 
+type PropertyWithBookedRanges = PropertyCardData & { bookedRanges?: Array<{ start: string; end: string }> };
+
 export function useProperties() {
   const [properties, setProperties] = useState<PropertyCardData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -38,7 +40,7 @@ export function useProperties() {
 }
 
 export function useProperty(idOrSlug: string | null) {
-  const [property, setProperty] = useState<PropertyCardData | null>(null);
+  const [property, setProperty] = useState<PropertyWithBookedRanges | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -54,7 +56,7 @@ export function useProperty(idOrSlug: string | null) {
         const res = await fetch(`/api/properties/${idOrSlug}`, { credentials: 'include' });
         if (!res.ok) throw new Error('Failed to fetch property');
         const data = await res.json();
-        setProperty(data.property || null);
+        setProperty(data.property ? { ...data.property, bookedRanges: data.bookedRanges || [] } : null);
       } catch (err) {
         setError(err instanceof Error ? err : new Error('Unknown error'));
       } finally {

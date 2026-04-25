@@ -63,8 +63,8 @@ export default function HelpContent() {
             <h2 className="text-2xl font-semibold mb-4">{t('helpPage.stillNeedHelp')}</h2>
             <p className="text-neutral-600 mb-8">{t('helpPage.supportAvailable')}</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="tel:+16478626518" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow">
-                <Phone className="w-5 h-5 text-blue-600" /><span>+1 (647) 862-6518</span>
+              <a href="tel:+16474467987" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow">
+                <Phone className="w-5 h-5 text-blue-600" /><span>+1 (647) 446-7987</span>
               </a>
               <a href="mailto:hello@neos.rentals" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white rounded-full shadow-sm hover:shadow-md transition-shadow">
                 <Mail className="w-5 h-5 text-blue-600" /><span>hello@neos.rentals</span>

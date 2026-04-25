@@ -24,7 +24,7 @@ export function StructuredData({ pageType = 'homepage', propertyData }: Structur
     description: t('metadata.description', 'Premium executive apartment rentals in downtown Toronto'),
     url: 'https://neos.rentals',
     logo: 'https://neos.rentals/logo.png',
-    telephone: '+1-647-862-6518',
+    telephone: '+1-647-446-7987',
     email: 'hello@neos.rentals',
     address: {
       '@type': 'PostalAddress',

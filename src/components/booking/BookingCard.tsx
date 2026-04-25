@@ -47,6 +47,7 @@ export function BookingCard({ property, className }: BookingCardProps) {
   
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
+  const bookedRanges = ((property as typeof property & { bookedRanges?: Array<{ start: string; end: string }> }).bookedRanges || []);
   const [guests, setGuests] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -54,6 +55,7 @@ export function BookingCard({ property, className }: BookingCardProps) {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   // Calculate price with cleaning fee
+
   const price = checkIn && checkOut
     ? calculateBookingPrice(
         {
@@ -353,6 +355,7 @@ export function BookingCard({ property, className }: BookingCardProps) {
           minNights={property.minNights}
           rating={property.reviewCount ? property.rating : 0}
           currency="CAD"
+          bookedRanges={bookedRanges}
         />
       )}
     </>

@@ -3055,7 +3055,7 @@
     "s10Text": "我们保留随时修改的权利。",
     "s11Title": "11. 联系方式",
     "s11Text": "如有问题，请联系：",
-    "contactInfo": "邮箱: hello@neos.rentals | 电话: +1 (647) 862-6518 | 地址: 20 Upjohn Rd, North York, ON, M3B 2V9",
+    "contactInfo": "邮箱: hello@neos.rentals | 电话: +1 (647) 446-7987 | 地址: 20 Upjohn Rd, North York, ON, M3B 2V9",
     "s5Items_0": "提供准确信息",
     "s5Items_1": "爱护房产",
     "s5Items_2": "遵守规章",
@@ -3081,7 +3081,7 @@
     "s6Text": "您有权：",
     "s7Title": "7. 联系我们",
     "s7Text": "如有问题，请联系：",
-    "contactInfo": "邮箱: hello@neos.rentals | 电话: +1 (647) 862-6518 | 地址: 20 Upjohn Rd, North York, ON, M3B 2V9",
+    "contactInfo": "邮箱: hello@neos.rentals | 电话: +1 (647) 446-7987 | 地址: 20 Upjohn Rd, North York, ON, M3B 2V9",
     "s2Items_0": "个人信息：姓名、邮箱、电话、付款信息。",
     "s2Items_1": "预订信息：日期、偏好、特殊要求。",
     "s2Items_2": "技术信息：IP、浏览器、Cookie。",
@@ -3610,7 +3610,15 @@
   "host": {
     "properties": "套房源",
     "yearsHosting": "{count} 年房东经验",
-    "responseRate": "回复率"
+    "responseRate": "回复率",
+    "nav": {
+      "today": "今天",
+      "listings": "房源",
+      "calendar": "日历",
+      "reservations": "预订",
+      "inbox": "消息",
+      "earnings": "收入"
+    }
   },
   "trustBar": {
     "insurance": "200万美元商业责任保险",

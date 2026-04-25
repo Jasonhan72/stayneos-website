@@ -1,13 +1,9 @@
-export const dynamic = 'force-dynamic';
-import type { Metadata } from 'next';
-import DashboardPageClient from '@/components/pages/DashboardPageClient';
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: 'Dashboard',
-  description: 'Manage your NEOS bookings, profile, and saved listings.',
-  alternates: { canonical: '/dashboard' },
-};
+export const dynamic = "force-dynamic";
 
-export default function DashboardPage() {
-  return <DashboardPageClient />;
+export default function DashboardIndex() {
+  // After Airbnb-style refactor, /dashboard is just an entry point;
+  // the meaningful landing is "Trips" (= bookings).
+  redirect("/dashboard/bookings");
 }

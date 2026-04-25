@@ -59,6 +59,7 @@ export default function BookingContent() {
   // Form state
   const [checkIn, setCheckIn] = useState(queryCheckIn);
   const [checkOut, setCheckOut] = useState(queryCheckOut);
+  const bookedRanges = ((property as typeof property & { bookedRanges?: Array<{ start: string; end: string }> } | null)?.bookedRanges || []);
   const [guests, setGuests] = useState(queryGuests);
   const [guestName, setGuestName] = useState('');
   const [guestEmail, setGuestEmail] = useState('');
@@ -296,6 +297,7 @@ export default function BookingContent() {
                     minNights={propertyCardData.minNights}
                     rating={propertyCardData.reviewCount > 0 ? propertyCardData.rating : 0}
                     currency="CAD"
+                    bookedRanges={bookedRanges}
                   />
                 )}
 
@@ -366,7 +368,7 @@ export default function BookingContent() {
                         )}
                       </div>
                       <Link 
-                        href="/profile" 
+                        href="/account" 
                         className="text-sm font-semibold text-neutral-900 underline hover:text-neutral-600 transition-colors"
                       >
                         {t('common.edit') || 'Edit'}

@@ -41,3 +41,6 @@ test-results/
 _archive/
 test-chat.html
 WEB_SEARCH_IMPLEMENTATION.md
+
+# Airbnb reference screenshots (local dev only)
+docs/ref/

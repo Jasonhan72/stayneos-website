@@ -3307,7 +3307,7 @@
     "prq4": "Smoking?",
     "pra4": "All non-smoking.",
     "sq1": "Contact support?",
-    "sa1": "WhatsApp, +1 (647) 862-6518, hello@neos.rentals. 24/7.",
+    "sa1": "WhatsApp, +1 (647) 446-7987, hello@neos.rentals. 24/7.",
     "sq2": "Issue during stay?",
     "sa2": "24/7 support with emergency contacts.",
     "sq3": "Corporate housing?",
@@ -3398,7 +3398,7 @@
     "s10Text": "We may modify these Terms at any time.",
     "s11Title": "11. Contact",
     "s11Text": "Questions? Contact us:",
-    "contactInfo": "Email: hello@neos.rentals | Phone: +1 (647) 862-6518 | Address: 20 Upjohn Rd, North York, ON, M3B 2V9",
+    "contactInfo": "Email: hello@neos.rentals | Phone: +1 (647) 446-7987 | Address: 20 Upjohn Rd, North York, ON, M3B 2V9",
     "s5Items_0": "Provide accurate information",
     "s5Items_1": "Treat property with care",
     "s5Items_2": "Follow building rules",
@@ -3424,7 +3424,7 @@
     "s6Text": "You have the right to:",
     "s7Title": "7. Contact Us",
     "s7Text": "Questions? Contact us:",
-    "contactInfo": "Email: hello@neos.rentals | Phone: +1 (647) 862-6518 | Address: 20 Upjohn Rd, North York, ON, M3B 2V9",
+    "contactInfo": "Email: hello@neos.rentals | Phone: +1 (647) 446-7987 | Address: 20 Upjohn Rd, North York, ON, M3B 2V9",
     "s2Items_0": "Personal: Name, email, phone, payment.",
     "s2Items_1": "Booking: Dates, preferences, requests.",
     "s2Items_2": "Technical: IP, browser, cookies.",
@@ -3578,7 +3578,15 @@
   "host": {
     "properties": "properties",
     "yearsHosting": "{count} years hosting",
-    "responseRate": "response rate"
+    "responseRate": "response rate",
+    "nav": {
+      "today": "Today",
+      "listings": "Listings",
+      "calendar": "Calendar",
+      "reservations": "Reservations",
+      "inbox": "Inbox",
+      "earnings": "Earnings"
+    }
   },
   "trustBar": {
     "insurance": "$2M Commercial Liability Insurance",

@@ -132,7 +132,7 @@ export function PropertyForm({ initialData, mode = "create" }: PropertyFormProps
       await new Promise((resolve) => setTimeout(resolve, 1500));
       
       // 保存成功后跳转到房源列表
-      router.push("/dashboard/properties");
+      router.push("/host/listings");
       router.refresh();
     } catch (error) {
       if (process.env.NODE_ENV !== 'production') console.error("Failed to save property:", error);
@@ -225,7 +225,7 @@ export function PropertyForm({ initialData, mode = "create" }: PropertyFormProps
         <div className="flex items-center gap-4">
           <button
             type="button"
-            onClick={() => router.push("/dashboard/properties")}
+            onClick={() => router.push("/host/listings")}
             className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <ChevronLeft className="w-5 h-5" />

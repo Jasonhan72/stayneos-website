@@ -258,8 +258,8 @@ export function ContactInfoCard() {
     {
       icon: Phone,
       title: t("contact.phoneLabel"),
-      content: "+1 (647) 862-6518",
-      href: "tel:+16478626518",
+      content: "+1 (647) 446-7987",
+      href: "tel:+16474467987",
       description: t("contact.callAnytime")
     },
     {

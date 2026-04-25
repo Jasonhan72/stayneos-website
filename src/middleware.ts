@@ -9,7 +9,8 @@ export type UserRole = 'GUEST' | 'HOST' | 'ADMIN' | 'SUPER_ADMIN';
 // 需要保护的路由
 const PROTECTED_ROUTES = [
   '/dashboard',
-  '/profile',
+  '/account',
+  '/host',
   '/bookings',
   '/wishlists',
   '/checkout',
@@ -18,19 +19,16 @@ const PROTECTED_ROUTES = [
 // 需要认证的路由前缀
 const PROTECTED_PREFIXES = [
   '/dashboard/',
-  '/profile/',
+  '/account/',
+  '/host/',
   '/booking/',
   '/payment/',
 ];
 
-// 需要 Admin 角色的路由
-const ADMIN_ROUTES = [
-  '/admin',
-];
+// Admin routes are deprecated; Host routes replace them.
+const ADMIN_ROUTES: string[] = [];
 
-const ADMIN_PREFIXES = [
-  '/admin/',
-];
+const ADMIN_PREFIXES: string[] = [];
 
 // 需要 Host 角色的路由
 const HOST_PREFIXES = [

@@ -3,280 +3,282 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useI18n } from "@/lib/i18n";
-import { 
-  User, 
-  Home, 
-  Heart, 
-  ChevronDown,
-  ChevronUp,
-  LayoutDashboard,
-  Building2
+import {
+  Menu,
+  MessageCircle,
+  Luggage,
+  Heart,
+  Home,
+  UserCog,
+  HelpCircle,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/context/UserContext";
+import { useI18n } from "@/lib/i18n";
 
 interface UserMenuProps {
   variant?: "light" | "dark" | "transparent";
 }
 
+type MenuLink = {
+  label: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  bold?: boolean;
+};
+
 export function UserMenu({ variant = "light" }: UserMenuProps) {
-  const { t, locale } = useI18n();
+  const { locale } = useI18n();
   const { user, logout, isLoading } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Close menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Close menu on escape key
-  useEffect(() => {
-    function handleEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setIsOpen(false);
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener("keydown", handleEscape);
-      return () => document.removeEventListener("keydown", handleEscape);
-    }
-  }, [isOpen]);
-
-  const handleLogout = async () => {
-    setIsOpen(false);
-    await logout();
-  };
+  // i18n helpers (inline, avoid missing key churn)
+  const L = (zh: string, en: string, fr: string) =>
+    locale === "zh" ? zh : locale === "fr" ? fr : en;
 
   if (isLoading) {
-    return (
-      <div className="w-10 h-10 rounded-full bg-gray-200 animate-pulse" />
-    );
+    return <div className="w-[82px] h-10 rounded-full bg-black/5 animate-pulse" />;
   }
 
   const isDarkStyle = variant === "dark" || variant === "transparent";
-  const userAlt = locale === "zh" ? "用户头像" : locale === "fr" ? "Avatar utilisateur" : "User avatar";
-  const defaultUserName = locale === "zh" ? "用户" : locale === "fr" ? "Utilisateur" : "User";
+  const isHost =
+    user?.role === "HOST" ||
+    user?.role === "ADMIN" ||
+    user?.role === "SUPER_ADMIN";
 
-  // Not logged in state - Blueground style
+  // ===== Not logged in =====
   if (!user) {
     return (
       <div className="relative" ref={menuRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
           className={cn(
-            "flex items-center gap-1 p-2 rounded-full transition-all duration-200",
-            "hover:bg-black/5 focus:outline-none",
-            isOpen && "bg-black/5"
+            "flex items-center gap-3 px-2 pl-3 py-1.5 rounded-full border transition-all duration-200",
+            isDarkStyle
+              ? "border-white/30 hover:border-white/60 hover:shadow-md"
+              : "border-neutral-200 hover:shadow-md hover:border-neutral-300"
           )}
           aria-expanded={isOpen}
           aria-haspopup="true"
+          aria-label={L("用户菜单", "User menu", "Menu utilisateur")}
         >
-          <User 
+          <Menu
             className={cn(
-              "w-5 h-5",
+              "w-4 h-4",
               isDarkStyle ? "text-white" : "text-neutral-700"
-            )} 
+            )}
           />
-          {isOpen ? (
-            <ChevronUp 
-              className={cn(
-                "w-4 h-4",
-                isDarkStyle ? "text-white/60" : "text-neutral-500"
-              )} 
-            />
-          ) : (
-            <ChevronDown 
-              className={cn(
-                "w-4 h-4",
-                isDarkStyle ? "text-white/60" : "text-neutral-500"
-              )} 
-            />
-          )}
+          <div
+            className={cn(
+              "w-7 h-7 rounded-full flex items-center justify-center",
+              isDarkStyle ? "bg-white/20" : "bg-neutral-500"
+            )}
+          >
+            <span className="text-[11px] font-medium text-white">?</span>
+          </div>
         </button>
 
-        {/* Dropdown Menu - Not Logged In */}
-        <div
-          className={cn(
-            "absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-xl border border-neutral-100",
-            "transition-all duration-200 origin-top-right z-50",
-            isOpen 
-              ? "opacity-100 scale-100 translate-y-0 pointer-events-auto" 
-              : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
-          )}
-        >
-          <div className="py-1">
+        {isOpen && (
+          <div
+            className={cn(
+              "absolute right-0 mt-2 w-60 py-2 rounded-xl shadow-2xl border border-neutral-200 bg-white z-50",
+              "animate-in fade-in slide-in-from-top-2 duration-150"
+            )}
+          >
             <Link
               href="/register"
               onClick={() => setIsOpen(false)}
-              className={cn(
-                "block px-4 py-2.5 text-sm text-neutral-700",
-                "hover:bg-neutral-50 hover:text-primary transition-colors duration-150"
-              )}
+              className="block px-4 py-3 text-sm font-semibold text-neutral-900 hover:bg-neutral-50"
             >
-              {t('nav.signup')}
+              {L("注册", "Sign up", "Inscription")}
             </Link>
             <Link
               href="/login"
               onClick={() => setIsOpen(false)}
-              className={cn(
-                "block px-4 py-2.5 text-sm text-neutral-700",
-                "hover:bg-neutral-50 hover:text-primary transition-colors duration-150"
-              )}
+              className="block px-4 py-3 text-sm text-neutral-700 hover:bg-neutral-50"
             >
-              {t('nav.login')}
+              {L("登录", "Log in", "Connexion")}
+            </Link>
+            <div className="border-t border-neutral-200 my-1" />
+            <Link
+              href="/become-a-host"
+              onClick={() => setIsOpen(false)}
+              className="block px-4 py-3 text-sm text-neutral-700 hover:bg-neutral-50"
+            >
+              {L("开放您的房源", "List your home", "Mettez votre logement en location")}
+            </Link>
+            <Link
+              href="/help"
+              onClick={() => setIsOpen(false)}
+              className="block px-4 py-3 text-sm text-neutral-700 hover:bg-neutral-50"
+            >
+              {L("帮助中心", "Help Centre", "Centre d'aide")}
             </Link>
           </div>
-        </div>
+        )}
       </div>
     );
   }
 
-  // Logged in state - Blueground style menu
-  const menuItems = [
+  // ===== Logged in =====
+  const firstSection: MenuLink[] = [
     {
-      label: t("nav.dashboard"),
-      href: "/dashboard",
-      icon: LayoutDashboard,
+      label: L("消息", "Messages", "Messages"),
+      href: "/dashboard/messages",
+      icon: MessageCircle,
+      bold: true,
     },
     {
-      label: t("nav.bookings"),
+      label: L("我的行程", "Trips", "Voyages"),
       href: "/dashboard/bookings",
-      icon: Home,
+      icon: Luggage,
+      bold: true,
     },
     {
-      label: t("nav.manageProperties"),
-      href: "/dashboard/properties",
-      icon: Building2,
-    },
-    {
-      label: t("nav.wishlists"),
-      href: "/wishlists",
+      label: L("收藏", "Wishlists", "Favoris"),
+      href: "/dashboard/wishlists",
       icon: Heart,
-    },
-    {
-      label: t("nav.profile"),
-      href: "/profile",
-      icon: User,
+      bold: true,
     },
   ];
 
-  // Get initials from user name
-  const getInitials = (name: string) => {
-    if (!name || name.trim() === '') return '?';
-    return name
-      .split(" ")
-      .filter(n => n && n.length > 0)
-      .map((n) => n.charAt(0))
-      .join("")
-      .toUpperCase()
-      .slice(0, 2) || '?';
-  };
+  const hostSection: MenuLink[] = isHost
+    ? [
+        {
+          label: L("切换到房东模式", "Switch to Hosting", "Passer en mode hôte"),
+          href: "/host",
+          icon: Home,
+          bold: true,
+        },
+      ]
+    : [
+        {
+          label: L("开放您的房源", "List your home", "Mettez votre logement en location"),
+          href: "/become-a-host",
+          icon: Home,
+          bold: true,
+        },
+      ];
+
+  const thirdSection: MenuLink[] = [
+    {
+      label: L("账号设置", "Account settings", "Paramètres du compte"),
+      href: "/account",
+      icon: UserCog,
+    },
+    {
+      label: L("帮助中心", "Help Centre", "Centre d'aide"),
+      href: "/help",
+      icon: HelpCircle,
+    },
+  ];
+
+  const userAlt = L("用户头像", "User avatar", "Avatar utilisateur");
+  const initials =
+    (user.firstName?.[0] || user.email?.[0] || "U").toUpperCase() +
+    (user.lastName?.[0] || "").toUpperCase();
 
   return (
     <div className="relative" ref={menuRef}>
-      {/* Avatar Button - Blueground Style */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "flex items-center gap-2 pl-1 pr-2 py-1 rounded-full transition-all duration-200",
-          "hover:bg-black/5 focus:outline-none",
-          isOpen && "bg-black/5"
+          "flex items-center gap-3 px-2 pl-3 py-1.5 rounded-full border transition-all duration-200",
+          isDarkStyle
+            ? "border-white/30 hover:border-white/60 hover:shadow-md"
+            : "border-neutral-200 hover:shadow-md hover:border-neutral-300"
         )}
         aria-expanded={isOpen}
         aria-haspopup="true"
+        aria-label={L("用户菜单", "User menu", "Menu utilisateur")}
       >
-        {/* Avatar - Show image if available, otherwise initials */}
-        {user?.avatar || user?.image ? (
-          <div className="w-9 h-9 rounded-full overflow-hidden bg-neutral-100">
-            <Image
-              src={user.avatar || user.image!}
-              alt={user.name || userAlt}
-              width={36}
-              height={36}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        ) : (
-          <div className={cn(
-            "w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold",
-            "bg-[#e3f2fd] text-[#1967d2]"
-          )}>
-            {getInitials(user.name || user.email || defaultUserName)}
-          </div>
-        )}
-        {isOpen ? (
-          <ChevronUp 
-            className={cn(
-              "w-4 h-4",
-              isDarkStyle ? "text-white/60" : "text-neutral-400"
-            )} 
+        <Menu
+          className={cn(
+            "w-4 h-4",
+            isDarkStyle ? "text-white" : "text-neutral-700"
+          )}
+        />
+        {user.image ? (
+          <Image
+            src={user.image}
+            alt={userAlt}
+            width={32}
+            height={32}
+            className="w-8 h-8 rounded-full object-cover"
           />
         ) : (
-          <ChevronDown 
-            className={cn(
-              "w-4 h-4",
-              isDarkStyle ? "text-white/60" : "text-neutral-400"
-            )} 
-          />
+          <div className="w-8 h-8 rounded-full bg-neutral-900 flex items-center justify-center">
+            <span className="text-xs font-medium text-white">{initials}</span>
+          </div>
         )}
       </button>
 
-      {/* Dropdown Menu - Logged In */}
-      <div
-        className={cn(
-          "absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-neutral-100",
-          "transition-all duration-200 origin-top-right z-50",
-          isOpen 
-            ? "opacity-100 scale-100 translate-y-0 pointer-events-auto" 
-            : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
-        )}
-      >
-        {/* Menu Items with Icons */}
-        <div className="py-2">
-          {menuItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setIsOpen(false)}
-              className={cn(
-                "flex items-center gap-3 px-4 py-3 text-sm text-neutral-700",
-                "hover:bg-neutral-50 transition-colors duration-150"
-              )}
-            >
-              <item.icon className="w-5 h-5 text-neutral-500" />
-              {item.label}
-            </Link>
+      {isOpen && (
+        <div
+          className={cn(
+            "absolute right-0 mt-2 w-64 py-2 rounded-xl shadow-2xl border border-neutral-200 bg-white z-50",
+            "animate-in fade-in slide-in-from-top-2 duration-150"
+          )}
+        >
+          {firstSection.map((item) => (
+            <MenuItem key={item.href} item={item} onClick={() => setIsOpen(false)} />
           ))}
-        </div>
-
-        {/* Divider */}
-        <div className="border-t border-neutral-100" />
-
-        {/* Logout */}
-        <div className="py-2">
+          <div className="border-t border-neutral-200 my-1" />
+          {hostSection.map((item) => (
+            <MenuItem key={item.href} item={item} onClick={() => setIsOpen(false)} />
+          ))}
+          <div className="border-t border-neutral-200 my-1" />
+          {thirdSection.map((item) => (
+            <MenuItem key={item.href} item={item} onClick={() => setIsOpen(false)} />
+          ))}
+          <div className="border-t border-neutral-200 my-1" />
           <button
-            onClick={handleLogout}
-            className={cn(
-              "w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600",
-              "hover:bg-red-50 transition-colors duration-150"
-            )}
+            onClick={() => {
+              setIsOpen(false);
+              logout();
+            }}
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
           >
-            {t('nav.logout')}
+            <LogOut className="w-4 h-4 text-neutral-500" />
+            <span>{L("退出登录", "Log out", "Déconnexion")}</span>
           </button>
         </div>
-      </div>
+      )}
     </div>
   );
 }
 
-export default UserMenu;
+function MenuItem({
+  item,
+  onClick,
+}: {
+  item: MenuLink;
+  onClick: () => void;
+}) {
+  const Icon = item.icon;
+  return (
+    <Link
+      href={item.href}
+      onClick={onClick}
+      className={cn(
+        "flex items-center gap-3 px-4 py-3 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors",
+        item.bold && "font-semibold text-neutral-900"
+      )}
+    >
+      <Icon className="w-4 h-4 text-neutral-500" />
+      <span>{item.label}</span>
+    </Link>
+  );
+}

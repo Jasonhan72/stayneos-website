@@ -101,7 +101,7 @@ export function AIResponsePanel({ state, response, visible }: AIResponsePanelPro
                   {t('aiConcierge.browseCta', 'Browse Properties')}
                 </Link>
                 <a
-                  href="https://wa.me/16478626518?text=Hi%2C%20I'm%20interested%20in%20NEOS%20apartments"
+                  href="https://wa.me/16474467987?text=Hi%2C%20I'm%20interested%20in%20NEOS%20apartments"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-6 py-3 bg-[#25D366] hover:bg-[#20bd5a] text-white font-semibold rounded-lg transition-colors"
@@ -149,7 +149,7 @@ export function AIResponsePanel({ state, response, visible }: AIResponsePanelPro
                         {t('aiConcierge.scheduleViewing', 'Schedule a Viewing')}
                       </Link>
                       <a
-                        href="https://wa.me/16478626518?text=Hi%2C%20I'm%20interested%20in%20NEOS%20apartments"
+                        href="https://wa.me/16474467987?text=Hi%2C%20I'm%20interested%20in%20NEOS%20apartments"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="px-5 py-2.5 bg-[#25D366] hover:bg-[#20bd5a] text-white font-semibold rounded-lg transition-colors text-sm"

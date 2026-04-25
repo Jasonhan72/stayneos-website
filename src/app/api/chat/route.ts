@@ -46,7 +46,7 @@ const SYSTEM_PROMPT = `You are Aria, the Customer Care Lead at NEOS (StayNeos Ex
 - Website: neos.rentals (also stayneos.com redirects to neos.rentals)
 - Features: Browse properties, AI Concierge for recommendations, For Business form for corporate housing
 - Languages: English, Chinese, French
-- Contact: hello@neos.rentals, +1 (647) 862-6518
+- Contact: hello@neos.rentals, +1 (647) 446-7987
 
 ## Booking Process
 1. **Browse**: Visit /properties to see all available apartments

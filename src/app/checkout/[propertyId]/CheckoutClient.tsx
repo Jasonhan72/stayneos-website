@@ -41,6 +41,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
   // Get initial values from URL params
   const [checkIn, setCheckIn] = useState(searchParams.get('checkIn') || '');
   const [checkOut, setCheckOut] = useState(searchParams.get('checkOut') || '');
+  const bookedRanges = ((property as typeof property & { bookedRanges?: Array<{ start: string; end: string }> } | null)?.bookedRanges || []);
   const [adults, setAdults] = useState(parseInt(searchParams.get('adults') || '1'));
   const [children, setChildren] = useState(parseInt(searchParams.get('children') || '0'));
   const [infants, setInfants] = useState(parseInt(searchParams.get('infants') || '0'));
@@ -438,6 +439,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
           minNights={property.minNights}
           rating={property.reviewCount > 0 ? property.rating : 0}
           currency="CAD"
+          bookedRanges={bookedRanges}
         />
       )}
 

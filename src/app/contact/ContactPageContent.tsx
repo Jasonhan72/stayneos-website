@@ -79,11 +79,11 @@ export default function ContactPageContent() {
               {t("contact.emergency.desc")}
             </p>
             <a 
-              href="tel:+16478626518"
+              href="tel:+16474467987"
               className="inline-flex items-center gap-3 px-8 py-4 bg-accent text-primary font-semibold text-lg hover:bg-accent-600 transition-colors"
             >
               <Phone className="w-6 h-6" />
-              +1 (647) 862-6518
+              +1 (647) 446-7987
             </a>
           </div>
         </Container>

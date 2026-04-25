@@ -54,6 +54,16 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
     return url;
   };
 
+
+  const isHost = (role?: string) =>
+    role === 'HOST' || role === 'ADMIN' || role === 'SUPER_ADMIN';
+
+  const getPostLoginUrl = (role?: string) => {
+    if (callbackUrl && callbackUrl !== '/') return sanitizeCallbackUrl(callbackUrl);
+    if (isHost(role)) return '/host';
+    return '/dashboard/bookings';
+  };
+
   const ensureSessionReady = async () => {
     for (let i = 0; i < 4; i += 1) {
       const res = await fetch('/api/auth/session', { credentials: 'include' });
@@ -109,7 +119,7 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
         }
       }
 
-      const nextUrl = sanitizeCallbackUrl(callbackUrl !== '/' ? callbackUrl : '/dashboard');
+      const nextUrl = getPostLoginUrl(data.user?.role);
       await ensureSessionReady();
       // Use hard redirect for reliability so middleware sees latest cookie immediately
       if (isClient) window.location.assign(nextUrl);

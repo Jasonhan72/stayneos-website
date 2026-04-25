@@ -71,13 +71,13 @@ export default function Footer() {
                   <span>hello@neos.rentals</span>
                 </a>
                 <a
-                  href="tel:+16478626518"
+                  href="tel:+16474467987"
                   className="flex items-center gap-3 text-primary-100 hover:text-accent transition-colors duration-200 group"
                 >
                   <div className="w-10 h-10 rounded-lg bg-primary-700/50 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                     <Phone className="w-5 h-5" />
                   </div>
-                  <span>+1 (647) 862-6518</span>
+                  <span>+1 (647) 446-7987</span>
                 </a>
                 <a
                   href="https://maps.google.com/?q=20+Upjohn+Rd+North+York+ON+M3B+2V9"

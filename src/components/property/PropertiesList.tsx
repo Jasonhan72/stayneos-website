@@ -97,7 +97,7 @@ export function PropertiesList() {
     setLoading(true);
     setFetchError(null);
     try {
-      const res = await fetch('/api/dashboard/properties', { credentials: 'include' });
+      const res = await fetch('/api/host/properties', { credentials: 'include' });
       if (!res.ok) {
         throw new Error(`Failed to load properties (${res.status})`);
       }
@@ -169,7 +169,7 @@ export function PropertiesList() {
   const confirmDelete = async () => {
     if (!propertyToDelete) return;
     try {
-      const res = await fetch(`/api/dashboard/properties/${propertyToDelete.id}`, {
+      const res = await fetch(`/api/host/properties/${propertyToDelete.id}`, {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -244,7 +244,7 @@ export function PropertiesList() {
 
         {/* 新增房源按钮 */}
         <Link
-          href="/dashboard/properties/new"
+          href="/host/listings/new"
           className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors w-full sm:w-auto justify-center"
         >
           <Plus className="w-4 h-4" />
@@ -261,7 +261,7 @@ export function PropertiesList() {
           </h3>
           <p className="text-gray-500 mb-6">{t("property.empty.description")}</p>
           <Link
-            href="/dashboard/properties/new"
+            href="/host/listings/new"
             className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
           >
             <Plus className="w-4 h-4" />
@@ -368,7 +368,7 @@ export function PropertiesList() {
                           <Eye className="w-4 h-4" />
                         </Link>
                         <Link
-                          href={`/dashboard/properties/${property.id}/edit`}
+                          href={`/host/listings/${property.id}/edit`}
                           className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                           title={t("common.edit")}
                         >
@@ -449,7 +449,7 @@ export function PropertiesList() {
                     {t("common.view")}
                   </Link>
                   <Link
-                    href={`/dashboard/properties/${property.id}/edit`}
+                    href={`/host/listings/${property.id}/edit`}
                     className="flex-1 flex items-center justify-center gap-1 px-3 py-2 text-sm text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
                   >
                     <Edit className="w-4 h-4" />

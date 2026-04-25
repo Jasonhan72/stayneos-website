@@ -206,6 +206,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
   // Booking state
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
+  const bookedRanges = ((property as typeof property & { bookedRanges?: Array<{ start: string; end: string }> } | null)?.bookedRanges || []);
   const [guests, setGuests] = useState(1);
   const [showCalendar, setShowCalendar] = useState(false);
   const [showReview, setShowReview] = useState(false);
@@ -266,6 +267,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
   const propertyDetails = propertyCardData as PropertyLocationDetails;
 
   // Calculate booking price from single source of truth
+
   const bookingPrice = useMemo(() => {
     if (!propertyCardData || !checkIn || !checkOut) return null;
     return calculateBookingPrice(propertyCardData, checkIn, checkOut);
@@ -429,6 +431,26 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
         <div className="flex items-center justify-between text-sm mt-1"><span className="text-neutral-600">{t('property.quarterly', 'Quarterly')} (3 {t('common.months', 'mo')})</span><span className="font-medium text-neutral-900">{fp(tierPrices.quarterly)}/Mo</span></div>
         <div className="flex items-center justify-between text-sm mt-1"><span className="text-neutral-600">{t('property.annual', 'Annual')} (12 {t('common.months', 'mo')})</span><span className="font-medium text-neutral-900">{fp(tierPrices.annual)}/Mo</span></div>
       </div>
+
+      {checkIn && checkOut && (
+        <div className="mb-4 rounded-2xl border border-neutral-200 bg-white px-4 py-3">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-sm font-semibold text-neutral-900">Modify reservation</p>
+              <p className="mt-1 text-sm text-neutral-600">
+                {new Date(checkIn).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' })} – {new Date(checkOut).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' })}
+              </p>
+              <p className="mt-1 text-xs text-neutral-500">Change dates, extend your stay, or clear this selection.</p>
+            </div>
+            <button
+              onClick={() => setShowCalendar(true)}
+              className="shrink-0 rounded-full border border-neutral-300 px-4 py-2 text-sm font-semibold text-neutral-900 transition-colors hover:border-neutral-900 hover:bg-neutral-50"
+            >
+              Edit
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Date/Guest Selector Box */}
       <div className="border border-neutral-300 rounded-xl overflow-hidden mb-4">
@@ -899,6 +921,20 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
 
       {/* Mobile Bottom Floating Bar */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 px-4 py-4 z-40">
+        {checkIn && checkOut && (
+          <button
+            onClick={() => setShowCalendar(true)}
+            className="mb-3 flex w-full items-center justify-between rounded-2xl border border-neutral-200 px-4 py-3 text-left transition-colors hover:bg-neutral-50"
+          >
+            <div>
+              <p className="text-sm font-semibold text-neutral-900">Modify reservation</p>
+              <p className="mt-1 text-sm text-neutral-600">
+                {new Date(checkIn).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' })} – {new Date(checkOut).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' })}
+              </p>
+            </div>
+            <span className="text-sm font-semibold text-neutral-900 underline underline-offset-4">Edit</span>
+          </button>
+        )}
         <div className="flex items-center justify-between">
           <div>
             {!checkIn || !checkOut ? (
@@ -954,6 +990,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
           minNights={propertyCardData.minNights || 1}
           rating={propertyCardData.reviewCount > 0 ? propertyCardData.rating : 0}
           currency="CAD"
+          bookedRanges={bookedRanges}
         />
       )}
 

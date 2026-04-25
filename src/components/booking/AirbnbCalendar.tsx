@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
-import { X, Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, Star, ChevronLeft, ChevronRight, CalendarRange, Pencil } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { BookedDateRange, formatDateKey, hasBookedDateInRange, isDateBooked } from './calendar-utils';
 
 export interface AirbnbCalendarProps {
   checkIn: string;
@@ -17,6 +18,7 @@ export interface AirbnbCalendarProps {
   currency?: string;
   className?: string;
   showFooter?: boolean;
+  bookedRanges?: BookedDateRange[];
 }
 
 const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
@@ -45,6 +47,7 @@ export function AirbnbCalendar({
   currency = 'CAD',
   className,
   showFooter = true,
+  bookedRanges = [],
 }: AirbnbCalendarProps) {
   const [selectedStart, setSelectedStart] = useState<string>(checkIn);
   const [selectedEnd, setSelectedEnd] = useState<string>(checkOut);
@@ -94,12 +97,9 @@ export function AirbnbCalendar({
     return months;
   }, [currentMonthOffset]);
 
-  const formatDateKey = useCallback((date: Date): string => {
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-  }, []);
-
-  const getDateStatus = useCallback((date: Date): 'none' | 'start' | 'end' | 'between' | 'disabled' => {
+  const getDateStatus = useCallback((date: Date): 'none' | 'start' | 'end' | 'between' | 'disabled' | 'booked' => {
     if (date < today) return 'disabled';
+    if (isDateBooked(date, bookedRanges)) return 'booked';
     
     const dateStr = formatDateKey(date);
     const start = selectedStart ? new Date(selectedStart) : null;
@@ -109,10 +109,10 @@ export function AirbnbCalendar({
     if (selectedEnd && dateStr === selectedEnd) return 'end';
     if (start && end && date > start && date < end) return 'between';
     return 'none';
-  }, [selectedStart, selectedEnd, today, formatDateKey]);
+  }, [selectedStart, selectedEnd, today, bookedRanges]);
 
   const handleDateClick = useCallback((date: Date) => {
-    if (date < today) return;
+    if (date < today || isDateBooked(date, bookedRanges)) return;
     
     const dateStr = formatDateKey(date);
     
@@ -130,7 +130,7 @@ export function AirbnbCalendar({
       const minEndDate = new Date(startDate);
       minEndDate.setDate(minEndDate.getDate() + 1);
       
-      if (date < minEndDate) {
+      if (date < minEndDate || hasBookedDateInRange(selectedStart, dateStr, bookedRanges)) {
         // Selected same day or before minimum end date - reset to new start
         setSelectedStart(dateStr);
         setSelectedEnd('');
@@ -142,7 +142,7 @@ export function AirbnbCalendar({
         onSelectCheckOut(dateStr);
       }
     }
-  }, [selectedStart, selectedEnd, today, onSelectCheckIn, onSelectCheckOut, formatDateKey]);
+  }, [selectedStart, selectedEnd, today, onSelectCheckIn, onSelectCheckOut, bookedRanges]);
 
   const handleClear = useCallback(() => {
     setSelectedStart('');
@@ -208,6 +208,7 @@ export function AirbnbCalendar({
 
   const hasSelection = selectedStart && selectedEnd;
   const hasAnyDate = selectedStart || selectedEnd;
+  const isEditingReservation = Boolean(checkIn && checkOut);
 
   // Mobile: Single month view with vertical scroll
   // Desktop: Two months side by side with horizontal navigation
@@ -245,6 +246,8 @@ export function AirbnbCalendar({
               textClasses = "text-transparent";
             } else if (status === 'disabled') {
               textClasses = "text-neutral-300 line-through cursor-not-allowed";
+            } else if (status === 'booked') {
+              textClasses = "text-neutral-400 cursor-not-allowed";
             } else if (status === 'start' || status === 'end') {
               textClasses = "bg-neutral-900 text-white rounded-full font-semibold cursor-pointer";
             } else if (status === 'between') {
@@ -258,14 +261,16 @@ export function AirbnbCalendar({
               <button
                 key={index}
                 onClick={() => !dayInfo.isDisabled && handleDateClick(dayInfo.date)}
-                disabled={dayInfo.isDisabled || !dayInfo.isCurrentMonth}
+                disabled={dayInfo.isDisabled || !dayInfo.isCurrentMonth || status === 'booked'}
                 className={cn(cellClasses, textClasses)}
               >
                 <span className={cn(
-                  "w-10 h-10 flex items-center justify-center",
-                  isSelected && "bg-neutral-900 text-white rounded-full"
+                  "w-10 h-10 flex items-center justify-center relative overflow-hidden",
+                  isSelected && "bg-neutral-900 text-white rounded-full",
+                  status === 'booked' && "rounded-full bg-neutral-200 text-neutral-400"
                 )}>
                   {dayNumber}
+                  {status === 'booked' && <span className="absolute inset-0 pointer-events-none before:absolute before:left-1 before:right-1 before:top-1/2 before:h-px before:-translate-y-1/2 before:rotate-[-35deg] before:bg-neutral-500" />}
                 </span>
               </button>
             );
@@ -280,13 +285,34 @@ export function AirbnbCalendar({
     return (
       <div className={cn("flex flex-col h-full", className)}>
         {/* Header with selection info */}
-        <div className="mb-4">
-          <h2 className="text-2xl font-semibold text-neutral-900">
-            {hasSelection ? `${displayCount} ${displayUnit}` : 'Select check-in date'}
-          </h2>
-          <p className="text-neutral-500 mt-1">
-            {hasSelection ? formatDateRange() : 'Add dates for prices'}
-          </p>
+        <div className="mb-4 space-y-3">
+          {isEditingReservation && (
+            <div className="flex items-start justify-between gap-3 rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 text-sm font-semibold text-neutral-900">
+                  <CalendarRange size={16} className="shrink-0" />
+                  <span>Modify reservation</span>
+                </div>
+                <p className="mt-1 text-sm text-neutral-600">
+                  Change dates, extend your stay, or clear this reservation to start over.
+                </p>
+              </div>
+              <button
+                onClick={handleClear}
+                className="shrink-0 rounded-full border border-neutral-300 px-3 py-1.5 text-sm font-medium text-neutral-900 transition-colors hover:border-neutral-900 hover:bg-white"
+              >
+                Start over
+              </button>
+            </div>
+          )}
+          <div>
+            <h2 className="text-2xl font-semibold text-neutral-900">
+              {hasSelection ? `${displayCount} ${displayUnit}` : isEditingReservation ? 'Modify your dates' : 'Select check-in date'}
+            </h2>
+            <p className="text-neutral-500 mt-1">
+              {hasSelection ? formatDateRange() : isEditingReservation ? 'Tap a new check-in or checkout to update your stay.' : 'Add dates for prices'}
+            </p>
+          </div>
         </div>
 
         {/* Weekday Headers - Fixed */}
@@ -388,13 +414,26 @@ export function AirbnbCalendar({
       </div>
 
       {/* Title */}
-      <div className="px-4 pt-6 pb-4 shrink-0">
-        <h2 className="text-2xl font-semibold text-neutral-900">
-          {hasSelection ? `${displayCount} ${displayUnit}` : 'Select check-in date'}
-        </h2>
-        <p className="text-neutral-500 mt-1">
-          {hasSelection ? formatDateRange() : 'Prices on calendar do not include taxes and fees'}
-        </p>
+      <div className="px-4 pt-6 pb-4 shrink-0 space-y-3">
+        {isEditingReservation && (
+          <div className="rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3">
+            <div className="flex items-center gap-2 text-sm font-semibold text-neutral-900">
+              <Pencil size={16} className="shrink-0" />
+              <span>Modify reservation</span>
+            </div>
+            <p className="mt-1 text-sm text-neutral-600">
+              Pick new dates, extend your stay, or clear the current selection.
+            </p>
+          </div>
+        )}
+        <div>
+          <h2 className="text-2xl font-semibold text-neutral-900">
+            {hasSelection ? `${displayCount} ${displayUnit}` : isEditingReservation ? 'Modify your dates' : 'Select check-in date'}
+          </h2>
+          <p className="text-neutral-500 mt-1">
+            {hasSelection ? formatDateRange() : isEditingReservation ? 'Tap a new check-in or checkout to update your stay.' : 'Prices on calendar do not include taxes and fees'}
+          </p>
+        </div>
       </div>
 
       {/* Weekday Headers - Fixed */}

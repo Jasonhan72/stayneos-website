@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { X, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { BookedDateRange, formatDateKey, hasBookedDateInRange, isDateBooked } from './calendar-utils';
 
 export interface FullscreenCalendarProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ export interface FullscreenCalendarProps {
   minNights?: number;
   rating?: number;
   currency?: string;
+  bookedRanges?: BookedDateRange[];
 }
 
 const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
@@ -41,6 +43,7 @@ export function FullscreenCalendar({
   pricePerNight = 0,
   rating = 0,
   currency = 'CAD',
+  bookedRanges = [],
 }: FullscreenCalendarProps) {
   const [selectedStart, setSelectedStart] = useState<string>(checkIn);
   const [selectedEnd, setSelectedEnd] = useState<string>(checkOut);
@@ -87,10 +90,11 @@ export function FullscreenCalendar({
     return months;
   }, [currentMonthOffset]);
 
-  const getDateStatus = useCallback((date: Date): 'none' | 'start' | 'end' | 'between' | 'disabled' => {
+  const getDateStatus = useCallback((date: Date): 'none' | 'start' | 'end' | 'between' | 'disabled' | 'booked' => {
     if (date < today) return 'disabled';
+    if (isDateBooked(date, bookedRanges)) return 'booked';
     
-    const dateStr = date.toISOString().split('T')[0];
+    const dateStr = formatDateKey(date);
     const start = selectedStart ? new Date(selectedStart) : null;
     const end = selectedEnd ? new Date(selectedEnd) : null;
     
@@ -98,12 +102,12 @@ export function FullscreenCalendar({
     if (selectedEnd && dateStr === selectedEnd) return 'end';
     if (start && end && date > start && date < end) return 'between';
     return 'none';
-  }, [selectedStart, selectedEnd, today]);
+  }, [selectedStart, selectedEnd, today, bookedRanges]);
 
   const handleDateClick = useCallback((date: Date) => {
-    if (date < today) return;
+    if (date < today || isDateBooked(date, bookedRanges)) return;
     
-    const dateStr = date.toISOString().split('T')[0];
+    const dateStr = formatDateKey(date);
     
     if (!selectedStart || (selectedStart && selectedEnd)) {
       setSelectedStart(dateStr);
@@ -113,7 +117,7 @@ export function FullscreenCalendar({
     } else {
       const startDate = new Date(selectedStart);
       
-      if (date <= startDate) {
+      if (date <= startDate || hasBookedDateInRange(selectedStart, dateStr, bookedRanges)) {
         setSelectedStart(dateStr);
         setSelectedEnd('');
         onSelectCheckIn(dateStr);
@@ -123,7 +127,7 @@ export function FullscreenCalendar({
         onSelectCheckOut(dateStr);
       }
     }
-  }, [selectedStart, selectedEnd, today, onSelectCheckIn, onSelectCheckOut]);
+  }, [selectedStart, selectedEnd, today, onSelectCheckIn, onSelectCheckOut, bookedRanges]);
 
   const handleClear = useCallback(() => {
     setSelectedStart('');
@@ -209,6 +213,8 @@ export function FullscreenCalendar({
               textClasses = "text-transparent";
             } else if (status === 'disabled') {
               textClasses = "text-neutral-300 line-through cursor-not-allowed";
+            } else if (status === 'booked') {
+              textClasses = "text-neutral-400 cursor-not-allowed";
             } else if (status === 'start' || status === 'end') {
               textClasses = "bg-neutral-900 text-white rounded-full font-semibold cursor-pointer";
             } else if (status === 'between') {
@@ -222,13 +228,14 @@ export function FullscreenCalendar({
               <button
                 key={index}
                 onClick={() => !dayInfo.isDisabled && handleDateClick(dayInfo.date)}
-                disabled={dayInfo.isDisabled || !dayInfo.isCurrentMonth}
+                disabled={dayInfo.isDisabled || !dayInfo.isCurrentMonth || status === 'booked'}
                 className={cn(cellClasses, textClasses)}
               >
                 <span className={cn(
-                  "w-10 h-10 flex items-center justify-center",
-                  (status === 'start' || status === 'end') && "bg-neutral-900 text-white rounded-full"
-                )}>{dayNumber}</span>
+                  "w-10 h-10 flex items-center justify-center relative overflow-hidden",
+                  (status === 'start' || status === 'end') && "bg-neutral-900 text-white rounded-full",
+                  status === 'booked' && "rounded-full bg-neutral-200 text-neutral-400"
+                )}>{dayNumber}{status === 'booked' && <span className="absolute inset-0 pointer-events-none before:absolute before:left-1 before:right-1 before:top-1/2 before:h-px before:-translate-y-1/2 before:rotate-[-35deg] before:bg-neutral-500" />}</span>
               </button>
             );
           })}
