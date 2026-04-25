@@ -31,3 +31,7 @@ binding = "IMAGES"
 # Workers AI Binding (free tier)
 [ai]
 binding = "AI"
+
+
+[triggers]
+crons = ["0 3 * * *"]
