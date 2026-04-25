@@ -38,7 +38,7 @@ export async function onRequestGet(context) {
     const token = authHeader.substring(7);
 
     // 验证 token
-    const decoded = await verifyJWT(token, env.JWT_SECRET || "stayneos-secret-key");
+    const decoded = await verifyJWT(token, env.JWT_SECRET);
     
     if (!decoded) {
       return new Response(

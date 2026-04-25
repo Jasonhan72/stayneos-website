@@ -129,27 +129,30 @@ export default function PropertyMap({
         // Create marker element
         const el = document.createElement('div');
         el.className = 'property-marker';
-        el.innerHTML = `
-          <div class="marker-content ${selectedPropertyId === property.id ? 'selected' : ''}"
-               style="
-                 background: ${selectedPropertyId === property.id ? '#003B5C' : '#C9A962'};
-                 color: white;
-                 padding: 6px 12px;
-                 border-radius: 0;
-                 font-weight: 600;
-                 font-size: 13px;
-                 box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-                 cursor: pointer;
-                 transition: all 0.2s;
-                 white-space: nowrap;
-                 border: 2px solid white;
-               "
-               onmouseover="this.style.transform='scale(1.05)';this.style.zIndex='10'"
-               onmouseout="this.style.transform='scale(1)';this.style.zIndex='1'"
-          >
-            From $${toMonthlyListingPrice(property.price, property.priceUnit).toLocaleString()}/mo
-          </div>
-        `;
+
+        const markerContent = document.createElement('div');
+        markerContent.className = `marker-content ${selectedPropertyId === property.id ? 'selected' : ''}`;
+        markerContent.style.background = selectedPropertyId === property.id ? '#003B5C' : '#C9A962';
+        markerContent.style.color = 'white';
+        markerContent.style.padding = '6px 12px';
+        markerContent.style.borderRadius = '0';
+        markerContent.style.fontWeight = '600';
+        markerContent.style.fontSize = '13px';
+        markerContent.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+        markerContent.style.cursor = 'pointer';
+        markerContent.style.transition = 'all 0.2s';
+        markerContent.style.whiteSpace = 'nowrap';
+        markerContent.style.border = '2px solid white';
+        markerContent.textContent = `From $${toMonthlyListingPrice(property.price, property.priceUnit).toLocaleString()}/mo`;
+        markerContent.addEventListener('mouseenter', () => {
+          markerContent.style.transform = 'scale(1.05)';
+          markerContent.style.zIndex = '10';
+        });
+        markerContent.addEventListener('mouseleave', () => {
+          markerContent.style.transform = 'scale(1)';
+          markerContent.style.zIndex = '1';
+        });
+        el.appendChild(markerContent);
 
         if (!map.current) return;
         

@@ -57,7 +57,7 @@ export async function onRequestGet(context) {
     }
 
     const token = authHeader.slice(7);
-    const decoded = await verifyJWT(token, env.JWT_SECRET || "stayneos-secret-key");
+    const decoded = await verifyJWT(token, env.JWT_SECRET);
     if (!decoded?.userId) {
       return new Response(JSON.stringify({ message: "会话无效" }), {
         status: 401,

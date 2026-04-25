@@ -91,9 +91,6 @@ export function RegisterForm() {
       // Store auth data - only on client
       if (data.token && isClient) {
         localStorage.setItem(TOKEN_KEY, data.token);
-        // Set client cookie so middleware sees it immediately
-        const secure = window.location.protocol === 'https:' ? '; Secure' : '';
-        document.cookie = `stayneos_auth_token=${encodeURIComponent(data.token)}; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Lax${secure}`;
       }
       if (data.user && isClient) {
         localStorage.setItem(USER_KEY, JSON.stringify(data.user));

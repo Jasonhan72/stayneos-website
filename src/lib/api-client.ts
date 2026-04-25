@@ -20,10 +20,10 @@ function getAuthToken(): string | null {
   // 从 localStorage 获取 token（客户端）
   if (typeof window !== 'undefined') {
     return (
-      localStorage.getItem('stayneos_auth_token') ||
       sessionStorage.getItem('stayneos_auth_token') ||
-      localStorage.getItem('auth_token') ||
-      sessionStorage.getItem('auth_token')
+      localStorage.getItem('stayneos_auth_token') ||
+      sessionStorage.getItem('auth_token') ||
+      localStorage.getItem('auth_token')
     );
   }
   return null;
@@ -36,8 +36,10 @@ export function setAuthToken(token: string, remember = false): void {
   if (typeof window !== 'undefined') {
     if (remember) {
       localStorage.setItem('auth_token', token);
+      localStorage.setItem('stayneos_auth_token', token);
     } else {
       sessionStorage.setItem('auth_token', token);
+      sessionStorage.setItem('stayneos_auth_token', token);
     }
   }
 }
@@ -49,6 +51,8 @@ export function clearAuthToken(): void {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('auth_token');
     sessionStorage.removeItem('auth_token');
+    localStorage.removeItem('stayneos_auth_token');
+    sessionStorage.removeItem('stayneos_auth_token');
   }
 }
 

@@ -73,7 +73,7 @@ export async function onRequestPost(context) {
     // 生成 JWT token
     const token = await generateJWT(
       { userId: user.id, email: user.email, role: user.role },
-      env.JWT_SECRET || "stayneos-secret-key"
+      env.JWT_SECRET
     );
 
     return new Response(

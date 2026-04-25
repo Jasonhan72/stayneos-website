@@ -111,13 +111,6 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
         if (isClient) localStorage.setItem(USER_KEY, JSON.stringify(data.user));
       }
 
-      // Fallback client cookie to avoid intermittent middleware race on some browsers/platforms
-      if (data.token) {
-        if (isClient) {
-          const secure = window.location.protocol === 'https:' ? '; Secure' : '';
-          document.cookie = `stayneos_auth_token=${encodeURIComponent(data.token)}; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Lax${secure}`;
-        }
-      }
 
       const nextUrl = getPostLoginUrl(data.user?.role);
       await ensureSessionReady();
