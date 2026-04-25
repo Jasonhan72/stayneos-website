@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { X, User, Home, Heart, KeyRound, Building2, Phone, ChevronRight, LayoutDashboard, Info } from "lucide-react";
+import { X, User, Home, Heart, KeyRound, Building2, Phone, ChevronRight, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/context/UserContext";
 import { useI18n } from "@/lib/i18n";
@@ -247,18 +247,6 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
               {/* Primary Menu Items */}
               <div className="space-y-0">
-                <Link
-                  href="/dashboard"
-                  onClick={onClose}
-                  className="flex items-center justify-between py-4 border-b border-neutral-100"
-                >
-                  <div className="flex items-center gap-4">
-                    <LayoutDashboard className="w-5 h-5 text-neutral-600" />
-                    <span className="text-neutral-800">{t("nav.dashboard")}</span>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-neutral-400" />
-                </Link>
-
                 <Link
                   href="/bookings"
                   onClick={onClose}

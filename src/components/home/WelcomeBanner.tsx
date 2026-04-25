@@ -71,15 +71,6 @@ export function WelcomeBanner({ className }: WelcomeBannerProps) {
 
           {/* Right Content - CTA */}
           <div className="flex flex-col sm:flex-row gap-3">
-            <Link href="/dashboard">
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="border-white/30 text-white hover:bg-white/10 hover:border-white/50"
-              >
-                {t("welcome.dashboard", "Dashboard")}
-              </Button>
-            </Link>
             <Link href="/properties">
               <Button 
                 variant="accent" 
