@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import AccountSidebar from "@/components/account/AccountSidebar";
+import AccountErrorBoundary from "@/components/account/AccountErrorBoundary";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +21,9 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
         </header>
         <div className="flex gap-10">
           <AccountSidebar />
-          <section className="min-w-0 flex-1">{children}</section>
+          <AccountErrorBoundary>
+            <section className="min-w-0 flex-1">{children}</section>
+          </AccountErrorBoundary>
         </div>
       </div>
     </main>

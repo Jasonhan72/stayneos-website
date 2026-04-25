@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode, useRef } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode, useRef, useMemo } from 'react';
 import { useToastHelpers } from '@/components/ui';
 
 // Types
@@ -66,48 +66,99 @@ const USER_KEY = "stayneos_user_data";
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
+function normalizeString(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  const trimmed = value.trim();
+  return trimmed || undefined;
+}
+
+function normalizeUserProfile(raw: unknown): UserProfile | null {
+  if (!raw || typeof raw !== 'object') return null;
+
+  const user = raw as Record<string, unknown>;
+  const id = normalizeString(user.id);
+  if (!id) return null;
+
+  const email = normalizeString(user.email) || '';
+  const fallbackName = normalizeString(user.name) || (email ? email.split('@')[0] : undefined) || 'User';
+  const nameParts = fallbackName.split(/\s+/).filter(Boolean);
+  const firstName = normalizeString(user.firstName) || nameParts[0] || '';
+  const lastName = normalizeString(user.lastName) || nameParts.slice(1).join(' ');
+  const deletionStatusRaw = normalizeString(user.deletionStatus);
+  const deletionStatus = deletionStatusRaw === 'pending_deletion' || deletionStatusRaw === 'deleted' || deletionStatusRaw === 'active'
+    ? deletionStatusRaw
+    : 'active';
+
+  const preferencesCandidate = user.preferences;
+  const preferences = preferencesCandidate && typeof preferencesCandidate === 'object'
+    ? {
+        language: (preferencesCandidate as Record<string, unknown>).language === 'fr' || (preferencesCandidate as Record<string, unknown>).language === 'zh' ? (preferencesCandidate as Record<string, unknown>).language as UserPreferences['language'] : 'en',
+        currency: ['CAD', 'USD', 'EUR', 'CNY'].includes(String((preferencesCandidate as Record<string, unknown>).currency || ''))
+          ? (preferencesCandidate as Record<string, unknown>).currency as UserPreferences['currency']
+          : defaultPreferences.currency,
+        notifications: {
+          email: typeof (preferencesCandidate as Record<string, unknown>).notifications === 'object' && typeof ((preferencesCandidate as Record<string, unknown>).notifications as Record<string, unknown>).email === 'boolean'
+            ? ((preferencesCandidate as Record<string, unknown>).notifications as Record<string, unknown>).email as boolean
+            : defaultPreferences.notifications.email,
+          sms: typeof (preferencesCandidate as Record<string, unknown>).notifications === 'object' && typeof ((preferencesCandidate as Record<string, unknown>).notifications as Record<string, unknown>).sms === 'boolean'
+            ? ((preferencesCandidate as Record<string, unknown>).notifications as Record<string, unknown>).sms as boolean
+            : defaultPreferences.notifications.sms,
+          marketing: typeof (preferencesCandidate as Record<string, unknown>).notifications === 'object' && typeof ((preferencesCandidate as Record<string, unknown>).notifications as Record<string, unknown>).marketing === 'boolean'
+            ? ((preferencesCandidate as Record<string, unknown>).notifications as Record<string, unknown>).marketing as boolean
+            : defaultPreferences.notifications.marketing,
+        },
+      }
+    : defaultPreferences;
+
+  return {
+    id,
+    firstName,
+    lastName,
+    name: [firstName, lastName].filter(Boolean).join(' ').trim() || fallbackName,
+    email,
+    image: normalizeString(user.image) || normalizeString(user.avatar),
+    avatar: normalizeString(user.avatar) || normalizeString(user.image),
+    phone: normalizeString(user.phone),
+    address: normalizeString(user.address),
+    preferences,
+    memberSince: normalizeString(user.memberSince) || new Date().toISOString().split('T')[0],
+    memberLevel: normalizeString(user.memberLevel) || 'Standard',
+    role: normalizeString(user.role) || 'GUEST',
+    deletionStatus,
+    deletionRequestedAt: normalizeString(user.deletionRequestedAt),
+    deletionScheduledAt: normalizeString(user.deletionScheduledAt),
+  };
+}
+
 function toUserProfile(user: {
-  id: string;
+  id?: string | null;
   name?: string | null;
   firstName?: string | null;
   lastName?: string | null;
-  email: string;
+  email?: string | null;
   role?: string | null;
   avatar?: string | null;
+  image?: string | null;
   phone?: string | null;
   address?: string | null;
   deletionStatus?: string | null;
   deletionRequestedAt?: string | null;
   deletionScheduledAt?: string | null;
+  memberSince?: string | null;
+  memberLevel?: string | null;
+  preferences?: Partial<UserPreferences> | null;
 }): UserProfile {
-  const name = (user.name || user.email?.split('@')[0] || 'User').trim();
-  const parts = name.split(/\s+/).filter(Boolean);
-  const firstName = user.firstName?.trim() || parts[0] || '';
-  const lastName = user.lastName?.trim() || parts.slice(1).join(' ');
-
-  return {
-    id: user.id,
-    firstName,
-    lastName,
-    name: [firstName, lastName].filter(Boolean).join(' ').trim() || name,
-    email: user.email,
-    image: user.avatar || undefined,
-    avatar: user.avatar || undefined,
-    phone: user.phone || undefined,
-    address: user.address || undefined,
-    preferences: defaultPreferences,
-    memberSince: new Date().toISOString().split('T')[0],
-    memberLevel: 'Standard',
-    role: user.role || 'GUEST',
-    deletionStatus: (user.deletionStatus as UserProfile['deletionStatus']) || 'active',
-    deletionRequestedAt: user.deletionRequestedAt || undefined,
-    deletionScheduledAt: user.deletionScheduledAt || undefined,
-  };
+  const profile = normalizeUserProfile(user);
+  if (!profile) {
+    throw new Error('Invalid user payload');
+  }
+  return profile;
 }
 
 
 export function UserProvider({ children }: { children: ReactNode }) {
   const toast = useToastHelpers();
+  const { warning: showWarningToast } = toast;
   const pendingDeletionNoticeShownRef = useRef<string | null>(null);
   // Always start with null to match SSR
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -121,12 +172,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
       try {
         const storedUser = localStorage.getItem(USER_KEY);
         if (storedUser) {
-          const parsedUser = JSON.parse(storedUser);
-          if (!parsedUser.preferences) {
-            parsedUser.preferences = defaultPreferences;
+          const parsedUser = normalizeUserProfile(JSON.parse(storedUser));
+          if (parsedUser) {
+            setUser(parsedUser);
+            localStorage.setItem(USER_KEY, JSON.stringify(parsedUser));
+            return;
           }
-          setUser(parsedUser);
-          return;
+          localStorage.removeItem(USER_KEY);
         }
 
         // OAuth flow uses HttpOnly cookie, so bootstrap user from server session API
@@ -169,12 +221,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const daysRemaining = Math.max(0, Math.ceil((deletionDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
 
     pendingDeletionNoticeShownRef.current = noticeKey;
-    toast.warning(
+    showWarningToast(
       '账号正在删除流程中',
       `账号将在 ${daysRemaining} 天后永久删除。前往 Account > Delete account 可恢复账号。`,
       8000,
     );
-  }, [toast, user]);
+  }, [showWarningToast, user]);
 
   // Listen for storage changes (for login/logout across tabs)
   useEffect(() => {
@@ -182,8 +234,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       if (e.key === USER_KEY) {
         if (e.newValue) {
           try {
-            const parsedUser = JSON.parse(e.newValue);
-            setUser(parsedUser);
+            setUser(normalizeUserProfile(JSON.parse(e.newValue)));
           } catch {
             setUser(null);
           }
@@ -197,8 +248,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       const storedUser = localStorage.getItem(USER_KEY);
       if (storedUser) {
         try {
-          const parsedUser = JSON.parse(storedUser);
-          setUser(parsedUser);
+          setUser(normalizeUserProfile(JSON.parse(storedUser)));
         } catch {
           setUser(null);
         }
@@ -335,7 +385,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       if (process.env.NODE_ENV !== 'production') console.error('Error refreshing user:', error);
     }
-  }, [logout]);
+  }, [logout, user?.memberLevel, user?.memberSince, user?.preferences]);
 
   // Validate active session periodically
   useEffect(() => {
@@ -346,7 +396,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     return () => clearInterval(interval);
   }, [refreshUser]);
 
-  const value: UserContextType = {
+  const value: UserContextType = useMemo(() => ({
     user,
     isLoading,
     isAuthenticated: !!user,
@@ -355,7 +405,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     updateAvatar,
     logout,
     refreshUser,
-  };
+  }), [user, isLoading, updateProfile, updatePreferences, updateAvatar, logout, refreshUser]);
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
