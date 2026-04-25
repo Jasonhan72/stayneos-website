@@ -50,6 +50,9 @@ export async function GET(request: NextRequest) {
         avatar: user.avatar,
         phone: (user as typeof user & { phone?: string | null }).phone ?? null,
         address: (user as typeof user & { address?: string | null }).address ?? null,
+        deletionRequestedAt: (user as typeof user & { deletionRequestedAt?: string | null }).deletionRequestedAt ?? null,
+        deletionScheduledAt: (user as typeof user & { deletionScheduledAt?: string | null }).deletionScheduledAt ?? null,
+        deletionStatus: (user as typeof user & { deletionStatus?: string | null }).deletionStatus ?? 'active',
       }
     }, { status: 200 });
   } catch {

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode, useRef } from 'react';
+import { useToastHelpers } from '@/components/ui';
 
 // Types
 export interface UserProfile {
@@ -24,6 +25,9 @@ export interface UserProfile {
   memberSince: string;
   memberLevel: string;
   role: string;
+  deletionStatus?: 'active' | 'pending_deletion' | 'deleted';
+  deletionRequestedAt?: string;
+  deletionScheduledAt?: string;
 }
 
 export interface UserPreferences {
@@ -72,6 +76,9 @@ function toUserProfile(user: {
   avatar?: string | null;
   phone?: string | null;
   address?: string | null;
+  deletionStatus?: string | null;
+  deletionRequestedAt?: string | null;
+  deletionScheduledAt?: string | null;
 }): UserProfile {
   const name = (user.name || user.email?.split('@')[0] || 'User').trim();
   const parts = name.split(/\s+/).filter(Boolean);
@@ -92,11 +99,16 @@ function toUserProfile(user: {
     memberSince: new Date().toISOString().split('T')[0],
     memberLevel: 'Standard',
     role: user.role || 'GUEST',
+    deletionStatus: (user.deletionStatus as UserProfile['deletionStatus']) || 'active',
+    deletionRequestedAt: user.deletionRequestedAt || undefined,
+    deletionScheduledAt: user.deletionScheduledAt || undefined,
   };
 }
 
 
 export function UserProvider({ children }: { children: ReactNode }) {
+  const toast = useToastHelpers();
+  const pendingDeletionNoticeShownRef = useRef<string | null>(null);
   // Always start with null to match SSR
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -141,6 +153,28 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
     loadUserFromStorage();
   }, []);
+
+  useEffect(() => {
+    if (!user || user.deletionStatus !== 'pending_deletion' || !user.deletionScheduledAt) {
+      pendingDeletionNoticeShownRef.current = null;
+      return;
+    }
+
+    const noticeKey = `${user.id}:${user.deletionScheduledAt}`;
+    if (pendingDeletionNoticeShownRef.current === noticeKey) {
+      return;
+    }
+
+    const deletionDate = new Date(user.deletionScheduledAt);
+    const daysRemaining = Math.max(0, Math.ceil((deletionDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
+
+    pendingDeletionNoticeShownRef.current = noticeKey;
+    toast.warning(
+      '账号正在删除流程中',
+      `账号将在 ${daysRemaining} 天后永久删除。前往 Account > Delete account 可恢复账号。`,
+      8000,
+    );
+  }, [toast, user]);
 
   // Listen for storage changes (for login/logout across tabs)
   useEffect(() => {
@@ -287,6 +321,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
         const data = await response.json();
         if (data?.user) {
           const profile = toUserProfile(data.user);
+          if (user?.preferences) {
+            profile.preferences = user.preferences;
+            profile.memberSince = user.memberSince;
+            profile.memberLevel = user.memberLevel;
+          }
           setUser(profile);
           localStorage.setItem(USER_KEY, JSON.stringify(profile));
         }

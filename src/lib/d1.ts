@@ -8,9 +8,14 @@ export interface User {
   emailVerified: string | null;
   name: string | null;
   phone: string | null;
+  address?: string | null;
   avatar: string | null;
   password: string | null;
   role: 'GUEST' | 'HOST' | 'ADMIN' | 'SUPER_ADMIN';
+  stripeCustomerId?: string | null;
+  deletionRequestedAt?: string | null;
+  deletionScheduledAt?: string | null;
+  deletionStatus?: 'active' | 'pending_deletion' | 'deleted' | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -132,6 +137,11 @@ export const userDb = {
         role: (data.role || 'GUEST') as User['role'],
         emailVerified: null,
         phone: null,
+        address: null,
+        stripeCustomerId: null,
+        deletionRequestedAt: null,
+        deletionScheduledAt: null,
+        deletionStatus: 'active',
         createdAt: now,
         updatedAt: now,
       };
@@ -151,7 +161,12 @@ export const userDb = {
     if (data.avatar !== undefined) { sets.push('avatar = ?'); values.push(data.avatar); }
     if (data.role !== undefined) { sets.push('role = ?'); values.push(data.role); }
     if (data.phone !== undefined) { sets.push('phone = ?'); values.push(data.phone); }
+    if (data.address !== undefined) { sets.push('address = ?'); values.push(data.address); }
     if (data.emailVerified !== undefined) { sets.push('emailVerified = ?'); values.push(data.emailVerified); }
+    if (data.stripeCustomerId !== undefined) { sets.push('stripeCustomerId = ?'); values.push(data.stripeCustomerId); }
+    if (data.deletionRequestedAt !== undefined) { sets.push('deletionRequestedAt = ?'); values.push(data.deletionRequestedAt); }
+    if (data.deletionScheduledAt !== undefined) { sets.push('deletionScheduledAt = ?'); values.push(data.deletionScheduledAt); }
+    if (data.deletionStatus !== undefined) { sets.push('deletionStatus = ?'); values.push(data.deletionStatus); }
     
     if (sets.length === 0) return;
     

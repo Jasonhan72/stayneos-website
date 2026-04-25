@@ -53,6 +53,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "该账号未设置密码，请使用其他方式登录" }, { status: 401 });
     }
 
+    const deletionStatus = (user as typeof user & { deletionStatus?: string | null }).deletionStatus ?? 'active';
+    const deletionRequestedAt = (user as typeof user & { deletionRequestedAt?: string | null }).deletionRequestedAt ?? null;
+    const deletionScheduledAt = (user as typeof user & { deletionScheduledAt?: string | null }).deletionScheduledAt ?? null;
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return NextResponse.json({ message: "邮箱或密码错误" }, { status: 401 });
@@ -70,8 +74,24 @@ export async function POST(request: Request) {
 
     const response = NextResponse.json(
       {
-        message: "登录成功",
-        user: { id: user.id, name: user.name, email: user.email, role: user.role },
+        message: deletionStatus === 'pending_deletion' ? '账号处于删除冷静期，已为你恢复登录。' : '登录成功',
+        pendingDeletionNotice: deletionStatus === 'pending_deletion'
+          ? {
+              status: deletionStatus,
+              deletionRequestedAt,
+              deletionScheduledAt,
+              recoverable: true,
+            }
+          : null,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          deletionStatus,
+          deletionRequestedAt,
+          deletionScheduledAt,
+        },
       },
       { status: 200 }
     );

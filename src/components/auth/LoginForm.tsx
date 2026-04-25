@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useToastHelpers } from '@/components/ui/Toast';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
@@ -21,6 +22,7 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const toast = useToastHelpers();
   
   useEffect(() => {
     setIsClient(true);
@@ -111,6 +113,16 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
         if (isClient) localStorage.setItem(USER_KEY, JSON.stringify(data.user));
       }
 
+      if (data.pendingDeletionNotice?.deletionScheduledAt) {
+        const msRemaining = new Date(data.pendingDeletionNotice.deletionScheduledAt).getTime() - Date.now();
+        const daysRemaining = Math.max(1, Math.ceil(msRemaining / (1000 * 60 * 60 * 24)));
+
+        toast.warning(
+          'Pending account deletion',
+          `Your account is scheduled for deletion in ${daysRemaining} day${daysRemaining === 1 ? '' : 's'}. Use Account Settings → Delete account to restore it.`,
+          12000,
+        );
+      }
 
       const nextUrl = getPostLoginUrl(data.user?.role);
       await ensureSessionReady();
