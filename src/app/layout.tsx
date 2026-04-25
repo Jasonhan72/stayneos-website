@@ -164,8 +164,8 @@ export default async function RootLayout({
         ></script>
       </head>
       <body className="font-sans antialiased">
-        <UserProvider>
-          <ToastProvider>
+        <ToastProvider>
+          <UserProvider>
           <WishlistProvider>
           <I18nProvider initialLocale={locale}>
             <a
@@ -180,8 +180,8 @@ export default async function RootLayout({
             <CustomerChat />
           </I18nProvider>
           </WishlistProvider>
-          </ToastProvider>
-        </UserProvider>
+          </UserProvider>
+        </ToastProvider>
       </body>
     </html>
   );
