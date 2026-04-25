@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { signToken } from "@/lib/auth/jwt";
 import { userDb, getDb } from "@/lib/d1";
+import { detectDevice, getIpFromRequest } from "@/lib/account-settings";
+import { hashSessionToken } from "@/lib/account-auth";
 import { AUTH_COOKIE_NAME, getAuthCookieOptions } from "@/lib/auth/cookie";
 import { getPublicBaseUrl } from '@/lib/config/env';
 import { checkRateLimit } from '@/lib/security/rate-limit';
@@ -63,6 +65,24 @@ export async function POST(request: Request) {
     }
 
     const token = await signToken({ userId: user.id, email: user.email, role: user.role });
+
+    if (!useDevStore) {
+      const now = new Date().toISOString();
+      await db!.prepare(`
+        INSERT INTO user_sessions (id, user_id, token_hash, device, ip, user_agent, location, last_active_at, created_at, revoked_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)
+      `).bind(
+        crypto.randomUUID(),
+        user.id,
+        hashSessionToken(token),
+        detectDevice(request.headers.get('user-agent')),
+        getIpFromRequest(request.headers),
+        request.headers.get('user-agent'),
+        request.headers.get('cf-ipcountry') || null,
+        now,
+        now,
+      ).run();
+    }
 
     const isFormSubmit = contentType.includes("application/x-www-form-urlencoded");
     if (isFormSubmit) {

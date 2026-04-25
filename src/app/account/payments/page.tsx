@@ -1,20 +1,23 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/context/UserContext";
-import { CreditCard, Plus, ExternalLink, Trash2 } from "lucide-react";
+import { CreditCard, Plus, ExternalLink, Trash2, FileText } from "lucide-react";
 import { useToastHelpers } from "@/components/ui/Toast";
 import StripeProvider from "@/components/payment/StripeProvider";
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 
 type PaymentMethod = { id: string; brand: string; last4: string; expMonth: number | null; expYear: number | null; isDefault: boolean; };
+type Invoice = { id: string; amount: number; currency: string; status: string; issuedAt: string; paidAt: string | null; pdfUrl: string | null; bookingId: string | null; };
 
 export default function PaymentsPage() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const { locale } = useI18n();
   const toast = useToastHelpers();
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [pageLoading, setPageLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -25,13 +28,19 @@ export default function PaymentsPage() {
   const fetchPayments = useCallback(async () => {
     setPageLoading(true);
     try {
-      const response = await fetch('/api/account/payments', { credentials: 'include', cache: 'no-store' });
-      const payload = await response.json();
-      if (!response.ok) throw new Error(payload?.error || 'Failed to load payment methods');
-      setPaymentMethods(payload.paymentMethods || []);
-      setStripeReady(Boolean(payload.stripeReady));
+      const [paymentsResponse, billingResponse] = await Promise.all([
+        fetch('/api/account/payments', { credentials: 'include', cache: 'no-store' }),
+        fetch('/api/account/billing', { credentials: 'include', cache: 'no-store' }),
+      ]);
+      const paymentsPayload = await paymentsResponse.json();
+      const billingPayload = await billingResponse.json();
+      if (!paymentsResponse.ok) throw new Error(paymentsPayload?.error || 'Failed to load payment methods');
+      if (!billingResponse.ok) throw new Error(billingPayload?.error || 'Failed to load billing history');
+      setPaymentMethods(paymentsPayload.paymentMethods || []);
+      setStripeReady(Boolean(paymentsPayload.stripeReady));
+      setInvoices(billingPayload.invoices || []);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to load payment methods');
+      toast.error(error instanceof Error ? error.message : 'Failed to load payment settings');
     } finally {
       setPageLoading(false);
     }
@@ -108,7 +117,10 @@ export default function PaymentsPage() {
         </StripeProvider>
       )}
 
-      <div className="rounded-2xl border border-neutral-200 p-5"><div className="flex items-center gap-3 mb-2"><ExternalLink className="w-5 h-5 text-neutral-600" /><h3 className="text-sm font-semibold text-neutral-900">{L("账单与发票", "Billing & invoices", "Facturation")}</h3></div><p className="text-sm text-neutral-500 mb-4">{L("查看交易记录和下载发票。", "View transaction history and download invoices.", "Consultez l'historique et téléchargez les factures.")}</p><button className="rounded-lg border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-900 hover:bg-neutral-50 transition-colors">{L("查看账单", "View billing", "Voir la facturation")}</button></div>
+      <div className="rounded-2xl border border-neutral-200 p-5">
+        <div className="flex items-center gap-3 mb-2"><FileText className="w-5 h-5 text-neutral-600" /><h3 className="text-sm font-semibold text-neutral-900">{L("账单历史", "Billing history", "Historique de facturation")}</h3></div>
+        {invoices.length > 0 ? <div className="divide-y divide-neutral-100">{invoices.map((invoice) => <div key={invoice.id} className="py-4 flex items-center justify-between gap-4"><div><div className="text-sm font-medium text-neutral-900">{invoice.currency} {invoice.amount.toFixed(2)}</div><div className="mt-1 text-xs text-neutral-500">{new Date(invoice.issuedAt).toLocaleDateString()} · {invoice.status}{invoice.bookingId ? ` · Booking ${invoice.bookingId}` : ''}</div></div><div className="flex items-center gap-3">{invoice.pdfUrl ? <a href={invoice.pdfUrl} target="_blank" rel="noreferrer" className="text-xs text-neutral-500 underline underline-offset-2 hover:text-neutral-900">{L('下载 PDF', 'Download PDF', 'Télécharger le PDF')}</a> : null}<Link href={`/account/billing/${invoice.id}`} className="inline-flex items-center gap-1 text-xs text-neutral-500 underline underline-offset-2 hover:text-neutral-900"><ExternalLink className="w-3.5 h-3.5" />{L('查看详情', 'View details', 'Voir les détails')}</Link></div></div>)}</div> : <div><p className="text-sm font-medium text-neutral-900">{L('暂无发票', 'No invoices yet', 'Aucune facture pour le moment')}</p><p className="mt-1 text-sm text-neutral-500">No invoices yet. Invoices will appear here after your first booking.</p></div>}
+      </div>
     </div>
   );
 }
