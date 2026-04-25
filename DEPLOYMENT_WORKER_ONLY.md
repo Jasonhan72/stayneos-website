@@ -5,9 +5,9 @@
 - 不再使用 `functions/api/*`（Cloudflare Pages Functions）
 
 ## 当前状态
-- `functions/` 已迁移为 `functions_legacy/`，避免被误当成生产 API 入口
-- `wrangler.toml` 使用 `main = ".open-next/worker.js"`，API 由 OpenNext Worker 统一处理
-- `npm run deploy:pages` 已禁用（会直接失败并提示使用 Worker 部署）
+- `functions/` 目录已删除（2026-04-24 收尾）。所有 API 由 App Router + OpenNext Worker 统一处理。
+- `wrangler.toml` 使用 `main = ".open-next/worker.js"`。
+- `npm run deploy:pages` 已停止使用。
 
 ## 构建与部署
 1. 构建 Worker 包：
@@ -19,8 +19,6 @@
    npm run deploy
    ```
 
-## 说明（临时兼容策略）
-- 当前 `build:worker` 使用：
-  `opennextjs-cloudflare build --dangerouslyUseUnsupportedNextVersion`
-- 原因：项目 Next.js 版本 `14.2.35` 已超官方支持窗口。
-- 后续建议：升级到受支持 Next.js 主版本后移除该参数。
+## 历史背景
+- 早期同时存在 Pages Functions (`functions/api/*`) 与 App Router (`src/app/api/*`)，存在鉴权逻辑漂移风险。已统一到 App Router。
+- 早期 Next.js 14.2.35 需要 `--dangerouslyUseUnsupportedNextVersion` 才能 build。已升级到 Next 15.5.10，`build:worker` 直接通过，不再需要 flag。
