@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
-import { Globe, Moon, DollarSign, Layout, MessageSquare, Ruler, Thermometer, Sparkles } from "lucide-react";
+import { Globe, Moon, DollarSign, Layout, MessageSquare, Ruler, Sparkles } from "lucide-react";
 import { useAuth } from "@/lib/context/UserContext";
 import { useToastHelpers } from "@/components/ui/Toast";
 
