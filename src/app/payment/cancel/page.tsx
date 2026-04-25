@@ -33,7 +33,7 @@ export default function PaymentCancelPage() {
         </div>
 
         <div className="space-y-3">
-          <Link href="/dashboard/bookings">
+          <Link href="/bookings">
             <Button size="lg" className="w-full">
               {t('payment.cancel.viewBookings')}
             </Button>

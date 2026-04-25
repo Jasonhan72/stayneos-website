@@ -19,7 +19,7 @@ function PaymentSuccessContent() {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
       return () => clearTimeout(timer);
     } else {
-      router.push('/dashboard/bookings');
+      router.push('/bookings');
     }
   }, [countdown, router]);
 
@@ -57,7 +57,7 @@ function PaymentSuccessContent() {
         </div>
 
         <div className="space-y-3">
-          <Link href="/dashboard/bookings">
+          <Link href="/bookings">
             <Button size="lg" className="w-full">
               {t('payment.success.viewBookings')}
               <ArrowRight size={18} className="ml-2" />

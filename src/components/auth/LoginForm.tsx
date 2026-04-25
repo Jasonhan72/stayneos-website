@@ -61,7 +61,7 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
   const getPostLoginUrl = (role?: string) => {
     if (callbackUrl && callbackUrl !== '/') return sanitizeCallbackUrl(callbackUrl);
     if (isHost(role)) return '/host';
-    return '/dashboard/bookings';
+    return '/bookings';
   };
 
   const ensureSessionReady = async () => {

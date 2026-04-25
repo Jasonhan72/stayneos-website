@@ -216,7 +216,7 @@ export default function BookingDetailClient() {
               <AlertCircle size={48} className="text-red-500 mx-auto mb-4" />
               <h2 className="text-xl font-bold text-gray-900 mb-2">{t('bookingDetail.error.title')}</h2>
               <p className="text-gray-600 mb-6">{error || t('bookingDetail.error.notFound')}</p>
-              <Link href="/dashboard/bookings">
+              <Link href="/bookings">
                 <Button>{t('bookingDetail.backToList')}</Button>
               </Link>
             </div>
@@ -238,7 +238,7 @@ export default function BookingDetailClient() {
         <div className="container mx-auto px-4 max-w-4xl">
           {/* 返回链接 */}
           <Link 
-            href="/dashboard/bookings"
+            href="/bookings"
             className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6"
           >
             <ChevronLeft size={20} />

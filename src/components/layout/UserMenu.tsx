@@ -142,13 +142,13 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
     },
     {
       label: L("我的行程", "Trips", "Voyages"),
-      href: "/dashboard/bookings",
+      href: "/bookings",
       icon: Luggage,
       bold: true,
     },
     {
       label: L("收藏", "Wishlists", "Favoris"),
-      href: "/dashboard/wishlists",
+      href: "/wishlists",
       icon: Heart,
       bold: true,
     },
