@@ -48,7 +48,7 @@ export default function PrivacyPage() {
         "Permanently delete your NEOS account and associated data. This cannot be undone.",
         "Supprimez définitivement votre compte NEOS. Cette action est irréversible."
       ),
-      href: "#",
+      href: "/account/delete-account",
     },
   ];
 
