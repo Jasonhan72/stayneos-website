@@ -8,11 +8,12 @@ export function generateStaticParams() {
   }));
 }
 
-function PaymentPageContent({ params }: { params: { propertyId: string } }) {
-  return <PaymentClient propertyId={params.propertyId} />;
+async function PaymentPageContent({ params }: { params: Promise<{ propertyId: string }> }) {
+  const { propertyId } = await params;
+  return <PaymentClient propertyId={propertyId} />;
 }
 
-export default function PaymentPage({ params }: { params: { propertyId: string } }) {
+export default function PaymentPage({ params }: { params: Promise<{ propertyId: string }> }) {
   return (
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
       <PaymentPageContent params={params} />

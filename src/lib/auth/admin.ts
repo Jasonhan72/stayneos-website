@@ -17,7 +17,7 @@ export interface AdminPayload {
  */
 export async function verifyAdmin(): Promise<AdminPayload | null> {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const token = cookieStore.get('stayneos_auth_token')?.value || 
                   cookieStore.get('auth-token')?.value;
     
@@ -69,7 +69,7 @@ export async function requireAdmin(): Promise<{
  */
 export async function getCurrentUser(): Promise<AdminPayload | null> {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const token = cookieStore.get('stayneos_auth_token')?.value || 
                   cookieStore.get('auth-token')?.value;
     

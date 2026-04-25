@@ -6,7 +6,7 @@ import { reviewDb } from "@/lib/review-db";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const currentUser = await getCurrentUserFromRequest(request);
@@ -21,7 +21,8 @@ export async function GET(
       return NextResponse.json({ error: "用户不存在" }, { status: 404 });
     }
 
-    const booking = await bookingDb.findById(db, params.id);
+    const { id } = await params;
+    const booking = await bookingDb.findById(db, id);
     if (!booking || booking.userId !== user.id) {
       return NextResponse.json({ error: "预订不存在" }, { status: 404 });
     }
@@ -36,7 +37,7 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const currentUser = await getCurrentUserFromRequest(request);
@@ -51,7 +52,8 @@ export async function POST(
       return NextResponse.json({ error: "用户不存在" }, { status: 404 });
     }
 
-    const booking = await bookingDb.findById(db, params.id);
+    const { id } = await params;
+    const booking = await bookingDb.findById(db, id);
     if (!booking || booking.userId !== user.id) {
       return NextResponse.json({ error: "预订不存在" }, { status: 404 });
     }

@@ -24,12 +24,12 @@ async function getAuthorizedUser(request: NextRequest) {
   return user ? { db, user } : null;
 }
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const auth = await getAuthorizedUser(request);
     if (!auth) return apiError('请先登录', 401, 'UNAUTHORIZED');
 
-    const booking = await bookingDb.findById(auth.db, params.id);
+    const booking = await bookingDb.findById(auth.db, (await params).id);
     if (!booking || booking.userId !== auth.user.id) return apiError('预订不存在', 404, 'BOOKING_NOT_FOUND');
 
     const property = getPropertySnapshot(booking.propertyId);
@@ -42,12 +42,12 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const auth = await getAuthorizedUser(request);
     if (!auth) return apiError('请先登录', 401, 'UNAUTHORIZED');
 
-    const booking = await bookingDb.findById(auth.db, params.id);
+    const booking = await bookingDb.findById(auth.db, (await params).id);
     if (!booking || booking.userId !== auth.user.id) return apiError('预订不存在', 404, 'BOOKING_NOT_FOUND');
 
     const body = (await request.json().catch(() => ({}))) as {
@@ -74,8 +74,8 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       return apiError('无可更新字段', 400, 'NO_UPDATE_FIELDS');
     }
 
-    await bookingDb.update(auth.db, params.id, updatePayload);
-    const updatedBooking = await bookingDb.findById(auth.db, params.id);
+    await bookingDb.update(auth.db, (await params).id, updatePayload);
+    const updatedBooking = await bookingDb.findById(auth.db, (await params).id);
 
     return apiSuccess({ booking: updatedBooking, message: '预订更新成功' });
   } catch {
@@ -83,12 +83,12 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const auth = await getAuthorizedUser(request);
     if (!auth) return apiError('请先登录', 401, 'UNAUTHORIZED');
 
-    const booking = await bookingDb.findById(auth.db, params.id);
+    const booking = await bookingDb.findById(auth.db, (await params).id);
     if (!booking || booking.userId !== auth.user.id) return apiError('预订不存在', 404, 'BOOKING_NOT_FOUND');
     if (booking.status === 'CANCELLED') return apiError('预订已取消', 400, 'ALREADY_CANCELLED');
     if (booking.status === 'CHECKED_IN' || booking.status === 'CHECKED_OUT') {
@@ -122,14 +122,14 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       message = '预订已取消，退款已发起';
     }
 
-    await bookingDb.update(auth.db, params.id, {
+    await bookingDb.update(auth.db, (await params).id, {
       status: 'CANCELLED',
       paymentStatus,
       cancelledAt,
       cancelReason: body.reason || null,
     });
 
-    const updatedBooking = await bookingDb.findById(auth.db, params.id);
+    const updatedBooking = await bookingDb.findById(auth.db, (await params).id);
     return apiSuccess({ booking: updatedBooking, message });
   } catch {
     return apiError('取消预订失败', 500, 'INTERNAL_ERROR');

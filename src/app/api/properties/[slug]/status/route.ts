@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getPropertyDb } from '@/lib/property-db';
 import { verifyRequestAuth } from '@/lib/auth/admin-api';
 
-export async function PATCH(request: Request, { params }: { params: { slug: string } }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
     // Require authenticated user (HOST, ADMIN, or SUPER_ADMIN)
     const user = await verifyRequestAuth(request);
@@ -24,9 +24,10 @@ export async function PATCH(request: Request, { params }: { params: { slug: stri
     const db = getPropertyDb();
 
     // Check property exists
+    const { slug } = await params;
     const existing = await db
       .prepare('SELECT id, status FROM Property WHERE slug = ? OR id = ?')
-      .bind(params.slug, params.slug)
+      .bind(slug, slug)
       .first();
 
     if (!existing) {
@@ -36,7 +37,7 @@ export async function PATCH(request: Request, { params }: { params: { slug: stri
     // Update status
     await db
       .prepare('UPDATE Property SET status = ?, updatedAt = ? WHERE slug = ? OR id = ?')
-      .bind(status, new Date().toISOString(), params.slug, params.slug)
+      .bind(status, new Date().toISOString(), slug, slug)
       .run();
 
     return NextResponse.json({

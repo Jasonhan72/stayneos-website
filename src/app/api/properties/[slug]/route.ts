@@ -85,19 +85,20 @@ async function getBookedRanges(propertyIdOrSlug: string): Promise<BookedRange[]>
   }
 }
 
-export async function GET(_request: Request, { params }: { params: { slug: string } }) {
-  const bookedRanges = await getBookedRanges(params.slug);
+export async function GET(_request: Request, { params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const bookedRanges = await getBookedRanges(slug);
 
   try {
     const db = getPropertyDb();
-    const row = await db.prepare("SELECT * FROM Property WHERE (slug=? OR id=?) AND status='PUBLISHED'").bind(params.slug, params.slug).first();
+    const row = await db.prepare("SELECT * FROM Property WHERE (slug=? OR id=?) AND status='PUBLISHED'").bind(slug, slug).first();
     if (row) return NextResponse.json({ property: toPublicProperty(row as never), bookedRanges });
   } catch {
     // D1 not available, fall through
   }
   
   // Fallback to mock data
-  const mock = getPropertyById(params.slug);
+  const mock = getPropertyById(slug);
   if (mock) {
     return NextResponse.json({ property: {
       id: mock.id,

@@ -7,7 +7,7 @@ import { getPropertyById } from '@/lib/data';
 import type { PropertyCardData } from '@/types';
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 async function getProperty(idOrSlug: string): Promise<PropertyCardData | null> {
@@ -32,7 +32,8 @@ async function getProperty(idOrSlug: string): Promise<PropertyCardData | null> {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const property = await getProperty(params.id);
+  const { id } = await params;
+  const property = await getProperty(id);
   if (!property) return { title: 'Property Not Found | NEOS' };
 
   return {
@@ -42,7 +43,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function PropertyDetailPage({ params }: PageProps) {
-  const property = await getProperty(params.id);
+  const { id } = await params;
+  const property = await getProperty(id);
   if (!property) notFound();
-  return <PropertyDetailClient propertyId={params.id} initialProperty={property} />;
+  return <PropertyDetailClient propertyId={id} initialProperty={property} />;
 }

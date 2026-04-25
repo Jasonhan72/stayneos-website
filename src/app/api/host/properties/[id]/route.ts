@@ -5,7 +5,7 @@ import { normalizePropertyInput, toPropertyFormState, slugify } from '@/lib/admi
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const user = await verifyRequestAuth(request);
     if (!user) {
@@ -13,9 +13,10 @@ export async function GET(request: Request, { params }: { params: { id: string }
     }
 
     const db = getDb();
+    const { id } = await params;
     const property = await db
       .prepare('SELECT * FROM Property WHERE id = ?')
-      .bind(params.id)
+      .bind(id)
       .first();
 
     if (!property) {
@@ -28,7 +29,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const user = await verifyRequestAuth(request);
     if (!user) {
@@ -36,7 +37,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     }
 
     const db = getDb();
-    const existing = await db.prepare('SELECT * FROM Property WHERE id = ?').bind(params.id).first<Record<string, unknown>>();
+    const { id } = await params;
+    const existing = await db.prepare('SELECT * FROM Property WHERE id = ?').bind(id).first<Record<string, unknown>>();
     if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
     const incoming = await request.json() as Record<string, unknown>;
@@ -69,7 +71,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       body.nearestSubway, body.subwayWalkMinutes, JSON.stringify(body.nearbyLandmarks),
       body.minStayDays, body.checkInTime, body.checkOutTime, body.selfCheckIn ? 1 : 0,
       JSON.stringify(body.images), body.heroImage, JSON.stringify(body.idealFor),
-      body.metaTitle, body.metaDescription, params.id
+      body.metaTitle, body.metaDescription, id
     ).run();
 
     return NextResponse.json({ success: true });

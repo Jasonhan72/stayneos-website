@@ -8,12 +8,13 @@ export const metadata: Metadata = {
   description: 'Log in to your NEOS account to manage bookings and access premium furnished apartments.',
 };
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
-  searchParams?: { callbackUrl?: string; callback?: string; redirect?: string };
+  searchParams?: Promise<{ callbackUrl?: string; callback?: string; redirect?: string }>;
 }) {
-  const callbackUrl = searchParams?.redirect || searchParams?.callbackUrl || searchParams?.callback || '/dashboard';
+  const resolvedSearchParams = await searchParams;
+  const callbackUrl = resolvedSearchParams?.redirect || resolvedSearchParams?.callbackUrl || resolvedSearchParams?.callback || '/dashboard';
 
   return (
     <div className="min-h-screen flex">

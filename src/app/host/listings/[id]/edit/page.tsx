@@ -2,6 +2,7 @@ import { HostPropertyFormClient } from "@/components/host/listings/HostPropertyF
 
 export const dynamic = "force-dynamic";
 
-export default function HostEditPropertyPage({ params }: { params: { id: string } }) {
-  return <HostPropertyFormClient propertyId={params.id} />;
+export default async function HostEditPropertyPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return <HostPropertyFormClient propertyId={id} />;
 }

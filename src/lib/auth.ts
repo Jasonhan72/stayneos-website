@@ -75,8 +75,8 @@ export async function verifyToken(token: string): Promise<AuthPayload | null> {
 /**
  * Set authentication cookie
  */
-export function setAuthCookie(token: string): void {
-  cookies().set("auth-token", token, {
+export async function setAuthCookie(token: string): Promise<void> {
+  (await cookies()).set("auth-token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
@@ -88,8 +88,8 @@ export function setAuthCookie(token: string): void {
 /**
  * Remove authentication cookie
  */
-export function removeAuthCookie(): void {
-  cookies().delete("auth-token");
+export async function removeAuthCookie(): Promise<void> {
+  (await cookies()).delete("auth-token");
 }
 
 /**
@@ -98,9 +98,9 @@ export function removeAuthCookie(): void {
 export async function getCurrentUser(): Promise<AuthPayload | null> {
   try {
     const token =
-      cookies().get("stayneos_auth_token")?.value ||
-      cookies().get("auth-token")?.value ||
-      cookies().get("auth_token")?.value;
+      (await cookies()).get("stayneos_auth_token")?.value ||
+      (await cookies()).get("auth-token")?.value ||
+      (await cookies()).get("auth_token")?.value;
     if (!token) return null;
     return await verifyToken(token);
   } catch {

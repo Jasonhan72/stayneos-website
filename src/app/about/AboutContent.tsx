@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { Container } from '@/components/ui';
 import { useI18n } from '@/lib/i18n';
 import {
@@ -136,8 +137,8 @@ export default function AboutContent() {
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary mb-4">{t('aboutPage.ctaTitle')}</h2>
             <p className="text-primary-700 text-lg mb-8 max-w-2xl mx-auto">{t('aboutPage.ctaDesc')}</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/properties" className="inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-semibold hover:bg-primary-700 transition-colors">{t('aboutPage.ctaBrowse')}</a>
-              <a href="/contact" className="inline-flex items-center justify-center px-8 py-4 bg-white text-primary font-semibold hover:bg-neutral-100 transition-colors border border-primary">{t('aboutPage.ctaContact')}</a>
+              <Link href="/properties" className="inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-semibold hover:bg-primary-700 transition-colors">{t('aboutPage.ctaBrowse')}</Link>
+              <Link href="/contact" className="inline-flex items-center justify-center px-8 py-4 bg-white text-primary font-semibold hover:bg-neutral-100 transition-colors border border-primary">{t('aboutPage.ctaContact')}</Link>
             </div>
           </div>
         </Container>

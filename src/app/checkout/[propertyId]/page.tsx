@@ -6,11 +6,12 @@ export function generateStaticParams() {
   return mockProperties.map(p => ({ propertyId: p.id }));
 }
 
-function CheckoutPageContent({ params }: { params: { propertyId: string } }) {
-  return <CheckoutClient propertyId={params.propertyId} />;
+async function CheckoutPageContent({ params }: { params: Promise<{ propertyId: string }> }) {
+  const { propertyId } = await params;
+  return <CheckoutClient propertyId={propertyId} />;
 }
 
-export default function CheckoutPage({ params }: { params: { propertyId: string } }) {
+export default function CheckoutPage({ params }: { params: Promise<{ propertyId: string }> }) {
   return (
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
       <CheckoutPageContent params={params} />

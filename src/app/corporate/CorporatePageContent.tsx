@@ -3,6 +3,7 @@
 import { Container, Section } from "@/components/ui";
 import { Building2, Users, Globe, Briefcase, Clock, Shield } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import Link from 'next/link';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   housing: Building2,
@@ -34,18 +35,18 @@ export default function CorporatePageContent({ solutions, benefits }: CorporateP
               {t("corporate.hero.subtitle")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
+              <Link
                 href="/contact"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-primary rounded-full font-semibold hover:bg-white/90 transition-colors"
               >
                 {t("corporate.hero.ctaQuote")}
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/properties"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white text-white rounded-full font-semibold hover:bg-white/10 transition-colors"
               >
                 {t("corporate.hero.ctaBrowse")}
-              </a>
+              </Link>
             </div>
           </div>
         </Container>
@@ -109,12 +110,12 @@ export default function CorporatePageContent({ solutions, benefits }: CorporateP
             <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
               {t("corporate.cta.subtitle")}
             </p>
-            <a
+            <Link
               href="/contact"
               className="inline-flex items-center gap-2 px-8 py-4 bg-white text-blue-600 rounded-full font-semibold hover:bg-white/90 transition-colors"
             >
               {t("corporate.cta.button")}
-            </a>
+            </Link>
           </div>
         </Container>
       </Section>

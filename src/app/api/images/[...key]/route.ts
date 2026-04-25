@@ -7,11 +7,12 @@ function getR2(): any {
   throw new Error("R2 binding 'IMAGES' not found");
 }
 
-export async function GET(_request: Request, { params }: { params: { key: string[] } }) {
+export async function GET(_request: Request, { params }: { params: Promise<{ key: string[] }> }) {
   try {
-    const key = params.key.join('/');
+    const { key } = await params;
+    const keyPath = key.join('/');
     const r2 = getR2();
-    const object = await r2.get(key);
+    const object = await r2.get(keyPath);
 
     if (!object) {
       return new Response('Not Found', { status: 404 });
