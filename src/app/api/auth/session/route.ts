@@ -48,6 +48,8 @@ export async function GET(request: NextRequest) {
         email: user.email,
         role: user.role,
         avatar: user.avatar,
+        phone: (user as typeof user & { phone?: string | null }).phone ?? null,
+        address: (user as typeof user & { address?: string | null }).address ?? null,
       }
     }, { status: 200 });
   } catch {

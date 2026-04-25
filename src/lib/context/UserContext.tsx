@@ -12,6 +12,7 @@ export interface UserProfile {
   image?: string;
   avatar?: string;
   phone?: string;
+  address?: string;
   dateOfBirth?: string;
   nationality?: string;
   emergencyContact?: {
@@ -64,21 +65,29 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 function toUserProfile(user: {
   id: string;
   name?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
   email: string;
   role?: string | null;
   avatar?: string | null;
+  phone?: string | null;
+  address?: string | null;
 }): UserProfile {
   const name = (user.name || user.email?.split('@')[0] || 'User').trim();
   const parts = name.split(/\s+/).filter(Boolean);
+  const firstName = user.firstName?.trim() || parts[0] || '';
+  const lastName = user.lastName?.trim() || parts.slice(1).join(' ');
 
   return {
     id: user.id,
-    firstName: parts[0] || '',
-    lastName: parts.slice(1).join(' '),
-    name,
+    firstName,
+    lastName,
+    name: [firstName, lastName].filter(Boolean).join(' ').trim() || name,
     email: user.email,
     image: user.avatar || undefined,
     avatar: user.avatar || undefined,
+    phone: user.phone || undefined,
+    address: user.address || undefined,
     preferences: defaultPreferences,
     memberSince: new Date().toISOString().split('T')[0],
     memberLevel: 'Standard',
@@ -174,22 +183,36 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const updateProfile = useCallback(async (data: Partial<UserProfile>) => {
+    if (!user) {
+      throw new Error('Not authenticated');
+    }
+
     setIsLoading(true);
     try {
-      // Update local state
-      setUser(prev => {
-        if (!prev) return null;
-        const updated = { ...prev, ...data };
-        localStorage.setItem(USER_KEY, JSON.stringify(updated));
-        return updated;
+      const response = await fetch('/api/auth/profile', {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
       });
 
-      // TODO: Sync with backend API
-      await new Promise(resolve => setTimeout(resolve, 500));
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(payload?.error || 'Failed to update profile');
+      }
+
+      const nextUser = toUserProfile(payload.user ?? { ...user, ...data });
+      nextUser.preferences = user.preferences;
+      nextUser.memberSince = user.memberSince;
+      nextUser.memberLevel = user.memberLevel;
+      localStorage.setItem(USER_KEY, JSON.stringify(nextUser));
+      setUser(nextUser);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [user]);
 
   const updatePreferences = useCallback(async (prefs: Partial<UserPreferences>) => {
     setIsLoading(true);

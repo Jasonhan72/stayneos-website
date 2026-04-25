@@ -7,6 +7,7 @@ import { WishlistProvider } from "@/lib/context/WishlistContext";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { CustomerChat } from "@/components/layout/CustomerChat";
+import { ToastProvider } from "@/components/ui/Toast";
 import { getBaseUrl } from "@/lib/config/env";
 import {
   getHtmlLang,
@@ -164,6 +165,7 @@ export default async function RootLayout({
       </head>
       <body className="font-sans antialiased">
         <UserProvider>
+          <ToastProvider>
           <WishlistProvider>
           <I18nProvider initialLocale={locale}>
             <a
@@ -178,6 +180,7 @@ export default async function RootLayout({
             <CustomerChat />
           </I18nProvider>
           </WishlistProvider>
+          </ToastProvider>
         </UserProvider>
       </body>
     </html>
