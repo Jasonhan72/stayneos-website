@@ -6,7 +6,7 @@ import { getAuthSecret, getPublicBaseUrl } from "@/lib/config/env";
 import { AUTH_COOKIE_NAME, getAuthCookieOptions, getClearedAuthCookieOptions } from "@/lib/auth/cookie";
 
 export const dynamic = "force-dynamic";
-const DEFAULT_REDIRECT = "/dashboard";
+const DEFAULT_REDIRECT = "/";
 const isDev = process.env.NODE_ENV !== "production";
 const debugLog = (...args: unknown[]) => {
   if (isDev) console.log(...args);

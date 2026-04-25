@@ -49,10 +49,10 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
 
 
   const sanitizeCallbackUrl = (url: string) => {
-    if (!url) return '/dashboard';
+    if (!url) return '/';
     // only allow internal relative paths
-    if (!url.startsWith('/')) return '/dashboard';
-    if (url.startsWith('//')) return '/dashboard';
+    if (!url.startsWith('/')) return '/';
+    if (url.startsWith('//')) return '/';
     return url;
   };
 
@@ -61,9 +61,13 @@ export function LoginForm({ callbackUrl = '/' }: LoginFormProps) {
     role === 'HOST' || role === 'ADMIN' || role === 'SUPER_ADMIN';
 
   const getPostLoginUrl = (role?: string) => {
+    // If user came from a protected page, send them back there
     if (callbackUrl && callbackUrl !== '/') return sanitizeCallbackUrl(callbackUrl);
+    // Hosts go to their host dashboard
     if (isHost(role)) return '/host';
-    return '/bookings';
+    // Regular guests go back to the home page (Airbnb / Booking.com convention)
+    // so they can continue browsing. They can reach Trips / Account from the navbar.
+    return '/';
   };
 
   const ensureSessionReady = async () => {

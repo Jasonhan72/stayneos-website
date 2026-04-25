@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { getAuthSecret, getPublicBaseUrl } from "@/lib/config/env";
 
-const DEFAULT_REDIRECT = "/dashboard";
+const DEFAULT_REDIRECT = "/";
 
 function resolveCookieDomain(hostname: string): string | undefined {
   const baseHostname = new URL(getPublicBaseUrl()).hostname;
