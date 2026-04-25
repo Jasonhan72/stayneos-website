@@ -3,7 +3,6 @@ import { getCurrentUserFromRequest } from "@/lib/auth";
 import { getDb } from "@/lib/d1";
 
 export const dynamic = "force-dynamic";
-export const runtime = "edge";
 
 type Prefs = {
   bookingConfirmations: boolean;
