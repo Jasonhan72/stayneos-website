@@ -1,16 +1,19 @@
-import type { Metadata } from "next";
+"use client";
+
+import { usePathname } from "next/navigation";
 import AccountSidebar from "@/components/account/AccountSidebar";
 import AccountErrorBoundary from "@/components/account/AccountErrorBoundary";
 
-export const dynamic = "force-dynamic";
-
-export const metadata: Metadata = {
-  title: "Account settings · NEOS",
-  description: "Manage your NEOS account, personal info, security and preferences.",
-  alternates: { canonical: "/account" },
-};
-
 export default function AccountLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  // On the root /account listing page, render without sidebar
+  // On sub-pages (personal-info, security, etc.), show sidebar + padding
+  const isRootPage = pathname === "/account";
+
+  if (isRootPage) {
+    return <main className="min-h-screen bg-white"><AccountErrorBoundary>{children}</AccountErrorBoundary></main>;
+  }
+
   return (
     <main className="min-h-screen bg-white">
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
