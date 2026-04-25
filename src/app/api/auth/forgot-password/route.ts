@@ -2,9 +2,29 @@ export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { userDb, getDb } from "@/lib/d1";
+import { sendEmail } from "@/lib/email";
+import { getBaseUrl } from "@/lib/config/env";
 
 function hashToken(token: string): string {
   return crypto.createHash("sha256").update(token).digest("hex");
+}
+
+function buildResetEmailHtml(resetUrl: string, name?: string | null): string {
+  const greeting = name ? `Hi ${name},` : "Hi there,";
+  return `
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:560px;margin:0 auto;color:#111">
+      <h2 style="margin:0 0 16px;font-weight:600">Reset your NEOS password</h2>
+      <p style="line-height:1.6">${greeting}</p>
+      <p style="line-height:1.6">We received a request to reset the password on your NEOS account. Click the button below to choose a new one. The link expires in 1 hour.</p>
+      <p style="text-align:center;margin:28px 0">
+        <a href="${resetUrl}" style="display:inline-block;background:#111;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:500">Reset password</a>
+      </p>
+      <p style="line-height:1.6;font-size:14px;color:#555">If the button doesn't work, copy and paste this link into your browser:<br><span style="word-break:break-all;color:#333">${resetUrl}</span></p>
+      <p style="line-height:1.6;font-size:14px;color:#555">If you didn't request this, you can safely ignore this email — your password won't change.</p>
+      <hr style="margin:32px 0;border:none;border-top:1px solid #eee">
+      <p style="font-size:12px;color:#999;margin:0">NEOS Rentals · hello@neos.rentals · <a href="https://neos.rentals" style="color:#999">neos.rentals</a></p>
+    </div>
+  `;
 }
 
 export async function POST(request: Request) {
@@ -22,7 +42,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "请输入有效的邮箱地址" }, { status: 400 });
     }
 
-    // Always return success to prevent email enumeration
+    // Always return success to prevent email enumeration — the user-facing
+    // response must not depend on whether the email actually exists.
     const user = await userDb.findByEmail(db, email);
 
     if (user) {
@@ -36,8 +57,20 @@ export async function POST(request: Request) {
         .bind(resetTokenHash, resetExpiry, user.id)
         .run();
 
-      // TODO: Send email via Resend with resetToken (plain) in the link
-      // DO NOT log the token or URL
+      // Send the reset email. Failures are logged but never leak back to the
+      // caller (that would break enumeration protection). The plain token
+      // never hits our logs — only the URL-safe payload inside the email.
+      const baseUrl = getBaseUrl();
+      const resetUrl = `${baseUrl}/reset-password?token=${encodeURIComponent(resetToken)}`;
+      try {
+        await sendEmail({
+          to: [user.email],
+          subject: "Reset your NEOS password",
+          html: buildResetEmailHtml(resetUrl, user.name),
+        });
+      } catch {
+        // sendEmail already logs internally; swallow to avoid enumeration leak.
+      }
     }
 
     return NextResponse.json({
