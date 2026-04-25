@@ -168,18 +168,15 @@ function hasHostRole(role?: string): boolean {
 }
 
 export async function middleware(request: NextRequest) {
-  // Domain redirect: stayneos.com → neos.rentals (301)
+  // Canonical domain: neos.rentals (apex). All variants 301 → neos.rentals.
   const host = request.headers.get('host') || '';
-  if (host === 'stayneos.com' || host === 'www.stayneos.com') {
+  if (
+    host === 'stayneos.com' ||
+    host === 'www.stayneos.com' ||
+    host === 'www.neos.rentals'
+  ) {
     const url = request.nextUrl.clone();
     url.host = 'neos.rentals';
-    url.port = '';
-    return NextResponse.redirect(url, 301);
-  }
-  // neos.rentals → www.neos.rentals (301) - 统一使用 www 版本
-  if (host === 'neos.rentals') {
-    const url = request.nextUrl.clone();
-    url.host = 'www.neos.rentals';
     url.port = '';
     return NextResponse.redirect(url, 301);
   }

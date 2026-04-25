@@ -3,12 +3,6 @@ compatibility_date = "2026-02-06"
 compatibility_flags = ["nodejs_compat"]
 main = ".open-next/worker.js"
 
-# Pages configuration
-[pages]
-name = "stayneos"
-pages_build_output_dir = "dist"
-production_branch = "main"
-
 # Static assets served from .open-next/assets
 [assets]
 directory = ".open-next/assets"
@@ -19,7 +13,7 @@ RESEND_FROM_EMAIL = "hello@neos.rentals"
 NODE_ENV = "production"
 AI_CONCIERGE_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
 ARIA_CHAT_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
-NEXTAUTH_URL = "https://www.neos.rentals"
+NEXTAUTH_URL = "https://neos.rentals"
 # SECURITY: NEXTAUTH_SECRET must be injected via `wrangler secret put NEXTAUTH_SECRET` — never set here
 # SECURITY: Google OAuth credentials must be injected via `wrangler secret put`
 
