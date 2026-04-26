@@ -212,7 +212,7 @@ export function CustomerChat() {
       {/* Floating Chat Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="chat-toggle-button fixed bottom-24 right-4 z-[1000] w-14 h-14 bg-[#2563eb] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200 md:bottom-6 md:right-20"
+        className="chat-toggle-button fixed bottom-28 right-4 z-[60] w-14 h-14 bg-[#2563eb] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200 md:bottom-6 md:right-20 account-page:bottom-32"
         aria-label={t('chat.toggle', 'Open chat with NEOS Support')}
       >
         <svg

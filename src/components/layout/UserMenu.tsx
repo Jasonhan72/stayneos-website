@@ -4,14 +4,16 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
+  ChevronRight,
+  Globe,
+  HelpCircle,
+  Heart,
+  LogOut,
+  Luggage,
   Menu,
   MessageCircle,
-  Luggage,
-  Heart,
-  Home,
+  User,
   UserCog,
-  HelpCircle,
-  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/context/UserContext";
@@ -52,12 +54,7 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
   }
 
   const isDarkStyle = variant === "dark" || variant === "transparent";
-  const isHost =
-    user?.role === "HOST" ||
-    user?.role === "ADMIN" ||
-    user?.role === "SUPER_ADMIN";
-
-  if (!user) {
+    if (!user) {
     return (
       <div className="relative" ref={menuRef}>
         <button
@@ -124,56 +121,18 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
     );
   }
 
-  const firstSection: MenuLink[] = [
-    {
-      label: L("消息", "Messages", "Messages"),
-      href: "/messages",
-      icon: MessageCircle,
-      bold: true,
-    },
-    {
-      label: L("我的行程", "Trips", "Voyages"),
-      href: "/bookings",
-      icon: Luggage,
-      bold: true,
-    },
-    {
-      label: L("收藏", "Wishlists", "Favoris"),
-      href: "/wishlists",
-      icon: Heart,
-      bold: true,
-    },
-  ];
-
-  const hostSection: MenuLink[] = isHost
-    ? [
-        {
-          label: L("切换到房东模式", "Switch to hosting", "Passer en mode hôte"),
-          href: "/host",
-          icon: Home,
-          bold: true,
-        },
-      ]
-    : [
-        {
-          label: L("开放您的房源", "List your home", "Mettez votre logement en location"),
-          href: "/become-a-host",
-          icon: Home,
-          bold: true,
-        },
-      ];
-
-  const thirdSection: MenuLink[] = [
-    {
-      label: L("账号设置", "Account settings", "Paramètres du compte"),
-      href: "/account",
-      icon: UserCog,
-    },
-    {
-      label: L("帮助中心", "Help Centre", "Centre d'aide"),
-      href: "/help",
-      icon: HelpCircle,
-    },
+  const sections: MenuLink[][] = [
+    [
+      { label: L("消息", "Messages", "Messages"), href: "/messages", icon: MessageCircle, bold: true },
+      { label: L("我的行程", "Trips", "Voyages"), href: "/bookings", icon: Luggage, bold: true },
+      { label: L("收藏", "Wishlists", "Favoris"), href: "/wishlists", icon: Heart, bold: true },
+    ],
+    [
+      { label: L("个人主页", "Profile", "Profil"), href: "/profile", icon: User },
+      { label: L("账号设置", "Account settings", "Paramètres du compte"), href: "/account/personal-info", icon: UserCog },
+      { label: L("语言与货币", "Languages & currency", "Langues et devise"), href: "/account/preferences", icon: Globe },
+      { label: L("帮助中心", "Help Centre", "Centre d'aide"), href: "/help", icon: HelpCircle },
+    ],
   ];
 
   const userAlt = L("用户头像", "User avatar", "Avatar utilisateur");
@@ -212,32 +171,26 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
       </button>
 
       {isOpen && (
-        <div
-          className={cn(
-            "animate-in slide-in-from-top-2 absolute right-0 z-50 mt-2 w-64 rounded-xl border border-neutral-200 bg-white py-2 shadow-2xl fade-in duration-150"
-          )}
-        >
-          {firstSection.map((item) => (
-            <MenuItem key={item.href} item={item} onClick={() => setIsOpen(false)} />
+        <div className="animate-in slide-in-from-top-2 absolute right-0 z-50 mt-3 w-[320px] rounded-[24px] border border-neutral-200 bg-white py-3 shadow-[0_20px_50px_rgba(0,0,0,0.18)] fade-in duration-150">
+          {sections.map((section, idx) => (
+            <div key={idx}>
+              {section.map((item) => (
+                <MenuItem key={item.href} item={item} onClick={() => setIsOpen(false)} />
+              ))}
+              {idx < sections.length - 1 ? <div className="my-2 border-t border-neutral-200" /> : null}
+            </div>
           ))}
-          <div className="my-1 border-t border-neutral-200" />
-          {hostSection.map((item) => (
-            <MenuItem key={item.href} item={item} onClick={() => setIsOpen(false)} />
-          ))}
-          <div className="my-1 border-t border-neutral-200" />
-          {thirdSection.map((item) => (
-            <MenuItem key={item.href} item={item} onClick={() => setIsOpen(false)} />
-          ))}
-          <div className="my-1 border-t border-neutral-200" />
+          <div className="my-2 border-t border-neutral-200" />
           <button
             onClick={() => {
               setIsOpen(false);
               logout();
             }}
-            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-neutral-700 transition-colors hover:bg-neutral-50"
+            className="flex min-h-[56px] w-full items-center gap-4 px-5 text-left text-[15px] text-neutral-900 transition-colors hover:bg-neutral-50"
           >
-            <LogOut className="h-4 w-4 text-neutral-500" />
-            <span>{L("退出登录", "Log out", "Déconnexion")}</span>
+            <LogOut className="h-5 w-5 text-neutral-600" />
+            <span className="flex-1 font-medium">{L("退出登录", "Log out", "Déconnexion")}</span>
+            <ChevronRight className="h-4 w-4 text-neutral-400" />
           </button>
         </div>
       )}
@@ -248,15 +201,10 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
 function MenuItem({ item, onClick }: { item: MenuLink; onClick: () => void }) {
   const Icon = item.icon;
   return (
-    <Link
-      href={item.href}
-      onClick={onClick}
-      className="flex items-center gap-3 px-4 py-3 text-sm text-neutral-700 transition-colors hover:bg-neutral-50"
-    >
-      <Icon className="h-4 w-4 text-neutral-500" />
-      <span className={item.bold ? "font-semibold text-neutral-900" : "font-medium text-neutral-900"}>
-        {item.label}
-      </span>
+    <Link href={item.href} onClick={onClick} className="flex min-h-[56px] items-center gap-4 px-5 text-[15px] text-neutral-900 transition-colors hover:bg-neutral-50">
+      <Icon className="h-5 w-5 text-neutral-600" />
+      <span className={item.bold ? "flex-1 font-semibold" : "flex-1 font-medium"}>{item.label}</span>
+      <ChevronRight className="h-4 w-4 text-neutral-400" />
     </Link>
   );
 }
