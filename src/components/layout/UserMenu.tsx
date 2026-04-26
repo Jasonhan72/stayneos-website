@@ -44,12 +44,11 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // i18n helpers (inline, avoid missing key churn)
   const L = (zh: string, en: string, fr: string) =>
     locale === "zh" ? zh : locale === "fr" ? fr : en;
 
   if (isLoading) {
-    return <div className="w-[82px] h-10 rounded-full bg-black/5 animate-pulse" />;
+    return <div className="h-10 w-[82px] animate-pulse rounded-full bg-black/5" />;
   }
 
   const isDarkStyle = variant === "dark" || variant === "transparent";
@@ -58,31 +57,25 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
     user?.role === "ADMIN" ||
     user?.role === "SUPER_ADMIN";
 
-  // ===== Not logged in =====
   if (!user) {
     return (
       <div className="relative" ref={menuRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
           className={cn(
-            "flex items-center gap-3 px-2 pl-3 py-1.5 rounded-full border transition-all duration-200",
+            "flex items-center gap-3 rounded-full border px-2 py-1.5 pl-3 transition-all duration-200",
             isDarkStyle
               ? "border-white/30 hover:border-white/60 hover:shadow-md"
-              : "border-neutral-200 hover:shadow-md hover:border-neutral-300"
+              : "border-neutral-200 hover:border-neutral-300 hover:shadow-md"
           )}
           aria-expanded={isOpen}
           aria-haspopup="true"
           aria-label={L("用户菜单", "User menu", "Menu utilisateur")}
         >
-          <Menu
-            className={cn(
-              "w-4 h-4",
-              isDarkStyle ? "text-white" : "text-neutral-700"
-            )}
-          />
+          <Menu className={cn("h-4 w-4", isDarkStyle ? "text-white" : "text-neutral-700")} />
           <div
             className={cn(
-              "w-7 h-7 rounded-full flex items-center justify-center",
+              "flex h-7 w-7 items-center justify-center rounded-full",
               isDarkStyle ? "bg-white/20" : "bg-neutral-500"
             )}
           >
@@ -93,8 +86,7 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
         {isOpen && (
           <div
             className={cn(
-              "absolute right-0 mt-2 w-60 py-2 rounded-xl shadow-2xl border border-neutral-200 bg-white z-50",
-              "animate-in fade-in slide-in-from-top-2 duration-150"
+              "animate-in slide-in-from-top-2 absolute right-0 z-50 mt-2 w-60 rounded-xl border border-neutral-200 bg-white py-2 shadow-2xl fade-in duration-150"
             )}
           >
             <Link
@@ -111,7 +103,7 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
             >
               {L("登录", "Log in", "Connexion")}
             </Link>
-            <div className="border-t border-neutral-200 my-1" />
+            <div className="my-1 border-t border-neutral-200" />
             <Link
               href="/become-a-host"
               onClick={() => setIsOpen(false)}
@@ -132,11 +124,10 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
     );
   }
 
-  // ===== Logged in =====
   const firstSection: MenuLink[] = [
     {
       label: L("消息", "Messages", "Messages"),
-      href: "/dashboard/messages",
+      href: "/messages",
       icon: MessageCircle,
       bold: true,
     },
@@ -157,7 +148,7 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
   const hostSection: MenuLink[] = isHost
     ? [
         {
-          label: L("切换到房东模式", "Switch to Hosting", "Passer en mode hôte"),
+          label: L("切换到房东模式", "Switch to hosting", "Passer en mode hôte"),
           href: "/host",
           icon: Home,
           bold: true,
@@ -195,31 +186,26 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "flex items-center gap-3 px-2 pl-3 py-1.5 rounded-full border transition-all duration-200",
+          "flex items-center gap-3 rounded-full border px-2 py-1.5 pl-3 transition-all duration-200",
           isDarkStyle
             ? "border-white/30 hover:border-white/60 hover:shadow-md"
-            : "border-neutral-200 hover:shadow-md hover:border-neutral-300"
+            : "border-neutral-200 hover:border-neutral-300 hover:shadow-md"
         )}
         aria-expanded={isOpen}
         aria-haspopup="true"
         aria-label={L("用户菜单", "User menu", "Menu utilisateur")}
       >
-        <Menu
-          className={cn(
-            "w-4 h-4",
-            isDarkStyle ? "text-white" : "text-neutral-700"
-          )}
-        />
+        <Menu className={cn("h-4 w-4", isDarkStyle ? "text-white" : "text-neutral-700")} />
         {user.image ? (
           <Image
             src={user.image}
             alt={userAlt}
             width={32}
             height={32}
-            className="w-8 h-8 rounded-full object-cover"
+            className="h-8 w-8 rounded-full object-cover"
           />
         ) : (
-          <div className="w-8 h-8 rounded-full bg-neutral-900 flex items-center justify-center">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-900">
             <span className="text-xs font-medium text-white">{initials}</span>
           </div>
         )}
@@ -228,30 +214,29 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
       {isOpen && (
         <div
           className={cn(
-            "absolute right-0 mt-2 w-64 py-2 rounded-xl shadow-2xl border border-neutral-200 bg-white z-50",
-            "animate-in fade-in slide-in-from-top-2 duration-150"
+            "animate-in slide-in-from-top-2 absolute right-0 z-50 mt-2 w-64 rounded-xl border border-neutral-200 bg-white py-2 shadow-2xl fade-in duration-150"
           )}
         >
           {firstSection.map((item) => (
             <MenuItem key={item.href} item={item} onClick={() => setIsOpen(false)} />
           ))}
-          <div className="border-t border-neutral-200 my-1" />
+          <div className="my-1 border-t border-neutral-200" />
           {hostSection.map((item) => (
             <MenuItem key={item.href} item={item} onClick={() => setIsOpen(false)} />
           ))}
-          <div className="border-t border-neutral-200 my-1" />
+          <div className="my-1 border-t border-neutral-200" />
           {thirdSection.map((item) => (
             <MenuItem key={item.href} item={item} onClick={() => setIsOpen(false)} />
           ))}
-          <div className="border-t border-neutral-200 my-1" />
+          <div className="my-1 border-t border-neutral-200" />
           <button
             onClick={() => {
               setIsOpen(false);
               logout();
             }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors"
+            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-neutral-700 transition-colors hover:bg-neutral-50"
           >
-            <LogOut className="w-4 h-4 text-neutral-500" />
+            <LogOut className="h-4 w-4 text-neutral-500" />
             <span>{L("退出登录", "Log out", "Déconnexion")}</span>
           </button>
         </div>
@@ -260,25 +245,18 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
   );
 }
 
-function MenuItem({
-  item,
-  onClick,
-}: {
-  item: MenuLink;
-  onClick: () => void;
-}) {
+function MenuItem({ item, onClick }: { item: MenuLink; onClick: () => void }) {
   const Icon = item.icon;
   return (
     <Link
       href={item.href}
       onClick={onClick}
-      className={cn(
-        "flex items-center gap-3 px-4 py-3 text-sm text-neutral-700 hover:bg-neutral-50 transition-colors",
-        item.bold && "font-semibold text-neutral-900"
-      )}
+      className="flex items-center gap-3 px-4 py-3 text-sm text-neutral-700 transition-colors hover:bg-neutral-50"
     >
-      <Icon className="w-4 h-4 text-neutral-500" />
-      <span>{item.label}</span>
+      <Icon className="h-4 w-4 text-neutral-500" />
+      <span className={item.bold ? "font-semibold text-neutral-900" : "font-medium text-neutral-900"}>
+        {item.label}
+      </span>
     </Link>
   );
 }
