@@ -77,12 +77,12 @@ function getStatusConfig(t: (key: string) => string): Record<string, { label: st
   };
 }
 
-type TabType = 'all' | 'upcoming' | 'current' | 'completed';
+type TabType = 'upcoming' | 'completed' | 'cancelled';
 
 export default function BookingsPage() {
   const { user, isAuthenticated } = useAuth();
   const { t } = useI18n();
-  const [activeTab, setActiveTab] = useState<TabType>('all');
+  const [activeTab, setActiveTab] = useState<TabType>('upcoming');
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -129,14 +129,12 @@ export default function BookingsPage() {
     const checkOut = new Date(booking.check_out);
     
     switch (activeTab) {
-      case 'all':
-        return booking.status !== 'CANCELLED';
       case 'upcoming':
         return checkIn > today && ['PENDING', 'CONFIRMED'].includes(booking.status);
-      case 'current':
-        return checkIn <= today && checkOut >= today && booking.status !== 'CANCELLED';
       case 'completed':
         return (checkOut < today && booking.status !== 'CANCELLED') || booking.status === 'CHECKED_OUT';
+      case 'cancelled':
+        return booking.status === 'CANCELLED';
       default:
         return true;
     }
@@ -183,35 +181,36 @@ export default function BookingsPage() {
     );
   }
 
+  const hasCancelled = bookings.some(b => b.status === 'cancelled');
+
   return (
-    <main id="main-content" className="min-h-screen bg-neutral-50 pt-24 pb-12">
-      <Container>
+    <main id="main-content" className="min-h-screen bg-white pt-24 pb-12">
+      <div className="mx-auto max-w-3xl px-4">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-neutral-900">{t('bookings.title')}</h1>
-          <p className="text-neutral-600 mt-2">{t('bookings.manageBookings')}</p>
+        <div className="mb-10">
+          <h1 className="text-3xl font-semibold tracking-tight text-neutral-900">{t('bookings.title')}</h1>
+          <p className="text-sm text-neutral-500 mt-1">{t('bookings.manageBookings')}</p>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-2 mb-6 border-b border-neutral-200">
-          {[
-            { id: 'all', label: t('bookings.allBookings') },
-            { id: 'upcoming', label: t('bookings.upcoming') },
-            { id: 'current', label: t('bookings.current') },
-            { id: 'completed', label: t('bookings.completed') },
-          ].map((tab) => (
+        {/* Airnbnb-style Tabs: underline indicator, no pill */}
+        <div className="flex gap-0 mb-8 border-b border-neutral-200">
+          {([] as { id: TabType; label: string }[]).concat(
+            { id: 'upcoming' as TabType, label: t('bookings.upcoming', 'Upcoming') },
+            ...(hasCancelled ? [{ id: 'cancelled' as TabType, label: t('status.cancelled', 'Cancelled') }] : []),
+            { id: 'completed' as TabType, label: t('bookings.completed', 'Past') },
+          ).map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as TabType)}
-              className={`px-6 py-3 font-medium transition-colors relative ${
+              className={`px-5 py-3 text-sm transition-colors relative ${
                 activeTab === tab.id 
-                  ? 'text-primary' 
-                  : 'text-neutral-600 hover:text-neutral-900'
+                  ? 'text-neutral-900 font-medium' 
+                  : 'text-neutral-500 hover:text-neutral-700'
               }`}
             >
               {tab.label}
               {activeTab === tab.id && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
+                <div className="absolute bottom-0 left-3 right-3 h-0.5 bg-neutral-900" />
               )}
             </button>
           ))}
@@ -220,25 +219,27 @@ export default function BookingsPage() {
         {/* Loading State */}
         {isLoading ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 className="animate-spin mr-2 text-primary" size={24} />
-            <span className="text-neutral-600">{t('bookings.loading')}</span>
+            <Loader2 className="animate-spin mr-2 text-neutral-400" size={24} />
+            <span className="text-neutral-500 text-sm">{t('bookings.loading')}</span>
           </div>
         ) : error ? (
-          <Card className="p-8 text-center">
-            <p className="text-red-600">{error}</p>
-            <Button onClick={fetchBookings} className="mt-4">{t('bookings.retry')}</Button>
-          </Card>
+          <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-center">
+            <p className="text-red-700 text-sm">{error}</p>
+            <button onClick={fetchBookings} className="mt-3 text-sm font-medium text-neutral-900 underline underline-offset-4 hover:no-underline">{t('bookings.retry')}</button>
+          </div>
         ) : filteredBookings.length === 0 ? (
-          <Card className="p-12 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 bg-neutral-100 flex items-center justify-center">
-              <Calendar size={32} className="text-neutral-400" />
+          <div className="text-center py-16">
+            <div className="mb-6">{/* placeholder for empty illustration */}
+              <div className="mx-auto w-20 h-20 rounded-full bg-neutral-100 flex items-center justify-center">
+                <Calendar size={32} className="text-neutral-400" />
+              </div>
             </div>
-            <h3 className="text-lg font-medium text-neutral-900 mb-2">{t('bookings.noBookings')}</h3>
-            <p className="text-neutral-600 mb-4">{t('bookings.noBookings')}</p>
+            <h2 className="text-xl font-semibold text-neutral-900 mb-2">{t('bookings.noBookings', 'No trips yet')}</h2>
+            <p className="text-sm text-neutral-500 mb-6">{t('bookings.noBookingsDesc', 'Where have you been, and where are you going?')}</p>
             <Link href="/properties">
-              <Button>{t('nav.properties')}</Button>
+              <span className="inline-block rounded-full bg-neutral-900 text-white px-6 py-2.5 text-sm font-medium hover:bg-neutral-800 transition-colors">{t('nav.properties')}</span>
             </Link>
-          </Card>
+          </div>
         ) : (
           /* Bookings List */
           <div className="space-y-6">
@@ -351,7 +352,7 @@ export default function BookingsPage() {
             ))}
           </div>
         )}
-      </Container>
+      </div>
 
       {/* Booking Detail Modal */}
       <Modal
