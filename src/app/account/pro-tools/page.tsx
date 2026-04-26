@@ -44,7 +44,7 @@ const TOOLS = [
     descEn: "Communicate with guests and NEOS support.",
     descZh: "与房客及 NEOS 客服沟通。",
     descFr: "Communiquez avec les voyageurs et le support NEOS.",
-    href: "/dashboard/messages",
+    href: "/messages",
     hostOnly: false,
   },
   {

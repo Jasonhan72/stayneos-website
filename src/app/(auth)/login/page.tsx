@@ -14,7 +14,7 @@ export default async function LoginPage({
   searchParams?: Promise<{ callbackUrl?: string; callback?: string; redirect?: string }>;
 }) {
   const resolvedSearchParams = await searchParams;
-  const callbackUrl = resolvedSearchParams?.redirect || resolvedSearchParams?.callbackUrl || resolvedSearchParams?.callback || '/dashboard';
+  const callbackUrl = resolvedSearchParams?.redirect || resolvedSearchParams?.callbackUrl || resolvedSearchParams?.callback || '/';
 
   return (
     <div className="min-h-screen flex">

@@ -14,7 +14,7 @@ export default function ForbiddenContent() {
         <p className="text-gray-600 mb-8 max-w-md mx-auto">{t('forbiddenPage.description')}</p>
         <div className="space-x-4">
           <Link href="/" className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">{t('forbiddenPage.goHome')}</Link>
-          <Link href="/dashboard" className="inline-block px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors">{t('forbiddenPage.myDashboard')}</Link>
+          <Link href="/" className="inline-block px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors">{t('forbiddenPage.myDashboard')}</Link>
         </div>
       </div>
     </div>

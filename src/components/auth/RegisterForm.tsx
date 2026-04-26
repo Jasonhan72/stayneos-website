@@ -98,7 +98,7 @@ export function RegisterForm() {
 
       // Hard redirect to dashboard (ensures middleware sees cookie)
       if (isClient) {
-        window.location.assign('/dashboard');
+        window.location.assign('/');
       }
     } catch (error) {
       console.error('Registration error:', error);

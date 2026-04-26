@@ -81,7 +81,7 @@ export async function POST(request: Request) {
     const isFormSubmit = contentType.includes("application/x-www-form-urlencoded");
     if (isFormSubmit) {
       const baseUrl = getPublicBaseUrl();
-      const response = NextResponse.redirect(`${baseUrl}/dashboard`, 303);
+      const response = NextResponse.redirect(`${baseUrl}/`, 303);
       response.cookies.set(AUTH_COOKIE_NAME, token, getAuthCookieOptions(request));
       return response;
     }
