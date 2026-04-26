@@ -212,7 +212,7 @@ export function CustomerChat() {
       {/* Floating Chat Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="chat-toggle-button fixed bottom-6 right-20 z-[1000] w-14 h-14 bg-[#2563eb] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200"
+        className="chat-toggle-button fixed bottom-24 right-4 z-[1000] w-14 h-14 bg-[#2563eb] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200 md:bottom-6 md:right-20"
         aria-label={t('chat.toggle', 'Open chat with NEOS Support')}
       >
         <svg
@@ -230,7 +230,7 @@ export function CustomerChat() {
       {isOpen && (
         <div
           ref={chatWindowRef}
-          className="fixed bottom-24 right-6 z-[1001] w-[380px] h-[450px] bg-white rounded-lg shadow-2xl flex flex-col border border-gray-200"
+          className="fixed bottom-40 right-4 z-[1001] w-[380px] h-[450px] bg-white rounded-lg shadow-2xl flex flex-col border border-gray-200 md:bottom-24 md:right-6"
           style={{
             maxWidth: 'calc(100vw - 48px)',
             maxHeight: 'calc(100vh - 120px)'

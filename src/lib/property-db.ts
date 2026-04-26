@@ -103,7 +103,13 @@ export function toPublicProperty(property: PropertyRecord) {
     priceUnit: 'month',
     rating: 0,
     reviewCount: 0,
-    images: images.map((img) => img.url).filter(Boolean),
+    images: images.map((img) => img.url).filter((url) => Boolean(url)).map((url) => {
+      if (typeof url !== "string") return "";
+      const trimmed = url.trim();
+      if (!trimmed) return "";
+      if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.startsWith("/")) return trimmed;
+      return `/${trimmed.replace(/^\/+/, "")}`;
+    }).filter(Boolean),
     maxGuests: Math.max(1, (property.bedrooms || 1) * 2),
     area: property.sqft || 0,
     bedrooms: property.bedrooms,
@@ -118,7 +124,12 @@ export function toPublicProperty(property: PropertyRecord) {
     currency: property.currency || 'CAD',
     metaTitle: property.metaTitle,
     metaDescription: property.metaDescription,
-    heroImage: property.heroImage || images[0]?.url || null,
+    heroImage: (() => {
+      const hero = property.heroImage || images[0]?.url || null;
+      if (!hero) return null;
+      if (hero.startsWith("http://") || hero.startsWith("https://") || hero.startsWith("/")) return hero;
+      return `/${hero.replace(/^\/+/, "")}`;
+    })(),
     status: property.status,
     priceMonthly: property.priceMonthly,
     priceQuarterly: property.priceQuarterly,
