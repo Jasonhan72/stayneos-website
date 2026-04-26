@@ -1,0 +1,526 @@
+{
+  "/images/cities/montreal.jpg": {
+    "fallback": "/images/cities/montreal.jpg",
+    "width": 600,
+    "height": 338,
+    "variants": {
+      "600": {
+        "jpg": "/images/cities/montreal-600.jpg",
+        "webp": "/images/cities/montreal-600.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABAED/8QAFAEBAAAAAAAAAAAAAAAAAAAABP/aAAwDAQACEAMQAAAAfA5oH//EAB4QAAICAgIDAAAAAAAAAAAAAAECAAMhQQQRBSIx/9oACAEBAAE/AD4sD48HFetxhOtkGLbXYVV7yPXR2IwqwW5HeMgGf//EABgRAAIDAAAAAAAAAAAAAAAAAAABERQx/9oACAECAQE/ALU6z//EABgRAAIDAAAAAAAAAAAAAAAAAAACFCFB/9oACAEDAQE/AIqZR//Z"
+  },
+  "/images/cities/newyork.jpg": {
+    "fallback": "/images/cities/newyork.jpg",
+    "width": 600,
+    "height": 400,
+    "variants": {
+      "600": {
+        "jpg": "/images/cities/newyork-600.jpg",
+        "webp": "/images/cities/newyork-600.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAgMEBv/EABUBAQEAAAAAAAAAAAAAAAAAAAAC/9oADAMBAAIQAxAAAACkso2n/8QAIBAAAgEDBAMAAAAAAAAAAAAAAQIRAAMSEyEiQVFhof/aAAgBAQABPwBUtETqL19oJZOfMDF8TO29Z9q8HqmuyHGu0FgT7Pmv/8QAFhEAAwAAAAAAAAAAAAAAAAAAAAMS/9oACAECAQE/ALYf/8QAFxEAAwEAAAAAAAAAAAAAAAAAAAECA//aAAgBAwEBPwBRkf/Z"
+  },
+  "/images/cities/newyork_alt.jpg": {
+    "fallback": "/images/cities/newyork_alt.jpg",
+    "width": 600,
+    "height": 400,
+    "variants": {
+      "600": {
+        "jpg": "/images/cities/newyork_alt-600.jpg",
+        "webp": "/images/cities/newyork_alt-600.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABgID/8QAFAEBAAAAAAAAAAAAAAAAAAAABP/aAAwDAQACEAMQAAAARZE5Gv8A/8QAIBAAAgICAAcAAAAAAAAAAAAAAQIAAwQREhMxM1FSYf/aAAgBAQABPwBrlVWbwJVl8VaP7KDEynUd1gpJJ3GtfmEGxk10+Az/xAAZEQABBQAAAAAAAAAAAAAAAAAAAQIDU6H/2gAIAQIBAT8AWN9mH//EABcRAAMBAAAAAAAAAAAAAAAAAAACElL/2gAIAQMBAT8ApcH/2Q=="
+  },
+  "/images/cities/niagara.jpg": {
+    "fallback": "/images/cities/niagara.jpg",
+    "width": 1200,
+    "height": 798,
+    "variants": {
+      "640": {
+        "jpg": "/images/cities/niagara-640.jpg",
+        "webp": "/images/cities/niagara-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/cities/niagara-1080.jpg",
+        "webp": "/images/cities/niagara-1080.webp"
+      },
+      "1200": {
+        "jpg": "/images/cities/niagara-1200.jpg",
+        "webp": "/images/cities/niagara-1200.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABAMF/8QAFQEBAQAAAAAAAAAAAAAAAAAAAgP/2gAMAwEAAhADEAAAAKqwQqf/xAAgEAABBAIBBQAAAAAAAAAAAAABAAIDBAUSMREhInGy/9oACAEBAAE/ABkcc3n5cq92nO/SEbO9K1kxb6xua0d1HbiiO0bfIDkr/8QAFxEAAwEAAAAAAAAAAAAAAAAAAAESUf/aAAgBAgEBPwCnp//EABYRAAMAAAAAAAAAAAAAAAAAAAARYf/aAAgBAwEBPwBQ/9k="
+  },
+  "/images/cities/toronto.jpg": {
+    "fallback": "/images/cities/toronto.jpg",
+    "width": 600,
+    "height": 750,
+    "variants": {
+      "600": {
+        "jpg": "/images/cities/toronto-600.jpg",
+        "webp": "/images/cities/toronto-600.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIFBv/EABQBAQAAAAAAAAAAAAAAAAAAAAP/2gAMAwEAAhADEAAAAKRk3NP/xAAgEAACAQQBBQAAAAAAAAAAAAABAgMABCExBRETIkFS/9oACAEBAAE/ALnlZ7ZlHbXIxScz7JTVRPNcSfRqWJkYjXj1xomv/8QAFxEBAQEBAAAAAAAAAAAAAAAAAQIRAP/aAAgBAgEBPwCzXCk7/8QAGBEAAwEBAAAAAAAAAAAAAAAAAQIRACH/2gAIAQMBAT8AQ8pW7//Z"
+  },
+  "/images/cities/vancouver.jpg": {
+    "fallback": "/images/cities/vancouver.jpg",
+    "width": 600,
+    "height": 379,
+    "variants": {
+      "600": {
+        "jpg": "/images/cities/vancouver-600.jpg",
+        "webp": "/images/cities/vancouver-600.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABAMG/8QAFAEBAAAAAAAAAAAAAAAAAAAAAv/aAAwDAQACEAMQAAAAQjP2J//EAB8QAQABBAIDAQAAAAAAAAAAAAECAAMEESEyEjFBgf/aAAgBAQABPwCJhkDi2/KhDFOtyH7QYvgdnbv3VtwI8DN2co1//8QAFxEBAAMAAAAAAAAAAAAAAAAAAgADUf/aAAgBAgEBPwA2PZ//xAAYEQACAwAAAAAAAAAAAAAAAAABAgBSof/aAAgBAwEBPwAolQMn/9k="
+  },
+  "/images/cooper-55-15c489d2.jpg": {
+    "fallback": "/images/cooper-55-15c489d2.jpg",
+    "width": 4032,
+    "height": 3024,
+    "variants": {
+      "640": {
+        "jpg": "/images/cooper-55-15c489d2-640.jpg",
+        "webp": "/images/cooper-55-15c489d2-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/cooper-55-15c489d2-1080.jpg",
+        "webp": "/images/cooper-55-15c489d2-1080.webp"
+      },
+      "1920": {
+        "jpg": "/images/cooper-55-15c489d2-1920.jpg",
+        "webp": "/images/cooper-55-15c489d2-1920.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAgMEBf/EABUBAQEAAAAAAAAAAAAAAAAAAAEC/9oADAMBAAIQAxAAAADXXEcP/8QAHBAAAgEFAQAAAAAAAAAAAAAAAQIRAAMEITFB/9oACAEBAAE/AAoiiGAKr4p73VYuWl+0jGZ93WRk2AsvsTX/xAAXEQADAQAAAAAAAAAAAAAAAAAAARFB/9oACAECAQE/AFNP/8QAFhEAAwAAAAAAAAAAAAAAAAAAAAER/9oACAEDAQE/AHT/2Q=="
+  },
+  "/images/cooper-55-7a4fc63b.jpg": {
+    "fallback": "/images/cooper-55-7a4fc63b.jpg",
+    "width": 5712,
+    "height": 4284,
+    "variants": {
+      "640": {
+        "jpg": "/images/cooper-55-7a4fc63b-640.jpg",
+        "webp": "/images/cooper-55-7a4fc63b-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/cooper-55-7a4fc63b-1080.jpg",
+        "webp": "/images/cooper-55-7a4fc63b-1080.webp"
+      },
+      "1920": {
+        "jpg": "/images/cooper-55-7a4fc63b-1920.jpg",
+        "webp": "/images/cooper-55-7a4fc63b-1920.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAABQL/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEAMQAAAAVgEuP//EAB0QAAICAgMBAAAAAAAAAAAAAAIDAAEREgQFQSH/2gAIAQEAAT8AEX+gWJzFKagqanbEb2XHH4FbXG9i4861r5P/xAAWEQADAAAAAAAAAAAAAAAAAAAAIkH/2gAIAQIBAT8Aan//xAAVEQEBAAAAAAAAAAAAAAAAAAAAIf/aAAgBAwEBPwCP/9k="
+  },
+  "/images/cooper-55-a12c07ee.jpg": {
+    "fallback": "/images/cooper-55-a12c07ee.jpg",
+    "width": 4032,
+    "height": 3024,
+    "variants": {
+      "640": {
+        "jpg": "/images/cooper-55-a12c07ee-640.jpg",
+        "webp": "/images/cooper-55-a12c07ee-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/cooper-55-a12c07ee-1080.jpg",
+        "webp": "/images/cooper-55-a12c07ee-1080.webp"
+      },
+      "1920": {
+        "jpg": "/images/cooper-55-a12c07ee-1920.jpg",
+        "webp": "/images/cooper-55-a12c07ee-1920.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIEBv/EABUBAQEAAAAAAAAAAAAAAAAAAAEC/9oADAMBAAIQAxAAAAAox7S//8QAHxAAAgIBBAMAAAAAAAAAAAAAAQIDEQAEEyEyQVKR/9oACAEBAAE/AN/SCEy7l1VqO2MdIkZczJx4vnIz3x2pVr1+HP/EABcRAAMBAAAAAAAAAAAAAAAAAAABAjL/2gAIAQIBAT8Aqrb2f//EABcRAQADAAAAAAAAAAAAAAAAAAEAAjL/2gAIAQMBAT8ACoZn/9k="
+  },
+  "/images/cooper-55-b16f7ae9.jpg": {
+    "fallback": "/images/cooper-55-b16f7ae9.jpg",
+    "width": 4032,
+    "height": 3024,
+    "variants": {
+      "640": {
+        "jpg": "/images/cooper-55-b16f7ae9-640.jpg",
+        "webp": "/images/cooper-55-b16f7ae9-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/cooper-55-b16f7ae9-1080.jpg",
+        "webp": "/images/cooper-55-b16f7ae9-1080.webp"
+      },
+      "1920": {
+        "jpg": "/images/cooper-55-b16f7ae9-1920.jpg",
+        "webp": "/images/cooper-55-b16f7ae9-1920.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAEEBf/EABUBAQEAAAAAAAAAAAAAAAAAAAAD/9oADAMBAAIQAxAAAADYnHN//8QAHBAAAgICAwAAAAAAAAAAAAAAAQIAEQMSEyFx/9oACAEBAAE/ABZUBvOomPay7WbnPqyIxUFrqIuQT//EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQIBAT8Af//EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQMBAT8Af//Z"
+  },
+  "/images/cooper-55-b734cd4b.jpg": {
+    "fallback": "/images/cooper-55-b734cd4b.jpg",
+    "width": 4032,
+    "height": 3024,
+    "variants": {
+      "640": {
+        "jpg": "/images/cooper-55-b734cd4b-640.jpg",
+        "webp": "/images/cooper-55-b734cd4b-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/cooper-55-b734cd4b-1080.jpg",
+        "webp": "/images/cooper-55-b734cd4b-1080.webp"
+      },
+      "1920": {
+        "jpg": "/images/cooper-55-b734cd4b-1920.jpg",
+        "webp": "/images/cooper-55-b734cd4b-1920.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAgUG/8QAFAEBAAAAAAAAAAAAAAAAAAAAA//aAAwDAQACEAMQAAAAVDHlx//EAB4QAAICAgIDAAAAAAAAAAAAAAECAAMRMQQSE1Oh/9oACAEBAAE/AKwh2wla0+xZ5Grx3UCWchwNDBz9n//EABgRAAIDAAAAAAAAAAAAAAAAAAABAgNB/9oACAECAQE/AJXPGf/EABYRAAMAAAAAAAAAAAAAAAAAAAABA//aAAgBAwEBPwBSP//Z"
+  },
+  "/images/cooper-55-c38824ec.jpg": {
+    "fallback": "/images/cooper-55-c38824ec.jpg",
+    "width": 4032,
+    "height": 3024,
+    "variants": {
+      "640": {
+        "jpg": "/images/cooper-55-c38824ec-640.jpg",
+        "webp": "/images/cooper-55-c38824ec-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/cooper-55-c38824ec-1080.jpg",
+        "webp": "/images/cooper-55-c38824ec-1080.webp"
+      },
+      "1920": {
+        "jpg": "/images/cooper-55-c38824ec-1920.jpg",
+        "webp": "/images/cooper-55-c38824ec-1920.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAMFBv/EABUBAQEAAAAAAAAAAAAAAAAAAAQF/9oADAMBAAIQAxAAAACkZt7p/wD/xAAcEAACAgIDAAAAAAAAAAAAAAAAAgEDFDEEUmL/2gAIAQEAAT8Azao7mfx/RFtbbRRbUjSqf//EABURAQEAAAAAAAAAAAAAAAAAAAAR/9oACAECAQE/AI//xAAXEQADAQAAAAAAAAAAAAAAAAAAARJh/9oACAEDAQE/ALWn/9k="
+  },
+  "/images/cooper-55-c5e8357d.jpg": {
+    "fallback": "/images/cooper-55-c5e8357d.jpg",
+    "width": 5712,
+    "height": 4284,
+    "variants": {
+      "640": {
+        "jpg": "/images/cooper-55-c5e8357d-640.jpg",
+        "webp": "/images/cooper-55-c5e8357d-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/cooper-55-c5e8357d-1080.jpg",
+        "webp": "/images/cooper-55-c5e8357d-1080.webp"
+      },
+      "1920": {
+        "jpg": "/images/cooper-55-c5e8357d-1920.jpg",
+        "webp": "/images/cooper-55-c5e8357d-1920.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABAMF/8QAFQEBAQAAAAAAAAAAAAAAAAAAAQP/2gAMAwEAAhADEAAAAH3zXzf/xAAcEAACAwADAQAAAAAAAAAAAAABAgADEQQSIVH/2gAIAQEAAT8AJ9ILLoiDxho0Snk0uVrtGvExNJ6gsPu7P//EABkRAAEFAAAAAAAAAAAAAAAAAAEAAhESQf/aAAgBAgEBPwAllY1f/8QAGBEAAgMAAAAAAAAAAAAAAAAAABIBITH/2gAIAQMBAT8Ah22j/9k="
+  },
+  "/images/cooper-55-cff56997.jpg": {
+    "fallback": "/images/cooper-55-cff56997.jpg",
+    "width": 5712,
+    "height": 4284,
+    "variants": {
+      "640": {
+        "jpg": "/images/cooper-55-cff56997-640.jpg",
+        "webp": "/images/cooper-55-cff56997-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/cooper-55-cff56997-1080.jpg",
+        "webp": "/images/cooper-55-cff56997-1080.webp"
+      },
+      "1920": {
+        "jpg": "/images/cooper-55-cff56997-1920.jpg",
+        "webp": "/images/cooper-55-cff56997-1920.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAABP/EABUBAQEAAAAAAAAAAAAAAAAAAAID/9oADAMBAAIQAxAAAABKBAi//8QAIRAAAgIBAgcAAAAAAAAAAAAAAQIAEQMEIQUSE0NRYcH/2gAIAQEAAT8A1RJRfT/IoJeqFUN47cybnueKi8XdNW+LKq9MWA6z/8QAFxEAAwEAAAAAAAAAAAAAAAAAAAERIf/aAAgBAgEBPwDKz//EABcRAAMBAAAAAAAAAAAAAAAAAAABESH/2gAIAQMBAT8A2I//2Q=="
+  },
+  "/images/cooper-55-dining.jpg": {
+    "fallback": "/images/cooper-55-dining.jpg",
+    "width": 4032,
+    "height": 3024,
+    "variants": {
+      "640": {
+        "jpg": "/images/cooper-55-dining-640.jpg",
+        "webp": "/images/cooper-55-dining-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/cooper-55-dining-1080.jpg",
+        "webp": "/images/cooper-55-dining-1080.webp"
+      },
+      "1920": {
+        "jpg": "/images/cooper-55-dining-1920.jpg",
+        "webp": "/images/cooper-55-dining-1920.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABQME/8QAFQEBAQAAAAAAAAAAAAAAAAAAAQL/2gAMAwEAAhADEAAAANNREJf/xAAgEAACAQQBBQAAAAAAAAAAAAABAgMABBFREiEiMUFx/9oACAEBAAE/ACkjsMbxQt/Pe3TPrVWszpHyuJMvskmoJl4ByR8Br//EABYRAQEBAAAAAAAAAAAAAAAAAAEAAv/aAAgBAgEBPwAM3//EABYRAQEBAAAAAAAAAAAAAAAAAAIAAf/aAAgBAwEBPwBar//Z"
+  },
+  "/images/cooper-55-e62f3e96.jpg": {
+    "fallback": "/images/cooper-55-e62f3e96.jpg",
+    "width": 4031,
+    "height": 2901,
+    "variants": {
+      "640": {
+        "jpg": "/images/cooper-55-e62f3e96-640.jpg",
+        "webp": "/images/cooper-55-e62f3e96-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/cooper-55-e62f3e96-1080.jpg",
+        "webp": "/images/cooper-55-e62f3e96-1080.webp"
+      },
+      "1920": {
+        "jpg": "/images/cooper-55-e62f3e96-1920.jpg",
+        "webp": "/images/cooper-55-e62f3e96-1920.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABAEF/8QAFAEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEAMQAAAAZMRYf//EACAQAAICAQMFAAAAAAAAAAAAAAECAAMREhMjQUJxgrH/2gAIAQEAAT8ApNmn3b7Lds0XjvFgzHCKVBvcDw01UIr8zcuMEoehn//EABYRAQEBAAAAAAAAAAAAAAAAABECAP/aAAgBAgEBPwCrQd//xAAWEQEBAQAAAAAAAAAAAAAAAAACEQD/2gAIAQMBAT8AIl3/2Q=="
+  },
+  "/images/cooper-55-e98a880d.jpg": {
+    "fallback": "/images/cooper-55-e98a880d.jpg",
+    "width": 4032,
+    "height": 3024,
+    "variants": {
+      "640": {
+        "jpg": "/images/cooper-55-e98a880d-640.jpg",
+        "webp": "/images/cooper-55-e98a880d-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/cooper-55-e98a880d-1080.jpg",
+        "webp": "/images/cooper-55-e98a880d-1080.webp"
+      },
+      "1920": {
+        "jpg": "/images/cooper-55-e98a880d-1920.jpg",
+        "webp": "/images/cooper-55-e98a880d-1920.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAgQF/8QAFAEBAAAAAAAAAAAAAAAAAAAABP/aAAwDAQACEAMQAAAAsGEFj//EABkQAAIDAQAAAAAAAAAAAAAAAAABAgMVUf/aAAgBAQABPwDVhw1qx3Idsen/xAAWEQADAAAAAAAAAAAAAAAAAAAAEXH/2gAIAQIBAT8AUP/EABURAQEAAAAAAAAAAAAAAAAAAAAR/9oACAEDAQE/AK//2Q=="
+  },
+  "/images/default-avatar.jpg": {
+    "fallback": "/images/default-avatar.jpg",
+    "width": 200,
+    "height": 200,
+    "variants": {
+      "200": {
+        "jpg": "/images/default-avatar-200.jpg",
+        "webp": "/images/default-avatar-200.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIQAxAAAACsB//EABkQAQADAQEAAAAAAAAAAAAAAAEAAjERUf/aAAgBAQABPwDp7BHGNauhCtTCf//EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQIBAT8Af//EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQMBAT8Af//Z"
+  },
+  "/images/host-avatar.jpg": {
+    "fallback": "/images/host-avatar.jpg",
+    "width": 2571,
+    "height": 1402,
+    "variants": {
+      "640": {
+        "jpg": "/images/host-avatar-640.jpg",
+        "webp": "/images/host-avatar-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/host-avatar-1080.jpg",
+        "webp": "/images/host-avatar-1080.webp"
+      },
+      "1920": {
+        "jpg": "/images/host-avatar-1920.jpg",
+        "webp": "/images/host-avatar-1920.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAwEG/8QAFQEBAQAAAAAAAAAAAAAAAAAAAgP/2gAMAwEAAhADEAAAANiaw0//xAAfEAEAAQQCAwEAAAAAAAAAAAABAgADERIEMRMhQYH/2gAIAQEAAT8A88dtdfg0cu2isJBjYydlRsW49ZPQd/Co8a1BWGT96r//xAAVEQEBAAAAAAAAAAAAAAAAAAAAIf/aAAgBAgEBPwCv/8QAFxEAAwEAAAAAAAAAAAAAAAAAAAEhI//aAAgBAwEBPwDKxn//2Q=="
+  },
+  "/images/placeholder-property.jpg": {
+    "fallback": "/images/placeholder-property.jpg",
+    "width": 800,
+    "height": 600,
+    "variants": {
+      "640": {
+        "jpg": "/images/placeholder-property-640.jpg",
+        "webp": "/images/placeholder-property-640.webp"
+      },
+      "800": {
+        "jpg": "/images/placeholder-property-800.jpg",
+        "webp": "/images/placeholder-property-800.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAEG/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEAMQAAAA1ND/xAAbEAACAwADAAAAAAAAAAAAAAAAARIjMRNSYv/aAAgBAQABPwCvyLjeRK31K1kT/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAgBAgEBPwB//8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAgBAwEBPwB//9k="
+  },
+  "/images/placeholder.jpg": {
+    "fallback": "/images/placeholder.jpg",
+    "width": 800,
+    "height": 600,
+    "variants": {
+      "640": {
+        "jpg": "/images/placeholder-640.jpg",
+        "webp": "/images/placeholder-640.webp"
+      },
+      "800": {
+        "jpg": "/images/placeholder-800.jpg",
+        "webp": "/images/placeholder-800.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIQAxAAAACpB//EAB0QAAICAQUAAAAAAAAAAAAAAAABAxECEhMxUmL/2gAIAQEAAT8AuLyLbbpaSon1MVFjxR//xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAECAQE/AH//xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAEDAQE/AH//2Q=="
+  },
+  "/images/simcoe-238-bath1.jpg": {
+    "fallback": "/images/simcoe-238-bath1.jpg",
+    "width": 1529,
+    "height": 2048,
+    "variants": {
+      "640": {
+        "jpg": "/images/simcoe-238-bath1-640.jpg",
+        "webp": "/images/simcoe-238-bath1-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/simcoe-238-bath1-1080.jpg",
+        "webp": "/images/simcoe-238-bath1-1080.webp"
+      },
+      "1529": {
+        "jpg": "/images/simcoe-238-bath1-1529.jpg",
+        "webp": "/images/simcoe-238-bath1-1529.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAwIE/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAL/2gAMAwEAAhADEAAAANyHEv/EABsQAAIDAQEBAAAAAAAAAAAAAAECABEhMRKR/9oACAEBAAE/AL8lVA6Zdhhl7EJpj8jvq23cn//EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQIBAT8Af//EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQMBAT8Af//Z"
+  },
+  "/images/simcoe-238-bath2.jpg": {
+    "fallback": "/images/simcoe-238-bath2.jpg",
+    "width": 2048,
+    "height": 1529,
+    "variants": {
+      "640": {
+        "jpg": "/images/simcoe-238-bath2-640.jpg",
+        "webp": "/images/simcoe-238-bath2-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/simcoe-238-bath2-1080.jpg",
+        "webp": "/images/simcoe-238-bath2-1080.webp"
+      },
+      "1920": {
+        "jpg": "/images/simcoe-238-bath2-1920.jpg",
+        "webp": "/images/simcoe-238-bath2-1920.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAECBf/EABUBAQEAAAAAAAAAAAAAAAAAAAEC/9oADAMBAAIQAxAAAADXIUv/xAAcEAACAgMBAQAAAAAAAAAAAAABAgAREjFBIRP/2gAIAQEAAT8AQYg9rkv0rjy7gZX2fNz5pTBWYZboz//EABYRAAMAAAAAAAAAAAAAAAAAAAAREv/aAAgBAgEBPwCWf//EABYRAAMAAAAAAAAAAAAAAAAAAAAREv/aAAgBAwEBPwCkf//Z"
+  },
+  "/images/simcoe-238-kitchen.jpg": {
+    "fallback": "/images/simcoe-238-kitchen.jpg",
+    "width": 2048,
+    "height": 1529,
+    "variants": {
+      "640": {
+        "jpg": "/images/simcoe-238-kitchen-640.jpg",
+        "webp": "/images/simcoe-238-kitchen-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/simcoe-238-kitchen-1080.jpg",
+        "webp": "/images/simcoe-238-kitchen-1080.webp"
+      },
+      "1920": {
+        "jpg": "/images/simcoe-238-kitchen-1920.jpg",
+        "webp": "/images/simcoe-238-kitchen-1920.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAwUG/8QAFQEBAQAAAAAAAAAAAAAAAAAAAQL/2gAMAwEAAhADEAAAANBOIJf/xAAeEAACAQUAAwAAAAAAAAAAAAABAgMABBESEyEiUf/aAAgBAQABPwDm+6r65K5q4mSGVnIydRqKiaVbyLDnTl9z5q4VJrmIKxDhdq//xAAXEQADAQAAAAAAAAAAAAAAAAAAAREh/9oACAECAQE/AGssP//EABYRAAMAAAAAAAAAAAAAAAAAAAABMf/aAAgBAwEBPwBU/9k="
+  },
+  "/images/simcoe-238-living.jpg": {
+    "fallback": "/images/simcoe-238-living.jpg",
+    "width": 2048,
+    "height": 1529,
+    "variants": {
+      "640": {
+        "jpg": "/images/simcoe-238-living-640.jpg",
+        "webp": "/images/simcoe-238-living-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/simcoe-238-living-1080.jpg",
+        "webp": "/images/simcoe-238-living-1080.webp"
+      },
+      "1920": {
+        "jpg": "/images/simcoe-238-living-1920.jpg",
+        "webp": "/images/simcoe-238-living-1920.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAwT/xAAVAQEBAAAAAAAAAAAAAAAAAAABAv/aAAwDAQACEAMQAAAAtaJ4f//EACAQAAIBAwQDAAAAAAAAAAAAAAECAwAREhMhMXEEFEH/2gAIAQEAAT8A9mEzPDqjNL5DqvFxndLMMCpO3V6ZG1hKG3yPPAvSqyY2kt82Ff/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQIBAT8Af//EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQMBAT8Af//Z"
+  },
+  "/images/wellesley-1607-bath.jpg": {
+    "fallback": "/images/wellesley-1607-bath.jpg",
+    "width": 1200,
+    "height": 1600,
+    "variants": {
+      "640": {
+        "jpg": "/images/wellesley-1607-bath-640.jpg",
+        "webp": "/images/wellesley-1607-bath-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/wellesley-1607-bath-1080.jpg",
+        "webp": "/images/wellesley-1607-bath-1080.webp"
+      },
+      "1200": {
+        "jpg": "/images/wellesley-1607-bath-1200.jpg",
+        "webp": "/images/wellesley-1607-bath-1200.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAgMF/8QAFAEBAAAAAAAAAAAAAAAAAAAAA//aAAwDAQACEAMQAAAAWgIkn//EACIQAQAABQIHAAAAAAAAAAAAAAEAAgMRIRJhBBQjMkGRof/aAAgBAQABPwCU61RNj7FMEBu21Od45aQvd7sufEUuHSVmpVKmmduDPk93j//EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQIBAT8Af//EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQMBAT8Af//Z"
+  },
+  "/images/wellesley-1607-bedroom.jpg": {
+    "fallback": "/images/wellesley-1607-bedroom.jpg",
+    "width": 1600,
+    "height": 1200,
+    "variants": {
+      "640": {
+        "jpg": "/images/wellesley-1607-bedroom-640.jpg",
+        "webp": "/images/wellesley-1607-bedroom-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/wellesley-1607-bedroom-1080.jpg",
+        "webp": "/images/wellesley-1607-bedroom-1080.webp"
+      },
+      "1600": {
+        "jpg": "/images/wellesley-1607-bedroom-1600.jpg",
+        "webp": "/images/wellesley-1607-bedroom-1600.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABAMF/8QAFAEBAAAAAAAAAAAAAAAAAAAAAv/aAAwDAQACEAMQAAAA0SWMF//EACAQAAICAQMFAAAAAAAAAAAAAAECAAMRBAWRITFRgbH/2gAIAQEAAT8AawICe4DY8R9VYxK1omeZRfp7+tThvo5m5AJXVaiKWD49MJ//xAAYEQACAwAAAAAAAAAAAAAAAAABAgARIf/aAAgBAgEBPwBwdpp//8QAFxEAAwEAAAAAAAAAAAAAAAAAAQIRAP/aAAgBAwEBPwBCBKu//9k="
+  },
+  "/images/wellesley-1607-kitchen.jpg": {
+    "fallback": "/images/wellesley-1607-kitchen.jpg",
+    "width": 1600,
+    "height": 1200,
+    "variants": {
+      "640": {
+        "jpg": "/images/wellesley-1607-kitchen-640.jpg",
+        "webp": "/images/wellesley-1607-kitchen-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/wellesley-1607-kitchen-1080.jpg",
+        "webp": "/images/wellesley-1607-kitchen-1080.webp"
+      },
+      "1600": {
+        "jpg": "/images/wellesley-1607-kitchen-1600.jpg",
+        "webp": "/images/wellesley-1607-kitchen-1600.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABAEF/8QAFAEBAAAAAAAAAAAAAAAAAAAABP/aAAwDAQACEAMQAAAA0jUh0f/EACIQAAIBAwIHAAAAAAAAAAAAAAIDAQAREgQhFCIxM2Fxkv/aAAgBAQABPwCXryId7j15Zp2oUwDEGFEiQ5W81IsHiCIoxZt6o09whbFixn5r/8QAGBEAAgMAAAAAAAAAAAAAAAAAAAIBETL/2gAIAQIBAT8AlkvR/8QAGREAAQUAAAAAAAAAAAAAAAAAAgABAxEh/9oACAEDAQE/AGCStFf/2Q=="
+  },
+  "/images/wellesley-1607-living.jpg": {
+    "fallback": "/images/wellesley-1607-living.jpg",
+    "width": 1600,
+    "height": 1200,
+    "variants": {
+      "640": {
+        "jpg": "/images/wellesley-1607-living-640.jpg",
+        "webp": "/images/wellesley-1607-living-640.webp"
+      },
+      "1080": {
+        "jpg": "/images/wellesley-1607-living-1080.jpg",
+        "webp": "/images/wellesley-1607-living-1080.webp"
+      },
+      "1600": {
+        "jpg": "/images/wellesley-1607-living-1600.jpg",
+        "webp": "/images/wellesley-1607-living-1600.webp"
+      }
+    },
+    "placeholder": "data:image/jpeg;base64,/9j/2wBDABISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////2wBDARISEhITEhQWFhQcHhseHCkmIiImKT4sMCwwLD5eO0U7O0U7XlNlUk1SZVOWdmhodpatkYqRrdK8vNL/+///////wgARCAAQABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABQME/8QAFQEBAQAAAAAAAAAAAAAAAAAAAQL/2gAMAwEAAhADEAAAAEZj65f/xAAgEAACAQMEAwAAAAAAAAAAAAABAgMABBESEyIxIUFx/9oACAEBAAE/AA+UbjkY7PurmR4reVlCgqjEH5VtdLMgLvz22Vk6Hk1MyXMQh1hWZMV//8QAGBEAAgMAAAAAAAAAAAAAAAAAAAECEUH/2gAIAQIBAT8AuKw//8QAFxEBAQEBAAAAAAAAAAAAAAAAAREAAv/aAAgBAwEBPwBO1t3/2Q=="
+  }
+}

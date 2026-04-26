@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import Image from 'next/image';
+import ResponsiveImage from '@/components/ui/ResponsiveImage';
 import Link from 'next/link';
 import { ArrowRight, MapPin, Star, Heart } from 'lucide-react';
 import { Card, Badge, Section } from '@/components/ui';
@@ -185,7 +185,7 @@ export function FeaturedPropertiesSection() {
                   <Card className="group h-full">
                     <Link href={`/property/${property.id}`}>
                       <div className="aspect-[4/3] overflow-hidden relative">
-                        <Image
+                        <ResponsiveImage
                           src={property.images[0] || '/images/placeholder-property.jpg'}
                           alt={property.title}
                           fill
@@ -251,7 +251,7 @@ export function FeaturedPropertiesSection() {
               <Card key={property.id} className="group">
                 <Link href={`/property/${property.id}`}>
                   <div className="aspect-[4/3] overflow-hidden relative">
-                    <Image
+                    <ResponsiveImage
                       src={property.images[0] || '/images/placeholder-property.jpg'}
                       alt={property.title}
                       fill

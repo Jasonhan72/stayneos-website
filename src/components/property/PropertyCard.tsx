@@ -1,5 +1,5 @@
 import { Heart, Star, MapPin, Users, Maximize } from "lucide-react";
-import Image from "next/image";
+import ResponsiveImage from '@/components/ui/ResponsiveImage';
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import { useWishlist } from "@/lib/context/WishlistContext";
@@ -150,7 +150,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         <div className="card h-full flex flex-col">
           {/* Image Container */}
           <div className="relative aspect-[4/3] overflow-hidden">
-            <Image
+            <ResponsiveImage
               src={property.images[0] || "/images/cooper-55-c5e8357d.jpg"}
               alt={`${title} - Main image`}
               fill

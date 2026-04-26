@@ -27,7 +27,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:e2e": "playwright test",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "images:optimize": "node scripts/optimize-images.mjs"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
@@ -77,6 +78,7 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
     "whatwg-fetch": "^3.6.20",
-    "wrangler": "^4.78.0"
+    "wrangler": "^4.78.0",
+    "sharp": "^0.34.4"
   }
 }

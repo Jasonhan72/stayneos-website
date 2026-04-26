@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useMemo, useRef } from 'react';
-import Image from 'next/image';
+import ResponsiveImage from '@/components/ui/ResponsiveImage';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
@@ -619,7 +619,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                 key={index} 
                 className="w-full flex-shrink-0 snap-center relative aspect-[4/3]"
               >
-                <Image 
+                <ResponsiveImage 
                   src={url} 
                   alt={`${localizedTitle} - Image ${index + 1}`}
                   fill 
@@ -674,7 +674,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
               <div className="h-[400px] rounded-xl overflow-hidden relative cursor-pointer hover:opacity-95 transition-opacity"
                 onClick={() => setShowGallery(true)}
               >
-                <Image src={imageUrls[0]} alt={localizedTitle} fill priority={true} className="object-cover" />
+                <ResponsiveImage src={imageUrls[0]} alt={localizedTitle} fill priority={true} className="object-cover" />
               </div>
             ) : imageUrls.length === 2 ? (
               /* 2 images: side by side */
@@ -682,7 +682,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                 {imageUrls.slice(0, 2).map((img, idx) => (
                   <div key={idx} className="relative cursor-pointer hover:opacity-95 transition-opacity"
                     onClick={() => { setCurrentImageIndex(idx); setShowGallery(true); }}>
-                    <Image src={img} alt={`${localizedTitle} - ${idx + 1}`} fill className="object-cover" priority={idx === 0} />
+                    <ResponsiveImage src={img} alt={`${localizedTitle} - ${idx + 1}`} fill className="object-cover" priority={idx === 0} />
                   </div>
                 ))}
               </div>
@@ -691,13 +691,13 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
               <div className="grid grid-cols-2 gap-2 h-[400px] rounded-xl overflow-hidden">
                 <div className="relative cursor-pointer hover:opacity-95 transition-opacity"
                   onClick={() => setShowGallery(true)}>
-                  <Image src={imageUrls[0]} alt={localizedTitle} fill priority={true} className="object-cover" />
+                  <ResponsiveImage src={imageUrls[0]} alt={localizedTitle} fill priority={true} className="object-cover" />
                 </div>
                 <div className={`grid ${imageUrls.length === 3 ? 'grid-rows-2' : 'grid-cols-2 grid-rows-2'} gap-2`}>
                   {imageUrls.slice(1).map((img, idx) => (
                     <div key={idx} className={`relative cursor-pointer hover:opacity-95 transition-opacity ${imageUrls.length === 4 ? '' : idx === 0 ? '' : ''}`}
                       onClick={() => { setCurrentImageIndex(idx + 1); setShowGallery(true); }}>
-                      <Image src={img} alt={`${localizedTitle} - ${idx + 2}`} fill className="object-cover" />
+                      <ResponsiveImage src={img} alt={`${localizedTitle} - ${idx + 2}`} fill className="object-cover" />
                       {idx === imageUrls.length - 2 && (
                         <button onClick={(e) => { e.stopPropagation(); setShowGallery(true); }}
                           className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-lg border border-neutral-900 bg-white px-4 py-2 text-sm font-medium text-neutral-900 shadow-sm transition-colors hover:bg-neutral-50 z-10">
@@ -713,12 +713,12 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
               <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[400px] rounded-xl overflow-hidden">
                 <div className="col-span-2 row-span-2 relative cursor-pointer hover:opacity-95 transition-opacity"
                   onClick={() => setShowGallery(true)}>
-                  <Image src={imageUrls[0]} alt={localizedTitle} fill priority={true} className="object-cover" />
+                  <ResponsiveImage src={imageUrls[0]} alt={localizedTitle} fill priority={true} className="object-cover" />
                 </div>
                 {imageUrls.slice(1, 5).map((img, idx) => (
                   <div key={idx} className="relative cursor-pointer hover:opacity-95 transition-opacity"
                     onClick={() => { setCurrentImageIndex(idx + 1); setShowGallery(true); }}>
-                    <Image src={img} alt={`${localizedTitle} - ${idx + 2}`} fill className="object-cover" />
+                    <ResponsiveImage src={img} alt={`${localizedTitle} - ${idx + 2}`} fill className="object-cover" />
                     {idx === 3 && (
                       <button onClick={(e) => { e.stopPropagation(); setShowGallery(true); }}
                         className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-lg border border-neutral-900 bg-white px-4 py-2 text-sm font-medium text-neutral-900 shadow-sm transition-colors hover:bg-neutral-50 z-10">
@@ -774,7 +774,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
             {/* Host Info */}
             <div className="flex items-center gap-3 py-6">
               <div className="relative w-12 h-12 rounded-full overflow-hidden bg-white border border-neutral-200 p-1.5">
-                <Image 
+                <ResponsiveImage 
                   src={mockHost.avatar} 
                   alt={mockHost.name}
                   fill
@@ -1111,7 +1111,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
             
             {/* Main Image */}
             <div className="flex-1 relative flex items-center justify-center">
-              <Image 
+              <ResponsiveImage 
                 src={imageUrls[currentImageIndex]} 
                 alt={`${localizedTitle} - Image ${currentImageIndex + 1}`} 
                 fill 
@@ -1147,7 +1147,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
                         : 'opacity-50 hover:opacity-100'
                     }`}
                   >
-                    <Image src={image} alt={`Thumbnail ${index + 1}`} fill className="object-cover" />
+                    <ResponsiveImage src={image} alt={`Thumbnail ${index + 1}`} fill className="object-cover" />
                   </button>
                 ))}
               </div>

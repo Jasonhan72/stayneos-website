@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import ResponsiveImage from '@/components/ui/ResponsiveImage';
 import Link from 'next/link';
 import { Container } from '@/components/ui';
 import { useI18n } from '@/lib/i18n';
@@ -17,7 +17,7 @@ export default function AboutContent() {
       {/* Hero Section */}
       <section className="relative bg-primary py-24 lg:py-32 overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-          <Image src="/images/cooper-55-e98a880d.jpg" alt="Toronto skyline view from a NEOS property" fill className="object-cover" priority={true} />
+          <ResponsiveImage src="/images/cooper-55-e98a880d.jpg" alt="Toronto skyline view from a NEOS property" fill className="object-cover" priority={true} />
         </div>
         <Container className="relative z-10">
           <div className="max-w-3xl mx-auto text-center">
@@ -46,7 +46,7 @@ export default function AboutContent() {
             </div>
             <div className="relative">
               <div className="aspect-[4/5] relative">
-                <Image src="/images/cooper-55-c5e8357d.jpg" alt="Living room in a NEOS furnished suite" fill className="object-cover" />
+                <ResponsiveImage src="/images/cooper-55-c5e8357d.jpg" alt="Living room in a NEOS furnished suite" fill className="object-cover" />
               </div>
               <div className="absolute -bottom-6 -left-6 bg-accent p-6 md:p-8 max-w-xs">
                 <p className="text-3xl md:text-4xl font-bold text-primary mb-2">28+</p>
@@ -81,12 +81,12 @@ export default function AboutContent() {
             <div className="order-2 lg:order-1 relative">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-4">
-                  <div className="aspect-square relative"><Image src="/images/simcoe-238-kitchen.jpg" alt="Kitchen in a NEOS furnished suite" fill className="object-cover" /></div>
-                  <div className="aspect-[4/5] relative"><Image src="/images/cooper-55-a12c07ee.jpg" alt="Living space in a NEOS property" fill className="object-cover" /></div>
+                  <div className="aspect-square relative"><ResponsiveImage src="/images/simcoe-238-kitchen.jpg" alt="Kitchen in a NEOS furnished suite" fill className="object-cover" /></div>
+                  <div className="aspect-[4/5] relative"><ResponsiveImage src="/images/cooper-55-a12c07ee.jpg" alt="Living space in a NEOS property" fill className="object-cover" /></div>
                 </div>
                 <div className="space-y-4 pt-8">
-                  <div className="aspect-[4/5] relative"><Image src="/images/wellesley-1607-bedroom.jpg" alt="Bedroom in a NEOS furnished suite" fill className="object-cover" /></div>
-                  <div className="aspect-square relative"><Image src="/images/wellesley-1607-bath.jpg" alt="Bathroom in a NEOS furnished suite" fill className="object-cover" /></div>
+                  <div className="aspect-[4/5] relative"><ResponsiveImage src="/images/wellesley-1607-bedroom.jpg" alt="Bedroom in a NEOS furnished suite" fill className="object-cover" /></div>
+                  <div className="aspect-square relative"><ResponsiveImage src="/images/wellesley-1607-bath.jpg" alt="Bathroom in a NEOS furnished suite" fill className="object-cover" /></div>
                 </div>
               </div>
             </div>
@@ -111,7 +111,7 @@ export default function AboutContent() {
       {/* Commitment */}
       <section className="py-20 lg:py-28 bg-primary relative overflow-hidden">
         <div className="absolute inset-0 opacity-5">
-          <Image src="/images/cooper-55-cff56997.jpg" alt="Interior detail from a NEOS property" fill className="object-cover" />
+          <ResponsiveImage src="/images/cooper-55-cff56997.jpg" alt="Interior detail from a NEOS property" fill className="object-cover" />
         </div>
         <Container className="relative z-10">
           <div className="text-center mb-16">
@@ -163,7 +163,7 @@ function StoryCard({ icon, step, title, description, image, highlighted = false 
   return (
     <div className={`group ${highlighted ? 'md:-mt-4' : ''}`}>
       <div className="aspect-[4/3] relative mb-6 overflow-hidden">
-        <Image src={image} alt={title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+        <ResponsiveImage src={image} alt={title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
         <div className={`absolute inset-0 ${highlighted ? 'bg-primary/20' : 'bg-gradient-to-t from-black/40 to-transparent'}`} />
         <div className="absolute top-4 left-4"><span className={`text-5xl font-bold ${highlighted ? 'text-accent' : 'text-white/80'}`}>{step}</span></div>
       </div>

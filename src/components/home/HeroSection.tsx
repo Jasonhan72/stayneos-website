@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import ResponsiveImage from '@/components/ui/ResponsiveImage';
 import { Container } from '@/components/ui';
 import { HeroChatInline } from './HeroChatInline';
 import { useI18n } from '@/lib/i18n';
@@ -13,7 +13,7 @@ export function HeroSection() {
       <section className="relative h-[100svh] min-h-[600px] flex items-center justify-center overflow-hidden bg-neutral-900">
         {/* Background image (always visible, renders first) */}
         <div className="absolute inset-0 z-0">
-          <Image
+          <ResponsiveImage
             src="/images/cooper-55-e98a880d.jpg"
             alt="55 Cooper St lakefront view"
             fill
