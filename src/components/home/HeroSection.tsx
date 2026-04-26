@@ -22,16 +22,17 @@ export function HeroSection() {
           />
         </div>
 
-        {/* Background video (overlays image on desktop, may not autoplay on iOS) */}
+        {/* Background video (desktop only, lazy preload metadata) */}
         <video
           autoPlay
           muted
           loop
           playsInline
-          poster="/images/cooper-55-e98a880d.jpg"
+          preload="metadata"
+          poster="/videos/hero-poster.jpg"
           className="absolute inset-0 w-full h-full object-cover z-0 hidden md:block"
         >
-          <source src="/videos/hero-loop.mp4" type="video/mp4" />
+          <source src="/videos/hero-loop.mp4" type="video/mp4" media="(min-width: 768px)" />
         </video>
 
         {/* Dark overlay */}

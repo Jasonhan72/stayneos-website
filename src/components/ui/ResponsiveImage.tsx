@@ -19,41 +19,109 @@ type ResponsiveImageProps = Omit<ImageProps, 'src' | 'placeholder' | 'blurDataUR
 const generated = manifest as Record<string, GeneratedVariant>;
 const preferredWidths = [640, 1080, 1920];
 
-function buildSrcSet(entry: GeneratedVariant | undefined, format: 'avif' | 'webp' | 'jpg') {
-  if (!entry) return '';
-  return preferredWidths
-    .map((width) => {
-      const actual = entry.variants[String(width)] ? width : Object.keys(entry.variants).map(Number).sort((a,b)=>a-b).find((w) => w >= width) ?? Number(Object.keys(entry.variants)[0]);
-      const src = entry.variants[String(actual)]?.[format];
-      return src ? `${src} ${actual}w` : null;
+function buildSrcSet(entry: GeneratedVariant, format: 'avif' | 'webp' | 'jpg') {
+  const variantWidths = Object.keys(entry.variants).map(Number).sort((a, b) => a - b);
+  const targets = preferredWidths
+    .map((width) => variantWidths.find((w) => w >= width) ?? variantWidths[variantWidths.length - 1])
+    .filter((v, i, arr) => v != null && arr.indexOf(v) === i);
+  return targets
+    .map((w) => {
+      const url = entry.variants[String(w)]?.[format];
+      return url ? `${url} ${w}w` : null;
     })
     .filter(Boolean)
-    .filter((v, i, arr) => arr.indexOf(v) === i)
     .join(', ');
 }
 
-export default function ResponsiveImage({ src, alt, sizes = '100vw', loading, priority, ...props }: ResponsiveImageProps) {
+function pickFallback(entry: GeneratedVariant): string {
+  // Prefer the largest jpg variant over the original (which can be many MB).
+  const variantWidths = Object.keys(entry.variants).map(Number).sort((a, b) => b - a);
+  for (const w of variantWidths) {
+    const jpg = entry.variants[String(w)]?.jpg;
+    if (jpg) return jpg;
+  }
+  return entry.fallback;
+}
+
+export default function ResponsiveImage({
+  src,
+  alt,
+  sizes = '100vw',
+  loading,
+  priority,
+  width,
+  height,
+  className,
+  style,
+  ...rest
+}: ResponsiveImageProps) {
   const entry = generated[src];
 
+  // No optimized variants → defer to next/image as-is.
   if (!entry) {
-    return <Image src={src} alt={alt} sizes={sizes} loading={loading} priority={priority} {...props} />;
+    return (
+      <Image
+        src={src}
+        alt={alt as string}
+        sizes={sizes}
+        loading={loading}
+        priority={priority}
+        width={width as number}
+        height={height as number}
+        className={className}
+        style={style}
+        {...rest}
+      />
+    );
   }
 
   const avif = buildSrcSet(entry, 'avif');
   const webp = buildSrcSet(entry, 'webp');
+  const jpgSrcSet = buildSrcSet(entry, 'jpg');
+  const fallbackSrc = pickFallback(entry);
+
+  // Use a plain <picture>/<img> pipeline so the browser only fetches one
+  // resource. Wrapping next/image inside <picture> caused double-fetches
+  // (next/image emits its own srcSet alongside the <source> elements).
+  // We still preserve LQIP via a CSS background blur using the placeholder.
+  const placeholderStyle = entry.placeholder
+    ? {
+        backgroundImage: `url(${entry.placeholder})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        ...style,
+      }
+    : style;
+
+  // Filter out next/image-only props that <img> doesn't understand.
+  const {
+    quality: _q,
+    fill: _f,
+    placeholder: _p,
+    blurDataURL: _b,
+    onLoadingComplete: _olc,
+    unoptimized: _u,
+    ...imgProps
+  } = rest as Record<string, unknown>;
+
   return (
     <picture>
       {avif ? <source type="image/avif" srcSet={avif} sizes={sizes} /> : null}
       {webp ? <source type="image/webp" srcSet={webp} sizes={sizes} /> : null}
-      <Image
-        {...props}
-        src={entry.fallback}
-        alt={alt}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={fallbackSrc}
+        srcSet={jpgSrcSet || undefined}
         sizes={sizes}
-        loading={loading}
-        priority={priority}
-        placeholder={entry.placeholder ? 'blur' : 'empty'}
-        blurDataURL={entry.placeholder ?? undefined}
+        alt={alt as string}
+        width={width as number | undefined}
+        height={height as number | undefined}
+        loading={priority ? 'eager' : (loading ?? 'lazy')}
+        decoding="async"
+        fetchPriority={priority ? 'high' : 'auto'}
+        className={className}
+        style={placeholderStyle}
+        {...(imgProps as Record<string, unknown>)}
       />
     </picture>
   );
