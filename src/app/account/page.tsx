@@ -1,16 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
 import { Bell, ChevronRight, HelpCircle, LogOut, Settings } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/UserContext";
 
 export default function AccountIndexPage() {
   const { locale } = useI18n();
   const { user, logout } = useAuth();
+  const router = useRouter();
   const L = useCallback((z: string, e: string, f: string) => (locale === "zh" ? z : locale === "fr" ? f : e), [locale]);
   const name = (user?.firstName || user?.name || user?.email || "NEOS").toUpperCase();
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches) {
+      router.replace("/account/personal-info");
+    }
+  }, [router]);
 
   const items = [
     { href: "/account/personal-info", icon: Settings, label: L("账号设置", "Account settings", "Paramètres du compte") },

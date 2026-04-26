@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, FormEvent } from 'react';
+import { usePathname } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
 
 interface Message {
@@ -17,6 +18,7 @@ interface ChatHistory {
 
 export function CustomerChat() {
   const { t } = useI18n();
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
@@ -206,6 +208,10 @@ export function CustomerChat() {
       }]);
     }
   };
+
+  if (pathname?.startsWith('/account')) {
+    return null;
+  }
 
   return (
     <>

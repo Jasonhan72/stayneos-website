@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback } from "react";
@@ -33,7 +34,9 @@ export function AccountDesktopShell({ children, title, description, aside }: { c
     <div className="min-h-screen bg-white">
       <div className="border-b border-neutral-200">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-4 py-4 sm:px-6 lg:px-10">
-          <Link href="/" className="text-[28px] font-semibold tracking-[-0.03em] text-[#9f1d22]">NEOS</Link>
+          <Link href="/" className="inline-flex items-center">
+            <Image src="/images/logo/neostay-logo.png" alt="NEOS" width={96} height={24} className="h-6 w-auto" priority />
+          </Link>
           <Link href="/" className="rounded-full border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-900 transition hover:bg-neutral-50">{L("完成", "Done", "Terminé")}</Link>
         </div>
       </div>
