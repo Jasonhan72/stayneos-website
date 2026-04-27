@@ -32,7 +32,7 @@ export function AccountDesktopShell({ children, title, description, aside }: { c
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="border-b border-neutral-200">
+      <div className="hidden border-b border-neutral-200 lg:block">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-4 py-4 sm:px-6 lg:px-10">
           <Link href="/" className="inline-flex items-center">
             <Image src="/logo.png" alt="NEOS" width={96} height={24} className="h-6 w-auto" priority />
@@ -87,6 +87,7 @@ export function AccountDesktopShell({ children, title, description, aside }: { c
 
           <div className={cn("mt-8", aside ? "grid gap-8 xl:grid-cols-[minmax(0,1fr)_320px]" : "") }>
             <div>{children}</div>
+            {aside ? <div className="mt-8 xl:hidden">{aside}</div> : null}
             {aside ? <div className="hidden xl:block">{aside}</div> : null}
           </div>
         </main>

@@ -209,7 +209,7 @@ export function CustomerChat() {
     }
   };
 
-  if (pathname?.startsWith('/account')) {
+  if (pathname?.startsWith('/account') || pathname?.startsWith('/property/')) {
     return null;
   }
 

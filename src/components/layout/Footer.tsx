@@ -4,10 +4,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Phone, Mail, Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
   const { t } = useI18n();
+  const pathname = usePathname();
   const currentYear = new Date().getFullYear();
+
+  if (pathname === "/account") {
+    return null;
+  }
 
   const footerLinks = {
     company: [

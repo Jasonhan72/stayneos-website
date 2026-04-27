@@ -28,7 +28,7 @@ export default function AccountIndexPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="mx-auto max-w-md px-5 pb-10 pt-5 lg:hidden">
+      <div className="mx-auto min-h-screen max-w-md px-5 pb-10 pt-5 lg:hidden">
         <div className="flex items-center justify-between">
           <h1 className="text-[34px] font-semibold tracking-[-0.03em] text-neutral-950">{L("菜单", "Menu", "Menu")}</h1>
           <div className="flex items-center gap-3">
