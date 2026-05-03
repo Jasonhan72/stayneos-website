@@ -54,7 +54,7 @@ export default function ResetPasswordForm({ initialToken = "" }: { initialToken?
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-sm">
         <div className="text-center mb-8">
           <Link href="/">
-            <Image src="/logo.png" alt="NEOS" width={200} height={70} className="h-16 w-auto object-contain mx-auto mb-4" />
+            <Image src="/logo.png" alt="NEOS" width={150} height={50} className="h-12 w-auto object-contain mx-auto mb-4" />
           </Link>
           <h1 className="text-2xl font-bold text-gray-900">Set New Password</h1>
         </div>
