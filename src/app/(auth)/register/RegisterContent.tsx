@@ -15,7 +15,7 @@ export default function RegisterContent() {
         <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-primary/50" />
         <div className="relative z-10 flex flex-col justify-between h-full p-12 xl:p-16">
           <Link href="/" className="inline-block">
-            <Image src="/logo.png" alt="NEOS" width={180} height={60} className="h-12 w-auto object-contain brightness-0 invert" priority={true} />
+            <Image src="/logo-light.png" alt="NEOS" width={180} height={60} className="h-12 w-auto object-contain" priority={true} />
           </Link>
           <div className="max-w-md">
             <h1 className="text-4xl xl:text-5xl font-bold text-white mb-6 leading-tight">

@@ -19,7 +19,7 @@ export default function LoginContent() {
         <div className="relative z-10 flex flex-col justify-between h-full p-12">
           <div>
             <Link href="/" className="inline-block">
-              <ResponsiveImage src="/logo.png" alt="NEOS" width={180} height={60} className="h-14 w-auto object-contain brightness-0 invert" priority={true} />
+              <ResponsiveImage src="/logo-light.png" alt="NEOS" width={180} height={60} className="h-14 w-auto object-contain" priority={true} />
             </Link>
           </div>
           <div className="max-w-lg">
