@@ -58,7 +58,7 @@ export default function Footer() {
                   alt="NEOS"
                   width={150}
                   height={50}
-                  className="h-10 md:h-11 w-auto object-contain"
+                  className="h-14 md:h-16 w-auto object-contain"
                 />
               </Link>
               <p className="mt-4 text-primary-100 max-w-sm leading-relaxed text-sm md:text-base">

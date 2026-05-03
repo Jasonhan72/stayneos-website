@@ -24,7 +24,7 @@ export default async function LoginPage({
         <div className="relative z-10 flex flex-col justify-between h-full p-12">
           <div>
             <Link href="/" className="inline-block">
-              <ResponsiveImage src="/logo-light.png" alt="NEOS" width={180} height={60} className="h-14 w-auto object-contain" priority={true} />
+              <ResponsiveImage src="/logo-light.png" alt="NEOS" width={180} height={60} className="h-20 w-auto object-contain" priority={true} />
             </Link>
           </div>
           <div className="max-w-lg">
@@ -38,7 +38,7 @@ export default async function LoginPage({
         <div className="w-full max-w-md">
           <div className="lg:hidden flex justify-center mb-8">
             <Link href="/">
-              <ResponsiveImage src="/logo.png" alt="NEOS" width={150} height={50} className="h-12 w-auto object-contain" priority={true} />
+              <ResponsiveImage src="/logo.png" alt="NEOS" width={150} height={50} className="h-14 w-auto object-contain" priority={true} />
             </Link>
           </div>
 
