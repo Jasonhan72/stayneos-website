@@ -120,7 +120,7 @@ export default function MessagesPage() {
                 {L("联系我们", "Contact us", "Nous contacter")}
               </Link>
               <a
-                href="https://wa.me/16478626518"
+                href="https://wa.me/16474467987?text=Hi%2C%20I'm%20interested%20in%20NEOS%20apartments"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 px-5 py-2.5 text-sm font-medium text-neutral-900 hover:bg-neutral-50"

@@ -3,12 +3,14 @@
 import { useState, useEffect, useRef, FormEvent } from 'react';
 import { usePathname } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
+import { ChatExternalPropertyCard, type ChatExternalProperty } from '@/components/home/ChatExternalPropertyCard';
 
 interface Message {
   id: string;
   text: string;
   sender: 'user' | 'bot';
   timestamp: Date;
+  externalProperties?: ChatExternalProperty[];
 }
 
 interface ChatHistory {
@@ -161,11 +163,17 @@ export function CustomerChat() {
         setSessionId(data.sessionId);
       }
       
+      const externalProperties: ChatExternalProperty[] | undefined =
+        Array.isArray(data.externalProperties) && data.externalProperties.length > 0
+          ? data.externalProperties
+          : undefined;
+
       const botMessage: Message = {
         id: Date.now().toString(),
         text: data.text,
         sender: 'bot',
-        timestamp: new Date()
+        timestamp: new Date(),
+        externalProperties,
       };
       
       setMessages(prev => [...prev, botMessage]);
@@ -328,6 +336,13 @@ export function CustomerChat() {
                     {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 </div>
+                {message.externalProperties && message.externalProperties.length > 0 && (
+                  <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
+                    {message.externalProperties.map((p, i) => (
+                      <ChatExternalPropertyCard key={`${p.url}-${i}`} property={p} variant="light" />
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
             

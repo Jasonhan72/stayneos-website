@@ -245,7 +245,7 @@ async function getPropertyContext(): Promise<string> {
 }
 
 // Direct web search (shared lib, no HTTP round-trip)
-import { performWebSearch } from '@/lib/web-search';
+import { performWebSearch, searchExternalProperties, type ExternalProperty } from '@/lib/web-search';
 
 async function callWebSearch(query: string): Promise<string> {
   try {
@@ -254,6 +254,24 @@ async function callWebSearch(query: string): Promise<string> {
     console.error('Web search error:', error);
     return 'Unable to fetch web search results at this time.';
   }
+}
+
+// Detect whether the user is specifically looking for property listings
+// (so we should try to render external property cards, not just news).
+function needsExternalPropertySearch(query: string): boolean {
+  const q = query.toLowerCase();
+  const propertyKeywords = [
+    'rent', 'rental', 'lease', 'apartment', 'condo', 'house', 'studio',
+    'bedroom', '1br', '2br', '3br', 'br ', 'unit', 'suite', 'listing',
+    'find', 'looking for', 'show me', 'available',
+    // Chinese
+    '房源', '出租', '出售', '公寓', '单间', '两居', '三居', '套房', '帮我找', '查一下房', '找房子',
+    // Site references
+    'condos.ca', 'zolo', 'rentals.ca', 'rentfaster', 'padmapper', 'realtor.ca', 'liv.rent', 'kijiji', 'housesigma',
+  ];
+  // Also: any URL in the message that points to a property site
+  if (/https?:\/\/[^\s]*(condos\.ca|zolo\.ca|rentals\.ca|rentfaster\.ca|padmapper\.com|liv\.rent|realtor\.ca|kijiji\.ca|housesigma\.com|zumper\.com)/i.test(query)) return true;
+  return propertyKeywords.some(k => q.includes(k));
 }
 
 // Simple IP-based rate limit for public chat (20 req/min)
@@ -331,12 +349,25 @@ export async function POST(request: NextRequest) {
     let webSearchResults = '';
     let usedWebSearch = false;
     
+    let externalProperties: ExternalProperty[] = [];
+
     if (needsWeather(message)) {
       usedWebSearch = true;
       webSearchResults = await getWeather(message);
     } else if (needsWebSearch(message)) {
       usedWebSearch = true;
-      webSearchResults = await callWebSearch(message);
+      // If the user is specifically asking for listings, fetch both the
+      // text summary (for the AI) and structured cards (for the UI) in parallel.
+      if (needsExternalPropertySearch(message)) {
+        const [textResults, cards] = await Promise.allSettled([
+          callWebSearch(message),
+          searchExternalProperties(message, 3),
+        ]);
+        webSearchResults = textResults.status === 'fulfilled' ? textResults.value : '';
+        externalProperties = cards.status === 'fulfilled' ? cards.value : [];
+      } else {
+        webSearchResults = await callWebSearch(message);
+      }
     }
     
     // Fetch live property data from database
@@ -398,7 +429,8 @@ export async function POST(request: NextRequest) {
           source: 'cloudflare-ai',
           language,
           usedWebSearch,
-          webSearchQuery: usedWebSearch ? message : undefined
+          webSearchQuery: usedWebSearch ? message : undefined,
+          externalProperties: externalProperties.length > 0 ? externalProperties : undefined,
         }, {
           headers: {
             'Cache-Control': 'no-store, no-cache, must-revalidate',
@@ -418,7 +450,8 @@ export async function POST(request: NextRequest) {
         source: 'fallback-ai-error',
         language,
         usedWebSearch,
-        webSearchQuery: usedWebSearch ? message : undefined
+        webSearchQuery: usedWebSearch ? message : undefined,
+        externalProperties: externalProperties.length > 0 ? externalProperties : undefined,
       }, {
         headers: {
           'Cache-Control': 'no-store, no-cache, must-revalidate',

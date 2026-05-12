@@ -5,6 +5,7 @@ import { useI18n } from '@/lib/i18n';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Loader2, SendHorizontal } from 'lucide-react';
+import { ChatExternalPropertyCard, type ChatExternalProperty } from './ChatExternalPropertyCard';
 
 interface Message {
   id: string;
@@ -12,6 +13,7 @@ interface Message {
   sender: 'user' | 'bot';
   property?: PropertyRecommendation | null;
   hotelComparison?: string;
+  externalProperties?: ChatExternalProperty[];
 }
 
 interface PropertyRecommendation {
@@ -143,12 +145,18 @@ export function HeroChatInline() {
       const hotelMatch = replyText.match(/(该区域类似酒店.*?。|Hotel.*?saving.*?\.)/);
       if (hotelMatch) hotelComparison = hotelMatch[0];
 
+      const externalProperties: ChatExternalProperty[] | undefined =
+        Array.isArray(data.externalProperties) && data.externalProperties.length > 0
+          ? data.externalProperties
+          : undefined;
+
       const botMsg: Message = {
         id: `b-${Date.now()}`,
         text: replyText,
         sender: 'bot',
         property,
         hotelComparison,
+        externalProperties,
       };
       setMessages((prev) => [...prev, botMsg]);
     } catch {
@@ -333,6 +341,18 @@ export function HeroChatInline() {
                     <p className="whitespace-pre-wrap leading-relaxed">{msg.text}</p>
                   </div>
                 </div>
+
+                {msg.externalProperties && msg.externalProperties.length > 0 && (
+                  <div className="mt-3 -mx-1 flex gap-3 overflow-x-auto pb-2 pl-1 pr-1 scrollbar-thin scrollbar-thumb-white/20">
+                    {msg.externalProperties.map((p, i) => (
+                      <ChatExternalPropertyCard
+                        key={`${p.url}-${i}`}
+                        property={p}
+                        variant="dark"
+                      />
+                    ))}
+                  </div>
+                )}
 
                 {msg.property && (
                   <div className="mt-3 bg-white/10 rounded-xl overflow-hidden flex flex-col md:flex-row border border-white/10">

@@ -321,3 +321,273 @@ export async function performWebSearch(query: string, maxResults = 3): Promise<s
 // Backwards compatibility exports
 export { searchDuckDuckGo, readURL as scrapeURL, jinaRead, searchRealtorCA };
 export function isAllowedDomain(): boolean { return true; }
+
+// ─── External Property Extraction ─────────────────────────────
+// Extract structured property fields (price, beds, location, image) from
+// search results so the chat UI can render them as cards like internal listings.
+
+export interface ExternalProperty {
+  title: string;
+  url: string;
+  source: string;        // hostname (e.g. realtor.ca, condos.ca)
+  price?: number;        // monthly CAD
+  priceText?: string;    // raw price string for display when number can't be parsed
+  bedrooms?: number;
+  bathrooms?: number;
+  location?: string;     // address / neighborhood
+  image?: string;        // first image URL if found
+  snippet?: string;      // short description
+}
+
+// Try to pull a price like "$3,250/mo", "$3250 monthly", "CAD 3,500 / month" out of text.
+function parsePrice(text: string): { num?: number; raw?: string } {
+  if (!text) return {};
+  const re = /(?:CAD\s*|C?\$\s*)([0-9][0-9,]{2,7}(?:\.[0-9]{1,2})?)\s*(?:\/\s*(?:mo|month|monthly|m)\b|per\s*month|monthly|\/m)?/i;
+  const m = text.match(re);
+  if (!m) return {};
+  const num = parseFloat(m[1].replace(/,/g, ''));
+  if (!Number.isFinite(num) || num < 500 || num > 50000) return { raw: m[0] };
+  return { num: Math.round(num), raw: m[0] };
+}
+
+function parseBedrooms(text: string): number | undefined {
+  if (!text) return undefined;
+  // "3 bed", "3-bedroom", "3 BR", "studio", "bachelor"
+  if (/\b(studio|bachelor)\b/i.test(text)) return 0;
+  const m = text.match(/(\d+)\s*(?:-?\s*)?(?:bed|bedroom|br\b)/i);
+  if (m) {
+    const n = parseInt(m[1], 10);
+    if (n >= 0 && n <= 10) return n;
+  }
+  return undefined;
+}
+
+function parseBathrooms(text: string): number | undefined {
+  if (!text) return undefined;
+  const m = text.match(/(\d+(?:\.\d)?)\s*(?:-?\s*)?(?:bath|bathroom|ba\b)/i);
+  if (m) {
+    const n = parseFloat(m[1]);
+    if (n > 0 && n <= 10) return n;
+  }
+  return undefined;
+}
+
+function parseLocation(text: string, fallbackTitle: string): string | undefined {
+  // Common formats: "Address: 123 King St, Toronto" or just a Toronto-area street
+  const addrLabel = text.match(/(?:Address|Location|Located\s+at)\s*[:\-]?\s*([^\n,]+(?:,\s*[A-Za-z .'-]+){0,2})/i);
+  if (addrLabel) return addrLabel[1].trim().slice(0, 120);
+  const streetMatch = text.match(/\b(\d{1,5}\s+[A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+){0,3}\s+(?:St|Street|Ave|Avenue|Rd|Road|Blvd|Boulevard|Dr|Drive|Cres|Crescent|Way|Ct|Court|Pl|Place|Ln|Lane)\.?(?:\s+[NSEW]\.?)?(?:,\s*[A-Za-z .'-]+){0,2})/);
+  if (streetMatch) return streetMatch[1].trim().slice(0, 120);
+  // Toronto neighborhoods
+  const hood = text.match(/\b(Downtown|North York|Scarborough|Etobicoke|Yorkville|Liberty Village|King West|Distillery District|Annex|Forest Hill|Rosedale|Leslieville|Riverdale|Cabbagetown|Mississauga|Markham|Vaughan|Richmond Hill)\b/i);
+  if (hood) return hood[1];
+  // Fallback: try to slice city out of title ("... Toronto, ON")
+  const cityInTitle = fallbackTitle.match(/(Toronto|Mississauga|Markham|Vaughan|Richmond Hill|North York|Scarborough|Etobicoke)(?:[,\s]+ON)?/i);
+  if (cityInTitle) return cityInTitle[0];
+  return undefined;
+}
+
+function extractFirstImage(html: string, baseUrl: string): string | undefined {
+  // og:image first
+  const og = html.match(/<meta[^>]*property=["']og:image["'][^>]*content=["']([^"']+)["']/i)
+    || html.match(/<meta[^>]*content=["']([^"']+)["'][^>]*property=["']og:image["']/i)
+    || html.match(/<meta[^>]*name=["']twitter:image["'][^>]*content=["']([^"']+)["']/i);
+  let url = og?.[1];
+  if (!url) {
+    // First <img> with a decent looking src
+    const img = html.match(/<img[^>]+src=["']([^"']+\.(?:jpe?g|png|webp)[^"']*)["']/i);
+    url = img?.[1];
+  }
+  if (!url) return undefined;
+  try {
+    return new URL(url, baseUrl).toString();
+  } catch {
+    return undefined;
+  }
+}
+
+// Hosts that typically list rental properties
+const PROPERTY_HOSTS = [
+  'realtor.ca', 'condos.ca', 'zolo.ca', 'rentals.ca', 'rentfaster.ca',
+  'kijiji.ca', 'padmapper.com', 'liv.rent', 'rentseeker.ca', 'rentboard.ca',
+  'housesigma.com', 'royallepage.ca', 'remax.ca', 'zumper.com', 'apartments.com',
+];
+
+function looksLikePropertyHost(hostname: string): boolean {
+  return PROPERTY_HOSTS.some(h => hostname === h || hostname.endsWith('.' + h));
+}
+
+async function fetchHtml(url: string): Promise<string> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/131.0.0.0 Safari/537.36',
+        Accept: 'text/html,application/xhtml+xml',
+        'Accept-Language': 'en-CA,en-US;q=0.9',
+      },
+      signal: controller.signal,
+      redirect: 'follow',
+    });
+    clearTimeout(timeout);
+    return await res.text();
+  } catch {
+    return '';
+  }
+}
+
+// Try to extract structured property data from a single URL via JSON-LD + meta + content text.
+async function extractPropertyFromURL(url: string, fallback: { title?: string; snippet?: string }): Promise<ExternalProperty | null> {
+  const hostname = extractSource(url);
+  if (!looksLikePropertyHost(hostname)) {
+    // Still try, but be more conservative
+  }
+
+  // 1. Try Jina markdown first (often defeats SPAs)
+  const jina = await jinaRead(url);
+  let title = fallback.title || '';
+  let snippet = fallback.snippet || '';
+  let priceNum: number | undefined;
+  let priceRaw: string | undefined;
+  let beds: number | undefined;
+  let baths: number | undefined;
+  let location: string | undefined;
+  let image: string | undefined;
+
+  if (jina && jina.length > 100) {
+    const firstLine = jina.split('\n')[0].replace(/^#\s*/, '').trim();
+    if (firstLine && firstLine.length > 5) title = firstLine.substring(0, 200);
+    snippet = jina.substring(0, 800);
+    const pp = parsePrice(jina);
+    priceNum = pp.num; priceRaw = pp.raw;
+    beds = parseBedrooms(jina);
+    baths = parseBathrooms(jina);
+    location = parseLocation(jina, title);
+  }
+
+  // 2. Fetch raw HTML for image + JSON-LD if Jina didn't give us enough
+  if (!image || !priceNum || beds === undefined) {
+    const html = await fetchHtml(url);
+    if (html) {
+      if (!image) image = extractFirstImage(html, url);
+      // JSON-LD
+      const jsonLdRegex = /<script type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+      let ldMatch;
+      while ((ldMatch = jsonLdRegex.exec(html)) !== null) {
+        try {
+          const json = JSON.parse(ldMatch[1]);
+          const candidates = Array.isArray(json) ? json : [json];
+          for (const c of candidates) {
+            const t = c['@type'];
+            const tStr = Array.isArray(t) ? t.join(' ') : (t || '');
+            if (/RealEstateListing|Apartment|House|Product|Residence/i.test(tStr)) {
+              if (!title && (c.name || c.headline)) title = String(c.name || c.headline).substring(0, 200);
+              if (!priceNum) {
+                const p = c.offers?.price ?? c.price;
+                if (typeof p === 'number' && p > 500 && p < 50000) priceNum = Math.round(p);
+                else if (typeof p === 'string') {
+                  const pp = parsePrice(p);
+                  if (pp.num) priceNum = pp.num;
+                  if (pp.raw && !priceRaw) priceRaw = pp.raw;
+                }
+              }
+              if (beds === undefined && c.numberOfBedrooms !== undefined) {
+                const n = parseInt(String(c.numberOfBedrooms), 10);
+                if (Number.isFinite(n)) beds = n;
+              }
+              if (baths === undefined && c.numberOfBathroomsTotal !== undefined) {
+                const n = parseFloat(String(c.numberOfBathroomsTotal));
+                if (Number.isFinite(n)) baths = n;
+              }
+              if (!location && c.address) {
+                const a = c.address;
+                location = [a.streetAddress, a.addressLocality, a.addressRegion].filter(Boolean).join(', ').slice(0, 120);
+              }
+              if (!image && c.image) {
+                const img = Array.isArray(c.image) ? c.image[0] : c.image;
+                if (typeof img === 'string') image = img;
+                else if (img?.url) image = img.url;
+              }
+            }
+          }
+        } catch { /* skip */ }
+      }
+      if (!priceNum || !priceRaw) {
+        const pp = parsePrice(html);
+        if (pp.num && !priceNum) priceNum = pp.num;
+        if (pp.raw && !priceRaw) priceRaw = pp.raw;
+      }
+      if (beds === undefined) beds = parseBedrooms(html);
+      if (baths === undefined) baths = parseBathrooms(html);
+      if (!location) location = parseLocation(html, title);
+    }
+  }
+
+  // If we don't even have a title, give up
+  if (!title || title.length < 5) return null;
+
+  // Need at least one of: price, beds, location, image — otherwise it's not really a property card
+  if (priceNum === undefined && beds === undefined && !location && !image) {
+    return null;
+  }
+
+  return {
+    title,
+    url,
+    source: hostname,
+    price: priceNum,
+    priceText: priceRaw,
+    bedrooms: beds,
+    bathrooms: baths,
+    location,
+    image,
+    snippet: snippet ? snippet.substring(0, 240) : undefined,
+  };
+}
+
+/**
+ * Search the web for rental listings matching the user's query and return
+ * structured property cards (max 4). Used by the chat API so the UI can
+ * render external listings the same way as internal ones.
+ */
+export async function searchExternalProperties(query: string, maxResults = 3): Promise<ExternalProperty[]> {
+  const lowerQuery = query.toLowerCase();
+
+  // 1. Direct URL — just read it
+  const urlMatch = query.match(/https?:\/\/[^\s]+/);
+  if (urlMatch) {
+    const url = urlMatch[0];
+    const card = await extractPropertyFromURL(url, {});
+    return card ? [card] : [];
+  }
+
+  // 2. Build a search query biased toward rental sites
+  const hasLocation = /toronto|gta|ontario|canada|多伦多|vancouver|montreal/.test(lowerQuery);
+  const baseQuery = hasLocation ? query : `Toronto ${query}`;
+  const siteFilter = '(site:condos.ca OR site:zolo.ca OR site:rentals.ca OR site:rentfaster.ca OR site:padmapper.com OR site:liv.rent OR site:zumper.com OR site:realtor.ca)';
+  const searchQuery = `${baseQuery} rent ${siteFilter}`;
+
+  const ddg = await searchDuckDuckGo(searchQuery, maxResults + 4);
+  if (ddg.length === 0) return [];
+
+  // 3. Try to enrich top results in parallel
+  const enriched = await Promise.allSettled(
+    ddg.slice(0, maxResults + 2).map(r =>
+      extractPropertyFromURL(r.url, { title: r.title, snippet: r.snippet })
+    )
+  );
+
+  const cards: ExternalProperty[] = [];
+  for (const r of enriched) {
+    if (r.status === 'fulfilled' && r.value) {
+      // Dedupe by URL
+      if (!cards.find(c => c.url === r.value!.url)) {
+        cards.push(r.value);
+        if (cards.length >= maxResults) break;
+      }
+    }
+  }
+
+  return cards;
+}
