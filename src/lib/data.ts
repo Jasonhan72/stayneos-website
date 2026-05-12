@@ -45,6 +45,8 @@ export const mockProperties: Property[] = [
       "/images/simcoe-238-living.jpg",
       "/images/simcoe-238-kitchen.jpg",
       "/images/simcoe-238-1.jpg",
+      "/images/simcoe-238-2.jpg",
+      "/images/simcoe-238-3.jpg",
       "/images/simcoe-238-bath1.jpg"
     ],
     maxGuests: 5,
