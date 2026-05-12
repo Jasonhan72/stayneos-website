@@ -352,13 +352,15 @@ function parsePrice(text: string): { num?: number; raw?: string } {
 
 function parseBedrooms(text: string): number | undefined {
   if (!text) return undefined;
-  // "3 bed", "3-bedroom", "3 BR", "studio", "bachelor"
-  if (/\b(studio|bachelor)\b/i.test(text)) return 0;
+  // Prefer numeric matches first; only fall back to Studio when it's a clearly
+  // standalone label (otherwise listing aggregator pages with the word
+  // "studio" sprinkled around get misclassified as 0-bed cards).
   const m = text.match(/(\d+)\s*(?:-?\s*)?(?:bed|bedroom|br\b)/i);
   if (m) {
     const n = parseInt(m[1], 10);
-    if (n >= 0 && n <= 10) return n;
+    if (n >= 1 && n <= 10) return n;
   }
+  if (/\b(studio|bachelor)\s+(?:apartment|condo|suite|unit|for\s*rent)/i.test(text)) return 0;
   return undefined;
 }
 
@@ -372,12 +374,27 @@ function parseBathrooms(text: string): number | undefined {
   return undefined;
 }
 
+// Reject obviously-garbage location strings that slipped through (e.g. JSON
+// fragments, JS expressions, HTML attributes from the source page).
+function looksLikeCleanLocation(s: string): boolean {
+  if (!s) return false;
+  if (s.length < 2 || s.length > 120) return false;
+  // No raw JSON / JS / HTML noise
+  if (/[{}<>;]|@type|PostalAddress|pathname|href|className/.test(s)) return false;
+  // Must contain at least one letter
+  if (!/[A-Za-z\u4e00-\u9fff]/.test(s)) return false;
+  // Reject if mostly punctuation/symbols
+  const letters = (s.match(/[A-Za-z\u4e00-\u9fff]/g) || []).length;
+  if (letters / s.length < 0.4) return false;
+  return true;
+}
+
 function parseLocation(text: string, fallbackTitle: string): string | undefined {
   // Common formats: "Address: 123 King St, Toronto" or just a Toronto-area street
   const addrLabel = text.match(/(?:Address|Location|Located\s+at)\s*[:\-]?\s*([^\n,]+(?:,\s*[A-Za-z .'-]+){0,2})/i);
-  if (addrLabel) return addrLabel[1].trim().slice(0, 120);
+  if (addrLabel && looksLikeCleanLocation(addrLabel[1].trim())) return addrLabel[1].trim().slice(0, 120);
   const streetMatch = text.match(/\b(\d{1,5}\s+[A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+){0,3}\s+(?:St|Street|Ave|Avenue|Rd|Road|Blvd|Boulevard|Dr|Drive|Cres|Crescent|Way|Ct|Court|Pl|Place|Ln|Lane)\.?(?:\s+[NSEW]\.?)?(?:,\s*[A-Za-z .'-]+){0,2})/);
-  if (streetMatch) return streetMatch[1].trim().slice(0, 120);
+  if (streetMatch && looksLikeCleanLocation(streetMatch[1].trim())) return streetMatch[1].trim().slice(0, 120);
   // Toronto neighborhoods
   const hood = text.match(/\b(Downtown|North York|Scarborough|Etobicoke|Yorkville|Liberty Village|King West|Distillery District|Annex|Forest Hill|Rosedale|Leslieville|Riverdale|Cabbagetown|Mississauga|Markham|Vaughan|Richmond Hill)\b/i);
   if (hood) return hood[1];
@@ -526,6 +543,9 @@ async function extractPropertyFromURL(url: string, fallback: { title?: string; s
 
   // If we don't even have a title, give up
   if (!title || title.length < 5) return null;
+
+  // Final cleanup: drop location if it doesn't look like a clean address/place
+  if (location && !looksLikeCleanLocation(location)) location = undefined;
 
   // Need at least one of: price, beds, location, image — otherwise it's not really a property card
   if (priceNum === undefined && beds === undefined && !location && !image) {
