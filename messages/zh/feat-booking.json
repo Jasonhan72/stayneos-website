@@ -335,5 +335,8 @@
   "monthlyDiscount": "月租享 {percent}% 折扣",
   "monthlyDiscountLabel": "月租优惠 ({percent}% 折扣)",
   "firstInstallment": "首期付款",
-  "requestToBook": "申请预订"
+  "requestToBook": "申请预订",
+  "booking.stepReview": "确认信息",
+  "booking.stepPayment": "支付",
+  "booking.stepConfirm": "已完成"
 }

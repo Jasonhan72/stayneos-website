@@ -335,5 +335,8 @@
   "monthlyDiscount": "{percent}% de réduction pour les séjours mensuels",
   "monthlyDiscountLabel": "Réduction Mensuelle ({percent}% de réduction)",
   "firstInstallment": "Premier versement",
-  "requestToBook": "Demande de réservation"
+  "requestToBook": "Demande de réservation",
+  "booking.stepReview": "Vérifier",
+  "booking.stepPayment": "Paiement",
+  "booking.stepConfirm": "Confirmé"
 }

@@ -335,5 +335,8 @@
   "monthlyDiscount": "{percent}% off for monthly stays",
   "monthlyDiscountLabel": "Monthly Discount ({percent}% off)",
   "firstInstallment": "First installment",
-  "requestToBook": "Request to book"
+  "requestToBook": "Request to book",
+  "booking.stepReview": "Review",
+  "booking.stepPayment": "Payment",
+  "booking.stepConfirm": "Confirmed"
 }
