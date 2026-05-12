@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import CheckoutClient from './CheckoutClient';
+import { BookingStepIndicator } from '@/components/booking/BookingStepIndicator';
 import { mockProperties } from '@/lib/data';
 
 export function generateStaticParams() {
@@ -8,7 +9,17 @@ export function generateStaticParams() {
 
 async function CheckoutPageContent({ params }: { params: Promise<{ propertyId: string }> }) {
   const { propertyId } = await params;
-  return <CheckoutClient propertyId={propertyId} />;
+  return (
+    <>
+      {/* SSR-rendered progress bar — visible immediately, before client hydration */}
+      <div className="bg-white border-b border-neutral-100 py-4">
+        <div className="px-4">
+          <BookingStepIndicator current="review" />
+        </div>
+      </div>
+      <CheckoutClient propertyId={propertyId} />
+    </>
+  );
 }
 
 export default function CheckoutPage({ params }: { params: Promise<{ propertyId: string }> }) {

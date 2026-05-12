@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { mockProperties } from '@/lib/data';
 import PaymentClient from './PaymentClient';
+import { BookingStepIndicator } from '@/components/booking/BookingStepIndicator';
 
 export function generateStaticParams() {
   return mockProperties.map((property) => ({
@@ -10,7 +11,16 @@ export function generateStaticParams() {
 
 async function PaymentPageContent({ params }: { params: Promise<{ propertyId: string }> }) {
   const { propertyId } = await params;
-  return <PaymentClient propertyId={propertyId} />;
+  return (
+    <>
+      <div className="bg-white border-b border-neutral-100 py-4">
+        <div className="px-4">
+          <BookingStepIndicator current="payment" />
+        </div>
+      </div>
+      <PaymentClient propertyId={propertyId} />
+    </>
+  );
 }
 
 export default function PaymentPage({ params }: { params: Promise<{ propertyId: string }> }) {

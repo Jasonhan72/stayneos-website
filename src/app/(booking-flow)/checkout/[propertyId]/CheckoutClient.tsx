@@ -16,7 +16,6 @@ import {
 } from 'lucide-react';
 import { Container } from '@/components/ui';
 import { BookingPriceCalculator } from '@/components/booking';
-import { BookingStepIndicator } from '@/components/booking/BookingStepIndicator';
 import { calculateBookingPrice } from '@/lib/booking';
 import { useProperty } from '@/hooks/useProperties';
 import { getLocalizedTitle } from '@/components/property/PropertyCard';
@@ -206,7 +205,6 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
 
       <Container className="py-6">
         <div className="max-w-xl mx-auto">
-          <BookingStepIndicator current="review" />
           {/* Property Card - Airbnb Style */}
           <div className="flex gap-4 mb-6 p-4 border border-neutral-200 rounded-xl">
             <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">

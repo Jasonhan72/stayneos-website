@@ -16,7 +16,6 @@ import {
   Shield
 } from 'lucide-react';
 import { Container, Divider } from '@/components/ui';
-import { BookingStepIndicator } from '@/components/booking/BookingStepIndicator';
 import { useProperty } from '@/hooks/useProperties';
 import { getLocalizedTitle } from '@/components/property/PropertyCard';
 import { useI18n } from '@/lib/i18n';
@@ -201,7 +200,6 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
 
       <Container className="py-8">
         <div className="max-w-3xl mx-auto">
-          <BookingStepIndicator current="payment" />
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
             {/* Left column - Payment form */}
             <div className="lg:col-span-3 space-y-6">

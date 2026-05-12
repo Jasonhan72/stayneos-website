@@ -1,7 +1,5 @@
-'use client';
-
 import { Check } from 'lucide-react';
-import { useI18n } from '@/lib/i18n';
+import { getServerTranslation, resolveRequestLocale } from '@/lib/i18n-server';
 
 export type BookingStep = 'review' | 'payment' | 'confirm';
 
@@ -12,24 +10,28 @@ interface Props {
 const ORDER: BookingStep[] = ['review', 'payment', 'confirm'];
 
 /**
- * 3-step progress bar shown across the booking flow.
+ * Read-only 3-step progress bar shown across the booking flow.
  *   review  → /checkout/[id]
  *   payment → /payment/[id]
  *   confirm → /payment/success
  *
- * Read-only — clicking a step does NOT navigate (the user has to use the
- * back button or the action inside each step). This is intentional: every
- * step has side effects (creating bookings, charging cards) that aren't
- * safe to revisit by URL alone.
+ * Pure server component: renders into SSR HTML before client hydration so
+ * the progress bar is visible immediately (no flash). It accepts no event
+ * handlers and reads its label translations on the server. Client pages
+ * (CheckoutClient, PaymentClient) include it via the route's page.tsx
+ * server wrapper, not directly.
+ *
+ * Clicking a step does NOT navigate — every step has side effects
+ * (creating bookings, charging cards) that aren't safe to revisit by URL.
  */
-export function BookingStepIndicator({ current }: Props) {
-  const { t } = useI18n();
+export async function BookingStepIndicator({ current }: Props) {
+  const locale = await resolveRequestLocale();
   const idx = ORDER.indexOf(current);
 
   const labels: Record<BookingStep, string> = {
-    review: t('booking.stepReview', 'Review'),
-    payment: t('booking.stepPayment', 'Payment'),
-    confirm: t('booking.stepConfirm', 'Confirmed'),
+    review: getServerTranslation(locale, 'booking.stepReview', 'Review'),
+    payment: getServerTranslation(locale, 'booking.stepPayment', 'Payment'),
+    confirm: getServerTranslation(locale, 'booking.stepConfirm', 'Confirmed'),
   };
 
   return (
