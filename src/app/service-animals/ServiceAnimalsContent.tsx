@@ -30,7 +30,7 @@ export default function ServiceAnimalsContent() {
           </section>
           <section>
             <h2 className="text-xl font-semibold text-neutral-900 mb-3">{t('serviceAnimalsPage.contact')}</h2>
-            <p className="text-neutral-600">{t('serviceAnimalsPage.contactDesc', { email: 'hello@neos.rentals' })}</p>
+            <p className="text-neutral-600">{t('serviceAnimalsPage.contactDesc', { email: 'hello@stayneos.com' })}</p>
           </section>
         </div>
       </div>

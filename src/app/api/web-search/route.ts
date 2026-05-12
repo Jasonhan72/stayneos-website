@@ -17,8 +17,8 @@ export async function POST(request: Request) {
         snippet: 'Fallback search link (real crawler integration pending).',
       },
       {
-        title: 'StayNeos Properties',
-        url: 'https://neos.rentals/properties',
+        title: 'NEOS Properties',
+        url: 'https://www.stayneos.com/properties',
         snippet: 'Browse current furnished apartment inventory.',
       },
     ];

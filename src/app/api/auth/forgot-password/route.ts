@@ -22,7 +22,7 @@ function buildResetEmailHtml(resetUrl: string, name?: string | null): string {
       <p style="line-height:1.6;font-size:14px;color:#555">If the button doesn't work, copy and paste this link into your browser:<br><span style="word-break:break-all;color:#333">${resetUrl}</span></p>
       <p style="line-height:1.6;font-size:14px;color:#555">If you didn't request this, you can safely ignore this email — your password won't change.</p>
       <hr style="margin:32px 0;border:none;border-top:1px solid #eee">
-      <p style="font-size:12px;color:#999;margin:0">NEOS Rentals · hello@neos.rentals · <a href="https://neos.rentals" style="color:#999">neos.rentals</a></p>
+      <p style="font-size:12px;color:#999;margin:0">NEOS · hello@stayneos.com · <a href="https://www.stayneos.com" style="color:#999">www.stayneos.com</a></p>
     </div>
   `;
 }

@@ -1,11 +1,11 @@
 # robots.txt for StayNeos
-# https://neos.rentals/robots.txt
+# https://www.stayneos.com/robots.txt
 
 User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://neos.rentals/sitemap.xml
+Sitemap: https://www.stayneos.com/sitemap.xml
 
 # Crawl-delay for better server performance
 Crawl-delay: 1

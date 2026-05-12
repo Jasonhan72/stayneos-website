@@ -168,15 +168,16 @@ function hasHostRole(role?: string): boolean {
 }
 
 export async function middleware(request: NextRequest) {
-  // Canonical domain: neos.rentals (apex). All variants 301 → neos.rentals.
+  // Canonical domain: www.stayneos.com (primary).
+  // neos.rentals and all variants 301 → www.stayneos.com.
   const host = request.headers.get('host') || '';
   if (
     host === 'stayneos.com' ||
-    host === 'www.stayneos.com' ||
+    host === 'neos.rentals' ||
     host === 'www.neos.rentals'
   ) {
     const url = request.nextUrl.clone();
-    url.host = 'neos.rentals';
+    url.host = 'www.stayneos.com';
     url.port = '';
     return NextResponse.redirect(url, 301);
   }

@@ -17,7 +17,7 @@ const VALID_TYPES = new Set<InquiryType>([
 ]);
 
 const JSON_HEADERS = {
-  "Access-Control-Allow-Origin": "https://neos.rentals",
+  "Access-Control-Allow-Origin": "https://www.stayneos.com",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, x-csrf-token",
 };

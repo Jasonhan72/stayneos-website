@@ -15,7 +15,7 @@ interface EmailPayload {
 
 export async function sendEmail(payload: EmailPayload): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
-  const fromEmail = process.env.RESEND_FROM_EMAIL || 'hello@neos.rentals';
+  const fromEmail = process.env.RESEND_FROM_EMAIL || 'hello@stayneos.com';
 
   if (!apiKey) {
     if (process.env.NODE_ENV !== 'production') console.warn('[email] RESEND_API_KEY not set, skipping email notification');
@@ -82,7 +82,7 @@ export async function notifyNewInquiry(data: {
           <p style="color: #111; margin: 0; white-space: pre-wrap;">${data.message}</p>
         </div>
         <p style="margin-top: 24px; color: #999; font-size: 12px;">
-          This notification was sent automatically from neos.rentals
+          This notification was sent automatically from www.stayneos.com
         </p>
       </div>
     `,

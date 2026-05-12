@@ -33,7 +33,7 @@ export default function CancellationContent() {
           <section>
             <h2 className="text-lg md:text-xl lg:text-2xl font-semibold text-neutral-900 mb-3">{t('cancellationPage.contact')}</h2>
             <p className="text-neutral-600 text-sm md:text-base leading-relaxed">
-              {t('cancellationPage.contactDesc', { email: 'hello@neos.rentals', phone: '+1 (647) 446-7987' })}
+              {t('cancellationPage.contactDesc', { email: 'hello@stayneos.com', phone: '+1 (647) 446-7987' })}
             </p>
           </section>
         </div>

@@ -62,7 +62,7 @@ function formatDate(dateStr: string, locale: string): string {
 
 function sanitizeExternalUrl(url: string): string | null {
   try {
-    const parsed = new URL(url, "https://neos.rentals");
+    const parsed = new URL(url, "https://www.stayneos.com");
     return parsed.protocol === "http:" || parsed.protocol === "https:" ? parsed.toString() : null;
   } catch {
     return null;

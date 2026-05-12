@@ -22,10 +22,10 @@ export function StructuredData({ pageType = 'homepage', propertyData }: Structur
     '@type': 'RealEstateAgent',
     name: 'NEOS Executive Apartments',
     description: t('metadata.description', 'Premium executive apartment rentals in downtown Toronto'),
-    url: 'https://neos.rentals',
-    logo: 'https://neos.rentals/logo.png',
+    url: 'https://www.stayneos.com',
+    logo: 'https://www.stayneos.com/logo.png',
     telephone: '+1-647-446-7987',
-    email: 'hello@neos.rentals',
+    email: 'hello@stayneos.com',
     address: {
       '@type': 'PostalAddress',
       streetAddress: '55 Cooper St',
@@ -53,7 +53,7 @@ export function StructuredData({ pageType = 'homepage', propertyData }: Structur
       '@type': 'WebSite',
       potentialAction: {
         '@type': 'SearchAction',
-        target: 'https://neos.rentals/properties?q={search_term_string}',
+        target: 'https://www.stayneos.com/properties?q={search_term_string}',
         'query-input': 'required name=search_term_string'
       }
     };

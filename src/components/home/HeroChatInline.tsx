@@ -156,7 +156,7 @@ export function HeroChatInline() {
         ...prev,
         {
           id: `e-${Date.now()}`,
-          text: t('chat.error', 'Sorry, something went wrong. Please try again or email hello@neos.rentals.'),
+          text: t('chat.error', 'Sorry, something went wrong. Please try again or email hello@stayneos.com.'),
           sender: 'bot',
         },
       ]);

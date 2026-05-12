@@ -9,11 +9,11 @@ directory = ".open-next/assets"
 
 # Environment Variables
 [vars]
-RESEND_FROM_EMAIL = "hello@neos.rentals"
+RESEND_FROM_EMAIL = "hello@stayneos.com"
 NODE_ENV = "production"
 AI_CONCIERGE_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
 ARIA_CHAT_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
-NEXTAUTH_URL = "https://neos.rentals"
+NEXTAUTH_URL = "https://www.stayneos.com"
 # SECURITY: NEXTAUTH_SECRET must be injected via `wrangler secret put NEXTAUTH_SECRET` — never set here
 # SECURITY: Google OAuth credentials must be injected via `wrangler secret put`
 
