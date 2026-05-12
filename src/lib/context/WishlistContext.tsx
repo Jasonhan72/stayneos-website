@@ -30,13 +30,10 @@ function saveLocal(ids: string[]) {
   } catch {}
 }
 
-/** Guess whether the user is signed in by looking for a session cookie. */
+/** Guess whether the user is signed in by looking for the auth cookie. */
 function isLoggedIn(): boolean {
   if (typeof document === 'undefined') return false;
-  // next-auth.session-token is the default; also check for any auth cookie.
-  if (document.cookie.includes('next-auth.session-token')) return true;
-  if (document.cookie.includes('__Secure-next-auth.session-token')) return true;
-  return false;
+  return document.cookie.includes('stayneos_auth_token=');
 }
 
 export function WishlistProvider({ children }: { children: React.ReactNode }) {

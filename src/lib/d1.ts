@@ -20,7 +20,7 @@ export interface User {
   updatedAt: string;
 }
 
-// Session type for NextAuth
+// Session row in D1 (used by self-hosted JWT auth)
 export interface Session {
   id: string;
   sessionToken: string;

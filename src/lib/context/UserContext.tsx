@@ -14,6 +14,7 @@ export interface UserProfile {
   avatar?: string;
   phone?: string;
   address?: string;
+  bio?: string;
   dateOfBirth?: string;
   nationality?: string;
   emergencyContact?: {
