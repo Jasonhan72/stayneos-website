@@ -5,7 +5,7 @@ import { useI18n } from '@/lib/i18n';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Loader2, SendHorizontal } from 'lucide-react';
-import { ChatExternalPropertyCard, type ChatExternalProperty } from './ChatExternalPropertyCard';
+import { ChatExternalPropertyCard, type ChatExternalProperty } from '@/components/shared/chat/ChatExternalPropertyCard';
 
 interface Message {
   id: string;

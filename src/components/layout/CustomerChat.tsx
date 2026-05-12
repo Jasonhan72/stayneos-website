@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, FormEvent } from 'react';
 import { usePathname } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
-import { ChatExternalPropertyCard, type ChatExternalProperty } from '@/components/home/ChatExternalPropertyCard';
+import { ChatExternalPropertyCard, type ChatExternalProperty } from '@/components/shared/chat/ChatExternalPropertyCard';
 
 interface Message {
   id: string;

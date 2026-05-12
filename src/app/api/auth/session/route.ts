@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
 import { verifyToken } from "@/lib/auth/jwt";
 import { userDb, getDb } from "@/lib/d1";
 import { AUTH_COOKIE_NAME, getClearedAuthCookieOptions } from "@/lib/auth/cookie";
-import { hashSessionToken } from "@/lib/account-auth";
+import { hashSessionToken } from "@/lib/auth/account";
 
 export async function GET(request: NextRequest) {
   try {

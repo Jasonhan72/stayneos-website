@@ -23,11 +23,9 @@ const csp = [
 ].join('; ');
 
 const nextConfig = {
-  i18n: {
-    locales: ['en', 'fr', 'zh'],
-    defaultLocale: 'en',
-    localeDetection: false,
-  },
+  // i18n handled at runtime by middleware + @/lib/i18n (App Router style).
+  // The legacy Pages Router `i18n` config block doesn't apply here and
+  // would only produce a build-time warning.
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
@@ -99,4 +97,10 @@ const nextConfig = {
   compress: true,
 };
 
-module.exports = nextConfig;
+// Wrap with bundle analyzer only when ANALYZE=true. Keeps the dependency
+// out of every production build but lets `npm run analyze` produce reports.
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
+module.exports = withBundleAnalyzer(nextConfig);

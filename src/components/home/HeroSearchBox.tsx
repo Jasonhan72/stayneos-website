@@ -7,7 +7,7 @@ import { Calendar, ChevronRight, Loader2, Search, SendHorizontal } from 'lucide-
 import { Button } from '@/components/ui';
 import { useI18n } from '@/lib/i18n';
 import { getVisitorId } from '@/lib/visitor';
-import { ChatPropertyCard } from './ChatPropertyCard';
+import { ChatPropertyCard } from '@/components/shared/chat/ChatPropertyCard';
 
 const AirbnbCalendar = dynamic(() => import('@/components/booking').then((mod) => mod.AirbnbCalendar), {
   ssr: false,

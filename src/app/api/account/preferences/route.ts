@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/d1";
-import { requireAccountUser } from "@/lib/account-auth";
+import { requireAccountUser } from "@/lib/auth/account";
 import { DEFAULT_PREFERENCES, normalizePreferences } from "@/lib/account-settings";
 
 export const dynamic = "force-dynamic";

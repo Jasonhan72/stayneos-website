@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { AUTH_COOKIE_NAME, getClearedAuthCookieOptions } from "@/lib/auth/cookie";
 import { getDb } from "@/lib/d1";
-import { hashSessionToken } from "@/lib/account-auth";
+import { hashSessionToken } from "@/lib/auth/account";
 import { getPublicBaseUrl } from "@/lib/config/env";
 
 export async function POST(request: Request) {

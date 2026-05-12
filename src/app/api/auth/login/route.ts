@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { signToken } from "@/lib/auth/jwt";
 import { userDb, getDb } from "@/lib/d1";
 import { detectDevice, getIpFromRequest } from "@/lib/account-settings";
-import { hashSessionToken } from "@/lib/account-auth";
+import { hashSessionToken } from "@/lib/auth/account";
 import { AUTH_COOKIE_NAME, getAuthCookieOptions } from "@/lib/auth/cookie";
 import { getPublicBaseUrl } from '@/lib/config/env';
 import { checkRateLimit } from '@/lib/security/rate-limit';
