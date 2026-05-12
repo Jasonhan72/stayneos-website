@@ -1,0 +1,62 @@
+{
+  "contact": {
+    "pageTitle": "Contact Us",
+    "pageSubtitle": "Have questions or need assistance? Our team is here to help you. Get in touch with us through any of the channels below.",
+    "infoTitle": "Contact Information",
+    "formTitle": "Send Message",
+    "emailLabel": "Email",
+    "addressLabel": "Address",
+    "phoneLabel": "Phone",
+    "hoursLabel": "Hours",
+    "callAnytime": "Call anytime during work hours",
+    "workHours": "Monday to Friday 9:00-18:00 EST",
+    "weekend": "Closed on weekends and holidays",
+    "form": {
+      "title": "Contact Us",
+      "subtitle": "Fill out the form below and we'll get back to you soon",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "phoneOptional": "Phone (Optional)",
+      "subject": "Subject",
+      "message": "Message",
+      "namePlaceholder": "Please enter your name",
+      "emailPlaceholder": "Please enter your email",
+      "phonePlaceholder": "Please enter your phone",
+      "messagePlaceholder": "Please describe your needs or questions...",
+      "subjectBooking": "Booking Inquiry",
+      "subjectPartnership": "Partnership",
+      "subjectSupport": "Technical Support",
+      "subjectOther": "Other",
+      "required": "Required",
+      "minChars": "Message must be at least 10 characters",
+      "privacyNote": "Your information will be sent to hello@stayneos.com. We promise to protect your privacy.",
+      "send": "Send Message",
+      "errorName": "Please enter your name",
+      "errorEmail": "Please enter your email",
+      "errorMessage": "Please enter your message",
+      "submitFailed": "Submission failed. Please try again."
+    },
+    "success": {
+      "title": "Submitted Successfully!",
+      "message": "Thank you for your message. We have received it and will contact you within 24 hours.",
+      "sendNew": "Send New Message"
+    },
+    "followUs": "Follow Us",
+    "followDesc": "Follow us on social media for the latest properties and promotions",
+    "faqTitle": "FAQ",
+    "faqHowToBook": "How to book an apartment?",
+    "faqMinStay": "What is the minimum stay?",
+    "faqDeposit": "How is the deposit refunded?",
+    "faqPets": "Are pets allowed?",
+    "viewAllFaq": "View All FAQ",
+    "openInMaps": "Open in Google Maps",
+    "emergency": {
+      "title": "Need Emergency Help?",
+      "desc": "If you are a current tenant and need immediate assistance, please call our 24/7 emergency hotline"
+    },
+    "responseTime": "We typically respond within 24 hours",
+    "visitUs": "Visit Us",
+    "responseWithin2Hours": "We respond within 2 hours during business hours"
+  }
+}

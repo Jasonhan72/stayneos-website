@@ -1,0 +1,62 @@
+{
+  "contact": {
+    "pageTitle": "联系我们",
+    "pageSubtitle": "无论您有任何问题或需求，我们的团队随时准备为您提供帮助。请通过以下方式与我们取得联系。",
+    "infoTitle": "联系方式",
+    "formTitle": "发送消息",
+    "emailLabel": "电子邮箱",
+    "addressLabel": "办公地址",
+    "phoneLabel": "联系电话",
+    "hoursLabel": "工作时间",
+    "callAnytime": "工作时间随时拨打",
+    "workHours": "周一至周五 9:00-18:00 EST",
+    "weekend": "周末及节假日休息",
+    "form": {
+      "title": "联系我们",
+      "subtitle": "填写以下表单，我们会尽快回复",
+      "name": "姓名",
+      "email": "邮箱",
+      "phone": "电话",
+      "phoneOptional": "电话（选填）",
+      "subject": "主题",
+      "message": "消息内容",
+      "namePlaceholder": "请输入您的姓名",
+      "emailPlaceholder": "请输入您的邮箱",
+      "phonePlaceholder": "请输入您的电话",
+      "messagePlaceholder": "请详细描述您的需求或问题...",
+      "subjectBooking": "预订咨询",
+      "subjectPartnership": "合作洽谈",
+      "subjectSupport": "技术支持",
+      "subjectOther": "其他",
+      "required": "必填项",
+      "minChars": "消息内容至少需要10个字符",
+      "privacyNote": "您的信息将被发送至 hello@stayneos.com，我们承诺保护您的隐私。",
+      "send": "发送消息",
+      "errorName": "请输入您的姓名",
+      "errorEmail": "请输入您的邮箱",
+      "errorMessage": "请输入您的消息",
+      "submitFailed": "提交失败，请稍后重试。"
+    },
+    "success": {
+      "title": "提交成功！",
+      "message": "感谢您的来信。我们已收到您的消息，将在 24 小时内与您联系。",
+      "sendNew": "发送新消息"
+    },
+    "followUs": "关注我们",
+    "followDesc": "在社交媒体上关注我们，获取最新房源和优惠信息",
+    "faqTitle": "常见问题",
+    "faqHowToBook": "如何预订公寓？",
+    "faqMinStay": "最短租期是多久？",
+    "faqDeposit": "押金如何退还？",
+    "faqPets": "可以带宠物入住吗？",
+    "viewAllFaq": "查看全部 FAQ",
+    "openInMaps": "在 Google Maps 中打开",
+    "emergency": {
+      "title": "需要紧急帮助？",
+      "desc": "如果您是已入住的租客，遇到紧急情况需要立即协助，请拨打我们的 24 小时紧急热线"
+    },
+    "responseTime": "我们通常在24小时内回复",
+    "visitUs": "来访地址",
+    "responseWithin2Hours": "我们将在工作时间内 2 小时内回复"
+  }
+}

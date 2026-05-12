@@ -1,0 +1,220 @@
+{
+  "hero": {
+    "title": "Découvrez Toronto, sélectionné par l'IA et l'expertise humaine.",
+    "highlight": "Arrêtez de chercher. Commencez à vivre.",
+    "subtitle": "Appartements meublés premium au centre-ville de Toronto. 30 jours à 12 mois. Prêts à emménager.",
+    "cta": "Listez Votre Propriété",
+    "ctaQuote": "Demander un Devis",
+    "ctaBrowse": "Parcourir les Propriétés",
+    "stats": {
+      "residences": "Résidences de luxe",
+      "managed": "Séjours entièrement gérés",
+      "support": "Assistance 24/7"
+    }
+  },
+  "heroSubtitle": "Appartements exécutifs flexibles pour déplacements, équipes de projet et relocalisations.<br>Réduisez les coûts. Améliorez la satisfaction. Simplifiez la gestion.",
+  "heroTitle": "Solutions de Logement Corporate",
+  "dualPath": {
+    "browse": {
+      "title": "Parcourir les appartements meublés premium",
+      "description": "Explorez des résidences prêtes à emménager conçues pour les cadres, les familles et les séjours prolongés à Toronto.",
+      "cta": "Voir les logements disponibles"
+    },
+    "business": {
+      "title": "Planifier une relocalisation ou un logement d'entreprise",
+      "description": "Bénéficiez d'un accompagnement sur mesure pour les équipes projet, les missions temporaires et les séjours corporate gérés.",
+      "cta": "Voir les solutions entreprise"
+    }
+  },
+  "homePaths": {
+    "housing": {
+      "title": "J’ai besoin d’un logement",
+      "description": "Pour les locataires individuels et les familles en relocalisation cherchant un logement prêt à emménager à Toronto.",
+      "cta": "Voir les logements"
+    },
+    "relocation": {
+      "title": "Je gère des relocalisations",
+      "description": "Pour les sociétés de relocalisation, équipes RH et dossiers d’hébergement d’assurance.",
+      "cta": "Découvrir les solutions entreprises"
+    }
+  },
+  "cta": {
+    "title": "Trouvez votre chez-vous ce soir",
+    "subtitle": "Parcourez des appartements meublés prêts à vivre. Pas de bail long, pas de pièces vides — juste un foyer.",
+    "explore": "Parcourir les appartements",
+    "contact": "Contactez-Nous",
+    "button": "Contactez-Nous",
+    "desc": "Contactez-nous aujourd'hui pour en savoir plus sur nos services et trouver votre logement idéal.",
+    "browse": "Parcourir les appartements"
+  },
+  "ctaButton": "Obtenir un Devis",
+  "ctaBrowse": "Parcourir les Propriétés",
+  "ctaContact": "Nous dire bonjour",
+  "ctaQuote": "Demander un Devis",
+  "ctaTitle": "Trouvez la Solution de Logement Idéale pour Votre Équipe",
+  "ctaSubtitle": "Un gestionnaire de compte dédié vous contactera sous 24 heures avec une proposition personnalisée",
+  "trustBar": {
+    "insurance": "Assurance responsabilité commerciale de 2M$",
+    "concierge": "Toutes les propriétés dans des immeubles avec conciergerie",
+    "licensed": "Courtage agréé en Ontario"
+  },
+  "trust": {
+    "verified": "Logements Vérifiés",
+    "support": "Support 24/7",
+    "selection": "Sélection premium"
+  },
+  "trustNote": "🔒 Vos informations sont sécurisées · Réponse sous 24h · Sans engagement",
+  "howItWorks": {
+    "title": "Comment fonctionne NEOS",
+    "subtitle": "Un parcours simple de la découverte à l'emménagement, conçu pour les séjours mensuels premium.",
+    "step1": {
+      "title": "Explorez les logements",
+      "description": "Parcourez les appartements meublés, comparez les emplacements et sélectionnez le séjour mensuel idéal."
+    },
+    "step2": {
+      "title": "Confirmez vos dates",
+      "description": "Choisissez la période de séjour correspondant à votre projet, déménagement ou besoin de logement temporaire."
+    },
+    "step3": {
+      "title": "Emménagez en douceur",
+      "description": "Arrivez dans un logement entièrement équipé avec services publics, mobilier et assistance déjà en place."
+    }
+  },
+  "whyChoose": {
+    "label": "POURQUOI NOUS CHOISIR",
+    "title": "Pourquoi nous choisir",
+    "desc": "On ne vous trouve pas juste un endroit. On s'assure que ça ressemble à chez vous."
+  },
+  "valueProposition": {
+    "title": "Pourquoi choisir NEOS",
+    "subtitle": "Des résidences premium à Toronto avec la fiabilité opérationnelle requise pour les séjours prolongés.",
+    "curated": {
+      "title": "Logements sélectionnés",
+      "description": "Appartements soigneusement meublés avec des finitions premium, lumière naturelle et intérieurs design."
+    },
+    "flexible": {
+      "title": "Conditions flexibles",
+      "description": "Séjours de 30 jours ou plus avec des baux adaptés à la relocalisation, aux projets et aux voyages prolongés."
+    },
+    "concierge": {
+      "title": "Service de conciergerie",
+      "description": "Services publics, ménage et soins aux résidents sont pris en charge pour un séjour fluide dès le premier jour."
+    },
+    "support": {
+      "title": "Support réactif",
+      "description": "Notre équipe reste disponible avant l'arrivée, pendant le séjour et à chaque changement de plan."
+    }
+  },
+  "features": {
+    "title": "Pourquoi NEOS",
+    "subtitle": "Votre logement est prêt avant vous. Pas de surprises, pas de frais cachés — juste un bel espace qui vous attend.",
+    "quality": "Sélection sur le terrain",
+    "qualityDesc": "Chaque appartement est visité, vérifié et approuvé par notre équipe. S'il ne nous convainc pas, il ne va pas en ligne.",
+    "flexible": "À votre rythme",
+    "flexibleDesc": "Un mois ou douze. Prolongez ou raccourcissez à tout moment. Vos plans changent — votre logement ne devrait pas être un souci.",
+    "service": "Quelqu'un veille sur vous",
+    "serviceDesc": "Une vraie personne répond quand vous appelez. Jour et nuit, semaine et week-end.",
+    "support": "24 heures sur 24",
+    "supportDesc": "Enfermé dehors à minuit ? Besoin d'une réparation ? On est là. Toujours.",
+    "utilities": "Tous les services publics inclus",
+    "wifi": "WiFi haut débit",
+    "housekeeping": "Service de ménage",
+    "minNights": "Minimum 28 nuits",
+    "kitchen": "Cuisine entièrement équipée",
+    "locations": "Emplacements premium",
+    "instant": "Réservation instantanée",
+    "photography": "Photographie professionnelle",
+    "screening": "Vérification des locataires",
+    "collection": "Collecte des loyers",
+    "maintenance": "Coordination de la maintenance",
+    "airport": "Transfert aéroport",
+    "grocery": "Livraison d'épicerie",
+    "restaurant": "Réservations de restaurants",
+    "recommendations": "Recommandations locales",
+    "monthToMonth": "Options mois par mois",
+    "noHidden": "Pas de frais cachés",
+    "renewal": "Renouvellement facile",
+    "termination": "Résiliation anticipée disponible"
+  },
+  "testimonials": {
+    "title": "Ce que disent nos clients",
+    "subtitle": "Lisez les avis de nos clients satisfaits qui ont vécu la différence NEOS"
+  },
+  "storyOrigin": "Tout a commencé par une recherche frustrante. Un fondateur s'installe dans une nouvelle ville et fait face au même choix : hôtel sans cuisine ou bail de 12 mois vide. On a créé une troisième option.",
+  "storyMission": "En 2024, NEOS est né : de beaux appartements meublés, prêts dès le lendemain. Triés sur le volet, dans les quartiers où vous voudriez vraiment vivre.",
+  "storyToday": "Aujourd'hui, nous sommes la référence pour les professionnels. Ingénieurs, consultants, familles — ils restent chez nous parce qu'on traite chaque séjour comme s'il comptait.",
+  "storyTitle": "Comment tout a commencé",
+  "story": {
+    "label": "NOTRE HISTOIRE",
+    "title": "Comment tout a commencé",
+    "subtitle": "Une recherche d'appartement frustrante. C'est tout."
+  },
+  "mission": {
+    "label": "NOTRE MISSION",
+    "title": "Ce qui nous motive",
+    "desc": "Tout le monde mérite un vrai foyer — même loin de chez soi.",
+    "items": {
+      "executive": "Appartements sélectionnés",
+      "executiveDesc": "Des quartiers que vous choisiriez vous-même.",
+      "simple": "Zéro tracas",
+      "simpleDesc": "Pas de paperasse. Pas de meubles. Arrivez et vivez.",
+      "flexible": "Votre emploi du temps",
+      "flexibleDesc": "28 jours ou 365. Prolongez par message. C'est vous qui décidez.",
+      "location": "Les meilleurs quartiers",
+      "locationDesc": "De King West à Yorkville. Là où ça se passe."
+    }
+  },
+  "whatOffers": "Ce que propose ce logement",
+  "commitment": {
+    "label": "NOTRE ENGAGEMENT",
+    "title": "Notre promesse",
+    "subtitle": "Chaque séjour doit valoir la peine d'en parler."
+  },
+  "peopleFirst": "Des vraies personnes, pas des transactions",
+  "peopleFirstDesc": "Vous n'êtes pas un numéro. Une vraie personne répond. On se souvient de vos préférences.",
+  "projectTeams": "Équipes de Projet",
+  "projectTeamsDesc": "Projets de conseil, équipes de construction, affectations temporaires. Hébergement de groupe",
+  "quality": "Sélection sur le terrain",
+  "qualityDesc": "Chaque appartement est visité, vérifié et approuvé par notre équipe. S'il ne nous convainc pas, il ne va pas en ligne.",
+  "sustainability": "Mieux pour la ville",
+  "sustainabilityDesc": "Bâtiments écoresponsables, fournisseurs locaux. Chaque ville est aussi notre ville.",
+  "flexibility": "La vie ne rentre pas dans des cases",
+  "flexibilityDesc": "Les projets se prolongent. Les plans changent. On comprend. Flexibilité, pas de pénalités.",
+  "flexible": "À votre rythme",
+  "flexibleDesc": "Un mois ou douze. Prolongez ou raccourcissez à tout moment. Vos plans changent — votre logement ne devrait pas être un souci.",
+  "flexibleCancellation": "Annulation Flexible",
+  "flexibleLeasing": {
+    "title": "Bail flexible",
+    "desc": "Un mois, prolongez à six. Pas de pénalités."
+  },
+  "freeCancellation": "Annulation gratuite",
+  "freeCancellationDesc": "Annulation gratuite avant le {date}",
+  "simple": "Zéro tracas",
+  "simpleDesc": "Pas de paperasse. Pas de meubles. Arrivez et vivez.",
+  "globalNetwork": {
+    "title": "Réseau en croissance",
+    "desc": "Commençant dans les grandes villes, puis partout où le business vous emmène."
+  },
+  "corporateHousing": {
+    "title": "Logement d'entreprise",
+    "desc": "Votre équipe arrive lundi. Appartements prêts dimanche. Meublés, à pied du centre-ville."
+  },
+  "businessTravel": "Voyages d'Affaires",
+  "businessTravelDesc": "Déplacements de dirigeants, hospitalité client, formation. Emplacements prestigieux",
+  "relocation": {
+    "title": "Relocalisation",
+    "subtitle": "Emménagez cette semaine",
+    "desc": "Nouvelle ville, nouveau boulot, cent choses sur la liste. Rayez « trouver un logement » dès aujourd'hui.",
+    "cta": "Trouvez votre point de chute"
+  },
+  "relocationDesc": "Intégration nouveaux employés, déménagements bureaux. Un chez-soi pendant la transition",
+  "movein": {
+    "title": "Entrez et vivez",
+    "desc": "Vos clés sont prêtes. Le WiFi est branché. Le lit est fait. Commencez à vivre dès votre arrivée."
+  },
+  "collection": "Collecte des loyers",
+  "partnersCount": "50+ Partenaires entreprise",
+  "statsTitle": "En chiffres",
+  "scenariosTitle": "Des Solutions pour Chaque Besoin d'Entreprise",
+  "reasonsTitle": "Pourquoi mon paiement a-t-il été annulé ?"
+}

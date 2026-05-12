@@ -1,0 +1,836 @@
+{
+  "business": {
+    "hero": {
+      "title": "Corporate Housing Solutions",
+      "subtitle": "Streamlined accommodation solutions for business travelers, employee relocations, and project teams. Save costs, reduce complexity, and provide premium housing for your organization.",
+      "ctaQuote": "Request a Quote",
+      "ctaBrowse": "Explore Solutions"
+    },
+    "solutions": {
+      "title": "Solutions for Every Need",
+      "subtitle": "From individual business travelers to large project teams, we have the perfect accommodation solution for your organization.",
+      "individual": {
+        "title": "Business Travel",
+        "description": "Individual accommodations for executives and business travelers with premium amenities and 24/7 concierge support.",
+        "f1": "Executive suites",
+        "f2": "Airport transfers",
+        "f3": "Concierge service",
+        "f4": "Flexible check-in"
+      },
+      "relocation": {
+        "title": "Employee Relocation",
+        "description": "Temporary housing for relocating employees with move-in ready apartments and local orientation support.",
+        "f1": "Fully furnished",
+        "f2": "Utilities included",
+        "f3": "Local orientation",
+        "f4": "Flexible terms"
+      },
+      "group": {
+        "title": "Group Accommodations",
+        "description": "Multiple units for training programs, conferences, or project teams with centralized billing and coordination.",
+        "f1": "Bulk booking discounts",
+        "f2": "Team coordination",
+        "f3": "Centralized billing",
+        "f4": "Meeting spaces"
+      },
+      "longterm": {
+        "title": "Long-term Projects",
+        "description": "Extended stays for project teams or extended assignments with cost-effective monthly rates and dedicated support.",
+        "f1": "Extended stay rates",
+        "f2": "Project coordination",
+        "f3": "Regular housekeeping",
+        "f4": "Dedicated account manager"
+      }
+    },
+    "advantages": {
+      "title": "Why Choose NEOS for Business",
+      "subtitle": "Transform your corporate accommodation strategy with our comprehensive business solutions.",
+      "flexible": {
+        "title": "Flexible Terms",
+        "description": "Month-to-month agreements with no long-term commitments. Scale up or down based on your business needs.",
+        "stat": "30-day minimum"
+      },
+      "cost": {
+        "title": "Cost Savings",
+        "description": "Save 30-40% compared to hotels for extended stays. All-inclusive pricing with no hidden fees.",
+        "stat": "Up to 40% savings"
+      },
+      "manager": {
+        "title": "Dedicated Account Manager",
+        "description": "Personal account manager for seamless booking, billing, and ongoing support throughout your partnership.",
+        "stat": "24/7 support"
+      },
+      "billing": {
+        "title": "Streamlined Billing",
+        "description": "Consolidated monthly invoicing with detailed reporting and expense tracking for easy reconciliation.",
+        "stat": "Single invoice"
+      }
+    },
+    "cases": {
+      "title": "Typical Scenarios",
+      "subtitle": "See how leading companies have transformed their accommodation strategies with NEOS.",
+      "typical": "Typical Scenario",
+      "label": "Typical Scenario",
+      "tech": {
+        "company": "Tech Startup",
+        "challenge": "Needed 15 units for 6-month project team relocation to Toronto",
+        "solution": "Provided furnished apartments in downtown core with meeting spaces",
+        "result": "Saved $180,000 compared to hotels while improving team productivity"
+      },
+      "consulting": {
+        "company": "Consulting Firm",
+        "challenge": "Executive travel program with unpredictable durations",
+        "solution": "Flexible booking system with premium downtown suites",
+        "result": "Reduced accommodation costs by 35% with improved executive satisfaction"
+      },
+      "manufacturing": {
+        "company": "Manufacturing Corp",
+        "challenge": "Employee relocation program for new Toronto office",
+        "solution": "Staged move-in process with temporary housing for 50+ employees",
+        "result": "Smooth transition with 95% employee satisfaction rating"
+      },
+      "saved": "saved",
+      "challengeLabel": "Challenge:",
+      "solutionLabel": "Solution:",
+      "resultLabel": "Result:"
+    },
+    "features": {
+      "title": "Business-First Features",
+      "subtitle": "Enterprise-grade features designed to simplify corporate accommodation management.",
+      "booking": {
+        "title": "Easy Booking",
+        "description": "Online platform for easy reservations and modifications"
+      },
+      "reporting": {
+        "title": "Expense Reporting",
+        "description": "Detailed reporting for expense management and budgeting"
+      },
+      "support": {
+        "title": "24/7 Support",
+        "description": "Round-the-clock support for urgent needs and modifications"
+      },
+      "quality": {
+        "title": "Quality Guarantee",
+        "description": "Vetted properties meeting corporate standards"
+      }
+    },
+    "stats": {
+      "companies": "Operational Support",
+      "stays": "Flexible Portfolio",
+      "savings": "Average Savings vs Hotels",
+      "satisfaction": "Dedicated Account Support"
+    },
+    "form": {
+      "title": "Request a Custom Quote",
+      "subtitle": "Tell us about your requirements and our team will create a customized solution for your organization.",
+      "responseGuarantee": "2-hour response guarantee — we'll get back to you fast.",
+      "companyName": "Company Name",
+      "companyNamePlaceholder": "Your company name",
+      "contactName": "Contact Name",
+      "contactNamePlaceholder": "Your full name",
+      "email": "Email Address",
+      "emailPlaceholder": "your@company.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "jobTitle": "Job Title",
+      "jobTitlePlaceholder": "Your job title",
+      "accommodationType": "Accommodation Type",
+      "selectType": "Select type",
+      "individual": "Individual Travel",
+      "group": "Group Accommodation",
+      "longTerm": "Long-term Stay",
+      "projectTeam": "Project Team",
+      "numberOfUnits": "Number of Units",
+      "selectUnits": "Select",
+      "unit": "Unit",
+      "units": "Units",
+      "duration": "Expected Duration",
+      "selectDuration": "Select",
+      "months": "Months",
+      "years": "Years",
+      "budget": "Monthly Budget Range",
+      "selectBudget": "Select budget range",
+      "requirements": "Specific Requirements",
+      "requirementsPlaceholder": "Please describe your accommodation needs, preferred locations, special requirements, timeline, and any other details that would help us create the perfect solution for your organization...",
+      "submitting": "Submitting...",
+      "submit": "Request Quote",
+      "success": {
+        "title": "Quote Request Submitted!",
+        "message": "Thank you for your interest! Our business development team will analyze your requirements and contact you within 24 hours with a customized proposal and pricing."
+      },
+      "budgetOptions": {
+        "under5k": "Under $5,000",
+        "5kTo15k": "$5,000 - $15,000",
+        "15kTo30k": "$15,000 - $30,000",
+        "30kTo50k": "$30,000 - $50,000",
+        "50kPlus": "$50,000+"
+      }
+    },
+    "trust": {
+      "insured": "Fully insured — $2M commercial general liability",
+      "invoicing": "Corporate invoicing with net-30 payment terms available",
+      "secure": "All properties in secure, concierge-serviced buildings",
+      "response": "Dedicated account manager with 2-hour response guarantee"
+    }
+  },
+  "corporate": {
+    "hero": {
+      "title": "Corporate Housing Solutions",
+      "subtitle": "Premium furnished apartments for your business needs. Flexible terms, prime locations, and dedicated support for corporate clients.",
+      "ctaQuote": "Request a Quote",
+      "ctaBrowse": "Browse Properties"
+    },
+    "solutions": {
+      "title": "Solutions for Every Need",
+      "subtitle": "From individual business travelers to large project teams, we have the perfect accommodation solution.",
+      "housing": {
+        "title": "Corporate Housing",
+        "desc": "Fully furnished apartments for relocating employees and long-term business travelers. Flexible lease terms from 1 month to 1 year."
+      },
+      "group": {
+        "title": "Group Accommodations",
+        "desc": "Multiple units for project teams, training groups, or conference attendees. Centralized billing and dedicated account management."
+      },
+      "mobility": {
+        "title": "Global Mobility",
+        "desc": "Seamless relocation support for international assignees. We handle everything from airport pickup to local orientation."
+      },
+      "executive": {
+        "title": "Executive Suites",
+        "desc": "Premium accommodations for C-suite executives and VIP guests. Luxury finishes and concierge services included."
+      }
+    },
+    "benefits": {
+      "terms": {
+        "title": "Flexible Terms",
+        "desc": "From 1 month to 1 year"
+      },
+      "inclusive": {
+        "title": "All Inclusive",
+        "desc": "Utilities, WiFi, housekeeping"
+      },
+      "location": {
+        "title": "Prime Locations",
+        "desc": "Prime business districts"
+      },
+      "support": {
+        "title": "Dedicated Support",
+        "desc": "24/7 concierge service"
+      }
+    },
+    "cta": {
+      "title": "Ready to streamline your corporate housing?",
+      "subtitle": "Contact our corporate sales team for custom quotes and dedicated account management.",
+      "button": "Contact Sales Team"
+    },
+    "heroTitle": "Corporate Housing Solutions",
+    "heroSubtitle": "Flexible executive apartments for business travel, project teams, and relocations.<br>Reduce costs. Boost satisfaction. Simplify management.",
+    "ctaButton": "Get Corporate Quote",
+    "valueTitle": "Why Companies Choose NEOS",
+    "costSaving": "Save Up to 30%",
+    "costSavingDesc": "Compared to hotels, corporate clients save an average of 30% while enjoying more space and better amenities",
+    "flexible": "Flexible Lease Terms",
+    "flexibleDesc": "From one week to one year, scale up or down based on project needs. No long-term contracts required",
+    "service": "All-In-One Service",
+    "serviceDesc": "Dedicated account manager + 24/7 concierge + automated invoicing. One point of contact for everything",
+    "quality": "Quality-Assured Properties",
+    "qualityDesc": "Every property is personally inspected, fully furnished, and work-ready. Your employees deserve the best",
+    "scenariosTitle": "Solutions for Every Business Need",
+    "businessTravel": "Business Travel",
+    "businessTravelDesc": "Executive trips, client hospitality, training accommodation. Prime locations that reflect your brand",
+    "projectTeams": "Project Teams",
+    "projectTeamsDesc": "Consulting projects, construction teams, temporary assignments. Group accommodation with team collaboration",
+    "relocation": "Relocation & Onboarding",
+    "relocationDesc": "New hire transitions, office relocations, expat housing. A home away from home during transition",
+    "ctaTitle": "Find the Perfect Housing Solution for Your Team",
+    "ctaSubtitle": "A dedicated account manager will contact you within 24 hours with a customized proposal",
+    "submitButton": "Request Quote",
+    "trustNote": "🔒 Your information is secure · Response within 24h · No obligation"
+  },
+  "longterm": {
+    "hero": {
+      "title": "Long-Term Rental Discounts",
+      "subtitle": "Save significantly on extended stays with our flexible long-term lease options. Choose 3, 6, or 12-month terms and enjoy up to 30% off monthly rates in Toronto's premium furnished apartments.",
+      "savingsCta": "See Savings",
+      "cta": "Get Quote"
+    },
+    "pricing": {
+      "title": "Choose Your Savings Level",
+      "subtitle": "The longer you stay, the more you save. All options include the same premium amenities and services.",
+      "select": "Select This Plan"
+    },
+    "advantages": {
+      "title": "Why Choose Long-Term with NEOS",
+      "subtitle": "Beyond just savings, long-term stays offer stability, convenience, and a true home-away-from-home experience."
+    },
+    "usecases": {
+      "title": "Perfect For Your Situation",
+      "subtitle": "Long-term rentals work for a variety of life and business situations requiring extended Toronto stays."
+    },
+    "benefits": {
+      "title": "Everything Included",
+      "subtitle": "All long-term rentals include premium amenities and services at no additional cost."
+    },
+    "testimonials": {
+      "title": "Long-Term Resident Stories",
+      "subtitle": "See how our long-term residents have saved money and enjoyed their extended Toronto stays."
+    },
+    "form": {
+      "title": "Get Your Long-Term Rental Quote",
+      "subtitle": "Tell us about your long-term housing needs and we'll create a custom proposal with your savings breakdown.",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Enter your last name",
+      "email": "Email Address",
+      "emailPlaceholder": "your@email.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "moveInDate": "Desired Move-in Date",
+      "leaseDuration": "Preferred Lease Duration",
+      "months": "Months",
+      "propertyType": "Property Type",
+      "selectType": "Select type",
+      "studio": "Studio",
+      "bedroom": "Bedroom",
+      "bedrooms": "Bedrooms",
+      "budget": "Monthly Budget",
+      "selectBudget": "Select budget",
+      "location": "Preferred Area",
+      "selectLocation": "Select area",
+      "message": "Tell us about your requirements",
+      "messagePlaceholder": "Please describe your long-term housing needs, any specific requirements, reasons for extended stay, and any questions about our long-term rental program...",
+      "submitting": "Submitting...",
+      "submit": "Get My Quote & Savings",
+      "success": {
+        "title": "Quote Request Submitted!",
+        "message": "Thank you for your interest in long-term rentals! Our team will prepare a detailed quote with your exact savings breakdown and contact you within 24 hours."
+      }
+    }
+  },
+  "hosts": {
+    "hero": {
+      "title": "List Your Property",
+      "subtitle": "Earn guaranteed monthly income with zero vacancy risk. Join Toronto's premium executive housing platform and let us handle everything while you collect steady payments.",
+      "calculateCta": "Calculate Your Earnings",
+      "cta": "Get Started"
+    },
+    "advantages": {
+      "title": "Why Choose NEOS",
+      "subtitle": "Join hundreds of property owners who've transformed their real estate investments into hassle-free income streams."
+    },
+    "calculator": {
+      "title": "Calculate Your Potential Earnings",
+      "subtitle": "See how much more you could earn with NEOS compared to traditional rentals.",
+      "currentRent": "Current Monthly Rent",
+      "occupancyRate": "Current Occupancy Rate",
+      "guarantee": "Monthly payments regardless of occupancy, plus professional management included."
+    },
+    "process": {
+      "title": "How It Works",
+      "subtitle": "Get started in four simple steps and begin earning guaranteed income from your property."
+    },
+    "benefits": {
+      "title": "Additional Benefits",
+      "subtitle": "More reasons why property owners choose NEOS for their investment properties."
+    },
+    "form": {
+      "title": "List Your Property Today",
+      "subtitle": "Complete the form below and our team will contact you within 24 hours to discuss your property.",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Enter your last name",
+      "email": "Email Address",
+      "emailPlaceholder": "your@email.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "propertyAddress": "Property Address",
+      "propertyAddressPlaceholder": "Enter property address",
+      "propertyType": "Property Type",
+      "selectType": "Select type",
+      "apartment": "Apartment",
+      "condo": "Condo",
+      "house": "House",
+      "bedrooms": "Bedrooms",
+      "bedroom": "Bedroom",
+      "selectBedrooms": "Select",
+      "studio": "Studio",
+      "monthlyRent": "Current Monthly Rent",
+      "rentPlaceholder": "Optional",
+      "message": "Tell us about your property",
+      "messagePlaceholder": "Describe your property, current condition, furnishing status, and any questions you have about our program...",
+      "submitting": "Submitting...",
+      "submit": "Submit Application",
+      "success": {
+        "title": "Application Submitted!",
+        "message": "Thank you for your interest! Our team will review your application and contact you within 24 hours to discuss next steps and answer any questions you may have."
+      }
+    }
+  },
+  "landlords": {
+    "hero": {
+      "title": "Maximize Your Rental Income",
+      "subtitle": "Partner with NEOS and earn up to 30% more from your property. We handle everything while you enjoy passive income.",
+      "cta": "List Your Property"
+    },
+    "benefits": {
+      "title": "Why Partner With Us?",
+      "subtitle": "We provide end-to-end property management services that help you earn more with less stress.",
+      "income": {
+        "title": "Higher Rental Income",
+        "desc": "Earn up to 30% more compared to traditional long-term rentals. Our flexible pricing optimization ensures maximum returns."
+      },
+      "protection": {
+        "title": "Property Protection",
+        "desc": "Comprehensive insurance coverage and security deposits protect your property. Regular inspections ensure everything stays in perfect condition."
+      },
+      "management": {
+        "title": "Hassle-Free Management",
+        "desc": "We handle everything from marketing to maintenance. No more midnight emergency calls or dealing with difficult tenants."
+      },
+      "support": {
+        "title": "24/7 Guest Support",
+        "desc": "Our dedicated team handles all guest communications and support, so you don't have to worry about a thing."
+      },
+      "marketing": {
+        "title": "Professional Marketing",
+        "desc": "High-quality photography, compelling listings, and multi-platform promotion ensure maximum visibility for your property."
+      },
+      "guests": {
+        "title": "Quality Guests",
+        "desc": "Rigorous guest screening process ensures your property is rented to verified, responsible guests only."
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Getting started is easy. Three simple steps to start earning more."
+    },
+    "steps": {
+      "step1": {
+        "title": "List Your Property",
+        "desc": "Submit your property details and we'll create a professional listing."
+      },
+      "step2": {
+        "title": "We Handle Everything",
+        "desc": "From guest screening to cleaning, we manage the entire process."
+      },
+      "step3": {
+        "title": "Get Paid",
+        "desc": "Receive monthly payouts directly to your account. It's that simple."
+      }
+    },
+    "cta": {
+      "title": "Ready to Start Earning More?",
+      "subtitle": "Join hundreds of landlords who trust NEOS with their properties.",
+      "button": "Get Started Today"
+    }
+  },
+  "agents": {
+    "hero": {
+      "title": "Partner with NEOS",
+      "subtitle": "Join our network of real estate professionals and earn competitive commissions by referring properties, representing tenants, or referring guests to our premium executive apartments.",
+      "cta": "Become a Partner"
+    },
+    "models": {
+      "title": "Partnership Models",
+      "subtitle": "Choose the partnership model that fits your business and start earning today.",
+      "commission": "Commission",
+      "property": {
+        "title": "Refer Properties",
+        "desc": "Refer property owners to list their furnished apartments with NEOS. Earn commission on every successful listing."
+      },
+      "tenant": {
+        "title": "Represent Tenants",
+        "desc": "Help your clients find the perfect executive apartment. Earn commission on every booking you facilitate."
+      },
+      "guest": {
+        "title": "Refer Guests",
+        "desc": "Refer business travelers, relocating employees, or project teams to NEOS and earn for every successful booking."
+      }
+    },
+    "process": {
+      "title": "How It Works",
+      "subtitle": "Get started in four simple steps and start earning commissions.",
+      "register": {
+        "title": "Register",
+        "desc": "Complete the application form with your details and license information."
+      },
+      "evaluate": {
+        "title": "Property Evaluation",
+        "desc": "We evaluate referred properties to ensure they meet our quality standards."
+      },
+      "review": {
+        "title": "Review & Approve",
+        "desc": "Our team reviews applications and approves qualified partners within 48 hours."
+      },
+      "commission": {
+        "title": "Earn Commission",
+        "desc": "Start earning commissions on every successful referral or booking."
+      }
+    },
+    "requirements": {
+      "title": "Property Requirements",
+      "subtitle": "Properties we accept must meet the following criteria:",
+      "furnished": {
+        "title": "Fully Furnished",
+        "desc": "All properties must be fully furnished with quality furniture, appliances, and housewares."
+      },
+      "location": {
+        "title": "Prime Location",
+        "desc": "Located in prime business districts with good transit access"
+      },
+      "quality": {
+        "title": "High Quality",
+        "desc": "Well-maintained properties with modern amenities, professional cleaning, and 24/7 support readiness."
+      },
+      "amenities": {
+        "title": "Essential Amenities",
+        "desc": "Must include high-speed WiFi, in-unit laundry or facilities, fully equipped kitchen, and workspace."
+      }
+    },
+    "benefits": {
+      "title": "Why Partner with NEOS",
+      "subtitle": "Join hundreds of real estate professionals who trust NEOS for their clients' housing needs.",
+      "commission": {
+        "title": "Competitive Commission",
+        "desc": "Earn up to 50% commission on property referrals and competitive rates on tenant representation."
+      },
+      "support": {
+        "title": "Dedicated Support",
+        "desc": "Access to our partner support team for assistance with bookings, inquiries, and client needs."
+      },
+      "marketing": {
+        "title": "Marketing Materials",
+        "desc": "Receive professional marketing materials, property photos, and descriptions to share with clients."
+      },
+      "fast": {
+        "title": "Fast Payouts",
+        "desc": "Commission payments processed monthly with detailed reporting and transparent tracking."
+      }
+    },
+    "form": {
+      "title": "Register as a Partner",
+      "subtitle": "Fill out the form below and our team will contact you within 24 hours.",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Enter your last name",
+      "email": "Email Address",
+      "emailPlaceholder": "your@email.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "company": "Company/Brokerage",
+      "companyPlaceholder": "Your company name",
+      "license": "Real Estate License Number",
+      "licensePlaceholder": "Optional",
+      "partnershipType": "Partnership Type",
+      "selectType": "Select partnership type",
+      "message": "Message",
+      "messagePlaceholder": "Tell us about your business and how you'd like to partner with NEOS...",
+      "privacyNote": "Your information will be kept confidential and used only for partnership communication.",
+      "submit": "Submit Application",
+      "submitting": "Submitting...",
+      "successTitle": "Application Submitted!",
+      "successMessage": "Thank you for your interest. Our team will review your application and contact you within 24 hours.",
+      "submitAnother": "Submit another application"
+    }
+  },
+  "students": {
+    "hero": {
+      "title": "For Academic & Medical Professionals",
+      "subtitle": "Designed for visiting scholars, medical fellows/residents, parents of international students, and conference attendees.",
+      "pricingCta": "View Pricing",
+      "cta": "Request Availability"
+    },
+    "advantages": {
+      "title": "Who We Serve"
+    },
+    "universities": {
+      "title": "Partner Universities & Colleges",
+      "subtitle": "Strategically located near Toronto's top educational institutions for easy access to campus and academic resources."
+    },
+    "features": {
+      "title": "Student-Focused Amenities",
+      "subtitle": "Every space is designed with student success in mind, from study areas to social spaces."
+    },
+    "pricing": {
+      "title": "Realistic Pricing",
+      "subtitle": "We do not offer shared-room products.",
+      "real": {
+        "1": "Prime downtown locations",
+        "2": "Move-in ready furnished homes",
+        "3": "Flexible stays from 30 days to 12 months",
+        "title": "3BR"
+      },
+      "month": "month"
+    },
+    "testimonials": {
+      "title": "What Students Say",
+      "subtitle": "Hear from current and former residents about their NEOS experience."
+    },
+    "form": {
+      "title": "Apply for Student Housing",
+      "subtitle": "Ready to secure your Toronto student housing? Complete the application below and our team will contact you within 24 hours.",
+      "firstName": "First name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last name",
+      "lastNamePlaceholder": "Enter your last name",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "phone": "Phone",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "university": "University / Institution",
+      "selectUniversity": "Select your school",
+      "uoft": "University of Toronto",
+      "tmu": "Toronto Metropolitan University",
+      "ocad": "OCAD University",
+      "gbc": "George Brown College",
+      "cc": "Centennial College",
+      "seneca": "Seneca Polytechnic",
+      "other": "Other",
+      "program": "Program/Major",
+      "programPlaceholder": "e.g. Computer Science",
+      "moveInDate": "Move-in Date",
+      "duration": "Lease Duration",
+      "selectDuration": "Select",
+      "months": "Months",
+      "flexible": "Flexible",
+      "budget": "Monthly Budget",
+      "selectBudget": "Select budget",
+      "roomType": "Preferred Room Type",
+      "shared": "Shared Room",
+      "studio": "Private Studio",
+      "oneBed": "1-Bedroom",
+      "message": "Your housing requirements",
+      "messagePlaceholder": "Tell us about yourself, any special requirements, roommate preferences, or questions you have about student housing with NEOS...",
+      "submitting": "Submitting...",
+      "submit": "Submit inquiry",
+      "success": {
+        "title": "Request received",
+        "message": "Our team will contact you within 24 hours."
+      },
+      "validation": "Please complete required fields"
+    },
+    "audience": {
+      "1": "Visiting scholars and researchers",
+      "2": "Medical fellows and residents",
+      "3": "Parents visiting international students",
+      "4": "International conference participants"
+    },
+    "location": {
+      "title": "Prime Location: 238 Simcoe",
+      "subtitle": "Walkable to Toronto General, Mt. Sinai, SickKids, Princess Margaret, and close to UofT St. George, AGO, and OCAD.",
+      "point1": "~3-minute walk to St. Patrick / Osgoode subway",
+      "point2": "Ideal for medical professionals",
+      "point3": "High-quality full apartments, move-in ready",
+      "point4": "30-day to 12-month options"
+    }
+  },
+  "services": {
+    "title": "How We Can Help",
+    "subtitle": "Whether you're a business traveler, a relocating professional, or a company housing a team — we have a home for that.",
+    "corporateHousing": {
+      "title": "Corporate Housing",
+      "desc": "Your team flies in Monday. Their apartments are ready Sunday. Fully furnished, utilities included, walking distance to downtown offices."
+    },
+    "shortTerm": {
+      "title": "Short-Term Stays",
+      "desc": "Between leases? Renovating? Just need a beautiful space for a few weeks? Move in with nothing but a suitcase."
+    },
+    "propertyManagement": {
+      "title": "Property Management",
+      "desc": "Own a condo? We'll fill it, maintain it, and handle everything. You just collect the income."
+    },
+    "concierge": {
+      "title": "Personal Concierge",
+      "desc": "Need groceries before you arrive? Airport pickup? Restaurant recs in your neighborhood? Just ask."
+    },
+    "flexibleLeasing": {
+      "title": "Flexible Leasing",
+      "desc": "Stay a month, extend to six. No penalties, no paperwork headaches. Your lease works around your life."
+    },
+    "globalNetwork": {
+      "title": "Growing Network",
+      "desc": "Expanding to cities where business takes you. One platform, consistent quality everywhere."
+    },
+    "features": {
+      "utilities": "All utilities included",
+      "wifi": "High-speed WiFi",
+      "housekeeping": "Housekeeping service",
+      "support": "24/7 support",
+      "minNights": "Minimum 28 nights",
+      "kitchen": "Fully equipped kitchen",
+      "locations": "Premium locations",
+      "instant": "Instant booking",
+      "photography": "Professional photography",
+      "screening": "Tenant screening",
+      "collection": "Rent collection",
+      "maintenance": "Maintenance coordination",
+      "airport": "Airport pickup",
+      "grocery": "Grocery delivery",
+      "restaurant": "Restaurant reservations",
+      "recommendations": "Local recommendations",
+      "monthToMonth": "Month-to-month options",
+      "noHidden": "No hidden fees",
+      "renewal": "Easy renewal",
+      "termination": "Early termination available"
+    },
+    "cta": {
+      "title": "Let's Find Your Home",
+      "desc": "Tell us what you need. We'll handle the rest.",
+      "button": "Get in Touch"
+    }
+  },
+  "longTerm": "Long-term Rental",
+  "shortTerm": {
+    "title": "Short-Term Stays",
+    "desc": "Between leases? Renovating? Move in with nothing but a suitcase."
+  },
+  "marketSegments": {
+    "title": "Built for different stay scenarios",
+    "subtitle": "NEOS supports relocation, business housing, and longer monthly stays with the same premium standard.",
+    "business": {
+      "title": "Business travel",
+      "subtitle": "Corporate-ready",
+      "description": "Furnished residences for executives, project teams, and consultants who need a dependable downtown base.",
+      "cta": "Explore business stays"
+    },
+    "longTerm": {
+      "title": "Long-term stays",
+      "subtitle": "30+ day living",
+      "description": "Ideal for renovation gaps, temporary housing, and guests who want home-level comfort for longer periods.",
+      "cta": "View long-term options"
+    },
+    "relocation": {
+      "title": "Relocation support",
+      "subtitle": "Move with certainty",
+      "description": "A smoother landing for employees, families, and international arrivals transitioning into Toronto.",
+      "cta": "See relocation-ready homes"
+    }
+  },
+  "marketInsights": {
+    "title": "Toronto Market Insights & Reports | NEOS Knowledge Hub",
+    "description": "Toronto real estate market reports, TRREB data analysis, rental trends, and investment insights. Updated regularly with the latest data.",
+    "hero": {
+      "title": "Toronto Market Insights",
+      "subtitle": "Data-driven real estate analysis, TRREB reports, and rental market trends"
+    },
+    "search": {
+      "placeholder": "Search market reports, TRREB data, rental trends..."
+    },
+    "categories": {
+      "all": "All Categories",
+      "rentalTrends": "Rental Trends",
+      "marketReports": "Market Reports",
+      "investment": "Investment Insights",
+      "policy": "Policy & Regulations",
+      "neighborhoods": "Neighborhoods"
+    },
+    "stats": {
+      "totalReports": "Total Reports",
+      "monthlyGrowth": "Monthly Growth",
+      "avgRent": "Avg. 1BR Rent",
+      "activeListings": "Active Listings"
+    },
+    "loading": "Loading market insights...",
+    "noPosts": "No market reports found",
+    "noPostsDesc": "Market reports and TRREB data analysis will appear here as they are published. Check back soon!",
+    "recentReports": "Recent Reports",
+    "downloadAll": "Download All Reports",
+    "readMore": "Read Report",
+    "newsletter": {
+      "title": "Stay Informed",
+      "description": "Get monthly market insights, rental trends, and investment analysis delivered to your inbox.",
+      "placeholder": "Your email address",
+      "subscribe": "Subscribe",
+      "privacy": "We respect your privacy. Unsubscribe at any time."
+    }
+  },
+  "marketing": {
+    "title": "Professional Marketing",
+    "desc": "High-quality photography, compelling listings, and multi-platform promotion ensure maximum visibility for your property."
+  },
+  "segments": {
+    "title": "Homes Backed by Real Property Photos",
+    "subtitle": "Here for work? In between places? Starting fresh? We've got you covered.",
+    "business": {
+      "title": "Business Stays",
+      "subtitle": "Corporate rates available",
+      "desc": "You're here for a 3-month project. We'll make sure the rest of your life doesn't pause. Walk to the Financial District, cook dinner in your own kitchen.",
+      "cta": "Explore Corporate Plans"
+    },
+    "longterm": {
+      "title": "Extended Living",
+      "subtitle": "Save 20% monthly",
+      "desc": "Not just passing through? Settle in. Your apartment comes with everything — dishes, linens, even a coffee maker. Just bring yourself.",
+      "cta": "Browse Long-Stay Homes"
+    },
+    "relocation": {
+      "title": "Relocation Landing",
+      "subtitle": "Move in this week",
+      "desc": "New city, new job, a hundred things on your list. Cross \"find a place to live\" off today.",
+      "cta": "Find Your Landing Spot"
+    }
+  },
+  "solutions": {
+    "title": "Solutions for Every Need",
+    "subtitle": "From individual business travelers to large project teams, we have the perfect accommodation solution.",
+    "housing": {
+      "title": "Corporate Housing",
+      "desc": "Fully furnished apartments for relocating employees and long-term business travelers. Flexible lease terms from 1 month to 1 year."
+    },
+    "group": {
+      "title": "Group Accommodations",
+      "desc": "Multiple units for project teams, training groups, or conference attendees. Centralized billing and dedicated account management."
+    },
+    "mobility": {
+      "title": "Global Mobility",
+      "desc": "Seamless relocation support for international assignees. We handle everything from airport pickup to local orientation."
+    },
+    "executive": {
+      "title": "Executive Suites",
+      "desc": "Premium accommodations for C-suite executives and VIP guests. Luxury finishes and concierge services included."
+    }
+  },
+  "benefits": {
+    "title": "Why Partner With Us?",
+    "subtitle": "We provide end-to-end property management services that help you earn more with less stress.",
+    "income": {
+      "title": "Higher Rental Income",
+      "desc": "Earn up to 30% more compared to traditional long-term rentals. Our flexible pricing optimization ensures maximum returns."
+    },
+    "protection": {
+      "title": "Property Protection",
+      "desc": "Comprehensive insurance coverage and security deposits protect your property. Regular inspections ensure everything stays in perfect condition."
+    },
+    "management": {
+      "title": "Hassle-Free Management",
+      "desc": "We handle everything from marketing to maintenance. No more midnight emergency calls or dealing with difficult tenants."
+    },
+    "support": {
+      "title": "Dedicated Support",
+      "desc": "24/7 concierge service"
+    },
+    "marketing": {
+      "title": "Professional Marketing",
+      "desc": "High-quality photography, compelling listings, and multi-platform promotion ensure maximum visibility for your property."
+    },
+    "guests": {
+      "title": "Quality Guests",
+      "desc": "Rigorous guest screening process ensures your property is rented to verified, responsible guests only."
+    },
+    "terms": {
+      "title": "Flexible Terms",
+      "desc": "From 1 month to 1 year"
+    },
+    "inclusive": {
+      "title": "All Inclusive",
+      "desc": "Utilities, WiFi, housekeeping"
+    },
+    "location": {
+      "title": "Prime Locations",
+      "desc": "Prime business districts & major cities"
+    }
+  }
+}

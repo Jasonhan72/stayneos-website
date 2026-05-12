@@ -1,0 +1,84 @@
+{
+  "chat": {
+    "title": "Chat with NEOS Support",
+    "subtitle": "Aria • Customer Care Lead",
+    "toggle": "Open chat with NEOS Support",
+    "close": "Close chat",
+    "clear": "Clear chat history",
+    "clearConfirm": "Are you sure you want to clear the chat history?",
+    "welcome": "Hi! I'm Aria, NEOS Customer Care. How can I help you today?",
+    "placeholder": "Type your message...",
+    "send": "Send",
+    "typing": "Aria is typing...",
+    "disclaimer": "Responses may take a few moments",
+    "error": "Sorry, there was an error sending your message. Please try again or email us at hello@stayneos.com.",
+    "fallback": {
+      "1": "For booking inquiries, please visit our properties page or use the AI concierge above.",
+      "2": "For urgent matters, please email us at hello@stayneos.com.",
+      "3": "Our team typically responds within 2 hours during business hours (9am-6pm EST)."
+    }
+  },
+  "ai": {
+    "assistant": {
+      "title": "AI Smart Assistant",
+      "toggle": "AI Assistant"
+    },
+    "description": {
+      "title": "Generate Description",
+      "placeholder": "Enter location or features, AI will generate an attractive description...",
+      "button": "Generate",
+      "tip": "Enter keywords like \"luxury downtown apartment\" for better results"
+    },
+    "pricing": {
+      "title": "Pricing Suggestion",
+      "placeholder": "Get pricing suggestions based on property info...",
+      "button": "Get Suggestion",
+      "tip": "AI analyzes market prices based on city, type, and area"
+    },
+    "amenities": {
+      "title": "Amenity Recommendations",
+      "placeholder": "Recommend amenities based on description...",
+      "button": "Recommend",
+      "tip": "AI will analyze your description and recommend suitable amenities"
+    },
+    "generating": "Generating...",
+    "result": {
+      "title": "Result:"
+    },
+    "tip": {
+      "title": "Tip"
+    },
+    "generateDescription": "AI Generate Description",
+    "suggestPrice": "Get Pricing Suggestion",
+    "suggestAmenities": "AI Recommend Amenities"
+  },
+  "aiConcierge": {
+    "placeholder": "Tell me about your Toronto plans...",
+    "submit": "Ask NEOS AI",
+    "chip1": "Medical rotation, 3 months",
+    "chip2": "Relocating for work, family of 4",
+    "chip3": "Visiting scholar at U of T",
+    "chip4": "Insurance housing, immediate",
+    "fallbackLink": "Or browse our full collection →",
+    "loading": "NEOS AI is finding your perfect match...",
+    "error": "Our AI is taking a moment. Browse our collection or chat with us.",
+    "browseCta": "Browse Properties",
+    "whatsappCta": "Chat on WhatsApp",
+    "scheduleViewing": "Schedule a Viewing"
+  },
+  "concierge": {
+    "title": "Personal Concierge",
+    "desc": "Groceries, airport pickup, restaurant recs. Just ask."
+  },
+  "assistant": {
+    "title": "AI Smart Assistant",
+    "toggle": "AI Assistant"
+  },
+  "messagePrompt": "Before you can continue, let {hostName} know a little about your trip and why their place is a good fit.",
+  "messageExample1": "Hi! I'm traveling for work and looking for a short-term residence. Your place looks perfect for my stay.",
+  "messageExample2": "Looking forward to staying at your beautiful apartment! I'll be working remotely during the weekdays.",
+  "messageExample3": "This will be my first time staying in this city. Excited to explore from your conveniently located place!",
+  "messagePlaceholder": "Please describe your needs or questions...",
+  "messageTooShort": "Please write a bit more about your trip",
+  "writeMessage": "Write a message to the host"
+}

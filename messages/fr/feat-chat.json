@@ -1,0 +1,84 @@
+{
+  "chat": {
+    "title": "Discuter avec le support NEOS",
+    "subtitle": "Aria • Responsable service client",
+    "toggle": "Ouvrir le chat avec le support NEOS",
+    "close": "Fermer le chat",
+    "clear": "Effacer l'historique du chat",
+    "clearConfirm": "Êtes-vous sûr de vouloir effacer l'historique du chat ?",
+    "welcome": "Bonjour ! Je suis Aria, service client NEOS. Comment puis-je vous aider aujourd'hui ?",
+    "placeholder": "Tapez votre message...",
+    "send": "Envoyer",
+    "typing": "Aria est en train d'écrire...",
+    "disclaimer": "Les réponses peuvent prendre quelques instants",
+    "error": "Désolé, une erreur s'est produite lors de l'envoi de votre message. Veuillez réessayer ou nous contacter par email à hello@stayneos.com.",
+    "fallback": {
+      "1": "Pour les demandes de réservation, veuillez visiter notre page de propriétés ou utiliser le concierge IA ci-dessus.",
+      "2": "Pour les questions urgentes, veuillez nous contacter par email à hello@stayneos.com.",
+      "3": "Notre équipe répond généralement dans les 2 heures pendant les heures ouvrables (9h-18h HNE)."
+    }
+  },
+  "ai": {
+    "assistant": {
+      "title": "Assistant IA",
+      "toggle": "Assistant IA"
+    },
+    "description": {
+      "title": "Générer Description",
+      "placeholder": "Entrez l'emplacement ou les caractéristiques...",
+      "button": "Générer",
+      "tip": "Entrez des mots-clés comme \"appartement luxe centre-ville\""
+    },
+    "pricing": {
+      "title": "Suggestion de Prix",
+      "placeholder": "Obtenir des suggestions de prix...",
+      "button": "Obtenir",
+      "tip": "L'IA analyse les prix du marché selon la ville et le type"
+    },
+    "amenities": {
+      "title": "Recommandations",
+      "placeholder": "Recommander des équipements selon la description...",
+      "button": "Recommander",
+      "tip": "L'IA analysera votre description et recommandera des équipements"
+    },
+    "generating": "Génération...",
+    "result": {
+      "title": "Résultat :"
+    },
+    "tip": {
+      "title": "Conseil"
+    },
+    "generateDescription": "IA Générer Description",
+    "suggestPrice": "Suggestion de Prix",
+    "suggestAmenities": "IA Recommander Équipements"
+  },
+  "aiConcierge": {
+    "placeholder": "Parlez-moi de vos projets à Toronto...",
+    "submit": "Demander à NEOS AI",
+    "chip1": "Rotation médicale, 3 mois",
+    "chip2": "Relocalisation professionnelle, famille de 4",
+    "chip3": "Chercheur invité à U of T",
+    "chip4": "Logement d'assurance, immédiat",
+    "fallbackLink": "Ou parcourez notre collection complète →",
+    "loading": "NEOS AI recherche votre match parfait...",
+    "error": "Notre IA prend un moment. Parcourez notre collection ou contactez-nous.",
+    "browseCta": "Parcourir les propriétés",
+    "whatsappCta": "Discuter sur WhatsApp",
+    "scheduleViewing": "Planifier une visite"
+  },
+  "concierge": {
+    "title": "Conciergerie personnelle",
+    "desc": "Courses, transfert, restaurants. Demandez."
+  },
+  "assistant": {
+    "title": "Assistant IA",
+    "toggle": "Assistant IA"
+  },
+  "messagePrompt": "Avant de continuer, faites savoir à {hostName} un peu plus sur votre voyage et pourquoi son logement vous convient.",
+  "messageExample1": "Bonjour ! Je visite Toronto pour une conférence d'affaires et votre logement semble parfait pour mon séjour.",
+  "messageExample2": "J'ai hâte de séjourner dans votre bel appartement ! Je travaillerai à distance en semaine.",
+  "messageExample3": "Ce sera ma première fois à Toronto. Je suis excité d'explorer la ville depuis votre emplacement pratique !",
+  "messagePlaceholder": "Veuillez décrire vos besoins ou questions...",
+  "messageTooShort": "Veuillez écrire un peu plus sur votre voyage",
+  "writeMessage": "Écrire un message à l'hôte"
+}

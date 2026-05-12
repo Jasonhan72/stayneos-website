@@ -1,0 +1,220 @@
+{
+  "hero": {
+    "title": "体验多伦多，AI 与专业团队为您精选",
+    "highlight": "停止搜索，开始生活",
+    "subtitle": "多伦多市中心高端精装公寓。30天到12个月。拎包入住。",
+    "cta": "发布房源",
+    "ctaQuote": "获取报价",
+    "ctaBrowse": "浏览房源",
+    "stats": {
+      "residences": "精选豪华公寓",
+      "managed": "全托管式服务",
+      "support": "全天候支持"
+    }
+  },
+  "heroSubtitle": "为出差团队、项目驻场、企业搬迁提供灵活的高端公寓解决方案<br>降低成本 · 提升员工满意度 · 简化管理流程",
+  "heroTitle": "企业差旅住房方案",
+  "dualPath": {
+    "browse": {
+      "title": "浏览高端精装公寓",
+      "description": "探索专为商务人士、家庭和长期住客打造的拎包入住公寓。",
+      "cta": "查看可用房源"
+    },
+    "business": {
+      "title": "规划搬迁或商务住宿",
+      "description": "为项目团队、临时派遣和企业住宿提供定制化支持。",
+      "cta": "查看商务方案"
+    }
+  },
+  "homePaths": {
+    "housing": {
+      "title": "我需要住房",
+      "description": "面向个人租客和搬迁家庭，提供可拎包入住的多伦多公寓。",
+      "cta": "浏览房源"
+    },
+    "relocation": {
+      "title": "我负责搬迁安置",
+      "description": "面向搬迁公司、企业HR及保险安置团队的企业住房方案。",
+      "cta": "查看企业方案"
+    }
+  },
+  "cta": {
+    "title": "今晚，找到您的理想居所",
+    "subtitle": "浏览可以立即入住的精装公寓。不用长租约，不用空房间——只有家。",
+    "explore": "浏览公寓",
+    "contact": "联系我们",
+    "button": "联系我们",
+    "desc": "今天联系我们，了解更多关于我们服务的信息，找到您的理想居所。",
+    "browse": "浏览公寓"
+  },
+  "ctaButton": "获取企业报价",
+  "ctaBrowse": "浏览房源",
+  "ctaContact": "跟我们聊聊",
+  "ctaQuote": "获取报价",
+  "ctaTitle": "为企业寻找理想的住房方案",
+  "ctaSubtitle": "专属客户经理将在 24 小时内与您联系，提供定制化方案和优惠报价",
+  "trustBar": {
+    "insurance": "200万美元商业责任保险",
+    "concierge": "所有物业均位于礼宾服务大楼",
+    "licensed": "安大略省持牌经纪"
+  },
+  "trust": {
+    "verified": "真实房源认证",
+    "support": "24/7 专属支持",
+    "selection": "精选房源"
+  },
+  "trustNote": "🔒 企业信息严格保密 · 24小时内回复 · 无强制购买义务",
+  "howItWorks": {
+    "title": "NEOS 如何运作",
+    "subtitle": "从发现到入住的简单流程，专为高端月租精装公寓设计。",
+    "step1": {
+      "title": "探索房源",
+      "description": "浏览精装公寓，比较地段，筛选适合的月租房源。"
+    },
+    "step2": {
+      "title": "确认日期",
+      "description": "选择符合您项目、搬迁或临时住房需求的入住时间。"
+    },
+    "step3": {
+      "title": "轻松入住",
+      "description": "抵达后即可入住配备齐全的公寓，水电、家具、服务均已就绪。"
+    }
+  },
+  "whyChoose": {
+    "label": "为什么选择我们",
+    "title": "为什么大家选我们",
+    "desc": "我们不只是帮你找个地方。我们确保那里真的有家的感觉。"
+  },
+  "valueProposition": {
+    "title": "为何选择 NEOS",
+    "subtitle": "多伦多高端公寓，为长期住宿提供可靠的运营保障。",
+    "curated": {
+      "title": "精选房源",
+      "description": "精心装修的公寓，高端装饰、充足采光、设计感满满的室内空间。"
+    },
+    "flexible": {
+      "title": "灵活租期",
+      "description": "30天起租，租约结构适配搬迁、项目和长期出差需求。"
+    },
+    "concierge": {
+      "title": "管家式服务",
+      "description": "水电、保洁、住客关怀一站式服务，入住第一天就感受到无缝体验。"
+    },
+    "support": {
+      "title": "随时响应",
+      "description": "从入住前到住宿期间，我们的团队随时待命，为您的计划变更提供支持。"
+    }
+  },
+  "features": {
+    "title": "为何选择 NEOS",
+    "subtitle": "您的居所，比您更早准备就绪。没有意外，没有隐藏费用——只有一处为您精心打造的温馨空间。",
+    "quality": "逐一精选",
+    "qualityDesc": "每套公寓都经过我们团队实地看房、审核、把关。不够好的，不会上线。",
+    "flexible": "随需而变",
+    "flexibleDesc": "住一个月或十二个月。随时延长或缩短。您的计划会变，住的地方不该成为麻烦。",
+    "service": "全天候专属支持",
+    "serviceDesc": "随时致电，真人接听。无论白天黑夜，工作日或周末，我们始终在线。",
+    "support": "全天候守护",
+    "supportDesc": "深夜遇到门锁问题？需要维修协助？我们一直都在。",
+    "utilities": "包含所有公用事业费用",
+    "wifi": "高速WiFi",
+    "housekeeping": "家政服务",
+    "minNights": "最少28晚",
+    "kitchen": "设备齐全的厨房",
+    "locations": "优质地段",
+    "instant": "即时预订",
+    "photography": "专业摄影",
+    "screening": "租客筛选",
+    "collection": "租金收取",
+    "maintenance": "维护协调",
+    "airport": "机场接送",
+    "grocery": "杂货配送",
+    "restaurant": "餐厅预订",
+    "recommendations": "本地推荐",
+    "monthToMonth": "按月租赁选项",
+    "noHidden": "无隐藏费用",
+    "renewal": "轻松续租",
+    "termination": "可提前终止"
+  },
+  "testimonials": {
+    "title": "客人评价",
+    "subtitle": "阅读我们满意客户的真实评价，了解NEOS的服务差异"
+  },
+  "storyOrigin": "这始于一次令人崩溃的找房经历。创始人因工作搬到陌生城市，面对和每个人一样的选择：没有厨房的酒店小房间，或者要签12个月租约的空荡公寓。两个都不合理。于是我们打造了第三种选择。",
+  "storyMission": "2024 年，NEOS 带着一个简单的想法上线：漂亮的精装公寓，明天就能搬进去。每套房子都是精心挑选、设施齐全，而且都在您真正想住的社区。",
+  "storyToday": "如今，我们是专业人士找家的首选。技术主管、咨询顾问、住院医生、搬迁家庭——他们选择我们，因为我们认真对待每一次入住。因为每一次都很重要。",
+  "storyTitle": "如何开始的",
+  "story": {
+    "label": "我们的故事",
+    "title": "如何开始的",
+    "subtitle": "一次令人难忘的找房经历，就是全部的起点。"
+  },
+  "mission": {
+    "label": "我们的使命",
+    "title": "驱动我们的是什么",
+    "desc": "每个人都值得拥有一个真正的家——即使远在他乡。这不是口号，是我们做每个决定的依据。",
+    "items": {
+      "executive": "精选公寓",
+      "executiveDesc": "你自己会选的社区，进门就能感受到的品质。",
+      "simple": "零麻烦",
+      "simpleDesc": "没有繁琐手续。不用买家具。不用装宽带。来了就住。",
+      "flexible": "你的时间表",
+      "flexibleDesc": "住 28 天或 365 天。发条消息就能续约。想走就走。你说了算。",
+      "location": "优越地理位置",
+      "locationDesc": "精选核心城市优质社区，每个家都在您想待的地方。"
+    }
+  },
+  "whatOffers": "房源设施",
+  "commitment": {
+    "label": "我们的承诺",
+    "title": "我们的承诺",
+    "subtitle": "每位住客都应该获得值得分享的体验。这是我们给自己定的标准。"
+  },
+  "peopleFirst": "真实的人，不是交易",
+  "peopleFirstDesc": "你不是一个订单号。给我们发消息，回复你的是真人。我们记得你的咖啡偏好和入住习惯。",
+  "projectTeams": "项目驻场团队",
+  "projectTeamsDesc": "咨询项目、工程施工、临时派驻。多人入住方案，团队协同更便利",
+  "quality": "逐一精选",
+  "qualityDesc": "每套公寓都经过我们团队实地看房、审核、把关。不够好的，不会上线。",
+  "sustainability": "让城市更好",
+  "sustainabilityDesc": "我们优先选择环保建筑，减少浪费，选择本地供应商。每一座城市都是我们的家。",
+  "flexibility": "生活不是按剧本走的",
+  "flexibilityDesc": "项目延期了。计划变了。我们理解。灵活租期，轻松续约，不因为你是人而受惩罚。",
+  "flexible": "按你的节奏来",
+  "flexibleDesc": "住一个月或十二个月。随时延长或缩短。你的计划会变，住的地方不该成为麻烦。",
+  "flexibleCancellation": "灵活取消",
+  "flexibleLeasing": {
+    "title": "灵活租约",
+    "desc": "住一个月，延长到半年。不罚款。"
+  },
+  "freeCancellation": "免费取消",
+  "freeCancellationDesc": "{date} 前可免费取消",
+  "simple": "零麻烦",
+  "simpleDesc": "没有繁琐手续。不用买家具。来了就住。",
+  "globalNetwork": {
+    "title": "持续扩展",
+    "desc": "从主要城市起步，扩展至商务带您去的每一座城市。一个平台，始终如一的品质。"
+  },
+  "corporateHousing": {
+    "title": "企业住房",
+    "desc": "你的团队周一飞来，公寓周日就准备好了。精装家具，步行到市中心。"
+  },
+  "businessTravel": "商务差旅",
+  "businessTravelDesc": "高管出差、客户接待、培训住宿。位置便利，设施齐全，彰显企业形象",
+  "relocation": {
+    "title": "搬迁过渡",
+    "subtitle": "本周即可入住",
+    "desc": "新城市，新工作，清单上一堆事。今天就把\"找住处\"这一项划掉吧。",
+    "cta": "找到你的落脚点"
+  },
+  "relocationDesc": "新员工入职、办公室搬迁、外派人员安置。过渡期的温馨居所",
+  "movein": {
+    "title": "推门即住",
+    "desc": "钥匙已备好。WiFi 已连上。床已铺好。到了就开始生活。"
+  },
+  "collection": "租金收取",
+  "partnersCount": "50+ 企业合作伙伴",
+  "statsTitle": "用数字说话",
+  "scenariosTitle": "为企业各种场景提供解决方案",
+  "reasonsTitle": "为什么我的支付被取消了？"
+}

@@ -1,0 +1,204 @@
+{
+  "neighborhoods": {
+    "hero": {
+      "title": "Toronto Neighborhood Guide",
+      "subtitle": "We currently focus on 3 real operating neighborhoods."
+    },
+    "cta": {
+      "title": "Ready to Find Your Perfect Toronto Home?",
+      "subtitle": "Browse our curated selection of executive apartments in these premium Toronto neighborhoods.",
+      "browse": "Browse All Properties",
+      "contact": "Contact Our Team"
+    },
+    "facts": {
+      "title": "Toronto Quick Facts",
+      "subtitle": "Essential information for executive travelers and business professionals.",
+      "businessHours": {
+        "title": "Business Hours",
+        "desc": "Most offices operate 9 AM - 5 PM EST"
+      },
+      "airport": {
+        "title": "Airport Access",
+        "desc": "45-60 min to Pearson via UP Express"
+      },
+      "transit": {
+        "title": "Public Transit",
+        "desc": "Extensive subway, streetcar & bus network"
+      },
+      "culture": {
+        "title": "Business Culture",
+        "desc": "Professional, multicultural environment"
+      }
+    },
+    "categories": {
+      "all": "All Neighborhoods",
+      "business": "Business Districts",
+      "luxury": "Luxury Living",
+      "value": "Value Options"
+    },
+    "city": "Toronto",
+    "labels": {
+      "popularWith": "Popular with:",
+      "highlights": "Highlights:",
+      "keyFeatures": "Key Features:",
+      "transportation": "Transportation:",
+      "averageMonthlyPricing": "Average Monthly Pricing:",
+      "studio": "Studio",
+      "oneBedroom": "1 Bedroom",
+      "twoBedroom": "2 Bedroom"
+    },
+    "data": {
+      "downtown": {
+        "name": "Downtown Core / Grange Park (238 Simcoe St)",
+        "tagline": "Toronto’s cultural core",
+        "features": {
+          "1": "Next to AGO, OCAD, UofT St. George",
+          "2": "Walkable to four major hospitals",
+          "3": "Toronto General, Mt. Sinai, SickKids, Princess Margaret",
+          "4": "Ideal for visiting scholars and medical professionals",
+          "5": "~3-minute walk to St. Patrick / Osgoode subway"
+        }
+      },
+      "yorkville": {
+        "name": "Yorkville",
+        "tagline": "Yorkville living",
+        "description": "Discover premium stays in Yorkville with great transit and amenities.",
+        "features": {
+          "1": "Feature 1",
+          "2": "Feature 2",
+          "3": "Feature 3",
+          "4": "Feature 4",
+          "5": "Feature 5"
+        },
+        "transportation": {
+          "1": "Transit option 1",
+          "2": "Transit option 2",
+          "3": "Transit option 3",
+          "4": "Transit option 4"
+        },
+        "highlights": {
+          "1": "Highlight 1",
+          "2": "Highlight 2",
+          "3": "Highlight 3",
+          "4": "Highlight 4"
+        },
+        "popularWith": {
+          "1": "Group 1",
+          "2": "Group 2",
+          "3": "Group 3"
+        },
+        "pricing": {
+          "studio": "3200",
+          "oneBed": "4200",
+          "twoBed": "6000"
+        }
+      },
+      "liberty-village": {
+        "name": "Liberty Village",
+        "tagline": "Liberty Village living",
+        "description": "Discover premium stays in Liberty Village with great transit and amenities.",
+        "features": {
+          "1": "Feature 1",
+          "2": "Feature 2",
+          "3": "Feature 3",
+          "4": "Feature 4",
+          "5": "Feature 5"
+        },
+        "transportation": {
+          "1": "Transit option 1",
+          "2": "Transit option 2",
+          "3": "Transit option 3",
+          "4": "Transit option 4"
+        },
+        "highlights": {
+          "1": "Highlight 1",
+          "2": "Highlight 2",
+          "3": "Highlight 3",
+          "4": "Highlight 4"
+        },
+        "popularWith": {
+          "1": "Group 1",
+          "2": "Group 2",
+          "3": "Group 3"
+        },
+        "pricing": {
+          "studio": "2400",
+          "oneBed": "3000",
+          "twoBed": "4200"
+        }
+      },
+      "midtown": {
+        "name": "Midtown",
+        "tagline": "Midtown living",
+        "description": "Discover premium stays in Midtown with great transit and amenities.",
+        "features": {
+          "1": "Feature 1",
+          "2": "Feature 2",
+          "3": "Feature 3",
+          "4": "Feature 4",
+          "5": "Feature 5"
+        },
+        "transportation": {
+          "1": "Transit option 1",
+          "2": "Transit option 2",
+          "3": "Transit option 3",
+          "4": "Transit option 4"
+        },
+        "highlights": {
+          "1": "Highlight 1",
+          "2": "Highlight 2",
+          "3": "Highlight 3",
+          "4": "Highlight 4"
+        },
+        "popularWith": {
+          "1": "Group 1",
+          "2": "Group 2",
+          "3": "Group 3"
+        },
+        "pricing": {
+          "studio": "2200",
+          "oneBed": "2800",
+          "twoBed": "3800"
+        }
+      },
+      "north-york": {
+        "name": "North York / Yonge-Sheppard (28 Avondale Ave)",
+        "tagline": "Established urban sub-centre",
+        "features": {
+          "1": "Walkable to Sheppard subway station",
+          "2": "~20 minutes to downtown",
+          "3": "Great for families and commuting professionals",
+          "4": "Rich dining and shopping along Yonge",
+          "5": "Convenient and stable neighborhood"
+        }
+      },
+      "waterfront": {
+        "name": "Waterfront / Sugar Wharf (55 Cooper St)",
+        "tagline": "Toronto’s newest waterfront community",
+        "features": {
+          "1": "Menkes-developed waterfront district",
+          "2": "8-minute walk to Union Station",
+          "3": "5-minute walk to the Financial District",
+          "4": "Near Scotiabank Arena, Rogers Centre, Jack Layton Ferry Terminal",
+          "5": "Lake-view apartments above the 55th floor"
+        }
+      }
+    }
+  },
+  "cities": {
+    "title": "Our Cities",
+    "subtitle": "Premium furnished apartments in top cities across North America",
+    "properties": "Properties available",
+    "availableNow": "Available now",
+    "subtitleCurrent": "Starting in Toronto — Canada's business capital",
+    "availableNowBadge": "Available Now",
+    "comingSoon": "Coming Soon",
+    "niagaraFalls": "Niagara Falls",
+    "niagaraDesc": "A new market in development.",
+    "yourCity": "Your City?",
+    "yourCityNotify": "Get notified when we expand",
+    "yourCityDesc": "Tell us where you need premium furnished stays next.",
+    "emailPlaceholder": "Email address",
+    "notifyMe": "Notify Me"
+  }
+}

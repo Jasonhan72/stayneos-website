@@ -1,0 +1,42 @@
+{
+  "search": {
+    "location": "Location",
+    "selectLocation": "Select Location",
+    "date": "Dates",
+    "selectDate": "Select Dates",
+    "guests": "Guests",
+    "guestCount": "{count} Guests",
+    "search": "Search",
+    "title": "Search Properties",
+    "desc": "Browse our curated properties, filter by location, price, and amenities",
+    "adults": "Adults",
+    "children": "Children",
+    "infants": "Infants",
+    "infant": "Infant",
+    "pets": "Pets",
+    "pet": "Pet",
+    "serviceAnimal": "Service animal",
+    "guest": "Guest",
+    "ages13Plus": "Age 13+",
+    "ages2To12": "Ages 2-12",
+    "under2": "Under 2"
+  },
+  "searchPlaceholder": "Search location, property name...",
+  "filter": {
+    "all": "All Status"
+  },
+  "applyFilters": "Apply Filters",
+  "clearFilters": "Clear Filters",
+  "resetFilters": "Reset Filters",
+  "adjustFilters": "Try adjusting your filters or search terms",
+  "sort": {
+    "recommended": "Recommended",
+    "priceLow": "Price: Low to High",
+    "priceHigh": "Price: High to Low",
+    "rating": "Highest Rated"
+  },
+  "gridView": "Grid view",
+  "listView": "List view",
+  "mapView": "Map view",
+  "noResults": "No properties found"
+}

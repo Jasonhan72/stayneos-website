@@ -1,0 +1,62 @@
+{
+  "contact": {
+    "pageTitle": "Contactez-nous",
+    "pageSubtitle": "Vous avez des questions ou besoin d'aide? Notre équipe est là pour vous aider. Contactez-nous via l'un des canaux ci-dessous.",
+    "infoTitle": "Coordonnées",
+    "formTitle": "Envoyer un Message",
+    "emailLabel": "Email",
+    "addressLabel": "Adresse",
+    "phoneLabel": "Téléphone",
+    "hoursLabel": "Heures",
+    "callAnytime": "Appelez à tout moment pendant les heures de travail",
+    "workHours": "Lundi au vendredi 9h00-18h00 EST",
+    "weekend": "Fermé les week-ends et jours fériés",
+    "form": {
+      "title": "Contactez-nous",
+      "subtitle": "Remplissez le formulaire ci-dessous et nous vous répondrons bientôt",
+      "name": "Nom",
+      "email": "Email",
+      "phone": "Téléphone",
+      "phoneOptional": "Téléphone (Optionnel)",
+      "subject": "Sujet",
+      "message": "Message",
+      "namePlaceholder": "Veuillez entrer votre nom",
+      "emailPlaceholder": "Veuillez entrer votre email",
+      "phonePlaceholder": "Veuillez entrer votre téléphone",
+      "messagePlaceholder": "Veuillez décrire vos besoins ou questions...",
+      "subjectBooking": "Demande de Réservation",
+      "subjectPartnership": "Partenariat",
+      "subjectSupport": "Support Technique",
+      "subjectOther": "Autre",
+      "required": "Requis",
+      "minChars": "Le message doit contenir au moins 10 caractères",
+      "privacyNote": "Vos informations seront envoyées à hello@stayneos.com. Nous nous engageons à protéger votre vie privée.",
+      "send": "Envoyer",
+      "errorName": "Veuillez entrer votre nom",
+      "errorEmail": "Veuillez entrer votre email",
+      "errorMessage": "Veuillez entrer votre message",
+      "submitFailed": "Échec de l’envoi. Veuillez réessayer."
+    },
+    "success": {
+      "title": "Envoyé Avec Succès!",
+      "message": "Merci pour votre message. Nous l'avons bien reçu et vous contacterons dans les 24 heures.",
+      "sendNew": "Envoyer un Nouveau Message"
+    },
+    "followUs": "Suivez-nous",
+    "followDesc": "Suivez-nous sur les réseaux sociaux pour les dernières propriétés et promotions",
+    "faqTitle": "FAQ",
+    "faqHowToBook": "Comment réserver un appartement?",
+    "faqMinStay": "Quelle est la durée minimale de séjour?",
+    "faqDeposit": "Comment se fait le remboursement du dépôt?",
+    "faqPets": "Les animaux sont-ils acceptés?",
+    "viewAllFaq": "Voir Toute la FAQ",
+    "openInMaps": "Ouvrir dans Google Maps",
+    "emergency": {
+      "title": "Besoin d'Aide d'Urgence?",
+      "desc": "Si vous êtes un locataire actuel et avez besoin d'une assistance immédiate, veuillez appeler notre ligne d'urgence 24h/24"
+    },
+    "responseTime": "Nous répondons généralement sous 24 heures",
+    "visitUs": "Nous rendre visite",
+    "responseWithin2Hours": "Nous répondons sous 2 heures pendant les heures ouvrables"
+  }
+}

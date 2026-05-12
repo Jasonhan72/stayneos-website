@@ -1,0 +1,23 @@
+{
+  "host": {
+    "properties": "properties",
+    "yearsHosting": "{count} years hosting",
+    "responseRate": "response rate",
+    "nav": {
+      "today": "Today",
+      "listings": "Listings",
+      "calendar": "Calendar",
+      "reservations": "Reservations",
+      "inbox": "Inbox",
+      "earnings": "Earnings"
+    }
+  },
+  "hostBannerDesc": "Become a host and earn steady income",
+  "hostBannerTitle": "🏠 List Your Property",
+  "hostedBy": "Hosted by {name}",
+  "yourHost": "Your host",
+  "contactHost": "Contact Host",
+  "messageToHost": "Message to the host",
+  "superhostYears": "{years} years hosting",
+  "typicallyResponds": "Typically responds within an hour"
+}

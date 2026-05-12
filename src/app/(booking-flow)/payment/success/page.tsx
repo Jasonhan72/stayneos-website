@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui';
+import { BookingStepIndicator } from '@/components/booking/BookingStepIndicator';
 import { useI18n } from '@/lib/i18n';
 import { CheckCircle, Calendar, Mail, ArrowRight, Loader2 } from 'lucide-react';
 
@@ -26,6 +27,7 @@ function PaymentSuccessContent() {
   return (
     <main className="min-h-screen bg-amber-50 flex items-center justify-center p-4">
       <div className="max-w-lg w-full bg-white rounded-2xl shadow-xl p-8 text-center">
+        <BookingStepIndicator current="confirm" />
         <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
           <CheckCircle size={40} className="text-green-600" />
         </div>

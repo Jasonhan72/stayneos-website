@@ -1,0 +1,84 @@
+{
+  "chat": {
+    "title": "与 NEOS 客服聊天",
+    "subtitle": "Aria • 客服主管",
+    "toggle": "打开 NEOS 客服聊天",
+    "close": "关闭聊天",
+    "clear": "清除聊天记录",
+    "clearConfirm": "确定要清除聊天记录吗？",
+    "welcome": "您好！我是 Aria，NEOS 客服。今天有什么可以帮您？",
+    "placeholder": "输入您的消息...",
+    "send": "发送",
+    "typing": "Aria 正在输入...",
+    "disclaimer": "回复可能需要一些时间",
+    "error": "抱歉，发送消息时出错。请重试或发送邮件至 hello@stayneos.com 联系我们。",
+    "fallback": {
+      "1": "如需预订咨询，请访问我们的房源页面或使用上方的 AI 礼宾服务。",
+      "2": "紧急事宜请发送邮件至 hello@stayneos.com 联系我们。",
+      "3": "我们的团队通常在营业时间（东部时间上午9点至下午6点）内2小时内回复。"
+    }
+  },
+  "ai": {
+    "assistant": {
+      "title": "AI 智能助手",
+      "toggle": "AI 助手"
+    },
+    "description": {
+      "title": "生成描述",
+      "placeholder": "输入房源位置或特点，AI 将为您生成吸引人的描述...",
+      "button": "生成描述",
+      "tip": "输入关键词如\"市中心豪华公寓\"可获得更好的生成效果"
+    },
+    "pricing": {
+      "title": "定价建议",
+      "placeholder": "基于房源信息获取定价建议...",
+      "button": "获取建议",
+      "tip": "AI 会根据城市、房型和面积分析市场价格"
+    },
+    "amenities": {
+      "title": "设施推荐",
+      "placeholder": "根据房源描述推荐配套设施...",
+      "button": "推荐设施",
+      "tip": "AI 会分析您的描述并推荐适合的设施"
+    },
+    "generating": "生成中...",
+    "result": {
+      "title": "生成结果："
+    },
+    "tip": {
+      "title": "提示"
+    },
+    "generateDescription": "AI 生成描述",
+    "suggestPrice": "获取定价建议",
+    "suggestAmenities": "AI 推荐设施"
+  },
+  "aiConcierge": {
+    "placeholder": "告诉我您的多伦多计划...",
+    "submit": "咨询 NEOS AI",
+    "chip1": "医疗轮转，3个月",
+    "chip2": "工作搬迁，4口之家",
+    "chip3": "多大访问学者",
+    "chip4": "保险住房，立即入住",
+    "fallbackLink": "或浏览我们的全部房源 →",
+    "loading": "NEOS AI 正在为您寻找最佳匹配...",
+    "error": "AI 正在加载中，请浏览我们的房源或联系我们。",
+    "browseCta": "浏览房源",
+    "whatsappCta": "WhatsApp 咨询",
+    "scheduleViewing": "预约看房"
+  },
+  "concierge": {
+    "title": "私人管家",
+    "desc": "填冰箱、接机、推荐餐厅。开口就行。"
+  },
+  "assistant": {
+    "title": "AI 智能助手",
+    "toggle": "AI 助手"
+  },
+  "messagePrompt": "在继续之前，请向{hostName}介绍一下您的行程以及为什么他们的房源适合您。",
+  "messageExample1": "您好！我因工作出差需要寻找短期居所，您的房源看起来非常适合我的住宿。",
+  "messageExample2": "期待入住您美丽的公寓！工作日我会远程办公。",
+  "messageExample3": "这将是我第一次入住贵地。很高兴从您便利的位置探索这座城市！",
+  "messagePlaceholder": "请详细描述您的需求或问题...",
+  "messageTooShort": "请多写一些关于您行程的信息",
+  "writeMessage": "给房东留言"
+}

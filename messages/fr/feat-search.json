@@ -1,0 +1,42 @@
+{
+  "search": {
+    "location": "Emplacement",
+    "selectLocation": "Sélectionner l'emplacement",
+    "date": "Dates",
+    "selectDate": "Sélectionner les dates",
+    "guests": "Invités",
+    "guestCount": "{count} Invités",
+    "search": "Rechercher",
+    "title": "Rechercher des Propriétés",
+    "desc": "Parcourez nos propriétés sélectionnées, filtrez par emplacement, prix et équipements",
+    "adults": "Adultes",
+    "children": "Enfants",
+    "infants": "Bébés",
+    "infant": "Bébé",
+    "pets": "Animaux",
+    "pet": "Animal",
+    "serviceAnimal": "Animal d'assistance",
+    "guest": "Invité",
+    "ages13Plus": "13 ans et plus",
+    "ages2To12": "2-12 ans",
+    "under2": "Moins de 2 ans"
+  },
+  "searchPlaceholder": "Rechercher un emplacement, nom de propriété...",
+  "filter": {
+    "all": "Tous les Statuts"
+  },
+  "applyFilters": "Appliquer les filtres",
+  "clearFilters": "Effacer les filtres",
+  "resetFilters": "Réinitialiser les filtres",
+  "adjustFilters": "Essayez d'ajuster vos filtres ou termes de recherche",
+  "sort": {
+    "recommended": "Recommandé",
+    "priceLow": "Prix: croissant",
+    "priceHigh": "Prix: décroissant",
+    "rating": "Mieux notés"
+  },
+  "gridView": "Vue en grille",
+  "listView": "Vue en liste",
+  "mapView": "Vue sur carte",
+  "noResults": "Aucune propriété trouvée"
+}

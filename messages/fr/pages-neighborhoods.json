@@ -1,0 +1,204 @@
+{
+  "neighborhoods": {
+    "categories": {
+      "all": "Tous les quartiers",
+      "business": "Quartiers d'affaires",
+      "luxury": "Vie de luxe",
+      "value": "Bon rapport qualité-prix"
+    },
+    "city": "Toronto",
+    "labels": {
+      "popularWith": "Populaire auprès de :",
+      "highlights": "Points forts :",
+      "keyFeatures": "Caractéristiques clés :",
+      "transportation": "Transport :",
+      "averageMonthlyPricing": "Prix mensuel moyen :",
+      "studio": "Studio",
+      "oneBedroom": "1 chambre",
+      "twoBedroom": "2 chambres"
+    },
+    "facts": {
+      "businessHours": {
+        "title": "Heures de bureau",
+        "desc": "La plupart des bureaux sont ouverts de 9h à 17h (HE)"
+      },
+      "airport": {
+        "title": "Accès à l'aéroport",
+        "desc": "45 à 60 min jusqu'à Pearson via UP Express"
+      },
+      "transit": {
+        "title": "Transports en commun",
+        "desc": "Réseau étendu de métro, tramway et bus"
+      },
+      "culture": {
+        "title": "Culture d'affaires",
+        "desc": "Environnement professionnel et multiculturel"
+      },
+      "title": "Toronto en bref",
+      "subtitle": "Informations essentielles pour les voyageurs d'affaires et professionnels."
+    },
+    "data": {
+      "downtown": {
+        "name": "Centre-ville / Grange Park (238 Simcoe St)",
+        "tagline": "Cœur culturel de Toronto",
+        "features": {
+          "1": "Près de AGO, OCAD, UofT St. George",
+          "2": "Hôpitaux majeurs accessibles à pied",
+          "3": "Toronto General, Mt. Sinai, SickKids, Princess Margaret",
+          "4": "Idéal pour chercheurs et professionnels médicaux",
+          "5": "~3 min à pied de St. Patrick / Osgoode"
+        }
+      },
+      "yorkville": {
+        "name": "Yorkville",
+        "tagline": "Vivre à Yorkville",
+        "description": "Découvrez des logements premium à Yorkville, avec transport pratique et excellents services.",
+        "features": {
+          "1": "Caractéristique 1",
+          "2": "Caractéristique 2",
+          "3": "Caractéristique 3",
+          "4": "Caractéristique 4",
+          "5": "Caractéristique 5"
+        },
+        "transportation": {
+          "1": "Option de transport 1",
+          "2": "Option de transport 2",
+          "3": "Option de transport 3",
+          "4": "Option de transport 4"
+        },
+        "highlights": {
+          "1": "Point fort 1",
+          "2": "Point fort 2",
+          "3": "Point fort 3",
+          "4": "Point fort 4"
+        },
+        "popularWith": {
+          "1": "Groupe 1",
+          "2": "Groupe 2",
+          "3": "Groupe 3"
+        },
+        "pricing": {
+          "studio": "3200",
+          "oneBed": "4200",
+          "twoBed": "6000"
+        }
+      },
+      "liberty-village": {
+        "name": "Liberty Village",
+        "tagline": "Vivre à Liberty Village",
+        "description": "Découvrez des logements premium à Liberty Village, avec transport pratique et excellents services.",
+        "features": {
+          "1": "Caractéristique 1",
+          "2": "Caractéristique 2",
+          "3": "Caractéristique 3",
+          "4": "Caractéristique 4",
+          "5": "Caractéristique 5"
+        },
+        "transportation": {
+          "1": "Option de transport 1",
+          "2": "Option de transport 2",
+          "3": "Option de transport 3",
+          "4": "Option de transport 4"
+        },
+        "highlights": {
+          "1": "Point fort 1",
+          "2": "Point fort 2",
+          "3": "Point fort 3",
+          "4": "Point fort 4"
+        },
+        "popularWith": {
+          "1": "Groupe 1",
+          "2": "Groupe 2",
+          "3": "Groupe 3"
+        },
+        "pricing": {
+          "studio": "2400",
+          "oneBed": "3000",
+          "twoBed": "4200"
+        }
+      },
+      "midtown": {
+        "name": "Midtown",
+        "tagline": "Vivre à Midtown",
+        "description": "Découvrez des logements premium à Midtown, avec transport pratique et excellents services.",
+        "features": {
+          "1": "Caractéristique 1",
+          "2": "Caractéristique 2",
+          "3": "Caractéristique 3",
+          "4": "Caractéristique 4",
+          "5": "Caractéristique 5"
+        },
+        "transportation": {
+          "1": "Option de transport 1",
+          "2": "Option de transport 2",
+          "3": "Option de transport 3",
+          "4": "Option de transport 4"
+        },
+        "highlights": {
+          "1": "Point fort 1",
+          "2": "Point fort 2",
+          "3": "Point fort 3",
+          "4": "Point fort 4"
+        },
+        "popularWith": {
+          "1": "Groupe 1",
+          "2": "Groupe 2",
+          "3": "Groupe 3"
+        },
+        "pricing": {
+          "studio": "2200",
+          "oneBed": "2800",
+          "twoBed": "3800"
+        }
+      },
+      "north-york": {
+        "name": "North York / Yonge-Sheppard (28 Avondale Ave)",
+        "tagline": "Sous-centre urbain mature",
+        "features": {
+          "1": "Sheppard station accessible à pied",
+          "2": "~20 min jusqu’au centre-ville",
+          "3": "Idéal pour familles et navetteurs",
+          "4": "Restaurants et commerces le long de Yonge",
+          "5": "Quartier pratique et stable"
+        }
+      },
+      "waterfront": {
+        "name": "Bord de lac / Sugar Wharf (55 Cooper St)",
+        "tagline": "Nouveau quartier riverain de Toronto",
+        "features": {
+          "1": "Développé par Menkes",
+          "2": "8 min à pied d’Union Station",
+          "3": "5 min du Financial District",
+          "4": "Près de Scotiabank Arena, Rogers Centre, Jack Layton Ferry Terminal",
+          "5": "Appartements avec vue lac au-delà du 55e étage"
+        }
+      }
+    },
+    "hero": {
+      "title": "Guide des quartiers réels de Toronto",
+      "subtitle": "Nous nous concentrons actuellement sur 3 quartiers réels."
+    },
+    "cta": {
+      "title": "Prêt à trouver votre maison idéale à Toronto ?",
+      "contact": "Contacter notre équipe",
+      "browse": "Parcourir Toutes les propriétés",
+      "subtitle": "Parcourir our curated selection of executive apartments in these premium Toronto neighborhoods."
+    }
+  },
+  "cities": {
+    "title": "Nos Villes",
+    "subtitle": "Appartements meublés premium dans les meilleures villes d'Amérique du Nord",
+    "properties": "Propriétés disponibles",
+    "availableNow": "Disponible maintenant",
+    "subtitleCurrent": "En commençant par Toronto — la capitale des affaires du Canada",
+    "availableNowBadge": "Disponible maintenant",
+    "comingSoon": "Bientôt disponible",
+    "niagaraFalls": "Chutes du Niagara",
+    "niagaraDesc": "Un nouveau marché en développement.",
+    "yourCity": "Votre ville ?",
+    "yourCityNotify": "Soyez informé de notre expansion",
+    "yourCityDesc": "Dites-nous où vous avez besoin de logements meublés premium.",
+    "emailPlaceholder": "Adresse courriel",
+    "notifyMe": "Me notifier"
+  }
+}

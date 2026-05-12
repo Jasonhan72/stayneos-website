@@ -1,0 +1,23 @@
+{
+  "host": {
+    "properties": "套房源",
+    "yearsHosting": "{count} 年房东经验",
+    "responseRate": "回复率",
+    "nav": {
+      "today": "今天",
+      "listings": "房源",
+      "calendar": "日历",
+      "reservations": "预订",
+      "inbox": "消息",
+      "earnings": "收入"
+    }
+  },
+  "hostBannerDesc": "成为房东，获得稳定收益",
+  "hostBannerTitle": "🏠 发布您的房源",
+  "hostedBy": "房东：{name}",
+  "yourHost": "您的房东",
+  "contactHost": "联系房东",
+  "messageToHost": "给房东的留言",
+  "superhostYears": "{years} 年房东经验",
+  "typicallyResponds": "通常在一小时内回复"
+}

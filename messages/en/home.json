@@ -1,0 +1,220 @@
+{
+  "hero": {
+    "title": "Experience Toronto, Curated by AI & Human Expertise.",
+    "highlight": "Stop searching. Start living.",
+    "subtitle": "Premium furnished apartments in downtown Toronto. 30 days to 12 months. Move-in ready.",
+    "cta": "List Your Property",
+    "ctaQuote": "Request a Quote",
+    "ctaBrowse": "Browse Properties",
+    "stats": {
+      "residences": "Luxury residences",
+      "managed": "Fully managed stays",
+      "support": "Guest support"
+    }
+  },
+  "heroSubtitle": "Flexible executive apartments for business travel, project teams, and relocations.<br>Reduce costs. Boost satisfaction. Simplify management.",
+  "heroTitle": "Corporate Housing Solutions",
+  "dualPath": {
+    "browse": {
+      "title": "Browse premium furnished apartments",
+      "description": "Explore move-in ready residences designed for executives, families, and longer stays in Toronto.",
+      "cta": "View available homes"
+    },
+    "business": {
+      "title": "Plan relocation or business housing",
+      "description": "Get tailored support for project teams, temporary assignments, and managed corporate stays.",
+      "cta": "See business solutions"
+    }
+  },
+  "homePaths": {
+    "housing": {
+      "title": "I need housing",
+      "description": "For individual renters and relocating families who need a move-in ready Toronto home.",
+      "cta": "Browse homes"
+    },
+    "relocation": {
+      "title": "I manage relocations",
+      "description": "For relocation companies, corporate HR teams, and insurance housing coordinators.",
+      "cta": "Explore business solutions"
+    }
+  },
+  "cta": {
+    "title": "Find Your Home Tonight",
+    "subtitle": "Browse furnished apartments ready for move-in. No long leases, no empty rooms — just home.",
+    "explore": "Browse Apartments",
+    "contact": "Contact Us",
+    "button": "Contact Us",
+    "desc": "Contact us today to learn more about our services and find your perfect home.",
+    "browse": "Browse Apartments"
+  },
+  "ctaButton": "Get Corporate Quote",
+  "ctaBrowse": "Browse Properties",
+  "ctaContact": "Say Hello",
+  "ctaQuote": "Request a Quote",
+  "ctaTitle": "Find the Perfect Housing Solution for Your Team",
+  "ctaSubtitle": "A dedicated account manager will contact you within 24 hours with a customized proposal",
+  "trustBar": {
+    "insurance": "$2M Commercial Liability Insurance",
+    "concierge": "All properties in concierge buildings",
+    "licensed": "Licensed Ontario brokerage"
+  },
+  "trust": {
+    "verified": "Verified Homes",
+    "support": "24/7 Support",
+    "selection": "Premium Selection"
+  },
+  "trustNote": "🔒 Your information is secure · Response within 24h · No obligation",
+  "howItWorks": {
+    "title": "Three Steps to Home",
+    "subtitle": "Pick a place. Book it. Move in. That's it.",
+    "step1": {
+      "title": "Explore homes",
+      "description": "Review furnished apartments, compare locations, and shortlist the right monthly stay."
+    },
+    "step2": {
+      "title": "Confirm your dates",
+      "description": "Choose the stay window that matches your project, move, or temporary housing timeline."
+    },
+    "step3": {
+      "title": "Move in smoothly",
+      "description": "Arrive to a fully set up home with utilities, furnishings, and support already in place."
+    }
+  },
+  "whyChoose": {
+    "label": "WHY CHOOSE US",
+    "title": "Why People Choose Us",
+    "desc": "We don't just find you a place. We make sure it actually feels like home."
+  },
+  "valueProposition": {
+    "title": "Why guests choose NEOS",
+    "subtitle": "Premium Toronto residences with the operational reliability required for extended stays.",
+    "curated": {
+      "title": "Curated homes",
+      "description": "Thoughtfully furnished apartments with premium finishes, natural light, and design-led interiors."
+    },
+    "flexible": {
+      "title": "Flexible terms",
+      "description": "Stay 30 days or longer with lease structures built for relocation, projects, and extended travel."
+    },
+    "concierge": {
+      "title": "Concierge-level service",
+      "description": "Utilities, housekeeping, and guest care are handled so every stay feels seamless from day one."
+    },
+    "support": {
+      "title": "Responsive support",
+      "description": "Our team stays available before arrival, during the stay, and whenever plans need to change."
+    }
+  },
+  "features": {
+    "title": "Why NEOS",
+    "subtitle": "Your home is ready before you are. No surprises, no hidden fees — just a beautiful space waiting for you.",
+    "quality": "Hand-Picked Homes",
+    "qualityDesc": "Every apartment is visited, vetted, and approved by our team. If it doesn't feel right, it doesn't go live.",
+    "flexible": "Stay on Your Terms",
+    "flexibleDesc": "One month or twelve. Extend or shorten anytime. Your plans change — your home shouldn't be a problem.",
+    "service": "Around-the-Clock Support",
+    "serviceDesc": "A real person answers when you call. Day or night, weekday or weekend.",
+    "support": "All-Inclusive Pricing",
+    "supportDesc": "One transparent monthly price with utilities, WiFi, housekeeping, and amenities included.",
+    "utilities": "All utilities included",
+    "wifi": "High-speed WiFi",
+    "housekeeping": "Housekeeping service",
+    "minNights": "Minimum 28 nights",
+    "kitchen": "Fully equipped kitchen",
+    "locations": "Premium locations",
+    "instant": "Instant booking",
+    "photography": "Professional photography",
+    "screening": "Tenant screening",
+    "collection": "Rent collection",
+    "maintenance": "Maintenance coordination",
+    "airport": "Airport pickup",
+    "grocery": "Grocery delivery",
+    "restaurant": "Restaurant reservations",
+    "recommendations": "Local recommendations",
+    "monthToMonth": "Month-to-month options",
+    "noHidden": "No hidden fees",
+    "renewal": "Easy renewal",
+    "termination": "Early termination available"
+  },
+  "testimonials": {
+    "title": "What Our Guests Say",
+    "subtitle": "Read reviews from our satisfied guests who have experienced the NEOS difference"
+  },
+  "storyOrigin": "It started with a frustrating search. A founder relocated for work and faced the same choice everyone does: a tiny hotel room with no kitchen, or a 12-month lease on an empty apartment. Neither made sense. So we built a third option.",
+  "storyMission": "In 2024, NEOS launched with a simple idea: beautiful, furnished apartments you can move into tomorrow. Every home is hand-picked, fully equipped, and located in neighborhoods where you'd actually want to live.",
+  "storyToday": "Today, we're the go-to choice for professionals who need a real home, not a temporary fix. Tech leads, consultants, medical residents, relocating families — they all stay with us because we treat every stay like it matters. Because it does.",
+  "storyTitle": "How It Started",
+  "story": {
+    "label": "OUR STORY",
+    "title": "How It Started",
+    "subtitle": "One frustrating apartment search. That's all it took."
+  },
+  "mission": {
+    "label": "OUR MISSION",
+    "title": "What Drives Us",
+    "desc": "We believe everyone deserves a real home — even when they're far from theirs. That's not a tagline. It's how we make every decision.",
+    "items": {
+      "executive": "Curated Apartments",
+      "executiveDesc": "Hand-picked homes in neighborhoods you'd choose yourself. Quality you can feel the moment you walk in.",
+      "simple": "Zero Hassle",
+      "simpleDesc": "No paperwork maze. No furniture shopping. No utility setup. Just show up and live.",
+      "flexible": "Your Timeline",
+      "flexibleDesc": "Stay 28 days or 365. Extend with a message. Leave when you're ready. It's your call.",
+      "location": "Premium Locations",
+      "locationDesc": "Curated homes in vibrant neighborhoods where you want to be."
+    }
+  },
+  "whatOffers": "What this place offers",
+  "commitment": {
+    "label": "OUR COMMITMENT",
+    "title": "Our Promise",
+    "subtitle": "Every guest gets an experience worth talking about. That's the bar we set."
+  },
+  "peopleFirst": "Real People, Not Transactions",
+  "peopleFirstDesc": "You're not a booking number. When you message us, a real person replies. We remember your coffee preference and your check-in quirks.",
+  "projectTeams": "Project Teams",
+  "projectTeamsDesc": "Consulting projects, construction teams, temporary assignments. Group accommodation with team collaboration",
+  "quality": "Hand-Picked Homes",
+  "qualityDesc": "Every apartment is visited, vetted, and approved by our team. If it doesn't feel right, it doesn't go live.",
+  "sustainability": "Better for the City",
+  "sustainabilityDesc": "We partner with eco-conscious buildings, minimize waste, and choose local suppliers. Every city is our home too.",
+  "flexibility": "Life Doesn't Fit Neat Boxes",
+  "flexibilityDesc": "Projects get extended. Plans change. We get it. Flexible terms, easy extensions, no penalties for being human.",
+  "flexible": "Stay on Your Terms",
+  "flexibleDesc": "One month or twelve. Extend or shorten anytime. Your plans change — your home shouldn't be a problem.",
+  "flexibleCancellation": "Flexible Cancellation",
+  "flexibleLeasing": {
+    "title": "Flexible Leasing",
+    "desc": "Stay a month, extend to six. No penalties."
+  },
+  "freeCancellation": "Free cancellation",
+  "freeCancellationDesc": "Free cancellation before {date}",
+  "simple": "Zero Hassle",
+  "simpleDesc": "No paperwork maze. No furniture shopping. Just show up and live.",
+  "globalNetwork": {
+    "title": "Growing Network",
+    "desc": "Expanding to cities where business takes you."
+  },
+  "corporateHousing": {
+    "title": "Corporate Housing",
+    "desc": "Your team flies in Monday. Their apartments are ready Sunday. Fully furnished, walking distance to downtown."
+  },
+  "businessTravel": "Business Travel",
+  "businessTravelDesc": "Executive trips, client hospitality, training accommodation. Prime locations that reflect your brand",
+  "relocation": {
+    "title": "Relocation Landing",
+    "subtitle": "Move in this week",
+    "desc": "New city, new job, a hundred things on your list. Cross \"find a place to live\" off today.",
+    "cta": "Find Your Landing Spot"
+  },
+  "relocationDesc": "New hire transitions, office relocations, expat housing. A home away from home during transition",
+  "movein": {
+    "title": "Walk In, Live",
+    "desc": "Your keys are ready. The WiFi's on. The bed's made. Start living from the moment you arrive."
+  },
+  "collection": "Rent collection",
+  "partnersCount": "50+ Corporate Partners",
+  "statsTitle": "The Numbers",
+  "scenariosTitle": "Solutions for Every Business Need",
+  "reasonsTitle": "Why was my payment cancelled?"
+}

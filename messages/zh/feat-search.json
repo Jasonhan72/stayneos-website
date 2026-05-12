@@ -1,0 +1,42 @@
+{
+  "search": {
+    "location": "位置",
+    "selectLocation": "选择位置",
+    "date": "日期",
+    "selectDate": "选择日期",
+    "guests": "房客",
+    "guestCount": "{count} 位房客",
+    "search": "搜索",
+    "title": "搜索房源",
+    "desc": "浏览我们的精选房源，按位置、价格、设施筛选",
+    "adults": "成人",
+    "children": "儿童",
+    "infants": "婴儿",
+    "infant": "婴儿",
+    "pets": "宠物",
+    "pet": "宠物",
+    "serviceAnimal": "服务性动物",
+    "guest": "房客",
+    "ages13Plus": "13岁以上",
+    "ages2To12": "2-12岁",
+    "under2": "2岁以下"
+  },
+  "searchPlaceholder": "搜索位置、房源名称...",
+  "filter": {
+    "all": "全部状态"
+  },
+  "applyFilters": "应用筛选",
+  "clearFilters": "清除筛选",
+  "resetFilters": "重置筛选",
+  "adjustFilters": "请尝试调整筛选条件或搜索关键词",
+  "sort": {
+    "recommended": "推荐",
+    "priceLow": "价格从低到高",
+    "priceHigh": "价格从高到低",
+    "rating": "评分最高"
+  },
+  "gridView": "网格视图",
+  "listView": "列表视图",
+  "mapView": "地图视图",
+  "noResults": "未找到房源"
+}

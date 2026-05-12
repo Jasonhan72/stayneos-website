@@ -1,0 +1,23 @@
+{
+  "host": {
+    "properties": "propriétés",
+    "yearsHosting": "{count} ans d'hébergement",
+    "responseRate": "taux de réponse",
+    "nav": {
+      "today": "Aujourd’hui",
+      "listings": "Annonces",
+      "calendar": "Calendrier",
+      "reservations": "Réservations",
+      "inbox": "Boîte de réception",
+      "earnings": "Revenus"
+    }
+  },
+  "hostBannerDesc": "Devenez hôte et gagnez un revenu stable",
+  "hostBannerTitle": "🏠 Publiez Votre Propriété",
+  "hostedBy": "Hébergé par {name}",
+  "yourHost": "Votre hôte",
+  "contactHost": "Contacter l'hôte",
+  "messageToHost": "Message à l'hôte",
+  "superhostYears": "{years} ans d'expérience",
+  "typicallyResponds": "Répond généralement dans l'heure"
+}

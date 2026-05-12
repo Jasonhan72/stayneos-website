@@ -1,7 +1,7 @@
 import { cookies, headers } from "next/headers";
-import en from "../../messages/en.json";
-import fr from "../../messages/fr.json";
-import zh from "../../messages/zh.json";
+import en from "../../messages/en";
+import fr from "../../messages/fr";
+import zh from "../../messages/zh";
 
 export type ServerLocale = "en" | "fr" | "zh";
 

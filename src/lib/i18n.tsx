@@ -14,10 +14,12 @@ interface I18nContextType {
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
-// Import translations
-import en from '../../messages/en.json';
-import fr from '../../messages/fr.json';
-import zh from '../../messages/zh.json';
+// Import translations (each lang now lives in messages/<lang>/*.json split
+// by namespace; the barrel in each lang directory merges them back into a
+// single dict so consumers continue to look up dot-keys like 'aboutPage.title').
+import en from '../../messages/en';
+import fr from '../../messages/fr';
+import zh from '../../messages/zh';
 
 const translations = { en, fr, zh };
 
