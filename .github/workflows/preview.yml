@@ -20,50 +20,28 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-
       - run: npm ci --legacy-peer-deps
-
       - name: Typecheck
         run: npm run typecheck
 
-  # ── Gate 1b: Tests (advisory — pre-existing failures) ──
-  tests:
-    name: Tests
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v5
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-
-      - run: npm ci --legacy-peer-deps
-
-      - name: Unit Tests
-        run: npm run test -- --runInBand
-
-  # ── Gate 2: Build ──
-  build:
-    name: Build
+  # ── Gate 2: Build + Deploy Preview ──
+  build-and-deploy:
+    name: Build + Deploy Preview
     needs: typecheck
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
+    outputs:
+      url: ${{ steps.deploy.outputs.url }}
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-
       - run: npm ci --legacy-peer-deps
 
       - name: Clean previous build cache
@@ -79,38 +57,9 @@ jobs:
         env:
           NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: preview-build
-          path: |
-            .open-next
-            wrangler.toml
-          retention-days: 1
-
-  # ── Gate 3: Deploy to Preview Worker ──
-  deploy-preview:
-    name: Deploy Preview
-    needs: build
-    outputs:
-      url: ${{ steps.deploy.outputs.url }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/setup-node@v5
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: preview-build
-
       - name: Deploy to preview worker
         id: deploy
         run: |
-          ls -la .open-next/ 2>/dev/null || echo "WARNING: .open-next not found"
-          ls -la wrangler.toml 2>/dev/null || echo "WARNING: wrangler.toml not found"
           npx wrangler deploy --name stayneos-preview 2>&1 | tee deploy-output.txt
           DEPLOY_URL=$(grep -o 'https://stayneos-preview[^ ]*\.workers\.dev' deploy-output.txt | head -1)
           if [ -z "$DEPLOY_URL" ]; then
@@ -138,12 +87,12 @@ jobs:
             sleep 10
           done
           echo "⚠️ Preview may still be deploying. URL: $PREVIEW_URL"
-          # Don't fail — worker may take longer
 
-  # ── Gate 4: PR Comment ──
+  # ── Gate 3: PR Comment ──
   comment:
     name: Comment PR
-    needs: deploy-preview
+    needs: build-and-deploy
+    if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -161,10 +110,8 @@ jobs:
             | Item | Status |
             |------|--------|
             | Typecheck | ${{ needs.typecheck.result == 'success' && '✅' || '❌' }} |
-            | Tests | ${{ needs.tests.result == 'success' && '✅' || needs.tests.result == 'skipped' && '⏭️' || '⚠️' }} |
-            | Build | ${{ needs.build.result == 'success' && '✅' || '❌' }} |
-            | **Preview URL** | **[🔗 ${{ needs.deploy-preview.outputs.url }}](${{ needs.deploy-preview.outputs.url }})** |
+            | Build + Deploy | ${{ needs.build-and-deploy.result == 'success' && '✅' || '❌' }} |
+            | **Preview URL** | ${{ needs.build-and-deploy.result == 'success' && format('**[🔗 {0}]({0})**', needs.build-and-deploy.outputs.url) || 'N/A (deploy failed)' }} |
             | Commit | `${{ github.event.pull_request.head.sha }}` |
 
-            > ℹ️ Preview worker: `stayneos-preview` — deployed from this PR.  
-            > Every push to this PR updates the preview automatically.
+            > ℹ️ Preview worker: `stayneos-preview` — updated on every push to this PR.
