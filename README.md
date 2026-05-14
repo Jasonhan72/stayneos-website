@@ -78,3 +78,4 @@ stayneos-web/
 - Website: https://stayneos.com
 
 <!-- Preview deploy test 1778739046 -->
+<!-- Preview deploy verified: 2026-05-14T06:13:15Z -->
