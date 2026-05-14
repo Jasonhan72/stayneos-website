@@ -35,8 +35,7 @@ export async function GET(request: NextRequest) {
     const wishlist = (results ?? []).map((r) => ({ id: r.propertyId, addedAt: r.addedAt }));
 
     if (wishlist.length === 0) {
-      const emptyResponse: WishlistGetResponse = { properties: [], wishlist: [] };
-      return NextResponse.json(emptyResponse) satisfies ReturnType<typeof NextResponse.json>;
+      return NextResponse.json({ properties: [], wishlist: [] } satisfies WishlistGetResponse);
     }
 
     // 2. Fetch all property data in one query using IN clause
@@ -128,8 +127,7 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    const response: WishlistGetResponse = { properties, wishlist };
-    return NextResponse.json(response) satisfies ReturnType<typeof NextResponse.json>;
+    return NextResponse.json({ properties, wishlist } satisfies WishlistGetResponse);
   } catch (err) {
     console.error('wishlist:get', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -208,12 +206,11 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const response: WishlistPostResponse = {
+    return NextResponse.json({
       success: true,
       action: resolvedAction,
       propertyId,
-    };
-    return NextResponse.json(response) satisfies ReturnType<typeof NextResponse.json>;
+    } satisfies WishlistPostResponse);
   } catch (err) {
     console.error('wishlist:update', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
