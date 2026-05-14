@@ -10,6 +10,7 @@ import { validateCsrf } from '@/lib/security/csrf';
 import { sanitizeEmail, sanitizeText } from '@/lib/security/sanitize';
 import { apiError } from '@/lib/api/response';
 import { addDevUser } from '@/lib/auth/dev-user-store';
+import type { RegisterResponse } from '@/types/api/auth';
 
 export async function POST(request: Request) {
   try {
@@ -91,9 +92,9 @@ export async function POST(request: Request) {
         message: "注册成功",
         user: {
           id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
+          name: user.name!,
+          email: user.email!,
+          role: user.role!,
           createdAt: user.createdAt,
         },
       } satisfies RegisterResponse,
