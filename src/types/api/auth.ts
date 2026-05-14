@@ -4,11 +4,8 @@
 
 import type { User } from '../user';
 
-/** POST /api/auth/login 或 /api/auth/register 成功返回 */
-export interface AuthResponse {
-  user: User;
-  token?: string;
-}
+// NOTE: AuthResponse is defined in ../user.ts (shared with auth system).
+// This file exports API-specific auth types only.
 
 /** 登录请求体 */
 export interface LoginRequestBody {
