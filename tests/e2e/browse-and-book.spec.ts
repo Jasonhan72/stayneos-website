@@ -60,9 +60,14 @@ test.describe('Browse and Book flow', () => {
     await expect(page).toHaveURL(/\/checkout\//);
     await expect(page.locator('main')).toBeVisible({ timeout: 10_000 });
 
-    // Verify dates are shown on the page
+    // Verify dates and key checkout elements are shown on the page
     const pageContent = page.locator('main');
-    await expect(pageContent).toContainText(yyyymmdd(checkIn));
-    await expect(pageContent).toContainText(yyyymmdd(checkOut));
+    // The checkout page renders dates as "Jun 13" format, not ISO
+    const checkInFormatted = checkIn.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const checkOutFormatted = checkOut.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    await expect(pageContent).toContainText(checkInFormatted);
+    await expect(pageContent).toContainText(checkOutFormatted);
+    // Verify checkout has price summary
+    await expect(pageContent).toContainText(/Price Summary/i);
   });
 });
