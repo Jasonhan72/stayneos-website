@@ -286,7 +286,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 </Link>
 
                 <Link
-                  href="/wishlists"
+                  href="/dashboard/wishlists"
                   onClick={onClose}
                   className="flex items-center justify-between py-4 border-b border-neutral-100"
                 >

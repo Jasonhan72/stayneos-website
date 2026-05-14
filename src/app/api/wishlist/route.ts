@@ -4,9 +4,11 @@ import { getDb } from '@/lib/d1';
 import { checkRateLimit } from '@/lib/security/rate-limit';
 import { validateCsrf } from '@/lib/security/csrf';
 import { apiError } from '@/lib/api/response';
+import type { WishlistGetResponse, WishlistPostResponse, WishlistPropertyCard } from '@/types/api';
 
 export const dynamic = 'force-dynamic';
 
+/** D1 raw row shape for Wishlist table */
 interface WishlistRow {
   propertyId: string;
   addedAt: string;
@@ -33,7 +35,8 @@ export async function GET(request: NextRequest) {
     const wishlist = (results ?? []).map((r) => ({ id: r.propertyId, addedAt: r.addedAt }));
 
     if (wishlist.length === 0) {
-      return NextResponse.json({ properties: [], wishlist: [] });
+      const emptyResponse: WishlistGetResponse = { properties: [], wishlist: [] };
+      return NextResponse.json(emptyResponse) satisfies ReturnType<typeof NextResponse.json>;
     }
 
     // 2. Fetch all property data in one query using IN clause
@@ -62,7 +65,7 @@ export async function GET(request: NextRequest) {
     for (const img of (imageRows ?? []) as any[]) {
       if (!imagesByProperty[img.propertyId]) imagesByProperty[img.propertyId] = [];
       imagesByProperty[img.propertyId].push({
-        url: img.url,
+        url: img.url as string,
         isPrimary: img.isPrimary === 1,
       });
     }
@@ -79,7 +82,6 @@ export async function GET(request: NextRequest) {
            GROUP BY propertyId`
         )
         .bind(...propertyIds)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .all<{ propertyId: string; reviewCount: number; averageRating: number }>();
 
       for (const r of (reviewRows ?? [])) {
@@ -95,7 +97,7 @@ export async function GET(request: NextRequest) {
 
     // 5. Map to public property shape (matches what the frontend expects)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const properties = (propertyRows ?? []).map((row: any) => {
+    const properties: WishlistPropertyCard[] = (propertyRows ?? []).map((row: any) => {
       const p = row as Record<string, unknown>;
       const imgs = imagesByProperty[p.id as string] ?? [];
       const priceMonthly = (p.priceMonthly ?? p.basePrice ?? 0) as number;
@@ -104,12 +106,12 @@ export async function GET(request: NextRequest) {
       const agg = reviewAgg[p.id as string] ?? { reviewCount: 0, averageRating: 0 };
 
       return {
-        id: p.id,
-        title: p.title,
-        slug: p.slug,
-        address: p.address,
-        city: p.city,
-        neighborhood: p.neighborhood ?? '',
+        id: p.id as string,
+        title: p.title as string,
+        slug: p.slug as string,
+        address: p.address as string,
+        city: p.city as string,
+        neighborhood: (p.neighborhood ?? '') as string,
         priceMonthly,
         basePrice: (p.basePrice ?? 0) as number,
         currency,
@@ -118,15 +120,16 @@ export async function GET(request: NextRequest) {
         reviewCount: agg.reviewCount,
         averageRating: agg.averageRating,
         images: imgs.map((img) => ({
-          url: (img.url as string).startsWith('http') || (img.url as string).startsWith('/')
+          url: ((img.url as string).startsWith('http') || (img.url as string).startsWith('/')
             ? img.url
-            : `/${img.url}`,
+            : `/${img.url}`) as string,
           isPrimary: img.isPrimary,
         })),
       };
     });
 
-    return NextResponse.json({ properties, wishlist });
+    const response: WishlistGetResponse = { properties, wishlist };
+    return NextResponse.json(response) satisfies ReturnType<typeof NextResponse.json>;
   } catch (err) {
     console.error('wishlist:get', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -205,11 +208,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({
+    const response: WishlistPostResponse = {
       success: true,
       action: resolvedAction,
       propertyId,
-    });
+    };
+    return NextResponse.json(response) satisfies ReturnType<typeof NextResponse.json>;
   } catch (err) {
     console.error('wishlist:update', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

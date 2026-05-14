@@ -163,7 +163,7 @@ export default function ProfilePage() {
                 {L("我的行程", "My trips", "Mes voyages")}
               </Link>
               <Link
-                href="/wishlists"
+                href="/dashboard/wishlists"
                 className="flex items-center gap-2 rounded-lg px-3 py-2 text-neutral-700 transition hover:bg-neutral-50"
               >
                 <MapPin size={14} />
