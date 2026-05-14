@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import type { WishlistGetResponse } from '@/types/api/wishlist';
 
 const STORAGE_KEY = 'stayneos_wishlist';
 
@@ -54,7 +55,7 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
     fetch('/api/wishlist', { credentials: 'include' })
       .then(async (res) => {
         if (!res.ok) throw new Error('wishlist fetch failed');
-        const body = (await res.json()) as { wishlist?: { id: string }[] };
+        const body: WishlistGetResponse = await res.json();
         const serverIds = (body.wishlist ?? []).map((x) => x.id);
         const localIds = loadLocal();
 

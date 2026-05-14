@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getPropertyDb, toPublicProperty } from '@/lib/property-db';
 import { getPropertyById } from '@/lib/data';
 import { getDb } from '@/lib/d1';
+import type { PropertyDetailResponse } from '@/types/api/property';
 
 interface BookedRange {
   start: string;
@@ -92,7 +93,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ slu
   try {
     const db = getPropertyDb();
     const row = await db.prepare("SELECT * FROM Property WHERE (slug=? OR id=?) AND status='PUBLISHED'").bind(slug, slug).first();
-    if (row) return NextResponse.json({ property: toPublicProperty(row as never), bookedRanges });
+    if (row) return NextResponse.json({ property: toPublicProperty(row as never), bookedRanges } satisfies PropertyDetailResponse);
   } catch {
     // D1 not available, fall through
   }
@@ -111,7 +112,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ slu
       city: 'Toronto',
       price: mock.priceUnit === 'night' ? Math.floor(mock.price * 30 * 0.8 / 100) * 100 : mock.price,
       priceUnit: 'month',
-      rating: mock.reviewCount > 0 ? mock.rating : 0,
+      rating: (mock.reviewCount > 0 ? mock.rating : 0) ?? 0,
       reviewCount: mock.reviewCount || 0,
       images: mock.images,
       maxGuests: mock.maxGuests,
@@ -119,14 +120,15 @@ export async function GET(_request: Request, { params }: { params: Promise<{ slu
       bedrooms: mock.bedrooms,
       bathrooms: mock.bathrooms,
       amenities: mock.amenities || [],
-      featured: mock.featured,
+      featured: mock.featured ?? false,
       description: mock.description || '',
       descriptionZh: mock.descriptionZh || undefined,
       descriptionFr: mock.descriptionFr || undefined,
       minNights: mock.minNights || 30,
       monthlyDiscount: mock.monthlyDiscount || 0,
       currency: 'CAD',
-    }, bookedRanges });
+    },
+      bookedRanges } satisfies PropertyDetailResponse);
   }
   
   return NextResponse.json({ error: 'Not found' }, { status: 404 });

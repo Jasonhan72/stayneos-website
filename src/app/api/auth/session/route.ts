@@ -64,8 +64,8 @@ export async function GET(request: NextRequest) {
       user: {
         id: user.id,
         name: user.name,
-        email: user.email,
-        role: user.role,
+        email: user.email!,
+        role: user.role!,
         avatar: user.avatar,
         phone: (user as typeof user & { phone?: string | null }).phone ?? null,
         address: (user as typeof user & { address?: string | null }).address ?? null,

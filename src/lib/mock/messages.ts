@@ -1,35 +1,8 @@
 // Mock data for the /messages page
 // Replace with real API data later
+// Types sourced from shared API contract: src/types/api/messages.ts
 
-export interface ChatMessage {
-  id: string;
-  senderId: string;
-  text: string;
-  timestamp: string; // ISO
-  reaction?: string | null;
-}
-
-export interface Conversation {
-  id: string;
-  guestName: string;
-  guestAvatar: string | null;
-  propertyTitle: string;
-  propertyImage: string;
-  propertyAddress: string;
-  lastMessage: string;
-  lastMessageAt: string; // ISO
-  unread: boolean;
-  messages: ChatMessage[];
-  booking: BookingSummary;
-}
-
-export interface BookingSummary {
-  checkIn: string; // ISO date
-  checkOut: string; // ISO date
-  guests: number;
-  nights: number;
-  nightlyRate: number; // in CAD
-}
+import type { ChatMessage, Conversation } from '@/types/api/messages';
 
 const mockMessages1: ChatMessage[] = [
   { id: "m1", senderId: "guest", text: "Hi! I'm interested in your beautiful apartment. Is it available for the dates I selected?", timestamp: "2026-05-10T09:15:00Z" },

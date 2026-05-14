@@ -13,6 +13,7 @@ const PROTECTED_ROUTES = [
   '/host',
   '/bookings',
   '/wishlists',
+  '/messages',
   '/checkout',
 ];
 

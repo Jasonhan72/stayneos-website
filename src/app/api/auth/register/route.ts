@@ -96,7 +96,7 @@ export async function POST(request: Request) {
           role: user.role,
           createdAt: user.createdAt,
         },
-      },
+      } satisfies RegisterResponse,
       { status: 201 }
     );
 

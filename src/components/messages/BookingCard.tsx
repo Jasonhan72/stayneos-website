@@ -2,7 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import type { Conversation } from "@/lib/mock/messages";
+import type { Conversation } from "@/types/api/messages";
 
 // ── helpers ──────────────────────────────────────────────
 function fmtDate(iso: string): string {

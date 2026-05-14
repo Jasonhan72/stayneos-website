@@ -4,6 +4,7 @@ import { getDb } from '@/lib/d1';
 import { checkRateLimit } from '@/lib/security/rate-limit';
 import { validateCsrf } from '@/lib/security/csrf';
 import { apiError } from '@/lib/api/response';
+import type { WishlistGetResponse, WishlistPostResponse, WishlistProperty } from '@/types/api/wishlist';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,7 +34,7 @@ export async function GET(request: NextRequest) {
     const wishlist = (results ?? []).map((r) => ({ id: r.propertyId, addedAt: r.addedAt }));
 
     if (wishlist.length === 0) {
-      return NextResponse.json({ properties: [], wishlist: [] });
+      return NextResponse.json({ properties: [], wishlist: [], } satisfies WishlistGetResponse);
     }
 
     // 2. Fetch all property data in one query using IN clause
@@ -96,7 +97,8 @@ export async function GET(request: NextRequest) {
     // 5. Map to public property shape (matches what the frontend expects)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const properties = (propertyRows ?? []).map((row: any) => {
-      const p = row as Record<string, unknown>;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const p = row as Record<string, any>;
       const imgs = imagesByProperty[p.id as string] ?? [];
       const priceMonthly = (p.priceMonthly ?? p.basePrice ?? 0) as number;
       const currency = (p.currency ?? 'CAD') as string;
@@ -123,10 +125,10 @@ export async function GET(request: NextRequest) {
             : `/${img.url}`,
           isPrimary: img.isPrimary,
         })),
-      };
+      } as WishlistProperty;
     });
 
-    return NextResponse.json({ properties, wishlist });
+    return NextResponse.json({ properties, wishlist, } satisfies WishlistGetResponse);
   } catch (err) {
     console.error('wishlist:get', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -209,7 +211,7 @@ export async function POST(request: NextRequest) {
       success: true,
       action: resolvedAction,
       propertyId,
-    });
+    } satisfies WishlistPostResponse);
   } catch (err) {
     console.error('wishlist:update', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

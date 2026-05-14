@@ -105,9 +105,9 @@ export async function POST(request: Request) {
           : null,
         user: {
           id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
+          name: user.name!,
+          email: user.email!,
+          role: user.role!,
           deletionStatus,
           deletionRequestedAt,
           deletionScheduledAt,

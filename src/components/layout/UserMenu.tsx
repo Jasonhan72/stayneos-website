@@ -86,7 +86,7 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
     [
       { label: L("消息", "Messages", "Messages"), href: "/dashboard/messages", icon: MessageCircle, bold: true },
       { label: L("我的行程", "Trips", "Voyages"), href: "/bookings", icon: Luggage, bold: true },
-      { label: L("收藏", "Wishlists", "Favoris"), href: "/wishlists", icon: Heart, bold: true },
+      { label: L("收藏", "Wishlists", "Favoris"), href: "/dashboard/wishlists", icon: Heart, bold: true },
     ],
     [
       { label: L("个人主页", "Profile", "Profil"), href: "/profile", icon: User },
