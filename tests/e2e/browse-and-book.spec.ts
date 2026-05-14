@@ -74,7 +74,7 @@ test.describe('Browse and Book flow', () => {
     }
 
     // Verify dates and key checkout elements are shown on the page
-    const pageContent = page.locator('main');
+    const pageContent = page.locator('main').first();
     // The checkout page renders dates as "Jun 13" format, not ISO
     const checkInFormatted = checkIn.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     const checkOutFormatted = checkOut.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
