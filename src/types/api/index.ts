@@ -1,9 +1,53 @@
 /**
- * API 共享类型统一导出
+ * API 类型契约 — barrel export
  */
-export * from './common';
-export * from './auth';
-export * from './property';
-export * from './booking';
-export * from './messages';
-export * from './wishlist';
+
+export type {
+  ApiResponse,
+  PaginatedResponse,
+  ApiError,
+  HttpMethod,
+  RequestConfig,
+  SuccessResponse,
+  PaginationParams,
+  ApiErrorResponse,
+  UnauthorizedResponse,
+} from './common';
+
+export type {
+  LoginRequestBody,
+  RegisterRequestBody,
+  SessionResponse,
+  LogoutResponse,
+} from './auth';
+
+export type {
+  WishlistItem,
+  WishlistGetResponse,
+  WishlistPostResponse,
+  WishlistPropertyCard,
+  WishlistPropertyImage,
+} from './wishlist';
+
+export type {
+  PropertyListResponse,
+  PropertyDetailResponse,
+  PropertyApiError,
+} from './property';
+
+export type {
+  BookingListResponse,
+  BookingDetailResponse,
+  CreateBookingRequestBody,
+  CreateBookingResponseBody,
+  UpdateBookingRequestBody,
+} from './booking';
+
+export type {
+  Message,
+  Conversation,
+  MessagesListResponse,
+  MessagesDetailResponse,
+  SendMessageRequest,
+  SendMessageResponse,
+} from './messages';

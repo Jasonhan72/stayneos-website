@@ -26,7 +26,7 @@ export default function DashboardWishlistsPage() {
       setLoading(true);
       try {
         const response = await fetch('/api/wishlist', { credentials: 'include', cache: 'no-store' });
-        const payload = await response.json() as WishlistGetResponse;
+        const payload = await response.json() as WishlistGetResponse & { error?: string };
         if (!response.ok) throw new Error(payload?.error || 'Failed to load wishlist');
         if (active) setProperties(payload.properties || []);
       } catch {
