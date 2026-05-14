@@ -26,6 +26,7 @@
     "viewReservation": "View reservation details",
     "backToList": "Back to messages",
     "you": "You",
-    "new": "New"
+    "new": "New",
+    "previewBanner": "Messaging is in preview — conversations shown are sample data. Real messaging coming soon."
   }
 }

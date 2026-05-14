@@ -34,6 +34,16 @@ export default function MessagesPage() {
   // ── Layout: three-column on desktop ──────────────────
   return (
     <PageShell>
+      {/* Preview banner */}
+      <div className="flex items-center justify-center gap-2 bg-amber-50 px-4 py-2 text-sm text-amber-800 border-b border-amber-200">
+        <span aria-hidden="true">🚧</span>
+        <span>
+          {t(
+            "messages.previewBanner",
+            "Messaging is in preview — conversations shown are sample data. Real messaging coming soon."
+          )}
+        </span>
+      </div>
       <div className="flex h-full">
         {/* Left: Conversation list */}
         <div
