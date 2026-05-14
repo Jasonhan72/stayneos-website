@@ -7,7 +7,7 @@ Every pull request to `main` automatically gets a **preview deployment** — a l
 ## How It Works
 
 ```
-PR opened/updated → Typecheck → Tests → Build → Deploy to preview worker → PR Comment
+PR opened/updated → Typecheck → Tests → Build + Deploy to preview worker → PR Comment
 ```
 
 1. **Open a PR** targeting `main`
@@ -57,6 +57,6 @@ npx wrangler deploy --name stayneos-preview
 ## Workflow Files
 
 - `.github/workflows/preview.yml` — PR preview deployment
-- `.github/workflows/deploy-final.yml` — Production deployment (main only)
-- `.github/workflows/ci.yml` — CI quality gates
+- `.github/workflows/deploy-final.yml` — Production deployment (main push)
 - `.github/workflows/test.yml` — Test suite
+- `.github/workflows/monitoring.yml` — Monitoring checks
