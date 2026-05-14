@@ -108,7 +108,32 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
                 {t("nav.partnerWithUs")}
               </Link>
               
+              {isAuthenticated ? (
               <UserMenu variant={currentVariant as "light" | "dark" | "transparent"} />
+            ) : (
+              <>
+                <Link
+                  href="/register"
+                  className={cn(
+                    "text-sm font-medium px-3 py-2 rounded-full transition-all duration-200",
+                    "hover:bg-black/5",
+                    textStyles[currentVariant]
+                  )}
+                >
+                  {t("nav.signup")}
+                </Link>
+                <Link
+                  href="/login"
+                  className={cn(
+                    "text-sm font-medium px-3 py-2 rounded-full transition-all duration-200",
+                    "hover:bg-black/5",
+                    textStyles[currentVariant]
+                  )}
+                >
+                  {t("nav.login")}
+                </Link>
+              </>
+            )}
             </div>
 
             {/* Mobile - User Avatar when logged in, Hamburger when logged out */}
