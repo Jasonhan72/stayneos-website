@@ -1,0 +1,31 @@
+{
+  "messages": {
+    "title": "消息",
+    "all": "全部",
+    "unread": "未读",
+    "searchPlaceholder": "搜索消息...",
+    "noConversations": "暂无消息",
+    "noConversationsDesc": "当有用户给您发消息时，对话会显示在这里。",
+    "selectConversation": "选择对话开始聊天",
+    "today": "今天",
+    "yesterday": "昨天",
+    "typeMessage": "输入消息...",
+    "send": "发送",
+    "attachFile": "添加附件",
+    "showDetails": "显示详情",
+    "hideDetails": "隐藏详情",
+    "reservationDetails": "预订详情",
+    "checkIn": "入住",
+    "checkOut": "退房",
+    "guests": "位房客",
+    "guest": "位房客",
+    "nights": "晚",
+    "night": "晚",
+    "nightlyRate": "/晚",
+    "subtotal": "小计",
+    "viewReservation": "查看预订详情",
+    "backToList": "返回消息列表",
+    "you": "你",
+    "new": "新"
+  }
+}

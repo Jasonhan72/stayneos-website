@@ -1,0 +1,31 @@
+{
+  "messages": {
+    "title": "Messages",
+    "all": "Tous",
+    "unread": "Non lus",
+    "searchPlaceholder": "Rechercher des messages...",
+    "noConversations": "Aucun message",
+    "noConversationsDesc": "Lorsque des clients vous envoient des messages, leurs conversations apparaîtront ici.",
+    "selectConversation": "Sélectionnez une conversation pour commencer",
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "typeMessage": "Écrivez un message...",
+    "send": "Envoyer",
+    "attachFile": "Joindre un fichier",
+    "showDetails": "Afficher les détails",
+    "hideDetails": "Masquer les détails",
+    "reservationDetails": "Détails de la réservation",
+    "checkIn": "Arrivée",
+    "checkOut": "Départ",
+    "guests": "voyageurs",
+    "guest": "voyageur",
+    "nights": "nuits",
+    "night": "nuit",
+    "nightlyRate": "par nuit",
+    "subtotal": "Sous-total",
+    "viewReservation": "Voir les détails de la réservation",
+    "backToList": "Retour aux messages",
+    "you": "Vous",
+    "new": "Nouveau"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "messages": {
+    "title": "Messages",
+    "all": "All",
+    "unread": "Unread",
+    "searchPlaceholder": "Search messages...",
+    "noConversations": "No messages yet",
+    "noConversationsDesc": "When guests message you, their conversations will appear here.",
+    "selectConversation": "Select a conversation to start chatting",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "typeMessage": "Type a message...",
+    "send": "Send",
+    "attachFile": "Attach file",
+    "showDetails": "Show details",
+    "hideDetails": "Hide details",
+    "reservationDetails": "Reservation details",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "guests": "guests",
+    "guest": "guest",
+    "nights": "nights",
+    "night": "night",
+    "nightlyRate": "per night",
+    "subtotal": "Subtotal",
+    "viewReservation": "View reservation details",
+    "backToList": "Back to messages",
+    "you": "You",
+    "new": "New"
+  }
+}

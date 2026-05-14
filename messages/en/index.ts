@@ -8,6 +8,7 @@ import featAccount from './feat-account.json';
 import featBooking from './feat-booking.json';
 import featChat from './feat-chat.json';
 import featHost from './feat-host.json';
+import featMessages from './feat-messages.json';
 import featPayment from './feat-payment.json';
 import featProperty from './feat-property.json';
 import featSearch from './feat-search.json';
@@ -28,6 +29,7 @@ const dict = {
   ...featBooking,
   ...featChat,
   ...featHost,
+  ...featMessages,
   ...featPayment,
   ...featProperty,
   ...featSearch,
