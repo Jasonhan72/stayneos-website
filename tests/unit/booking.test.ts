@@ -65,7 +65,7 @@ describe('booking date validation', () => {
   });
 
   it('rejects checkout before checkin', () => {
-    const result = validateBookingDates('2026-04-10', '2026-04-05');
+    const result = validateBookingDates('2099-04-10', '2099-04-05');
     expect(result.valid).toBe(false);
     expect(result.error).toContain('退房日期');
   });

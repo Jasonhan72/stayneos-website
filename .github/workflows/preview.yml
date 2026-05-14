@@ -31,12 +31,11 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
-  # ── Gate 1b: Tests (advisory — pre-existing failures) ──
+  # ── Gate 1b: Tests (required) ──
   tests:
     name: Tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
 
@@ -53,7 +52,7 @@ jobs:
   # ── Gate 2: Build ──
   build:
     name: Build
-    needs: typecheck
+    needs: [typecheck, tests]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -161,7 +160,7 @@ jobs:
             | Item | Status |
             |------|--------|
             | Typecheck | ${{ needs.typecheck.result == 'success' && '✅' || '❌' }} |
-            | Tests | ${{ needs.tests.result == 'success' && '✅' || needs.tests.result == 'skipped' && '⏭️' || '⚠️' }} |
+            | Tests | ${{ needs.tests.result == 'success' && '✅' || needs.tests.result == 'skipped' && '⏭️' || '❌' }} |
             | Build | ${{ needs.build.result == 'success' && '✅' || '❌' }} |
             | **Preview URL** | **[🔗 ${{ needs.deploy-preview.outputs.url }}](${{ needs.deploy-preview.outputs.url }})** |
             | Commit | `${{ github.event.pull_request.head.sha }}` |
