@@ -85,9 +85,7 @@ jobs:
           name: preview-build
           path: |
             .open-next
-            .next
-            worker.js
-            src/worker.ts
+            wrangler.toml
           retention-days: 1
 
   # ── Gate 3: Deploy to Preview Worker ──
@@ -99,14 +97,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-
-      - run: npm ci --legacy-peer-deps
 
       - name: Download build artifact
         uses: actions/download-artifact@v4
@@ -116,6 +109,8 @@ jobs:
       - name: Deploy to preview worker
         id: deploy
         run: |
+          ls -la .open-next/ 2>/dev/null || echo "WARNING: .open-next not found"
+          ls -la wrangler.toml 2>/dev/null || echo "WARNING: wrangler.toml not found"
           npx wrangler deploy --name stayneos-preview 2>&1 | tee deploy-output.txt
           DEPLOY_URL=$(grep -o 'https://stayneos-preview[^ ]*\.workers\.dev' deploy-output.txt | head -1)
           if [ -z "$DEPLOY_URL" ]; then
