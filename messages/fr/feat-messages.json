@@ -26,6 +26,7 @@
     "viewReservation": "Voir les détails de la réservation",
     "backToList": "Retour aux messages",
     "you": "Vous",
-    "new": "Nouveau"
+    "new": "Nouveau",
+    "previewBanner": "La messagerie est en aperçu — les conversations affichées sont des données d'exemple. La messagerie réelle arrive bientôt."
   }
 }

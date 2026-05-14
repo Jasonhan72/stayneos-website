@@ -67,13 +67,41 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // 4. Map to public property shape (matches what the frontend expects)
+    // 4. Aggregate review counts and average ratings from Review table
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const reviewAgg: Record<string, { reviewCount: number; averageRating: number }> = {};
+    try {
+      const { results: reviewRows } = await db
+        .prepare(
+          `SELECT propertyId, COUNT(*) as reviewCount, AVG(rating) as averageRating
+           FROM Review
+           WHERE propertyId IN (${placeholders})
+           GROUP BY propertyId`
+        )
+        .bind(...propertyIds)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .all<{ propertyId: string; reviewCount: number; averageRating: number }>();
+
+      for (const r of (reviewRows ?? [])) {
+        reviewAgg[r.propertyId] = {
+          reviewCount: Number(r.reviewCount) || 0,
+          averageRating: Number(Number(r.averageRating).toFixed(1)) || 0,
+        };
+      }
+    } catch {
+      // Review table may not exist yet in some environments; fall back gracefully
+      console.warn('wishlist:get - Review table unavailable, using defaults');
+    }
+
+    // 5. Map to public property shape (matches what the frontend expects)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const properties = (propertyRows ?? []).map((row: any) => {
       const p = row as Record<string, unknown>;
       const imgs = imagesByProperty[p.id as string] ?? [];
       const priceMonthly = (p.priceMonthly ?? p.basePrice ?? 0) as number;
       const currency = (p.currency ?? 'CAD') as string;
+
+      const agg = reviewAgg[p.id as string] ?? { reviewCount: 0, averageRating: 0 };
 
       return {
         id: p.id,
@@ -87,8 +115,8 @@ export async function GET(request: NextRequest) {
         currency,
         bedrooms: (p.bedrooms ?? 0) as number,
         bathrooms: (p.bathrooms ?? 0) as number,
-        reviewCount: 0,
-        averageRating: 0,
+        reviewCount: agg.reviewCount,
+        averageRating: agg.averageRating,
         images: imgs.map((img) => ({
           url: (img.url as string).startsWith('http') || (img.url as string).startsWith('/')
             ? img.url

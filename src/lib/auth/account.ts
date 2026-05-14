@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "crypto";
-import { getCurrentUserFromRequest } from "@/lib/auth";
+import { getCurrentUserFromRequest } from "@/lib/auth/server";
 import { AUTH_COOKIE_NAME, getClearedAuthCookieOptions } from "@/lib/auth/cookie";
 import { getDb, userDb, type User } from "@/lib/d1";
 

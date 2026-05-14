@@ -26,6 +26,7 @@
     "viewReservation": "查看预订详情",
     "backToList": "返回消息列表",
     "you": "你",
-    "new": "新"
+    "new": "新",
+    "previewBanner": "消息功能处于预览阶段——显示的对话为示例数据，真实消息功能即将上线。"
   }
 }
