@@ -103,10 +103,52 @@ jobs:
           done
           echo "⚠️ Preview may still be deploying. URL: $PREVIEW_URL"
 
-  # ── Gate 3: PR Comment ──
+  # ── Gate 3: E2E Tests (runs against preview URL) ──
+  e2e:
+    name: E2E Tests
+    needs: [build-and-deploy]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci --legacy-peer-deps
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Run E2E tests
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ needs.build-and-deploy.outputs.url }}
+          E2E_USER_EMAIL: ${{ secrets.E2E_USER_EMAIL }}
+          E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
+        run: npx playwright test
+
+      - name: Upload E2E trace artifacts (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-traces
+          path: test-results/
+          retention-days: 7
+
+      - name: Upload Playwright report (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  # ── Gate 4: PR Comment ──
   comment:
     name: Comment PR
-    needs: [typecheck, tests, build-and-deploy]
+    needs: [typecheck, tests, build-and-deploy, e2e]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -127,6 +169,7 @@ jobs:
             | Typecheck | ${{ needs.typecheck.result == 'success' && '✅' || '❌' }} |
             | Tests | ${{ needs.tests.result == 'success' && '✅' || needs.tests.result == 'skipped' && '⏭️' || '❌' }} |
             | Build + Deploy | ${{ needs.build-and-deploy.result == 'success' && '✅' || '❌' }} |
+            | E2E Tests | ${{ needs.e2e.result == 'success' && '✅' || needs.e2e.result == 'skipped' && '⏭️' || '❌' }} |
             | **Preview URL** | ${{ needs.build-and-deploy.result == 'success' && format('**[🔗 {0}]({0})**', needs.build-and-deploy.outputs.url) || 'N/A (deploy failed)' }} |
             | Commit | `${{ github.event.pull_request.head.sha }}` |
 
