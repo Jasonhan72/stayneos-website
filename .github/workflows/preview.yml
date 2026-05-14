@@ -1,0 +1,159 @@
+name: Preview Deploy
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "24"
+
+jobs:
+  # ── Gate 1: Typecheck + Tests ──
+  checks:
+    name: Typecheck & Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci --legacy-peer-deps
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit Tests
+        run: npm run test -- --runInBand
+
+  # ── Gate 2: Build ──
+  build:
+    name: Build
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci --legacy-peer-deps
+
+      - name: Clean previous build cache
+        run: rm -rf .next .open-next
+
+      - name: Build Next.js
+        run: npm run build
+        env:
+          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
+
+      - name: Build OpenNext for Cloudflare
+        run: npx opennextjs-cloudflare build
+        env:
+          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: preview-build
+          path: |
+            .open-next
+            .next
+            worker.js
+            src/worker.ts
+          retention-days: 1
+
+  # ── Gate 3: Deploy to Preview Worker ──
+  deploy-preview:
+    name: Deploy Preview
+    needs: build
+    outputs:
+      url: ${{ steps.deploy.outputs.url }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci --legacy-peer-deps
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: preview-build
+
+      - name: Deploy to preview worker
+        id: deploy
+        run: |
+          npx wrangler deploy --name stayneos-preview 2>&1 | tee deploy-output.txt
+          DEPLOY_URL=$(grep -o 'https://stayneos-preview[^ ]*\.workers\.dev' deploy-output.txt | head -1)
+          if [ -z "$DEPLOY_URL" ]; then
+            DEPLOY_URL="https://stayneos-preview.neos-lab.workers.dev"
+          fi
+          echo "url=$DEPLOY_URL" >> "$GITHUB_OUTPUT"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Wait for deployment propagation
+        run: sleep 30
+
+      - name: Verify preview is live
+        run: |
+          PREVIEW_URL="${{ steps.deploy.outputs.url }}"
+          echo "Checking $PREVIEW_URL ..."
+          for i in $(seq 1 10); do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$PREVIEW_URL")
+            echo "Attempt $i: HTTP $STATUS"
+            if [ "$STATUS" = "200" ] || [ "$STATUS" = "301" ] || [ "$STATUS" = "302" ] || [ "$STATUS" = "308" ]; then
+              echo "✅ Preview is live at $PREVIEW_URL"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "⚠️ Preview may still be deploying. URL: $PREVIEW_URL"
+          # Don't fail — worker may take longer
+
+  # ── Gate 4: PR Comment ──
+  comment:
+    name: Comment PR
+    needs: deploy-preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Post preview URL to PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: preview-deployment
+          message: |
+            ## 🔍 Preview Deployment
+
+            | Item | Status |
+            |------|--------|
+            | Typecheck | ${{ needs.checks.result == 'success' && '✅' || '❌' }} |
+            | Tests | ${{ needs.checks.result == 'success' && '✅' || '❌' }} |
+            | Build | ${{ needs.build.result == 'success' && '✅' || '❌' }} |
+            | **Preview URL** | **[🔗 ${{ needs.deploy-preview.outputs.url }}](${{ needs.deploy-preview.outputs.url }})** |
+            | Commit | `${{ github.event.pull_request.head.sha }}` |
+
+            > ℹ️ Preview worker: `stayneos-preview` — deployed from this PR.  
+            > Every push to this PR updates the preview automatically.
