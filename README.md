@@ -81,3 +81,4 @@ stayneos-web/
 <!-- Preview deploy verified: 2026-05-14T06:13:15Z -->
 <!-- preview final verify 2026-05-14T06:23:37Z -->
 <!-- preview deploy v3: 2026-05-14T06:33:11Z -->
+<!-- Preview deploy final test: 2026-05-14T06:47:10Z -->
