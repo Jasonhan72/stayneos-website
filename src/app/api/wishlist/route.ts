@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUserFromRequest } from '@/lib/auth';
 import { getDb } from '@/lib/d1';
+import { checkRateLimit } from '@/lib/security/rate-limit';
+import { validateCsrf } from '@/lib/security/csrf';
+import { apiError } from '@/lib/api/response';
 
 export const dynamic = 'force-dynamic';
 
@@ -105,6 +108,11 @@ export async function GET(request: NextRequest) {
 // POST /api/wishlist — add, remove, or toggle a property in the wishlist.
 export async function POST(request: NextRequest) {
   try {
+    const rate = checkRateLimit(request, 'wishlist:update', { limit: 30, windowMs: 60_000 });
+    if (!rate.allowed) return apiError('Too many wishlist updates', 429, 'RATE_LIMITED');
+
+    if (!validateCsrf(request)) return apiError('Invalid CSRF token', 403, 'CSRF_INVALID');
+
     const currentUser = await getCurrentUserFromRequest(request);
     if (!currentUser?.userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -133,7 +141,9 @@ export async function POST(request: NextRequest) {
 
     if (action === 'add') {
       await db
-        .prepare('INSERT OR IGNORE INTO Wishlist (userId, propertyId) VALUES (?, ?)')
+        .prepare(
+          'INSERT OR IGNORE INTO Wishlist (userId, propertyId) VALUES (?, ?)'
+        )
         .bind(currentUser.userId, propertyId)
         .run();
       resolvedAction = 'added';
@@ -144,7 +154,7 @@ export async function POST(request: NextRequest) {
         .run();
       resolvedAction = 'removed';
     } else {
-      // toggle
+      // toggle: one round-trip check, then mutate
       const existing = await db
         .prepare('SELECT 1 AS present FROM Wishlist WHERE userId = ? AND propertyId = ? LIMIT 1')
         .bind(currentUser.userId, propertyId)
@@ -158,7 +168,9 @@ export async function POST(request: NextRequest) {
         resolvedAction = 'removed';
       } else {
         await db
-          .prepare('INSERT OR IGNORE INTO Wishlist (userId, propertyId) VALUES (?, ?)')
+          .prepare(
+            'INSERT OR IGNORE INTO Wishlist (userId, propertyId) VALUES (?, ?)'
+          )
           .bind(currentUser.userId, propertyId)
           .run();
         resolvedAction = 'added';
