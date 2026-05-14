@@ -32,7 +32,7 @@ type MenuLink = {
 
 export function UserMenu({ variant = "light" }: UserMenuProps) {
   const { locale } = useI18n();
-  const { user, logout, isLoading } = useAuth();
+  const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -49,74 +49,35 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
   const L = (zh: string, en: string, fr: string) =>
     locale === "zh" ? zh : locale === "fr" ? fr : en;
 
-  if (isLoading) {
-    return <div className="h-10 w-[82px] animate-pulse rounded-full bg-black/5" />;
-  }
-
   const isDarkStyle = variant === "dark" || variant === "transparent";
-    if (!user) {
-    return (
-      <div className="relative" ref={menuRef}>
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className={cn(
-            "flex items-center gap-3 rounded-full border px-2 py-1.5 pl-3 transition-all duration-200",
-            isDarkStyle
-              ? "border-white/30 hover:border-white/60 hover:shadow-md"
-              : "border-neutral-200 hover:border-neutral-300 hover:shadow-md"
-          )}
-          aria-expanded={isOpen}
-          aria-haspopup="true"
-          aria-label={L("用户菜单", "User menu", "Menu utilisateur")}
-        >
-          <Menu className={cn("h-4 w-4", isDarkStyle ? "text-white" : "text-neutral-700")} />
-          <div
-            className={cn(
-              "flex h-7 w-7 items-center justify-center rounded-full",
-              isDarkStyle ? "bg-white/20" : "bg-neutral-500"
-            )}
-          >
-            <span className="text-[11px] font-medium text-white">?</span>
-          </div>
-        </button>
 
-        {isOpen && (
-          <div
-            className={cn(
-              "animate-in slide-in-from-top-2 absolute right-0 z-50 mt-2 w-60 rounded-xl border border-neutral-200 bg-white py-2 shadow-2xl fade-in duration-150"
-            )}
-          >
-            <Link
-              href="/register"
-              onClick={() => setIsOpen(false)}
-              className="block px-4 py-3 text-sm font-semibold text-neutral-900 hover:bg-neutral-50"
-            >
-              {L("注册", "Sign up", "Inscription")}
-            </Link>
-            <Link
-              href="/login"
-              onClick={() => setIsOpen(false)}
-              className="block px-4 py-3 text-sm text-neutral-700 hover:bg-neutral-50"
-            >
-              {L("登录", "Log in", "Connexion")}
-            </Link>
-            <div className="my-1 border-t border-neutral-200" />
-            <Link
-              href="/become-a-host"
-              onClick={() => setIsOpen(false)}
-              className="block px-4 py-3 text-sm text-neutral-700 hover:bg-neutral-50"
-            >
-              {L("开放您的房源", "List your home", "Mettez votre logement en location")}
-            </Link>
-            <Link
-              href="/help"
-              onClick={() => setIsOpen(false)}
-              className="block px-4 py-3 text-sm text-neutral-700 hover:bg-neutral-50"
-            >
-              {L("帮助中心", "Help Centre", "Centre d'aide")}
-            </Link>
-          </div>
-        )}
+  // SSR-safe: no skeleton — always render Sign Up / Log In when no user
+  // (covers both SSR initial render and client-side unauthenticated state)
+  if (!user) {
+    return (
+      <div className="flex items-center gap-1" ref={menuRef}>
+        <Link
+          href="/register"
+          className={cn(
+            "text-sm font-medium px-3 py-2 rounded-full transition-all duration-200",
+            isDarkStyle
+              ? "text-white/90 hover:text-white hover:bg-white/10"
+              : "text-neutral-700 hover:text-neutral-900 hover:bg-black/5"
+          )}
+        >
+          {L("注册", "Sign Up", "Inscription")}
+        </Link>
+        <Link
+          href="/login"
+          className={cn(
+            "text-sm font-medium px-3 py-2 rounded-full transition-all duration-200",
+            isDarkStyle
+              ? "text-white/90 hover:text-white hover:bg-white/10"
+              : "text-neutral-700 hover:text-neutral-900 hover:bg-black/5"
+          )}
+        >
+          {L("登录", "Log In", "Connexion")}
+        </Link>
       </div>
     );
   }
