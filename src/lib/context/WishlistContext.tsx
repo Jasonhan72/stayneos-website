@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 
 const STORAGE_KEY = 'stayneos_wishlist';
 
@@ -40,6 +41,8 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
   const [wishlist, setWishlist] = useState<string[]>(loadLocal);
   const [_ready, setReady] = useState(false);
   const syncLock = useRef(false);
+  const router = useRouter();
+  const pathname = usePathname();
 
   // Hydrate from server on mount when signed in.
   useEffect(() => {
@@ -104,23 +107,28 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
 
   const toggleWishlist = useCallback(
     (id: string) => {
+      // Redirect to login if not authenticated
+      if (!isLoggedIn()) {
+        const loginUrl = `/login?callbackUrl=${encodeURIComponent(pathname)}`;
+        router.push(loginUrl);
+        return;
+      }
+
       const next = wishlist.includes(id)
         ? wishlist.filter((x) => x !== id)
         : [...wishlist, id];
       setWishlist(next);
       saveLocal(next);
 
-      if (isLoggedIn()) {
-        const action = wishlist.includes(id) ? 'remove' : 'add';
-        fetch('/api/wishlist', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ propertyId: id, action }),
-        }).catch(() => {});
-      }
+      const action = wishlist.includes(id) ? 'remove' : 'add';
+      fetch('/api/wishlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ propertyId: id, action }),
+      }).catch(() => {});
     },
-    [wishlist]
+    [wishlist, router, pathname]
   );
 
   const clearWishlist = useCallback(() => {

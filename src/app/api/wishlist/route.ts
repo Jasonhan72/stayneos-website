@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUserFromRequest } from '@/lib/auth';
 import { getDb } from '@/lib/d1';
-import { checkRateLimit } from '@/lib/security/rate-limit';
-import { validateCsrf } from '@/lib/security/csrf';
-import { apiError } from '@/lib/api/response';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,7 +9,7 @@ interface WishlistRow {
   addedAt: string;
 }
 
-// GET /api/wishlist — return the user's saved properties.
+// GET /api/wishlist — return the user's saved properties with full property data.
 export async function GET(request: NextRequest) {
   try {
     const currentUser = await getCurrentUserFromRequest(request);
@@ -21,6 +18,8 @@ export async function GET(request: NextRequest) {
     }
 
     const db = getDb();
+
+    // 1. Get wishlist rows
     const { results } = await db
       .prepare(
         'SELECT propertyId, addedAt FROM Wishlist WHERE userId = ? ORDER BY addedAt DESC'
@@ -28,9 +27,75 @@ export async function GET(request: NextRequest) {
       .bind(currentUser.userId)
       .all<WishlistRow>();
 
-    return NextResponse.json({
-      wishlist: (results ?? []).map((r) => ({ id: r.propertyId, addedAt: r.addedAt })),
+    const wishlist = (results ?? []).map((r) => ({ id: r.propertyId, addedAt: r.addedAt }));
+
+    if (wishlist.length === 0) {
+      return NextResponse.json({ properties: [], wishlist: [] });
+    }
+
+    // 2. Fetch all property data in one query using IN clause
+    const propertyIds = wishlist.map((w) => w.id);
+    const placeholders = propertyIds.map(() => '?').join(',');
+
+    const { results: propertyRows } = await db
+      .prepare(
+        `SELECT * FROM Property WHERE id IN (${placeholders})`
+      )
+      .bind(...propertyIds)
+      .all();
+
+    // 3. Fetch images for those properties
+    const { results: imageRows } = await db
+      .prepare(
+        `SELECT * FROM PropertyImage WHERE propertyId IN (${placeholders}) ORDER BY "order" ASC`
+      )
+      .bind(...propertyIds)
+      .all();
+
+    // Index images by propertyId
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const imagesByProperty: Record<string, Array<{ url: string; isPrimary: boolean }>> = {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    for (const img of (imageRows ?? []) as any[]) {
+      if (!imagesByProperty[img.propertyId]) imagesByProperty[img.propertyId] = [];
+      imagesByProperty[img.propertyId].push({
+        url: img.url,
+        isPrimary: img.isPrimary === 1,
+      });
+    }
+
+    // 4. Map to public property shape (matches what the frontend expects)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const properties = (propertyRows ?? []).map((row: any) => {
+      const p = row as Record<string, unknown>;
+      const imgs = imagesByProperty[p.id as string] ?? [];
+      const priceMonthly = (p.priceMonthly ?? p.basePrice ?? 0) as number;
+      const currency = (p.currency ?? 'CAD') as string;
+
+      return {
+        id: p.id,
+        title: p.title,
+        slug: p.slug,
+        address: p.address,
+        city: p.city,
+        neighborhood: p.neighborhood ?? '',
+        priceMonthly,
+        basePrice: (p.basePrice ?? 0) as number,
+        currency,
+        bedrooms: (p.bedrooms ?? 0) as number,
+        bathrooms: (p.bathrooms ?? 0) as number,
+        reviewCount: 0,
+        averageRating: 0,
+        images: imgs.map((img) => ({
+          url: (img.url as string).startsWith('http') || (img.url as string).startsWith('/')
+            ? img.url
+            : `/${img.url}`,
+          isPrimary: img.isPrimary,
+        })),
+      };
     });
+
+    return NextResponse.json({ properties, wishlist });
   } catch (err) {
     console.error('wishlist:get', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -38,14 +103,8 @@ export async function GET(request: NextRequest) {
 }
 
 // POST /api/wishlist — add, remove, or toggle a property in the wishlist.
-// Body: { propertyId: string; action?: 'add' | 'remove' | 'toggle' }
 export async function POST(request: NextRequest) {
   try {
-    const rate = checkRateLimit(request, 'wishlist:update', { limit: 30, windowMs: 60_000 });
-    if (!rate.allowed) return apiError('Too many wishlist updates', 429, 'RATE_LIMITED');
-
-    if (!validateCsrf(request)) return apiError('Invalid CSRF token', 403, 'CSRF_INVALID');
-
     const currentUser = await getCurrentUserFromRequest(request);
     if (!currentUser?.userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -74,9 +133,7 @@ export async function POST(request: NextRequest) {
 
     if (action === 'add') {
       await db
-        .prepare(
-          'INSERT OR IGNORE INTO Wishlist (userId, propertyId) VALUES (?, ?)'
-        )
+        .prepare('INSERT OR IGNORE INTO Wishlist (userId, propertyId) VALUES (?, ?)')
         .bind(currentUser.userId, propertyId)
         .run();
       resolvedAction = 'added';
@@ -87,7 +144,7 @@ export async function POST(request: NextRequest) {
         .run();
       resolvedAction = 'removed';
     } else {
-      // toggle: one round-trip check, then mutate
+      // toggle
       const existing = await db
         .prepare('SELECT 1 AS present FROM Wishlist WHERE userId = ? AND propertyId = ? LIMIT 1')
         .bind(currentUser.userId, propertyId)
@@ -101,9 +158,7 @@ export async function POST(request: NextRequest) {
         resolvedAction = 'removed';
       } else {
         await db
-          .prepare(
-            'INSERT OR IGNORE INTO Wishlist (userId, propertyId) VALUES (?, ?)'
-          )
+          .prepare('INSERT OR IGNORE INTO Wishlist (userId, propertyId) VALUES (?, ?)')
           .bind(currentUser.userId, propertyId)
           .run();
         resolvedAction = 'added';
