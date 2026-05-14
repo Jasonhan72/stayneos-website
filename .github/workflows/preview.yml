@@ -28,10 +28,25 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+  # ── Gate 1b: Tests (required) ──
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - name: Unit Tests
+        run: npm run test -- --runInBand
+
   # ── Gate 2: Build + Deploy Preview ──
   build-and-deploy:
     name: Build + Deploy Preview
-    needs: typecheck
+    needs: [typecheck, tests]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     outputs:
@@ -91,7 +106,7 @@ jobs:
   # ── Gate 3: PR Comment ──
   comment:
     name: Comment PR
-    needs: build-and-deploy
+    needs: [typecheck, tests, build-and-deploy]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -110,6 +125,7 @@ jobs:
             | Item | Status |
             |------|--------|
             | Typecheck | ${{ needs.typecheck.result == 'success' && '✅' || '❌' }} |
+            | Tests | ${{ needs.tests.result == 'success' && '✅' || needs.tests.result == 'skipped' && '⏭️' || '❌' }} |
             | Build + Deploy | ${{ needs.build-and-deploy.result == 'success' && '✅' || '❌' }} |
             | **Preview URL** | ${{ needs.build-and-deploy.result == 'success' && format('**[🔗 {0}]({0})**', needs.build-and-deploy.outputs.url) || 'N/A (deploy failed)' }} |
             | Commit | `${{ github.event.pull_request.head.sha }}` |
