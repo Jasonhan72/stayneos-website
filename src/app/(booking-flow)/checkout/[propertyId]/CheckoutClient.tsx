@@ -21,6 +21,7 @@ import { useProperty } from '@/hooks/useProperties';
 import { getLocalizedTitle } from '@/components/property/PropertyCard';
 import { useI18n } from '@/lib/i18n';
 import { useAuth } from '@/lib/context/UserContext';
+import { ensureCsrfToken } from '@/lib/security/csrf-client';
 
 const AirbnbCalendar = dynamic(() => import('@/components/booking').then((mod) => mod.AirbnbCalendar), {
   ssr: false,
@@ -55,6 +56,8 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
   // Modals state
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showGuestPicker, setShowGuestPicker] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [bookingError, setBookingError] = useState('');
 
   useEffect(() => {
     if (isAuthenticated && user) {
@@ -136,7 +139,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
   };
 
   // Handle proceed to payment
-  const handleProceedToPayment = () => {
+  const handleProceedToPayment = async () => {
     if (!checkIn || !checkOut) {
       setShowDatePicker(true);
       return;
@@ -148,7 +151,6 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
       return;
     }
 
-    // Redirect to payment page with booking details
     const params = new URLSearchParams();
     params.set('checkIn', checkIn);
     params.set('checkOut', checkOut);
@@ -160,9 +162,53 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
     params.set('infants', infants.toString());
     params.set('pets', pets.toString());
     if (guestPhone.trim()) params.set('guestPhone', guestPhone.trim());
-    if (isAuthenticated && user) params.set('userId', user.id);
-    
-    router.push(`/payment/${propertyId}?${params.toString()}`);
+
+    if (!isAuthenticated) {
+      router.push(`/login?callbackUrl=${encodeURIComponent(`/checkout/${propertyId}?${params.toString()}`)}`);
+      return;
+    }
+
+    setBookingError('');
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-csrf-token': ensureCsrfToken(),
+        },
+        body: JSON.stringify({
+          propertyId,
+          checkIn,
+          checkOut,
+          guests: adults + children,
+          guestName: guestName.trim(),
+          guestEmail: guestEmail.trim(),
+          guestPhone: guestPhone.trim() || undefined,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || data.error || 'Unable to create booking. Please try again.');
+      }
+
+      const booking = data.booking || data.data?.booking;
+      if (!booking?.id) {
+        throw new Error('Booking was created but no booking id was returned.');
+      }
+
+      params.set('bookingId', booking.id);
+      if (booking.bookingNumber) params.set('bookingNumber', booking.bookingNumber);
+      if (user?.id) params.set('userId', user.id);
+
+      router.push(`/payment/${propertyId}?${params.toString()}`);
+    } catch (error) {
+      setBookingError(error instanceof Error ? error.message : 'Unable to create booking. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Format guest display text
@@ -402,14 +448,19 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
               </div>
             </div>
             
+            {bookingError && (
+              <p className="mb-3 text-sm text-rose-600 text-center">{bookingError}</p>
+            )}
             <button 
               onClick={handleProceedToPayment}
-              disabled={!checkIn || !checkOut}
+              disabled={!checkIn || !checkOut || isSubmitting}
               className="w-full py-4 bg-black hover:bg-neutral-800 disabled:bg-neutral-300 text-white font-semibold text-lg rounded-xl transition-colors"
             >
-              {!checkIn || !checkOut 
-                ? 'Select dates' 
-                : (t('checkout.reviewAndContinue') || 'Review and continue')
+              {isSubmitting
+                ? (t('common.loading') || 'Loading...')
+                : !checkIn || !checkOut 
+                  ? 'Select dates' 
+                  : (t('checkout.reviewAndContinue') || 'Review and continue')
               }
             </button>
             
