@@ -67,6 +67,11 @@ export interface Property {
   monthlyPrice?: number;
   quarterlyPrice?: number;
   annualPrice?: number;
+  defaultStayType?: 'NIGHTLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY' | string;
+  nightlyRate?: number;
+  monthlyRate?: number;
+  quarterlyRate?: number;
+  yearlyRate?: number;
   quarterlyDiscountPercent?: number;
   annualDiscountPercent?: number;
   currency: string;
@@ -108,6 +113,11 @@ export interface PropertyListItem {
   monthlyPrice?: number;
   quarterlyPrice?: number;
   annualPrice?: number;
+  defaultStayType?: 'NIGHTLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY' | string;
+  nightlyRate?: number;
+  monthlyRate?: number;
+  quarterlyRate?: number;
+  yearlyRate?: number;
   quarterlyDiscountPercent?: number;
   annualDiscountPercent?: number;
   currency: string;
@@ -148,6 +158,11 @@ export interface PropertyCardData {
   monthlyPrice?: number;
   quarterlyPrice?: number;
   annualPrice?: number;
+  defaultStayType?: 'NIGHTLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY' | string;
+  nightlyRate?: number;
+  monthlyRate?: number;
+  quarterlyRate?: number;
+  yearlyRate?: number;
   quarterlyDiscountPercent?: number;
   annualDiscountPercent?: number;
 }

@@ -16,6 +16,9 @@ export interface Booking {
   checkIn: string;
   checkOut: string;
   nights: number;
+  stayType?: 'NIGHTLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
+  unitCount?: number;
+  unitRate?: number;
   
   // 客人
   guests: number;
@@ -61,6 +64,9 @@ export interface CreateBookingRequest {
   checkIn: string;
   checkOut: string;
   guests: number;
+  stayType?: 'NIGHTLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY' | 'nightly' | 'monthly' | 'quarterly' | 'yearly';
+  unitCount?: number;
+  unitRate?: number;
   guestName?: string;
   guestEmail?: string;
   guestPhone?: string;
@@ -84,6 +90,10 @@ export interface BookingQueryParams {
 // 价格计算结果
 export interface BookingPriceCalculation {
   nights: number;
+  months?: number;
+  stayType?: 'NIGHTLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
+  unitCount?: number;
+  unitRate?: number;
   basePrice: number;
   subtotal: number;
   discount: number;

@@ -30,7 +30,7 @@ import { useCurrency } from '@/hooks/useCurrency';
 import { useProperty } from '@/hooks/useProperties';
 import { PropertyCardData } from '@/types';
 import { getPropertyLocation } from '@/lib/utils/property-transform';
-import { calculateBookingPrice } from '@/lib/booking';
+import { calculateBookingPrice, getDefaultStayType, normalizeStayType, stayTypeToQuery, type StayType } from '@/lib/booking';
 
 interface PropertyDetailClientProps {
   propertyId: string;
@@ -220,6 +220,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
   const [showPaymentNotice, setShowPaymentNotice] = useState<string | null>(null);
   const [bookingError, setBookingError] = useState<string>('');
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [selectedStayType, setSelectedStayType] = useState<StayType | null>(null);
   const [pendingCheckoutUrl, setPendingCheckoutUrl] = useState<string | null>(null);
   
   // Guest breakdown state for GuestSelector
@@ -276,8 +277,8 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
 
   const bookingPrice = useMemo(() => {
     if (!propertyCardData || !checkIn || !checkOut) return null;
-    return calculateBookingPrice(propertyCardData, checkIn, checkOut);
-  }, [propertyCardData, checkIn, checkOut]);
+    return calculateBookingPrice(propertyCardData, checkIn, checkOut, selectedStayType || getDefaultStayType(propertyCardData));
+  }, [propertyCardData, checkIn, checkOut, selectedStayType]);
 
   // Loading state
   if (isLoading) {
@@ -331,11 +332,14 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
     bathrooms: propertyCardData.bathrooms 
   });
 
+  const effectiveStayType = normalizeStayType(selectedStayType, getDefaultStayType(propertyCardData));
+
   const tierPrices = (() => {
-    const monthly = propertyCardData?.price || 0;
-    const quarterly = Number((propertyCardData as unknown as { priceQuarterly?: number })?.priceQuarterly || 0) || Math.round(monthly * 0.92);
-    const annual = Number((propertyCardData as unknown as { priceAnnual?: number })?.priceAnnual || 0) || Math.round(monthly * 0.85);
-    return { monthly, quarterly, annual };
+    const monthly = Number((propertyCardData as unknown as { monthlyRate?: number; priceMonthly?: number })?.monthlyRate || (propertyCardData as unknown as { priceMonthly?: number })?.priceMonthly || propertyCardData?.price || 0);
+    const nightly = Number((propertyCardData as unknown as { nightlyRate?: number })?.nightlyRate || 0) || Math.max(1, Math.round(monthly / 30));
+    const quarterly = Number((propertyCardData as unknown as { quarterlyRate?: number; priceQuarterly?: number })?.quarterlyRate || (propertyCardData as unknown as { priceQuarterly?: number })?.priceQuarterly || 0) || Math.round(monthly * 0.92);
+    const annual = Number((propertyCardData as unknown as { yearlyRate?: number; priceAnnual?: number })?.yearlyRate || (propertyCardData as unknown as { priceAnnual?: number })?.priceAnnual || 0) || Math.round(monthly * 0.85);
+    return { nightly, monthly, quarterly, annual };
   })();
 
   const buildCheckoutUrl = () => {
@@ -346,6 +350,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
       adults: guestBreakdown.adults.toString(),
       children: guestBreakdown.children.toString(),
       infants: guestBreakdown.infants.toString(),
+      stayType: stayTypeToQuery(effectiveStayType),
     });
     return `/checkout/${propertyId}?${params.toString()}`;
   };
@@ -372,7 +377,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
     }
 
     const nights = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    const minNights = propertyCardData.minNights || 1;
+    const minNights = bookingPrice?.minNights || propertyCardData.minNights || 1;
     if (nights < minNights) {
       setBookingError(t('booking.validation.minNights', 'Minimum {count} nights required', { count: minNights }));
       setShowCalendar(true);
@@ -441,7 +446,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
       {/* Price Header */}
       <div className="flex items-baseline justify-between mb-4">
         <span className="text-2xl font-bold text-neutral-900">
-          {t('property.fromPrice', 'From ${price}/Mo', { price: fp(propertyCardData.price).replace(/[$€¥]/, '') })}
+          {effectiveStayType === 'NIGHTLY' ? t('property.fromNightlyPrice', 'From ${price}/night', { price: fp(tierPrices.nightly).replace(/[$€¥]/, '') }) : t('property.fromPrice', 'From ${price}/Mo', { price: fp(propertyCardData.price).replace(/[$€¥]/, '') })}
         </span>
         {propertyCardData.reviewCount > 0 && (
           <div className="flex items-center gap-1">
@@ -452,10 +457,18 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
         )}
       </div>
 
-      <div className="mb-4 rounded-xl border border-neutral-200 p-3 bg-neutral-50">
-        <div className="flex items-center justify-between text-sm"><span className="text-neutral-600">{t('property.monthly', 'Monthly')}</span><span className="font-semibold text-neutral-900">{fp(tierPrices.monthly)}/Mo</span></div>
-        <div className="flex items-center justify-between text-sm mt-1"><span className="text-neutral-600">{t('property.quarterly', 'Quarterly')} (3 {t('common.months', 'mo')})</span><span className="font-medium text-neutral-900">{fp(tierPrices.quarterly)}/Mo</span></div>
-        <div className="flex items-center justify-between text-sm mt-1"><span className="text-neutral-600">{t('property.annual', 'Annual')} (12 {t('common.months', 'mo')})</span><span className="font-medium text-neutral-900">{fp(tierPrices.annual)}/Mo</span></div>
+      <div className="mb-4 rounded-xl border border-neutral-200 p-3 bg-neutral-50 space-y-2">
+        {(['MONTHLY', 'QUARTERLY', 'YEARLY'] as StayType[]).map((type) => (
+          <button
+            key={type}
+            type="button"
+            onClick={() => setSelectedStayType(type)}
+            className={`flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-left text-sm ${effectiveStayType === type ? 'bg-white shadow-sm ring-1 ring-neutral-200' : ''}`}
+          >
+            <span className="text-neutral-600">{type === 'MONTHLY' ? t('property.monthly', 'Monthly') : type === 'QUARTERLY' ? `${t('property.quarterly', 'Quarterly')} (3 ${t('common.months', 'mo')})` : `${t('property.annual', 'Annual')} (12 ${t('common.months', 'mo')})`}</span>
+            <span className="font-semibold text-neutral-900">{fp(type === 'MONTHLY' ? tierPrices.monthly : type === 'QUARTERLY' ? tierPrices.quarterly : tierPrices.annual)}/Mo</span>
+          </button>
+        ))}
       </div>
 
       {checkIn && checkOut && (
@@ -529,7 +542,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
       {bookingPrice && (
         <div className="space-y-3 text-sm border-t border-neutral-100 pt-4">
           <div className="flex justify-between">
-            <span className="text-neutral-600 underline">{fp(bookingPrice.ratePerMonth)} x {bookingPrice.months} {t('booking.months', { count: bookingPrice.months })} ({bookingPrice.tierName})</span>
+            <span className="text-neutral-600 underline">{fp(bookingPrice.unitRate)} x {bookingPrice.unitCount} {effectiveStayType === 'NIGHTLY' ? t('booking.nights', { count: bookingPrice.unitCount }) : t('booking.months', { count: bookingPrice.unitCount })} ({bookingPrice.tierName})</span>
             <span className="text-neutral-900">{fp(bookingPrice.subtotal)}</span>
           </div>
           <div className="flex justify-between">
@@ -976,7 +989,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
             ) : bookingPrice ? (
               <div>
                 <p className="text-lg font-semibold">${bookingPrice.total.toLocaleString()}</p>
-                <p className="text-sm text-neutral-600">{bookingPrice.months} {t('booking.months', { count: bookingPrice.months })}</p>
+                <p className="text-sm text-neutral-600">{bookingPrice.unitCount} {effectiveStayType === 'NIGHTLY' ? t('booking.nights', { count: bookingPrice.unitCount }) : t('booking.months', { count: bookingPrice.unitCount })}</p>
               </div>
             ) : (
               <div>
@@ -1073,6 +1086,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
               adults: guestBreakdown.adults.toString(),
               children: guestBreakdown.children.toString(),
               infants: guestBreakdown.infants.toString(),
+              stayType: stayTypeToQuery(effectiveStayType),
             });
             router.push(`/checkout/${propertyId}?${params.toString()}`);
           } else if (method === 'paypal' || method === 'applepay') {

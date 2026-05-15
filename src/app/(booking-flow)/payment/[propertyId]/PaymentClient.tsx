@@ -21,7 +21,7 @@ import { getLocalizedTitle } from '@/components/property/PropertyCard';
 import { useI18n } from '@/lib/i18n';
 import StripeProvider from '@/components/payment/StripeProvider';
 import PaymentForm from '@/components/payment/PaymentForm';
-import { calculateBookingPrice } from '@/lib/booking';
+import { calculateBookingPrice, normalizeStayType, getDefaultStayType } from '@/lib/booking';
 
 interface PaymentClientProps {
   propertyId: string;
@@ -53,18 +53,38 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
   const children = parseInt(searchParams.get('children') || '0');
   const infants = parseInt(searchParams.get('infants') || '0');
   const bookingId = searchParams.get('bookingId') || '';
+  const stayType = property ? normalizeStayType(searchParams.get('stayType') || searchParams.get('type'), getDefaultStayType(property)) : normalizeStayType(searchParams.get('stayType') || searchParams.get('type'));
 
   // Calculate pricing from unified source
-  const priceCalc = property && checkIn && checkOut ? calculateBookingPrice(property, checkIn, checkOut) : null;
+  const priceCalc = property && checkIn && checkOut ? calculateBookingPrice(property, checkIn, checkOut, stayType) : null;
   const _nights = priceCalc?.nights || 0; // eslint-disable-line @typescript-eslint/no-unused-vars
-  const months = priceCalc?.months || 0;
+  const unitCount = priceCalc?.unitCount || 0;
   const _isMonthly = priceCalc?.isMonthly || false; // eslint-disable-line @typescript-eslint/no-unused-vars
   const subtotal = priceCalc?.subtotal || 0;
   const taxes = priceCalc ? Math.round((subtotal - promoDiscount + priceCalc.cleaningFee + priceCalc.serviceFee) * 0.13) : 0;
   const total = priceCalc ? subtotal - promoDiscount + priceCalc.cleaningFee + priceCalc.serviceFee + taxes : 0;
-  const ratePerMonth = priceCalc?.ratePerMonth || 0;
+  const unitRate = priceCalc?.unitRate || 0;
 
   const localizedTitle = property ? getLocalizedTitle(property, locale) : t('property.notFound') || 'Property';
+
+  const unitLabel = (count: number) => {
+    if (locale === 'zh') {
+      if (stayType === 'NIGHTLY') return '晚';
+      if (stayType === 'QUARTERLY') return '季度';
+      if (stayType === 'YEARLY') return '年';
+      return '个月';
+    }
+    if (locale === 'fr') {
+      if (stayType === 'NIGHTLY') return count === 1 ? 'nuit' : 'nuits';
+      if (stayType === 'QUARTERLY') return count === 1 ? 'trimestre' : 'trimestres';
+      if (stayType === 'YEARLY') return count === 1 ? 'an' : 'ans';
+      return 'mois';
+    }
+    if (stayType === 'NIGHTLY') return count === 1 ? 'night' : 'nights';
+    if (stayType === 'QUARTERLY') return count === 1 ? 'quarter' : 'quarters';
+    if (stayType === 'YEARLY') return count === 1 ? 'year' : 'years';
+    return count === 1 ? 'month' : 'months';
+  };
 
   // Create payment intent on mount
   useEffect(() => {
@@ -343,7 +363,7 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
                       <span className="text-neutral-600">
-                        ${ratePerMonth.toLocaleString()} CAD/month x {months} {months === 1 ? 'month' : 'months'}
+                        ${unitRate.toLocaleString()} CAD × {unitCount} {unitLabel(unitCount)}
                       </span>
                       <span>${subtotal.toLocaleString()} CAD</span>
                     </div>

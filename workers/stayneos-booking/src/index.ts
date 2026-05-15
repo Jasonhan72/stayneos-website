@@ -24,7 +24,7 @@ interface Env {
 
 interface BookingRow {
   id: string; bookingNumber: string; propertyId: string; userId: string;
-  checkIn: string; checkOut: string; nights: number; guests: number;
+  checkIn: string; checkOut: string; nights: number; stayType: 'NIGHTLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY'; unitCount: number; unitRate: number; guests: number;
   guestName: string | null; guestEmail: string | null; guestPhone: string | null;
   basePrice: number; cleaningFee: number | null; serviceFee: number | null;
   discount: number | null; discountRate: number | null; tax: number | null;
@@ -131,13 +131,13 @@ async function createBooking(db: D1Database, data: Omit<BookingRow, 'id' | 'crea
   const id = uuid();
   const now = nowIso();
   await db.prepare(`
-    INSERT INTO Booking (id, bookingNumber, propertyId, userId, checkIn, checkOut, nights, guests,
+    INSERT INTO Booking (id, bookingNumber, propertyId, userId, checkIn, checkOut, nights, stayType, unitCount, unitRate, guests,
       guestName, guestEmail, guestPhone, basePrice, cleaningFee, serviceFee, discount, discountRate,
       tax, totalPrice, currency, specialRequests, status, paymentStatus,
       stripePaymentIntentId, cancelledAt, cancelReason, createdAt, updatedAt)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   `).bind(id, data.bookingNumber, data.propertyId, data.userId, data.checkIn, data.checkOut,
-    data.nights, data.guests, data.guestName, data.guestEmail, data.guestPhone,
+    data.nights, data.stayType, data.unitCount, data.unitRate, data.guests, data.guestName, data.guestEmail, data.guestPhone,
     data.basePrice, data.cleaningFee, data.serviceFee, data.discount, data.discountRate,
     data.tax, data.totalPrice, data.currency, data.specialRequests, data.status,
     data.paymentStatus, data.stripePaymentIntentId, data.cancelledAt, data.cancelReason, now, now).run();
@@ -253,7 +253,7 @@ async function handleCreateBooking(env: Env, request: Request, userId: string): 
   const body = await request.json() as {
     propertyId?: string; checkIn?: string; checkOut?: string;
     guests?: number; guestName?: string; guestEmail?: string;
-    guestPhone?: string; specialRequests?: string;
+    guestPhone?: string; specialRequests?: string; stayType?: string; unitCount?: number; unitRate?: number;
   };
 
   const { propertyId, checkIn, checkOut, guests } = body;
@@ -271,8 +271,13 @@ async function handleCreateBooking(env: Env, request: Request, userId: string): 
   if (!dateValidation.valid) return apiError(dateValidation.error || '日期无效', 400, 'INVALID_DATES');
 
   const nights = Math.round((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / 86400000);
+  const stayTypeRaw = String(body.stayType || 'NIGHTLY').toUpperCase();
+  const stayType = (['NIGHTLY', 'MONTHLY', 'QUARTERLY', 'YEARLY'].includes(stayTypeRaw) ? stayTypeRaw : 'NIGHTLY') as BookingRow['stayType'];
+  const unitCount = Number(body.unitCount || (stayType === 'NIGHTLY' ? nights : Math.max(1, Math.ceil(nights / 30))));
+  const minUnits = stayType === 'QUARTERLY' ? 3 : stayType === 'YEARLY' ? 12 : 1;
+  if (stayType !== 'NIGHTLY' && unitCount < minUnits) return apiError('预订期限不满足最短要求', 400, 'INVALID_STAY_TYPE_DURATION');
   // Simple pricing: base price * nights, 10% service fee, 13% HST
-  const basePrice = 200; // Default nightly rate — real pricing uses property.pricePerNight
+  const basePrice = Number(body.unitRate || 200); // Default rate — real pricing uses property stay-type rates
   const serviceFee = Math.round(basePrice * nights * 0.10);
   const tax = Math.round((basePrice * nights + serviceFee) * 0.13);
   const total = basePrice * nights + serviceFee + tax;
@@ -281,7 +286,7 @@ async function handleCreateBooking(env: Env, request: Request, userId: string): 
     bookingNumber: generateBookingNumber(),
     propertyId,
     userId,
-    checkIn, checkOut, nights, guests: Number(guests),
+    checkIn, checkOut, nights, stayType, unitCount, unitRate: basePrice, guests: Number(guests),
     guestName: body.guestName || null,
     guestEmail: body.guestEmail || null,
     guestPhone: body.guestPhone || null,
@@ -292,7 +297,7 @@ async function handleCreateBooking(env: Env, request: Request, userId: string): 
     stripePaymentIntentId: null, cancelledAt: null, cancelReason: null,
   });
 
-  return json({ success: true, booking: { id: booking.id, bookingNumber: booking.bookingNumber, totalPrice: booking.totalPrice, currency: booking.currency } });
+  return json({ success: true, booking: { id: booking.id, bookingNumber: booking.bookingNumber, totalPrice: booking.totalPrice, currency: booking.currency, stayType: booking.stayType, unitCount: booking.unitCount, unitRate: booking.unitRate } });
 }
 
 async function handleListBookings(env: Env, _request: Request, userId: string): Promise<Response> {

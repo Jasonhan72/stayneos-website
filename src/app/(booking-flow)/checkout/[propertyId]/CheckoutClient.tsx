@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronLeft, Star, X, Plus, Minus, Shield, User } from "lucide-react";
 import { Container } from "@/components/ui";
-import { calculateBookingPrice } from "@/lib/booking";
+import { calculateBookingPrice, normalizeStayType, getDefaultStayType, stayTypeToQuery } from "@/lib/booking";
 import { useProperty } from "@/hooks/useProperties";
 import { getLocalizedTitle } from "@/components/property/PropertyCard";
 import { useI18n } from "@/lib/i18n";
@@ -63,6 +63,9 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
   const [guestName, setGuestName] = useState(searchParams.get("name") || "");
   const [guestEmail, setGuestEmail] = useState(searchParams.get("email") || "");
   const [guestPhone, setGuestPhone] = useState(searchParams.get("phone") || "");
+  const stayType = property
+    ? normalizeStayType(searchParams.get("stayType") || searchParams.get("type"), getDefaultStayType(property))
+    : normalizeStayType(searchParams.get("stayType") || searchParams.get("type"));
   const [showGuestForm, setShowGuestForm] = useState(!isAuthenticated);
 
   // Modals state
@@ -126,13 +129,11 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
   // Calculate pricing with Airbnb style breakdown
   const priceCalc =
     checkIn && checkOut
-      ? calculateBookingPrice(property, checkIn, checkOut)
+      ? calculateBookingPrice(property, checkIn, checkOut, stayType)
       : null;
 
-  const nights = priceCalc?.nights || 0;
-  const months = priceCalc?.months || 0;
   const finalPrice = priceCalc?.total || 0;
-  const isMonthly = Boolean(priceCalc?.isMonthly);
+  const isMonthly = stayType !== "NIGHTLY";
 
   const formatCurrency = (amount: number) =>
     new Intl.NumberFormat(
@@ -144,16 +145,33 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
       },
     ).format(amount);
 
-  const stayQuantityLabel = isMonthly
-    ? t("checkout.monthCount", { count: months })
-    : t("checkout.nightCount", { count: nights });
+  const unitLabel = (count: number) => {
+    if (locale === "zh") {
+      if (stayType === "NIGHTLY") return "晚";
+      if (stayType === "QUARTERLY") return "季度";
+      if (stayType === "YEARLY") return "年";
+      return "个月";
+    }
+    if (locale === "fr") {
+      if (stayType === "NIGHTLY") return count === 1 ? "nuit" : "nuits";
+      if (stayType === "QUARTERLY") return count === 1 ? "trimestre" : "trimestres";
+      if (stayType === "YEARLY") return count === 1 ? "an" : "ans";
+      return "mois";
+    }
+    if (stayType === "NIGHTLY") return count === 1 ? "night" : "nights";
+    if (stayType === "QUARTERLY") return count === 1 ? "quarter" : "quarters";
+    if (stayType === "YEARLY") return count === 1 ? "year" : "years";
+    return count === 1 ? "month" : "months";
+  };
+
+  const stayTypeLabel = () => {
+    if (locale === "zh") return stayType === "NIGHTLY" ? "短租" : stayType === "MONTHLY" ? "月租" : stayType === "QUARTERLY" ? "季租" : "年租";
+    if (locale === "fr") return stayType === "NIGHTLY" ? "Court séjour" : stayType === "MONTHLY" ? "Mensuel" : stayType === "QUARTERLY" ? "Trimestriel" : "Annuel";
+    return stayType === "NIGHTLY" ? "Short stay" : stayType === "MONTHLY" ? "Monthly stay" : stayType === "QUARTERLY" ? "Quarterly stay" : "Yearly stay";
+  };
 
   const baseRateLabel = priceCalc
-    ? `${formatCurrency(
-        isMonthly
-          ? priceCalc.ratePerMonth
-          : Math.round(priceCalc.subtotal / Math.max(nights, 1)),
-      )} × ${stayQuantityLabel}`
+    ? `${formatCurrency(priceCalc.unitRate)} × ${priceCalc.unitCount} ${unitLabel(priceCalc.unitCount)}`
     : t("booking.selectDates") || "Select dates";
 
   // Format date for display
@@ -205,6 +223,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
     params.set("checkIn", checkIn);
     params.set("checkOut", checkOut);
     params.set("amount", finalPrice.toString());
+    params.set("stayType", stayTypeToQuery(stayType));
     params.set("guestName", guestName.trim());
     params.set("guestEmail", guestEmail.trim());
     params.set("adults", adults.toString());
@@ -238,6 +257,9 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
           guestName: guestName.trim(),
           guestEmail: guestEmail.trim(),
           guestPhone: guestPhone.trim() || undefined,
+          stayType,
+          unitCount: priceCalc?.unitCount,
+          unitRate: priceCalc?.unitRate,
         }),
       });
 
@@ -344,14 +366,18 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
                 <span>-{formatCurrency(priceCalc.discount)}</span>
               </div>
             )}
-            <div className="flex justify-between gap-4">
-              <span>{t("booking.cleaningFee") || "Cleaning fee"}</span>
-              <span>{formatCurrency(priceCalc.cleaningFee)}</span>
-            </div>
-            <div className="flex justify-between gap-4">
-              <span>{t("booking.serviceFee") || "Service fee"}</span>
-              <span>{formatCurrency(priceCalc.serviceFee)}</span>
-            </div>
+            {priceCalc.cleaningFee > 0 && (
+              <div className="flex justify-between gap-4">
+                <span>{t("booking.cleaningFee") || "Cleaning fee"}</span>
+                <span>{formatCurrency(priceCalc.cleaningFee)}</span>
+              </div>
+            )}
+            {priceCalc.serviceFee > 0 && (
+              <div className="flex justify-between gap-4">
+                <span>{t("booking.serviceFee") || "Service fee"}</span>
+                <span>{formatCurrency(priceCalc.serviceFee)}</span>
+              </div>
+            )}
             <div className="flex justify-between gap-4">
               <span>{t("checkout.taxesHst") || "Taxes (13% HST)"}</span>
               <span>{formatCurrency(priceCalc.tax)}</span>
@@ -443,6 +469,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
                     {t("booking.dates") || "Dates"}
                   </h3>
                   <p className="text-neutral-600 mt-0.5">{formatDateRange()}</p>
+                  <p className="mt-1 text-sm text-neutral-500">{stayTypeLabel()}</p>
                   {isMonthly && property.monthlyDiscount && (
                     <p className="text-sm text-rose-600 font-medium mt-1">
                       {t("properties.monthlyDiscount", {

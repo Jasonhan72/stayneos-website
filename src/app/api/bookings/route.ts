@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUserFromRequest } from '@/lib/auth';
 import { userDb, getDb } from '@/lib/d1';
 import { bookingDb } from '@/lib/booking-db';
-import { validateBookingDates, generateBookingNumber, calculateBookingPrice } from '@/lib/booking';
+import { validateBookingDates, generateBookingNumber, calculateBookingPrice, normalizeStayType, getStayTypeMinimumUnits } from '@/lib/booking';
 import { paymentDb } from '@/lib/payment-db';
 import { apiError } from '@/lib/api/response';
 import { checkRateLimit } from '@/lib/security/rate-limit';
@@ -26,6 +26,9 @@ function normalizeBookingRow<T extends Record<string, unknown>>(row: T) {
     totalPrice: Number((r.totalPrice as number) ?? (r.total_price as number) ?? 0),
     paymentStatus: (r.paymentStatus as string) || (r.payment_status as string) || 'PENDING',
     status: (r.status as string) || 'PENDING',
+    stayType: (r.stayType as string) || 'NIGHTLY',
+    unitCount: Number((r.unitCount as number) ?? (r.nights as number) ?? 0),
+    unitRate: Number((r.unitRate as number) ?? 0),
   };
 }
 
@@ -91,6 +94,7 @@ export async function POST(request: NextRequest) {
     const db = getDb();
     const body = await request.json();
     const { propertyId, checkIn, checkOut, guests, guestName, guestEmail, guestPhone, specialRequests } = body;
+    const stayType = normalizeStayType(body.stayType, propertyId ? undefined : 'nightly');
 
     if (!propertyId || !checkIn || !checkOut || !guests) return apiError('请填写所有必填字段', 400, 'VALIDATION_ERROR');
 
@@ -100,10 +104,15 @@ export async function POST(request: NextRequest) {
     const user = await userDb.findByEmail(db, currentUser.email);
     if (!user) return apiError('用户不存在', 404, 'USER_NOT_FOUND');
 
-    const dateValidation = validateBookingDates(checkIn, checkOut, property.minNights);
+    const dateValidation = validateBookingDates(checkIn, checkOut, property.minNights, stayType);
     if (!dateValidation.valid) return apiError(dateValidation.error || '日期无效', 400, 'INVALID_DATES');
 
-    const priceCalc = calculateBookingPrice(property, checkIn, checkOut);
+    const priceCalc = calculateBookingPrice(property, checkIn, checkOut, stayType);
+    const requestedUnitCount = Number(body.unitCount || priceCalc.unitCount);
+    const requestedUnitRate = Number(body.unitRate || priceCalc.unitRate);
+    if (stayType !== 'NIGHTLY' && requestedUnitCount < getStayTypeMinimumUnits(stayType)) {
+      return apiError('预订期限不满足最短要求', 400, 'INVALID_STAY_TYPE_DURATION');
+    }
     const booking = await bookingDb.create(db, {
       bookingNumber: generateBookingNumber(),
       propertyId,
@@ -111,6 +120,9 @@ export async function POST(request: NextRequest) {
       checkIn,
       checkOut,
       nights: priceCalc.nights,
+      stayType: priceCalc.stayType,
+      unitCount: requestedUnitCount,
+      unitRate: requestedUnitRate,
       guests: Number(guests),
       guestName: guestName || user.name,
       guestEmail: guestEmail || user.email,
@@ -136,6 +148,9 @@ export async function POST(request: NextRequest) {
       bookingNumber: booking.bookingNumber,
       totalPrice: booking.totalPrice,
       currency: booking.currency,
+      stayType: booking.stayType,
+      unitCount: booking.unitCount,
+      unitRate: booking.unitRate,
     };
 
     await sendBookingReceived({

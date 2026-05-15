@@ -9,6 +9,9 @@ export interface Booking {
   checkIn: string;
   checkOut: string;
   nights: number;
+  stayType: 'NIGHTLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
+  unitCount: number;
+  unitRate: number;
   guests: number;
   guestName: string | null;
   guestEmail: string | null;
@@ -55,16 +58,16 @@ export const bookingDb = {
     await db
       .prepare(`
         INSERT INTO Booking (
-          id, bookingNumber, propertyId, userId, checkIn, checkOut, nights, guests,
+          id, bookingNumber, propertyId, userId, checkIn, checkOut, nights, stayType, unitCount, unitRate, guests,
           guestName, guestEmail, guestPhone, basePrice, cleaningFee, serviceFee,
           discount, discountRate, tax, totalPrice, currency, specialRequests,
           status, paymentStatus, stripePaymentIntentId, cancelledAt, cancelReason,
           createdAt, updatedAt
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `)
       .bind(
         id, data.bookingNumber, data.propertyId, data.userId, data.checkIn, data.checkOut,
-        data.nights, data.guests, data.guestName, data.guestEmail, data.guestPhone,
+        data.nights, data.stayType, data.unitCount, data.unitRate, data.guests, data.guestName, data.guestEmail, data.guestPhone,
         data.basePrice, data.cleaningFee, data.serviceFee, data.discount, data.discountRate,
         data.tax, data.totalPrice, data.currency, data.specialRequests, data.status,
         data.paymentStatus, data.stripePaymentIntentId, data.cancelledAt, data.cancelReason,
