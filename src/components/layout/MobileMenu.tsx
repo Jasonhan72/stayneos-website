@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { X, User, Home, Heart, KeyRound, Building2, Phone, ChevronRight, Info } from "lucide-react";
+import { X, User, Home, Heart, KeyRound, Building2, ChevronRight, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/context/UserContext";
 import { useI18n } from "@/lib/i18n";
@@ -73,7 +73,6 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     { label: t("nav.properties") || "Properties", href: "/properties", icon: Home },
     { label: t("nav.business"), href: "/for-business", icon: Building2 },
     { label: t("nav.about") || "About Us", href: "/about", icon: Info },
-    { label: t("nav.contact"), href: "/contact", icon: Phone },
   ];
 
   if (showLangCurrency) {
@@ -338,17 +337,6 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   <ChevronRight className="w-5 h-5 text-neutral-400" />
                 </Link>
 
-                <Link
-                  href="/contact"
-                  onClick={onClose}
-                  className="flex items-center justify-between py-4 border-b border-neutral-100"
-                >
-                  <div className="flex items-center gap-4">
-                    <Phone className="w-5 h-5 text-neutral-600" />
-                    <span className="text-neutral-800">{t("nav.contact")}</span>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-neutral-400" />
-                </Link>
               </div>
 
               {/* Log out */}

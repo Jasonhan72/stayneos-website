@@ -36,7 +36,6 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
     { href: "/properties", label: t("nav.properties") },
     { href: "/for-business", label: t("nav.business") },
     { href: "/about", label: t("nav.about") },
-    { href: "/contact", label: t("nav.contact") },
   ];
 
   const bgStyles = {
