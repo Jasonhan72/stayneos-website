@@ -469,6 +469,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
                     {t("booking.dates") || "Dates"}
                   </h3>
                   <p className="text-neutral-600 mt-0.5">{formatDateRange()}</p>
+                  <p className="mt-1 text-sm text-neutral-500">{stayTypeLabel()}</p>
                   {isMonthly && property.monthlyDiscount && (
                     <p className="text-sm text-rose-600 font-medium mt-1">
                       {t("properties.monthlyDiscount", {
