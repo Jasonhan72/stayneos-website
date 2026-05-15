@@ -5,7 +5,7 @@ import { getDb, userDb } from "@/lib/d1";
 import { bookingDb } from "@/lib/booking-db";
 import { paymentDb } from "@/lib/payment-db";
 import { type PropertyRecord, toPublicProperty } from "@/lib/property-db";
-import { sendPaymentConfirmed } from "@/lib/email";
+import { sendHostNewReservation, sendPaymentConfirmed } from "@/lib/email";
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 const isDev = process.env.NODE_ENV !== "production";
@@ -119,6 +119,12 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
         locale: (user as { locale?: string | null } | null)?.locale,
         paidAmount: paymentIntent.amount_received / 100,
       });
+
+      try {
+        await sendHostNewReservation(booking, property);
+      } catch (error) {
+        console.error("[email] Failed to queue host new reservation email:", error);
+      }
     } else {
       console.warn("[email] Property not found for payment confirmation email", booking.propertyId);
     }

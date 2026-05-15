@@ -1,6 +1,7 @@
 import { sendEmail } from './client';
 import { bookingReceivedTemplate } from './templates/booking-received';
 import { paymentConfirmedTemplate } from './templates/payment-confirmed';
+import { hostNewReservationTemplate } from './templates/host-new-reservation';
 import type { EmailBooking, EmailProperty } from './templates/shared';
 
 export { sendEmail, type EmailPayload } from './client';
@@ -48,6 +49,22 @@ export async function sendPaymentConfirmed(input: {
     return await sendEmail({ to: [to], ...message });
   } catch (error) {
     console.error('[email] Failed to send payment confirmed email:', error);
+    return false;
+  }
+}
+
+
+export async function sendHostNewReservation(
+  booking: EmailBooking,
+  property: EmailProperty
+): Promise<boolean> {
+  const to = process.env.HOST_NOTIFICATION_EMAIL || 'host@neos.rentals';
+
+  try {
+    const message = hostNewReservationTemplate({ booking, property });
+    return await sendEmail({ to: [to], ...message });
+  } catch (error) {
+    console.error('[email] Failed to send host new reservation email:', error);
     return false;
   }
 }
