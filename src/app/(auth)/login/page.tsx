@@ -11,17 +11,17 @@ export const metadata: Metadata = {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ callbackUrl?: string; callback?: string; redirect?: string }>;
+  searchParams?: Promise<{ callbackUrl?: string; callback?: string; redirect?: string; next?: string }>;
 }) {
   const resolvedSearchParams = await searchParams;
-  const callbackUrl = resolvedSearchParams?.redirect || resolvedSearchParams?.callbackUrl || resolvedSearchParams?.callback || '/';
+  const callbackUrl = resolvedSearchParams?.redirect || resolvedSearchParams?.callbackUrl || resolvedSearchParams?.callback || resolvedSearchParams?.next || '/';
 
   return (
     <div className="min-h-screen flex">
-      <div className="hidden lg:flex lg:w-[55%] relative">
+      <div className="hidden lg:flex lg:w-[55%] relative min-h-screen">
         <ResponsiveImage src="/images/cooper-55-e98a880d.jpg" alt="Toronto skyline view from a NEOS property" fill className="object-cover" priority={true} />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
-        <div className="relative z-10 flex flex-col justify-between h-full p-12">
+        <div className="absolute inset-0 z-10 flex flex-col justify-between p-12">
           <div>
             <Link href="/" className="inline-block">
               <ResponsiveImage src="/logo.png" alt="NEOS" width={180} height={60} className="h-14 w-auto object-contain brightness-0 invert" priority={true} />
