@@ -1,0 +1,21 @@
+# stayneos-payments — Stripe webhook + payment intent worker
+name = "stayneos-payments-staging"
+compatibility_date = "2026-02-06"
+compatibility_flags = ["nodejs_compat"]
+main = "src/index.ts"
+
+# ── D1 database (shared with main worker) ──
+[[d1_databases]]
+binding = "DB"
+database_name = "stayneos-db"
+database_id = "f667afae-6f66-4e4a-960a-37096eabdf03"
+
+# ── R2 bucket (shared with main worker, used if image receipts added later) ──
+[[r2_buckets]]
+bucket_name = "stayneos-images"
+binding = "IMAGES"
+
+# ── Secrets (set via `wrangler secret put <name>`) ──
+# STRIPE_SECRET_KEY
+# STRIPE_WEBHOOK_SECRET
+# NEXTAUTH_SECRET   (for JWT verification in auth checks)

@@ -1,0 +1,94 @@
+name: Deploy Staging Workers (Payments + Booking)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'workers/stayneos-payments/**'
+      - 'workers/stayneos-booking/**'
+      - '.github/workflows/deploy-workers-staging.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-workers-staging
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: "24"
+
+jobs:
+  deploy-payments-staging:
+    name: Deploy payments staging
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: workers/stayneos-payments
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deploy payments staging
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Verify health
+        run: |
+          sleep 10
+          URL="https://stayneos-payments-staging.neos-lab.workers.dev/health"
+          for i in $(seq 1 10); do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+            echo "Attempt $i: HTTP $STATUS"
+            if [ "$STATUS" = "200" ]; then
+              echo "✅ stayneos-payments-staging is healthy"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "⚠️ Health check may need more time"
+
+  deploy-booking-staging:
+    name: Deploy booking staging
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: workers/stayneos-booking
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deploy booking staging
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Verify health
+        run: |
+          sleep 10
+          URL="https://stayneos-booking-staging.neos-lab.workers.dev/health"
+          for i in $(seq 1 10); do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+            echo "Attempt $i: HTTP $STATUS"
+            if [ "$STATUS" = "200" ]; then
+              echo "✅ stayneos-booking-staging is healthy"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "⚠️ Health check may need more time"

@@ -25,10 +25,22 @@ npx wrangler pages deploy dist --project-name=stayneos
 ```
 
 ## 🛠️ Tech Stack
-- Next.js 14 + TypeScript
+- Next.js 15 + TypeScript
 - Tailwind CSS
 - React Context (i18n)
-- Cloudflare Pages (Hosting)
+- Cloudflare Workers (OpenNext)
+
+## 🧩 Worker Architecture
+
+The project uses multiple Cloudflare Workers:
+
+| Worker | Purpose | Docs |
+|--------|---------|------|
+| `stayneos` | Main Next.js app | (this README) |
+| `stayneos-payments` | Stripe webhook + payment API | [docs/workers.md](docs/workers.md) |
+| `stayneos-booking` | Booking CRUD API | [docs/workers.md](docs/workers.md) |
+
+See [docs/workers.md](docs/workers.md) for full worker documentation, deployment steps, and traffic switch plan.
 
 ## 🌍 Features
 - Multi-language support (EN/FR/ZH)
@@ -52,21 +64,25 @@ npm run dev
 # Build
 npm run build
 
-# Deploy
+# Deploy main worker
 npm run deploy
 ```
 
 ## 📁 Project Structure
 ```
 stayneos-web/
-├── .github/workflows/    # CI/CD automation
-├── messages/             # i18n translations
-├── public/images/        # Property photos
+├── .github/workflows/      # CI/CD automation
+├── docs/workers.md         # Worker architecture docs
+├── messages/               # i18n translations
+├── public/images/          # Property photos
+├── workers/                # Independent Cloudflare Workers
+│   ├── stayneos-payments/  # Stripe webhook + payment API
+│   └── stayneos-booking/   # Booking CRUD API
 ├── src/
-│   ├── app/             # Next.js pages
-│   ├── components/      # React components
-│   └── lib/             # Utilities & i18n
-└── dist/                # Build output
+│   ├── app/                # Next.js pages
+│   ├── components/         # React components
+│   └── lib/                # Utilities & i18n
+└── dist/                   # Build output
 ```
 
 ## 🔑 API Tokens Required
@@ -81,6 +97,3 @@ stayneos-web/
 <!-- Preview deploy verified: 2026-05-14T06:13:15Z -->
 <!-- preview final verify 2026-05-14T06:23:37Z -->
 <!-- preview deploy v3: 2026-05-14T06:33:11Z -->
-# StayNeos Website
-
-Branch protection verification test PR.

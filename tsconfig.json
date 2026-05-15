@@ -42,6 +42,7 @@
     "jest.setup.tsx",
     "playwright.config.ts",
     "src/worker.ts",
+    "workers",
     "**/*.test.ts",
     "**/*.test.tsx",
     "**/*.spec.ts",

@@ -45,3 +45,8 @@ WEB_SEARCH_IMPLEMENTATION.md
 # Airbnb reference screenshots (local dev only)
 docs/ref/
 public/videos/*.original.*
+
+# Independent workers
+workers/*/node_modules
+workers/*/dist
+workers/*/.wrangler
