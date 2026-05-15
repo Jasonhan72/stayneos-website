@@ -96,7 +96,7 @@ export default function ResponsiveImage({
   // Filter out next/image-only props that <img> doesn't understand.
   const {
     quality: _q,
-    fill: _f,
+    fill,
     placeholder: _p,
     blurDataURL: _b,
     onLoadingComplete: _olc,
@@ -104,8 +104,18 @@ export default function ResponsiveImage({
     ...imgProps
   } = rest as Record<string, unknown>;
 
+  // When fill is used, the image must absolutely cover the parent container.
+  const fillStyle = fill
+    ? { position: 'absolute' as const, width: '100%', height: '100%' }
+    : {};
+  const combinedStyle = fill
+    ? { ...fillStyle, ...(placeholderStyle as Record<string, unknown>) }
+    : placeholderStyle;
+  const fillClass = fill ? 'absolute inset-0 w-full h-full' : '';
+  const resolvedClassName = [className, fillClass].filter(Boolean).join(' ');
+
   return (
-    <picture>
+    <picture className={fill ? 'absolute inset-0' : undefined}>
       {avif ? <source type="image/avif" srcSet={avif} sizes={sizes} /> : null}
       {webp ? <source type="image/webp" srcSet={webp} sizes={sizes} /> : null}
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -119,8 +129,8 @@ export default function ResponsiveImage({
         loading={priority ? 'eager' : (loading ?? 'lazy')}
         decoding="async"
         fetchPriority={priority ? 'high' : 'auto'}
-        className={className}
-        style={placeholderStyle}
+        className={resolvedClassName}
+        style={combinedStyle}
         {...(imgProps as Record<string, unknown>)}
       />
     </picture>
