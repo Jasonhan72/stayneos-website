@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useI18n, type Locale } from "@/lib/i18n";
 
@@ -56,8 +56,8 @@ export function LanguageCurrencySelector({ variant = "light" }: LanguageCurrency
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        {/* Flag Icon */}
-        <span className="text-xl">{selectedLang.flag}</span>
+        {/* Globe Icon */}
+        <Globe className="w-5 h-5" />
         <span className="text-sm font-medium">
           {selectedLang.code}, {selectedCurrency.symbol}
         </span>
