@@ -8,8 +8,8 @@ StayNeos uses a monorepo with multiple Cloudflare Workers:
 |--------|--------|---------|-------|
 | `stayneos` (main) | ✅ Production | Full Next.js app via OpenNext | `stayneos.com` |
 | `stayneos-preview` | ✅ Staging | PR preview deployments | `stayneos-preview.neos-lab.workers.dev` |
-| `stayneos-payments-staging` | 🚧 Staging | Stripe webhook + payment API | `stayneos-payments-staging.YOUR_SUBDOMAIN.workers.dev` |
-| `stayneos-booking-staging` | 🚧 Staging | Booking CRUD API | `stayneos-booking-staging.YOUR_SUBDOMAIN.workers.dev` |
+| `stayneos-payments-staging` | 🚧 Staging | Stripe webhook + payment API | `stayneos-payments-staging.neos-lab.workers.dev` |
+| `stayneos-booking-staging` | 🚧 Staging | Booking CRUD API | `stayneos-booking-staging.neos-lab.workers.dev` |
 | `stayneos-payments` | 📋 Planned | Production payments worker | TBD |
 | `stayneos-booking` | 📋 Planned | Production booking worker | TBD |
 
@@ -88,11 +88,11 @@ Go to GitHub Actions → "Deploy Staging Workers" → "Run workflow"
 
 ```bash
 # Payments staging
-curl https://stayneos-payments-staging.YOUR_SUBDOMAIN.workers.dev/health
+curl https://stayneos-payments-staging.neos-lab.workers.dev/health
 # → {"ok":true,"service":"stayneos-payments","ts":"..."}
 
 # Booking staging
-curl https://stayneos-booking-staging.YOUR_SUBDOMAIN.workers.dev/health
+curl https://stayneos-booking-staging.neos-lab.workers.dev/health
 # → {"ok":true,"service":"stayneos-booking","ts":"..."}
 ```
 
@@ -101,7 +101,7 @@ curl https://stayneos-booking-staging.YOUR_SUBDOMAIN.workers.dev/health
 ```bash
 # Test that the webhook endpoint exists (will return 400 without valid Stripe signature)
 curl -s -o /dev/null -w "%{http_code}" \
-  -X POST https://stayneos-payments-staging.YOUR_SUBDOMAIN.workers.dev/api/payments/webhook
+  -X POST https://stayneos-payments-staging.neos-lab.workers.dev/api/payments/webhook
 # → 400 (MISSING_SIGNATURE) — correct behavior
 ```
 
@@ -110,11 +110,11 @@ curl -s -o /dev/null -w "%{http_code}" \
 ```bash
 # Test auth requirement
 curl -s -o /dev/null -w "%{http_code}" \
-  https://stayneos-booking-staging.YOUR_SUBDOMAIN.workers.dev/api/bookings
+  https://stayneos-booking-staging.neos-lab.workers.dev/api/bookings
 # → 401 (UNAUTHORIZED) — correct behavior
 
 # Test with user header
-curl -s https://stayneos-booking-staging.YOUR_SUBDOMAIN.workers.dev/api/bookings \
+curl -s https://stayneos-booking-staging.neos-lab.workers.dev/api/bookings \
   -H "X-StayNeos-User-Id: YOUR_TEST_USER_ID"
 ```
 
