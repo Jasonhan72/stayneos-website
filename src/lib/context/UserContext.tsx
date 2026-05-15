@@ -65,6 +65,22 @@ const defaultPreferences: UserPreferences = {
 
 const USER_KEY = "stayneos_user_data";
 
+/** Strip sensitive fields before persisting to localStorage.
+ *  localStorage is accessible to JS (XSS risk), so keep only display fields. */
+function toStorageProfile(user: UserProfile): Partial<UserProfile> {
+  return {
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    name: user.name,
+    avatar: user.avatar,
+    image: user.image,
+    preferences: user.preferences,
+    memberSince: user.memberSince,
+    memberLevel: user.memberLevel,
+  };
+}
+
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 function normalizeString(value: unknown): string | undefined {
@@ -176,7 +192,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
           const parsedUser = normalizeUserProfile(JSON.parse(storedUser));
           if (parsedUser) {
             setUser(parsedUser);
-            localStorage.setItem(USER_KEY, JSON.stringify(parsedUser));
+            localStorage.setItem(USER_KEY, JSON.stringify(toStorageProfile(parsedUser)));
             return;
           }
           localStorage.removeItem(USER_KEY);
@@ -193,7 +209,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
           if (data?.user) {
             const profile = toUserProfile(data.user);
             setUser(profile);
-            localStorage.setItem(USER_KEY, JSON.stringify(profile));
+            localStorage.setItem(USER_KEY, JSON.stringify(toStorageProfile(profile)));
           }
         }
       } catch (error) {
@@ -292,7 +308,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       nextUser.preferences = user.preferences;
       nextUser.memberSince = user.memberSince;
       nextUser.memberLevel = user.memberLevel;
-      localStorage.setItem(USER_KEY, JSON.stringify(nextUser));
+      localStorage.setItem(USER_KEY, JSON.stringify(toStorageProfile(nextUser)));
       setUser(nextUser);
     } finally {
       setIsLoading(false);
@@ -315,7 +331,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
             },
           },
         };
-        localStorage.setItem(USER_KEY, JSON.stringify(updated));
+        localStorage.setItem(USER_KEY, JSON.stringify(toStorageProfile(updated)));
         
         // Trigger locale change if language was updated
         if (prefs.language) {
@@ -325,7 +341,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
         
         return updated;
       });
-      await new Promise(resolve => setTimeout(resolve, 300));
     } finally {
       setIsLoading(false);
     }
@@ -337,10 +352,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
       setUser(prev => {
         if (!prev) return null;
         const updated = { ...prev, avatar: avatarUrl, image: avatarUrl };
-        localStorage.setItem(USER_KEY, JSON.stringify(updated));
+        localStorage.setItem(USER_KEY, JSON.stringify(toStorageProfile(updated)));
         return updated;
       });
-      await new Promise(resolve => setTimeout(resolve, 500));
     } finally {
       setIsLoading(false);
     }
@@ -378,7 +392,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
             profile.memberLevel = user.memberLevel;
           }
           setUser(profile);
-          localStorage.setItem(USER_KEY, JSON.stringify(profile));
+          localStorage.setItem(USER_KEY, JSON.stringify(toStorageProfile(profile)));
         }
       } else if (response.status === 401) {
         await logout();

@@ -91,6 +91,16 @@ const nextConfig = {
       destination: '/properties/:path*',
       permanent: true,
     },
+    {
+      source: '/wishlists',
+      destination: '/dashboard/wishlists',
+      permanent: true,
+    },
+    {
+      source: '/messages',
+      destination: '/dashboard/messages',
+      permanent: true,
+    },
   ],
 
   poweredByHeader: false,

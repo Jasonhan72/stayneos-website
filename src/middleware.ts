@@ -26,11 +26,6 @@ const PROTECTED_PREFIXES = [
   '/payment/',
 ];
 
-// Admin routes are deprecated; Host routes replace them.
-const ADMIN_ROUTES: string[] = [];
-
-const ADMIN_PREFIXES: string[] = [];
-
 // 需要 Host 角色的路由
 const HOST_PREFIXES = [
   '/host/',
@@ -97,21 +92,6 @@ function isProtectedRoute(pathname: string): boolean {
   return false;
 }
 
-// 检查是否是 Admin 路由
-function isAdminRoute(pathname: string): boolean {
-  if (ADMIN_ROUTES.includes(pathname)) {
-    return true;
-  }
-  
-  for (const prefix of ADMIN_PREFIXES) {
-    if (pathname.startsWith(prefix)) {
-      return true;
-    }
-  }
-  
-  return false;
-}
-
 // 检查是否是 Host 路由
 function isHostRoute(pathname: string): boolean {
   for (const prefix of HOST_PREFIXES) {
@@ -156,11 +136,6 @@ async function verifyToken(token: string): Promise<{ valid: boolean; payload?: J
   } catch {
     return { valid: false };
   }
-}
-
-// 检查用户是否有 Admin 权限
-function hasAdminRole(role?: string): boolean {
-  return role === 'ADMIN' || role === 'SUPER_ADMIN';
 }
 
 // 检查用户是否有 Host 权限
@@ -222,33 +197,6 @@ export async function middleware(request: NextRequest) {
       requestHeaders.set('x-user-id', userPayload.userId || '');
       requestHeaders.set('x-user-role', userPayload.role || '');
       requestHeaders.set('x-user-email', userPayload.email || '');
-    }
-  }
-  
-  // 检查 Admin 路由权限
-  if (isAdminRoute(pathname)) {
-    if (!isAuthenticated) {
-      const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('callbackUrl', pathname);
-      loginUrl.searchParams.set('error', 'admin_required');
-      
-      const response = NextResponse.redirect(loginUrl);
-      if (!request.cookies.get('stayneos_locale')?.value) {
-        response.cookies.set('stayneos_locale', locale, {
-          path: '/',
-          maxAge: 365 * 24 * 60 * 60,
-          sameSite: 'lax',
-        });
-      }
-      return response;
-    }
-    
-    const userRole = userPayload?.role;
-    if (!hasAdminRole(userRole)) {
-      // 用户已登录但没有 Admin 权限
-      const forbiddenUrl = new URL('/403', request.url);
-      const response = NextResponse.redirect(forbiddenUrl);
-      return response;
     }
   }
   
