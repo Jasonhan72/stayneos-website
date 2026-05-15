@@ -32,10 +32,19 @@ function saveLocal(ids: string[]) {
   } catch {}
 }
 
-/** Guess whether the user is signed in by looking for the auth cookie. */
+/** Check whether the user is signed in.
+ *  The auth cookie is httpOnly (invisible to JS), so we check localStorage instead.
+ *  LoginForm stores the JWT token under `stayneos_auth_token`;
+ *  UserContext stores the profile under `stayneos_user_data`. */
 function isLoggedIn(): boolean {
-  if (typeof document === 'undefined') return false;
-  return document.cookie.includes('stayneos_auth_token=');
+  if (typeof window === 'undefined') return false;
+  try {
+    if (localStorage.getItem('stayneos_user_data')) return true;
+    if (localStorage.getItem('stayneos_auth_token')) return true;
+    return false;
+  } catch {
+    return false;
+  }
 }
 
 export function WishlistProvider({ children }: { children: React.ReactNode }) {
