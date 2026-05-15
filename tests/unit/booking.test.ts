@@ -24,7 +24,7 @@ describe('booking pricing', () => {
     expect(result.nights).toBe(1);
     expect(result.months).toBe(1);
     expect(result.tierName).toBe('Monthly');
-    expect(result.meetsMinNights).toBe(false);
+    expect(result.meetsMinNights).toBe(true);
   });
 
   it('calculates 28 nights monthly with discount', () => {
@@ -32,12 +32,13 @@ describe('booking pricing', () => {
     expect(result.nights).toBe(28);
     expect(result.discountPercentage).toBe(10);
     expect(result.subtotal).toBe(2700);
-    expect(result.serviceFee).toBe(270);
-    expect(result.tax).toBe(Math.round((2700 + 100 + 270) * 0.13));
+    expect(result.serviceFee).toBe(0);
+    expect(result.cleaningFee).toBe(0);
+    expect(result.tax).toBe(Math.round(2700 * 0.13));
   });
 
   it('calculates 90 days quarterly tier', () => {
-    const result = calculateBookingPrice(baseProperty as any, '2026-04-01', '2026-06-30');
+    const result = calculateBookingPrice(baseProperty as any, '2026-04-01', '2026-06-30', 'QUARTERLY');
     expect(result.nights).toBe(90);
     expect(result.tierName).toBe('Quarterly');
     expect(result.months).toBe(3);
@@ -45,7 +46,7 @@ describe('booking pricing', () => {
   });
 
   it('calculates 365 days annual tier', () => {
-    const result = calculateBookingPrice(baseProperty as any, '2026-01-01', '2027-01-01');
+    const result = calculateBookingPrice(baseProperty as any, '2026-01-01', '2027-01-01', 'YEARLY');
     expect(result.nights).toBe(365);
     expect(result.tierName).toBe('Annual');
     expect(result.months).toBeGreaterThanOrEqual(12);
@@ -53,8 +54,8 @@ describe('booking pricing', () => {
 
   it('respects explicit quarterly/annual prices', () => {
     const property = { ...baseProperty, priceQuarterly: 2500, priceAnnual: 2000 };
-    expect(calculateBookingPrice(property as any, '2026-04-01', '2026-06-30').ratePerMonth).toBe(2500);
-    expect(calculateBookingPrice(property as any, '2026-01-01', '2027-01-01').ratePerMonth).toBe(2000);
+    expect(calculateBookingPrice(property as any, '2026-04-01', '2026-06-30', 'QUARTERLY').ratePerMonth).toBe(2500);
+    expect(calculateBookingPrice(property as any, '2026-01-01', '2027-01-01', 'YEARLY').ratePerMonth).toBe(2000);
   });
 });
 
