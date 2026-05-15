@@ -20,7 +20,6 @@ export default function Footer() {
       { label: t("footer.about"), href: "/about" },
       { label: t("footer.owners") || "For Property Owners", href: "/for-hosts" },
       { label: t("footer.agents") || "For Agents", href: "/for-agents" },
-      { label: t("footer.contact"), href: "/contact" },
     ],
     services: [
       { label: t("footer.properties") || "Properties", href: "/properties" },
