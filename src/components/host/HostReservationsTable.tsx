@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import useSWR from "swr";
 
 type Reservation = {
   id: string;
@@ -13,16 +13,20 @@ type Reservation = {
   amount: number;
 };
 
-export default function HostReservationsTable() {
-  const [rows, setRows] = useState<Reservation[]>([]);
-  const [loading, setLoading] = useState(true);
+type ReservationsResponse = {
+  reservations?: Reservation[];
+};
 
-  useEffect(() => {
-    fetch('/api/host/reservations', { credentials: 'include', cache: 'no-store' })
-      .then((r) => r.json())
-      .then((data) => setRows(data.reservations || []))
-      .finally(() => setLoading(false));
-  }, []);
+const fetcher = (url: string): Promise<ReservationsResponse> =>
+  fetch(url, { credentials: 'include', cache: 'no-store' }).then((r) => r.json());
+
+export default function HostReservationsTable() {
+  const { data, isLoading } = useSWR<ReservationsResponse>(
+    '/api/host/reservations',
+    fetcher,
+    { revalidateOnFocus: false }
+  );
+  const rows = data?.reservations ?? [];
 
   return (
     <div className="rounded-3xl border border-neutral-200 bg-white shadow-sm overflow-hidden">
@@ -42,7 +46,7 @@ export default function HostReservationsTable() {
             </tr>
           </thead>
           <tbody>
-            {loading ? (
+            {isLoading ? (
               <tr><td className="px-6 py-8 text-neutral-500" colSpan={6}>Loading…</td></tr>
             ) : rows.length === 0 ? (
               <tr><td className="px-6 py-8 text-neutral-500" colSpan={6}>No reservations found.</td></tr>
