@@ -195,7 +195,7 @@ export function HeroChatInline() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={t('aiConcierge.placeholder', 'Tell me about your Toronto plans...')}
+            placeholder={t('aiConcierge.placeholder', 'Where are you looking to stay?')}
             className="flex-1 px-5 py-4 text-gray-800 placeholder-gray-400 bg-transparent outline-none text-base"
             disabled={isLoading}
           />
@@ -221,7 +221,7 @@ export function HeroChatInline() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={t('aiConcierge.placeholder', 'Tell me about your Toronto plans...')}
+            placeholder={t('aiConcierge.placeholder', 'Where are you looking to stay?')}
             className="w-full px-4 py-3.5 text-gray-800 placeholder-gray-400 bg-transparent outline-none text-base"
             disabled={isLoading}
           />

@@ -268,9 +268,9 @@ export async function performWebSearch(query: string, maxResults = 3): Promise<s
     return searchRealtorCA(query);
   }
 
-  // General search
-  const hasLocation = /toronto|gta|ontario|canada|多伦多|vancouver|montreal/.test(lowerQuery);
-  const searchQuery = hasLocation ? query : `Toronto ${query}`;
+  // General search — detect any city, don't default to Toronto
+  const hasLocation = /toronto|gta|ontario|canada|多伦多|vancouver|montreal|ottawa|calgary|edmonton|quebec|halifax|winnipeg|seattle|portland|san\s*francisco|los\s*angeles|new\s*york|boston|chicago|austin|miami|houston|dallas|denver|phoenix|san\s*diego|london|paris|berlin|tokyo|sydney|dubai|singapore|hong\s*kong|shanghai|beijing/i.test(lowerQuery);
+  const searchQuery = hasLocation ? query : query; // Don't force Toronto — search as-is
 
   const ddgResults = await searchDuckDuckGo(searchQuery, maxResults + 2);
 
@@ -411,23 +411,47 @@ function extractFirstImage(html: string, baseUrl: string): string | undefined {
     || html.match(/<meta[^>]*name=["']twitter:image["'][^>]*content=["']([^"']+)["']/i);
   let url = og?.[1];
   if (!url) {
-    // First <img> with a decent looking src
+    // NextJS-style images (from _next/image?url=...)
+    const nextImg = html.match(/<img[^>]+src=["']([^"']*_next\/image[^"']+)["']/i);
+    url = nextImg?.[1];
+  }
+  if (!url) {
+    // data-src or lazy-loaded src
+    const dataSrc = html.match(/<img[^>]+(?:data-src|data-lazy-src|data-original)=["']([^"']+\.(?:jpe?g|png|webp)[^"']*)["']/i);
+    url = dataSrc?.[1];
+  }
+  if (!url) {
+    // Any <img> with a decent looking src (jpg/png/webp)
     const img = html.match(/<img[^>]+src=["']([^"']+\.(?:jpe?g|png|webp)[^"']*)["']/i);
     url = img?.[1];
   }
+  if (!url) {
+    // Broader: any img src with common image dimensions/hints
+    const anyImg = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+    url = anyImg?.[1];
+    // Skip tiny icons / logos / tracking pixels
+    if (url && /(?:icon|logo|avatar|pixel|tracker|badge|favicon|1x1|spacer)/i.test(url)) {
+      url = undefined;
+    }
+  }
   if (!url) return undefined;
   try {
-    return new URL(url, baseUrl).toString();
+    const resolved = new URL(url, baseUrl).toString();
+    // Skip data URIs (too small to be property images)
+    if (resolved.startsWith('data:')) return undefined;
+    return resolved;
   } catch {
     return undefined;
   }
 }
 
-// Hosts that typically list rental properties
+// Hosts that typically list rental properties (US + Canada + international)
 const PROPERTY_HOSTS = [
   'realtor.ca', 'condos.ca', 'zolo.ca', 'rentals.ca', 'rentfaster.ca',
   'kijiji.ca', 'padmapper.com', 'liv.rent', 'rentseeker.ca', 'rentboard.ca',
   'housesigma.com', 'royallepage.ca', 'remax.ca', 'zumper.com', 'apartments.com',
+  'zillow.com', 'hotpads.com', 'trulia.com', 'redfin.com', 'realtor.com',
+  'streeteasy.com', 'apartmentguide.com', 'rent.com', 'forrent.com',
 ];
 
 function looksLikePropertyHost(hostname: string): boolean {
@@ -440,14 +464,20 @@ async function fetchHtml(url: string): Promise<string> {
     const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
     const res = await fetch(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/131.0.0.0 Safari/537.36',
-        Accept: 'text/html,application/xhtml+xml',
-        'Accept-Language': 'en-CA,en-US;q=0.9',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Accept-Language': 'en-CA,en-US;q=0.9,en;q=0.8',
+        'Cache-Control': 'no-cache',
       },
       signal: controller.signal,
       redirect: 'follow',
     });
     clearTimeout(timeout);
+    if (!res.ok) return '';
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('text/html') && !contentType.includes('application/xhtml')) {
+      return '';
+    }
     return await res.text();
   } catch {
     return '';
@@ -582,11 +612,27 @@ export async function searchExternalProperties(query: string, maxResults = 3): P
     return card ? [card] : [];
   }
 
-  // 2. Build a search query biased toward rental sites
-  const hasLocation = /toronto|gta|ontario|canada|多伦多|vancouver|montreal/.test(lowerQuery);
-  const baseQuery = hasLocation ? query : `Toronto ${query}`;
-  const siteFilter = '(site:condos.ca OR site:zolo.ca OR site:rentals.ca OR site:rentfaster.ca OR site:padmapper.com OR site:liv.rent OR site:zumper.com OR site:realtor.ca)';
-  const searchQuery = `${baseQuery} rent ${siteFilter}`;
+  // 2. Detect ANY city/location in the query to avoid defaulting to Toronto
+  // Common city names (US + Canada + major international)
+  const cityPattern = /(?:in|near|around|for|at)\s+([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+){0,2})(?:\b|[,?.!])/;
+  const cityMatch = query.match(cityPattern);
+  
+  // Broader location detection: any major city mention
+  const hasLocation = /toronto|gta|ontario|canada|多伦多|vancouver|montreal|ottawa|calgary|edmonton|quebec|halifax|winnipeg|seattle|portland|san\s*francisco|los\s*angeles|new\s*york|boston|chicago|austin|miami|houston|dallas|denver|phoenix|san\s*diego|london|paris|berlin|tokyo|sydney|dubai|singapore|hong\s*kong|shanghai|beijing/i.test(lowerQuery);
+  
+  // Extract location if present, otherwise use empty (don't default to Toronto)
+  let locationPrefix = '';
+  if (hasLocation) {
+    locationPrefix = query;
+  } else if (cityMatch) {
+    locationPrefix = `${cityMatch[1]} ${query}`;
+  } else {
+    // No location detected — search as-is but add "rent" context
+    locationPrefix = query;
+  }
+  
+  const siteFilter = '(site:condos.ca OR site:zolo.ca OR site:rentals.ca OR site:rentfaster.ca OR site:padmapper.com OR site:liv.rent OR site:zumper.com OR site:realtor.ca OR site:apartments.com OR site:zillow.com OR site:hotpads.com)';
+  const searchQuery = `${locationPrefix} rent ${siteFilter}`;
 
   const ddg = await searchDuckDuckGo(searchQuery, maxResults + 4);
   if (ddg.length === 0) return [];
