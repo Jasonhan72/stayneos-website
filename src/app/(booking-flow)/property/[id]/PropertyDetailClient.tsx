@@ -24,6 +24,8 @@ import { ReviewAndContinue, PaymentMethod, GuestSelector, type GuestCounts } fro
 // CardDetailsForm removed - PCI compliance: all card input handled by Stripe Elements
 import { useI18n } from '@/lib/i18n';
 import { useWishlist } from '@/lib/context/WishlistContext';
+import { useAuth } from '@/lib/context/UserContext';
+import { LoginModal } from '@/components/auth/LoginModal';
 import { useCurrency } from '@/hooks/useCurrency';
 import { useProperty } from '@/hooks/useProperties';
 import { PropertyCardData } from '@/types';
@@ -184,6 +186,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
   const { formatPrice: fp } = useCurrency();
   const router = useRouter();
   const { property, isLoading, error } = useProperty(propertyId);
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { isWishlisted, toggleWishlist } = useWishlist();
@@ -216,6 +219,8 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
   const [showGuestSelector, setShowGuestSelector] = useState(false);
   const [showPaymentNotice, setShowPaymentNotice] = useState<string | null>(null);
   const [bookingError, setBookingError] = useState<string>('');
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [pendingCheckoutUrl, setPendingCheckoutUrl] = useState<string | null>(null);
   
   // Guest breakdown state for GuestSelector
   const [guestBreakdown, setGuestBreakdown] = useState<GuestCounts>({
@@ -333,6 +338,24 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
     return { monthly, quarterly, annual };
   })();
 
+  const buildCheckoutUrl = () => {
+    const params = new URLSearchParams({
+      checkIn,
+      checkOut,
+      guests: guests.toString(),
+      adults: guestBreakdown.adults.toString(),
+      children: guestBreakdown.children.toString(),
+      infants: guestBreakdown.infants.toString(),
+    });
+    return `/checkout/${propertyId}?${params.toString()}`;
+  };
+
+  const continueToCheckout = () => {
+    const checkoutUrl = pendingCheckoutUrl || buildCheckoutUrl();
+    setPendingCheckoutUrl(null);
+    router.push(checkoutUrl);
+  };
+
   const handleCheckAvailability = () => {
     if (!checkIn || !checkOut) {
       setBookingError(t('booking.validation.selectDates', 'Please select check-in and check-out dates'));
@@ -357,18 +380,15 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
     }
 
     setBookingError('');
-    // Send guests directly to the active checkout route.
-    // /booking/[id] is a legacy protected redirect, so using it here sends
-    // unauthenticated guests to /login before checkout can open.
-    const params = new URLSearchParams({
-      checkIn,
-      checkOut,
-      guests: guests.toString(),
-      adults: guestBreakdown.adults.toString(),
-      children: guestBreakdown.children.toString(),
-      infants: guestBreakdown.infants.toString(),
-    });
-    router.push(`/checkout/${propertyId}?${params.toString()}`);
+    const checkoutUrl = buildCheckoutUrl();
+
+    if (isAuthLoading || !isAuthenticated) {
+      setPendingCheckoutUrl(checkoutUrl);
+      setShowLoginModal(true);
+      return;
+    }
+
+    router.push(checkoutUrl);
   };
 
   // 获取图片 URL 列表 - 使用可选链避免条件调用 hook
@@ -979,6 +999,14 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
           </button>
         </div>
       </div>
+
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onSuccess={continueToCheckout}
+        callbackUrl={pendingCheckoutUrl || buildCheckoutUrl()}
+        reason="reserve"
+      />
 
       {/* Calendar Modal */}
       {showCalendar && (

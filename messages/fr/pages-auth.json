@@ -59,7 +59,14 @@
     "passwordStrengthLength": "Au moins 8 caractères",
     "passwordStrengthUpper": "Une lettre majuscule",
     "passwordStrengthLower": "Une lettre minuscule",
-    "passwordStrengthNumber": "Un chiffre"
+    "passwordStrengthNumber": "Un chiffre",
+    "appleComingSoon": "Continuer avec Apple (bientôt)",
+    "modal": {
+      "reserveTitle": "Connectez-vous pour confirmer votre réservation",
+      "wishlistTitle": "Connectez-vous pour enregistrer ce logement",
+      "messageTitle": "Connectez-vous pour contacter NEOS",
+      "signupTitle": "Créer votre compte NEOS"
+    }
   },
   "login": "Connexion",
   "register": "S'inscrire",

@@ -59,7 +59,14 @@
     "passwordStrengthLength": "至少 8 个字符",
     "passwordStrengthUpper": "包含一个大写字母",
     "passwordStrengthLower": "包含一个小写字母",
-    "passwordStrengthNumber": "包含一个数字"
+    "passwordStrengthNumber": "包含一个数字",
+    "appleComingSoon": "使用 Apple 登录（即将推出）",
+    "modal": {
+      "reserveTitle": "登录以确认您的预订",
+      "wishlistTitle": "登录以收藏此房源",
+      "messageTitle": "登录以联系 NEOS",
+      "signupTitle": "创建您的 NEOS 账户"
+    }
   },
   "login": "登录",
   "register": "注册",
