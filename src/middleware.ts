@@ -7,13 +7,13 @@ export type Locale = 'en' | 'fr' | 'zh';
 export type UserRole = 'GUEST' | 'HOST' | 'ADMIN' | 'SUPER_ADMIN';
 
 // 需要保护的路由
+// Note: /wishlists and /messages are redirected to /dashboard/* by middleware
+// before auth check, so they don't need to be listed here.
 const PROTECTED_ROUTES = [
   '/dashboard',
   '/account',
   '/host',
   '/bookings',
-  '/wishlists',
-  '/messages',
   '/checkout',
 ];
 
@@ -184,6 +184,21 @@ export async function middleware(request: NextRequest) {
   }
 
   const { pathname } = request.nextUrl;
+
+  // Route dedup: redirect old flat routes to /dashboard equivalents.
+  // Page-level redirect() is unreliable in OpenNext + Cloudflare Workers,
+  // so these are handled at the middleware edge.
+  const ROUTE_REDIRECTS: Record<string, string> = {
+    '/wishlists': '/dashboard/wishlists',
+    '/messages': '/dashboard/messages',
+  };
+  const redirectTarget = ROUTE_REDIRECTS[pathname];
+  if (redirectTarget) {
+    const url = request.nextUrl.clone();
+    url.pathname = redirectTarget;
+    return NextResponse.redirect(url, 308);
+  }
+
   const locale = detectLocale(request);
   
   // Clone the request headers
