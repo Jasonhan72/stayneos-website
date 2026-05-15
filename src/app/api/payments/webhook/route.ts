@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
-import { getDb } from "@/lib/d1";
+import { getDb, userDb } from "@/lib/d1";
 import { bookingDb } from "@/lib/booking-db";
 import { paymentDb } from "@/lib/payment-db";
+import { type PropertyRecord, toPublicProperty } from "@/lib/property-db";
+import { sendPaymentConfirmed } from "@/lib/email";
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 const isDev = process.env.NODE_ENV !== "production";
@@ -19,6 +21,15 @@ const debugError = (..._args: unknown[]) => {
 
 export function generateStaticParams() {
   return [];
+}
+
+async function findPropertyForEmail(db: D1Database, propertyId: string) {
+  const row = await db
+    .prepare("SELECT * FROM Property WHERE id = ? OR slug = ? LIMIT 1")
+    .bind(propertyId, propertyId)
+    .first<PropertyRecord>();
+
+  return row ? toPublicProperty(row) : null;
 }
 
 export async function POST(request: NextRequest) {
@@ -90,6 +101,30 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
     cardLast4: charge?.payment_method_details?.card?.last4 || null,
     paidAt: new Date().toISOString(),
   });
+
+  try {
+    const booking = await bookingDb.findById(db, bookingId);
+    if (!booking) return;
+
+    const [user, property] = await Promise.all([
+      userDb.findById(db, booking.userId),
+      findPropertyForEmail(db, booking.propertyId),
+    ]);
+
+    if (property) {
+      await sendPaymentConfirmed({
+        booking,
+        property,
+        userEmail: user?.email,
+        locale: (user as { locale?: string | null } | null)?.locale,
+        paidAmount: paymentIntent.amount_received / 100,
+      });
+    } else {
+      console.warn("[email] Property not found for payment confirmation email", booking.propertyId);
+    }
+  } catch (error) {
+    console.error("[email] Failed to queue payment confirmation email:", error);
+  }
 }
 
 async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {

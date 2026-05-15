@@ -1,57 +1,64 @@
-/**
- * Email notification helper using Resend API.
- * Requires RESEND_API_KEY as a Cloudflare Workers secret.
- * Falls back silently if not configured (inquiry still saved to D1).
- */
+import { sendEmail } from './client';
+import { bookingReceivedTemplate } from './templates/booking-received';
+import { paymentConfirmedTemplate } from './templates/payment-confirmed';
+import type { EmailBooking, EmailProperty } from './templates/shared';
 
-const RESEND_API_URL = 'https://api.resend.com/emails';
+export { sendEmail, type EmailPayload } from './client';
 
-interface EmailPayload {
-  to: string[];
-  subject: string;
-  html: string;
-  replyTo?: string;
+function getRecipient(booking: EmailBooking, userEmail?: string | null): string | null {
+  return booking.guestEmail || userEmail || null;
 }
 
-export async function sendEmail(payload: EmailPayload): Promise<boolean> {
-  const apiKey = process.env.RESEND_API_KEY;
-  const fromEmail = process.env.RESEND_FROM_EMAIL || 'hello@stayneos.com';
-
-  if (!apiKey) {
-    if (process.env.NODE_ENV !== 'production') console.warn('[email] RESEND_API_KEY not set, skipping email notification');
+export async function sendBookingReceived(input: {
+  booking: EmailBooking;
+  property: EmailProperty;
+  userEmail?: string | null;
+  locale?: string | null;
+}): Promise<boolean> {
+  const to = getRecipient(input.booking, input.userEmail);
+  if (!to) {
+    console.warn('[email] No recipient for booking received email', input.booking.id);
     return false;
   }
 
   try {
-    const res = await fetch(RESEND_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        from: `NEOS <${fromEmail}>`,
-        to: payload.to,
-        subject: payload.subject,
-        html: payload.html,
-        reply_to: payload.replyTo,
-      }),
-    });
-
-    if (!res.ok) {
-      const err = await res.text();
-      if (process.env.NODE_ENV !== 'production') console.error('[email] Resend error:', res.status, err);
-      return false;
-    }
-
-    return true;
+    const message = bookingReceivedTemplate(input);
+    return await sendEmail({ to: [to], ...message });
   } catch (error) {
-    if (process.env.NODE_ENV !== 'production') console.error('[email] Failed to send:', error);
+    console.error('[email] Failed to send booking received email:', error);
     return false;
   }
 }
 
-/** Notify admin about a new inquiry/contact submission */
+export async function sendPaymentConfirmed(input: {
+  booking: EmailBooking;
+  property: EmailProperty;
+  userEmail?: string | null;
+  locale?: string | null;
+  paidAmount?: number | null;
+}): Promise<boolean> {
+  const to = getRecipient(input.booking, input.userEmail);
+  if (!to) {
+    console.warn('[email] No recipient for payment confirmed email', input.booking.id);
+    return false;
+  }
+
+  try {
+    const message = paymentConfirmedTemplate(input);
+    return await sendEmail({ to: [to], ...message });
+  } catch (error) {
+    console.error('[email] Failed to send payment confirmed email:', error);
+    return false;
+  }
+}
+
+// TODO(BOOK-003 Phase 2): wire this to a cron-triggered pre-arrival reminder job.
+export async function sendPreArrivalReminder(): Promise<boolean> {
+  console.warn('[email] Pre-arrival reminder is not implemented yet');
+  return false;
+}
+
+/** Notify admin about a new inquiry/contact submission. */
 export async function notifyNewInquiry(data: {
   type: string;
   name: string;
