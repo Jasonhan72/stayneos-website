@@ -138,7 +138,13 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
 
   const handlePaymentSuccess = () => {
     const bookingNum = searchParams.get('bookingNumber') || bookingId;
-    router.push(`/payment/success?booking=${bookingNum}`);
+    const params = new URLSearchParams({ booking: bookingNum });
+
+    if (bookingId) {
+      params.set('id', bookingId);
+    }
+
+    router.push(`/payment/success?${params.toString()}`);
   };
 
   const handlePaymentError = (errorMsg: string) => {
