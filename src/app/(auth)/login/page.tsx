@@ -18,7 +18,7 @@ export default async function LoginPage({
 
   return (
     <div className="min-h-screen flex">
-      <div className="hidden lg:flex lg:w-[55%] relative min-h-screen">
+      <div className="hidden lg:flex lg:w-[55%] relative min-h-screen bg-neutral-900">
         <ResponsiveImage src="/images/cooper-55-e98a880d.jpg" alt="Toronto skyline view from a NEOS property" fill className="object-cover" priority={true} />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
         <div className="absolute inset-0 z-10 flex flex-col justify-between p-12">

@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import { ensureCsrfToken } from '@/lib/security/csrf-client';
 import type { WishlistGetResponse } from '@/types/api';
 
 const STORAGE_KEY = 'stayneos_wishlist';
@@ -81,7 +82,10 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
           for (const id of localOnly) {
             fetch('/api/wishlist', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: {
+                'Content-Type': 'application/json',
+                'x-csrf-token': ensureCsrfToken(),
+              },
               credentials: 'include',
               body: JSON.stringify({ propertyId: id, action: 'add' }),
             }).catch(() => {});
@@ -133,7 +137,10 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
       const action = wishlist.includes(id) ? 'remove' : 'add';
       fetch('/api/wishlist', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-csrf-token': ensureCsrfToken(),
+        },
         credentials: 'include',
         body: JSON.stringify({ propertyId: id, action }),
       }).catch(() => {});
