@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
+import useSWR from "swr";
 import Link from "next/link";
 import { Container, Section } from "@/components/ui";
 import {
@@ -88,35 +89,33 @@ function getLocalizedField(post: MarketPost, field: "title" | "summary", locale:
   return { text: p[field] || "", isTranslated: true };
 }
 
+type MarketPostsResponse = {
+  posts?: MarketPost[];
+  pagination?: PaginationInfo;
+};
+
+const fetcher = (url: string): Promise<MarketPostsResponse> =>
+  fetch(url).then((r) => {
+    if (!r.ok) throw new Error("Failed to fetch");
+    return r.json();
+  });
+
 export default function MarketInsightsHub() {
   const { t, locale } = useI18n();
-  const [posts, setPosts] = useState<MarketPost[]>([]);
-  const [pagination, setPagination] = useState<PaginationInfo | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
 
-  const fetchPosts = useCallback(async (p: number, category: string) => {
-    setIsLoading(true);
-    try {
-      const params = new URLSearchParams({ page: String(p), limit: "12" });
-      if (category !== "all") params.set("category", category);
-      const res = await fetch(`/api/market-posts?${params}`);
-      if (!res.ok) throw new Error("Failed to fetch");
-      const data = await res.json();
-      setPosts(data.posts || []);
-      setPagination(data.pagination || null);
-    } catch {
-      setPosts([]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const params = new URLSearchParams({ page: String(page), limit: "12" });
+  if (activeCategory !== "all") params.set("category", activeCategory);
+  const swrKey = `/api/market-posts?${params}`;
 
-  useEffect(() => {
-    fetchPosts(page, activeCategory);
-  }, [page, activeCategory, fetchPosts]);
+  const { data, isLoading } = useSWR<MarketPostsResponse>(swrKey, fetcher, {
+    revalidateOnFocus: false,
+    keepPreviousData: true,
+  });
+  const posts: MarketPost[] = data?.posts ?? [];
+  const pagination: PaginationInfo | null = data?.pagination ?? null;
 
   const handleCategoryChange = (cat: string) => {
     setActiveCategory(cat);
