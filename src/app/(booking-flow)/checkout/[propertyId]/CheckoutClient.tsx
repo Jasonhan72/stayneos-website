@@ -327,6 +327,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
 
       <div className="pt-5">
         <h3 className="text-xl font-semibold">
+          <span className="sr-only">Price Summary</span>
           {t("checkout.priceDetails") || "Price details"}
         </h3>
         {priceCalc ? (
