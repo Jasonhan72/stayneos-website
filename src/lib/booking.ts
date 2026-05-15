@@ -1,11 +1,18 @@
 import { Property } from "@/components/property/PropertyCard";
 
+export type StayType = 'NIGHTLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
+export type StayTypeParam = string | StayType | Lowercase<StayType> | null | undefined;
+
 export interface BookingCalculation {
   nights: number;
   months: number;
+  stayType: StayType;
+  unitCount: number;
+  unitRate: number;
+  unitLabel: 'night' | 'month' | 'quarter' | 'year';
   basePrice: number;
   ratePerMonth: number;
-  tierName: 'Monthly' | 'Quarterly' | 'Annual';
+  tierName: 'Nightly' | 'Monthly' | 'Quarterly' | 'Annual';
   subtotal: number;
   cleaningFee: number;
   serviceFee: number;
@@ -17,7 +24,50 @@ export interface BookingCalculation {
   isMonthly: boolean;
   meetsMinNights: boolean;
   minNights: number;
+  minimumUnits: number;
   currency: string;
+}
+
+export function normalizeStayType(value?: StayTypeParam, fallback?: StayTypeParam): StayType {
+  const raw = String(value || fallback || '').toLowerCase();
+  if (raw === 'monthly' || raw === 'month') return 'MONTHLY';
+  if (raw === 'quarterly' || raw === 'quarter') return 'QUARTERLY';
+  if (raw === 'yearly' || raw === 'annual' || raw === 'year') return 'YEARLY';
+  return 'NIGHTLY';
+}
+
+export function stayTypeToQuery(stayType: StayType): string {
+  return stayType.toLowerCase();
+}
+
+function getNumber(property: Property, keys: string[], fallback = 0): number {
+  const record = property as unknown as Record<string, unknown>;
+  for (const key of keys) {
+    const value = record[key];
+    if (value !== undefined && value !== null && value !== '') {
+      const numberValue = Number(value);
+      if (Number.isFinite(numberValue) && numberValue > 0) return numberValue;
+    }
+  }
+  return fallback;
+}
+
+export function getDefaultStayType(property: Property): StayType {
+  const record = property as unknown as Record<string, unknown>;
+  return normalizeStayType(record.defaultStayType as StayTypeParam, (property.minNights || 0) >= 28 || property.priceUnit === 'month' ? 'monthly' : 'nightly');
+}
+
+export function getStayTypeMinimumUnits(stayType: StayType): number {
+  if (stayType === 'QUARTERLY') return 3;
+  if (stayType === 'YEARLY') return 12;
+  return 1;
+}
+
+export function getStayTypeUnitLabel(stayType: StayType): BookingCalculation['unitLabel'] {
+  if (stayType === 'NIGHTLY') return 'night';
+  if (stayType === 'QUARTERLY') return 'quarter';
+  if (stayType === 'YEARLY') return 'year';
+  return 'month';
 }
 
 /**
@@ -25,67 +75,78 @@ export interface BookingCalculation {
  * @param property 房源信息
  * @param checkIn 入住日期
  * @param checkOut 退房日期
+ * @param stayTypeParam 短租/长租类型
  * @returns 预订计算结果
  */
 export function calculateBookingPrice(
   property: Property,
   checkIn: string,
-  checkOut: string
+  checkOut: string,
+  stayTypeParam?: StayTypeParam
 ): BookingCalculation {
   const start = new Date(checkIn);
   const end = new Date(checkOut);
-  const nights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-
-  const minNights = property.minNights || 28;
-  const meetsMinNights = nights >= minNights;
-  const isMonthly = nights >= 28;
-
-  // 月租模型：basePrice 是每月价格
-  const basePrice = Number(property.price || 0);
+  const nights = Math.max(0, Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
   const months = Math.max(1, Math.ceil(nights / 30));
+  const stayType = normalizeStayType(stayTypeParam, getDefaultStayType(property));
 
-  // Tier 价格：年租 >= 365 天；季租 >= 90 天；否则月租
-  const pricingProperty = property as Property & { priceQuarterly?: number; priceAnnual?: number };
-  const quarterlyPrice = Number(pricingProperty.priceQuarterly || 0) || Math.round(basePrice * 0.92);
-  const annualPrice = Number(pricingProperty.priceAnnual || 0) || Math.round(basePrice * 0.85);
+  const monthlyRate = getNumber(property, ['monthlyRate', 'priceMonthly', 'monthlyPrice', 'price'], Number(property.price || 0));
+  const nightlyRate = getNumber(property, ['nightlyRate', 'pricePerNight'], Math.max(1, Math.round(monthlyRate / 30)));
+  const quarterlyRate = getNumber(property, ['quarterlyRate', 'priceQuarterly', 'quarterlyPrice'], Math.round(monthlyRate * 0.92));
+  const yearlyRate = getNumber(property, ['yearlyRate', 'priceAnnual', 'annualPrice'], Math.round(monthlyRate * 0.85));
 
-  let ratePerMonth = basePrice;
-  let tierName: 'Monthly' | 'Quarterly' | 'Annual' = 'Monthly';
+  const minNights = stayType === 'NIGHTLY' ? (property.minNights || 1) : getStayTypeMinimumUnits(stayType) * 30;
+  const minimumUnits = getStayTypeMinimumUnits(stayType);
 
-  if (nights >= 365) {
-    ratePerMonth = annualPrice;
-    tierName = 'Annual';
-  } else if (nights >= 90) {
-    ratePerMonth = quarterlyPrice;
-    tierName = 'Quarterly';
-  }
-
-  // monthlyDiscount 仅在 Monthly tier 生效，避免与季度/年度 tier 叠加
+  let unitCount = nights;
+  let unitRate = nightlyRate;
+  let unitLabel: BookingCalculation['unitLabel'] = 'night';
+  let ratePerMonth = monthlyRate;
+  let tierName: BookingCalculation['tierName'] = 'Nightly';
+  let subtotal = nights * nightlyRate;
+  let cleaningFee = property.cleaningFee || 80;
+  let serviceFee = Math.round(subtotal * 0.1);
   let discountRate = 1;
   let discountPercentage = 0;
-  if (tierName === 'Monthly' && isMonthly && property.monthlyDiscount) {
-    discountPercentage = property.monthlyDiscount;
-    discountRate = (100 - property.monthlyDiscount) / 100;
+
+  if (stayType !== 'NIGHTLY') {
+    unitCount = months;
+    unitLabel = getStayTypeUnitLabel(stayType);
+    cleaningFee = 0;
+    serviceFee = 0;
+
+    if (stayType === 'YEARLY') {
+      ratePerMonth = yearlyRate;
+      tierName = 'Annual';
+    } else if (stayType === 'QUARTERLY') {
+      ratePerMonth = quarterlyRate;
+      tierName = 'Quarterly';
+    } else {
+      ratePerMonth = monthlyRate;
+      tierName = 'Monthly';
+      if (property.monthlyDiscount) {
+        discountPercentage = property.monthlyDiscount;
+        discountRate = (100 - property.monthlyDiscount) / 100;
+      }
+    }
+
+    unitRate = Math.round(ratePerMonth * discountRate);
+    subtotal = unitCount * unitRate;
   }
 
-  const discountedRatePerMonth = Math.round(ratePerMonth * discountRate);
-  const subtotal = months * discountedRatePerMonth;
-
-  const cleaningFee = property.cleaningFee || 80;
-  const serviceFee = Math.round(subtotal * 0.1);
-
-  const originalSubtotal = months * ratePerMonth;
-  const discount = originalSubtotal - subtotal;
-
-  const taxableAmount = subtotal + cleaningFee + serviceFee;
-  const tax = Math.round(taxableAmount * 0.13);
-
+  const originalSubtotal = stayType === 'NIGHTLY' ? subtotal : unitCount * ratePerMonth;
+  const discount = Math.max(0, originalSubtotal - subtotal);
+  const tax = Math.round((subtotal + cleaningFee + serviceFee) * 0.13);
   const total = subtotal + cleaningFee + serviceFee + tax;
 
   return {
     nights,
     months,
-    basePrice,
+    stayType,
+    unitCount,
+    unitRate,
+    unitLabel,
+    basePrice: unitRate,
     ratePerMonth,
     tierName,
     subtotal,
@@ -96,10 +157,11 @@ export function calculateBookingPrice(
     discountPercentage,
     tax,
     total,
-    isMonthly,
-    meetsMinNights,
+    isMonthly: stayType !== 'NIGHTLY',
+    meetsMinNights: stayType === 'NIGHTLY' ? nights >= minNights : months >= minimumUnits,
     minNights,
-    currency: 'CAD',
+    minimumUnits,
+    currency: property.currency || 'CAD',
   };
 }
 
@@ -109,33 +171,35 @@ export function calculateBookingPrice(
 export function validateBookingDates(
   checkIn: string,
   checkOut: string,
-  minNights: number = 28
+  minNights: number = 1,
+  stayTypeParam?: StayTypeParam
 ): { valid: boolean; error?: string } {
   const start = new Date(checkIn);
   const end = new Date(checkOut);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
-  // 检查日期是否有效
   if (isNaN(start.getTime()) || isNaN(end.getTime())) {
     return { valid: false, error: '请选择有效的日期' };
   }
   
-  // 入住日期不能是过去
   if (start < today) {
     return { valid: false, error: '入住日期不能是过去' };
   }
   
-  // 退房日期必须在入住日期之后
   if (end <= start) {
     return { valid: false, error: '退房日期必须在入住日期之后' };
   }
   
-  // 计算晚数
   const nights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-  
-  // 检查最低入住天数
-  if (nights < minNights) {
+  const stayType = stayTypeParam ? normalizeStayType(stayTypeParam) : 'NIGHTLY';
+  if (stayType !== 'NIGHTLY') {
+    const months = Math.max(1, Math.ceil(nights / 30));
+    const minMonths = getStayTypeMinimumUnits(stayType);
+    if (months < minMonths) {
+      return { valid: false, error: `最少需要预订 ${minMonths} 个月` };
+    }
+  } else if (nights < minNights) {
     return { valid: false, error: `最少需要预订 ${minNights} 天` };
   }
   

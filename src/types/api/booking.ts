@@ -26,6 +26,9 @@ export interface CreateBookingRequestBody {
   checkIn: string;
   checkOut: string;
   guests: number;
+  stayType?: 'NIGHTLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY' | 'nightly' | 'monthly' | 'quarterly' | 'yearly';
+  unitCount?: number;
+  unitRate?: number;
   guestName?: string;
   guestEmail?: string;
   guestPhone?: string;

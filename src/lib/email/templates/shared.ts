@@ -1,4 +1,5 @@
 export type EmailLocale = 'en' | 'zh';
+export type EmailStayType = 'NIGHTLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
 
 export interface EmailBooking {
   id: string;
@@ -7,6 +8,9 @@ export interface EmailBooking {
   checkIn: string;
   checkOut: string;
   nights?: number;
+  stayType?: EmailStayType | string | null;
+  unitCount?: number | null;
+  unitRate?: number | null;
   guests?: number;
   guestName?: string | null;
   guestEmail?: string | null;
@@ -65,6 +69,35 @@ export function formatMoney(amount: number, currency: string, locale: EmailLocal
     style: 'currency',
     currency: currency || 'CAD',
   }).format(amount || 0);
+}
+
+export function stayTypeLabel(stayType: string | null | undefined, locale: EmailLocale): string {
+  const type = String(stayType || 'NIGHTLY').toUpperCase();
+  if (locale === 'zh') {
+    if (type === 'MONTHLY') return '月租';
+    if (type === 'QUARTERLY') return '季租';
+    if (type === 'YEARLY') return '年租';
+    return '短租';
+  }
+  if (type === 'MONTHLY') return 'Monthly stay';
+  if (type === 'QUARTERLY') return 'Quarterly stay';
+  if (type === 'YEARLY') return 'Yearly stay';
+  return 'Short stay';
+}
+
+export function stayDurationLabel(booking: EmailBooking, locale: EmailLocale): string {
+  const type = String(booking.stayType || 'NIGHTLY').toUpperCase();
+  const count = Number(booking.unitCount || booking.nights || 0);
+  if (locale === 'zh') {
+    if (type === 'NIGHTLY') return `${count} 晚`;
+    if (type === 'QUARTERLY') return `${count} 个月（季租）`;
+    if (type === 'YEARLY') return `${count} 个月（年租）`;
+    return `${count} 个月`;
+  }
+  if (type === 'NIGHTLY') return `${count} ${count === 1 ? 'night' : 'nights'}`;
+  if (type === 'QUARTERLY') return `${count} months (quarterly rate)`;
+  if (type === 'YEARLY') return `${count} months (yearly rate)`;
+  return `${count} ${count === 1 ? 'month' : 'months'}`;
 }
 
 export function propertyTitle(property: EmailProperty, locale: EmailLocale): string {

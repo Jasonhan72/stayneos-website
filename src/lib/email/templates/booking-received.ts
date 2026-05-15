@@ -8,6 +8,8 @@ import {
   getSupportEmail,
   normalizeLocale,
   propertyTitle,
+  stayDurationLabel,
+  stayTypeLabel,
   renderShell,
   TemplateResult,
 } from './shared';
@@ -32,13 +34,15 @@ export function bookingReceivedTemplate(input: {
         ${detailRow('房源', title)}
         ${detailRow('入住日期', formatDate(booking.checkIn, locale))}
         ${detailRow('退房日期', formatDate(booking.checkOut, locale))}
+        ${detailRow('住宿类型', stayTypeLabel(booking.stayType, locale))}
+        ${detailRow('时长', stayDurationLabel(booking, locale))}
       </table>
       <p style="text-align:center;margin:28px 0;">
         <a href="${escapeHtml(paymentUrl)}" style="display:inline-block;background:#FF385C;color:#fff;padding:13px 24px;border-radius:10px;text-decoration:none;font-weight:700;">前往付款</a>
       </p>
       <p style="font-size:14px;line-height:1.7;color:#555;margin:0;">如果你有任何问题，请回复此邮件或联系 ${escapeHtml(supportEmail)}。付款完成后，我们会发送确认邮件。</p>
     `);
-    const text = `你的预订请求已收到\n预订编号: ${booking.bookingNumber}\n房源: ${title}\n入住: ${formatDate(booking.checkIn, locale)}\n退房: ${formatDate(booking.checkOut, locale)}\n付款链接: ${paymentUrl}\n客服: ${supportEmail}`;
+    const text = `你的预订请求已收到\n预订编号: ${booking.bookingNumber}\n房源: ${title}\n入住: ${formatDate(booking.checkIn, locale)}\n退房: ${formatDate(booking.checkOut, locale)}\n住宿类型: ${stayTypeLabel(booking.stayType, locale)}\n时长: ${stayDurationLabel(booking, locale)}\n付款链接: ${paymentUrl}\n客服: ${supportEmail}`;
     return { subject, html, text };
   }
 
@@ -50,12 +54,14 @@ export function bookingReceivedTemplate(input: {
       ${detailRow('Property', title)}
       ${detailRow('Check-in', formatDate(booking.checkIn, locale))}
       ${detailRow('Check-out', formatDate(booking.checkOut, locale))}
+      ${detailRow('Stay type', stayTypeLabel(booking.stayType, locale))}
+      ${detailRow('Duration', stayDurationLabel(booking, locale))}
     </table>
     <p style="text-align:center;margin:28px 0;">
       <a href="${escapeHtml(paymentUrl)}" style="display:inline-block;background:#FF385C;color:#fff;padding:13px 24px;border-radius:10px;text-decoration:none;font-weight:700;">Continue to payment</a>
     </p>
     <p style="font-size:14px;line-height:1.7;color:#555;margin:0;">Questions? Reply to this email or contact ${escapeHtml(supportEmail)}. We’ll send a confirmation email after payment is completed.</p>
   `);
-  const text = `Reservation received\nBooking number: ${booking.bookingNumber}\nProperty: ${title}\nCheck-in: ${formatDate(booking.checkIn, locale)}\nCheck-out: ${formatDate(booking.checkOut, locale)}\nPayment link: ${paymentUrl}\nSupport: ${supportEmail}`;
+  const text = `Reservation received\nBooking number: ${booking.bookingNumber}\nProperty: ${title}\nCheck-in: ${formatDate(booking.checkIn, locale)}\nCheck-out: ${formatDate(booking.checkOut, locale)}\nStay type: ${stayTypeLabel(booking.stayType, locale)}\nDuration: ${stayDurationLabel(booking, locale)}\nPayment link: ${paymentUrl}\nSupport: ${supportEmail}`;
   return { subject, html, text };
 }

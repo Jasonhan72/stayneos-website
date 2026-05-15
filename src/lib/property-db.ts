@@ -29,6 +29,11 @@ export interface PropertyRecord {
   priceMonthly: number | null;
   priceQuarterly: number | null;
   priceAnnual: number | null;
+  defaultStayType?: 'NIGHTLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY' | string | null;
+  nightlyRate?: number | null;
+  monthlyRate?: number | null;
+  quarterlyRate?: number | null;
+  yearlyRate?: number | null;
   currency: string | null;
   includedAmenities: string | null;
   buildingAmenities: string | null;
@@ -99,8 +104,13 @@ export function toPublicProperty(property: PropertyRecord) {
     location: `${property.address}, ${property.city}`,
     neighborhood: property.neighborhood,
     city: property.city,
-    price: property.priceMonthly || 0,
-    priceUnit: 'month',
+    price: property.monthlyRate || property.priceMonthly || 0,
+    priceUnit: (property.defaultStayType || ((property.minStayDays || 30) >= 28 ? 'MONTHLY' : 'NIGHTLY')) === 'NIGHTLY' ? 'night' : 'month',
+    defaultStayType: property.defaultStayType || ((property.minStayDays || 30) >= 28 ? 'MONTHLY' : 'NIGHTLY'),
+    nightlyRate: property.nightlyRate || undefined,
+    monthlyRate: property.monthlyRate || property.priceMonthly || undefined,
+    quarterlyRate: property.quarterlyRate || property.priceQuarterly || undefined,
+    yearlyRate: property.yearlyRate || property.priceAnnual || undefined,
     rating: 0,
     reviewCount: 0,
     images: images.map((img) => img.url).filter((url) => Boolean(url)).map((url) => {
@@ -131,9 +141,9 @@ export function toPublicProperty(property: PropertyRecord) {
       return `/${hero.replace(/^\/+/, "")}`;
     })(),
     status: property.status,
-    priceMonthly: property.priceMonthly,
-    priceQuarterly: property.priceQuarterly,
-    priceAnnual: property.priceAnnual,
+    priceMonthly: property.monthlyRate || property.priceMonthly,
+    priceQuarterly: property.quarterlyRate || property.priceQuarterly,
+    priceAnnual: property.yearlyRate || property.priceAnnual,
     address: property.address,
     nearestSubway: property.nearestSubway,
     subwayWalkMinutes: property.subwayWalkMinutes,

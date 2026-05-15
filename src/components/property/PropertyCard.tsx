@@ -14,6 +14,11 @@ export interface Property {
   location: string;
   price: number;
   priceUnit: string;
+  defaultStayType?: 'NIGHTLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY' | string;
+  nightlyRate?: number;
+  monthlyRate?: number;
+  quarterlyRate?: number;
+  yearlyRate?: number;
   rating?: number;
   reviewCount: number;
   images: string[];
@@ -32,6 +37,9 @@ export interface Property {
   
   // API 数据结构的兼容字段
   basePrice?: number | string;
+  priceMonthly?: number | string | null;
+  priceQuarterly?: number | string | null;
+  priceAnnual?: number | string | null;
   currency?: string;
   city?: string;
   neighborhood?: string;

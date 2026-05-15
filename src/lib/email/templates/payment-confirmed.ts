@@ -8,6 +8,8 @@ import {
   getSiteUrl,
   normalizeLocale,
   propertyTitle,
+  stayDurationLabel,
+  stayTypeLabel,
   renderShell,
   TemplateResult,
 } from './shared';
@@ -33,6 +35,8 @@ export function paymentConfirmedTemplate(input: {
         ${detailRow('房源', title)}
         ${detailRow('入住日期', formatDate(booking.checkIn, locale))}
         ${detailRow('退房日期', formatDate(booking.checkOut, locale))}
+        ${detailRow('住宿类型', stayTypeLabel(booking.stayType, locale))}
+        ${detailRow('时长', stayDurationLabel(booking, locale))}
         ${detailRow('已付款', formatMoney(amount, booking.currency, locale))}
       </table>
       <div style="background:#fafafa;border-radius:12px;padding:16px;margin:22px 0;color:#444;line-height:1.7;">
@@ -42,7 +46,7 @@ export function paymentConfirmedTemplate(input: {
         <a href="${escapeHtml(dashboardUrl)}" style="display:inline-block;background:#222;color:#fff;padding:13px 24px;border-radius:10px;text-decoration:none;font-weight:700;">查看预订</a>
       </p>
     `);
-    const text = `付款已确认\n预订编号: ${booking.bookingNumber}\n房源: ${title}\n入住: ${formatDate(booking.checkIn, locale)}\n退房: ${formatDate(booking.checkOut, locale)}\n已付款: ${formatMoney(amount, booking.currency, locale)}\n退订政策摘要: 若需更改或取消预订，请尽早联系我们。\nDashboard: ${dashboardUrl}`;
+    const text = `付款已确认\n预订编号: ${booking.bookingNumber}\n房源: ${title}\n入住: ${formatDate(booking.checkIn, locale)}\n退房: ${formatDate(booking.checkOut, locale)}\n住宿类型: ${stayTypeLabel(booking.stayType, locale)}\n时长: ${stayDurationLabel(booking, locale)}\n已付款: ${formatMoney(amount, booking.currency, locale)}\n退订政策摘要: 若需更改或取消预订，请尽早联系我们。\nDashboard: ${dashboardUrl}`;
     return { subject, html, text };
   }
 
@@ -54,6 +58,8 @@ export function paymentConfirmedTemplate(input: {
       ${detailRow('Property', title)}
       ${detailRow('Check-in', formatDate(booking.checkIn, locale))}
       ${detailRow('Check-out', formatDate(booking.checkOut, locale))}
+      ${detailRow('Stay type', stayTypeLabel(booking.stayType, locale))}
+      ${detailRow('Duration', stayDurationLabel(booking, locale))}
       ${detailRow('Total paid', formatMoney(amount, booking.currency, locale))}
     </table>
     <div style="background:#fafafa;border-radius:12px;padding:16px;margin:22px 0;color:#444;line-height:1.7;">
@@ -63,6 +69,6 @@ export function paymentConfirmedTemplate(input: {
       <a href="${escapeHtml(dashboardUrl)}" style="display:inline-block;background:#222;color:#fff;padding:13px 24px;border-radius:10px;text-decoration:none;font-weight:700;">View booking</a>
     </p>
   `);
-  const text = `Payment confirmed\nBooking number: ${booking.bookingNumber}\nProperty: ${title}\nCheck-in: ${formatDate(booking.checkIn, locale)}\nCheck-out: ${formatDate(booking.checkOut, locale)}\nTotal paid: ${formatMoney(amount, booking.currency, locale)}\nCancellation policy summary: Contact us early if you need to change or cancel.\nDashboard: ${dashboardUrl}`;
+  const text = `Payment confirmed\nBooking number: ${booking.bookingNumber}\nProperty: ${title}\nCheck-in: ${formatDate(booking.checkIn, locale)}\nCheck-out: ${formatDate(booking.checkOut, locale)}\nStay type: ${stayTypeLabel(booking.stayType, locale)}\nDuration: ${stayDurationLabel(booking, locale)}\nTotal paid: ${formatMoney(amount, booking.currency, locale)}\nCancellation policy summary: Contact us early if you need to change or cancel.\nDashboard: ${dashboardUrl}`;
   return { subject, html, text };
 }
