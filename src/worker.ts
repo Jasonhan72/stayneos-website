@@ -1,8 +1,10 @@
 import worker from "../.open-next/worker";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { ConversationDO } from "@/durable-objects/conversation";
 
 type Env = {
   DB: D1Database;
+  CONVERSATIONS: DurableObjectNamespace<ConversationDO>;
 };
 
 type ExecutionContextLike = {
@@ -53,6 +55,18 @@ async function deletePendingAccounts(env: Env) {
 
 const appWorker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContextLike) {
+    // Handle WebSocket upgrade for messaging
+    const url = new URL(request.url);
+    if (url.pathname === "/api/messages/ws") {
+      const conversationId = url.searchParams.get("conversation_id");
+      if (!conversationId) {
+        return new Response("Missing conversation_id", { status: 400 });
+      }
+      const doId = env.CONVERSATIONS.idFromName(conversationId);
+      const stub = env.CONVERSATIONS.get(doId);
+      return stub.fetch(request);
+    }
+
     return worker.fetch(request, env, ctx);
   },
 
@@ -64,3 +78,4 @@ const appWorker = {
 };
 
 export default appWorker;
+export { ConversationDO };

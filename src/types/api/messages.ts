@@ -1,49 +1,73 @@
 /**
- * Messages API 共享类型
+ * Messages API 共享类型 (B6: Real messaging with D1 + Durable Objects)
  */
 
-/** 消息对象 */
-export interface Message {
+// ── Row types (from D1) ──────────────────────────────────
+
+/** API Message object */
+export interface ApiMessage {
   id: string;
+  conversation_id: string;
   conversationId: string;
+  sender_id: string;
   senderId: string;
-  content: string;
-  isRead: boolean;
-  createdAt: string;
+  body: string;
+  attachments_json: string;
+  attachmentsJson: string;
+  created_at: number;
+  createdAt: number;
 }
 
-/** 会话对象 */
-export interface Conversation {
+/** API Conversation object with participants */
+export interface ApiConversation {
   id: string;
+  type: 'dm' | 'host_guest';
+  created_at: number;
+  createdAt: number;
+  updated_at: number;
+  updatedAt: number;
   participants: string[];
-  propertyId?: string;
-  lastMessage?: Message;
-  createdAt: string;
-  updatedAt: string;
+  /** Last message preview (for the list view) */
+  lastMessage?: ApiMessage | null;
 }
 
-/** GET /api/messages 返回 */
-export interface MessagesListResponse {
-  conversations: Conversation[];
-  unreadCount: number;
+// ── Request types ────────────────────────────────────────
+
+/** POST /api/conversations */
+export interface CreateConversationRequest {
+  participant_user_ids: string[];
+  type: 'dm' | 'host_guest';
 }
 
-/** GET /api/messages/[id] 返回 */
-export interface MessagesDetailResponse {
-  messages: Message[];
-  conversation: Conversation;
-}
-
-/** POST /api/messages 请求体 */
+/** POST /api/conversations/:id/messages */
 export interface SendMessageRequest {
-  conversationId?: string;
-  recipientId?: string;
-  content: string;
-  propertyId?: string;
+  body: string;
+  attachmentsJson?: string;
 }
 
-/** POST /api/messages 返回 */
-export interface SendMessageResponse {
-  message: Message;
-  conversation: Conversation;
+// ── Response types ───────────────────────────────────────
+
+/** GET /api/conversations */
+export interface ConversationsListResponse {
+  conversations: ApiConversation[];
 }
+
+/** GET /api/conversations/:id/messages */
+export interface MessagesDetailResponse {
+  messages: ApiMessage[];
+  cursor: string | null;
+}
+
+/** POST /api/conversations/:id/messages */
+export interface SendMessageResponse {
+  message: ApiMessage;
+}
+
+/** POST /api/conversations */
+export interface CreateConversationResponse {
+  conversation: ApiConversation;
+}
+
+// Legacy aliases (keep compatibility)
+export type Message = ApiMessage;
+export type Conversation = ApiConversation;

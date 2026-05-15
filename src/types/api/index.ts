@@ -44,10 +44,12 @@ export type {
 } from './booking';
 
 export type {
-  Message,
-  Conversation,
-  MessagesListResponse,
-  MessagesDetailResponse,
+  ApiConversation,
+  ApiMessage,
+  CreateConversationRequest,
   SendMessageRequest,
+  ConversationsListResponse,
+  MessagesDetailResponse,
   SendMessageResponse,
+  CreateConversationResponse,
 } from './messages';
