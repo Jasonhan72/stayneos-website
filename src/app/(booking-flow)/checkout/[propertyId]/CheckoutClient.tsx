@@ -42,10 +42,11 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
   const [checkIn, setCheckIn] = useState(searchParams.get('checkIn') || '');
   const [checkOut, setCheckOut] = useState(searchParams.get('checkOut') || '');
   const bookedRanges = ((property as typeof property & { bookedRanges?: Array<{ start: string; end: string }> } | null)?.bookedRanges || []);
-  const [adults, setAdults] = useState(parseInt(searchParams.get('adults') || '1'));
-  const [children, setChildren] = useState(parseInt(searchParams.get('children') || '0'));
-  const [infants, setInfants] = useState(parseInt(searchParams.get('infants') || '0'));
-  const [pets, setPets] = useState(parseInt(searchParams.get('pets') || '0'));
+  const initialGuests = Math.max(1, parseInt(searchParams.get('guests') || '1', 10) || 1);
+  const [adults, setAdults] = useState(parseInt(searchParams.get('adults') || String(initialGuests), 10));
+  const [children, setChildren] = useState(parseInt(searchParams.get('children') || '0', 10));
+  const [infants, setInfants] = useState(parseInt(searchParams.get('infants') || '0', 10));
+  const [pets, setPets] = useState(parseInt(searchParams.get('pets') || '0', 10));
   const [guestName, setGuestName] = useState(searchParams.get('name') || '');
   const [guestEmail, setGuestEmail] = useState(searchParams.get('email') || '');
   const [guestPhone, setGuestPhone] = useState(searchParams.get('phone') || '');
