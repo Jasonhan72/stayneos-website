@@ -388,7 +388,7 @@ export function ReviewAndContinue({
 
           {/* Price Details */}
           <div className="mb-6">
-            <h2 className="text-lg font-semibold text-neutral-900 mb-4">Price details</h2>
+            <h2 className="text-lg font-semibold text-neutral-900 mb-4">Price Summary</h2>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
                 <span className="text-neutral-600 underline">${pricePerNight.toLocaleString()} x {months} months</span>
