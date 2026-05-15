@@ -357,13 +357,18 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
     }
 
     setBookingError('');
-    // Navigate to the booking page with Stripe payment integration
+    // Send guests directly to the active checkout route.
+    // /booking/[id] is a legacy protected redirect, so using it here sends
+    // unauthenticated guests to /login before checkout can open.
     const params = new URLSearchParams({
       checkIn,
       checkOut,
       guests: guests.toString(),
+      adults: guestBreakdown.adults.toString(),
+      children: guestBreakdown.children.toString(),
+      infants: guestBreakdown.infants.toString(),
     });
-    router.push(`/booking/${propertyId}?${params.toString()}`);
+    router.push(`/checkout/${propertyId}?${params.toString()}`);
   };
 
   // 获取图片 URL 列表 - 使用可选链避免条件调用 hook
@@ -1032,13 +1037,16 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
         onNext={(method) => {
           setShowPayment(false);
           if (method === 'card') {
-            // Redirect to booking page with Stripe integration
+            // Redirect to active checkout route; /booking/[id] is legacy and protected.
             const params = new URLSearchParams({
               checkIn,
               checkOut,
               guests: guests.toString(),
+              adults: guestBreakdown.adults.toString(),
+              children: guestBreakdown.children.toString(),
+              infants: guestBreakdown.infants.toString(),
             });
-            router.push(`/booking/${propertyId}?${params.toString()}`);
+            router.push(`/checkout/${propertyId}?${params.toString()}`);
           } else if (method === 'paypal' || method === 'applepay') {
             // PayPal and Apple Pay coming soon - show inline message
             setShowPayment(false);
