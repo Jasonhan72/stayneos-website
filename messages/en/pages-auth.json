@@ -59,7 +59,14 @@
     "passwordStrengthLength": "At least 8 characters",
     "passwordStrengthUpper": "One uppercase letter",
     "passwordStrengthLower": "One lowercase letter",
-    "passwordStrengthNumber": "One number"
+    "passwordStrengthNumber": "One number",
+    "appleComingSoon": "Continue with Apple (Coming Soon)",
+    "modal": {
+      "reserveTitle": "Log in to confirm your booking",
+      "wishlistTitle": "Log in to save this home",
+      "messageTitle": "Log in to message NEOS",
+      "signupTitle": "Create your NEOS account"
+    }
   },
   "login": "Login",
   "register": "Register",

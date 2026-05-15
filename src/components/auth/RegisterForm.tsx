@@ -8,7 +8,14 @@ import { ensureCsrfToken } from '@/lib/security/csrf-client';
 const TOKEN_KEY = 'stayneos_auth_token';
 const USER_KEY = 'stayneos_user_data';
 
-export function RegisterForm() {
+interface RegisterFormProps {
+  onSuccess?: () => void | Promise<void>;
+  redirectOnSuccess?: boolean;
+  compact?: boolean;
+  onSwitchToLogin?: () => void;
+}
+
+export function RegisterForm({ onSuccess, redirectOnSuccess = true, compact = false, onSwitchToLogin }: RegisterFormProps = {}) {
   const { t } = useI18n();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -94,10 +101,15 @@ export function RegisterForm() {
       }
       if (data.user && isClient) {
         localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+        window.dispatchEvent(new CustomEvent('localStorageChange'));
+      }
+
+      if (onSuccess) {
+        await onSuccess();
       }
 
       // Hard redirect to dashboard (ensures middleware sees cookie)
-      if (isClient) {
+      if (redirectOnSuccess && isClient) {
         window.location.assign('/');
       }
     } catch (error) {
@@ -111,8 +123,8 @@ export function RegisterForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <form onSubmit={handleSubmit} className={compact ? 'space-y-4' : 'space-y-6'}>
+      <div className={compact ? 'grid grid-cols-1 gap-4 sm:grid-cols-2' : 'grid grid-cols-1 md:grid-cols-2 gap-6'}>
         <div>
           <label htmlFor="firstName" className="block text-sm font-medium text-neutral-700 mb-2">
             {t('auth.firstName', 'First Name')}
@@ -230,9 +242,15 @@ export function RegisterForm() {
 
       <p className="text-center text-sm text-neutral-600">
         {t('auth.alreadyHaveAccount', 'Already have an account?')}{' '}
-        <Link href="/login" className="text-primary font-medium hover:underline">
-          {t('auth.signIn', 'Sign in')}
-        </Link>
+        {onSwitchToLogin ? (
+          <button type="button" onClick={onSwitchToLogin} className="text-primary font-medium hover:underline">
+            {t('auth.signIn', 'Sign in')}
+          </button>
+        ) : (
+          <Link href="/login" className="text-primary font-medium hover:underline">
+            {t('auth.signIn', 'Sign in')}
+          </Link>
+        )}
       </p>
     </form>
   );
