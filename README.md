@@ -53,6 +53,10 @@ See [docs/workers.md](docs/workers.md) for full worker documentation, deployment
 CLOUDFLARE_API_TOKEN=your_token_here
 ```
 
+## Email configuration
+
+Transactional guest emails use Resend over HTTPS. Configure `RESEND_API_KEY` as a GitHub Actions / Cloudflare Workers secret (do not commit it). `RESEND_FROM_EMAIL` defaults to `reservations@send.neos.rentals` and can be overridden in `wrangler.toml` vars.
+
 ## 🚀 Quick Start
 ```bash
 # Install dependencies

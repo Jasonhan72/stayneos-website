@@ -8,6 +8,7 @@ import { apiError } from '@/lib/api/response';
 import { checkRateLimit } from '@/lib/security/rate-limit';
 import { validateCsrf } from '@/lib/security/csrf';
 import { type PropertyRecord, toPublicProperty } from '@/lib/property-db';
+import { sendBookingReceived } from '@/lib/email';
 
 export function generateStaticParams() {
   return [];
@@ -136,6 +137,13 @@ export async function POST(request: NextRequest) {
       totalPrice: booking.totalPrice,
       currency: booking.currency,
     };
+
+    await sendBookingReceived({
+      booking,
+      property,
+      userEmail: user.email,
+      locale: (user as { locale?: string | null }).locale,
+    });
 
     return NextResponse.json({ success: true, booking: bookingPayload, data: { booking: bookingPayload } });
   } catch {
