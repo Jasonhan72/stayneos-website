@@ -15,7 +15,7 @@ const csp = [
   "font-src 'self' data: https://fonts.gstatic.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://js.stripe.com https://maps.googleapis.com https://maps.gstatic.com",
-  "connect-src 'self' https://*.cloudflareinsights.com https://api.resend.com https://api.stripe.com https://r.stripe.com https://m.stripe.network https://maps.googleapis.com https://maps.gstatic.com",
+  "connect-src 'self' https://cloudflareinsights.com https://*.cloudflareinsights.com https://api.resend.com https://api.stripe.com https://r.stripe.com https://m.stripe.network https://maps.googleapis.com https://maps.gstatic.com",
   "frame-src 'self' https://www.google.com https://maps.google.com https://js.stripe.com https://hooks.stripe.com",
   "object-src 'none'",
   "form-action 'self'",

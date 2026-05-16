@@ -22,6 +22,7 @@ import { useI18n } from '@/lib/i18n';
 import StripeProvider from '@/components/payment/StripeProvider';
 import PaymentForm from '@/components/payment/PaymentForm';
 import { calculateBookingPrice, normalizeStayType, getDefaultStayType } from '@/lib/booking';
+import { ensureCsrfToken } from '@/lib/security/csrf-client';
 
 interface PaymentClientProps {
   propertyId: string;
@@ -165,7 +166,22 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
     }
   };
 
-  const handlePaymentSuccess = () => {
+  const handlePaymentSuccess = async () => {
+    if (bookingId) {
+      try {
+        await fetch('/api/payments/confirm', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-csrf-token': ensureCsrfToken(),
+          },
+          body: JSON.stringify({ bookingId }),
+        });
+      } catch {
+        // Webhook/refresh will still reconcile payment status; don't block the user from success.
+      }
+    }
+
     const bookingNum = searchParams.get('bookingNumber') || bookingId;
     const params = new URLSearchParams({ booking: bookingNum });
 
