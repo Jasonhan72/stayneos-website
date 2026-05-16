@@ -31,6 +31,7 @@ import { useProperty } from '@/hooks/useProperties';
 import { PropertyCardData } from '@/types';
 import { getPropertyLocation } from '@/lib/utils/property-transform';
 import { calculateBookingPrice, getDefaultStayType, normalizeStayType, stayTypeToQuery, type StayType } from '@/lib/booking';
+import { formatDateLabel, nightsBetween, normalizeDate } from '@/components/booking/calendar-utils';
 
 interface PropertyDetailClientProps {
   propertyId: string;
@@ -181,11 +182,11 @@ const AirbnbCalendar = dynamic(() => import('@/components/booking').then((mod) =
   loading: () => null,
 });
 
-export default function PropertyDetailClient({ propertyId }: PropertyDetailClientProps) {
+export default function PropertyDetailClient({ propertyId, initialProperty }: PropertyDetailClientProps) {
   const { t, locale } = useI18n();
   const { formatPrice: fp } = useCurrency();
   const router = useRouter();
-  const { property, isLoading, error } = useProperty(propertyId);
+  const { property, isLoading, error } = useProperty(propertyId, initialProperty);
   const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -368,15 +369,15 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
       return;
     }
 
-    const startDate = new Date(checkIn);
-    const endDate = new Date(checkOut);
+    const startDate = normalizeDate(checkIn);
+    const endDate = normalizeDate(checkOut);
     if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime()) || endDate <= startDate) {
       setBookingError(t('booking.validation.invalidRange', 'Check-out must be after check-in'));
       setShowCalendar(true);
       return;
     }
 
-    const nights = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    const nights = nightsBetween(checkIn, checkOut);
     const minNights = bookingPrice?.minNights || propertyCardData.minNights || 1;
     if (nights < minNights) {
       setBookingError(t('booking.validation.minNights', 'Minimum {count} nights required', { count: minNights }));
@@ -477,7 +478,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
             <div>
               <p className="text-sm font-semibold text-neutral-900">Modify reservation</p>
               <p className="mt-1 text-sm text-neutral-600">
-                {new Date(checkIn).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' })} – {new Date(checkOut).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' })}
+                {formatDateLabel(checkIn, locale === 'zh' ? 'zh-CN' : 'en-US')} – {formatDateLabel(checkOut, locale === 'zh' ? 'zh-CN' : 'en-US')}
               </p>
               <p className="mt-1 text-xs text-neutral-500">Change dates, extend your stay, or clear this selection.</p>
             </div>
@@ -501,7 +502,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
           >
             <p className="text-xs font-semibold text-neutral-900 uppercase">{t('booking.checkIn', 'Check-in')}</p>
             <p className="text-sm text-neutral-600 mt-1">
-              {checkIn ? new Date(checkIn).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' }) : t('booking.addDate')}
+              {checkIn ? formatDateLabel(checkIn, locale === 'zh' ? 'zh-CN' : 'en-US') : t('booking.addDate')}
             </p>
           </button>
           <button 
@@ -510,7 +511,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
           >
             <p className="text-xs font-semibold text-neutral-900 uppercase">{t('booking.checkOut', 'Checkout')}</p>
             <p className="text-sm text-neutral-600 mt-1">
-              {checkOut ? new Date(checkOut).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' }) : t('booking.addDate')}
+              {checkOut ? formatDateLabel(checkOut, locale === 'zh' ? 'zh-CN' : 'en-US') : t('booking.addDate')}
             </p>
           </button>
         </div>
@@ -968,7 +969,7 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
             <div>
               <p className="text-sm font-semibold text-neutral-900">Modify reservation</p>
               <p className="mt-1 text-sm text-neutral-600">
-                {new Date(checkIn).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' })} – {new Date(checkOut).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' })}
+                {formatDateLabel(checkIn, locale === 'zh' ? 'zh-CN' : 'en-US')} – {formatDateLabel(checkOut, locale === 'zh' ? 'zh-CN' : 'en-US')}
               </p>
             </div>
             <span className="text-sm font-semibold text-neutral-900 underline underline-offset-4">Edit</span>

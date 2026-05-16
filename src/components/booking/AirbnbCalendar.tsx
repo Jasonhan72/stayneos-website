@@ -3,7 +3,7 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { X, Star, ChevronLeft, ChevronRight, CalendarRange, Pencil } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { BookedDateRange, formatDateKey, hasBookedDateInRange, isDateBooked } from './calendar-utils';
+import { BookedDateRange, formatDateKey, formatDateLabel, hasBookedDateInRange, isDateBooked, nightsBetween, normalizeDate } from './calendar-utils';
 
 export interface AirbnbCalendarProps {
   checkIn: string;
@@ -41,7 +41,6 @@ export function AirbnbCalendar({
   onClose,
   onClearDates,
   totalPrice = 0,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   minNights,
   rating = 0,
   currency = 'CAD',
@@ -53,6 +52,7 @@ export function AirbnbCalendar({
   const [selectedEnd, setSelectedEnd] = useState<string>(checkOut);
   // Desktop: show 2 months side by side, starting from current month
   const [currentMonthOffset, setCurrentMonthOffset] = useState(0);
+  const [saveError, setSaveError] = useState('');
 
   // Sync with props
   useEffect(() => {
@@ -70,9 +70,7 @@ export function AirbnbCalendar({
   // Calculate nights
   const nights = useMemo(() => {
     if (!selectedStart || !selectedEnd) return 0;
-    const start = new Date(selectedStart);
-    const end = new Date(selectedEnd);
-    return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+    return nightsBetween(selectedStart, selectedEnd);
   }, [selectedStart, selectedEnd]);
 
   const _months = Math.max(1, Math.ceil(nights / 30)); // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -102,8 +100,8 @@ export function AirbnbCalendar({
     if (isDateBooked(date, bookedRanges)) return 'booked';
     
     const dateStr = formatDateKey(date);
-    const start = selectedStart ? new Date(selectedStart) : null;
-    const end = selectedEnd ? new Date(selectedEnd) : null;
+    const start = selectedStart ? normalizeDate(selectedStart) : null;
+    const end = selectedEnd ? normalizeDate(selectedEnd) : null;
     
     if (selectedStart && dateStr === selectedStart) return 'start';
     if (selectedEnd && dateStr === selectedEnd) return 'end';
@@ -112,6 +110,7 @@ export function AirbnbCalendar({
   }, [selectedStart, selectedEnd, today, bookedRanges]);
 
   const handleDateClick = useCallback((date: Date) => {
+    setSaveError('');
     if (date < today || isDateBooked(date, bookedRanges)) return;
     
     const dateStr = formatDateKey(date);
@@ -124,7 +123,7 @@ export function AirbnbCalendar({
       onSelectCheckOut('');
     } else {
       // Have start, selecting end
-      const startDate = new Date(selectedStart);
+      const startDate = normalizeDate(selectedStart);
       
       // Calculate minimum end date (at least 1 night after start)
       const minEndDate = new Date(startDate);
@@ -147,6 +146,7 @@ export function AirbnbCalendar({
   const handleClear = useCallback(() => {
     setSelectedStart('');
     setSelectedEnd('');
+    setSaveError('');
     if (onClearDates) {
       onClearDates();
     } else {
@@ -157,21 +157,25 @@ export function AirbnbCalendar({
 
   const handleSave = useCallback(() => {
     if (selectedStart && selectedEnd) {
+      const selectedNights = nightsBetween(selectedStart, selectedEnd);
+      if (minNights && selectedNights < minNights) {
+        setSaveError(`Minimum ${minNights} nights required`);
+        return;
+      }
+
+      setSaveError('');
       onSelectCheckIn(selectedStart);
       onSelectCheckOut(selectedEnd);
       if (onClose) onClose();
     }
-  }, [selectedStart, selectedEnd, onSelectCheckIn, onSelectCheckOut, onClose]);
+  }, [selectedStart, selectedEnd, minNights, onSelectCheckIn, onSelectCheckOut, onClose]);
 
   const formatDateRange = useCallback(() => {
     if (!selectedStart) return '';
     if (!selectedEnd) {
-      const date = new Date(selectedStart);
-      return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      return formatDateLabel(selectedStart, 'en-US', { weekday: 'short', month: 'short', day: 'numeric' });
     }
-    const start = new Date(selectedStart);
-    const end = new Date(selectedEnd);
-    return `${start.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} - ${end.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}`;
+    return `${formatDateLabel(selectedStart, 'en-US', { weekday: 'short', month: 'short', day: 'numeric' })} - ${formatDateLabel(selectedEnd, 'en-US', { weekday: 'short', month: 'short', day: 'numeric' })}`;
   }, [selectedStart, selectedEnd]);
 
   // Generate days for a month
@@ -335,7 +339,11 @@ export function AirbnbCalendar({
 
         {/* Footer with actions */}
         {showFooter && (
-          <div className="flex items-center justify-between mt-4 pt-4 border-t border-neutral-200 shrink-0">
+          <div className="mt-4 pt-4 border-t border-neutral-200 shrink-0">
+            {saveError && (
+              <p className="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">{saveError}</p>
+            )}
+            <div className="flex items-center justify-between">
             <div>
               {hasSelection ? (
                 <div>
@@ -384,6 +392,7 @@ export function AirbnbCalendar({
               >
                 Save
               </button>
+            </div>
             </div>
           </div>
         )}
@@ -629,7 +638,11 @@ export function AirbnbCalendar({
         </div>
 
         {/* Footer */}
-        <div className="border-t border-neutral-100 px-6 py-4 flex items-center justify-between shrink-0">
+        <div className="border-t border-neutral-100 px-6 py-4 shrink-0">
+          {saveError && (
+            <p className="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">{saveError}</p>
+          )}
+          <div className="flex items-center justify-between">
           <div>
             {hasSelection ? (
               <div className="flex items-baseline gap-2">
@@ -675,6 +688,7 @@ export function AirbnbCalendar({
             >
               Save
             </button>
+          </div>
           </div>
         </div>
       </div>

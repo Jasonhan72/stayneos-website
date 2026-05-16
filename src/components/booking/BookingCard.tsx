@@ -18,6 +18,7 @@ import {
 import { Button } from '@/components/ui';
 import { BookingPriceCalculator } from './BookingPriceCalculator';
 import { calculateBookingPrice } from '@/lib/booking';
+import { formatDateLabel, normalizeDate } from './calendar-utils';
 import { cn } from '@/lib/utils';
 import { useI18n } from '@/lib/i18n';
 
@@ -85,8 +86,8 @@ export function BookingCard({ property, className }: BookingCardProps) {
       return;
     }
 
-    const startDate = new Date(checkIn);
-    const endDate = new Date(checkOut);
+    const startDate = normalizeDate(checkIn);
+    const endDate = normalizeDate(checkOut);
     if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime()) || endDate <= startDate) {
       setError(t('booking.validation.invalidRange', 'Check-out must be after check-in'));
       return;
@@ -121,8 +122,7 @@ export function BookingCard({ property, className }: BookingCardProps) {
   // Format date for display
   const formatDateDisplay = (dateStr: string) => {
     if (!dateStr) return t('booking.addDate', 'Add date');
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return formatDateLabel(dateStr, 'en-US');
   };
 
   // Get reserve button text
