@@ -212,7 +212,26 @@ export function AirbnbCalendar({
 
   const hasSelection = selectedStart && selectedEnd;
   const hasAnyDate = selectedStart || selectedEnd;
+  const isSelectingCheckOut = Boolean(selectedStart && !selectedEnd);
   const isEditingReservation = Boolean(checkIn && checkOut);
+
+  const calendarTitle = hasSelection
+    ? `${displayCount} ${displayUnit}`
+    : isSelectingCheckOut
+      ? 'Select check-out date'
+      : isEditingReservation
+        ? 'Modify your dates'
+        : 'Select check-in date';
+
+  const calendarSubtitle = hasSelection
+    ? formatDateRange()
+    : isSelectingCheckOut
+      ? `Check-in: ${formatDateRange()}`
+      : isEditingReservation
+        ? 'Tap a new check-in or checkout to update your stay.'
+        : 'Add dates for prices';
+
+  const footerPrompt = isSelectingCheckOut ? 'Select check-out date' : 'Add dates for prices';
 
   // Mobile: Single month view with vertical scroll
   // Desktop: Two months side by side with horizontal navigation
@@ -311,10 +330,10 @@ export function AirbnbCalendar({
           )}
           <div>
             <h2 className="text-2xl font-semibold text-neutral-900">
-              {hasSelection ? `${displayCount} ${displayUnit}` : isEditingReservation ? 'Modify your dates' : 'Select check-in date'}
+              {calendarTitle}
             </h2>
             <p className="text-neutral-500 mt-1">
-              {hasSelection ? formatDateRange() : isEditingReservation ? 'Tap a new check-in or checkout to update your stay.' : 'Add dates for prices'}
+              {calendarSubtitle}
             </p>
           </div>
         </div>
@@ -360,7 +379,7 @@ export function AirbnbCalendar({
                 </div>
               ) : (
                 <div>
-                  <p className="text-neutral-900">Add dates for prices</p>
+                  <p className="text-neutral-900">{footerPrompt}</p>
                   {hasRating && (
                     <div className="flex items-center gap-2 mt-1">
                       <Star size={14} className="fill-black" />
@@ -437,10 +456,10 @@ export function AirbnbCalendar({
         )}
         <div>
           <h2 className="text-2xl font-semibold text-neutral-900">
-            {hasSelection ? `${displayCount} ${displayUnit}` : isEditingReservation ? 'Modify your dates' : 'Select check-in date'}
+            {calendarTitle}
           </h2>
           <p className="text-neutral-500 mt-1">
-            {hasSelection ? formatDateRange() : isEditingReservation ? 'Tap a new check-in or checkout to update your stay.' : 'Prices on calendar do not include taxes and fees'}
+            {calendarSubtitle}
           </p>
         </div>
       </div>
@@ -480,6 +499,8 @@ export function AirbnbCalendar({
                     textClasses = "text-transparent";
                   } else if (status === 'disabled') {
                     textClasses = "text-neutral-300 line-through cursor-not-allowed";
+                  } else if (status === 'booked') {
+                    textClasses = "text-neutral-400 cursor-not-allowed";
                   } else if (status === 'start' || status === 'end') {
                     textClasses = "bg-neutral-900 text-white rounded-full font-semibold cursor-pointer";
                   } else if (status === 'between') {
@@ -492,15 +513,17 @@ export function AirbnbCalendar({
                   return (
                     <button
                       key={index}
-                      onClick={() => !dayInfo.isDisabled && handleDateClick(dayInfo.date)}
-                      disabled={dayInfo.isDisabled || !dayInfo.isCurrentMonth}
+                      onClick={() => !dayInfo.isDisabled && status !== 'booked' && handleDateClick(dayInfo.date)}
+                      disabled={dayInfo.isDisabled || !dayInfo.isCurrentMonth || status === 'booked'}
                       className={cn(cellClasses, textClasses)}
                     >
                       <span className={cn(
-                        "w-10 h-10 flex items-center justify-center",
-                        isSelected && "bg-neutral-900 text-white rounded-full"
+                        "w-10 h-10 flex items-center justify-center relative overflow-hidden",
+                        isSelected && "bg-neutral-900 text-white rounded-full",
+                        status === 'booked' && "rounded-full bg-neutral-200 text-neutral-400"
                       )}>
                         {dayNumber}
+                        {status === 'booked' && <span className="absolute inset-0 pointer-events-none before:absolute before:left-1 before:right-1 before:top-1/2 before:h-px before:-translate-y-1/2 before:rotate-[-35deg] before:bg-neutral-500" />}
                       </span>
                     </button>
                   );
@@ -530,7 +553,7 @@ export function AirbnbCalendar({
               </div>
             ) : (
               <div>
-                <p className="text-neutral-900">Add dates for prices</p>
+                <p className="text-neutral-900">{footerPrompt}</p>
                 {hasRating && (
                   <div className="flex items-center gap-2 mt-1">
                     <Star size={14} className="fill-black" />
@@ -662,7 +685,7 @@ export function AirbnbCalendar({
                     <span className="text-sm text-neutral-500">·</span>
                   </>
                 )}
-                <span className="text-sm text-neutral-500">Add dates for prices</span>
+                <span className="text-sm text-neutral-500">{footerPrompt}</span>
               </div>
             )}
           </div>
