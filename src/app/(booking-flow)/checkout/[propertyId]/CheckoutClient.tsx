@@ -213,8 +213,12 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
       return;
     }
 
-    // Require name and email - from logged-in user or guest form
-    if (!guestName.trim() || !guestEmail.trim()) {
+    // Require name and email - prefer authenticated user profile, fall back to guest form.
+    const contactName = (guestName.trim() || user?.name || '').trim();
+    const contactEmail = (guestEmail.trim() || user?.email || '').trim();
+    const contactPhone = (guestPhone.trim() || user?.phone || '').trim();
+
+    if (!contactName || !contactEmail) {
       setShowGuestForm(true);
       return;
     }
@@ -224,13 +228,13 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
     params.set("checkOut", checkOut);
     params.set("amount", finalPrice.toString());
     params.set("stayType", stayTypeToQuery(stayType));
-    params.set("guestName", guestName.trim());
-    params.set("guestEmail", guestEmail.trim());
+    params.set("guestName", contactName);
+    params.set("guestEmail", contactEmail);
     params.set("adults", adults.toString());
     params.set("children", children.toString());
     params.set("infants", infants.toString());
     params.set("pets", pets.toString());
-    if (guestPhone.trim()) params.set("guestPhone", guestPhone.trim());
+    if (contactPhone) params.set("guestPhone", contactPhone);
 
     if (!isAuthenticated) {
       router.push(
@@ -254,9 +258,9 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
           checkIn,
           checkOut,
           guests: adults + children,
-          guestName: guestName.trim(),
-          guestEmail: guestEmail.trim(),
-          guestPhone: guestPhone.trim() || undefined,
+          guestName: contactName,
+          guestEmail: contactEmail,
+          guestPhone: contactPhone || undefined,
           stayType,
           unitCount: priceCalc?.unitCount,
           unitRate: priceCalc?.unitRate,
