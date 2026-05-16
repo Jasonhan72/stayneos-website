@@ -25,6 +25,7 @@ interface GooglePropertyMapProps {
 }
 
 type GoogleMapsWindow = Window & {
+  gm_authFailure?: () => void;
   google?: {
     maps: {
       Map: new (el: HTMLElement, opts: Record<string, unknown>) => unknown;
@@ -111,6 +112,11 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, onPr
 
     async function initMap() {
       if (!mapRef.current || properties.length === 0) return;
+      const winWithAuthFailure = window as GoogleMapsWindow;
+      winWithAuthFailure.gm_authFailure = () => {
+        if (!disposed) setMapError('Google Maps API authentication failed');
+      };
+
       try {
         await loadGoogleMaps();
         if (disposed || !mapRef.current) return;
@@ -164,6 +170,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, onPr
     return () => {
       disposed = true;
       const win = window as GoogleMapsWindow;
+      if (win.gm_authFailure) win.gm_authFailure = undefined;
       markersRef.current.forEach(({ marker }) => win.google?.maps.event.clearInstanceListeners(marker));
       markersRef.current = [];
       infoWindow?.close();
