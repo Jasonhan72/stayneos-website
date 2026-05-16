@@ -16,6 +16,20 @@ export function normalizeDate(dateLike: string | Date): Date {
   return date;
 }
 
+export function nightsBetween(startDateLike: string | Date, endDateLike: string | Date): number {
+  const start = normalizeDate(startDateLike);
+  const end = normalizeDate(endDateLike);
+  return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+export function formatDateLabel(
+  dateLike: string | Date,
+  locale: string = 'en-US',
+  options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' },
+): string {
+  return normalizeDate(dateLike).toLocaleDateString(locale, options);
+}
+
 export function isSameDay(a: Date, b: Date): boolean {
   return a.getTime() === b.getTime();
 }

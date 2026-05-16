@@ -3,7 +3,7 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { X, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { BookedDateRange, formatDateKey, hasBookedDateInRange, isDateBooked } from './calendar-utils';
+import { BookedDateRange, formatDateKey, formatDateLabel, hasBookedDateInRange, isDateBooked, nightsBetween, normalizeDate } from './calendar-utils';
 
 export interface FullscreenCalendarProps {
   isOpen: boolean;
@@ -41,6 +41,7 @@ export function FullscreenCalendar({
   onSelectCheckOut,
   onClearDates,
   pricePerNight = 0,
+  minNights,
   rating = 0,
   currency = 'CAD',
   bookedRanges = [],
@@ -48,6 +49,7 @@ export function FullscreenCalendar({
   const [selectedStart, setSelectedStart] = useState<string>(checkIn);
   const [selectedEnd, setSelectedEnd] = useState<string>(checkOut);
   const [currentMonthOffset, setCurrentMonthOffset] = useState(0);
+  const [saveError, setSaveError] = useState('');
 
   // Sync with props
   useEffect(() => {
@@ -65,9 +67,7 @@ export function FullscreenCalendar({
   // Calculate nights
   const nights = useMemo(() => {
     if (!selectedStart || !selectedEnd) return 0;
-    const start = new Date(selectedStart);
-    const end = new Date(selectedEnd);
-    return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+    return nightsBetween(selectedStart, selectedEnd);
   }, [selectedStart, selectedEnd]);
 
   const totalPrice = nights * pricePerNight;
@@ -95,8 +95,8 @@ export function FullscreenCalendar({
     if (isDateBooked(date, bookedRanges)) return 'booked';
     
     const dateStr = formatDateKey(date);
-    const start = selectedStart ? new Date(selectedStart) : null;
-    const end = selectedEnd ? new Date(selectedEnd) : null;
+    const start = selectedStart ? normalizeDate(selectedStart) : null;
+    const end = selectedEnd ? normalizeDate(selectedEnd) : null;
     
     if (selectedStart && dateStr === selectedStart) return 'start';
     if (selectedEnd && dateStr === selectedEnd) return 'end';
@@ -105,6 +105,7 @@ export function FullscreenCalendar({
   }, [selectedStart, selectedEnd, today, bookedRanges]);
 
   const handleDateClick = useCallback((date: Date) => {
+    setSaveError('');
     if (date < today || isDateBooked(date, bookedRanges)) return;
     
     const dateStr = formatDateKey(date);
@@ -115,7 +116,7 @@ export function FullscreenCalendar({
       onSelectCheckIn(dateStr);
       onSelectCheckOut('');
     } else {
-      const startDate = new Date(selectedStart);
+      const startDate = normalizeDate(selectedStart);
       
       if (date <= startDate || hasBookedDateInRange(selectedStart, dateStr, bookedRanges)) {
         setSelectedStart(dateStr);
@@ -132,26 +133,31 @@ export function FullscreenCalendar({
   const handleClear = useCallback(() => {
     setSelectedStart('');
     setSelectedEnd('');
+    setSaveError('');
     onClearDates();
   }, [onClearDates]);
 
   const handleSave = useCallback(() => {
     if (selectedStart && selectedEnd) {
+      const selectedNights = nightsBetween(selectedStart, selectedEnd);
+      if (minNights && selectedNights < minNights) {
+        setSaveError(`Minimum ${minNights} nights required`);
+        return;
+      }
+
+      setSaveError('');
       onSelectCheckIn(selectedStart);
       onSelectCheckOut(selectedEnd);
       onClose();
     }
-  }, [selectedStart, selectedEnd, onSelectCheckIn, onSelectCheckOut, onClose]);
+  }, [selectedStart, selectedEnd, minNights, onSelectCheckIn, onSelectCheckOut, onClose]);
 
   const formatDateRange = useCallback(() => {
     if (!selectedStart) return '';
     if (!selectedEnd) {
-      const date = new Date(selectedStart);
-      return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      return formatDateLabel(selectedStart, 'en-US', { weekday: 'short', month: 'short', day: 'numeric' });
     }
-    const start = new Date(selectedStart);
-    const end = new Date(selectedEnd);
-    return `${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}-${end.toLocaleDateString('en-US', { day: 'numeric', year: 'numeric' })}`;
+    return `${formatDateLabel(selectedStart, 'en-US', { month: 'short', day: 'numeric' })}-${formatDateLabel(selectedEnd, 'en-US', { day: 'numeric', year: 'numeric' })}`;
   }, [selectedStart, selectedEnd]);
 
   // Generate days for a month
@@ -394,7 +400,11 @@ export function FullscreenCalendar({
           </div>
         </div>
 
-        <div className="border-t border-neutral-100 px-6 py-4 flex items-center justify-between shrink-0">
+        <div className="border-t border-neutral-100 px-6 py-4 shrink-0">
+          {saveError && (
+            <p className="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">{saveError}</p>
+          )}
+          <div className="flex items-center justify-between">
           <div>
             {hasSelection ? (
               <div className="flex items-baseline gap-2">
@@ -440,6 +450,7 @@ export function FullscreenCalendar({
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 

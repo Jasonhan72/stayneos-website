@@ -39,9 +39,9 @@ export function useProperties() {
   };
 }
 
-export function useProperty(idOrSlug: string | null) {
-  const [property, setProperty] = useState<PropertyWithBookedRanges | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+export function useProperty(idOrSlug: string | null, initialProperty?: PropertyWithBookedRanges | null) {
+  const [property, setProperty] = useState<PropertyWithBookedRanges | null>(initialProperty || null);
+  const [isLoading, setIsLoading] = useState(!initialProperty);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
@@ -58,14 +58,16 @@ export function useProperty(idOrSlug: string | null) {
         const data = await res.json();
         setProperty(data.property ? { ...data.property, bookedRanges: data.bookedRanges || [] } : null);
       } catch (err) {
-        setError(err instanceof Error ? err : new Error('Unknown error'));
+        if (!initialProperty) {
+          setError(err instanceof Error ? err : new Error('Unknown error'));
+        }
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchProperty();
-  }, [idOrSlug]);
+  }, [idOrSlug, initialProperty]);
 
   return {
     property,
