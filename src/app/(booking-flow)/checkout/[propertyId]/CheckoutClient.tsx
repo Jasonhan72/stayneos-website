@@ -732,6 +732,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
           rating={property.reviewCount > 0 ? property.rating : 0}
           currency="CAD"
           bookedRanges={bookedRanges}
+          autoCloseOnRangeSelect
         />
       )}
 

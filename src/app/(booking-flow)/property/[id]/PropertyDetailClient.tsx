@@ -1039,6 +1039,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           rating={propertyCardData.reviewCount > 0 ? propertyCardData.rating : 0}
           currency="CAD"
           bookedRanges={bookedRanges}
+          autoCloseOnRangeSelect
         />
       )}
 

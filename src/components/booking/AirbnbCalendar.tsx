@@ -19,6 +19,7 @@ export interface AirbnbCalendarProps {
   className?: string;
   showFooter?: boolean;
   bookedRanges?: BookedDateRange[];
+  autoCloseOnRangeSelect?: boolean;
 }
 
 const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
@@ -47,6 +48,7 @@ export function AirbnbCalendar({
   className,
   showFooter = true,
   bookedRanges = [],
+  autoCloseOnRangeSelect = false,
 }: AirbnbCalendarProps) {
   const [selectedStart, setSelectedStart] = useState<string>(checkIn);
   const [selectedEnd, setSelectedEnd] = useState<string>(checkOut);
@@ -139,9 +141,19 @@ export function AirbnbCalendar({
         // Valid end date (at least 1 night after start)
         setSelectedEnd(dateStr);
         onSelectCheckOut(dateStr);
+
+        if (autoCloseOnRangeSelect) {
+          const selectedNights = nightsBetween(selectedStart, dateStr);
+          if (minNights && selectedNights < minNights) {
+            setSaveError(`Minimum ${minNights} nights required`);
+            return;
+          }
+          setSaveError('');
+          onClose?.();
+        }
       }
     }
-  }, [selectedStart, selectedEnd, today, onSelectCheckIn, onSelectCheckOut, bookedRanges]);
+  }, [selectedStart, selectedEnd, today, onSelectCheckIn, onSelectCheckOut, bookedRanges, autoCloseOnRangeSelect, minNights, onClose]);
 
   const handleClear = useCallback(() => {
     setSelectedStart('');
