@@ -1031,11 +1031,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           onSelectCheckOut={(date) => {
             setCheckOut(date);
             setBookingError('');
-            if (date && checkIn) {
-              const selectedNights = nightsBetween(checkIn, date);
-              const minNights = bookingPrice?.minNights || propertyCardData.minNights || 1;
-              if (selectedNights >= minNights) setShowCalendar(false);
-            }
+            if (date && checkIn) setShowCalendar(false);
           }}
           onClose={() => setShowCalendar(false)}
           onClearDates={() => {

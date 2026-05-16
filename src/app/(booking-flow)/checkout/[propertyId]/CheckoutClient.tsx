@@ -13,7 +13,6 @@ import { getLocalizedTitle } from "@/components/property/PropertyCard";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/context/UserContext";
 import { ensureCsrfToken } from "@/lib/security/csrf-client";
-import { nightsBetween } from "@/components/booking/calendar-utils";
 
 const AirbnbCalendar = dynamic(
   () => import("@/components/booking").then((mod) => mod.AirbnbCalendar),
@@ -724,11 +723,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
           onSelectCheckIn={setCheckIn}
           onSelectCheckOut={(date) => {
             setCheckOut(date);
-            if (date && checkIn) {
-              const selectedNights = nightsBetween(checkIn, date);
-              const minNights = property.minNights || 1;
-              if (selectedNights >= minNights) setShowDatePicker(false);
-            }
+            if (date && checkIn) setShowDatePicker(false);
           }}
           onClose={() => setShowDatePicker(false)}
           onClearDates={() => {

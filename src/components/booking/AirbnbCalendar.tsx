@@ -42,7 +42,7 @@ export function AirbnbCalendar({
   onClose,
   onClearDates,
   totalPrice = 0,
-  minNights,
+  minNights: _minNights,
   rating = 0,
   currency = 'CAD',
   className,
@@ -143,17 +143,15 @@ export function AirbnbCalendar({
         onSelectCheckOut(dateStr);
 
         if (autoCloseOnRangeSelect) {
-          const selectedNights = nightsBetween(selectedStart, dateStr);
-          if (minNights && selectedNights < minNights) {
-            setSaveError(`Minimum ${minNights} nights required`);
-            return;
-          }
+          // Confirming the date range should close the picker; booking-level
+          // minimum-stay validation is handled by the parent flow when the user
+          // continues, so Save never appears to be a no-op on mobile.
           setSaveError('');
           onClose?.();
         }
       }
     }
-  }, [selectedStart, selectedEnd, today, onSelectCheckIn, onSelectCheckOut, bookedRanges, autoCloseOnRangeSelect, minNights, onClose]);
+  }, [selectedStart, selectedEnd, today, onSelectCheckIn, onSelectCheckOut, bookedRanges, autoCloseOnRangeSelect, onClose]);
 
   const handleClear = useCallback(() => {
     setSelectedStart('');
@@ -169,18 +167,15 @@ export function AirbnbCalendar({
 
   const handleSave = useCallback(() => {
     if (selectedStart && selectedEnd) {
-      const selectedNights = nightsBetween(selectedStart, selectedEnd);
-      if (minNights && selectedNights < minNights) {
-        setSaveError(`Minimum ${minNights} nights required`);
-        return;
-      }
-
+      // Save confirms the date range only. The booking flow performs business
+      // validation (minimum stay, stay type) on continue so mobile Save cannot
+      // silently refuse to close.
       setSaveError('');
       onSelectCheckIn(selectedStart);
       onSelectCheckOut(selectedEnd);
       if (onClose) onClose();
     }
-  }, [selectedStart, selectedEnd, minNights, onSelectCheckIn, onSelectCheckOut, onClose]);
+  }, [selectedStart, selectedEnd, onSelectCheckIn, onSelectCheckOut, onClose]);
 
 
   const handleSavePointerDown = useCallback((event: React.PointerEvent<HTMLButtonElement>) => {
