@@ -71,4 +71,23 @@ describe('AirbnbCalendar', () => {
     expect(bookedButtons.some((button) => button.hasAttribute('disabled'))).toBe(true);
   });
 
+  it('closes mobile calendar when saving a complete date range', () => {
+    const onClose = jest.fn();
+
+    render(
+      <AirbnbCalendar
+        checkIn="2026-06-01"
+        checkOut="2026-06-06"
+        onSelectCheckIn={jest.fn()}
+        onSelectCheckOut={jest.fn()}
+        onClose={onClose}
+      />
+    );
+
+    const saveButtons = screen.getAllByRole('button', { name: 'Save' }).filter((button) => !button.hasAttribute('disabled'));
+    fireEvent.click(saveButtons[0]);
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
 });

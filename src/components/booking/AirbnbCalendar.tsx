@@ -170,6 +170,16 @@ export function AirbnbCalendar({
     }
   }, [selectedStart, selectedEnd, minNights, onSelectCheckIn, onSelectCheckOut, onClose]);
 
+
+  const handleSavePointerDown = useCallback((event: React.PointerEvent<HTMLButtonElement>) => {
+    if (!selectedStart || !selectedEnd) return;
+    // On mobile Safari/Chrome, the fixed footer can receive the native tap while
+    // the React click confirmation is swallowed by layout/scroll changes. Save on
+    // pointer down so the confirmation cannot become a no-op for touch users.
+    event.preventDefault();
+    handleSave();
+  }, [selectedStart, selectedEnd, handleSave]);
+
   const formatDateRange = useCallback(() => {
     if (!selectedStart) return '';
     if (!selectedEnd) {
@@ -400,6 +410,8 @@ export function AirbnbCalendar({
                 </button>
               )}
               <button
+                type="button"
+                onPointerDown={handleSavePointerDown}
                 onClick={handleSave}
                 disabled={!hasSelection}
                 className={cn(
@@ -565,6 +577,8 @@ export function AirbnbCalendar({
           </div>
           
           <button
+            type="button"
+            onPointerDown={handleSavePointerDown}
             onClick={handleSave}
             disabled={!hasSelection}
             className={cn(
@@ -700,6 +714,8 @@ export function AirbnbCalendar({
               </button>
             )}
             <button
+              type="button"
+              onPointerDown={handleSavePointerDown}
               onClick={handleSave}
               disabled={!hasSelection}
               className={cn(
