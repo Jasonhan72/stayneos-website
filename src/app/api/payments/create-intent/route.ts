@@ -18,7 +18,7 @@ export async function OPTIONS() {
 }
 
 export async function POST(request: NextRequest) {
-  return safeApiHandler(async () => {
+  return safeApiHandler<unknown>(async () => {
     const currentUser = await getCurrentUserFromRequest(request);
 
     if (!currentUser?.email) {
@@ -54,6 +54,32 @@ export async function POST(request: NextRequest) {
     const amountInCents = Math.round(Number(booking.totalPrice) * 100);
     const property = getPropertySnapshot(booking.propertyId);
 
+    if (!process.env.STRIPE_SECRET_KEY || !stripe.paymentIntents) {
+      await paymentDb.upsertPending(db, {
+        bookingId: booking.id,
+        amount: booking.totalPrice,
+        currency: booking.currency,
+        stripePaymentIntentId: `manual_${booking.id}`,
+        status: "PENDING",
+        metadata: {
+          mode: "manual_payment_request",
+          reason: "stripe_not_configured",
+        },
+      });
+
+      return NextResponse.json(
+        {
+          success: true,
+          manual: true,
+          clientSecret: null,
+          paymentIntentId: null,
+          amount: amountInCents,
+          currency: booking.currency,
+        },
+        { headers: JSON_HEADERS }
+      );
+    }
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amountInCents,
       currency: booking.currency.toLowerCase(),
@@ -86,6 +112,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
+        manual: false,
         clientSecret: paymentIntent.client_secret,
         paymentIntentId: paymentIntent.id,
         amount: amountInCents,

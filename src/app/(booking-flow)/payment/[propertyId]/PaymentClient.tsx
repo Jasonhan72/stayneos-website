@@ -39,6 +39,7 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
   // Stripe
   const [clientSecret, setClientSecret] = useState('');
   const [paymentReady, setPaymentReady] = useState(false);
+  const [manualPaymentReady, setManualPaymentReady] = useState(false);
   
   // Promo code
   const [promoCode, setPromoCode] = useState('');
@@ -107,7 +108,15 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.error || 'Failed to initialize payment');
+          const errorMessage = typeof data.error === 'string'
+            ? data.error
+            : data.error?.message || 'Failed to initialize payment';
+          throw new Error(errorMessage);
+        }
+
+        if (data.manual) {
+          setManualPaymentReady(true);
+          return;
         }
 
         setClientSecret(data.clientSecret);
@@ -288,6 +297,19 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
                       onError={handlePaymentError}
                     />
                   </StripeProvider>
+                ) : manualPaymentReady ? (
+                  <div className="space-y-4">
+                    <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+                      Secure card payment is not configured for this deployment yet. Submit the booking request now and NEOS will follow up with payment instructions.
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handlePaymentSuccess}
+                      className="w-full rounded-xl bg-black px-6 py-4 text-base font-semibold text-white transition-colors hover:bg-neutral-800"
+                    >
+                      Submit booking request
+                    </button>
+                  </div>
                 ) : !error && (
                   <div className="flex items-center justify-center py-8">
                     <div className="w-6 h-6 border-2 border-neutral-300 border-t-black rounded-full animate-spin" />
