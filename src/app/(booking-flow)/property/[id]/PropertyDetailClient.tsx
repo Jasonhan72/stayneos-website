@@ -1028,7 +1028,15 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           checkIn={checkIn}
           checkOut={checkOut}
           onSelectCheckIn={(date) => { setCheckIn(date); setBookingError(''); }}
-          onSelectCheckOut={(date) => { setCheckOut(date); setBookingError(''); }}
+          onSelectCheckOut={(date) => {
+            setCheckOut(date);
+            setBookingError('');
+            if (date && checkIn) {
+              const selectedNights = nightsBetween(checkIn, date);
+              const minNights = bookingPrice?.minNights || propertyCardData.minNights || 1;
+              if (selectedNights >= minNights) setShowCalendar(false);
+            }
+          }}
           onClose={() => setShowCalendar(false)}
           onClearDates={() => {
             setCheckIn('');
