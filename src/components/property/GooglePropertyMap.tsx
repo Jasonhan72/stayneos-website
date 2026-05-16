@@ -195,10 +195,10 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, onPr
         Map · {properties.length} furnished stays
       </div>
 
-      <div ref={mapRef} className="absolute inset-0" aria-label="Properties map" />
+      <div ref={mapRef} className={cn("absolute inset-0", mapError && "hidden")} aria-label="Properties map" />
 
       {mapError && (
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,#e5e7eb_0,#e5e7eb_2px,transparent_3px),linear-gradient(135deg,#f5f5f4,#e7e5e4)]">
+        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_30%_20%,#e5e7eb_0,#e5e7eb_2px,transparent_3px),linear-gradient(135deg,#f5f5f4,#e7e5e4)]">
           <div className="absolute inset-0 opacity-40 [background-image:linear-gradient(90deg,#d4d4d4_1px,transparent_1px),linear-gradient(#d4d4d4_1px,transparent_1px)] [background-size:48px_48px]" />
           {properties.map((property, index) => {
             const selected = property.id === selectedPropertyId;
