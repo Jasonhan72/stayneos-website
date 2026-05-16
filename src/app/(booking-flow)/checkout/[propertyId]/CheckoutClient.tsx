@@ -214,9 +214,20 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
     }
 
     // Require name and email - prefer authenticated user profile, fall back to guest form.
-    const contactName = (guestName.trim() || user?.name || '').trim();
-    const contactEmail = (guestEmail.trim() || user?.email || '').trim();
-    const contactPhone = (guestPhone.trim() || user?.phone || '').trim();
+    let contactName = (guestName.trim() || user?.name || '').trim();
+    let contactEmail = (guestEmail.trim() || user?.email || '').trim();
+    let contactPhone = (guestPhone.trim() || user?.phone || '').trim();
+
+    if ((!contactName || !contactEmail) && isAuthenticated) {
+      try {
+        const session = await fetch('/api/auth/session', { cache: 'no-store' }).then((res) => res.json());
+        contactName = (contactName || session?.user?.name || '').trim();
+        contactEmail = (contactEmail || session?.user?.email || '').trim();
+        contactPhone = (contactPhone || session?.user?.phone || '').trim();
+      } catch {
+        // Fall through to the guest form validation below.
+      }
+    }
 
     if (!contactName || !contactEmail) {
       setShowGuestForm(true);
