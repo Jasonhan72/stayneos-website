@@ -9,6 +9,11 @@ const createStripeInstance = (): Stripe => {
   }
   return new Stripe(process.env.STRIPE_SECRET_KEY, {
     apiVersion: '2026-01-28.clover',
+    // Cloudflare Workers do not provide Node's http/https modules.
+    // Force Stripe onto fetch so PaymentIntent creation returns instead of hanging.
+    httpClient: Stripe.createFetchHttpClient(),
+    maxNetworkRetries: 1,
+    timeout: 10000,
   });
 };
 
