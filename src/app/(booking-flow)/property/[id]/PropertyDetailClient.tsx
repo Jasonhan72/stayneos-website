@@ -1,7 +1,7 @@
 // Property Detail Page - Airbnb Style with Desktop Two-Column Layout (使用真实 API)
 'use client';
 
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo } from 'react';
 import ResponsiveImage from '@/components/ui/ResponsiveImage';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
@@ -11,8 +11,6 @@ import {
   Heart,
   Share,
   ChevronLeft,
-  ChevronRight,
-  X,
   Trophy,
   Waves,
   Check,
@@ -39,6 +37,7 @@ import { calculateBookingPrice, getDefaultStayType, normalizeStayType, stayTypeT
 import { formatDateLabel, nightsBetween, normalizeDate } from '@/components/booking/calendar-utils';
 import { GOOGLE_MAPS_API_KEY, googleMapsSearchUrl, hasUsableGoogleMapsKey } from '@/lib/google-maps';
 import BookingSidebar from '@/components/property/BookingSidebar';
+import ListingGallery from '@/components/property/ListingGallery';
 
 interface PropertyDetailClientProps {
   propertyId: string;
@@ -196,24 +195,8 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   const { property, isLoading, error } = useProperty(propertyId, initialProperty);
   const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { isWishlisted, toggleWishlist } = useWishlist();
   const isLiked = isWishlisted(propertyId);
-  const [showGallery, setShowGallery] = useState(false);
-
-  // Mobile carousel scroll ref
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  // Handle scroll to update current image index
-  const handleScroll = () => {
-    if (scrollContainerRef.current) {
-      const scrollLeft = scrollContainerRef.current.scrollLeft;
-      const containerWidth = scrollContainerRef.current.offsetWidth;
-      const newIndex = Math.round(scrollLeft / containerWidth);
-      setCurrentImageIndex(Math.max(0, Math.min(newIndex, imageUrls.length - 1)));
-    }
-  };
-
   // Booking state
   const [checkIn, setCheckIn] = useState(() => searchParams.get('checkIn') || '');
   const [checkOut, setCheckOut] = useState(() => searchParams.get('checkOut') || '');
@@ -315,18 +298,6 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
       </div>
     );
   }
-
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => prev === property.images.length - 1 ? 0 : prev + 1);
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex((prev) => prev === 0 ? property.images.length - 1 : prev - 1);
-  };
-
-  const selectImage = (index: number) => {
-    setCurrentImageIndex(index);
-  };
 
   // Format property type and location
   const propertyType = propertyCardData.bedrooms <= 1 ? t('property.entireCondo') : t('property.entireHome');
@@ -575,134 +546,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
         </div>
       </Container>
 
-      {/* Full Width Image Gallery - Desktop Grid / Mobile Carousel */}
-      <div className="relative">
-        {/* Mobile: Swipe Carousel with CSS Scroll Snap */}
-        <div className="md:hidden relative w-full bg-neutral-100">
-          <div
-            ref={scrollContainerRef}
-            onScroll={handleScroll}
-            className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            {imageUrls.map((url, index) => (
-              <div
-                key={index}
-                className="w-full flex-shrink-0 snap-center relative aspect-[4/3]"
-              >
-                <ResponsiveImage
-                  src={url}
-                  alt={`${localizedTitle} - Image ${index + 1}`}
-                  fill
-                  priority={index === 0}
-                  className="object-cover"
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* Mobile Carousel Arrows */}
-          {imageUrls.length > 1 && (
-            <>
-              <button
-                onClick={() => {
-                  if (scrollContainerRef.current) {
-                    const w = scrollContainerRef.current.offsetWidth;
-                    scrollContainerRef.current.scrollTo({ left: (currentImageIndex - 1) * w, behavior: 'smooth' });
-                  }
-                }}
-                className={`absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 shadow flex items-center justify-center ${currentImageIndex === 0 ? 'opacity-0 pointer-events-none' : ''}`}
-                aria-label="Previous image"
-              >
-                <ChevronLeft size={18} />
-              </button>
-              <button
-                onClick={() => {
-                  if (scrollContainerRef.current) {
-                    const w = scrollContainerRef.current.offsetWidth;
-                    scrollContainerRef.current.scrollTo({ left: (currentImageIndex + 1) * w, behavior: 'smooth' });
-                  }
-                }}
-                className={`absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 shadow flex items-center justify-center ${currentImageIndex === imageUrls.length - 1 ? 'opacity-0 pointer-events-none' : ''}`}
-                aria-label="Next image"
-              >
-                <ChevronRight size={18} />
-              </button>
-            </>
-          )}
-
-          {/* Image Counter */}
-          <div className="absolute bottom-4 right-4 px-3 py-1.5 bg-black/70 text-white text-sm rounded-lg">
-            {currentImageIndex + 1} / {imageUrls.length}
-          </div>
-        </div>
-
-        {/* Desktop: Grid Gallery */}
-        <Container className="hidden md:block">
-          <div className="relative">
-            {imageUrls.length === 1 ? (
-              /* 1 image: full width */
-              <div className="h-[400px] rounded-xl overflow-hidden relative cursor-pointer hover:opacity-95 transition-opacity"
-                onClick={() => setShowGallery(true)}
-              >
-                <ResponsiveImage src={imageUrls[0]} alt={localizedTitle} fill priority={true} className="object-cover" />
-              </div>
-            ) : imageUrls.length === 2 ? (
-              /* 2 images: side by side */
-              <div className="grid grid-cols-2 gap-2 h-[400px] rounded-xl overflow-hidden">
-                {imageUrls.slice(0, 2).map((img, idx) => (
-                  <div key={idx} className="relative cursor-pointer hover:opacity-95 transition-opacity"
-                    onClick={() => { setCurrentImageIndex(idx); setShowGallery(true); }}>
-                    <ResponsiveImage src={img} alt={`${localizedTitle} - ${idx + 1}`} fill className="object-cover" priority={idx === 0} />
-                  </div>
-                ))}
-              </div>
-            ) : imageUrls.length <= 4 ? (
-              /* 3-4 images: 1 large left + stacked right */
-              <div className="grid grid-cols-2 gap-2 h-[400px] rounded-xl overflow-hidden">
-                <div className="relative cursor-pointer hover:opacity-95 transition-opacity"
-                  onClick={() => setShowGallery(true)}>
-                  <ResponsiveImage src={imageUrls[0]} alt={localizedTitle} fill priority={true} className="object-cover" />
-                </div>
-                <div className={`grid ${imageUrls.length === 3 ? 'grid-rows-2' : 'grid-cols-2 grid-rows-2'} gap-2`}>
-                  {imageUrls.slice(1).map((img, idx) => (
-                    <div key={idx} className={`relative cursor-pointer hover:opacity-95 transition-opacity ${imageUrls.length === 4 ? '' : idx === 0 ? '' : ''}`}
-                      onClick={() => { setCurrentImageIndex(idx + 1); setShowGallery(true); }}>
-                      <ResponsiveImage src={img} alt={`${localizedTitle} - ${idx + 2}`} fill className="object-cover" />
-                      {idx === imageUrls.length - 2 && (
-                        <button onClick={(e) => { e.stopPropagation(); setShowGallery(true); }}
-                          className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-lg border border-neutral-900 bg-white px-4 py-2 text-sm font-medium text-neutral-900 shadow-sm transition-colors hover:bg-neutral-50 z-10">
-                          {t('property.showAllPhotos', 'Show all photos')}
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              /* 5+ images: Airbnb classic - 1 large left (2x2) + 4 right */
-              <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[400px] rounded-xl overflow-hidden">
-                <div className="col-span-2 row-span-2 relative cursor-pointer hover:opacity-95 transition-opacity"
-                  onClick={() => setShowGallery(true)}>
-                  <ResponsiveImage src={imageUrls[0]} alt={localizedTitle} fill priority={true} className="object-cover" />
-                </div>
-                {imageUrls.slice(1, 5).map((img, idx) => (
-                  <div key={idx} className="relative cursor-pointer hover:opacity-95 transition-opacity"
-                    onClick={() => { setCurrentImageIndex(idx + 1); setShowGallery(true); }}>
-                    <ResponsiveImage src={img} alt={`${localizedTitle} - ${idx + 2}`} fill className="object-cover" />
-                    {idx === 3 && (
-                      <button onClick={(e) => { e.stopPropagation(); setShowGallery(true); }}
-                        className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-lg border border-neutral-900 bg-white px-4 py-2 text-sm font-medium text-neutral-900 shadow-sm transition-colors hover:bg-neutral-50 z-10">
-                        {t('property.showAllPhotos', 'Show all photos')}
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </Container>
-      </div>
+      <ListingGallery images={imageUrls} title={localizedTitle} />
 
       {/* Main Content - Two Column Layout on Desktop */}
       <Container className="pt-6">
@@ -1161,70 +1005,6 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
         </div>
       )}
 
-      {/* Full Screen Gallery Modal */}
-      {showGallery && (
-        <div className="fixed inset-0 z-50 bg-neutral-900">
-          <div className="h-full flex flex-col">
-            {/* Header */}
-            <div className="flex items-center justify-between p-4 bg-neutral-900">
-              <h3 className="text-white font-medium">
-                {currentImageIndex + 1} / {imageUrls.length}
-              </h3>
-              <button
-                onClick={() => setShowGallery(false)}
-                className="p-2 text-white hover:bg-neutral-800 transition-colors rounded-full"
-                aria-label="Close gallery"
-              >
-                <X size={24} />
-              </button>
-            </div>
-
-            {/* Main Image */}
-            <div className="flex-1 relative flex items-center justify-center">
-              <ResponsiveImage
-                src={imageUrls[currentImageIndex]}
-                alt={`${localizedTitle} - Image ${currentImageIndex + 1}`}
-                fill
-                className="object-cover"
-              />
-              <button
-                onClick={prevImage}
-                className="absolute left-4 p-3 bg-white/10 hover:bg-white/20 text-white transition-colors rounded-full"
-                aria-label="Previous image"
-              >
-                <ChevronLeft size={32} />
-              </button>
-
-              <button
-                onClick={nextImage}
-                className="absolute right-4 p-3 bg-white/10 hover:bg-white/20 text-white transition-colors rounded-full"
-                aria-label="Next image"
-              >
-                <ChevronRight size={32} />
-              </button>
-            </div>
-
-            {/* Thumbnails */}
-            <div className="p-4 bg-neutral-900">
-              <div className="flex gap-2 overflow-x-auto justify-center">
-                {imageUrls.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => selectImage(index)}
-                    className={`relative flex-shrink-0 w-20 h-14 overflow-hidden transition-all rounded-lg ${
-                      index === currentImageIndex
-                        ? 'ring-2 ring-white ring-offset-2 ring-offset-neutral-900'
-                        : 'opacity-50 hover:opacity-100'
-                    }`}
-                  >
-                    <ResponsiveImage src={image} alt={`Thumbnail ${index + 1}`} fill className="object-cover" />
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </main>
+          </main>
   );
 }
