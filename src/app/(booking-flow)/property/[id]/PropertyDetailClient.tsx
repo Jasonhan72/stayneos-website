@@ -32,7 +32,6 @@ import { useI18n } from '@/lib/i18n';
 import { useWishlist } from '@/lib/context/WishlistContext';
 import { useAuth } from '@/lib/context/UserContext';
 import { LoginModal } from '@/components/auth/LoginModal';
-import { useCurrency } from '@/hooks/useCurrency';
 import { useProperty } from '@/hooks/useProperties';
 import { PropertyCardData } from '@/types';
 import { getPropertyLocation } from '@/lib/utils/property-transform';
@@ -192,7 +191,6 @@ const AirbnbCalendar = dynamic(() => import('@/components/booking').then((mod) =
 
 export default function PropertyDetailClient({ propertyId, initialProperty }: PropertyDetailClientProps) {
   const { t, locale } = useI18n();
-  const { formatPrice: _fp } = useCurrency();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { property, isLoading, error } = useProperty(propertyId, initialProperty);
