@@ -1,299 +1,39 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { ArrowLeft, ImagePlus, Info, Loader2, Send, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserAvatarCompact } from "@/components/ui/UserAvatar";
-import type { ApiConversation, ApiMessage } from "@/types/api/messages";
+import type { ApiAttachment, ApiConversation, ApiMessage } from "@/types/api/messages";
 
-// ── helpers ──────────────────────────────────────────────
-function formatDateDivider(ts: number): string {
-  const d = new Date(ts);
-  const now = new Date();
-  const diff = Math.floor((now.getTime() - d.getTime()) / 86400000);
-  if (diff === 0) return "Today";
-  if (diff === 1) return "Yesterday";
-  return d.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-}
+function formatDivider(ts: number) { const d = new Date(ts); const today = new Date().toDateString(); if (d.toDateString() === today) return "Today"; return d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }); }
+function formatTime(ts: number) { return new Date(ts).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }); }
+function showDivider(messages: ApiMessage[], idx: number) { return idx === 0 || new Date(messages[idx].createdAt).toDateString() !== new Date(messages[idx - 1].createdAt).toDateString(); }
 
-function formatMsgTime(ts: number): string {
-  return new Date(ts).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
-}
+interface Props { conversation: ApiConversation; messages: ApiMessage[]; loading: boolean; loadingOlder?: boolean; hasMore?: boolean; refreshing?: boolean; error?: string | null; onBack: () => void; onLoadOlder: () => void; onSend: (text: string, attachments?: ApiAttachment[]) => Promise<void>; onToggleDetails: () => void; detailsVisible: boolean; t: (k: string, d: string) => string; currentUserId: string; }
 
-function shouldShowDateDivider(msgs: ApiMessage[], idx: number): boolean {
-  if (idx === 0) return true;
-  const curr = new Date(msgs[idx].createdAt).toDateString();
-  const prev = new Date(msgs[idx - 1].createdAt).toDateString();
-  return curr !== prev;
-}
+const templates = ["Hi! I’m checking on this stay.", "Thanks — that works for me.", "Could you share a little more detail?", "I’ll get back to you shortly."];
 
-// ── Props ────────────────────────────────────────────────
-interface Props {
-  conversation: ApiConversation;
-  messages: ApiMessage[];
-  loading: boolean;
-  wsConnected: boolean;
-  onBack: () => void;
-  onSend: (text: string) => Promise<void>;
-  onToggleDetails: () => void;
-  detailsVisible: boolean;
-  t: (k: string, d: string) => string;
-  currentUserId: string;
-}
-
-// ── Component ────────────────────────────────────────────
-export default function ChatArea({
-  conversation,
-  messages,
-  loading,
-  wsConnected,
-  onBack,
-  onSend,
-  onToggleDetails,
-  detailsVisible,
-  t,
-  currentUserId,
-}: Props) {
-  const [newMsg, setNewMsg] = useState("");
+export default function ChatArea({ conversation, messages, loading, loadingOlder, hasMore, refreshing, error, onBack, onLoadOlder, onSend, onToggleDetails, detailsVisible, t, currentUserId }: Props) {
+  const [text, setText] = useState("");
+  const [attachments, setAttachments] = useState<ApiAttachment[]>([]);
   const [sending, setSending] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const name = conversation.otherPerson?.name || (conversation.type === "host_guest" ? "StayNeos host" : "Guest");
 
-  // Auto-scroll to bottom on new messages
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
-  }, [messages]);
+  useEffect(() => { const el = scrollRef.current; if (!el || loadingOlder) return; el.scrollTo({ top: el.scrollHeight, behavior: "smooth" }); }, [messages.length, loadingOlder]);
+  useEffect(() => { const ta = textareaRef.current; if (!ta) return; ta.style.height = "auto"; ta.style.height = `${Math.min(ta.scrollHeight, 128)}px`; }, [text]);
 
-  // Auto-resize textarea
-  useEffect(() => {
-    const ta = textareaRef.current;
-    if (!ta) return;
-    ta.style.height = "auto";
-    ta.style.height = `${Math.min(ta.scrollHeight, 120)}px`;
-  }, [newMsg]);
+  async function handleSend() { if ((!text.trim() && attachments.length === 0) || sending) return; setSending(true); try { await onSend(text.trim(), attachments); setText(""); setAttachments([]); } finally { setSending(false); textareaRef.current?.focus(); } }
+  function onKeyDown(e: React.KeyboardEvent) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }
+  function onFiles(files: FileList | null) { const file = files?.[0]; if (!file) return; const reader = new FileReader(); reader.onload = () => setAttachments([{ type: "image", url: String(reader.result), name: file.name, size: file.size }]); reader.readAsDataURL(file); }
 
-  const handleSend = async () => {
-    if (!newMsg.trim() || sending) return;
-    setSending(true);
-    try {
-      await onSend(newMsg.trim());
-      setNewMsg("");
-    } finally {
-      setSending(false);
-      textareaRef.current?.focus();
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
-
-  const label = conversation.type === "host_guest" ? "Guest" : "Chat";
-
-  return (
-    <div className="flex h-full flex-col bg-white">
-      {/* ── Sticky Header ─────────────────────────────── */}
-      <div className="shrink-0 border-b border-neutral-100 px-4 py-3">
-        <div className="flex items-center gap-3">
-          {/* Mobile back button */}
-          <button
-            type="button"
-            onClick={onBack}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full hover:bg-neutral-100 md:hidden"
-            aria-label={t("messages.backToList", "Back to messages")}
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="text-neutral-700"
-            >
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-          </button>
-
-          <UserAvatarCompact name={label} image={null} className="!h-10 !w-10" />
-
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold text-neutral-900">{label}</p>
-            <p className="truncate text-xs text-neutral-500">
-              {conversation.type === "host_guest" ? "Host-Guest Chat" : "Direct Message"}
-              {wsConnected && (
-                <span className="ml-1 text-green-600">● connected</span>
-              )}
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={onToggleDetails}
-            className={cn(
-              "hidden shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors md:inline-flex items-center gap-1",
-              detailsVisible
-                ? "bg-neutral-900 text-white"
-                : "border border-neutral-200 text-neutral-700 hover:bg-neutral-50"
-            )}
-          >
-            {detailsVisible
-              ? t("messages.hideDetails", "Hide details")
-              : t("messages.showDetails", "Show details")}
-          </button>
-        </div>
-      </div>
-
-      {/* ── Messages ──────────────────────────────────── */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-6">
-        {loading ? (
-          <div className="flex items-center justify-center py-16">
-            <div className="h-6 w-6 animate-spin rounded-full border-2 border-neutral-300 border-t-accent" />
-          </div>
-        ) : (
-          <div className="mx-auto max-w-2xl space-y-4">
-            {messages.map((msg, idx) => {
-              const isOwn = msg.senderId === currentUserId;
-              return (
-                <React.Fragment key={msg.id}>
-                  {shouldShowDateDivider(messages, idx) && (
-                    <div className="flex items-center gap-3 py-2">
-                      <div className="flex-1 border-t border-neutral-100" />
-                      <span className="shrink-0 text-xs font-medium text-neutral-400">
-                        {formatDateDivider(msg.createdAt)}
-                      </span>
-                      <div className="flex-1 border-t border-neutral-100" />
-                    </div>
-                  )}
-
-                  <div
-                    className={cn(
-                      "flex gap-3",
-                      isOwn ? "flex-row-reverse" : "flex-row"
-                    )}
-                  >
-                    {/* Avatar - only show for other users */}
-                    {!isOwn ? (
-                      <div className="shrink-0 pt-1">
-                        <UserAvatarCompact name={label} image={null} className="!h-7 !w-7" />
-                      </div>
-                    ) : (
-                      <div className="w-7 shrink-0" />
-                    )}
-
-                    <div
-                      className={cn(
-                        "group max-w-[75%] sm:max-w-[65%]",
-                        isOwn ? "items-end" : "items-start"
-                      )}
-                    >
-                      {/* Bubble */}
-                      <div
-                        className={cn(
-                          "relative rounded-2xl px-4 py-2.5 text-sm leading-relaxed",
-                          isOwn
-                            ? "rounded-br-md bg-accent text-white"
-                            : "rounded-bl-md bg-neutral-100 text-neutral-800"
-                        )}
-                      >
-                        {msg.body}
-                      </div>
-
-                      {/* Timestamp */}
-                      <div
-                        className={cn(
-                          "mt-1 flex items-center gap-2",
-                          isOwn ? "justify-end" : "justify-start"
-                        )}
-                      >
-                        <span className="text-[11px] text-neutral-400">
-                          {formatMsgTime(msg.createdAt)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </React.Fragment>
-              );
-            })}
-          </div>
-        )}
-      </div>
-
-      {/* ── Input Area ────────────────────────────────── */}
-      <div className="shrink-0 border-t border-neutral-100 p-4">
-        <div className="mx-auto flex max-w-2xl items-end gap-2">
-          {/* Attachment button (placeholder) */}
-          <button
-            type="button"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-600"
-            aria-label={t("messages.attachFile", "Attach file")}
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
-            </svg>
-          </button>
-
-          {/* Textarea */}
-          <textarea
-            ref={textareaRef}
-            rows={1}
-            value={newMsg}
-            onChange={(e) => setNewMsg(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={t("messages.typeMessage", "Type a message...")}
-            className="flex-1 resize-none rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-neutral-400 focus:bg-white"
-          />
-
-          {/* Send button */}
-          <button
-            type="button"
-            onClick={handleSend}
-            disabled={!newMsg.trim() || sending}
-            className={cn(
-              "flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors",
-              newMsg.trim() && !sending
-                ? "bg-accent text-white hover:bg-accent/90"
-                : "bg-neutral-100 text-neutral-400 cursor-not-allowed"
-            )}
-            aria-label={t("messages.send", "Send")}
-          >
-            {sending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-            ) : (
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-              </svg>
-            )}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+  return <div className="flex h-full min-w-0 flex-col bg-white">
+    <div className="shrink-0 border-b border-neutral-200 bg-white px-4 py-3 md:px-6"><div className="flex items-center gap-3"><button type="button" onClick={onBack} className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-neutral-100 md:hidden" aria-label="Back"><ArrowLeft className="h-5 w-5" /></button><UserAvatarCompact name={name} image={conversation.otherPerson?.avatar || null} className="!h-11 !w-11" /><div className="min-w-0 flex-1"><p className="truncate text-base font-semibold text-neutral-950">{name}</p><p className="truncate text-xs text-neutral-500">{conversation.property?.title || "StayNeos conversation"}{refreshing ? <span className="ml-2 text-[#00A699]">refreshing…</span> : null}</p></div><button type="button" onClick={onToggleDetails} className={cn("flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-semibold", detailsVisible ? "border-neutral-950 bg-neutral-950 text-white" : "border-neutral-200 text-neutral-800 hover:bg-neutral-50")}><Info className="h-4 w-4" /><span className="hidden sm:inline">Details</span></button></div></div>
+    <div ref={scrollRef} className="flex-1 overflow-y-auto bg-[#F7F7F7] px-4 py-5 md:px-8"><div className="mx-auto max-w-3xl">{hasMore ? <div className="mb-4 flex justify-center"><button onClick={onLoadOlder} disabled={loadingOlder} className="rounded-full border border-neutral-200 bg-white px-4 py-2 text-xs font-bold text-neutral-700 shadow-sm hover:shadow">{loadingOlder ? "Loading…" : "Load earlier messages"}</button></div> : null}{loading ? <div className="flex justify-center py-20"><Loader2 className="h-7 w-7 animate-spin text-neutral-400" /></div> : null}{error && !loading ? <div className="rounded-3xl border border-red-100 bg-white p-5 text-sm text-red-700">{error}</div> : null}{!loading && !error && messages.length === 0 ? <div className="rounded-[32px] bg-white p-10 text-center shadow-sm"><div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#FF385C]/10"><Sparkles className="h-7 w-7 text-[#FF385C]" /></div><h2 className="text-lg font-semibold text-neutral-950">Start the conversation</h2><p className="mt-2 text-sm text-neutral-500">Send a quick note about check-in, arrival time, or anything you need for this stay.</p></div> : null}{messages.map((msg, idx) => { const own = msg.senderId === currentUserId; return <React.Fragment key={msg.id}>{showDivider(messages, idx) ? <div className="my-6 flex items-center gap-4"><div className="h-px flex-1 bg-neutral-200"/><span className="text-xs font-semibold text-neutral-500">{formatDivider(msg.createdAt)}</span><div className="h-px flex-1 bg-neutral-200"/></div> : null}<div className={cn("mb-3 flex gap-3", own ? "justify-end" : "justify-start")}><div className={cn("flex max-w-[78%] flex-col", own ? "items-end" : "items-start")}>{!own ? <span className="mb-1 text-xs font-semibold text-neutral-500">{name}</span> : null}<div className={cn("rounded-[22px] px-4 py-3 text-[15px] leading-6 shadow-sm", own ? "rounded-br-md bg-neutral-950 text-white" : "rounded-bl-md bg-white text-neutral-900")}>{msg.body ? <p className="whitespace-pre-wrap break-words">{msg.body}</p> : null}{msg.attachments?.map((a, i) => a.type === "image" ? <img key={i} src={a.url} alt={a.name || "attachment"} className="mt-2 max-h-72 rounded-2xl object-cover" /> : null)}</div><span className="mt-1 text-[11px] text-neutral-400">{formatTime(msg.createdAt)}</span></div></div></React.Fragment>; })}</div></div>
+    <div className="sticky bottom-0 shrink-0 border-t border-neutral-200 bg-white px-4 pb-[calc(env(safe-area-inset-bottom)+14px)] pt-3 md:px-8"><div className="mx-auto max-w-3xl"><div className="mb-2 flex gap-2 overflow-x-auto pb-1">{templates.map((tpl) => <button key={tpl} type="button" onClick={() => setText(tpl)} className="shrink-0 rounded-full border border-neutral-200 px-3 py-1.5 text-xs font-semibold text-neutral-700 hover:bg-neutral-50">{tpl}</button>)}</div>{attachments.map((a, i) => <div key={i} className="mb-2 flex items-center justify-between rounded-2xl bg-neutral-50 p-2 text-xs text-neutral-600"><span className="truncate">📷 {a.name || "Image attached"}</span><button onClick={() => setAttachments([])} className="font-bold text-neutral-900">Remove</button></div>)}<div className="flex items-end gap-2 rounded-[28px] border border-neutral-200 bg-white p-2 shadow-sm"><input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => onFiles(e.target.files)} /><button type="button" onClick={() => fileRef.current?.click()} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full hover:bg-neutral-100" aria-label="Attach image"><ImagePlus className="h-5 w-5 text-neutral-600" /></button><textarea ref={textareaRef} rows={1} value={text} onChange={(e) => setText(e.target.value)} onKeyDown={onKeyDown} placeholder={t("messages.typeMessage", "Type a message...")} className="max-h-32 flex-1 resize-none bg-transparent px-1 py-2.5 text-[15px] outline-none placeholder:text-neutral-400" /><button type="button" onClick={handleSend} disabled={(!text.trim() && attachments.length === 0) || sending} className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-full", text.trim() || attachments.length ? "bg-[#FF385C] text-white" : "bg-neutral-100 text-neutral-400")} aria-label="Send">{sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}</button></div></div></div>
+  </div>;
 }

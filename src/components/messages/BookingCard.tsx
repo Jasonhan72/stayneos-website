@@ -1,249 +1,31 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
-import React from "react";
+import Link from "next/link";
+import { CalendarDays, Home, Users, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Conversation } from "@/lib/mock/messages";
+import type { ApiConversation } from "@/types/api/messages";
 
-// ── helpers ──────────────────────────────────────────────
-function fmtDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+function fmtDate(iso?: string) { if (!iso) return "—"; return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }); }
+function fmtMoney(n?: number, currency = "CAD") { if (typeof n !== "number") return "—"; return new Intl.NumberFormat("en-CA", { style: "currency", currency, maximumFractionDigits: 0 }).format(n); }
+
+export default function BookingCard({ conversation, visible, onClose, t }: { conversation: ApiConversation; visible: boolean; onClose: () => void; t: (k: string, d: string) => string; }) {
+  return <>
+    <aside className={cn("hidden border-l border-neutral-200 bg-white transition-all duration-200 xl:block", visible ? "w-[360px]" : "w-0 overflow-hidden border-l-0")}><div className={cn("w-[360px]", !visible && "hidden")}><Content conversation={conversation} t={t} /></div></aside>
+    <div className={cn("fixed inset-0 z-50 xl:hidden", visible ? "pointer-events-auto" : "pointer-events-none")}><div onClick={onClose} className={cn("absolute inset-0 bg-black/40 transition-opacity", visible ? "opacity-100" : "opacity-0")} /><div className={cn("absolute bottom-0 left-0 right-0 max-h-[86vh] overflow-y-auto rounded-t-[28px] bg-white shadow-2xl transition-transform", visible ? "translate-y-0" : "translate-y-full")}><div className="flex items-center justify-between border-b border-neutral-100 px-5 py-4"><h3 className="text-lg font-semibold">Reservation details</h3><button onClick={onClose} className="rounded-full p-2 hover:bg-neutral-100"><X className="h-5 w-5" /></button></div><Content conversation={conversation} t={t} /></div></div>
+  </>;
 }
 
-function fmtCurrency(n: number): string {
-  return new Intl.NumberFormat("en-CA", {
-    style: "currency",
-    currency: "CAD",
-    minimumFractionDigits: 0,
-  }).format(n);
-}
-
-// ── Props ────────────────────────────────────────────────
-interface Props {
-  conversation: Conversation;
-  visible: boolean;
-  onClose: () => void;
-  t: (k: string, d: string) => string;
-}
-
-// ── Component ────────────────────────────────────────────
-export default function BookingCard({
-  conversation,
-  visible,
-  onClose,
-  t,
-}: Props) {
-  const { booking } = conversation;
-  const subtotal = booking.nights * booking.nightlyRate;
-  const guestLabel =
-    booking.guests === 1
-      ? t("messages.guest", "guest")
-      : t("messages.guests", "guests");
-  const nightLabel =
-    booking.nights === 1
-      ? t("messages.night", "night")
-      : t("messages.nights", "nights");
-
-  // Mobile drawer
-  return (
-    <>
-      {/* Desktop panel */}
-      <aside
-        className={cn(
-          "hidden border-l border-neutral-100 bg-white transition-all duration-300 md:block",
-          visible ? "w-80" : "w-0 overflow-hidden border-l-0",
-        )}
-      >
-        <div className={cn("w-80", !visible && "hidden")}>
-          <BookingCardContent
-            conversation={conversation}
-            t={t}
-            fmtDate={fmtDate}
-            fmtCurrency={fmtCurrency}
-            guestLabel={guestLabel}
-            nightLabel={nightLabel}
-            subtotal={subtotal}
-          />
-        </div>
-      </aside>
-
-      {/* Mobile overlay drawer */}
-      <div
-        className={cn(
-          "fixed inset-0 z-50 md:hidden transition-opacity duration-300",
-          visible
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none",
-        )}
-      >
-        {/* Backdrop */}
-        <div
-          className="absolute inset-0 bg-black/40"
-          onClick={onClose}
-        />
-
-        {/* Drawer */}
-        <div
-          className={cn(
-            "absolute bottom-0 left-0 right-0 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-white shadow-2xl transition-transform duration-300",
-            visible ? "translate-y-0" : "translate-y-full",
-          )}
-        >
-          {/* Handle */}
-          <div className="flex justify-center pt-3 pb-1">
-            <div className="h-1 w-10 rounded-full bg-neutral-300" />
-          </div>
-
-          {/* Close button */}
-          <div className="flex items-center justify-between px-5 py-2">
-            <h3 className="text-base font-semibold text-neutral-900">
-              {t("messages.reservationDetails", "Reservation details")}
-            </h3>
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-full p-1.5 hover:bg-neutral-100"
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="text-neutral-500"
-              >
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-
-          <BookingCardContent
-            conversation={conversation}
-            t={t}
-            fmtDate={fmtDate}
-            fmtCurrency={fmtCurrency}
-            guestLabel={guestLabel}
-            nightLabel={nightLabel}
-            subtotal={subtotal}
-          />
-        </div>
-      </div>
-    </>
-  );
-}
-
-// ── Shared content ─────────────────────────────────────
-function BookingCardContent({
-  conversation,
-  t,
-  fmtDate,
-  fmtCurrency,
-  guestLabel,
-  nightLabel,
-  subtotal,
-}: {
-  conversation: Conversation;
-  t: (k: string, d: string) => string;
-  fmtDate: (iso: string) => string;
-  fmtCurrency: (n: number) => string;
-  guestLabel: string;
-  nightLabel: string;
-  subtotal: number;
-}) {
-  return (
-    <div className="p-5">
-      {/* Property image */}
-      <div className="relative mb-4 aspect-[4/3] w-full overflow-hidden rounded-xl bg-neutral-100">
-        <div className="flex h-full w-full items-center justify-center text-neutral-300">
-          <svg
-            width="48"
-            height="48"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-          >
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            <polyline points="9 22 9 12 15 12 15 22" />
-          </svg>
-        </div>
-      </div>
-
-      {/* Property title */}
-      <h4 className="text-base font-semibold text-neutral-900">
-        {conversation.propertyTitle}
-      </h4>
-      <p className="mt-1 text-xs text-neutral-500">
-        {conversation.propertyAddress}
-      </p>
-
-      {/* Divider */}
-      <div className="my-4 border-t border-neutral-100" />
-
-      {/* Booking details */}
-      <h5 className="mb-3 text-sm font-semibold text-neutral-800">
-        {t("messages.reservationDetails", "Reservation details")}
-      </h5>
-
-      <div className="space-y-3 text-sm">
-        <div className="flex items-center justify-between">
-          <span className="text-neutral-500">
-            {t("messages.checkIn", "Check-in")}
-          </span>
-          <span className="font-medium text-neutral-900">
-            {fmtDate(conversation.booking.checkIn)}
-          </span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-neutral-500">
-            {t("messages.checkOut", "Check-out")}
-          </span>
-          <span className="font-medium text-neutral-900">
-            {fmtDate(conversation.booking.checkOut)}
-          </span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-neutral-500">
-            {conversation.booking.guests} {guestLabel}
-          </span>
-          <span className="text-neutral-400">
-            · {conversation.booking.nights} {nightLabel}
-          </span>
-        </div>
-      </div>
-
-      {/* Divider */}
-      <div className="my-4 border-t border-neutral-100" />
-
-      {/* Pricing */}
-      <div className="flex items-center justify-between text-sm">
-        <span className="text-neutral-900">
-          {fmtCurrency(conversation.booking.nightlyRate)}{" "}
-          <span className="text-neutral-500">
-            {t("messages.nightlyRate", "per night")}
-          </span>
-        </span>
-      </div>
-      <div className="mt-3 flex items-center justify-between border-t border-neutral-100 pt-3">
-        <span className="text-sm font-medium text-neutral-900">
-          {t("messages.subtotal", "Subtotal")}
-        </span>
-        <span className="text-sm font-semibold text-neutral-900">
-          {fmtCurrency(subtotal)}
-        </span>
-      </div>
-
-      {/* CTA */}
-      <button
-        type="button"
-        className="mt-5 w-full rounded-xl border border-neutral-900 bg-white px-4 py-3 text-sm font-semibold text-neutral-900 transition-colors hover:bg-neutral-50"
-      >
-        {t("messages.viewReservation", "View reservation details")}
-      </button>
+function Content({ conversation, t }: { conversation: ApiConversation; t: (k: string, d: string) => string }) {
+  const property = conversation.property;
+  const booking = conversation.booking;
+  return <div className="p-5">
+    <div className="overflow-hidden rounded-[28px] border border-neutral-200 bg-white shadow-sm">
+      <div className="aspect-[4/3] bg-neutral-100">{property?.imageUrl ? <img src={property.imageUrl} alt={property.title} className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center"><Home className="h-12 w-12 text-neutral-300" /></div>}</div>
+      <div className="p-4"><h3 className="text-lg font-semibold leading-tight text-neutral-950">{property?.title || "StayNeos home"}</h3><p className="mt-1 text-sm text-neutral-500">{property?.address || "Toronto"}</p>{property?.bedrooms || property?.bathrooms ? <p className="mt-2 text-xs font-medium text-neutral-500">{property.bedrooms ?? "—"} bed · {property.bathrooms ?? "—"} bath</p> : null}</div>
     </div>
-  );
+    <div className="mt-5 rounded-[28px] border border-neutral-200 p-5"><div className="mb-4 flex items-center justify-between"><h4 className="font-semibold text-neutral-950">Trip details</h4>{booking?.status ? <span className="rounded-full bg-[#00A699]/10 px-3 py-1 text-xs font-bold text-[#008A7A]">{booking.status}</span> : null}</div><div className="space-y-4 text-sm"><Row icon={<CalendarDays className="h-4 w-4" />} label="Check-in" value={fmtDate(booking?.checkIn)} /><Row icon={<CalendarDays className="h-4 w-4" />} label="Check-out" value={fmtDate(booking?.checkOut)} /><Row icon={<Users className="h-4 w-4" />} label="Guests" value={booking ? `${booking.guests} guest${booking.guests === 1 ? "" : "s"}` : "—"} /></div>{booking ? <div className="mt-5 border-t border-neutral-100 pt-4"><div className="flex items-center justify-between"><span className="text-sm font-medium text-neutral-500">Total</span><span className="font-semibold text-neutral-950">{fmtMoney(booking.totalPrice, booking.currency)}</span></div></div> : null}</div>
+    {booking ? <Link href={`/dashboard/bookings/${booking.id}`} className="mt-5 flex w-full items-center justify-center rounded-2xl bg-neutral-950 px-4 py-3 text-sm font-bold text-white hover:bg-neutral-800">{t("messages.viewReservation", "View reservation details")}</Link> : <button disabled className="mt-5 w-full rounded-2xl bg-neutral-100 px-4 py-3 text-sm font-bold text-neutral-400">No booking attached</button>}
+  </div>;
 }
+function Row({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) { return <div className="flex items-center justify-between gap-4"><div className="flex items-center gap-2 text-neutral-500">{icon}<span>{label}</span></div><span className="font-semibold text-neutral-950">{value}</span></div>; }

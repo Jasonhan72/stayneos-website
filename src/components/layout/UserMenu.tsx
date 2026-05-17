@@ -28,12 +28,14 @@ type MenuLink = {
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   bold?: boolean;
+  badge?: number;
 };
 
 export function UserMenu({ variant = "light" }: UserMenuProps) {
   const { locale } = useI18n();
   const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const [unreadMessages, setUnreadMessages] = useState(0);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -45,6 +47,39 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      setUnreadMessages(0);
+      return;
+    }
+    const readCached = () => {
+      const cached = Number(window.localStorage.getItem("stayneos_unread_messages") || "0");
+      if (Number.isFinite(cached)) setUnreadMessages(cached);
+    };
+    const refresh = async () => {
+      try {
+        const res = await fetch("/api/conversations", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        const count = Number(data.unreadCount || 0);
+        setUnreadMessages(count);
+        window.localStorage.setItem("stayneos_unread_messages", String(count));
+      } catch {}
+    };
+    const onUnread = (event: Event) => {
+      const detail = (event as CustomEvent<{ count?: number }>).detail;
+      setUnreadMessages(Number(detail?.count || 0));
+    };
+    readCached();
+    refresh();
+    window.addEventListener("stayneos:unread-messages", onUnread);
+    const id = window.setInterval(refresh, 30000);
+    return () => {
+      window.removeEventListener("stayneos:unread-messages", onUnread);
+      window.clearInterval(id);
+    };
+  }, [user]);
 
   const L = (zh: string, en: string, fr: string) =>
     locale === "zh" ? zh : locale === "fr" ? fr : en;
@@ -84,7 +119,7 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
 
   const sections: MenuLink[][] = [
     [
-      { label: L("消息", "Messages", "Messages"), href: "/dashboard/messages", icon: MessageCircle, bold: true },
+      { label: L("消息", "Messages", "Messages"), href: "/dashboard/messages", icon: MessageCircle, bold: true, badge: unreadMessages },
       { label: L("我的行程", "Trips", "Voyages"), href: "/bookings", icon: Luggage, bold: true },
       { label: L("收藏", "Wishlists", "Favoris"), href: "/dashboard/wishlists", icon: Heart, bold: true },
     ],
@@ -163,8 +198,12 @@ function MenuItem({ item, onClick }: { item: MenuLink; onClick: () => void }) {
   const Icon = item.icon;
   return (
     <Link href={item.href} onClick={onClick} className="flex min-h-[56px] items-center gap-4 px-5 text-[15px] text-neutral-900 transition-colors hover:bg-neutral-50">
-      <Icon className="h-5 w-5 text-neutral-600" />
+      <span className="relative">
+        <Icon className="h-5 w-5 text-neutral-600" />
+        {item.badge ? <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-[#FF385C] ring-2 ring-white" /> : null}
+      </span>
       <span className={item.bold ? "flex-1 font-semibold" : "flex-1 font-medium"}>{item.label}</span>
+      {item.badge ? <span className="rounded-full bg-[#FF385C] px-2 py-0.5 text-xs font-bold text-white">{item.badge}</span> : null}
       <ChevronRight className="h-4 w-4 text-neutral-400" />
     </Link>
   );

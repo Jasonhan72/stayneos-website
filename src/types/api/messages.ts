@@ -1,10 +1,12 @@
-/**
- * Messages API 共享类型 (B6: Real messaging with D1 + Durable Objects)
- */
+/** Shared API types for StayNeos messaging. */
 
-// ── Row types (from D1) ──────────────────────────────────
+export interface ApiAttachment {
+  type: 'image' | 'file';
+  url: string;
+  name?: string;
+  size?: number;
+}
 
-/** API Message object */
 export interface ApiMessage {
   id: string;
   conversation_id: string;
@@ -14,60 +16,91 @@ export interface ApiMessage {
   body: string;
   attachments_json: string;
   attachmentsJson: string;
+  attachments?: ApiAttachment[];
   created_at: number;
   createdAt: number;
 }
 
-/** API Conversation object with participants */
+export interface ConversationPerson {
+  id: string;
+  name: string;
+  email?: string;
+  avatar?: string | null;
+  role?: string | null;
+}
+
+export interface ConversationBooking {
+  id: string;
+  bookingNumber: string;
+  checkIn: string;
+  checkOut: string;
+  guests: number;
+  status: string;
+  paymentStatus?: string;
+  totalPrice?: number;
+  currency?: string;
+}
+
+export interface ConversationProperty {
+  id: string;
+  title: string;
+  address: string;
+  city?: string;
+  imageUrl?: string | null;
+  bedrooms?: number | null;
+  bathrooms?: number | null;
+}
+
 export interface ApiConversation {
   id: string;
   type: 'dm' | 'host_guest';
+  booking_id?: string | null;
+  bookingId?: string | null;
   created_at: number;
   createdAt: number;
   updated_at: number;
   updatedAt: number;
   participants: string[];
-  /** Last message preview (for the list view) */
+  people?: ConversationPerson[];
+  otherPerson?: ConversationPerson | null;
+  booking?: ConversationBooking | null;
+  property?: ConversationProperty | null;
+  unreadCount?: number;
+  lastReadAt?: number;
   lastMessage?: ApiMessage | null;
 }
 
-// ── Request types ────────────────────────────────────────
-
-/** POST /api/conversations */
 export interface CreateConversationRequest {
-  participant_user_ids: string[];
-  type: 'dm' | 'host_guest';
+  participant_user_ids?: string[];
+  participantUserIds?: string[];
+  booking_id?: string;
+  bookingId?: string;
+  type?: 'dm' | 'host_guest';
 }
 
-/** POST /api/conversations/:id/messages */
 export interface SendMessageRequest {
-  body: string;
+  body?: string;
   attachmentsJson?: string;
+  attachments?: ApiAttachment[];
 }
 
-// ── Response types ───────────────────────────────────────
-
-/** GET /api/conversations */
 export interface ConversationsListResponse {
   conversations: ApiConversation[];
+  unreadCount?: number;
 }
 
-/** GET /api/conversations/:id/messages */
 export interface MessagesDetailResponse {
   messages: ApiMessage[];
   cursor: string | null;
 }
 
-/** POST /api/conversations/:id/messages */
 export interface SendMessageResponse {
   message: ApiMessage;
 }
 
-/** POST /api/conversations */
 export interface CreateConversationResponse {
   conversation: ApiConversation;
 }
 
-// Legacy aliases (keep compatibility)
 export type Message = ApiMessage;
 export type Conversation = ApiConversation;
