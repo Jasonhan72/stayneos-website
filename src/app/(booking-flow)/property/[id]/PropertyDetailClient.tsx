@@ -5,7 +5,7 @@ import { useState, useMemo, useRef } from 'react';
 import ResponsiveImage from '@/components/ui/ResponsiveImage';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { 
   Star,
   Heart,
@@ -186,6 +186,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   const { t, locale } = useI18n();
   const { formatPrice: fp } = useCurrency();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { property, isLoading, error } = useProperty(propertyId, initialProperty);
   const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
   
@@ -208,10 +209,10 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   };
 
   // Booking state
-  const [checkIn, setCheckIn] = useState('');
-  const [checkOut, setCheckOut] = useState('');
+  const [checkIn, setCheckIn] = useState(() => searchParams.get('checkIn') || '');
+  const [checkOut, setCheckOut] = useState(() => searchParams.get('checkOut') || '');
   const bookedRanges = ((property as typeof property & { bookedRanges?: Array<{ start: string; end: string }> } | null)?.bookedRanges || []);
-  const [guests, setGuests] = useState(1);
+  const [guests, setGuests] = useState(() => Math.max(1, parseInt(searchParams.get('guests') || '1', 10) || 1));
   const [showCalendar, setShowCalendar] = useState(false);
   const [showReview, setShowReview] = useState(false);
   const [expandedNeighborhood, setExpandedNeighborhood] = useState(false);
@@ -226,9 +227,9 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   
   // Guest breakdown state for GuestSelector
   const [guestBreakdown, setGuestBreakdown] = useState<GuestCounts>({
-    adults: 1,
-    children: 0,
-    infants: 0,
+    adults: Math.max(1, parseInt(searchParams.get('adults') || searchParams.get('guests') || '1', 10) || 1),
+    children: Math.max(0, parseInt(searchParams.get('children') || '0', 10) || 0),
+    infants: Math.max(0, parseInt(searchParams.get('infants') || '0', 10) || 0),
   });
 
   // 转换 API 数据为组件格式
@@ -1062,6 +1063,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           }}
           onClose={() => setShowCalendar(false)}
           onSave={continueToCheckoutWithDates}
+          saveRedirectBase={buildCheckoutUrl({ checkIn: '', checkOut: '' })}
           onClearDates={() => {
             setCheckIn('');
             setCheckOut('');

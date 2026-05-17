@@ -12,6 +12,7 @@ export interface AirbnbCalendarProps {
   onSelectCheckOut: (date: string) => void;
   onClose?: () => void;
   onSave?: (checkIn: string, checkOut: string) => void;
+  saveRedirectBase?: string;
   onClearDates?: () => void;
   totalPrice?: number;
   minNights?: number;
@@ -29,6 +30,16 @@ const MONTH_NAMES = [
   'July', 'August', 'September', 'October', 'November', 'December'
 ];
 
+
+function navigateToSaveRedirect(base: string, checkIn: string, checkOut: string) {
+  if (typeof window === 'undefined') return;
+  const [path, query = ''] = base.split('?');
+  const params = new URLSearchParams(query);
+  params.set('checkIn', checkIn);
+  params.set('checkOut', checkOut);
+  window.location.assign(`${path}?${params.toString()}`);
+}
+
 interface DayInfo {
   date: Date;
   isCurrentMonth: boolean;
@@ -42,6 +53,7 @@ export function AirbnbCalendar({
   onSelectCheckOut,
   onClose,
   onSave,
+  saveRedirectBase,
   onClearDates,
   totalPrice = 0,
   minNights: _minNights,
@@ -113,6 +125,7 @@ export function AirbnbCalendar({
     return 'none';
   }, [selectedStart, selectedEnd, today, bookedRanges]);
 
+
   const handleDateClick = useCallback((date: Date) => {
     setSaveError('');
     if (date < today || isDateBooked(date, bookedRanges)) return;
@@ -146,11 +159,14 @@ export function AirbnbCalendar({
 
         if (autoCloseOnRangeSelect) {
           setSaveError('');
+          if (saveRedirectBase) {
+            navigateToSaveRedirect(saveRedirectBase, selectedStart, dateStr);
+          }
           onSave?.(selectedStart, dateStr);
         }
       }
     }
-  }, [selectedStart, selectedEnd, today, onSelectCheckIn, onSelectCheckOut, bookedRanges, autoCloseOnRangeSelect, onSave]);
+  }, [selectedStart, selectedEnd, today, onSelectCheckIn, onSelectCheckOut, bookedRanges, autoCloseOnRangeSelect, saveRedirectBase, onSave]);
 
   const handleClear = useCallback(() => {
     setSelectedStart('');
@@ -164,6 +180,7 @@ export function AirbnbCalendar({
     }
   }, [onClearDates, onSelectCheckIn, onSelectCheckOut]);
 
+
   const handleSave = useCallback(() => {
     if (selectedStart && selectedEnd) {
       // Save confirms the date range only. The booking flow performs business
@@ -172,10 +189,14 @@ export function AirbnbCalendar({
       setSaveError('');
       onSelectCheckIn(selectedStart);
       onSelectCheckOut(selectedEnd);
+      if (saveRedirectBase) {
+        navigateToSaveRedirect(saveRedirectBase, selectedStart, selectedEnd);
+        return;
+      }
       if (onSave) onSave(selectedStart, selectedEnd);
       else if (onClose) onClose();
     }
-  }, [selectedStart, selectedEnd, onSelectCheckIn, onSelectCheckOut, onClose, onSave]);
+  }, [selectedStart, selectedEnd, onSelectCheckIn, onSelectCheckOut, saveRedirectBase, onClose, onSave]);
 
 
   const handleSavePointerDown = useCallback((event: React.PointerEvent<HTMLButtonElement>) => {
