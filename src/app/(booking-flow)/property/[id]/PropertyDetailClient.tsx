@@ -995,6 +995,8 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             setCheckOut('');
           }}
           totalPrice={bookingPrice?.total || 0}
+          dailyPrice={Math.floor(tierPrices.monthly / 30)}
+          minStayNights={propertyCardData.minNights || 1}
           minNights={propertyCardData.minNights || 1}
           rating={propertyCardData.reviewCount > 0 ? propertyCardData.rating : 0}
           currency="CAD"
