@@ -42,16 +42,12 @@ function mergeRanges(ranges: BookedRange[]) {
   return merged;
 }
 
-function mockBookedRanges(): BookedRange[] {
-  const start = new Date();
-  start.setHours(0, 0, 0, 0);
-  start.setDate(start.getDate() + 7);
-  const end = new Date(start);
-  end.setDate(end.getDate() + 3);
-  return [{ start: toDateKey(start), end: toDateKey(end) }];
-}
-
 async function getBookedRanges(propertyIdOrSlug: string): Promise<BookedRange[]> {
+  // Real bookings only. No mock/fake "blocked" dates — if there are no bookings,
+  // every future date stays available. (Previously a mockBookedRanges() helper
+  // was used as a fallback, which painted today+7..today+10 as already booked
+  // even for fresh properties; that confused users into thinking the calendar
+  // showed phantom reservations.)
   try {
     const db = getDb();
     const property = await db
@@ -59,7 +55,7 @@ async function getBookedRanges(propertyIdOrSlug: string): Promise<BookedRange[]>
       .bind(propertyIdOrSlug, propertyIdOrSlug)
       .first<{ id: string; slug: string }>();
 
-    if (!property) return mockBookedRanges();
+    if (!property) return [];
 
     const result = await db
       .prepare(`
@@ -72,16 +68,14 @@ async function getBookedRanges(propertyIdOrSlug: string): Promise<BookedRange[]>
       .bind(property.id)
       .all<{ checkIn: string; checkOut: string }>();
 
-    const bookedRanges = mergeRanges(
+    return mergeRanges(
       (result.results || []).map((row) => ({
         start: toDateKey(row.checkIn),
         end: toDateKey(row.checkOut),
       }))
     );
-
-    return bookedRanges.length > 0 ? bookedRanges : mockBookedRanges();
   } catch {
-    return mockBookedRanges();
+    return [];
   }
 }
 
