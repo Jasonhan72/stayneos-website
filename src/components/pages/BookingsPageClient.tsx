@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Button, Container, Card, Badge, Divider, Modal } from '@/components/ui';
 import { useAuth } from '@/lib/context/UserContext';
@@ -42,6 +43,7 @@ interface Booking {
   createdAt: string;
   property?: {
     title?: string;
+    images?: Array<{ url: string; alt?: string | null }>;
   } | null;
 }
 
@@ -292,97 +294,115 @@ export default function BookingsPage() {
           /* Bookings List */
           <div className="space-y-6">
             {filteredBookings.map((booking) => (
-              <Card key={booking.id} className="overflow-hidden">
-                <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr]">
-                  <div className="relative min-h-56 bg-neutral-100 flex items-center justify-center">
-                    <Home className="text-neutral-300" size={52} />
-                    <div className={`absolute top-4 left-4 ${statusConfig[booking.status]?.bgColor || 'bg-gray-100'}`}>
-                      {getStatusBadge(booking.status)}
-                    </div>
-                  </div>
-
-                  <div className="min-w-0 p-6 lg:p-8">
-                    <p className="text-sm text-neutral-500 mb-1 break-all">
-                      {t('bookings.bookingNumber')}: {booking.bookingNumber}
-                    </p>
-                    <h3 className="text-2xl font-semibold leading-snug text-neutral-900 mb-6 break-words max-w-3xl">
-                      {booking.propertyTitle}
-                    </h3>
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-5 mb-6">
-                      <div className="min-w-0">
-                        <p className="text-sm text-neutral-500 whitespace-nowrap">{t('bookings.checkIn')}</p>
-                        <p className="font-semibold text-neutral-900 whitespace-nowrap">{formatBookingDate(booking.checkIn)}</p>
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm text-neutral-500 whitespace-nowrap">{t('bookings.checkOut')}</p>
-                        <p className="font-semibold text-neutral-900 whitespace-nowrap">{formatBookingDate(booking.checkOut)}</p>
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm text-neutral-500 whitespace-nowrap">{t('bookings.nights')}</p>
-                        <p className="font-semibold text-neutral-900 whitespace-nowrap">{booking.nights} {t('booking.nights')}</p>
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm text-neutral-500 whitespace-nowrap">{t('bookings.guests')}</p>
-                        <p className="font-semibold text-neutral-900 whitespace-nowrap">{booking.guests} {t('booking.guests')}</p>
+              <Card key={booking.id} className="overflow-hidden border-neutral-200 shadow-sm hover:shadow-md transition-shadow">
+                <div className="p-5 sm:p-6">
+                  <div className="flex flex-col lg:flex-row lg:items-start gap-5">
+                    <div className="relative w-full lg:w-40 h-44 lg:h-32 shrink-0 overflow-hidden rounded-2xl bg-neutral-100">
+                      {booking.property?.images?.[0]?.url ? (
+                        <Image
+                          src={booking.property.images[0].url}
+                          alt={booking.property.images[0].alt || booking.propertyTitle}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 1024px) 100vw, 160px"
+                        />
+                      ) : (
+                        <div className="h-full w-full flex items-center justify-center">
+                          <Home className="text-neutral-300" size={42} />
+                        </div>
+                      )}
+                      <div className={`absolute left-3 top-3 ${statusConfig[booking.status]?.bgColor || 'bg-white/90'} shadow-sm`}>
+                        {getStatusBadge(booking.status)}
                       </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-neutral-500 mb-6">
-                      <div className="flex items-center gap-2 text-neutral-700">
-                        <CreditCard size={16} className="text-neutral-400" />
-                        <span>{booking.paymentStatus === 'COMPLETED' ? t('bookings.paid') : t('bookings.unpaid')}</span>
-                      </div>
-                      <div>
-                        {t('bookings.bookingDate')}: {booking.createdAt ? formatBookingDate(booking.createdAt) : '-'}
-                      </div>
-                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-col xl:flex-row xl:items-start xl:justify-between gap-4">
+                        <div className="min-w-0">
+                          <p className="text-xs uppercase tracking-wide text-neutral-400 mb-1 break-all">
+                            {booking.bookingNumber}
+                          </p>
+                          <h3 className="text-2xl font-semibold leading-tight text-neutral-950 break-words">
+                            {booking.propertyTitle}
+                          </h3>
+                        </div>
 
-                    <div className="border-t border-neutral-200 pt-5 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-                      <div>
-                        <p className="text-sm text-neutral-500">{t('bookings.totalPrice')}</p>
-                        <p className="text-3xl font-bold text-neutral-900 whitespace-nowrap">
-                          ${booking.totalPrice.toLocaleString()} {booking.currency}
-                        </p>
+                        <div className="shrink-0 xl:text-right">
+                          <p className="text-sm text-neutral-500">{t('bookings.totalPrice')}</p>
+                          <p className="text-3xl font-bold text-neutral-950 whitespace-nowrap">
+                            ${booking.totalPrice.toLocaleString()} {booking.currency}
+                          </p>
+                        </div>
                       </div>
 
-                      <div className="flex flex-wrap md:justify-end gap-2">
-                        {['PENDING', 'CONFIRMED'].includes(booking.status) && (
-                          <>
-                            <Button variant="outline" size="sm" className="whitespace-nowrap">
-                              <MessageSquare size={14} className="mr-1" />
-                              {t('bookings.contactHost')}
+                      <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div className="rounded-xl bg-neutral-50 px-4 py-3">
+                          <p className="text-xs text-neutral-500 whitespace-nowrap">{t('bookings.checkIn')}</p>
+                          <p className="mt-1 font-semibold text-neutral-950 whitespace-nowrap">{formatBookingDate(booking.checkIn)}</p>
+                        </div>
+                        <div className="rounded-xl bg-neutral-50 px-4 py-3">
+                          <p className="text-xs text-neutral-500 whitespace-nowrap">{t('bookings.checkOut')}</p>
+                          <p className="mt-1 font-semibold text-neutral-950 whitespace-nowrap">{formatBookingDate(booking.checkOut)}</p>
+                        </div>
+                        <div className="rounded-xl bg-neutral-50 px-4 py-3">
+                          <p className="text-xs text-neutral-500 whitespace-nowrap">{t('bookings.nights')}</p>
+                          <p className="mt-1 font-semibold text-neutral-950 whitespace-nowrap">{booking.nights} {t('booking.nights')}</p>
+                        </div>
+                        <div className="rounded-xl bg-neutral-50 px-4 py-3">
+                          <p className="text-xs text-neutral-500 whitespace-nowrap">{t('bookings.guests')}</p>
+                          <p className="mt-1 font-semibold text-neutral-950 whitespace-nowrap">{booking.guests} {t('booking.guests')}</p>
+                        </div>
+                      </div>
+
+                      <div className="mt-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-t border-neutral-100 pt-5">
+                        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-neutral-500">
+                          <div className="flex items-center gap-2 text-neutral-700">
+                            <CreditCard size={16} className="text-neutral-400" />
+                            <span>{booking.paymentStatus === 'COMPLETED' ? t('bookings.paid') : t('bookings.unpaid')}</span>
+                          </div>
+                          <div>
+                            {t('bookings.bookingDate')}: {booking.createdAt ? formatBookingDate(booking.createdAt) : '-'}
+                          </div>
+                        </div>
+
+                        <div className="flex flex-wrap md:justify-end gap-2">
+                          {['PENDING', 'CONFIRMED'].includes(booking.status) && (
+                            <>
+                              <Button variant="outline" size="sm" className="whitespace-nowrap rounded-xl">
+                                <MessageSquare size={14} className="mr-1" />
+                                {t('bookings.contactHost')}
+                              </Button>
+                              <Button variant="outline" size="sm" className="whitespace-nowrap rounded-xl">
+                                <Download size={14} className="mr-1" />
+                                {t('bookings.downloadVoucher')}
+                              </Button>
+                            </>
+                          )}
+
+                          {booking.status === 'CHECKED_OUT' && (
+                            <Button
+                              size="sm"
+                              className="whitespace-nowrap rounded-xl"
+                              onClick={() => {
+                                setSelectedBooking(booking);
+                                setShowReviewModal(true);
+                              }}
+                            >
+                              <Star size={14} className="mr-1" />
+                              {t('bookings.writeReview')}
                             </Button>
-                            <Button variant="outline" size="sm" className="whitespace-nowrap">
-                              <Download size={14} className="mr-1" />
-                              {t('bookings.downloadVoucher')}
-                            </Button>
-                          </>
-                        )}
+                          )}
 
-                        {booking.status === 'CHECKED_OUT' && (
                           <Button
+                            variant="ghost"
                             size="sm"
-                            className="whitespace-nowrap"
-                            onClick={() => {
-                              setSelectedBooking(booking);
-                              setShowReviewModal(true);
-                            }}
+                            className="whitespace-nowrap rounded-xl"
+                            onClick={() => setSelectedBooking(booking)}
                           >
-                            <Star size={14} className="mr-1" />
-                            {t('bookings.writeReview')}
+                            {t('bookings.viewDetails')}
+                            <ChevronRight size={14} className="ml-1" />
                           </Button>
-                        )}
-
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="whitespace-nowrap"
-                          onClick={() => setSelectedBooking(booking)}
-                        >
-                          {t('bookings.viewDetails')}
-                          <ChevronRight size={14} className="ml-1" />
-                        </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
