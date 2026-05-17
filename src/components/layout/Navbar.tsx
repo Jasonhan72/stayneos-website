@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserMenu } from "./UserMenu";
@@ -20,17 +21,31 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, isAuthenticated } = useAuth();
   const { t, locale } = useI18n();
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
+  const rafRef = useRef<number | null>(null);
   const userAlt = locale === "zh" ? "用户头像" : locale === "fr" ? "Avatar utilisateur" : "User avatar";
   const openMenuLabel = locale === "zh" ? "打开菜单" : locale === "fr" ? "Ouvrir le menu" : "Open menu";
   const defaultInitial = locale === "zh" ? "用" : locale === "fr" ? "U" : "U";
 
+  // Throttled scroll listener (~100ms via rAF) with 80px threshold for homepage
+  const handleScroll = useCallback(() => {
+    if (rafRef.current) return;
+    rafRef.current = requestAnimationFrame(() => {
+      const threshold = isHomePage ? 80 : 20;
+      setIsScrolled(window.scrollY > threshold);
+      rafRef.current = null;
+    });
+  }, [isHomePage]);
+
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+    handleScroll(); // check initial state
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [handleScroll]);
 
   const navLinks = [
     { href: "/properties", label: t("nav.properties") },
@@ -38,19 +53,22 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
     { href: "/about", label: t("nav.about") },
   ];
 
+  // Homepage: transparent → white on scroll. Other pages: existing behavior.
+  const effectiveVariant = isHomePage
+    ? (isScrolled ? "light" : "transparent")
+    : variant;
+
   const bgStyles = {
     light: isScrolled ? "bg-white shadow-md" : "bg-white",
     dark: isScrolled ? "bg-primary shadow-md" : "bg-primary",
-    transparent: isScrolled ? "bg-white shadow-md" : "bg-transparent",
+    transparent: "bg-transparent",
   };
 
   const textStyles = {
     light: "text-neutral-700 hover:text-neutral-900",
     dark: "text-white/90 hover:text-white",
-    transparent: isScrolled ? "text-neutral-700 hover:text-neutral-900" : "text-white/90 hover:text-white",
+    transparent: "text-white/90 hover:text-white",
   };
-
-  const currentVariant = isScrolled ? "light" : variant;
 
   return (
     <>
@@ -58,7 +76,8 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
       <nav
         className={cn(
           "sticky top-0 z-50 transition-all duration-300",
-          bgStyles[currentVariant]
+          bgStyles[effectiveVariant],
+          isHomePage && isScrolled && "shadow-md"
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -83,7 +102,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
                   href={link.href}
                   className={cn(
                     "text-sm font-medium transition-colors duration-200 py-2",
-                    textStyles[currentVariant]
+                    textStyles[effectiveVariant]
                   )}
                 >
                   {link.label}
@@ -93,7 +112,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
 
             {/* Desktop - Language/Currency + Partner With Us + User Menu */}
             <div className="hidden lg:flex items-center gap-2">
-              <LanguageCurrencySelector variant={currentVariant as "light" | "dark" | "transparent"} />
+              <LanguageCurrencySelector variant={effectiveVariant as "light" | "dark" | "transparent"} />
               
               {/* Partner With Us button */}
               <Link
@@ -101,14 +120,14 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
                 className={cn(
                   "text-sm font-medium px-3 py-2 rounded-full transition-all duration-200",
                   "hover:bg-black/5",
-                  textStyles[currentVariant]
+                  textStyles[effectiveVariant]
                 )}
               >
                 {t("nav.partnerWithUs")}
               </Link>
               
               {isAuthenticated ? (
-              <UserMenu variant={currentVariant as "light" | "dark" | "transparent"} />
+              <UserMenu variant={effectiveVariant as "light" | "dark" | "transparent"} />
             ) : (
               <>
                 <Link
@@ -116,7 +135,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
                   className={cn(
                     "text-sm font-medium px-3 py-2 rounded-full transition-all duration-200",
                     "hover:bg-black/5",
-                    textStyles[currentVariant]
+                    textStyles[effectiveVariant]
                   )}
                 >
                   {t("nav.signup")}
@@ -126,7 +145,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
                   className={cn(
                     "text-sm font-medium px-3 py-2 rounded-full transition-all duration-200",
                     "hover:bg-black/5",
-                    textStyles[currentVariant]
+                    textStyles[effectiveVariant]
                   )}
                 >
                   {t("nav.login")}
@@ -153,34 +172,24 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
                       />
                     </div>
                   ) : (
-                    <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold bg-[#e3f2fd] text-[#1967d2]">
-                      {(() => {
-                        const name = user?.name || "";
-                        const email = user?.email || "";
-                        if (name) {
-                          const initials = name.split(" ").filter(n => n).map(n => n[0]).join("").toUpperCase();
-                          return initials.slice(0, 2) || defaultInitial;
-                        }
-                        if (email) {
-                          return email.substring(0, 2).toUpperCase();
-                        }
-                        return defaultInitial;
-                      })()}
+                    <div className="w-9 h-9 rounded-full bg-neutral-200 flex items-center justify-center">
+                      <span className="text-xs font-medium text-neutral-500">
+                        {(user.name || defaultInitial).charAt(0).toUpperCase()}
+                      </span>
                     </div>
                   )}
+                  <Menu size={20} className="text-neutral-600" />
                 </button>
               ) : (
                 <button
-                  type="button"
                   onClick={() => setIsMobileMenuOpen(true)}
                   className={cn(
-                    "p-2 rounded-lg transition-colors duration-200",
-                    "hover:bg-neutral-100 focus:outline-none",
-                    textStyles[currentVariant]
+                    "p-2 -mr-2 rounded-full hover:bg-black/5 transition-all",
+                    textStyles[effectiveVariant]
                   )}
                   aria-label={openMenuLabel}
                 >
-                  <Menu className="w-6 h-6" />
+                  <Menu size={20} />
                 </button>
               )}
             </div>
@@ -188,8 +197,11 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
         </div>
       </nav>
 
-      {/* Mobile Menu Drawer */}
-      <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
+      {/* Mobile Menu */}
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+      />
     </>
   );
 }
