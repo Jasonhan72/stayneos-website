@@ -39,7 +39,7 @@ const DEMO: Property[] = [
     priceUnit: "Month",
     rating: 4.88,
     reviewCount: 142,
-    images: ["/images/ice-condo-cn-89c2d4f1.jpg"],
+    images: ["/images/simcoe-238-2.jpg"],
     maxGuests: 3,
     area: 980,
     bedrooms: 1,
@@ -54,7 +54,7 @@ const DEMO: Property[] = [
     priceUnit: "Month",
     rating: 4.91,
     reviewCount: 64,
-    images: ["/images/yorkville-suite-1.jpg"],
+    images: ["/images/simcoe-238-3.jpg"],
     maxGuests: 2,
     area: 720,
     bedrooms: 1,
@@ -69,7 +69,7 @@ const DEMO: Property[] = [
     priceUnit: "Month",
     rating: 4.83,
     reviewCount: 51,
-    images: ["/images/lakeshore-loft.jpg"],
+    images: ["/images/simcoe-238-kitchen.jpg"],
     maxGuests: 4,
     area: 1180,
     bedrooms: 2,
@@ -153,16 +153,16 @@ export default function AirbnbPreviewPage() {
             <ResponsiveImage src="/images/cooper-55-c5e8357d.jpg" alt="hero" fill />
           </div>
           <div className="ab-image-grid__thumb">
-            <ResponsiveImage src="/images/ice-condo-cn-89c2d4f1.jpg" alt="t1" fill />
+            <ResponsiveImage src="/images/simcoe-238-2.jpg" alt="t1" fill />
           </div>
           <div className="ab-image-grid__thumb">
-            <ResponsiveImage src="/images/yorkville-suite-1.jpg" alt="t2" fill />
+            <ResponsiveImage src="/images/simcoe-238-3.jpg" alt="t2" fill />
           </div>
           <div className="ab-image-grid__thumb">
-            <ResponsiveImage src="/images/lakeshore-loft.jpg" alt="t3" fill />
+            <ResponsiveImage src="/images/simcoe-238-kitchen.jpg" alt="t3" fill />
           </div>
           <div className="ab-image-grid__thumb">
-            <ResponsiveImage src="/images/cooper-55-c5e8357d.jpg" alt="t4" fill />
+            <ResponsiveImage src="/images/simcoe-238-bath1.jpg" alt="t4" fill />
           </div>
           <button type="button" className="ab-image-grid__show-all">
             Show all photos
