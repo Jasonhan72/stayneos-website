@@ -853,6 +853,58 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               </div>
             </section>
 
+            {/* Airbnb-style Review Cards */}
+            <section className="py-8">
+              <div className="mb-6 flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-neutral-950">
+                  {t('property.guestReviews', 'Guest reviews')}
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {([
+                  { name: 'Sarah M.', date: 'March 2025', rating: 5, text: 'Absolutely stunning property! The views of the lake are incredible, and the apartment is exactly as described. The host was very responsive and accommodating. Would definitely stay again!' },
+                  { name: 'James K.', date: 'February 2025', rating: 4, text: 'Great location and very clean space. The building amenities are top-notch. Only minor issue was the street noise at night, but nothing too disruptive. Highly recommend for business travelers.' },
+                  { name: 'Emily R.', date: 'January 2025', rating: 5, text: 'This was the perfect home base for our month-long stay in Toronto. Close to transit, restaurants, and everything we needed. The apartment felt like a real home, not just a rental.' },
+                  { name: 'Michael T.', date: 'December 2024', rating: 5, text: 'Exceptional quality throughout. From the high-end finishes to the thoughtful amenities, everything exceeded expectations. The NEOS team made the booking process seamless.' },
+                ]).map((review, idx) => (
+                  <div
+                    key={idx}
+                    className="border border-neutral-200 rounded-2xl p-6 hover:shadow-md transition-shadow duration-200"
+                  >
+                    {/* Header: Avatar + Name + Date */}
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center shrink-0">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-neutral-500"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-neutral-900 text-sm">{review.name}</p>
+                        <p className="text-xs text-neutral-400">{review.date}</p>
+                      </div>
+                    </div>
+                    {/* Stars */}
+                    <div className="flex gap-0.5 mb-3">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          size={12}
+                          className={i < review.rating ? 'fill-black text-black' : 'fill-neutral-200 text-neutral-200'}
+                        />
+                      ))}
+                    </div>
+                    {/* Review text */}
+                    <p className="text-sm text-neutral-600 leading-relaxed line-clamp-4">
+                      {review.text}
+                    </p>
+                    {review.text.length > 200 && (
+                      <button className="mt-2 text-sm font-medium text-neutral-900 underline underline-offset-2">
+                        {t('property.showMore', 'Show more')}
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
+
             <Divider />
 
             {/* Location Map */}
