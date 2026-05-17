@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import {
   HeroSection,
+  CategoryChips,
   DualPathCTASection,
   TrustBadgesSection,
   FeaturedPropertiesSection,
@@ -67,6 +68,7 @@ export default function HomePage() {
     <main className="min-h-screen">
       <StructuredData pageType="homepage" />
       <HeroSection />
+      <CategoryChips />
       <DualPathCTASection />
       <TrustBadgesSection />
       <FeaturedPropertiesSection />

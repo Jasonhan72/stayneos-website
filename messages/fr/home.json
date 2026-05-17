@@ -216,5 +216,14 @@
   "partnersCount": "50+ Partenaires entreprise",
   "statsTitle": "En chiffres",
   "scenariosTitle": "Des Solutions pour Chaque Besoin d'Entreprise",
-  "reasonsTitle": "Pourquoi mon paiement a-t-il été annulé ?"
+  "reasonsTitle": "Pourquoi mon paiement a-t-il été annulé ?",
+  "categories": {
+    "executive": "Affaires",
+    "family": "Famille",
+    "medicalAcademic": "Médical-Académique",
+    "relocation": "Relocalisation",
+    "longTerm": "Long terme",
+    "waterfront": "Bord de l'eau",
+    "downtownCore": "Centre-ville"
+  }
 }

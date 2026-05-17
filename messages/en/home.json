@@ -216,5 +216,14 @@
   "partnersCount": "50+ Corporate Partners",
   "statsTitle": "The Numbers",
   "scenariosTitle": "Solutions for Every Business Need",
-  "reasonsTitle": "Why was my payment cancelled?"
+  "reasonsTitle": "Why was my payment cancelled?",
+  "categories": {
+    "executive": "Executive",
+    "family": "Family",
+    "medicalAcademic": "Medical-Academic",
+    "relocation": "Relocation",
+    "longTerm": "Long-term",
+    "waterfront": "Waterfront",
+    "downtownCore": "Downtown Core"
+  }
 }

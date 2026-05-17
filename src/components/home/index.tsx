@@ -1,3 +1,4 @@
+export { CategoryChips } from "./CategoryChips";
 export { WelcomeBanner } from './WelcomeBanner';
 export { HeroSection } from './HeroSection';
 export { DualPathCTASection } from './DualPathCTASection';
