@@ -24,22 +24,63 @@ import BackToHomeButton from '@/components/navigation/BackToHomeButton';
 
 interface Booking {
   id: string;
-  booking_number: string;
-  check_in: string;
-  check_out: string;
+  bookingNumber: string;
+  checkIn: string;
+  checkOut: string;
   nights: number;
   guests: number;
-  total_price: number;
+  totalPrice: number;
   currency: string;
   status: string;
-  payment_status: string;
-  property_id: string;
-  property_title: string;
-  guest_name: string;
-  guest_email: string;
-  guest_phone: string;
+  paymentStatus: string;
+  propertyId: string;
+  propertyTitle: string;
+  guestName: string;
+  guestEmail: string;
+  guestPhone: string;
+  specialRequests?: string;
+  createdAt: string;
+  property?: {
+    title?: string;
+  } | null;
+}
+
+type ApiBooking = Partial<Booking> & {
+  booking_number?: string;
+  check_in?: string;
+  check_out?: string;
+  total_price?: number;
+  payment_status?: string;
+  property_id?: string;
+  property_title?: string;
+  guest_name?: string;
+  guest_email?: string;
+  guest_phone?: string;
   special_requests?: string;
-  created_at: string;
+  created_at?: string;
+};
+
+function normalizeBooking(booking: ApiBooking): Booking {
+  return {
+    id: booking.id || '',
+    bookingNumber: booking.bookingNumber || booking.booking_number || '',
+    checkIn: booking.checkIn || booking.check_in || '',
+    checkOut: booking.checkOut || booking.check_out || '',
+    nights: Number(booking.nights || 0),
+    guests: Number(booking.guests || 0),
+    totalPrice: Number(booking.totalPrice ?? booking.total_price ?? 0),
+    currency: booking.currency || 'CAD',
+    status: booking.status || 'PENDING',
+    paymentStatus: booking.paymentStatus || booking.payment_status || 'PENDING',
+    propertyId: booking.propertyId || booking.property_id || '',
+    propertyTitle: booking.propertyTitle || booking.property_title || booking.property?.title || 'NEOS Stay',
+    guestName: booking.guestName || booking.guest_name || '',
+    guestEmail: booking.guestEmail || booking.guest_email || '',
+    guestPhone: booking.guestPhone || booking.guest_phone || '',
+    specialRequests: booking.specialRequests || booking.special_requests,
+    createdAt: booking.createdAt || booking.created_at || '',
+    property: booking.property || null,
+  };
 }
 
 function getStatusConfig(t: (key: string) => string): Record<string, { label: string; color: string; bgColor: string; icon: LucideIcon }> {
@@ -109,7 +150,8 @@ export default function BookingsPage() {
       }
       
       const data = await response.json();
-      setBookings(data?.data?.bookings || []);
+      const rawBookings = (data?.data?.bookings || data?.bookings || []) as ApiBooking[];
+      setBookings(rawBookings.map(normalizeBooking));
     } catch (_err) {
       setError(t('bookings.errorLoading'));
     } finally {
@@ -125,8 +167,8 @@ export default function BookingsPage() {
   const filteredBookings = bookings.filter((booking) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const checkIn = new Date(booking.check_in);
-    const checkOut = new Date(booking.check_out);
+    const checkIn = new Date(booking.checkIn);
+    const checkOut = new Date(booking.checkOut);
     
     switch (activeTab) {
       case 'upcoming':
@@ -181,7 +223,7 @@ export default function BookingsPage() {
     );
   }
 
-  const hasCancelled = bookings.some(b => b.status === 'cancelled');
+  const hasCancelled = bookings.some(b => b.status === 'CANCELLED');
 
   return (
     <main id="main-content" className="min-h-screen bg-white pt-24 pb-12">
@@ -260,9 +302,9 @@ export default function BookingsPage() {
                       <div className="flex-1">
                         <div className="flex items-start justify-between mb-2">
                           <div>
-                            <p className="text-sm text-neutral-500">{t('bookings.bookingNumber')}: {booking.booking_number}</p>
+                            <p className="text-sm text-neutral-500">{t('bookings.bookingNumber')}: {booking.bookingNumber}</p>
                             <h3 className="text-xl font-semibold text-neutral-900">
-                              {booking.property_title}
+                              {booking.propertyTitle}
                             </h3>
                           </div>
                         </div>
@@ -270,11 +312,11 @@ export default function BookingsPage() {
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                           <div className="p-3 bg-neutral-50 border border-neutral-200">
                             <p className="text-xs text-neutral-500">{t('bookings.checkIn')}</p>
-                            <p className="font-medium text-neutral-900">{booking.check_in}</p>
+                            <p className="font-medium text-neutral-900">{booking.checkIn}</p>
                           </div>
                           <div className="p-3 bg-neutral-50 border border-neutral-200">
                             <p className="text-xs text-neutral-500">{t('bookings.checkOut')}</p>
-                            <p className="font-medium text-neutral-900">{booking.check_out}</p>
+                            <p className="font-medium text-neutral-900">{booking.checkOut}</p>
                           </div>
                           <div className="p-3 bg-neutral-50 border border-neutral-200">
                             <p className="text-xs text-neutral-500">{t('bookings.nights')}</p>
@@ -290,11 +332,11 @@ export default function BookingsPage() {
                           <div className="flex items-center gap-2">
                             <CreditCard size={16} className="text-neutral-400" />
                             <span className="text-sm">
-                              {booking.payment_status === 'COMPLETED' ? t('bookings.paid') : t('bookings.unpaid')}
+                              {booking.paymentStatus === 'COMPLETED' ? t('bookings.paid') : t('bookings.unpaid')}
                             </span>
                           </div>
                           <div className="text-sm text-neutral-400">
-                            {t('bookings.bookingDate')}: {new Date(booking.created_at).toLocaleDateString('zh-CN')}
+                            {t('bookings.bookingDate')}: {booking.createdAt ? new Date(booking.createdAt).toLocaleDateString('zh-CN') : '-'}
                           </div>
                         </div>
                       </div>
@@ -304,7 +346,7 @@ export default function BookingsPage() {
                         <div className="mb-4">
                           <p className="text-sm text-neutral-500">{t('bookings.totalPrice')}</p>
                           <p className="text-2xl font-bold text-neutral-900">
-                            ${booking.total_price.toLocaleString()} {booking.currency}
+                            ${booking.totalPrice.toLocaleString()} {booking.currency}
                           </p>
                         </div>
 
@@ -365,7 +407,7 @@ export default function BookingsPage() {
             <div className="flex items-center justify-between p-4 bg-primary/5 border border-primary/20">
               <div>
                 <p className="text-sm text-neutral-500">{t('bookings.bookingNumber')}</p>
-                <p className="text-xl font-bold text-primary">{selectedBooking.booking_number}</p>
+                <p className="text-xl font-bold text-primary">{selectedBooking.bookingNumber}</p>
               </div>
               <Badge variant={selectedBooking.status === 'CONFIRMED' ? 'primary' : 'default'}>
                 {statusConfig[selectedBooking.status]?.label || selectedBooking.status}
@@ -375,19 +417,19 @@ export default function BookingsPage() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-neutral-500">{t('bookings.property')}</p>
-                <p className="font-medium">{selectedBooking.property_title}</p>
+                <p className="font-medium">{selectedBooking.propertyTitle}</p>
               </div>
               <div>
                 <p className="text-sm text-neutral-500">{t('booking.guestName')}</p>
-                <p className="font-medium">{selectedBooking.guest_name}</p>
+                <p className="font-medium">{selectedBooking.guestName}</p>
               </div>
               <div>
                 <p className="text-sm text-neutral-500">{t('bookings.checkIn')}</p>
-                <p className="font-medium">{selectedBooking.check_in}</p>
+                <p className="font-medium">{selectedBooking.checkIn}</p>
               </div>
               <div>
                 <p className="text-sm text-neutral-500">{t('bookings.checkOut')}</p>
-                <p className="font-medium">{selectedBooking.check_out}</p>
+                <p className="font-medium">{selectedBooking.checkOut}</p>
               </div>
             </div>
 
@@ -398,12 +440,12 @@ export default function BookingsPage() {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-neutral-600">{t('bookings.basePrice')}</span>
-                  <span>${selectedBooking.total_price.toLocaleString()} {selectedBooking.currency}</span>
+                  <span>${selectedBooking.totalPrice.toLocaleString()} {selectedBooking.currency}</span>
                 </div>
                 <Divider className="my-2" />
                 <div className="flex justify-between font-semibold text-base">
                   <span>{t('booking.total')}</span>
-                  <span>${selectedBooking.total_price.toLocaleString()} {selectedBooking.currency}</span>
+                  <span>${selectedBooking.totalPrice.toLocaleString()} {selectedBooking.currency}</span>
                 </div>
               </div>
             </div>
@@ -438,7 +480,7 @@ export default function BookingsPage() {
       >
         <div className="space-y-4">
           <p className="text-neutral-600">
-            {t('bookings.writeReview')} {selectedBooking?.property_title}
+            {t('bookings.writeReview')} {selectedBooking?.propertyTitle}
           </p>
           
           <div>
