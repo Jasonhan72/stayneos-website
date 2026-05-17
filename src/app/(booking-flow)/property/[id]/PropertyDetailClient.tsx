@@ -16,6 +16,12 @@ import {
   Trophy,
   Waves,
   Check,
+  ShieldCheck,
+  BadgeCheck,
+  MessageCircle,
+  ReceiptText,
+  MapPinned,
+  KeyRound,
 } from 'lucide-react';
 import { Container, Divider } from '@/components/ui';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -470,6 +476,23 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
     return parts.join(' ');
   })();
 
+  const monthlyEstimate = tierPrices.monthly || propertyCardData.price || 0;
+  const estimatedTax = Math.round(monthlyEstimate * 0.13);
+
+  const trustItems = [
+    { icon: ShieldCheck, title: 'Verified by NEOS', text: 'Photos, location context, pricing, and stay terms are reviewed before publishing.' },
+    { icon: ReceiptText, title: 'Transparent pricing', text: 'Monthly, quarterly, and annual rates are visible before checkout. No surprise service or cleaning fees.' },
+    { icon: MessageCircle, title: 'Human support', text: 'Contact the host or NEOS support from your booking once reserved.' },
+    { icon: KeyRound, title: 'Move-in ready', text: 'Furnished stay with utilities, WiFi, kitchenware, linens, and building essentials.' },
+  ];
+
+  const reviewSignals = [
+    { label: 'Cleanliness', score: 'Verified' },
+    { label: 'Location', score: 'Checked' },
+    { label: 'Move-in experience', score: 'Guided' },
+    { label: 'Accuracy', score: 'Reviewed' },
+  ];
+
   // Desktop Booking Card Component
   const BookingCard = ({ isSticky = false }: { isSticky?: boolean }) => (
     <div className={`bg-white border border-neutral-200 rounded-2xl p-6 shadow-lg ${isSticky ? 'sticky top-24' : ''}`}>
@@ -499,6 +522,21 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             <span className="font-semibold text-neutral-900">{fp(type === 'MONTHLY' ? tierPrices.monthly : type === 'QUARTERLY' ? tierPrices.quarterly : tierPrices.annual)}/Mo</span>
           </button>
         ))}
+      </div>
+
+      <div className="mb-4 rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4">
+        <div className="flex items-start gap-3">
+          <ReceiptText size={20} className="mt-0.5 text-emerald-700" />
+          <div className="min-w-0 flex-1">
+            <p className="font-semibold text-neutral-950">Transparent monthly estimate</p>
+            <div className="mt-3 space-y-2 text-sm">
+              <div className="flex justify-between gap-3"><span className="text-neutral-600">Monthly rent</span><span className="font-medium text-neutral-950">{fp(monthlyEstimate)}</span></div>
+              <div className="flex justify-between gap-3"><span className="text-neutral-600">Estimated tax</span><span className="font-medium text-neutral-950">{fp(estimatedTax)}</span></div>
+              <div className="flex justify-between gap-3 border-t border-emerald-200 pt-2"><span className="font-semibold text-neutral-950">Est. first month total</span><span className="font-bold text-neutral-950">{fp(monthlyEstimate + estimatedTax)}</span></div>
+            </div>
+            <p className="mt-2 text-xs text-neutral-600">Utilities, WiFi, basic kitchenware, linens, and support are included unless noted otherwise.</p>
+          </div>
+        </div>
       </div>
 
       {checkIn && checkOut && (
@@ -860,6 +898,33 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
 
             <Divider />
 
+            {/* Trust System */}
+            <section className="py-8">
+              <div className="mb-5 flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-wide text-emerald-700">NEOS trust layer</p>
+                  <h2 className="mt-1 text-2xl font-semibold text-neutral-950">Book with confidence</h2>
+                </div>
+                <span className="hidden rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800 md:inline-flex">
+                  <BadgeCheck size={16} className="mr-2" /> Verified stay
+                </span>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {trustItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <div key={item.title} className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+                      <Icon size={22} className="text-neutral-950" />
+                      <h3 className="mt-3 font-semibold text-neutral-950">{item.title}</h3>
+                      <p className="mt-1 text-sm leading-6 text-neutral-600">{item.text}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+
+            <Divider />
+
             {/* Badges / Highlights */}
             <div className="py-6 space-y-4">
               <div className="flex gap-3">
@@ -958,9 +1023,38 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
 
             <Divider />
 
+            {/* Review Trust Framework */}
+            <section className="py-8">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold text-neutral-950">Stay quality signals</h2>
+                  <p className="mt-1 text-sm text-neutral-600">Airbnb-style review dimensions adapted for long-term furnished stays.</p>
+                </div>
+                <span className="text-sm font-semibold text-neutral-950">New verified listing</span>
+              </div>
+              <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                {reviewSignals.map((signal) => (
+                  <div key={signal.label} className="rounded-2xl border border-neutral-200 p-4">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="font-medium text-neutral-950">{signal.label}</span>
+                      <span className="font-semibold text-emerald-700">{signal.score}</span>
+                    </div>
+                    <div className="mt-3 h-2 rounded-full bg-neutral-100">
+                      <div className="h-2 w-[92%] rounded-full bg-neutral-950" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <Divider />
+
             {/* Location Map */}
             <div className="py-6">
-              <h2 className="text-xl font-semibold mb-4">{t('property.whereYouBe')}</h2>
+              <div className="mb-4 flex items-center justify-between gap-4">
+                <h2 className="text-xl font-semibold">{t('property.whereYouBe')}</h2>
+                <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-3 py-1.5 text-xs font-semibold text-neutral-800"><MapPinned size={14} /> Location checked</span>
+              </div>
               <div className="w-full h-[350px] bg-neutral-100 relative overflow-hidden rounded-2xl">
                 <iframe 
                   src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}&q=${encodeURIComponent(locationShort)}&zoom=15`}

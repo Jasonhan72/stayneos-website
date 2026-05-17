@@ -23,7 +23,14 @@ import {
   Bath,
   Maximize,
   Users,
-  Calendar
+  Calendar,
+  ShieldCheck,
+  Home,
+  Train,
+  GraduationCap,
+  Briefcase,
+  Sofa,
+  Sparkles
 } from 'lucide-react';
 import { Button, Container, Card, Badge, Input } from '@/components/ui';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -83,6 +90,16 @@ export default function PropertiesPage() {
     { value: 'Concierge', label: t('properties.amenity.concierge', 'Concierge') },
   ]), [t]);
 
+  const trustCategories = useMemo(() => ([
+    { id: 'all', label: t('properties.categories.all', 'All stays'), icon: Home },
+    { id: 'downtown', label: t('properties.categories.downtown', 'Downtown'), icon: Briefcase },
+    { id: 'subway', label: t('properties.categories.subway', 'Near subway'), icon: Train },
+    { id: 'university', label: t('properties.categories.university', 'Near UofT'), icon: GraduationCap },
+    { id: 'furnished', label: t('properties.categories.furnished', 'Furnished'), icon: Sofa },
+    { id: 'luxury', label: t('properties.categories.luxury', 'Luxury condo'), icon: Sparkles },
+    { id: 'verified', label: t('properties.categories.verified', 'NEOS verified'), icon: ShieldCheck },
+  ]), [t]);
+
   const sortOptions = [
     { value: 'recommended', label: 'sort.recommended' },
     { value: 'price-low', label: 'sort.priceLow' },
@@ -113,6 +130,7 @@ export default function PropertiesPage() {
   const [checkIn, setCheckIn] = useState(initCheckIn);
   const [checkOut, setCheckOut] = useState(initCheckOut);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('all');
   
   // 构建 API 查询参数
   // 暂时禁用过滤参数
@@ -148,6 +166,33 @@ export default function PropertiesPage() {
       }
     }
     
+    // Airbnb-style category browsing for long-term stays
+    if (activeCategory !== 'all') {
+      filtered = filtered.filter((p) => {
+        const pMeta = p as PropertyCardData & { city?: string; neighborhood?: string };
+        const haystack = [p.title, p.description, p.location, pMeta.city, pMeta.neighborhood, ...(p.amenities || [])]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase();
+        switch (activeCategory) {
+          case 'downtown':
+            return haystack.includes('downtown') || haystack.includes('financial') || haystack.includes('waterfront') || haystack.includes('grange') || haystack.includes('yonge');
+          case 'subway':
+            return haystack.includes('subway') || haystack.includes('station') || haystack.includes('transit') || haystack.includes('union') || haystack.includes('wellesley') || haystack.includes('osgoode') || haystack.includes('st. patrick');
+          case 'university':
+            return haystack.includes('uoft') || haystack.includes('university') || haystack.includes('campus') || haystack.includes('student') || haystack.includes('hospital');
+          case 'furnished':
+            return haystack.includes('furnished') || haystack.includes('kitchen') || haystack.includes('wifi') || haystack.includes('linens');
+          case 'luxury':
+            return haystack.includes('luxury') || haystack.includes('concierge') || haystack.includes('pool') || haystack.includes('gym') || haystack.includes('waterfront');
+          case 'verified':
+            return true;
+          default:
+            return true;
+        }
+      });
+    }
+
     // Amenities 筛选
     if (selectedAmenities.length > 0) {
       filtered = filtered.filter(p => 
@@ -156,12 +201,12 @@ export default function PropertiesPage() {
     }
     
     return filtered;
-  }, [propertyList, selectedPriceRange, selectedBedrooms, selectedAmenities]);
+  }, [propertyList, selectedPriceRange, selectedBedrooms, selectedAmenities, activeCategory]);
 
   // 当筛选条件变化时重置页码
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, selectedPriceRange, selectedBedrooms, selectedAmenities, sortBy]);
+  }, [searchQuery, selectedPriceRange, selectedBedrooms, selectedAmenities, sortBy, activeCategory]);
 
   const toggleAmenity = (amenity: string) => {
     setSelectedAmenities(prev => 
@@ -176,6 +221,7 @@ export default function PropertiesPage() {
     setSelectedBedrooms('any');
     setSelectedAmenities([]);
     setSearchQuery('');
+    setActiveCategory('all');
     setCurrentPage(1);
   };
 
@@ -344,6 +390,29 @@ export default function PropertiesPage() {
                 )}
               </Button>
             </div>
+          </div>
+        </Container>
+      </div>
+
+      {/* Airbnb-inspired category browsing */}
+      <div className="bg-white border-b border-neutral-200">
+        <Container>
+          <div className="flex gap-8 overflow-x-auto py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="Stay categories">
+            {trustCategories.map((category) => {
+              const Icon = category.icon;
+              const active = activeCategory === category.id;
+              return (
+                <button
+                  key={category.id}
+                  type="button"
+                  onClick={() => setActiveCategory(category.id)}
+                  className={`flex shrink-0 flex-col items-center gap-2 border-b-2 pb-2 text-xs font-semibold transition-colors ${active ? 'border-neutral-950 text-neutral-950' : 'border-transparent text-neutral-500 hover:text-neutral-950'}`}
+                >
+                  <Icon size={23} strokeWidth={active ? 2.4 : 1.8} />
+                  <span>{category.label}</span>
+                </button>
+              );
+            })}
           </div>
         </Container>
       </div>
@@ -642,9 +711,14 @@ function PropertyGridCard({
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
           
-          {property.featured && (
-            <Badge className="absolute top-3 left-3" variant="primary">{t('property.featured')}</Badge>
-          )}
+          <div className="absolute left-3 top-3 flex flex-col gap-2">
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-neutral-950 shadow-sm">
+              <ShieldCheck size={13} className="text-emerald-600" /> NEOS verified
+            </span>
+            {property.featured && (
+              <Badge variant="primary">{t('property.featured')}</Badge>
+            )}
+          </div>
           
           <button 
             className="absolute top-3 right-3 p-2 bg-white/90 hover:bg-white transition-colors rounded-full"
@@ -660,12 +734,16 @@ function PropertyGridCard({
             <h3 className="font-semibold text-neutral-900 line-clamp-1 group-hover:text-primary transition-colors">
               {property.title}
             </h3>
-            {property.reviewCount > 0 && (
-              <div className="flex items-center gap-1 shrink-0">
-                <Star size={14} className="text-accent fill-accent" />
-                <span className="text-sm font-medium">{property.rating}</span>
-              </div>
-            )}
+            <div className="flex items-center gap-1 shrink-0">
+              {property.reviewCount > 0 ? (
+                <>
+                  <Star size={14} className="text-accent fill-accent" />
+                  <span className="text-sm font-medium">{property.rating}</span>
+                </>
+              ) : (
+                <span className="rounded-full bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700">New verified</span>
+              )}
+            </div>
           </div>
           
           <div className="flex items-center gap-1 text-neutral-500 mb-3">
@@ -683,6 +761,9 @@ function PropertyGridCard({
             <span>{t('property.max')} {property.maxGuests} {t('property.guests')}</span>
           </div>
           
+          <div className="mb-3 rounded-xl border border-neutral-200 bg-neutral-50 p-3 text-xs text-neutral-600">
+            <div className="flex items-center justify-between"><span>Available for 30+ days</span><span className="font-semibold text-neutral-900">No hidden fees</span></div>
+          </div>
           <PropertyPricingTiers property={property} compact />
           {/* Hotel Comparison */}
           <div className="hotel-comparison mt-1">
@@ -734,9 +815,14 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          {property.featured && (
-            <Badge className="absolute top-3 left-3" variant="primary">{t('property.featured')}</Badge>
-          )}
+          <div className="absolute left-3 top-3 flex flex-col gap-2">
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-neutral-950 shadow-sm">
+              <ShieldCheck size={13} className="text-emerald-600" /> NEOS verified
+            </span>
+            {property.featured && (
+              <Badge variant="primary">{t('property.featured')}</Badge>
+            )}
+          </div>
           <button 
             className="absolute top-3 right-3 p-2 bg-white/90 hover:bg-white transition-colors rounded-full"
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlist(property.id); }}
@@ -752,12 +838,16 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
               <h3 className="text-lg font-semibold text-neutral-900 group-hover:text-primary transition-colors">
                 {property.title}
               </h3>
-              {property.reviewCount > 0 && (
-                <div className="flex items-center gap-1">
-                  <Star size={14} className="text-accent fill-accent" />
-                  <span className="text-sm font-medium">{property.rating}</span>
-                </div>
-              )}
+              <div className="flex items-center gap-1">
+                {property.reviewCount > 0 ? (
+                  <>
+                    <Star size={14} className="text-accent fill-accent" />
+                    <span className="text-sm font-medium">{property.rating}</span>
+                  </>
+                ) : (
+                  <span className="rounded-full bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700">New verified</span>
+                )}
+              </div>
             </div>
             
             <div className="flex items-center gap-1 text-neutral-500 mb-3">
@@ -794,6 +884,9 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
           </div>
           
           <div className="mt-4">
+            <div className="mb-3 rounded-xl border border-neutral-200 bg-neutral-50 p-3 text-sm text-neutral-600">
+              <div className="flex items-center justify-between"><span>Minimum 30 days</span><span className="font-semibold text-neutral-900">All-inclusive estimate</span></div>
+            </div>
             <PropertyPricingTiers property={property} />
             {/* Hotel Comparison */}
             <div className="hotel-comparison mt-2">
