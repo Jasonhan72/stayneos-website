@@ -301,90 +301,88 @@ export default function BookingsPage() {
                     </div>
                   </div>
 
-                  <div className="p-6 lg:p-8">
-                    <div className="grid grid-cols-1 xl:grid-cols-[1fr_auto] gap-6">
+                  <div className="min-w-0 p-6 lg:p-8">
+                    <p className="text-sm text-neutral-500 mb-1 break-all">
+                      {t('bookings.bookingNumber')}: {booking.bookingNumber}
+                    </p>
+                    <h3 className="text-2xl font-semibold leading-snug text-neutral-900 mb-6 break-words max-w-3xl">
+                      {booking.propertyTitle}
+                    </h3>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-5 mb-6">
                       <div className="min-w-0">
-                        <p className="text-sm text-neutral-500 mb-1">
-                          {t('bookings.bookingNumber')}: {booking.bookingNumber}
-                        </p>
-                        <h3 className="text-2xl font-semibold leading-snug text-neutral-900 mb-5 break-words">
-                          {booking.propertyTitle}
-                        </h3>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 mb-5">
-                          <div>
-                            <p className="text-sm text-neutral-500">{t('bookings.checkIn')}</p>
-                            <p className="font-semibold text-neutral-900">{formatBookingDate(booking.checkIn)}</p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-neutral-500">{t('bookings.checkOut')}</p>
-                            <p className="font-semibold text-neutral-900">{formatBookingDate(booking.checkOut)}</p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-neutral-500">{t('bookings.nights')}</p>
-                            <p className="font-semibold text-neutral-900">{booking.nights} {t('booking.nights')}</p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-neutral-500">{t('bookings.guests')}</p>
-                            <p className="font-semibold text-neutral-900">{booking.guests} {t('booking.guests')}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-neutral-500">
-                          <div className="flex items-center gap-2 text-neutral-700">
-                            <CreditCard size={16} className="text-neutral-400" />
-                            <span>{booking.paymentStatus === 'COMPLETED' ? t('bookings.paid') : t('bookings.unpaid')}</span>
-                          </div>
-                          <div>
-                            {t('bookings.bookingDate')}: {booking.createdAt ? formatBookingDate(booking.createdAt) : '-'}
-                          </div>
-                        </div>
+                        <p className="text-sm text-neutral-500 whitespace-nowrap">{t('bookings.checkIn')}</p>
+                        <p className="font-semibold text-neutral-900 whitespace-nowrap">{formatBookingDate(booking.checkIn)}</p>
                       </div>
+                      <div className="min-w-0">
+                        <p className="text-sm text-neutral-500 whitespace-nowrap">{t('bookings.checkOut')}</p>
+                        <p className="font-semibold text-neutral-900 whitespace-nowrap">{formatBookingDate(booking.checkOut)}</p>
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm text-neutral-500 whitespace-nowrap">{t('bookings.nights')}</p>
+                        <p className="font-semibold text-neutral-900 whitespace-nowrap">{booking.nights} {t('booking.nights')}</p>
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm text-neutral-500 whitespace-nowrap">{t('bookings.guests')}</p>
+                        <p className="font-semibold text-neutral-900 whitespace-nowrap">{booking.guests} {t('booking.guests')}</p>
+                      </div>
+                    </div>
 
-                      <div className="xl:text-right xl:min-w-56">
+                    <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-neutral-500 mb-6">
+                      <div className="flex items-center gap-2 text-neutral-700">
+                        <CreditCard size={16} className="text-neutral-400" />
+                        <span>{booking.paymentStatus === 'COMPLETED' ? t('bookings.paid') : t('bookings.unpaid')}</span>
+                      </div>
+                      <div>
+                        {t('bookings.bookingDate')}: {booking.createdAt ? formatBookingDate(booking.createdAt) : '-'}
+                      </div>
+                    </div>
+
+                    <div className="border-t border-neutral-200 pt-5 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                      <div>
                         <p className="text-sm text-neutral-500">{t('bookings.totalPrice')}</p>
-                        <p className="text-3xl font-bold text-neutral-900 whitespace-nowrap mb-6">
+                        <p className="text-3xl font-bold text-neutral-900 whitespace-nowrap">
                           ${booking.totalPrice.toLocaleString()} {booking.currency}
                         </p>
+                      </div>
 
-                        <div className="flex flex-wrap xl:justify-end gap-2">
-                          {['PENDING', 'CONFIRMED'].includes(booking.status) && (
-                            <>
-                              <Button variant="outline" size="sm" className="whitespace-nowrap">
-                                <MessageSquare size={14} className="mr-1" />
-                                {t('bookings.contactHost')}
-                              </Button>
-                              <Button variant="outline" size="sm" className="whitespace-nowrap">
-                                <Download size={14} className="mr-1" />
-                                {t('bookings.downloadVoucher')}
-                              </Button>
-                            </>
-                          )}
-
-                          {booking.status === 'CHECKED_OUT' && (
-                            <Button
-                              size="sm"
-                              className="whitespace-nowrap"
-                              onClick={() => {
-                                setSelectedBooking(booking);
-                                setShowReviewModal(true);
-                              }}
-                            >
-                              <Star size={14} className="mr-1" />
-                              {t('bookings.writeReview')}
+                      <div className="flex flex-wrap md:justify-end gap-2">
+                        {['PENDING', 'CONFIRMED'].includes(booking.status) && (
+                          <>
+                            <Button variant="outline" size="sm" className="whitespace-nowrap">
+                              <MessageSquare size={14} className="mr-1" />
+                              {t('bookings.contactHost')}
                             </Button>
-                          )}
+                            <Button variant="outline" size="sm" className="whitespace-nowrap">
+                              <Download size={14} className="mr-1" />
+                              {t('bookings.downloadVoucher')}
+                            </Button>
+                          </>
+                        )}
 
+                        {booking.status === 'CHECKED_OUT' && (
                           <Button
-                            variant="ghost"
                             size="sm"
                             className="whitespace-nowrap"
-                            onClick={() => setSelectedBooking(booking)}
+                            onClick={() => {
+                              setSelectedBooking(booking);
+                              setShowReviewModal(true);
+                            }}
                           >
-                            {t('bookings.viewDetails')}
-                            <ChevronRight size={14} className="ml-1" />
+                            <Star size={14} className="mr-1" />
+                            {t('bookings.writeReview')}
                           </Button>
-                        </div>
+                        )}
+
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="whitespace-nowrap"
+                          onClick={() => setSelectedBooking(booking)}
+                        >
+                          {t('bookings.viewDetails')}
+                          <ChevronRight size={14} className="ml-1" />
+                        </Button>
                       </div>
                     </div>
                   </div>
