@@ -125,6 +125,7 @@ function getStatusConfig(t: (key: string) => string): Record<string, { label: st
 }
 
 type TabType = 'upcoming' | 'completed' | 'cancelled';
+type BookingModal = 'details' | 'contact' | 'voucher' | null;
 
 export default function BookingsPage() {
   const { user, isAuthenticated } = useAuth();
@@ -134,9 +135,13 @@ export default function BookingsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [bookingModal, setBookingModal] = useState<BookingModal>(null);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
+  const [hostMessage, setHostMessage] = useState('');
+  const [isSendingHostMessage, setIsSendingHostMessage] = useState(false);
+  const [hostMessageStatus, setHostMessageStatus] = useState<'idle' | 'sent' | 'error'>('idle');
 
   // 获取预订列表
   const fetchBookings = useCallback(async () => {
@@ -208,6 +213,125 @@ export default function BookingsPage() {
       setReviewRating(5);
       setReviewComment('');
     }, 500);
+  };
+
+  const openBookingModal = (booking: Booking, modal: Exclude<BookingModal, null>) => {
+    setSelectedBooking(booking);
+    setBookingModal(modal);
+    if (modal === 'contact') {
+      setHostMessageStatus('idle');
+      setHostMessage(
+        `Hi, I have a question about booking ${booking.bookingNumber} for ${booking.propertyTitle} (${formatBookingDate(booking.checkIn)} - ${formatBookingDate(booking.checkOut)}).`
+      );
+    }
+  };
+
+  const closeBookingModal = () => {
+    setSelectedBooking(null);
+    setBookingModal(null);
+    setHostMessageStatus('idle');
+    setIsSendingHostMessage(false);
+  };
+
+  const escapeVoucherText = (value: string | number | null | undefined) =>
+    String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char] || char));
+
+  const buildVoucherHtml = (booking: Booking) => {
+    const propertyTitle = escapeVoucherText(booking.propertyTitle);
+    const bookingNumber = escapeVoucherText(booking.bookingNumber);
+    const statusLabel = escapeVoucherText(statusConfig[booking.status]?.label || booking.status);
+    const guestName = escapeVoucherText(booking.guestName || 'Guest');
+    const paymentStatus = escapeVoucherText(booking.paymentStatus);
+    const currency = escapeVoucherText(booking.currency);
+    return `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>NEOS booking voucher ${bookingNumber}</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #171717; margin: 40px; }
+    .voucher { max-width: 760px; border: 1px solid #e5e5e5; border-radius: 24px; padding: 32px; }
+    .brand { font-size: 13px; letter-spacing: .18em; text-transform: uppercase; color: #737373; }
+    h1 { margin: 8px 0 24px; font-size: 30px; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .box { border: 1px solid #eee; border-radius: 16px; padding: 16px; }
+    .label { font-size: 12px; color: #737373; margin-bottom: 6px; }
+    .value { font-weight: 700; font-size: 16px; }
+    .total { margin-top: 24px; padding-top: 20px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: end; }
+    .price { font-size: 28px; font-weight: 800; }
+    .footer { margin-top: 28px; color: #737373; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <section class="voucher">
+    <div class="brand">NEOS Booking Voucher</div>
+    <h1>${propertyTitle}</h1>
+    <div class="grid">
+      <div class="box"><div class="label">Booking number</div><div class="value">${bookingNumber}</div></div>
+      <div class="box"><div class="label">Status</div><div class="value">${statusLabel}</div></div>
+      <div class="box"><div class="label">Check-in</div><div class="value">${formatBookingDate(booking.checkIn)}</div></div>
+      <div class="box"><div class="label">Check-out</div><div class="value">${formatBookingDate(booking.checkOut)}</div></div>
+      <div class="box"><div class="label">Guest</div><div class="value">${guestName}</div></div>
+      <div class="box"><div class="label">Guests / nights</div><div class="value">${booking.guests} guests · ${booking.nights} nights</div></div>
+    </div>
+    <div class="total">
+      <div><div class="label">Payment</div><div class="value">${paymentStatus}</div></div>
+      <div class="price">$${booking.totalPrice.toLocaleString()} ${currency}</div>
+    </div>
+    <div class="footer">Issued by NEOS. Please keep this voucher for check-in and support.</div>
+  </section>
+</body>
+</html>`;
+  };
+
+  const downloadVoucher = (booking: Booking) => {
+    const blob = new Blob([buildVoucherHtml(booking)], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `neos-voucher-${booking.bookingNumber || booking.id}.html`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const printVoucher = (booking: Booking) => {
+    const win = window.open('', '_blank', 'noopener,noreferrer');
+    if (!win) return;
+    win.document.write(buildVoucherHtml(booking));
+    win.document.close();
+    win.focus();
+    win.print();
+  };
+
+  const sendHostMessage = async () => {
+    if (!selectedBooking || !hostMessage.trim()) return;
+    setIsSendingHostMessage(true);
+    setHostMessageStatus('idle');
+    try {
+      const conversationRes = await fetch('/api/conversations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bookingId: selectedBooking.id, type: 'host_guest' }),
+      });
+      if (!conversationRes.ok) throw new Error('Unable to create conversation');
+      const conversationPayload = await conversationRes.json() as { conversation?: { id?: string } };
+      const conversationId = conversationPayload.conversation?.id;
+      if (!conversationId) throw new Error('Missing conversation id');
+
+      const messageRes = await fetch(`/api/conversations/${encodeURIComponent(conversationId)}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ body: hostMessage.trim() }),
+      });
+      if (!messageRes.ok) throw new Error('Unable to send message');
+      setHostMessageStatus('sent');
+    } catch {
+      setHostMessageStatus('error');
+    } finally {
+      setIsSendingHostMessage(false);
+    }
   };
 
   // 未登录提示
@@ -367,18 +491,18 @@ export default function BookingsPage() {
                           <Button
                             size="sm"
                             className="rounded-full bg-neutral-950 px-5 text-white hover:bg-neutral-800 whitespace-nowrap"
-                            onClick={() => setSelectedBooking(booking)}
+                            onClick={() => openBookingModal(booking, 'details')}
                           >
                             {t('bookings.viewDetails')}
                           </Button>
 
                           {['PENDING', 'CONFIRMED'].includes(booking.status) && (
                             <>
-                              <Button variant="outline" size="sm" className="rounded-full px-4 whitespace-nowrap">
+                              <Button variant="outline" size="sm" className="rounded-full px-4 whitespace-nowrap" onClick={() => openBookingModal(booking, 'contact')}>
                                 <MessageSquare size={14} className="mr-1" />
                                 {t('bookings.contactHost')}
                               </Button>
-                              <Button variant="ghost" size="sm" className="rounded-full px-3 whitespace-nowrap">
+                              <Button variant="ghost" size="sm" className="rounded-full px-3 whitespace-nowrap" onClick={() => openBookingModal(booking, 'voucher')}>
                                 <Download size={14} className="mr-1" />
                                 {t('bookings.downloadVoucher')}
                               </Button>
@@ -412,8 +536,8 @@ export default function BookingsPage() {
 
       {/* Booking Detail Modal */}
       <Modal
-        isOpen={!!selectedBooking && !showReviewModal}
-        onClose={() => setSelectedBooking(null)}
+        isOpen={!!selectedBooking && bookingModal === 'details' && !showReviewModal}
+        onClose={closeBookingModal}
         title={t('bookings.bookingDetails')}
       >
         {selectedBooking && (
@@ -465,19 +589,105 @@ export default function BookingsPage() {
             </div>
 
             <div className="flex justify-between pt-4">
-              <Button variant="outline" onClick={() => setSelectedBooking(null)}>
+              <Button variant="outline" onClick={closeBookingModal}>
                 {t('bookings.close')}
               </Button>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={() => printVoucher(selectedBooking)}>
                   <Printer size={16} className="mr-1" />
                   {t('bookings.print')}
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={() => downloadVoucher(selectedBooking)}>
                   <Download size={16} className="mr-1" />
                   {t('bookings.download')}
                 </Button>
               </div>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* Contact Host Modal */}
+      <Modal
+        isOpen={!!selectedBooking && bookingModal === 'contact'}
+        onClose={closeBookingModal}
+        title={t('bookings.contactHost')}
+      >
+        {selectedBooking && (
+          <div className="space-y-5">
+            <div className="rounded-2xl border border-neutral-200 p-4">
+              <p className="text-sm text-neutral-500">{selectedBooking.bookingNumber}</p>
+              <p className="font-semibold text-neutral-950">{selectedBooking.propertyTitle}</p>
+              <p className="mt-1 text-sm text-neutral-500">
+                {formatBookingDate(selectedBooking.checkIn)} - {formatBookingDate(selectedBooking.checkOut)}
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-neutral-800 mb-2">Message to host</label>
+              <textarea
+                value={hostMessage}
+                onChange={(event) => setHostMessage(event.target.value)}
+                rows={6}
+                className="w-full rounded-2xl border border-neutral-300 px-4 py-3 text-sm focus:border-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 resize-none"
+              />
+            </div>
+
+            {hostMessageStatus === 'sent' && (
+              <div className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700">Message sent. You can continue the conversation in Messages.</div>
+            )}
+            {hostMessageStatus === 'error' && (
+              <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">Could not send this message. Please try again or open Messages.</div>
+            )}
+
+            <div className="flex flex-col sm:flex-row sm:justify-end gap-3">
+              <Link href="/dashboard/messages" className="inline-flex justify-center rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium hover:border-neutral-900">
+                Open Messages
+              </Link>
+              <Button
+                onClick={sendHostMessage}
+                disabled={isSendingHostMessage || !hostMessage.trim()}
+                className="rounded-full px-5"
+              >
+                {isSendingHostMessage ? 'Sending...' : 'Send message'}
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* Voucher Modal */}
+      <Modal
+        isOpen={!!selectedBooking && bookingModal === 'voucher'}
+        onClose={closeBookingModal}
+        title={t('bookings.downloadVoucher')}
+      >
+        {selectedBooking && (
+          <div className="space-y-5">
+            <div className="rounded-3xl border border-neutral-200 p-6">
+              <p className="text-xs font-medium uppercase tracking-[0.18em] text-neutral-400">NEOS Booking Voucher</p>
+              <h3 className="mt-2 text-2xl font-semibold text-neutral-950">{selectedBooking.propertyTitle}</h3>
+              <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
+                <div className="rounded-xl bg-neutral-50 p-3"><p className="text-neutral-500">Booking</p><p className="font-semibold">{selectedBooking.bookingNumber}</p></div>
+                <div className="rounded-xl bg-neutral-50 p-3"><p className="text-neutral-500">Status</p><p className="font-semibold">{statusConfig[selectedBooking.status]?.label || selectedBooking.status}</p></div>
+                <div className="rounded-xl bg-neutral-50 p-3"><p className="text-neutral-500">Check-in</p><p className="font-semibold">{formatBookingDate(selectedBooking.checkIn)}</p></div>
+                <div className="rounded-xl bg-neutral-50 p-3"><p className="text-neutral-500">Check-out</p><p className="font-semibold">{formatBookingDate(selectedBooking.checkOut)}</p></div>
+              </div>
+              <div className="mt-5 flex items-end justify-between border-t border-neutral-200 pt-4">
+                <div><p className="text-sm text-neutral-500">Guest</p><p className="font-semibold">{selectedBooking.guestName || 'Guest'}</p></div>
+                <p className="text-2xl font-bold">${selectedBooking.totalPrice.toLocaleString()} {selectedBooking.currency}</p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:justify-end gap-3">
+              <Button variant="outline" className="rounded-full px-5" onClick={() => printVoucher(selectedBooking)}>
+                <Printer size={16} className="mr-2" />
+                {t('bookings.print')}
+              </Button>
+              <Button className="rounded-full px-5" onClick={() => downloadVoucher(selectedBooking)}>
+                <Download size={16} className="mr-2" />
+                {t('bookings.download')}
+              </Button>
             </div>
           </div>
         )}
