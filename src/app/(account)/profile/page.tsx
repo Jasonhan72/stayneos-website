@@ -1,17 +1,24 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Shield, Star, MapPin, Briefcase, MessageCircle, Pencil } from "lucide-react";
+import { Shield, Star, MapPin, Briefcase, MessageCircle, Pencil, Check, X } from "lucide-react";
 import { useAuth } from "@/lib/context/UserContext";
 import { useI18n } from "@/lib/i18n";
+import { useToastHelpers } from "@/components/ui/Toast";
 
 export default function ProfilePage() {
   const { locale } = useI18n();
-  const { user, isLoading, isAuthenticated } = useAuth();
+  const { user, isLoading, isAuthenticated, updateProfile } = useAuth();
   const router = useRouter();
+  const toast = useToastHelpers();
+
+  // Bio inline editing
+  const [editingBio, setEditingBio] = useState(false);
+  const [bioValue, setBioValue] = useState("");
+  const [savingBio, setSavingBio] = useState(false);
 
   const L = (zh: string, en: string, fr: string) =>
     locale === "zh" ? zh : locale === "fr" ? fr : en;
@@ -47,6 +54,29 @@ export default function ProfilePage() {
         { year: "numeric", month: "long" }
       )
     : null;
+
+  const startEditingBio = () => {
+    setBioValue(user.bio || "");
+    setEditingBio(true);
+  };
+
+  const cancelEditingBio = () => {
+    setEditingBio(false);
+    setBioValue("");
+  };
+
+  const saveBio = async () => {
+    setSavingBio(true);
+    try {
+      await updateProfile({ bio: bioValue.trim() });
+      toast.success(L("简介已保存", "Bio saved", "Bio enregistrée"));
+      setEditingBio(false);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to save bio");
+    } finally {
+      setSavingBio(false);
+    }
+  };
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-10 md:py-16">
@@ -102,19 +132,67 @@ export default function ProfilePage() {
       <section className="mt-10 grid gap-8 md:grid-cols-3">
         <div className="md:col-span-2 space-y-6">
           <div className="rounded-2xl border border-neutral-200 bg-white p-6">
-            <h2 className="text-lg font-semibold text-neutral-900">
-              {L("关于我", "About me", "À propos de moi")}
-            </h2>
-            {user.bio ? (
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-neutral-900">
+                {L("关于我", "About me", "À propos de moi")}
+              </h2>
+              {!editingBio && (
+                <button
+                  onClick={startEditingBio}
+                  className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-900"
+                >
+                  <Pencil size={13} />
+                  {user.bio
+                    ? L("编辑", "Edit", "Modifier")
+                    : L("添加简介", "Add bio", "Ajouter une bio")}
+                </button>
+              )}
+            </div>
+            {editingBio ? (
+              <div className="mt-3 space-y-3">
+                <textarea
+                  value={bioValue}
+                  onChange={(e) => setBioValue(e.target.value)}
+                  placeholder={L(
+                    "介绍一下你自己…",
+                    "Tell others about yourself…",
+                    "Présentez-vous…"
+                  )}
+                  rows={4}
+                  className="w-full rounded-lg border border-neutral-300 px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                  autoFocus
+                  maxLength={500}
+                />
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={saveBio}
+                    disabled={savingBio}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-800 disabled:opacity-50"
+                  >
+                    <Check size={14} />
+                    {savingBio
+                      ? L("保存中…", "Saving…", "Enregistrement…")
+                      : L("保存", "Save", "Enregistrer")}
+                  </button>
+                  <button
+                    onClick={cancelEditingBio}
+                    className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-900"
+                  >
+                    <X size={14} />
+                    {L("取消", "Cancel", "Annuler")}
+                  </button>
+                </div>
+              </div>
+            ) : user.bio ? (
               <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-neutral-700">
                 {user.bio}
               </p>
             ) : (
               <p className="mt-3 text-sm italic text-neutral-500">
                 {L(
-                  "还没有添加简介。点击编辑资料让其他人了解你。",
-                  "No bio yet. Edit your profile to tell others about yourself.",
-                  "Pas encore de bio. Modifiez votre profil pour vous présenter."
+                  "还没有添加简介。点击上方按钮让其他人了解你。",
+                  "No bio yet. Use the button above to tell others about yourself.",
+                  "Pas encore de bio. Utilisez le bouton ci-dessus pour vous présenter."
                 )}
               </p>
             )}

@@ -23,6 +23,7 @@ export async function PATCH(request: NextRequest) {
       phone?: unknown;
       address?: unknown;
       avatar?: unknown;
+      bio?: unknown;
     };
 
     // Whitelist fields — only allowed columns.
@@ -61,6 +62,10 @@ export async function PATCH(request: NextRequest) {
     if (typeof body.avatar === "string") {
       fields.push("avatar = ?");
       values.push(body.avatar.trim() || null);
+    }
+    if (typeof body.bio === "string") {
+      fields.push("bio = ?");
+      values.push(body.bio.trim() || null);
     }
 
     if (fields.length === 0) {

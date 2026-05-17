@@ -16,6 +16,7 @@ export interface User {
   deletionRequestedAt?: string | null;
   deletionScheduledAt?: string | null;
   deletionStatus?: 'active' | 'pending_deletion' | 'deleted' | null;
+  bio?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -167,6 +168,7 @@ export const userDb = {
     if (data.deletionRequestedAt !== undefined) { sets.push('deletionRequestedAt = ?'); values.push(data.deletionRequestedAt); }
     if (data.deletionScheduledAt !== undefined) { sets.push('deletionScheduledAt = ?'); values.push(data.deletionScheduledAt); }
     if (data.deletionStatus !== undefined) { sets.push('deletionStatus = ?'); values.push(data.deletionStatus); }
+    if (data.bio !== undefined) { sets.push('bio = ?'); values.push(data.bio); }
     
     if (sets.length === 0) return;
     
