@@ -154,7 +154,7 @@ export function FeaturedPropertiesSection() {
     <Section bg="neutral">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-8 md:mb-12 gap-3">
         <div>
-          <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-3 md:mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight mb-3 md:mb-4">
             {t('properties.featured', 'Our Collection — Every home, personally selected')}
           </h2>
           <p className="text-base md:text-lg text-neutral-600 max-w-xl">

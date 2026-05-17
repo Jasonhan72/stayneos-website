@@ -8,7 +8,6 @@ import dynamic from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Star,
-  Heart,
   Share,
   ChevronLeft,
   Trophy,
@@ -536,7 +535,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
 
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between mb-6">
           <div className="min-w-0">
-            <h1 className="text-2xl md:text-3xl font-bold text-neutral-900">{localizedTitle}</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-neutral-900 leading-[1.15] tracking-tight">{localizedTitle}</h1>
             {/* Sub-info row: ★ rating · reviews · location · Superhost badge */}
             <div className="mt-2 flex flex-wrap items-center gap-x-1.5 text-sm md:text-base text-neutral-600">
               {propertyCardData.reviewCount > 0 && (
@@ -570,27 +569,17 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           <div className="flex items-center gap-4 md:gap-6 shrink-0">
             <button
               onClick={handleShare}
-              className="rounded-full bg-white/95 backdrop-blur p-2 shadow-sm hover:shadow-md transition-shadow"
+              className="rounded-full bg-white/95 backdrop-blur p-2 shadow-sm hover:bg-white transition-colors"
               aria-label="Share property"
             >
-              <Share size={18} className="text-neutral-900" />
+              <Share size={24} className="text-neutral-900" />
             </button>
 
           </div>
         </div>
       </Container>
 
-      <div className="relative">
-        <ListingGallery images={imageUrls} title={localizedTitle} />
-        {/* Floating Save/Heart button - Airbnb style */}
-        <button
-          onClick={() => toggleWishlist(propertyId)}
-          className="absolute top-4 right-4 z-10 rounded-full bg-white/95 backdrop-blur p-2 shadow-sm hover:shadow-md transition-shadow"
-          aria-label={isLiked ? 'Remove from favorites' : 'Add to favorites'}
-        >
-          <Heart size={20} className={isLiked ? 'fill-rose-500 text-rose-500' : 'text-neutral-900'} />
-        </button>
-      </div>
+      <ListingGallery images={imageUrls} title={localizedTitle} isLiked={isLiked} onToggleSave={() => toggleWishlist(propertyId)} />
 
       {/* Main Content - Two Column Layout on Desktop */}
       <Container className="pt-6">
@@ -656,7 +645,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               <div className="mb-5 flex items-center justify-between gap-4">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-wide text-emerald-700">NEOS trust layer</p>
-                  <h2 className="mt-1 text-2xl font-semibold text-neutral-950">Book with confidence</h2>
+                  <h2 className="mt-1 text-2xl font-semibold text-neutral-950 tracking-tight">Book with confidence</h2>
                 </div>
                 <span className="hidden rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800 md:inline-flex">
                   <BadgeCheck size={16} className="mr-2" /> Verified stay
@@ -700,7 +689,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
 
             {/* Description */}
             <div className="py-6">
-              <h2 className="text-xl font-semibold mb-4">{t('property.aboutPlace')}</h2>
+              <h2 className="text-xl font-semibold mb-4 tracking-tight">{t('property.aboutPlace')}</h2>
               <p className="text-neutral-600 leading-relaxed">
                 {localizedDescription || t('property.defaultDescription', {
                   propertyType: propertyType.toLowerCase(),
@@ -745,7 +734,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
 
             {/* Amenities */}
             <div className="py-6">
-              <h2 className="text-xl font-semibold mb-4">{t('property.whatOffers')}</h2>
+              <h2 className="text-xl font-semibold mb-4 tracking-tight">{t('property.whatOffers')}</h2>
               <div className="grid grid-cols-2 gap-4">
                 {amenities.slice(0, 9).map((item) => (
                   <div key={item} className="flex items-center gap-3 text-neutral-700">
@@ -796,7 +785,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             <Divider />
 
             <div className="py-6">
-              <h2 className="text-xl font-semibold mb-4">{t('property.neighborhoodTitle', 'Neighborhood highlights')}</h2>
+              <h2 className="text-xl font-semibold mb-4 tracking-tight">{t('property.neighborhoodTitle', 'Neighborhood highlights')}</h2>
               <p className={`text-neutral-600 leading-relaxed ${expandedNeighborhood ? '' : 'line-clamp-4'}`}>
                 {neighborhoodParagraph}
               </p>
@@ -813,7 +802,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             {/* Airbnb-style 6-Dimension Review Scores */}
             <section className="py-8">
               <div className="mb-6">
-                <h2 className="text-xl font-semibold text-neutral-950">
+                <h2 className="text-xl font-semibold text-neutral-950 tracking-tight">
                   {t('property.reviewScores', 'Review scores')}
                 </h2>
                 {propertyCardData.reviewCount > 0 && (
@@ -841,7 +830,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             {/* Airbnb-style Review Cards */}
             <section className="py-8">
               <div className="mb-6 flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-neutral-950">
+                <h2 className="text-xl font-semibold text-neutral-950 tracking-tight">
                   {t('property.guestReviews', 'Guest reviews')}
                 </h2>
               </div>
@@ -895,7 +884,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             {/* Location Map */}
             <div className="py-6">
               <div className="mb-4 flex items-center justify-between gap-4">
-                <h2 className="text-xl font-semibold">{t('property.whereYouBe')}</h2>
+                <h2 className="text-xl font-semibold tracking-tight">{t('property.whereYouBe')}</h2>
                 <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-3 py-1.5 text-xs font-semibold text-neutral-800"><MapPinned size={14} /> Location checked</span>
               </div>
               <div className="w-full h-[350px] bg-neutral-100 relative overflow-hidden rounded-2xl">
