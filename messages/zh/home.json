@@ -216,5 +216,14 @@
   "partnersCount": "50+ 企业合作伙伴",
   "statsTitle": "用数字说话",
   "scenariosTitle": "为企业各种场景提供解决方案",
-  "reasonsTitle": "为什么我的支付被取消了？"
+  "reasonsTitle": "为什么我的支付被取消了？",
+  "categories": {
+    "executive": "高管商务",
+    "family": "家庭出行",
+    "medicalAcademic": "医疗学术",
+    "relocation": "搬迁安置",
+    "longTerm": "长租",
+    "waterfront": "湖畔",
+    "downtownCore": "市中心核心"
+  }
 }
