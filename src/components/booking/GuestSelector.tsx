@@ -9,6 +9,7 @@ export interface GuestCounts {
   adults: number;
   children: number;
   infants: number;
+  pets: number;
 }
 
 interface GuestSelectorProps {
@@ -18,6 +19,7 @@ interface GuestSelectorProps {
   initialGuests: GuestCounts;
   maxGuests: number;
   maxInfants?: number;
+  maxPets?: number;
   allowPets?: boolean;
 }
 
@@ -25,6 +27,8 @@ const MIN_ADULTS = 1;
 const MIN_CHILDREN = 0;
 const MIN_INFANTS = 0;
 const DEFAULT_MAX_INFANTS = 5;
+const MIN_PETS = 0;
+const MAX_PETS = 2;
 
 export function GuestSelector({
   isOpen,
@@ -33,6 +37,7 @@ export function GuestSelector({
   initialGuests,
   maxGuests,
   maxInfants = DEFAULT_MAX_INFANTS,
+  maxPets = 2,
   allowPets = false,
 }: GuestSelectorProps) {
   const { t } = useI18n();
@@ -85,6 +90,8 @@ export function GuestSelector({
         if (newValue < MIN_CHILDREN || newTotal > maxGuests) return prev;
       } else if (type === 'infants') {
         if (newValue < MIN_INFANTS || newValue > maxInfants) return prev;
+      } else if (type === 'pets') {
+        if (newValue < MIN_PETS || newValue > MAX_PETS) return prev;
       }
       
       return { ...prev, [type]: newValue };
@@ -145,9 +152,6 @@ export function GuestSelector({
           {/* Info Text */}
           <p className="text-sm text-neutral-600 mb-8">
             {getMaxGuestsText()}
-            {!allowPets && (
-              <span> {t('booking.guestSelector.noPets')}</span>
-            )}
           </p>
 
           {/* Guest Types */}
@@ -193,6 +197,40 @@ export function GuestSelector({
               maxValue={maxInfants}
               canDecrease={guests.infants > MIN_INFANTS}
               canIncrease={guests.infants < maxInfants}
+            />
+
+            {allowPets && (
+              <>
+                <div className="border-t border-neutral-100" />
+
+                {/* Pets */}
+                <GuestCounter
+                  label={t('booking.guestSelector.pets', 'Pets')}
+                  description={t('booking.guestSelector.petsDescription', "Service animals don't count")}
+                  value={guests.pets}
+                  onDecrease={() => updateGuests('pets', -1)}
+                  onIncrease={() => updateGuests('pets', 1)}
+                  minValue={0}
+                  maxValue={maxPets}
+                  canDecrease={guests.pets > 0}
+                  canIncrease={guests.pets < maxPets}
+                />
+              </>
+            )}
+
+            <div className="border-t border-neutral-100" />
+
+            {/* Pets */}
+            <GuestCounter
+              label={t('booking.guestSelector.pets', 'Pets')}
+              description={t('booking.guestSelector.petsDescription', 'Bringing a service animal?')}
+              value={guests.pets}
+              onDecrease={() => updateGuests('pets', -1)}
+              onIncrease={() => updateGuests('pets', 1)}
+              minValue={MIN_PETS}
+              maxValue={MAX_PETS}
+              canDecrease={guests.pets > MIN_PETS}
+              canIncrease={guests.pets < MAX_PETS}
             />
           </div>
         </div>

@@ -232,6 +232,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
     adults: Math.max(1, parseInt(searchParams.get('adults') || searchParams.get('guests') || '1', 10) || 1),
     children: Math.max(0, parseInt(searchParams.get('children') || '0', 10) || 0),
     infants: Math.max(0, parseInt(searchParams.get('infants') || '0', 10) || 0),
+    pets: Math.max(0, parseInt(searchParams.get('pets') || '0', 10) || 0),
   });
 
   // 转换 API 数据为组件格式
@@ -929,6 +930,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             checkIn={checkIn}
             checkOut={checkOut}
             guests={guests}
+            petsCount={guestBreakdown.pets}
             bookingPrice={bookingPrice}
             bookingError={bookingError}
             onOpenCalendar={() => setShowCalendar(true)}
@@ -1075,6 +1077,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               adults: guestBreakdown.adults.toString(),
               children: guestBreakdown.children.toString(),
               infants: guestBreakdown.infants.toString(),
+              pets: guestBreakdown.pets.toString(),
               stayType: stayTypeToQuery(effectiveStayType),
             });
             router.push(`/checkout/${propertyId}?${params.toString()}`);
@@ -1093,11 +1096,11 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
         onClose={() => setShowGuestSelector(false)}
         onSave={(newGuests) => {
           setGuestBreakdown(newGuests);
-          setGuests(newGuests.adults + newGuests.children);
+          setGuests(newGuests.adults + newGuests.children + newGuests.pets);
         }}
         initialGuests={guestBreakdown}
         maxGuests={propertyCardData.maxGuests}
-        allowPets={false}
+        allowPets={true}
       />
 
       {/* Payment Method Coming Soon Notice */}

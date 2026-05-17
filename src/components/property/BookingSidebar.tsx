@@ -35,6 +35,8 @@ export interface BookingSidebarProps {
   checkOut: string;
   /** Total guest count */
   guests: number;
+  /** Pet count */
+  petsCount?: number;
   /** Computed booking price (null if dates incomplete) */
   bookingPrice: BookingPriceInfo | null;
   /** Any booking validation error message */
@@ -62,6 +64,7 @@ export default function BookingSidebar({
   checkIn,
   checkOut,
   guests,
+  petsCount = 0,
   bookingPrice,
   bookingError,
   onOpenCalendar,
@@ -234,6 +237,9 @@ export default function BookingSidebar({
           </p>
           <p className="text-sm text-neutral-600 mt-1">
             {guests} {guests === 1 ? t('booking.guestSingular') : t('booking.guestsPlural')}
+            {petsCount > 0 && (
+              <span> · {petsCount} {petsCount === 1 ? t('booking.petSingular', 'pet') : t('booking.petsPlural', 'pets')}</span>
+            )}
           </p>
         </button>
       </div>
