@@ -88,6 +88,7 @@ export default function MessagesPage() {
         const data = await res.json();
         await fetchConversations(true);
         setSelectedId(data.conversation?.id || null);
+        setDetailsVisible(window.matchMedia("(min-width: 1280px)").matches);
       }
     } catch {}
   }, [fetchConversations, user]);
@@ -97,7 +98,7 @@ export default function MessagesPage() {
   useEffect(() => { if (selectedId) fetchMessages(selectedId); else setMessages([]); }, [selectedId]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (!user) return; const id = window.setInterval(() => { fetchConversations(true); if (selectedId) fetchMessages(selectedId, { quiet: true }); }, 8000); return () => window.clearInterval(id); }, [fetchConversations, fetchMessages, selectedId, user]);
 
-  const handleSelect = useCallback((id: string) => { setSelectedId(id); setDetailsVisible(true); }, []);
+  const handleSelect = useCallback((id: string) => { setSelectedId(id); setDetailsVisible(window.matchMedia("(min-width: 1280px)").matches); }, []);
 
   const handleSendMessage = useCallback(async (text: string, attachments?: ApiAttachment[]) => {
     if (!selectedId || (!text.trim() && !attachments?.length)) return;
