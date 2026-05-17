@@ -515,25 +515,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               <ChevronLeft size={24} className="text-neutral-900" />
             </Link>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleShare}
-                className="p-2.5 hover:bg-neutral-100 rounded-full transition-colors"
-                aria-label="Share property"
-              >
-                <Share size={20} className="text-neutral-900" />
-              </button>
-              <button
-                onClick={() => toggleWishlist(propertyId)}
-                className="p-2.5 hover:bg-neutral-100 rounded-full transition-colors"
-                aria-label={isLiked ? 'Remove from favorites' : 'Add to favorites'}
-              >
-                <Heart
-                  size={20}
-                  className={isLiked ? 'fill-rose-500 text-rose-500' : 'text-neutral-900'}
-                />
-              </button>
-            </div>
+
           </div>
         </Container>
       </nav>
@@ -588,24 +570,27 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           <div className="flex items-center gap-4 md:gap-6 shrink-0">
             <button
               onClick={handleShare}
-              className="inline-flex items-center gap-2 text-sm font-medium text-neutral-900 underline underline-offset-2"
+              className="rounded-full bg-white/95 backdrop-blur p-2 shadow-sm hover:shadow-md transition-shadow"
+              aria-label="Share property"
             >
-              <Share size={16} />
-              <span>{t('property.share', 'Share')}</span>
+              <Share size={18} className="text-neutral-900" />
             </button>
-            <button
-              onClick={() => toggleWishlist(propertyId)}
-              className="inline-flex items-center gap-2 text-sm font-medium text-neutral-900 underline underline-offset-2"
-              aria-label={isLiked ? 'Remove from favorites' : 'Add to favorites'}
-            >
-              <Heart size={16} className={isLiked ? 'fill-rose-500 text-rose-500' : 'text-neutral-900'} />
-              <span>{t('property.save', 'Save')}</span>
-            </button>
+
           </div>
         </div>
       </Container>
 
-      <ListingGallery images={imageUrls} title={localizedTitle} />
+      <div className="relative">
+        <ListingGallery images={imageUrls} title={localizedTitle} />
+        {/* Floating Save/Heart button - Airbnb style */}
+        <button
+          onClick={() => toggleWishlist(propertyId)}
+          className="absolute top-4 right-4 z-10 rounded-full bg-white/95 backdrop-blur p-2 shadow-sm hover:shadow-md transition-shadow"
+          aria-label={isLiked ? 'Remove from favorites' : 'Add to favorites'}
+        >
+          <Heart size={20} className={isLiked ? 'fill-rose-500 text-rose-500' : 'text-neutral-900'} />
+        </button>
+      </div>
 
       {/* Main Content - Two Column Layout on Desktop */}
       <Container className="pt-6">
