@@ -20,6 +20,7 @@ import Link from "next/link";
 import { Card, CardContent, Input, TextArea, UIButton } from "@/components/ui";
 import { useI18n } from "@/lib/i18n";
 import { submitInquiry } from "@/lib/inquiry-client";
+import { GOOGLE_MAPS_API_KEY, googleMapsSearchUrl, hasUsableGoogleMapsKey } from "@/lib/google-maps";
 
 // 联系表单组件
 export function ContactForm() {
@@ -394,28 +395,41 @@ export function FAQQuickLinks() {
 // 地图组件
 export function MapSection() {
   const { t } = useI18n();
+  const officeAddress = '20 Upjohn Rd, North York, ON, M3B 2V9';
+  const canEmbedGoogleMap = hasUsableGoogleMapsKey();
 
   return (
     <div className="w-full h-[400px] bg-neutral-100 relative overflow-hidden">
       {/* Google Maps 嵌入 */}
-      <iframe
-        src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}&q=20+Upjohn+Rd,+North+York,+ON+M3B+2V9&zoom=15`}
-        width="100%"
-        height="100%"
-        style={{ border: 0 }}
-        allowFullScreen
-        loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
-        className="absolute inset-0"
-        title="NEOS Office Location"
-      />
+      {canEmbedGoogleMap ? (
+        <iframe
+          src={`https://www.google.com/maps/embed/v1/place?key=${GOOGLE_MAPS_API_KEY}&q=${encodeURIComponent(officeAddress)}&zoom=15`}
+          width="100%"
+          height="100%"
+          style={{ border: 0 }}
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          className="absolute inset-0"
+          title="NEOS Office Location"
+        />
+      ) : (
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,#e5e7eb_0,#e5e7eb_2px,transparent_3px),linear-gradient(135deg,#f5f5f4,#e7e5e4)]">
+          <div className="absolute inset-0 opacity-40 [background-image:linear-gradient(90deg,#d4d4d4_1px,transparent_1px),linear-gradient(#d4d4d4_1px,transparent_1px)] [background-size:48px_48px]" />
+          <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2 rounded-2xl bg-white/90 px-5 py-4 text-center shadow-lg">
+            <MapPin className="text-primary" size={28} />
+            <p className="font-semibold text-neutral-900">NEOS office</p>
+            <a href={googleMapsSearchUrl(officeAddress)} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-primary hover:text-primary-700">Open in Google Maps</a>
+          </div>
+        </div>
+      )}
       
       {/* 地图上的信息卡片 */}
       <div className="absolute bottom-4 left-4 bg-white p-4 shadow-lg max-w-xs">
         <h4 className="font-semibold text-neutral-900 mb-1">NEOS</h4>
         <p className="text-sm text-neutral-600">20 Upjohn Rd, North York, ON</p>
         <a 
-          href="https://maps.google.com/?q=20+Upjohn+Rd+North+York+ON+M3B+2V9"
+          href={googleMapsSearchUrl(officeAddress)}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center text-sm text-primary hover:text-primary-700 font-medium mt-2"
