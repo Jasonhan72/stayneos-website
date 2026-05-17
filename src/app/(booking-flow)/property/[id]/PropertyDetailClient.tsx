@@ -494,11 +494,14 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
     { icon: KeyRound, title: 'Move-in ready', text: 'Furnished stay with utilities, WiFi, kitchenware, linens, and building essentials.' },
   ];
 
-  const reviewSignals = [
-    { label: 'Cleanliness', score: 'Verified' },
-    { label: 'Location', score: 'Checked' },
-    { label: 'Move-in experience', score: 'Guided' },
-    { label: 'Accuracy', score: 'Reviewed' },
+  // Airbnb-style 6-dimension review scores (mock data, backend to provide real values)
+  const reviewDimensions = [
+    { key: 'cleanliness', label: t('property.reviewDim.cleanliness', 'Cleanliness'), score: 4.8 },
+    { key: 'accuracy', label: t('property.reviewDim.accuracy', 'Accuracy'), score: 4.9 },
+    { key: 'checkin', label: t('property.reviewDim.checkin', 'Check-in'), score: 4.9 },
+    { key: 'communication', label: t('property.reviewDim.communication', 'Communication'), score: 4.7 },
+    { key: 'location', label: t('property.reviewDim.location', 'Location'), score: 4.7 },
+    { key: 'value', label: t('property.reviewDim.value', 'Value'), score: 4.6 },
   ];
 
   // Desktop Booking Card Component
@@ -822,25 +825,29 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
 
             <Divider />
 
-            {/* Review Trust Framework */}
+            {/* Airbnb-style 6-Dimension Review Scores */}
             <section className="py-8">
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                  <h2 className="text-xl font-semibold text-neutral-950">Stay quality signals</h2>
-                  <p className="mt-1 text-sm text-neutral-600">Airbnb-style review dimensions adapted for long-term furnished stays.</p>
-                </div>
-                <span className="text-sm font-semibold text-neutral-950">New verified listing</span>
+              <div className="mb-6">
+                <h2 className="text-xl font-semibold text-neutral-950">
+                  {t('property.reviewScores', 'Review scores')}
+                </h2>
+                {propertyCardData.reviewCount > 0 && (
+                  <p className="mt-1 text-sm text-neutral-600">
+                    {propertyCardData.rating} · {propertyCardData.reviewCount} {t('property.reviews')}
+                  </p>
+                )}
               </div>
-              <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                {reviewSignals.map((signal) => (
-                  <div key={signal.label} className="rounded-2xl border border-neutral-200 p-4">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="font-medium text-neutral-950">{signal.label}</span>
-                      <span className="font-semibold text-emerald-700">{signal.score}</span>
+              <div className="space-y-4">
+                {reviewDimensions.map((dim) => (
+                  <div key={dim.key} className="flex items-center gap-4">
+                    <span className="w-32 shrink-0 text-sm text-neutral-700">{dim.label}</span>
+                    <div className="flex-1 h-1.5 rounded-full bg-neutral-100 overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-neutral-900"
+                        style={{ width: `${(dim.score / 5) * 100}%` }}
+                      />
                     </div>
-                    <div className="mt-3 h-2 rounded-full bg-neutral-100">
-                      <div className="h-2 w-[92%] rounded-full bg-neutral-950" />
-                    </div>
+                    <span className="w-8 shrink-0 text-right text-sm font-medium text-neutral-900">{dim.score.toFixed(1)}</span>
                   </div>
                 ))}
               </div>
