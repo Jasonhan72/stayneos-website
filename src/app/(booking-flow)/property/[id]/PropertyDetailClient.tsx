@@ -343,10 +343,12 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
     return { nightly, monthly, quarterly, annual };
   })();
 
-  const buildCheckoutUrl = () => {
+  const buildCheckoutUrl = (overrides?: { checkIn?: string; checkOut?: string }) => {
+    const nextCheckIn = overrides?.checkIn ?? checkIn;
+    const nextCheckOut = overrides?.checkOut ?? checkOut;
     const params = new URLSearchParams({
-      checkIn,
-      checkOut,
+      checkIn: nextCheckIn,
+      checkOut: nextCheckOut,
       guests: guests.toString(),
       adults: guestBreakdown.adults.toString(),
       children: guestBreakdown.children.toString(),
@@ -360,6 +362,32 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
     const checkoutUrl = pendingCheckoutUrl || buildCheckoutUrl();
     setPendingCheckoutUrl(null);
     router.push(checkoutUrl);
+  };
+
+
+  const continueToCheckoutWithDates = (nextCheckIn: string, nextCheckOut: string) => {
+    setCheckIn(nextCheckIn);
+    setCheckOut(nextCheckOut);
+    setBookingError('');
+
+    const startDate = normalizeDate(nextCheckIn);
+    const endDate = normalizeDate(nextCheckOut);
+    if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime()) || endDate <= startDate) {
+      setBookingError(t('booking.validation.invalidRange', 'Check-out must be after check-in'));
+      setShowCalendar(true);
+      return;
+    }
+
+    const nights = nightsBetween(nextCheckIn, nextCheckOut);
+    const minNights = bookingPrice?.minNights || propertyCardData.minNights || 1;
+    if (nights < minNights) {
+      setBookingError(t('booking.validation.minNights', 'Minimum {count} nights required', { count: minNights }));
+      setShowCalendar(true);
+      return;
+    }
+
+    setShowCalendar(false);
+    router.push(buildCheckoutUrl({ checkIn: nextCheckIn, checkOut: nextCheckOut }));
   };
 
   const handleCheckAvailability = () => {
@@ -1031,9 +1059,9 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           onSelectCheckOut={(date) => {
             setCheckOut(date);
             setBookingError('');
-            if (date && checkIn) setShowCalendar(false);
           }}
           onClose={() => setShowCalendar(false)}
+          onSave={continueToCheckoutWithDates}
           onClearDates={() => {
             setCheckIn('');
             setCheckOut('');
@@ -1043,7 +1071,6 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           rating={propertyCardData.reviewCount > 0 ? propertyCardData.rating : 0}
           currency="CAD"
           bookedRanges={bookedRanges}
-          autoCloseOnRangeSelect
         />
       )}
 

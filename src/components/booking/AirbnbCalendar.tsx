@@ -11,6 +11,7 @@ export interface AirbnbCalendarProps {
   onSelectCheckIn: (date: string) => void;
   onSelectCheckOut: (date: string) => void;
   onClose?: () => void;
+  onSave?: (checkIn: string, checkOut: string) => void;
   onClearDates?: () => void;
   totalPrice?: number;
   minNights?: number;
@@ -40,6 +41,7 @@ export function AirbnbCalendar({
   onSelectCheckIn,
   onSelectCheckOut,
   onClose,
+  onSave,
   onClearDates,
   totalPrice = 0,
   minNights: _minNights,
@@ -143,15 +145,12 @@ export function AirbnbCalendar({
         onSelectCheckOut(dateStr);
 
         if (autoCloseOnRangeSelect) {
-          // Confirming the date range should close the picker; booking-level
-          // minimum-stay validation is handled by the parent flow when the user
-          // continues, so Save never appears to be a no-op on mobile.
           setSaveError('');
-          onClose?.();
+          onSave?.(selectedStart, dateStr);
         }
       }
     }
-  }, [selectedStart, selectedEnd, today, onSelectCheckIn, onSelectCheckOut, bookedRanges, autoCloseOnRangeSelect, onClose]);
+  }, [selectedStart, selectedEnd, today, onSelectCheckIn, onSelectCheckOut, bookedRanges, autoCloseOnRangeSelect, onSave]);
 
   const handleClear = useCallback(() => {
     setSelectedStart('');
@@ -173,9 +172,10 @@ export function AirbnbCalendar({
       setSaveError('');
       onSelectCheckIn(selectedStart);
       onSelectCheckOut(selectedEnd);
-      if (onClose) onClose();
+      if (onSave) onSave(selectedStart, selectedEnd);
+      else if (onClose) onClose();
     }
-  }, [selectedStart, selectedEnd, onSelectCheckIn, onSelectCheckOut, onClose]);
+  }, [selectedStart, selectedEnd, onSelectCheckIn, onSelectCheckOut, onClose, onSave]);
 
 
   const handleSavePointerDown = useCallback((event: React.PointerEvent<HTMLButtonElement>) => {
