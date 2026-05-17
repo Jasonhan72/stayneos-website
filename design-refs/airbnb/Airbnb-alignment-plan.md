@@ -29,7 +29,7 @@
 
 | # | Aspect | Airbnb | Stayneos Current | Severity |
 |---|--------|--------|-----------------|----------|
-| H1 | **Search Experience** | Floating pill-style search bar: 3 segments (Where / When / Who), auto-expands on click with destination suggestions and date picker. Centered below nav. | Full-screen hero with AI chat input (`HeroChatInline`). Text-heavy: title + subtitle + AI prompt. No structured search bar. | 🔴 P0 |
+| H1 | **Search Experience** | Floating pill-style search bar: 3 segments (Where / When / Who), auto-expands on click with destination suggestions and date picker. Centered below nav. | Full-screen hero with AI chat input (`HeroChatInline`). Text-heavy: title + subtitle + AI prompt. No structured search bar. | ⚪ **KEEP (Jason 2026-05-17)** — AI chat is the differentiator |
 | H2 | **Navigation Bar** | Sticky header, transparent background over hero → white on scroll. Logo left, center tabs (Homes/Experiences/Services), right: "Become a host" + globe + hamburger menu. | Standard nav bar with logo left, links center (Properties/For Business/About), auth buttons right. Language/currency dropdowns. Not transparent over hero. | 🟡 P1 |
 | H3 | **Hero Section** | Large immersive hero with image carousel or video. Minimal text: "Find your next stay" style CTAs. Search bar is the hero's focal point. | Full-screen video/image hero with heavy dark overlay gradient. Large heading, accent subtitle, paragraph, then AI chat input. Text content dominates. | 🟡 P1 |
 | H4 | **Category/Scenario Navigation** | Horizontal scrollable category chips with SVGs/icons: Popular, Coastal, Islands, Lakes, Mountains, Outdoors, Things to do. Sticky on scroll. | No category/scenario chips. Instead: DualPathCTASection (Browse / Business cards) and MarketSegmentsSection further down. | 🟡 P1 |
@@ -123,17 +123,10 @@ These items are the biggest competitive gaps. They directly impact user trust, c
 - Results count updates dynamically: "Showing N properties of M"
 **Files:** New component `src/components/property/FilterChips.tsx`
 
-#### P0-5: Homepage — Structured Search Bar
-**Current:** AI chat input (`HeroChatInline`).  
-**Target:** Airbnb-style segmented pill search bar. Also keep AI chat as differentiated feature.
-**Implementation:**
-- Add search pill bar below hero text: 3 segments (Where / When / Guests)
-- Where: auto-complete dropdown as user types (city, neighborhood)
-- When: calendar popover with date range picker
-- Guests: counter dropdown (adults/children)
-- "Search" button at end of pill
-- Keep HeroChatInline as secondary "Ask AI" feature (could be positioned below search bar or as a tab toggle)
-**Files:** New `src/components/home/SearchBar.tsx`, modify `HeroSection.tsx`
+#### ~~P0-5: Homepage — Structured Search Bar~~ ❌ CANCELLED (2026-05-17 Jason)
+**Decision:** Do NOT build the Airbnb-style Where/When/Guests pill search bar.
+**Reasoning:** Keep the existing AI chat input (`HeroChatInline`) as the hero's primary entry point. The AI conversation is StayNeos' differentiator vs. Airbnb; structured filters live on `/properties` instead.
+**Action:** No work on this item. Do not create `SearchBar.tsx`. Do not modify `HeroSection.tsx` to add a pill bar. Filter discovery happens via P0-3 (split view search) + P0-4 (filter chips) on the search page.
 
 ### 🟡 P1 — Important (High UX Improvement)
 
@@ -261,7 +254,7 @@ Airbnb filter bar:      sticky top-[72px], bg-white, border-b, z-10
 ```
 src/components/
 ├── search/
-│   ├── SearchBar.tsx          (P0 — homepage search pill)
+│   ├── ~~SearchBar.tsx~~      (CANCELLED 2026-05-17 — keep HeroChatInline)
 │   ├── FilterChips.tsx        (P0 — horizontal filter chips)
 │   ├── FilterModal.tsx        (P0 — filter facet modal)
 │   └── SortDropdown.tsx       (existing)
@@ -283,9 +276,11 @@ src/components/
 
 ### Order of Work (Recommended Sequence)
 
-1. **Week 1:** P0-5 (Search Bar) + P0-3 (Split View Search) — highest user-facing impact
+1. **Week 1:** P0-3 (Split View Search) — highest user-facing impact on discovery
 2. **Week 2:** P0-1 (Sticky Booking) + P0-2 (Gallery Grid) — listing detail revamp
 3. **Week 3:** P0-4 (Filter Chips) + P1-7 (Sticky Nav) — navigation polish
+
+> ~~P0-5 (Hero Search Bar)~~ cancelled by Jason 2026-05-17 — keep `HeroChatInline` AI chat as hero entry.
 4. **Week 4:** P1-1 through P1-6 — card redesign + category chips + hero refinement
 5. **Week 5:** P2 items — polish, animations, gallery modal
 
@@ -306,7 +301,7 @@ src/components/
 
 | Priority | Items | Effort Est. |
 |----------|-------|-------------|
-| 🔴 P0 | 5 items (Sticky Booking, Gallery Grid, Split Search, Filter Chips, Search Bar) | ~3 weeks |
+| 🔴 P0 | 4 items (Sticky Booking, Gallery Grid, Split Search, Filter Chips) | ~2.5 weeks |
 | 🟡 P1 | 7 items (Category Chips, Hero Refine, Meta Restructure, Amenity Grid, Highlights, Card Redesign, Sticky Nav) | ~2 weeks |
 | 🟢 P2 | 7 items (Reviews, Hover, Gallery Modal, Save/Share, Typography, Guest Selector, Tab Animation) | ~1 week |
 
