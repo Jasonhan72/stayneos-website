@@ -47,7 +47,7 @@ export default function MessagesPage() {
       const data = await res.json();
       setConversations(data.conversations || []);
       publishUnread(Number(data.unreadCount || 0));
-      if (!selectedId && data.conversations?.length) setSelectedId(data.conversations[0].id);
+      if (!selectedId && data.conversations?.length && window.matchMedia("(min-width: 768px)").matches) setSelectedId(data.conversations[0].id);
     } catch (e) {
       setListError(e instanceof Error ? e.message : "Failed to load conversations");
     } finally {
