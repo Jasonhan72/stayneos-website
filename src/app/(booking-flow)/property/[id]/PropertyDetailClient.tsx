@@ -21,6 +21,18 @@ import {
   MapPinned,
   KeyRound,
   Award,
+  Wifi,
+  Car,
+  CookingPot,
+  Tv,
+  Wind,
+  UtensilsCrossed,
+  Shirt,
+  Dumbbell,
+  PawPrint,
+  Flame,
+  Waves as WavesIcon,
+  TreePine,
 } from 'lucide-react';
 import { Container, Divider } from '@/components/ui';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -206,6 +218,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   const [showCalendar, setShowCalendar] = useState(false);
   const [showReview, setShowReview] = useState(false);
   const [expandedNeighborhood, setExpandedNeighborhood] = useState(false);
+  const [showAllAmenities, setShowAllAmenities] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   // showCardForm removed - card input now handled by Stripe Elements
   const [showGuestSelector, setShowGuestSelector] = useState(false);
@@ -277,7 +290,25 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
     return <Skeleton.PropertyDetail />;
   }
 
-  // Error state
+ 
+  // Amenity icon lookup
+  const amenityIcon = (key: string, size: number) => {
+    const lower = key.toLowerCase();
+    if (lower.includes('wifi') || lower.includes('internet')) return <Wifi size={size} className="text-neutral-900" />;
+    if (lower.includes('parking') || lower.includes('garage')) return <Car size={size} className="text-neutral-900" />;
+    if (lower.includes('kitchen') || lower.includes('cook')) return <CookingPot size={size} className="text-neutral-900" />;
+    if (lower.includes('tv') || lower.includes('television') || lower.includes('cable')) return <Tv size={size} className="text-neutral-900" />;
+    if (lower.includes('ac') || lower.includes('air condition') || lower.includes('heating') || lower.includes('hvac')) return <Wind size={size} className="text-neutral-900" />;
+    if (lower.includes('dish') || lower.includes('utensil') || lower.includes('dining')) return <UtensilsCrossed size={size} className="text-neutral-900" />;
+    if (lower.includes('laundry') || lower.includes('washer') || lower.includes('dryer') || lower.includes('linen')) return <Shirt size={size} className="text-neutral-900" />;
+    if (lower.includes('gym') || lower.includes('fitness') || lower.includes('exercise')) return <Dumbbell size={size} className="text-neutral-900" />;
+    if (lower.includes('pet') || lower.includes('dog') || lower.includes('cat')) return <PawPrint size={size} className="text-neutral-900" />;
+    if (lower.includes('fire') || lower.includes('fireplace')) return <Flame size={size} className="text-neutral-900" />;
+    if (lower.includes('pool') || lower.includes('water') || lower.includes('swim')) return <WavesIcon size={size} className="text-neutral-900" />;
+    if (lower.includes('garden') || lower.includes('outdoor') || lower.includes('balcony') || lower.includes('patio') || lower.includes('tree')) return <TreePine size={size} className="text-neutral-900" />;
+    return <Check size={size} className="text-neutral-900" />;
+  };
+ // Error state
   if (error || !property || !propertyCardData) {
     return (
       <div className="min-h-screen bg-white pt-24 pb-12">
@@ -728,16 +759,50 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             <div className="py-6">
               <h2 className="text-xl font-semibold mb-4">{t('property.whatOffers')}</h2>
               <div className="grid grid-cols-2 gap-4">
-                {amenities.slice(0, 6).map((item) => (
+                {amenities.slice(0, 9).map((item) => (
                   <div key={item} className="flex items-center gap-3 text-neutral-700">
-                    <Check size={18} className="text-neutral-900" />
-                    {t(`amenities.${item}`, item)}
+                    <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+                      {amenityIcon(item, 24)}
+                    </span>
+                    <span className="text-sm">{t(`amenities.${item}`, item)}</span>
                   </div>
                 ))}
               </div>
-              <button className="mt-6 px-6 py-3 border border-neutral-900 rounded-xl font-medium text-neutral-900">
-                {t('property.showAllAmenities', { count: amenities.length })}
-              </button>
+              {amenities.length > 9 && (
+                <button
+                  onClick={() => setShowAllAmenities(true)}
+                  className="mt-6 px-6 py-3 border border-neutral-900 rounded-xl font-medium text-neutral-900 hover:bg-neutral-50 transition-colors"
+                >
+                  {t('property.showAllAmenities', 'Show all {count} amenities', { count: amenities.length })}
+                </button>
+              )}
+              {/* Show all amenities modal */}
+              {showAllAmenities && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowAllAmenities(false)} />
+                  <div className="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 max-h-[80vh] overflow-y-auto p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-neutral-900">{t('property.whatOffers')}</h3>
+                      <button
+                        onClick={() => setShowAllAmenities(false)}
+                        className="p-2 rounded-full hover:bg-neutral-100 transition-colors"
+                      >
+                        <span className="text-xl leading-none">&times;</span>
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {amenities.map((item) => (
+                        <div key={item} className="flex items-center gap-3 text-neutral-700">
+                          <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+                            {amenityIcon(item, 24)}
+                          </span>
+                          <span>{t(`amenities.${item}`, item)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <Divider />
