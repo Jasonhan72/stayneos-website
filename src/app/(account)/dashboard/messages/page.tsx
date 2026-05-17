@@ -17,7 +17,7 @@ export default function MessagesPage() {
   const [conversations, setConversations] = useState<ApiConversation[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [unreadOnly, setUnreadOnly] = useState(false);
-  const [detailsVisible, setDetailsVisible] = useState(true);
+  const [detailsVisible, setDetailsVisible] = useState(false);
   const [messages, setMessages] = useState<ApiMessage[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [apiLoading, setApiLoading] = useState(false);
@@ -47,7 +47,10 @@ export default function MessagesPage() {
       const data = await res.json();
       setConversations(data.conversations || []);
       publishUnread(Number(data.unreadCount || 0));
-      if (!selectedId && data.conversations?.length && window.matchMedia("(min-width: 768px)").matches) setSelectedId(data.conversations[0].id);
+      if (!selectedId && data.conversations?.length && window.matchMedia("(min-width: 768px)").matches) {
+        setSelectedId(data.conversations[0].id);
+        setDetailsVisible(window.matchMedia("(min-width: 1280px)").matches);
+      }
     } catch (e) {
       setListError(e instanceof Error ? e.message : "Failed to load conversations");
     } finally {
