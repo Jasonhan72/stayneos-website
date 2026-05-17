@@ -41,7 +41,7 @@ export function CitiesSection() {
     <section className="py-20 bg-neutral-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">{t('cities.title')}</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight mb-4">{t('cities.title')}</h2>
           <p className="text-lg text-neutral-600 max-w-2xl mx-auto">{t('cities.subtitleCurrent', "Starting in Toronto — Canada's business capital")}</p>
         </div>
 
@@ -56,7 +56,7 @@ export function CitiesSection() {
                 </span>
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-6">
-                <h3 className="text-2xl font-bold text-white mb-1">{cityName}</h3>
+                <h3 className="text-2xl font-bold text-white tracking-tight mb-1">{cityName}</h3>
                 <p className="text-white/80 text-sm">{t('cities.availableNow', 'Available now')}</p>
               </div>
               <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -74,7 +74,7 @@ export function CitiesSection() {
               </span>
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-6">
-              <h3 className="text-2xl font-bold text-white mb-1">{t('cities.niagaraFalls', 'Niagara Falls')}</h3>
+              <h3 className="text-2xl font-bold text-white tracking-tight mb-1">{t('cities.niagaraFalls', 'Niagara Falls')}</h3>
               <p className="text-white/75 text-sm">{t('cities.niagaraDesc', 'A new market in development.')}</p>
             </div>
           </div>
@@ -84,7 +84,7 @@ export function CitiesSection() {
               <div className="mb-6 flex h-28 items-center justify-center rounded-lg bg-[radial-gradient(circle_at_center,_rgba(23,37,84,0.12),_transparent_60%),linear-gradient(135deg,rgba(15,23,42,0.04),rgba(15,23,42,0.08))]">
                 <span className="text-6xl font-bold text-neutral-400">?</span>
               </div>
-              <h3 className="text-2xl font-bold text-neutral-900 mb-2">{t('cities.yourCity', 'Your City?')}</h3>
+              <h3 className="text-2xl font-bold text-neutral-900 tracking-tight mb-2">{t('cities.yourCity', 'Your City?')}</h3>
               <p className="text-neutral-600 mb-2">{t('cities.yourCityNotify', 'Get notified when we expand')}</p>
               <p className="text-sm text-neutral-500">{t('cities.yourCityDesc', 'Tell us where you need premium furnished stays next.')}</p>
             </div>

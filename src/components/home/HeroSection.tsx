@@ -40,7 +40,7 @@ export function HeroSection() {
 
         <Container className="relative z-10 text-center px-4 py-16 md:py-0">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl sm:text-3xl md:text-6xl lg:text-7xl font-bold text-white mb-2 md:mb-4 leading-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight mb-2 md:mb-4 leading-tight tracking-tight">
               {t('hero.title', 'Experience Toronto, Curated by AI & Human Expertise.')}
             </h1>
 

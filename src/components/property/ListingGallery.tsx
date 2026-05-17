@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, X, Grid3X3 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Grid3X3, Heart } from 'lucide-react';
 import ResponsiveImage from '@/components/ui/ResponsiveImage';
 import { Container } from '@/components/ui';
 import { useI18n } from '@/lib/i18n';
@@ -10,9 +10,11 @@ interface ListingGalleryProps {
   images: string[];
   title: string;
   className?: string;
+  isLiked?: boolean;
+  onToggleSave?: () => void;
 }
 
-export default function ListingGallery({ images, title, className = '' }: ListingGalleryProps) {
+export default function ListingGallery({ images, title, className = '', isLiked = false, onToggleSave }: ListingGalleryProps) {
   const { t } = useI18n();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showGallery, setShowGallery] = useState(false);
@@ -54,6 +56,19 @@ export default function ListingGallery({ images, title, className = '' }: Listin
     <>
       {/* Full Width Image Gallery - Desktop Grid / Mobile Carousel */}
       <div className={`relative ${className}`}>
+        {/* Save (heart) button - floating top-right on gallery, Airbnb-style */}
+        {onToggleSave && !showGallery && (
+          <button
+            onClick={onToggleSave}
+            className="absolute top-4 right-4 z-10 rounded-full bg-white/95 backdrop-blur p-2 shadow-sm hover:bg-white transition-colors"
+            aria-label={isLiked ? 'Remove from favorites' : 'Add to favorites'}
+          >
+            <Heart
+              size={24}
+              className={isLiked ? 'fill-rose-500 stroke-rose-500' : 'text-neutral-900'}
+            />
+          </button>
+        )}
         {/* Mobile: Swipe Carousel with CSS Scroll Snap */}
         <div className="md:hidden relative w-full bg-neutral-100">
           <div

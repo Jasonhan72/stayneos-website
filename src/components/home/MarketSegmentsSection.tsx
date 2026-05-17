@@ -39,7 +39,7 @@ export function MarketSegmentsSection() {
   return (
     <Section bg="white">
       <div className="text-center mb-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
+        <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight mb-4">
           {t('marketSegments.title', 'Built for different stay scenarios')}
         </h2>
         <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
