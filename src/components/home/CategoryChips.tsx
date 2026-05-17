@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import {
   Briefcase,
   Users,
@@ -33,6 +34,8 @@ const CATEGORIES: Category[] = [
 
 export function CategoryChips() {
   const { t } = useI18n();
+  const searchParams = useSearchParams();
+  const activeCategory = searchParams.get('category');
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeftFade, setShowLeftFade] = useState(false);
   const [showRightFade, setShowRightFade] = useState(true);
@@ -79,14 +82,21 @@ export function CategoryChips() {
               key={cat.key}
               href={`/properties?category=${cat.key}`}
               className={cn(
-                'flex items-center gap-2 shrink-0 px-4 py-2.5 rounded-full',
+                'flex items-center gap-2 shrink-0 px-4 py-2.5 rounded-full relative',
                 'border border-neutral-200 bg-white',
-                'text-sm font-medium text-neutral-700',
-                'hover:border-neutral-400 hover:shadow-sm',
+                'text-sm font-medium',
                 'transition-all duration-200',
+                activeCategory === cat.key
+                  ? 'text-neutral-900 border-neutral-300 shadow-sm'
+                  : 'text-neutral-500 hover:text-neutral-700 hover:border-neutral-400 hover:shadow-sm',
+                // Animated underline via ::after
+                'after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:h-[2px] after:bg-neutral-900 after:rounded-full after:transition-all after:duration-300',
+                activeCategory === cat.key
+                  ? 'after:w-[calc(100%-2rem)]'
+                  : 'after:w-0 hover:after:w-[calc(100%-2rem)]',
               )}
             >
-              <Icon size={18} className="text-neutral-500 shrink-0" />
+              <Icon size={18} className={cn('shrink-0', activeCategory === cat.key ? 'text-neutral-900' : 'text-neutral-400')} />
               <span className="whitespace-nowrap">
                 {t(cat.labelKey, cat.defaultLabel)}
               </span>
