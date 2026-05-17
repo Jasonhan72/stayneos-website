@@ -6,7 +6,7 @@ import ResponsiveImage from '@/components/ui/ResponsiveImage';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { 
+import {
   Star,
   Heart,
   Share,
@@ -16,6 +16,12 @@ import {
   Trophy,
   Waves,
   Check,
+  ShieldCheck,
+  BadgeCheck,
+  MessageCircle,
+  ReceiptText,
+  MapPinned,
+  KeyRound,
 } from 'lucide-react';
 import { Container, Divider } from '@/components/ui';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -32,6 +38,7 @@ import { PropertyCardData } from '@/types';
 import { getPropertyLocation } from '@/lib/utils/property-transform';
 import { calculateBookingPrice, getDefaultStayType, normalizeStayType, stayTypeToQuery, type StayType } from '@/lib/booking';
 import { formatDateLabel, nightsBetween, normalizeDate } from '@/components/booking/calendar-utils';
+import { GOOGLE_MAPS_API_KEY, googleMapsSearchUrl, hasUsableGoogleMapsKey } from '@/lib/google-maps';
 
 interface PropertyDetailClientProps {
   propertyId: string;
@@ -189,12 +196,12 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   const searchParams = useSearchParams();
   const { property, isLoading, error } = useProperty(propertyId, initialProperty);
   const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
-  
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { isWishlisted, toggleWishlist } = useWishlist();
   const isLiked = isWishlisted(propertyId);
   const [showGallery, setShowGallery] = useState(false);
-  
+
   // Mobile carousel scroll ref
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -224,7 +231,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [selectedStayType, setSelectedStayType] = useState<StayType | null>(null);
   const [pendingCheckoutUrl, setPendingCheckoutUrl] = useState<string | null>(null);
-  
+
   // Guest breakdown state for GuestSelector
   const [guestBreakdown, setGuestBreakdown] = useState<GuestCounts>({
     adults: Math.max(1, parseInt(searchParams.get('adults') || searchParams.get('guests') || '1', 10) || 1),
@@ -292,12 +299,12 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
     return (
       <div className="min-h-screen bg-white pt-24 pb-12">
         <Container>
-          <ApiErrorAlert 
+          <ApiErrorAlert
             error={error || new Error('Property not found')}
             onRetry={() => window.location.reload()}
           />
           <div className="mt-6 text-center">
-            <Link 
+            <Link
               href="/properties"
               className="inline-flex items-center gap-2 text-primary hover:underline"
             >
@@ -325,13 +332,14 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   // Format property type and location
   const propertyType = propertyCardData.bedrooms <= 1 ? t('property.entireCondo') : t('property.entireHome');
   const locationShort = getPropertyLocation(propertyCardData);
-  
+  const canEmbedGoogleMap = hasUsableGoogleMapsKey();
+
   // Format guest info
-  const guestInfo = t('property.guestInfo', { 
-    maxGuests: propertyCardData.maxGuests, 
-    bedrooms: propertyCardData.bedrooms, 
-    beds: propertyCardData.bedrooms, 
-    bathrooms: propertyCardData.bathrooms 
+  const guestInfo = t('property.guestInfo', {
+    maxGuests: propertyCardData.maxGuests,
+    bedrooms: propertyCardData.bedrooms,
+    beds: propertyCardData.bedrooms,
+    bathrooms: propertyCardData.bathrooms
   });
 
   const effectiveStayType = normalizeStayType(selectedStayType, getDefaultStayType(propertyCardData));
@@ -427,7 +435,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   };
 
   // 获取图片 URL 列表 - 使用可选链避免条件调用 hook
-  const imageUrls = property.images?.length 
+  const imageUrls = property.images?.length
     ? property.images.filter(Boolean)
     : ['/images/placeholder-property.jpg'];
 
@@ -470,6 +478,27 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
     return parts.join(' ');
   })();
 
+  const selectedMonthlyEstimate = effectiveStayType === 'QUARTERLY'
+    ? tierPrices.quarterly
+    : effectiveStayType === 'YEARLY'
+      ? tierPrices.annual
+      : tierPrices.monthly || propertyCardData.price || 0;
+  const estimatedTax = Math.round(selectedMonthlyEstimate * 0.13);
+
+  const trustItems = [
+    { icon: ShieldCheck, title: 'Verified by NEOS', text: 'Photos, location context, pricing, and stay terms are reviewed before publishing.' },
+    { icon: ReceiptText, title: 'Transparent pricing', text: 'Monthly, quarterly, and annual rates are visible before checkout. No surprise service or cleaning fees.' },
+    { icon: MessageCircle, title: 'Human support', text: 'Contact the host or NEOS support from your booking once reserved.' },
+    { icon: KeyRound, title: 'Move-in ready', text: 'Furnished stay with utilities, WiFi, kitchenware, linens, and building essentials.' },
+  ];
+
+  const reviewSignals = [
+    { label: 'Cleanliness', score: 'Verified' },
+    { label: 'Location', score: 'Checked' },
+    { label: 'Move-in experience', score: 'Guided' },
+    { label: 'Accuracy', score: 'Reviewed' },
+  ];
+
   // Desktop Booking Card Component
   const BookingCard = ({ isSticky = false }: { isSticky?: boolean }) => (
     <div className={`bg-white border border-neutral-200 rounded-2xl p-6 shadow-lg ${isSticky ? 'sticky top-24' : ''}`}>
@@ -501,6 +530,21 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
         ))}
       </div>
 
+      <div className="mb-4 rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4">
+        <div className="flex items-start gap-3">
+          <ReceiptText size={20} className="mt-0.5 text-emerald-700" />
+          <div className="min-w-0 flex-1">
+            <p className="font-semibold text-neutral-950">Transparent monthly estimate</p>
+            <div className="mt-3 space-y-2 text-sm">
+              <div className="flex justify-between gap-3"><span className="text-neutral-600">Selected monthly rate</span><span className="font-medium text-neutral-950">{fp(selectedMonthlyEstimate)}</span></div>
+              <div className="flex justify-between gap-3"><span className="text-neutral-600">Estimated tax</span><span className="font-medium text-neutral-950">{fp(estimatedTax)}</span></div>
+              <div className="flex justify-between gap-3 border-t border-emerald-200 pt-2"><span className="font-semibold text-neutral-950">Est. first month total</span><span className="font-bold text-neutral-950">{fp(selectedMonthlyEstimate + estimatedTax)}</span></div>
+            </div>
+            <p className="mt-2 text-xs text-neutral-600">Utilities, WiFi, basic kitchenware, linens, and support are included unless noted otherwise.</p>
+          </div>
+        </div>
+      </div>
+
       {checkIn && checkOut && (
         <div className="mb-4 rounded-2xl border border-neutral-200 bg-white px-4 py-3">
           <div className="flex items-start justify-between gap-3">
@@ -525,7 +569,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
       <div className="border border-neutral-300 rounded-xl overflow-hidden mb-4">
         {/* {t('booking.checkIn', 'Check-in')} / Check-out */}
         <div className="grid grid-cols-2 divide-x divide-neutral-300">
-          <button 
+          <button
             onClick={() => setShowCalendar(true)}
             className="p-3 text-left hover:bg-neutral-50 transition-colors"
           >
@@ -534,7 +578,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               {checkIn ? formatDateLabel(checkIn, locale === 'zh' ? 'zh-CN' : 'en-US') : t('booking.addDate')}
             </p>
           </button>
-          <button 
+          <button
             onClick={() => setShowCalendar(true)}
             className="p-3 text-left hover:bg-neutral-50 transition-colors"
           >
@@ -544,9 +588,9 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             </p>
           </button>
         </div>
-        
+
         {/* {t('booking.guests', 'Guests')} */}
-        <button 
+        <button
           onClick={() => setShowGuestSelector(true)}
           className="w-full p-3 text-left border-t border-neutral-300 hover:bg-neutral-50 transition-colors"
         >
@@ -605,23 +649,23 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             <Link href="/properties" className="p-2 -ml-2 hover:bg-neutral-100 rounded-full transition-colors">
               <ChevronLeft size={24} className="text-neutral-900" />
             </Link>
-            
+
             <div className="flex items-center gap-2">
-              <button 
+              <button
                 onClick={handleShare}
                 className="p-2.5 hover:bg-neutral-100 rounded-full transition-colors"
                 aria-label="Share property"
               >
                 <Share size={20} className="text-neutral-900" />
               </button>
-              <button 
-                onClick={() => toggleWishlist(propertyId)} 
+              <button
+                onClick={() => toggleWishlist(propertyId)}
                 className="p-2.5 hover:bg-neutral-100 rounded-full transition-colors"
                 aria-label={isLiked ? 'Remove from favorites' : 'Add to favorites'}
               >
-                <Heart 
-                  size={20} 
-                  className={isLiked ? 'fill-rose-500 text-rose-500' : 'text-neutral-900'} 
+                <Heart
+                  size={20}
+                  className={isLiked ? 'fill-rose-500 text-rose-500' : 'text-neutral-900'}
                 />
               </button>
             </div>
@@ -676,28 +720,28 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
       <div className="relative">
         {/* Mobile: Swipe Carousel with CSS Scroll Snap */}
         <div className="md:hidden relative w-full bg-neutral-100">
-          <div 
+          <div
             ref={scrollContainerRef}
             onScroll={handleScroll}
             className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {imageUrls.map((url, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="w-full flex-shrink-0 snap-center relative aspect-[4/3]"
               >
-                <ResponsiveImage 
-                  src={url} 
+                <ResponsiveImage
+                  src={url}
                   alt={`${localizedTitle} - Image ${index + 1}`}
-                  fill 
+                  fill
                   priority={index === 0}
-                  className="object-cover" 
+                  className="object-cover"
                 />
               </div>
             ))}
           </div>
-          
+
           {/* Mobile Carousel Arrows */}
           {imageUrls.length > 1 && (
             <>
@@ -842,8 +886,8 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             {/* Host Info */}
             <div className="flex items-center gap-3 py-6">
               <div className="relative w-12 h-12 rounded-full overflow-hidden bg-white border border-neutral-200 p-1.5">
-                <ResponsiveImage 
-                  src={mockHost.avatar} 
+                <ResponsiveImage
+                  src={mockHost.avatar}
                   alt={mockHost.name}
                   fill
                   className="object-cover"
@@ -857,6 +901,33 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                 <p className="text-sm text-neutral-600">{t('property.superhostYears', { years: mockHost.yearsHosting })}</p>
               </div>
             </div>
+
+            <Divider />
+
+            {/* Trust System */}
+            <section className="py-8">
+              <div className="mb-5 flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-wide text-emerald-700">NEOS trust layer</p>
+                  <h2 className="mt-1 text-2xl font-semibold text-neutral-950">Book with confidence</h2>
+                </div>
+                <span className="hidden rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800 md:inline-flex">
+                  <BadgeCheck size={16} className="mr-2" /> Verified stay
+                </span>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {trustItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <div key={item.title} className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+                      <Icon size={22} className="text-neutral-950" />
+                      <h3 className="mt-3 font-semibold text-neutral-950">{item.title}</h3>
+                      <p className="mt-1 text-sm leading-6 text-neutral-600">{item.text}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
 
             <Divider />
 
@@ -884,13 +955,13 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             <div className="py-6">
               <h2 className="text-xl font-semibold mb-4">{t('property.aboutPlace')}</h2>
               <p className="text-neutral-600 leading-relaxed">
-                {localizedDescription || t('property.defaultDescription', { 
-                  propertyType: propertyType.toLowerCase(), 
-                  location: locationShort, 
-                  bedrooms: propertyCardData.bedrooms, 
-                  bathrooms: propertyCardData.bathrooms, 
-                  area: propertyCardData.area, 
-                  maxGuests: propertyCardData.maxGuests 
+                {localizedDescription || t('property.defaultDescription', {
+                  propertyType: propertyType.toLowerCase(),
+                  location: locationShort,
+                  bedrooms: propertyCardData.bedrooms,
+                  bathrooms: propertyCardData.bathrooms,
+                  area: propertyCardData.area,
+                  maxGuests: propertyCardData.maxGuests
                 })}
               </p>
               {localizedFacts && (
@@ -913,7 +984,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             {/* Property Narrative */}
             <div className="property-narrative mt-8 mb-8">
               <p className="text-lg text-neutral-700 leading-relaxed">
-                {propertyId === '1' || propertyId === '55-cooper-st-sugar-wharf' || propertyId === 'prop-55-cooper' 
+                {propertyId === '1' || propertyId === '55-cooper-st-sugar-wharf' || propertyId === 'prop-55-cooper'
                   ? t('property.narrative.sugarWharf', "Perched above Toronto's newest waterfront neighborhood, this sky suite offers panoramic views of Lake Ontario and the city skyline. Step outside to Corktown Common park, walk five minutes to the legendary St. Lawrence Market, or catch the UP Express at Union Station — just eight minutes on foot. Sugar Wharf's concierge lobby, rooftop terrace, and 24-hour security make this the gold standard for executive living in Toronto.")
                   : propertyId === '2' || propertyId === '238-simcoe-st-grange-park' || propertyId === 'prop-238-simcoe'
                   ? t('property.narrative.artistAlley', "Nestled in the heart of Toronto's cultural quarter, this suite sits directly across from the Art Gallery of Ontario and steps from Grange Park. The University of Toronto campus is a ten-minute walk, and the UHN hospital network is easily accessible by streetcar. With its vibrant café culture, independent bookshops, and proximity to Chinatown and Kensington Market, this is where Toronto's creative and academic communities call home.")
@@ -958,21 +1029,61 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
 
             <Divider />
 
+            {/* Review Trust Framework */}
+            <section className="py-8">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold text-neutral-950">Stay quality signals</h2>
+                  <p className="mt-1 text-sm text-neutral-600">Airbnb-style review dimensions adapted for long-term furnished stays.</p>
+                </div>
+                <span className="text-sm font-semibold text-neutral-950">New verified listing</span>
+              </div>
+              <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                {reviewSignals.map((signal) => (
+                  <div key={signal.label} className="rounded-2xl border border-neutral-200 p-4">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="font-medium text-neutral-950">{signal.label}</span>
+                      <span className="font-semibold text-emerald-700">{signal.score}</span>
+                    </div>
+                    <div className="mt-3 h-2 rounded-full bg-neutral-100">
+                      <div className="h-2 w-[92%] rounded-full bg-neutral-950" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <Divider />
+
             {/* Location Map */}
             <div className="py-6">
-              <h2 className="text-xl font-semibold mb-4">{t('property.whereYouBe')}</h2>
+              <div className="mb-4 flex items-center justify-between gap-4">
+                <h2 className="text-xl font-semibold">{t('property.whereYouBe')}</h2>
+                <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-3 py-1.5 text-xs font-semibold text-neutral-800"><MapPinned size={14} /> Location checked</span>
+              </div>
               <div className="w-full h-[350px] bg-neutral-100 relative overflow-hidden rounded-2xl">
-                <iframe 
-                  src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}&q=${encodeURIComponent(locationShort)}&zoom=15`}
-                  width="100%" 
-                  height="100%" 
-                  style={{ border: 0 }} 
-                  allowFullScreen 
-                  loading="lazy" 
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="absolute inset-0" 
-                  title={`${localizedTitle} Location`} 
-                />
+                {canEmbedGoogleMap ? (
+                  <iframe
+                    src={`https://www.google.com/maps/embed/v1/place?key=${GOOGLE_MAPS_API_KEY}&q=${encodeURIComponent(locationShort)}&zoom=15`}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    className="absolute inset-0"
+                    title={`${localizedTitle} Location`}
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,#e5e7eb_0,#e5e7eb_2px,transparent_3px),linear-gradient(135deg,#f5f5f4,#e7e5e4)]">
+                    <div className="absolute inset-0 opacity-40 [background-image:linear-gradient(90deg,#d4d4d4_1px,transparent_1px),linear-gradient(#d4d4d4_1px,transparent_1px)] [background-size:48px_48px]" />
+                    <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2 rounded-2xl bg-white/90 px-5 py-4 text-center shadow-lg">
+                      <MapPinned className="text-primary" size={28} />
+                      <p className="font-semibold text-neutral-900">{locationShort}</p>
+                      <a href={googleMapsSearchUrl(locationShort)} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-primary hover:text-primary-700">Open in Google Maps</a>
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="mt-4">
                 <p className="font-medium text-neutral-900">{locationShort}</p>
@@ -1033,7 +1144,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               </div>
             )}
           </div>
-          
+
           <button
             onClick={handleCheckAvailability}
             className="px-6 py-3.5 bg-gradient-to-r from-rose-500 to-rose-600 text-white font-semibold rounded-xl hover:from-rose-600 hover:to-rose-700 transition-colors"
@@ -1053,7 +1164,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
 
       {/* Calendar Modal */}
       {showCalendar && (
-        <AirbnbCalendar 
+        <AirbnbCalendar
           checkIn={checkIn}
           checkOut={checkOut}
           onSelectCheckIn={(date) => { setCheckIn(date); setBookingError(''); }}
@@ -1185,50 +1296,50 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               <h3 className="text-white font-medium">
                 {currentImageIndex + 1} / {imageUrls.length}
               </h3>
-              <button 
-                onClick={() => setShowGallery(false)} 
+              <button
+                onClick={() => setShowGallery(false)}
                 className="p-2 text-white hover:bg-neutral-800 transition-colors rounded-full"
                 aria-label="Close gallery"
               >
                 <X size={24} />
               </button>
             </div>
-            
+
             {/* Main Image */}
             <div className="flex-1 relative flex items-center justify-center">
-              <ResponsiveImage 
-                src={imageUrls[currentImageIndex]} 
-                alt={`${localizedTitle} - Image ${currentImageIndex + 1}`} 
-                fill 
-                className="object-cover" 
+              <ResponsiveImage
+                src={imageUrls[currentImageIndex]}
+                alt={`${localizedTitle} - Image ${currentImageIndex + 1}`}
+                fill
+                className="object-cover"
               />
-              <button 
-                onClick={prevImage} 
+              <button
+                onClick={prevImage}
                 className="absolute left-4 p-3 bg-white/10 hover:bg-white/20 text-white transition-colors rounded-full"
                 aria-label="Previous image"
               >
                 <ChevronLeft size={32} />
               </button>
-              
-              <button 
-                onClick={nextImage} 
+
+              <button
+                onClick={nextImage}
                 className="absolute right-4 p-3 bg-white/10 hover:bg-white/20 text-white transition-colors rounded-full"
                 aria-label="Next image"
               >
                 <ChevronRight size={32} />
               </button>
             </div>
-            
+
             {/* Thumbnails */}
             <div className="p-4 bg-neutral-900">
               <div className="flex gap-2 overflow-x-auto justify-center">
                 {imageUrls.map((image, index) => (
-                  <button 
-                    key={index} 
-                    onClick={() => selectImage(index)} 
+                  <button
+                    key={index}
+                    onClick={() => selectImage(index)}
                     className={`relative flex-shrink-0 w-20 h-14 overflow-hidden transition-all rounded-lg ${
-                      index === currentImageIndex 
-                        ? 'ring-2 ring-white ring-offset-2 ring-offset-neutral-900' 
+                      index === currentImageIndex
+                        ? 'ring-2 ring-white ring-offset-2 ring-offset-neutral-900'
                         : 'opacity-50 hover:opacity-100'
                     }`}
                   >
