@@ -1,109 +1,317 @@
-# Airbnb Alignment Plan
+# Airbnb Design Alignment Plan
 
-> Owner: Neos / Byte · Date: 2026-05-17  
-> Goal: Bring stayneos.com visual + interaction patterns closer to Airbnb, **without** copying brand identity.  
-> Scope: Homepage, Listing detail, Search results, Calendar/pricing.  
-> References live under `design-refs/airbnb/<page>/*.png` next to this file; stayneos baselines: `design-refs/stayneos-homepage.png`, `design-refs/stayneos-property-detail.png`.
-
----
-
-## TL;DR
-
-stayneos 当前页面美学偏「dark hero + 单一长落地页」，而 Airbnb 偏「明亮中性 + 模块化 + 信息密度高 + 强交互组件」。需要对齐的不是色彩品牌，而是 **三件事**：
-1. **搜索/查找体验** — Airbnb 的「inline search pill + 类目 chip + 地图模式」是租赁站的事实标准，stayneos 目前用 HeroChatInline 替代搜索，下游缺 chips / 地图，跳失率高。
-2. **房源详情页信息架构** — Airbnb 的「图片九宫格 → 标题 → 信息块 → sticky 预订卡 → reviews → 地图 → host」是经过大量 A/B 验证的最佳实践，我们已经做了一部分，缺 sticky booking card 的细节、九宫格 gallery、reviews 评分细分。
-3. **预订日历交互** — Airbnb 双月并排日历 + 价格 inline + 最低住宿提示 + clear 按钮，stayneos 目前的日历强度不足。
+> **Date:** 2026-05-17  
+> **Source:** airbnb.ca (Canadian Airbnb for Toronto market relevance)  
+> **Target:** stayneos.com  
+> **Scope:** Homepage, Search Results/Properties, Listing Detail, Calendar/Pricing
 
 ---
 
-## Page-by-Page Diff
+## Reference Screenshots
 
-### 1. Homepage  
-Refs: `homepage/01-hero.png`, `homepage/02-categories.png`  
-Stayneos: `design-refs/stayneos-homepage.png`
-
-| Element | Airbnb | Stayneos 当前 | Gap |
-|---|---|---|---|
-| Hero | 上方留白 + 搜索 pill (where / when / who) 居中，背景白/明亮 | 全屏 dark video + chat inline | hero 占满 100svh、暗色压抑、无搜索结构化入口 |
-| Top nav | sticky 白底，搜索条 collapse 状态 | 透明叠在 hero 上 | 滚动后 nav 没有清晰收起态 |
-| 类目导航 | 横向 scrollable 图标 chips（房型/区域） | 无 | 缺整段「快速筛选」入口 |
-| 房源卡片网格 | 4 列大图 + 收藏心 + 轮播 + 价格/评分一行 | 有 FeaturedPropertiesSection，但只展示精选 | 卡片紧凑度、收藏交互、轮播能力 |
-| Footer | 简洁 link grid + 语言/币种 picker | 类似 | OK |
-
-### 2. Listing detail  
-Refs: `listing-detail/01-top.png`, `02-booking-card.png`, `03-reviews.png`  
-Stayneos: `design-refs/stayneos-property-detail.png` + `src/app/(booking-flow)/property/[id]/PropertyDetailClient.tsx`
-
-| Element | Airbnb | Stayneos 当前 | Gap |
-|---|---|---|---|
-| Gallery | 一大 + 四小 九宫格（desktop），手机大轮播 | 单大图 + 缩略图行 | 缺九宫格，「Show all photos」按钮入口 |
-| 标题块 | H1 + 一行 sub-info (评分 · reviews · 城市)，紧凑 | 标题 + 多行信息 | 信息压缩 / 评分聚合 |
-| 房型 chip | "Entire rental unit · 2 guests · 1 bedroom..." | 散落多行 | 单行 inline 概要 |
-| Highlights | 三条带 icon 的 "self check-in / great location / free cancel" | 无 | **P0 缺**：建立 trust 的关键 |
-| Amenities | 9 个网格 + "Show all 38 amenities" | 列表平铺 | 需要 grid + modal |
-| Booking card | sticky 右侧，价格、日期、宾客数、立即/分期 CTA、税费明细 | 类似但视觉上没那么 "card" | 需要更明显的边框 + shadow + 浮起 |
-| Reviews | 总分 + 6 个分项 bar + 滚动 review list + filter | 滚动列表 | 缺评分细分维度 |
-| Host card | 头像 + identity verified + 回复率 | 类似 | OK，加 verified badge |
-| Location | 地图 + 周边介绍段落 | 有地图 | OK，加段落即可 |
-
-### 3. Search results  
-Refs: `search-results/01-search-page.png`, `02-filter-chips.png`
-
-| Element | Airbnb | Stayneos 当前 | Gap |
-|---|---|---|---|
-| Top filter bar | 横向 scrollable chips（type icons） + 「Filters」按钮 | （未见，可能没有 search 页） | **整页缺失/弱** |
-| 卡片网格 | 3-4 列 responsive，hover 阴影，收藏心，价格 + 评分 | 类似但展示数少 | 提升密度 + 分页 / 无限滚动 |
-| 地图 split | 右侧 sticky 地图 + 卡片 hover 联动 | 无 | **P1 缺**：高价值 |
-| Sort / total count | "1,000+ stays" + Sort dropdown | 无 | 加 results count + sort |
-| 移动端 | 底部 map toggle + filter bottom sheet | n/a | 移动适配 |
-
-### 4. Calendar / pricing
-
-Airbnb 模式：
-- 两个月并排（desktop），手机单月可滑
-- 已订 = 划线 + 不可点（**已与 2026-04-22 Jason 要求一致**）
-- 每格价格 inline（动态定价）
-- "Clear dates" + "Minimum stay" 提示
-- 选定后 booking card 实时拉总价 + cleaning + service fee + 税
-
-stayneos：单月日历 + 简单点选，明细弱。  
-Gap：参考 `airbnb-multicalendar-reference.md`（已有），把双月 + 价格 inline + 明细打通。
+| Page | Airbnb Reference | Stayneos Current | 
+|------|-----------------|------------------|
+| Homepage Hero | `design-refs/airbnb/homepage/01-hero.png` | `design-refs/stayneos-homepage.png` |
+| Homepage Categories | `design-refs/airbnb/homepage/02-categories.png` | — |
+| Search Results | `design-refs/airbnb/search-results/01-search-page.png` | `design-refs/stayneos-properties.png` |
+| Search Filters | `design-refs/airbnb/search-results/02-filter-chips.png` | — |
+| Search Grid Cards | `design-refs/airbnb/search-results/03-grid-cards.png` | — |
+| Listing Detail (Top) | `design-refs/airbnb/listing-detail/01-top.png` | `design-refs/stayneos-property-detail.png` |
+| Listing Detail (Booking) | `design-refs/airbnb/listing-detail/02-booking-card.png` | — |
+| Listing Detail (Reviews) | `design-refs/airbnb/listing-detail/03-reviews.png` | — |
+| Calendar/Pricing | `design-refs/airbnb/listing-detail/04-calendar-section.png` | — |
 
 ---
 
-## Priority Plan
+## Part 1: Page-by-Page Difference Analysis
 
-### P0 — 直接影响转化，2 周内
-1. **Listing trust highlights**（3 条带 icon 的特色行）— 已经部分对齐（commit `6f3915b apply airbnb trust design patterns`），收尾检查所有房源都有 3 条。
-2. **Listing gallery 九宫格 + "Show all photos" modal** — desktop 4-up 网格 + mobile carousel + 全屏 lightbox。
-3. **Sticky booking card 视觉强化** — 加 border + shadow + sticky positioning，确保滚动时不丢。
-4. **Hero 搜索 pill** — 即使保留 HeroChatInline，也要在下方加一条 Airbnb 式 "where / dates / guests" 结构化入口；很多用户不愿打字。
+### 1. Homepage
 
-### P1 — 信息密度 + 决策辅助，1 个月
-5. **Search results 页 + filter chips + sort + count** — 建独立 `/search` 路由，先没地图也行。
-6. **Reviews 细分评分（6 维 bar）** — 后端要新增字段或现场聚合。
-7. **类目 chips 导航** — 首页 hero 下方加 horizontal scrollable chips（Downtown / Lake / Pet-friendly / Long-stay…）。
-8. **双月日历 + 价格 inline** — 配合 calendar-pricing 截图（待补 P1 阶段截）。
+| # | Aspect | Airbnb | Stayneos Current | Severity |
+|---|--------|--------|-----------------|----------|
+| H1 | **Search Experience** | Floating pill-style search bar: 3 segments (Where / When / Who), auto-expands on click with destination suggestions and date picker. Centered below nav. | Full-screen hero with AI chat input (`HeroChatInline`). Text-heavy: title + subtitle + AI prompt. No structured search bar. | 🔴 P0 |
+| H2 | **Navigation Bar** | Sticky header, transparent background over hero → white on scroll. Logo left, center tabs (Homes/Experiences/Services), right: "Become a host" + globe + hamburger menu. | Standard nav bar with logo left, links center (Properties/For Business/About), auth buttons right. Language/currency dropdowns. Not transparent over hero. | 🟡 P1 |
+| H3 | **Hero Section** | Large immersive hero with image carousel or video. Minimal text: "Find your next stay" style CTAs. Search bar is the hero's focal point. | Full-screen video/image hero with heavy dark overlay gradient. Large heading, accent subtitle, paragraph, then AI chat input. Text content dominates. | 🟡 P1 |
+| H4 | **Category/Scenario Navigation** | Horizontal scrollable category chips with SVGs/icons: Popular, Coastal, Islands, Lakes, Mountains, Outdoors, Things to do. Sticky on scroll. | No category/scenario chips. Instead: DualPathCTASection (Browse / Business cards) and MarketSegmentsSection further down. | 🟡 P1 |
+| H5 | **Property Card Carousels** | "Popular homes in [City]" horizontal scrollable card rows with specific dates + prices (e.g., "Oct 16–18, $1,427 CAD total"). Each card: image, location, rating, dates, price. | "Featured" section with 3 property cards in a horizontal carousel. Cards show tiered pricing (Monthly/Quarterly/Annual). No rating displayed (0 reviews). | 🟡 P1 |
+| H6 | **Trust/Value Props** | Trust elements woven subtly throughout page. No dedicated badge section; trust is signaled via review counts, Superhost badges, etc. | Standalone `TrustBadgesSection` with icons (Premium Selection, Verified Homes, 24/7 Support). `ValuePropositionSection` with 4 card grid. More explicit but less subtle. | 🟢 P2 |
+| H7 | **Footer** | Multi-column links: Support, Hosting, Airbnb categories. | Multi-column footer with Company/Services/Support links + social + contact. Comparable quality. | 🟢 P2 |
 
-### P2 — Nice to have，2 个月+
-9. **Search 地图 split view + hover 联动**。
-10. **Amenities grid + "Show all" modal**。
-11. **Host verified badge 体系**。
-12. **移动端 bottom sheet filter + map toggle**。
+### 2. Listing Detail Page
+
+| # | Aspect | Airbnb | Stayneos Current | Severity |
+|---|--------|--------|-----------------|----------|
+| L1 | **Image Gallery** | Desktop: 1 large main image + 4 side thumbnails in a grid, "Show all photos" button overlay. Mobile: horizontal scrollable carousel. Rounded corners on images. | Mobile-first carousel with dots. Desktop: same carousel, no grid view. No "Show all photos" modal. | 🔴 P0 |
+| L2 | **Desktop Layout** | Two-column layout: **60% left** (gallery → title → host → description → amenities → calendar → reviews → map), **40% right** (sticky booking card that follows scroll). | Single-column scrollable layout with booking section inline (not sticky sidebar). | 🔴 P0 |
+| L3 | **Title + Meta Area** | Large bold title (24-28px). Below: property type · guests · bedrooms · beds · baths on one line, then host avatar + name + Superhost badge, then rating stars inline. | Title, then separate lines for type/guests/bedrooms/etc., rating, and action buttons (share/save). Host info shown separately. | 🟡 P1 |
+| L4 | **Listing Highlights** | Colored badge chips below host: "Dive right in (pool)", "Exceptional check-in experience", "Lots to do nearby". Visually distinct with icons. | No highlights section. Property facts shown as a key-value list (Pricing, Layout, All-Inclusive, Building, Location, Minimum Stay). | 🟡 P1 |
+| L5 | **Booking Card** | **Sticky sidebar** (position: sticky, top: 128px). Contains: price/night, date picker (check-in/check-out), guest selector dropdown, price breakdown (nightly × nights + cleaning + service fee), "Check availability" button. Clean white card with border, shadow. | Booking section is inline (not sticky sidebar). Contains: Stay Type toggle (Monthly/Quarterly/Annual), calendar, guest selector, price breakdown, CTA. Visually denser. | 🔴 P0 |
+| L6 | **Amenities Section** | 2-column grid of amenity items, each with icon + label. "Show all N amenities" expandable. | Amenities listed with icons (currently light on data). | 🟡 P1 |
+| L7 | **Reviews Section** | Rating breakdown bar chart (5★ → 1★), category ratings (cleanliness 5.0, accuracy 5.0, etc.), then individual review cards with user avatar, name, date, review text. Paginated or scrollable. | Reviews not visible (no reviews yet). Structure exists but untested. | 🟢 P2 |
+| L8 | **Host Section** | Profile photo (large circle), name, Superhost badge, years hosting, host description, response rate/time. Contact host button. | NEOS as host: avatar, name, Superhost badge, years hosting. Similar structure but less visual prominence. | 🟢 P2 |
+| L9 | **Map Section** | Embedded static map with location pin, "Exact location provided after booking" note. | `whereYoullBe` section with embedded Google Map. Similar pattern. | 🟢 P2 |
+
+### 3. Search Results / Properties Page
+
+| # | Aspect | Airbnb | Stayneos Current | Severity |
+|---|--------|--------|-----------------|----------|
+| S1 | **Split Layout** | **Left 60%**: scrollable property card grid. **Right 40%**: sticky interactive map with price pins that update as you scroll. | 3 property cards stacked + static map at bottom. No split view, no interactive map. | 🔴 P0 |
+| S2 | **Filter System** | Rich horizontal filter chip bar: Category chips (amazing views, lakefront, etc.) + Filter button that opens a modal with price range, rooms/beds, amenities, booking options, property type, etc. Chips dynamically appear when applied. | Basic Filter + Select Dates buttons. "Showing 3 properties of 3" counter. No chip-based UI. | 🔴 P0 |
+| S3 | **Property Cards** | Image-first with horizontal dots for multi-image, heart save button top-right. Below: location (no title), rating + review count, dates range (e.g., "Oct 16-18"), price/night + total. "Guest favourite" badge when applicable. Minimal text. | Cards: image, Featured badge, heart button, title, location, BR/BA/sqft/guests, tiered pricing table (M/Q/A). Information-dense but visually heavier. | 🟡 P1 |
+| S4 | **Card Image Carousel** | Cards support image carousel with left/right arrows or dots within the card. Hover shows next image. | Single static image per card. No in-card carousel. | 🟡 P1 |
+| S5 | **Sort** | Dropdown: sorting by relevance, price, rating, etc. | Sort dropdown present. Adequate. | 🟢 P2 |
+| S6 | **Map Integration** | Interactive Google Map with location pins, price labels on pins. Map updates as you browse. Click pin → see card preview. | Static Google Map at bottom with 3 property pins. No interaction between map and card list. | 🔴 P0 |
+
+### 4. Calendar & Pricing
+
+| # | Aspect | Airbnb | Stayneos Current | Severity |
+|---|--------|--------|-----------------|----------|
+| C1 | **Calendar Layout** | Two-month side-by-side layout (e.g., April + May 2026). Date range selection with colored highlight. Weekday headers (S M T W T F S). Clear dates / Add dates interface. | `AirbnbCalendar` component imported (likely similar). Good foundation. | 🟢 P2 |
+| C2 | **Guest Selector** | Counter-based: Adults, Children, Infants, Pets. Each with +/- buttons, min/max constraints. Shown as dropdown on booking card. | `GuestSelector` with Adults/Children/Infants. No pets option. | 🟢 P2 |
+| C3 | **Stay Type** | Nightly only (short-term model). | NEOS-specific: Monthly/Quarterly/Annual tier toggle + price tiers table. This is a business-differentiating feature and should stay. | ✅ Keep |
+| C4 | **Price Display** | Per-night price prominent, then breakdown (rate × nights, cleaning fee, service fee, taxes, total). | Tier pricing + `calculateBookingPrice`. Comparable pattern. | 🟢 P2 |
+| C5 | **CTA Button** | "Check availability" or "Reserve". Full-width, prominent color. | "Review and continue". Functional but less aspirational. | 🟢 P2 |
 
 ---
 
-## 实施约束
+## Part 2: Prioritized Implementation Plan
 
-- **不动品牌色**：stayneos 的暗色 + accent 色保留，只对齐 layout / spacing / interaction，不要复制 Airbnb 的粉/白配色。
-- **每个 P0 单独一个 PR**，先小步走，方便回滚。
-- **截图基线**：`design-refs/airbnb/` 是当前 Airbnb 状态（2026-05-17 抓取），后续 Airbnb 改版前不再更新。
-- **部署**：照常 `git push origin main` 触发 GH Actions，不本地 `wrangler deploy`（参考 MEMORY.md，`NEXT_PUBLIC_*` build-time 注入）。
+### 🔴 P0 — Critical (Must Fix to Match Airbnb UX)
+
+These items are the biggest competitive gaps. They directly impact user trust, conversion rate, and perceived product quality.
+
+#### P0-1: Listing Detail — Desktop Two-Column Sticky Booking Layout
+**Current:** Single-column scroll with inline booking.  
+**Target:** Left 60% content column + right 40% sticky booking card that follows scroll.
+**Implementation:**
+- Refactor `PropertyDetailClient` layout: `flex` with `position: sticky; top: 96px` for booking sidebar
+- Booking card stays fixed while user scrolls content
+- Responsive: on mobile, booking card becomes a bottom sticky bar or inline
+- Booking card should have: white background, border, shadow, rounded corners (like Airbnb's card)
+**Files:** `src/app/(booking-flow)/property/[id]/PropertyDetailClient.tsx`
+
+#### P0-2: Listing Detail — Desktop Gallery Grid
+**Current:** Mobile carousel on all viewports.  
+**Target:** Desktop: 1 large image (left/top) + side stack of 4 thumbnails. "Show all photos" button overlay with counter.
+**Implementation:**
+- Desktop (`md:` breakpoint): CSS Grid layout: large image spans 2 cols, 4 thumbnails in 2×2 grid
+- Mobile: keep existing carousel
+- Add `showGallery` modal: full-screen image viewer with navigation
+- Round image corners (12px radius, matching Airbnb's style)
+**Files:** `src/app/(booking-flow)/property/[id]/PropertyDetailClient.tsx`
+
+#### P0-3: Search/Properties — Split View with Interactive Map
+**Current:** 3 cards stacked + static map at bottom.  
+**Target:** Left: scrollable card grid. Right: sticky interactive map with price pins.
+**Implementation:**
+- Split layout: `flex` or `grid` with 60/40 split
+- Right map: `position: sticky; top: 80px; height: calc(100vh - 80px)`
+- Interactive map: click pin → highlight card, scroll list → highlight pin
+- Keep current list for < 5 properties fallback
+- Mobile: show map as toggleable panel (like Airbnb)
+**Files:** `src/app/(marketing)/properties/` or `src/app/(booking-flow)/properties/`
+
+#### P0-4: Search/Properties — Rich Filter Chip Bar
+**Current:** Basic Filter + Select Dates buttons.  
+**Target:** Horizontal scrollable filter chips + Filter button with multi-facet modal.
+**Implementation:**
+- Chip row: horizontally scrollable `<ul>` with filter categories
+- Each chip: rounded pill, icon + label, toggle on/off
+- Filter modal: slide-out or modal with sections (Price range slider, Bedrooms, Amenities, Property type, etc.)
+- Applied filters show as removable chips above results
+- "Clear all" link when filters active
+- Results count updates dynamically: "Showing N properties of M"
+**Files:** New component `src/components/property/FilterChips.tsx`
+
+#### P0-5: Homepage — Structured Search Bar
+**Current:** AI chat input (`HeroChatInline`).  
+**Target:** Airbnb-style segmented pill search bar. Also keep AI chat as differentiated feature.
+**Implementation:**
+- Add search pill bar below hero text: 3 segments (Where / When / Guests)
+- Where: auto-complete dropdown as user types (city, neighborhood)
+- When: calendar popover with date range picker
+- Guests: counter dropdown (adults/children)
+- "Search" button at end of pill
+- Keep HeroChatInline as secondary "Ask AI" feature (could be positioned below search bar or as a tab toggle)
+**Files:** New `src/components/home/SearchBar.tsx`, modify `HeroSection.tsx`
+
+### 🟡 P1 — Important (High UX Improvement)
+
+#### P1-1: Homepage — Category/Scenario Chips
+**Current:** No category-based navigation.  
+**Target:** Horizontal scrollable icon category chips below hero.
+**Implementation:**
+- Categories relevant to NEOS: Executive, Family, Medical/Academic, Relocation, Long-term, Waterfront, Downtown Core
+- Each chip: SVG icon + label, scrollable row with fade edges
+- Click → navigates to `/properties?category=executive` with filter pre-applied
+- Sticky behavior: scrolls away after passing
+**Files:** New `src/components/home/CategoryChips.tsx`
+
+#### P1-2: Homepage — Hero Refinement
+**Current:** Heavy text overlay with dark gradient.  
+**Target:** Lighter, more image-forward hero with integrated search bar.
+**Implementation:**
+- Reduce overlay opacity (from `via-neutral-900/40` to `via-neutral-900/20`)
+- Reduce text size on mobile (text-3xl → text-2xl)
+- Move subtitle into search bar placeholder context
+- Keep video loop but improve transition from image → video
+- Better image selection that shows lifestyle (Airbnb uses aspirational imagery)
+**Files:** `src/components/home/HeroSection.tsx`
+
+#### P1-3: Listing Detail — Title + Meta Restructure
+**Current:** Separated title, meta, host, rating.  
+**Target:** Airbnb-style compact header: title → meta line → rating + host inline.
+**Implementation:**
+- Title: 24-28px bold on desktop
+- One-line meta: "Entire rental unit in Toronto · 5 guests · 2 bedrooms · 3 beds · 2 baths"
+- Below meta: rating badge + host avatar (small circle) + "Hosted by NEOS · 2 years hosting"
+- Superhost badge inline
+**Files:** `src/app/(booking-flow)/property/[id]/PropertyDetailClient.tsx`
+
+#### P1-4: Listing Detail — Amenity Grid
+**Current:** Simple list with icons.  
+**Target:** 2-column grid of amenity cards with icons, expandable "Show all N amenities".
+**Implementation:**
+- Grid: `grid-cols-2` at md+, `grid-cols-1` mobile
+- Each item: icon + label
+- Show first 6-8 amenities, rest behind "Show all 13 amenities" button
+- Use Airbnb-style icons (kitchen → 🍳, wifi → 📶, pool → 🏊, etc.)
+**Files:** `src/components/property/` or inline in PropertyDetailClient
+
+#### P1-5: Listing Detail — Listing Highlights
+**Current:** No highlights section.  
+**Target:** Colored badge chips with icons for standout features.
+**Implementation:**
+- Add after host section: 2-3 highlight badges
+- Examples: "Dive right in" (pool), "Walk to transit", "Exceptional views"
+- Each badge: colored background, icon, title + subtitle
+- Map from property amenities/features dynamically
+**Files:** `src/app/(booking-flow)/property/[id]/PropertyDetailClient.tsx`
+
+#### P1-6: Property Cards — Card Density Reduction
+**Current:** Cards with tiered pricing table (Monthly/Quarterly/Annual) — information-dense.  
+**Target:** Lighter card with single price highlight, more image emphasis.
+**Implementation:**
+- Default view: show monthly price only (e.g., "$12,000/month"), with hover/expand for tier details
+- Remove BR/BA inline text; show as icon labels (🏠 3 · 🛏 2 · 📐 1273 sqft)
+- Add rating badge to cards (currently hidden when 0)
+- Aspect ratio: change from 4/3 to 1:1 (square), matching Airbnb's image-forward approach
+- Add image carousel dots on cards with >1 image
+**Files:** `src/components/property/PropertyCard.tsx`
+
+#### P1-7: Navigation — Sticky Transparent Header
+**Current:** Standard solid nav bar.  
+**Target:** Sticky nav with transparent-to-white transition on homepage.
+**Implementation:**
+- Detect scroll position, add/remove `bg-white shadow-sm` classes
+- On hero (scrollY < 100): transparent bg, white text/icons
+- On scroll (scrollY > 100): white bg, dark text/icons
+- Smooth transition
+**Files:** Global layout `src/app/layout.tsx` or Navbar component
+
+### 🟢 P2 — Nice to Have (Polish & Refinement)
+
+#### P2-1: Reviews Section Preparation
+**Current:** No reviews data yet; structure needs validation.  
+**Implementation:** Ensure review UI matches Airbnb pattern: rating breakdown bar, category ratings, user card layout with avatar circle, name, date, text.
+
+#### P2-2: Card Hover Animations
+**Current:** Image scale on hover (scale-105).  
+**Target:** More subtle Airbnb-style animation: slight image zoom, card elevation change, in-card image carousel on hover.
+
+#### P2-3: "Show All Photos" Gallery Modal
+**Current:** No gallery modal.  
+**Target:** Full-screen image viewer with grid view of all images, navigation arrows, counter (e.g., "3/12").
+
+#### P2-4: Save/Share Button Placement
+**Current:** Save (heart) and Share buttons in action area.  
+**Target:** Airbnb-style: save top-right on gallery, share inline with title.
+
+#### P2-5: Typography Refinement
+**Current:** Uses Inter font, good hierarchy.  
+**Target:** Review font sizes: Airbnb uses Cereal (proprietary), but Inter is close. Adjust line-heights and letter-spacing for a more polished feel. Key: tighter line-height on titles (1.1 → 1.2), slightly smaller body text.
+
+#### P2-6: Guest Selector Enhancement
+**Current:** Adults/Children/Infants counters.  
+**Target:** Add Pets option for pet-friendly properties.
+
+#### P2-7: Tab Animation in Category Nav
+**Current:** No category nav.  
+**Target:** Smooth underline slide animation between category tabs (like Airbnb's animated underline).
 
 ---
 
-## 下一步
+## Part 3: Implementation Notes
 
-- Neos 看完批 P0 顺序 → 派 Byte 拆 4 个 P0 任务。
-- Byte 执行时每个 P0 起独立分支 `feat/ab-align-<n>-<slug>`，PR 关联本文件章节。
-- 已开分支 `design/airbnb-alignment-research` 用于沉淀本目录所有参考资料，截图后续随 Airbnb 改版需要更新时单独提 PR。
+### CSS/Tailwind Patterns to Adopt
+
+```
+Airbnb card shadows:    shadow-sm (border) + hover:shadow-md
+Airbnb card borders:    border border-gray-200
+Airbnb image corners:   rounded-xl (12px)
+Airbnb spacing:         generous padding (24-32px in cards)
+Airbnb booking card:    sticky, white bg, border, shadow, rounded-2xl, p-6
+Airbnb price styling:   font-semibold, no $ symbol before number in some contexts
+Airbnb chip pills:      rounded-full, border, px-4, py-2, text-sm
+Airbnb filter bar:      sticky top-[72px], bg-white, border-b, z-10
+```
+
+### Component Architecture Suggestions
+
+```
+src/components/
+├── search/
+│   ├── SearchBar.tsx          (P0 — homepage search pill)
+│   ├── FilterChips.tsx        (P0 — horizontal filter chips)
+│   ├── FilterModal.tsx        (P0 — filter facet modal)
+│   └── SortDropdown.tsx       (existing)
+├── gallery/
+│   ├── ListingGallery.tsx     (P0 — desktop grid gallery)
+│   └── FullScreenGallery.tsx  (P2 — gallery modal)
+├── listing/
+│   ├── BookingSidebar.tsx     (P0 — sticky booking card)
+│   ├── ListingHighlights.tsx  (P1 — highlight badges)
+│   ├── AmenityGrid.tsx        (P1 — amenity grid)
+│   └── ReviewSection.tsx      (P2 — reviews layout)
+├── home/
+│   ├── CategoryChips.tsx      (P1 — category navigation)
+│   └── ... (existing components)
+└── property/
+    ├── PropertyCard.tsx       (P1 — card redesign)
+    └── PropertyMap.tsx        (P0 — interactive map)
+```
+
+### Order of Work (Recommended Sequence)
+
+1. **Week 1:** P0-5 (Search Bar) + P0-3 (Split View Search) — highest user-facing impact
+2. **Week 2:** P0-1 (Sticky Booking) + P0-2 (Gallery Grid) — listing detail revamp
+3. **Week 3:** P0-4 (Filter Chips) + P1-7 (Sticky Nav) — navigation polish
+4. **Week 4:** P1-1 through P1-6 — card redesign + category chips + hero refinement
+5. **Week 5:** P2 items — polish, animations, gallery modal
+
+### NEOS-Specific Considerations
+
+- **StayNeos is mid-term (30+ days), not short-term.** Airbnb targets nightly stays. Some Airbnb patterns (per-night pricing, weekend trip carousels) don't apply. Focus layout/UX parallels but keep business-specific features:
+  - ✅ Keep: tiered pricing (Monthly/Quarterly/Annual) — this is NEOS's competitive advantage
+  - ✅ Keep: AI Concierge chat — unique differentiator, just not as the ONLY search mechanism
+  - ✅ Keep: Corporate/Relocation/Business sections — core NEOS audience
+
+- **Small inventory (3 properties).** Airbnb has millions. Some patterns (dynamic filter counts, dense grids, infinite scroll) may not make sense for 3 properties. Scale investment proportionally. The split view and interactive map work even with 3 properties.
+
+- **Multi-language support.** NEOS supports en/zh/fr. Ensure all new UI components use `useI18n()` for text strings.
+
+---
+
+## Part 4: Summary
+
+| Priority | Items | Effort Est. |
+|----------|-------|-------------|
+| 🔴 P0 | 5 items (Sticky Booking, Gallery Grid, Split Search, Filter Chips, Search Bar) | ~3 weeks |
+| 🟡 P1 | 7 items (Category Chips, Hero Refine, Meta Restructure, Amenity Grid, Highlights, Card Redesign, Sticky Nav) | ~2 weeks |
+| 🟢 P2 | 7 items (Reviews, Hover, Gallery Modal, Save/Share, Typography, Guest Selector, Tab Animation) | ~1 week |
+
+**Total estimated effort: ~6 weeks for full alignment.**
+
+---
+
+*Generated by Byte (Frontend Engineer) — Design Analysis Task, May 2026*
