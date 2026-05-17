@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* AB-001: Airbnb-style design tokens & components */
+@import url('../styles/airbnb-tokens.css');
+
 :root {
   /* NEOS 品牌色彩系统 */
   --primary: #003B5C;
