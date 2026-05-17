@@ -67,11 +67,19 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
   const textStyles = {
     light: "text-neutral-700 hover:text-neutral-900",
     dark: "text-white/90 hover:text-white",
-    transparent: "text-white/90 hover:text-white",
+    transparent: "text-white hover:text-white [text-shadow:_0_1px_2px_rgb(0_0_0_/_55%)]",
   };
 
   return (
     <>
+      {/* Hero scrim: ensure transparent nav links stay legible over bright video frames */}
+      {isHomePage && !isScrolled && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed top-0 left-0 right-0 h-24 md:h-28 z-40 bg-gradient-to-b from-black/55 via-black/25 to-transparent"
+        />
+      )}
+
       {/* Main Navigation */}
       <nav
         className={cn(
