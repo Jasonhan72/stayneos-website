@@ -11,7 +11,6 @@ import {
   CreditCard,
   Download,
   MessageSquare,
-  ChevronRight,
   Check,
   Clock,
   X,
@@ -21,7 +20,6 @@ import {
   Home,
   LucideIcon
 } from 'lucide-react';
-import BackToHomeButton from '@/components/navigation/BackToHomeButton';
 
 interface Booking {
   id: string;
@@ -226,7 +224,6 @@ export default function BookingsPage() {
             </Link>
           </div>
         </Container>
-        <BackToHomeButton />
       </main>
     );
   }
@@ -234,16 +231,17 @@ export default function BookingsPage() {
   const hasCancelled = bookings.some(b => b.status === 'CANCELLED');
 
   return (
-    <main id="main-content" className="min-h-screen bg-white pt-24 pb-12">
-      <div className="mx-auto max-w-3xl px-4">
+    <main id="main-content" className="min-h-screen bg-white pt-28 pb-16">
+      <div className="mx-auto max-w-5xl px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-10">
-          <h1 className="text-3xl font-semibold tracking-tight text-neutral-900">{t('bookings.title')}</h1>
-          <p className="text-sm text-neutral-500 mt-1">{t('bookings.manageBookings')}</p>
+        <div className="mb-10 flex flex-col gap-2">
+          <p className="text-sm font-medium text-neutral-500">Trips</p>
+          <h1 className="text-4xl font-semibold tracking-tight text-neutral-950">{t('bookings.title')}</h1>
+          <p className="text-base text-neutral-500">{t('bookings.manageBookings')}</p>
         </div>
 
         {/* Airnbnb-style Tabs: underline indicator, no pill */}
-        <div className="flex gap-0 mb-8 border-b border-neutral-200">
+        <div className="flex gap-8 mb-8 border-b border-neutral-200">
           {([] as { id: TabType; label: string }[]).concat(
             { id: 'upcoming' as TabType, label: t('bookings.upcoming', 'Upcoming') },
             ...(hasCancelled ? [{ id: 'cancelled' as TabType, label: t('status.cancelled', 'Cancelled') }] : []),
@@ -252,7 +250,7 @@ export default function BookingsPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as TabType)}
-              className={`px-5 py-3 text-sm transition-colors relative ${
+              className={`py-4 text-sm transition-colors relative ${
                 activeTab === tab.id 
                   ? 'text-neutral-900 font-medium' 
                   : 'text-neutral-500 hover:text-neutral-700'
@@ -260,7 +258,7 @@ export default function BookingsPage() {
             >
               {tab.label}
               {activeTab === tab.id && (
-                <div className="absolute bottom-0 left-3 right-3 h-0.5 bg-neutral-900" />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-neutral-900" />
               )}
             </button>
           ))}
@@ -294,85 +292,93 @@ export default function BookingsPage() {
           /* Bookings List */
           <div className="space-y-6">
             {filteredBookings.map((booking) => (
-              <Card key={booking.id} className="overflow-hidden border-neutral-200 shadow-sm hover:shadow-md transition-shadow">
-                <div className="p-5 sm:p-6">
-                  <div className="flex flex-col lg:flex-row lg:items-start gap-5">
-                    <div className="relative w-full lg:w-40 h-44 lg:h-32 shrink-0 overflow-hidden rounded-2xl bg-neutral-100">
+              <Card key={booking.id} className="overflow-hidden rounded-3xl border-neutral-200 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">
+                <div className="p-4 sm:p-5">
+                  <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-5">
+                    <div className="relative h-56 md:h-full min-h-48 overflow-hidden rounded-2xl bg-neutral-100">
                       {booking.property?.images?.[0]?.url ? (
                         <Image
                           src={booking.property.images[0].url}
                           alt={booking.property.images[0].alt || booking.propertyTitle}
                           fill
                           className="object-cover"
-                          sizes="(max-width: 1024px) 100vw, 160px"
+                          sizes="(max-width: 768px) 100vw, 220px"
                         />
                       ) : (
                         <div className="h-full w-full flex items-center justify-center">
-                          <Home className="text-neutral-300" size={42} />
+                          <Home className="text-neutral-300" size={44} />
                         </div>
                       )}
-                      <div className={`absolute left-3 top-3 ${statusConfig[booking.status]?.bgColor || 'bg-white/90'} shadow-sm`}>
+                      <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/35 to-transparent" />
+                      <div className={`absolute left-3 top-3 rounded-full ${statusConfig[booking.status]?.bgColor || 'bg-white/90'} shadow-sm`}>
                         {getStatusBadge(booking.status)}
                       </div>
                     </div>
 
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-col xl:flex-row xl:items-start xl:justify-between gap-4">
-                        <div className="min-w-0">
-                          <p className="text-xs uppercase tracking-wide text-neutral-400 mb-1 break-all">
+                    <div className="min-w-0 py-1 md:py-2">
+                      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                        <div className="min-w-0 max-w-xl">
+                          <p className="text-xs font-medium uppercase tracking-[0.18em] text-neutral-400 mb-2 break-all">
                             {booking.bookingNumber}
                           </p>
-                          <h3 className="text-2xl font-semibold leading-tight text-neutral-950 break-words">
+                          <h3 className="text-2xl lg:text-3xl font-semibold leading-tight text-neutral-950 break-words">
                             {booking.propertyTitle}
                           </h3>
                         </div>
 
-                        <div className="shrink-0 xl:text-right">
+                        <div className="shrink-0 lg:text-right">
                           <p className="text-sm text-neutral-500">{t('bookings.totalPrice')}</p>
-                          <p className="text-3xl font-bold text-neutral-950 whitespace-nowrap">
+                          <p className="text-3xl font-semibold text-neutral-950 whitespace-nowrap">
                             ${booking.totalPrice.toLocaleString()} {booking.currency}
                           </p>
                         </div>
                       </div>
 
-                      <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <div className="rounded-xl bg-neutral-50 px-4 py-3">
-                          <p className="text-xs text-neutral-500 whitespace-nowrap">{t('bookings.checkIn')}</p>
+                      <div className="mt-6 grid grid-cols-2 lg:grid-cols-4 divide-x divide-neutral-200 overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+                        <div className="px-4 py-3">
+                          <p className="text-xs font-medium text-neutral-500 whitespace-nowrap">{t('bookings.checkIn')}</p>
                           <p className="mt-1 font-semibold text-neutral-950 whitespace-nowrap">{formatBookingDate(booking.checkIn)}</p>
                         </div>
-                        <div className="rounded-xl bg-neutral-50 px-4 py-3">
-                          <p className="text-xs text-neutral-500 whitespace-nowrap">{t('bookings.checkOut')}</p>
+                        <div className="px-4 py-3">
+                          <p className="text-xs font-medium text-neutral-500 whitespace-nowrap">{t('bookings.checkOut')}</p>
                           <p className="mt-1 font-semibold text-neutral-950 whitespace-nowrap">{formatBookingDate(booking.checkOut)}</p>
                         </div>
-                        <div className="rounded-xl bg-neutral-50 px-4 py-3">
-                          <p className="text-xs text-neutral-500 whitespace-nowrap">{t('bookings.nights')}</p>
+                        <div className="px-4 py-3 border-t lg:border-t-0 border-neutral-200">
+                          <p className="text-xs font-medium text-neutral-500 whitespace-nowrap">{t('bookings.nights')}</p>
                           <p className="mt-1 font-semibold text-neutral-950 whitespace-nowrap">{booking.nights} {t('booking.nights')}</p>
                         </div>
-                        <div className="rounded-xl bg-neutral-50 px-4 py-3">
-                          <p className="text-xs text-neutral-500 whitespace-nowrap">{t('bookings.guests')}</p>
+                        <div className="px-4 py-3 border-t lg:border-t-0 border-neutral-200">
+                          <p className="text-xs font-medium text-neutral-500 whitespace-nowrap">{t('bookings.guests')}</p>
                           <p className="mt-1 font-semibold text-neutral-950 whitespace-nowrap">{booking.guests} {t('booking.guests')}</p>
                         </div>
                       </div>
 
-                      <div className="mt-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-t border-neutral-100 pt-5">
+                      <div className="mt-5 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                         <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-neutral-500">
                           <div className="flex items-center gap-2 text-neutral-700">
                             <CreditCard size={16} className="text-neutral-400" />
                             <span>{booking.paymentStatus === 'COMPLETED' ? t('bookings.paid') : t('bookings.unpaid')}</span>
                           </div>
-                          <div>
-                            {t('bookings.bookingDate')}: {booking.createdAt ? formatBookingDate(booking.createdAt) : '-'}
-                          </div>
+                          <span className="hidden sm:inline text-neutral-300">•</span>
+                          <div>{t('bookings.bookingDate')}: {booking.createdAt ? formatBookingDate(booking.createdAt) : '-'}</div>
                         </div>
 
-                        <div className="flex flex-wrap md:justify-end gap-2">
+                        <div className="flex flex-wrap lg:justify-end gap-3">
+                          <Button
+                            size="sm"
+                            className="rounded-full bg-neutral-950 px-5 text-white hover:bg-neutral-800 whitespace-nowrap"
+                            onClick={() => setSelectedBooking(booking)}
+                          >
+                            {t('bookings.viewDetails')}
+                          </Button>
+
                           {['PENDING', 'CONFIRMED'].includes(booking.status) && (
                             <>
-                              <Button variant="outline" size="sm" className="whitespace-nowrap rounded-xl">
+                              <Button variant="outline" size="sm" className="rounded-full px-4 whitespace-nowrap">
                                 <MessageSquare size={14} className="mr-1" />
                                 {t('bookings.contactHost')}
                               </Button>
-                              <Button variant="outline" size="sm" className="whitespace-nowrap rounded-xl">
+                              <Button variant="ghost" size="sm" className="rounded-full px-3 whitespace-nowrap">
                                 <Download size={14} className="mr-1" />
                                 {t('bookings.downloadVoucher')}
                               </Button>
@@ -381,8 +387,9 @@ export default function BookingsPage() {
 
                           {booking.status === 'CHECKED_OUT' && (
                             <Button
+                              variant="outline"
                               size="sm"
-                              className="whitespace-nowrap rounded-xl"
+                              className="rounded-full px-4 whitespace-nowrap"
                               onClick={() => {
                                 setSelectedBooking(booking);
                                 setShowReviewModal(true);
@@ -392,16 +399,6 @@ export default function BookingsPage() {
                               {t('bookings.writeReview')}
                             </Button>
                           )}
-
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="whitespace-nowrap rounded-xl"
-                            onClick={() => setSelectedBooking(booking)}
-                          >
-                            {t('bookings.viewDetails')}
-                            <ChevronRight size={14} className="ml-1" />
-                          </Button>
                         </div>
                       </div>
                     </div>
@@ -546,7 +543,6 @@ export default function BookingsPage() {
         </div>
       </Modal>
 
-      <BackToHomeButton />
     </main>
   );
 }
