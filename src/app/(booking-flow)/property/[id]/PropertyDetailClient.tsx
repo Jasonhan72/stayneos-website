@@ -20,6 +20,7 @@ import {
   ReceiptText,
   MapPinned,
   KeyRound,
+  Award,
 } from 'lucide-react';
 import { Container, Divider } from '@/components/ui';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -520,10 +521,34 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between mb-6">
           <div className="min-w-0">
             <h1 className="text-2xl md:text-3xl font-bold text-neutral-900">{localizedTitle}</h1>
+            {/* Sub-info row: ★ rating · reviews · location · Superhost badge */}
+            <div className="mt-2 flex flex-wrap items-center gap-x-1.5 text-sm md:text-base text-neutral-600">
+              {propertyCardData.reviewCount > 0 && (
+                <>
+                  <span className="inline-flex items-center gap-1">
+                    <Star size={14} className="fill-black" />
+                    <span className="font-medium text-neutral-900">{propertyCardData.rating}</span>
+                  </span>
+                  <span aria-hidden="true">·</span>
+                  <span>{propertyCardData.reviewCount} {t('property.reviews')}</span>
+                  <span aria-hidden="true">·</span>
+                </>
+              )}
+              <span>{locationShort}</span>
+              {mockHost.isSuperhost && (
+                <>
+                  <span aria-hidden="true">·</span>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-neutral-900 px-2 py-0.5 text-xs font-medium text-white">
+                    <Award size={12} />
+                    {t('property.superhost', 'Superhost')}
+                  </span>
+                </>
+              )}
+            </div>
+            {/* Room type summary */}
             <p className="mt-2 text-sm md:text-base text-neutral-600">
-              {locationShort} · {propertyType}
+              {propertyType} · {guestInfo}
             </p>
-            <p className="mt-1 text-sm md:text-base text-neutral-600">{guestInfo}</p>
           </div>
 
           <div className="flex items-center gap-4 md:gap-6 shrink-0">
