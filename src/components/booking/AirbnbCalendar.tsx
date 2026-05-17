@@ -22,6 +22,10 @@ export interface AirbnbCalendarProps {
   showFooter?: boolean;
   bookedRanges?: BookedDateRange[];
   autoCloseOnRangeSelect?: boolean;
+  /** Average daily price for inline display in calendar cells */
+  dailyPrice?: number;
+  /** Minimum stay in nights (shown as hint in footer) */
+  minStayNights?: number;
 }
 
 const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
@@ -56,7 +60,7 @@ export function AirbnbCalendar({
   saveRedirectBase,
   onClearDates,
   totalPrice = 0,
-  minNights: _minNights,
+  minNights: _minNights, dailyPrice = 0, minStayNights = 0,
   rating = 0,
   currency = 'CAD',
   className,
@@ -330,7 +334,17 @@ export function AirbnbCalendar({
                   isSelected && "bg-neutral-900 text-white rounded-full",
                   status === 'booked' && "rounded-full bg-neutral-200 text-neutral-400"
                 )}>
-                  {dayNumber}
+                  <span className="flex flex-col items-center justify-center leading-none">
+                    <span>{dayNumber}</span>
+                    {dailyPrice > 0 && dayInfo.isCurrentMonth && status !== 'disabled' && status !== 'start' && status !== 'end' && (
+                      <span className={cn(
+                        "text-[10px] leading-none mt-0.5",
+                        status === 'booked' ? "text-neutral-400" : "text-neutral-500"
+                      )}>
+                        ${Math.round(dailyPrice)}
+                      </span>
+                    )}
+                  </span>
                   {status === 'booked' && <span className="absolute inset-0 pointer-events-none before:absolute before:left-1 before:right-1 before:top-1/2 before:h-px before:-translate-y-1/2 before:rotate-[-35deg] before:bg-neutral-500" />}
                 </span>
               </button>
@@ -562,7 +576,14 @@ export function AirbnbCalendar({
                         isSelected && "bg-neutral-900 text-white rounded-full",
                         status === 'booked' && "rounded-full bg-neutral-200 text-neutral-400"
                       )}>
-                        {dayNumber}
+                        <span className="flex flex-col items-center justify-center leading-none">
+                          <span>{dayNumber}</span>
+                          {dailyPrice > 0 && dayInfo.isCurrentMonth && status !== 'disabled' && status !== 'start' && status !== 'end' && status !== 'booked' && (
+                            <span className="text-[10px] leading-none mt-0.5 text-neutral-500">
+                              ${Math.round(dailyPrice)}
+                            </span>
+                          )}
+                        </span>
                         {status === 'booked' && <span className="absolute inset-0 pointer-events-none before:absolute before:left-1 before:right-1 before:top-1/2 before:h-px before:-translate-y-1/2 before:rotate-[-35deg] before:bg-neutral-500" />}
                       </span>
                     </button>
@@ -719,15 +740,20 @@ export function AirbnbCalendar({
                 </span>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
-                {hasRating && (
-                  <>
-                    <Star size={14} className="fill-black" />
-                    <span className="text-sm text-neutral-600">{rating}</span>
-                    <span className="text-sm text-neutral-500">·</span>
-                  </>
-                )}
-                <span className="text-sm text-neutral-500">{footerPrompt}</span>
+              <div className="flex flex-col gap-0.5">
+                <div className="flex items-center gap-2">
+                  {hasRating && (
+                    <>
+                      <Star size={14} className="fill-black" />
+                      <span className="text-sm text-neutral-600">{rating}</span>
+                      <span className="text-sm text-neutral-500">·</span>
+                    </>
+                  )}
+                  <span className="text-sm text-neutral-500">{footerPrompt}</span>
+                </div>
+                <span className="text-xs text-neutral-400">
+                  Minimum stay: {minStayNights} {minStayNights === 1 ? 'night' : 'nights'}
+                </span>
               </div>
             )}
           </div>
