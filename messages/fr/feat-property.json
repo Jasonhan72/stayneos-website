@@ -153,7 +153,16 @@
       "artistAlley": "Niché au cœur du quartier culturel de Toronto, cette suite se trouve directement en face de l'Art Gallery of Ontario et à quelques pas du parc Grange. Le campus de l'Université de Toronto est à dix minutes à pied, et le réseau hospitalier UHN est facilement accessible en tramway. Avec sa culture de café vibrante, ses librairies indépendantes et sa proximité avec Chinatown et Kensington Market, c'est ici que les communautés créatives et académiques de Toronto se sentent chez elles.",
       "wellesley": "Situé à quelques pas de la station de métro Wellesley sur la ligne Yonge, ce studio moderne met toute la ville à votre porte. Marchez jusqu'aux magasins et restaurants de la rue Yonge, faites du jogging sur les sentiers de la vallée Don, ou rendez-vous au centre-ville en quelques minutes. Idéal pour les professionnels solo qui veulent de l'efficacité sans compromettre l'énergie du quartier."
     },
-    "superhost": "Superhôte"
+    "superhost": "Superhôte",
+    "reviewScores": "Notes des voyageurs",
+    "reviewDim": {
+      "cleanliness": "Propreté",
+      "accuracy": "Exactitude",
+      "checkin": "Arrivée",
+      "communication": "Communication",
+      "location": "Emplacement",
+      "value": "Rapport qualité-prix"
+    }
   },
   "properties": {
     "title": "Propriétés en Vedette",
