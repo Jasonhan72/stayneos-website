@@ -2,7 +2,7 @@
 'use client';
 import { PropertyCardData } from '@/types';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -122,6 +122,8 @@ export default function PropertiesPage() {
   const [searchQuery, setSearchQuery] = useState(initSearchQuery);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
+  const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(null);
+  const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
   
   // Filters
   const [selectedPriceRange, setSelectedPriceRange] = useState(priceRanges[0]);
@@ -530,9 +532,9 @@ export default function PropertiesPage() {
       )}
 
       {/* Main Content Area */}
-      <div className="flex flex-col lg:flex-row lg:h-[calc(100vh-200px)]">
+      <div className="flex flex-col lg:flex-row">
         {/* Left Panel - Property List */}
-        <div className="w-full lg:w-[60%] lg:overflow-y-auto bg-white">
+        <div className="w-full lg:w-[60%] lg:overflow-y-auto lg:h-[calc(100vh-80px)] bg-white">
           <Container className="py-6">
             {/* Results Toolbar */}
             <div className="flex items-center justify-between mb-6">
@@ -604,14 +606,14 @@ export default function PropertiesPage() {
                   /* List View */
                   <div className="space-y-4">
                     {filteredProperties.map((property) => (
-                      <PropertyListCard key={property.id} property={property} />
+                      <PropertyListCard key={property.id} property={property} onHover={setHoveredPropertyId} cardRef={(el) => { cardRefs.current[property.id] = el; }} />
                     ))}
                   </div>
                 ) : (
                   /* Grid View */
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {filteredProperties.map((property) => (
-                      <PropertyGridCard key={property.id} property={property} />
+                      <PropertyGridCard key={property.id} property={property} onHover={setHoveredPropertyId} cardRef={(el) => { cardRefs.current[property.id] = el; }} />
                     ))}
                   </div>
                 )}
@@ -623,7 +625,11 @@ export default function PropertiesPage() {
                   <GooglePropertyMap 
                     properties={filteredProperties}
                     selectedPropertyId={selectedPropertyId}
-                    onPropertySelect={setSelectedPropertyId}
+                    hoveredPropertyId={hoveredPropertyId}
+                    onPropertySelect={(id) => {
+                      setSelectedPropertyId(id);
+                      cardRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }}
                   />
                 </div>
               )}
@@ -688,11 +694,15 @@ export default function PropertiesPage() {
         </div>
 
         {/* Right Panel - Map (~40% on desktop) */}
-        <div className="hidden lg:block lg:w-[40%] lg:sticky lg:top-0 lg:h-full">
+        <div className="hidden lg:block lg:w-[40%] lg:sticky lg:top-[80px] lg:h-[calc(100vh-80px)]">
           <GooglePropertyMap 
             properties={filteredProperties}
             selectedPropertyId={selectedPropertyId}
-            onPropertySelect={setSelectedPropertyId}
+            hoveredPropertyId={hoveredPropertyId}
+            onPropertySelect={(id) => {
+              setSelectedPropertyId(id);
+              cardRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }}
           />
         </div>
       </div>
@@ -704,8 +714,12 @@ export default function PropertiesPage() {
 // Property Grid Card Component
 function PropertyGridCard({
   property,
+  onHover,
+  cardRef,
 }: {
   property: PropertyCardData;
+  onHover?: (id: string | null) => void;
+  cardRef?: (el: HTMLDivElement | null) => void;
 }) {
   const { t } = useI18n();
   const { isWishlisted, toggleWishlist } = useWishlist();
@@ -713,7 +727,12 @@ function PropertyGridCard({
   const location = getPropertyLocation(property);
   
   return (
-    <Card className="group overflow-hidden" hover>
+    <Card className="group overflow-hidden rounded-2xl" hover>
+      <div
+        ref={cardRef}
+        onMouseEnter={() => onHover?.(property.id)}
+        onMouseLeave={() => onHover?.(null)}
+      >
       <Link href={`/property/${property.slug || property.id}`}>
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden">
@@ -792,6 +811,7 @@ function PropertyGridCard({
           )}
         </div>
       </Link>
+      </div>
     </Card>
   );
 }
@@ -801,9 +821,11 @@ interface PropertyListCardProps {
   property: PropertyCardData;
   isSelected?: boolean;
   onClick?: () => void;
+  onHover?: (id: string | null) => void;
+  cardRef?: (el: HTMLDivElement | null) => void;
 }
 
-function PropertyListCard({ property, isSelected, onClick }: PropertyListCardProps) {
+function PropertyListCard({ property, isSelected, onClick, onHover, cardRef }: PropertyListCardProps) {
   const { t } = useI18n();
   const { isWishlisted, toggleWishlist } = useWishlist();
   const liked = isWishlisted(property.id);
@@ -811,10 +833,15 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
   
   return (
     <Card 
-      className={`group ${isSelected ? 'ring-2 ring-primary' : ''}`} 
+      className={`group rounded-2xl ${isSelected ? 'ring-2 ring-primary' : ''}`} 
       hover={!onClick}
       onClick={onClick}
     >
+      <div
+        ref={cardRef}
+        onMouseEnter={() => onHover?.(property.id)}
+        onMouseLeave={() => onHover?.(null)}
+      >
       <Link 
         href={`/property/${property.slug || property.id}`} 
         className="flex flex-col md:flex-row"
@@ -916,6 +943,7 @@ function PropertyListCard({ property, isSelected, onClick }: PropertyListCardPro
           )}
         </div>
       </Link>
+      </div>
     </Card>
   );
 }

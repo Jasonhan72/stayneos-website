@@ -22,6 +22,7 @@ interface Property {
 interface GooglePropertyMapProps {
   properties: Property[];
   selectedPropertyId: string | null;
+  hoveredPropertyId?: string | null;
   onPropertySelect: (id: string) => void;
 }
 
@@ -95,7 +96,7 @@ function markerIcon(selected: boolean, price: number) {
   };
 }
 
-export default function GooglePropertyMap({ properties, selectedPropertyId, onPropertySelect }: GooglePropertyMapProps) {
+export default function GooglePropertyMap({ properties, selectedPropertyId, hoveredPropertyId, onPropertySelect }: GooglePropertyMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<Array<{ id: string; marker: { setIcon: (icon: Record<string, unknown>) => void } }>>([]);
   const [mapError, setMapError] = useState('');
@@ -179,8 +180,16 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, onPr
   }, [properties, onPropertySelect]);
 
   useEffect(() => {
-    markersRef.current.forEach(({ id, marker }) => marker.setIcon(markerIcon(id === selectedPropertyId, priceFor(properties.find((p) => p.id === id) || {} as Property))));
-  }, [selectedPropertyId, properties]);
+    markersRef.current.forEach(({ id, marker }) => {
+      const isSelected = id === selectedPropertyId;
+      const isHovered = id === hoveredPropertyId && !isSelected;
+      if (isHovered) {
+        marker.setIcon(markerIcon(true, priceFor(properties.find((p) => p.id === id) || {} as Property)));
+      } else {
+        marker.setIcon(markerIcon(isSelected, priceFor(properties.find((p) => p.id === id) || {} as Property)));
+      }
+    });
+  }, [selectedPropertyId, hoveredPropertyId, properties]);
 
   if (properties.length === 0) {
     return (
