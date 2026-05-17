@@ -40,6 +40,8 @@ import { useI18n } from '@/lib/i18n';
 import { useWishlist } from '@/lib/context/WishlistContext';
 import { useCurrency } from '@/hooks/useCurrency';
 import { getPropertyLocation, resolvePropertyPricingTiers } from '@/lib/utils/property-transform';
+import FilterChips, { type FilterChip } from '@/components/property/FilterChips';
+import FilterModal, { PROPERTY_TYPES } from '@/components/property/FilterModal';
 import dynamic from 'next/dynamic';
 
 // 动态导入地图组件
@@ -118,7 +120,6 @@ export default function PropertiesPage() {
   // State
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
   const [sortBy, setSortBy] = useState('recommended');
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(initSearchQuery);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
@@ -129,6 +130,8 @@ export default function PropertiesPage() {
   const [selectedPriceRange, setSelectedPriceRange] = useState(priceRanges[0]);
   const [selectedBedrooms, setSelectedBedrooms] = useState('any');
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+  const [selectedPropertyTypes, setSelectedPropertyTypes] = useState<string[]>([]);
+  const [showFilterModal, setShowFilterModal] = useState(false);
   const [checkIn, setCheckIn] = useState(initCheckIn);
   const [checkOut, setCheckOut] = useState(initCheckOut);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -215,13 +218,22 @@ export default function PropertiesPage() {
       );
     }
     
+    // 房源类型筛选
+    if (selectedPropertyTypes.length > 0) {
+      filtered = filtered.filter(p =>
+        selectedPropertyTypes.some(type =>
+          (p.title + (p.slug || '')).toLowerCase().includes(type.toLowerCase())
+        )
+      );
+    }
+
     return filtered;
-  }, [propertyList, searchQuery, selectedPriceRange, selectedBedrooms, selectedAmenities, activeCategory]);
+  }, [propertyList, searchQuery, selectedPriceRange, selectedBedrooms, selectedAmenities, selectedPropertyTypes, activeCategory]);
 
   // 当筛选条件变化时重置页码
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, selectedPriceRange, selectedBedrooms, selectedAmenities, sortBy, activeCategory]);
+  }, [searchQuery, selectedPriceRange, selectedBedrooms, selectedAmenities, selectedPropertyTypes, sortBy, activeCategory]);
 
   const toggleAmenity = (amenity: string) => {
     setSelectedAmenities(prev => 
@@ -235,6 +247,7 @@ export default function PropertiesPage() {
     setSelectedPriceRange(priceRanges[0]);
     setSelectedBedrooms('any');
     setSelectedAmenities([]);
+    setSelectedPropertyTypes([]);
     setSearchQuery('');
     setActiveCategory('all');
     setCurrentPage(1);
@@ -242,8 +255,31 @@ export default function PropertiesPage() {
 
   const activeFiltersCount = 
     (selectedPriceRange.min > 0 || selectedPriceRange.max !== Infinity ? 1 : 0) +
+    (selectedPropertyTypes.length > 0 ? 1 : 0) +
     (selectedBedrooms !== 'any' ? 1 : 0) +
     selectedAmenities.length;
+  // Build filter chips for display
+  const filterChips = useMemo((): FilterChip[] => {
+    const chips: FilterChip[] = [];
+    if (selectedPriceRange.min > 0 || selectedPriceRange.max !== Infinity) {
+      chips.push({ key: 'price', label: selectedPriceRange.label, onRemove: () => setSelectedPriceRange(priceRanges[0]) });
+    }
+    if (selectedBedrooms !== 'any') {
+      const opt = bedroomOptions.find(o => o.value === selectedBedrooms);
+      chips.push({ key: 'bedrooms', label: opt?.label || selectedBedrooms, onRemove: () => setSelectedBedrooms('any') });
+    }
+    selectedPropertyTypes.forEach(type => {
+      const pt = PROPERTY_TYPES.find(t => t.value === type);
+      chips.push({ key: `type-${type}`, label: pt?.label || type, onRemove: () => setSelectedPropertyTypes(prev => prev.filter(t => t !== type)) });
+    });
+    selectedAmenities.forEach(amenity => {
+      const am = amenitiesList.find(a => a.value === amenity);
+      chips.push({ key: `amenity-${amenity}`, label: am?.label || amenity, onRemove: () => setSelectedAmenities(prev => prev.filter(a => a !== amenity)) });
+    });
+    return chips;
+  }, [selectedPriceRange, selectedBedrooms, selectedPropertyTypes, selectedAmenities, bedroomOptions, amenitiesList, priceRanges]);
+
+
 
   // 分页控件
   const getPageNumbers = () => {
@@ -392,8 +428,8 @@ export default function PropertiesPage() {
 
               {/* Filter Button */}
               <Button
-                variant={isFilterOpen ? 'primary' : 'outline'}
-                onClick={() => setIsFilterOpen(!isFilterOpen)}
+                variant="outline"
+                onClick={() => setShowFilterModal(true)}
                 className="relative"
               >
                 <SlidersHorizontal size={18} className="mr-2" />
@@ -433,91 +469,25 @@ export default function PropertiesPage() {
       </div>
 
       {/* Filter Panel */}
-      {isFilterOpen && (
-        <div className="bg-neutral-50 border-b border-neutral-200">
-          <Container>
-            <div className="py-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Price Range */}
-                <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-3">
-                    {t('properties.priceRange')}
-                  </label>
-                  <div className="flex flex-wrap gap-2">
-                    {priceRanges.map((range) => (
-                      <button
-                        key={range.label}
-                        onClick={() => setSelectedPriceRange(range)}
-                        className={`px-4 py-2 border text-sm transition-colors ${
-                          selectedPriceRange.label === range.label
-                            ? 'border-primary bg-primary text-white'
-                            : 'border-neutral-300 bg-white hover:border-primary'
-                        }`}
-                      >
-                        {range.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Bedrooms */}
-                <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-3">
-                    {t('properties.bedrooms')}
-                  </label>
-                  <div className="flex flex-wrap gap-2">
-                    {bedroomOptions.map((option) => (
-                      <button
-                        key={option.value}
-                        onClick={() => setSelectedBedrooms(option.value)}
-                        className={`px-4 py-2 border text-sm transition-colors ${
-                          selectedBedrooms === option.value
-                            ? 'border-primary bg-primary text-white'
-                            : 'border-neutral-300 bg-white hover:border-primary'
-                        }`}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Amenities */}
-                <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-3">
-                    {t('properties.amenities')}
-                  </label>
-                  <div className="flex flex-wrap gap-2">
-                    {amenitiesList.map((amenity) => (
-                      <button
-                        key={amenity.value}
-                        onClick={() => toggleAmenity(amenity.value)}
-                        className={`px-3 py-2 border text-sm transition-colors ${
-                          selectedAmenities.includes(amenity.value)
-                            ? 'border-primary bg-primary text-white'
-                            : 'border-neutral-300 bg-white hover:border-primary'
-                        }`}
-                      >
-                        {amenity.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Filter Actions */}
-              <div className="flex justify-end gap-3 mt-6 pt-6 border-t border-neutral-200">
-                <Button variant="ghost" onClick={clearFilters}>
-                  {t('properties.resetFilters')}
-                </Button>
-                <Button onClick={() => setIsFilterOpen(false)}>
-                  {t('properties.applyFilters')}
-                </Button>
-              </div>
-            </div>
-          </Container>
-        </div>
-      )}
+      {/* Filter Modal */}
+      <FilterModal
+        open={showFilterModal}
+        onClose={() => setShowFilterModal(false)}
+        priceRanges={priceRanges}
+        selectedPriceRange={selectedPriceRange}
+        onPriceRangeChange={setSelectedPriceRange}
+        bedroomOptions={bedroomOptions}
+        selectedBedrooms={selectedBedrooms}
+        onBedroomsChange={setSelectedBedrooms}
+        amenitiesList={amenitiesList}
+        selectedAmenities={selectedAmenities}
+        onAmenityToggle={toggleAmenity}
+        selectedPropertyTypes={selectedPropertyTypes}
+        onPropertyTypeToggle={(value) => setSelectedPropertyTypes(prev => prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value])}
+        onClearAll={clearFilters}
+        onApply={() => setShowFilterModal(false)}
+        activeFilterCount={activeFiltersCount}
+      />
       
       {/* Error Alert */}
       {error && (
@@ -535,6 +505,15 @@ export default function PropertiesPage() {
       <div className="flex flex-col lg:flex-row">
         {/* Left Panel - Property List */}
         <div className="w-full lg:w-[60%] lg:overflow-y-auto lg:h-[calc(100vh-80px)] bg-white">
+          <Container className="pt-2 pb-0">
+            <FilterChips
+              chips={filterChips}
+              activeCount={activeFiltersCount}
+              onOpenModal={() => setShowFilterModal(true)}
+              onClearAll={clearFilters}
+              className="mb-2"
+            />
+          </Container>
           <Container className="py-6">
             {/* Results Toolbar */}
             <div className="flex items-center justify-between mb-6">
