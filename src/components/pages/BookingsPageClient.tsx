@@ -83,6 +83,12 @@ function normalizeBooking(booking: ApiBooking): Booking {
   };
 }
 
+function formatBookingDate(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value || '-';
+  return date.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' });
+}
+
 function getStatusConfig(t: (key: string) => string): Record<string, { label: string; color: string; bgColor: string; icon: LucideIcon }> {
   return {
     PENDING: {
@@ -287,86 +293,78 @@ export default function BookingsPage() {
           <div className="space-y-6">
             {filteredBookings.map((booking) => (
               <Card key={booking.id} className="overflow-hidden">
-                <div className="flex flex-col lg:flex-row">
-                  {/* Property Image Placeholder */}
-                  <div className="relative w-full lg:w-72 h-48 lg:h-auto flex-shrink-0 bg-neutral-100 flex items-center justify-center">
-                    <Home className="text-neutral-300" size={48} />
+                <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr]">
+                  <div className="relative min-h-56 bg-neutral-100 flex items-center justify-center">
+                    <Home className="text-neutral-300" size={52} />
                     <div className={`absolute top-4 left-4 ${statusConfig[booking.status]?.bgColor || 'bg-gray-100'}`}>
                       {getStatusBadge(booking.status)}
                     </div>
                   </div>
 
-                  {/* Booking Details */}
-                  <div className="flex-1 p-6">
-                    <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between mb-2">
+                  <div className="p-6 lg:p-8">
+                    <div className="grid grid-cols-1 xl:grid-cols-[1fr_auto] gap-6">
+                      <div className="min-w-0">
+                        <p className="text-sm text-neutral-500 mb-1">
+                          {t('bookings.bookingNumber')}: {booking.bookingNumber}
+                        </p>
+                        <h3 className="text-2xl font-semibold leading-snug text-neutral-900 mb-5 break-words">
+                          {booking.propertyTitle}
+                        </h3>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 mb-5">
                           <div>
-                            <p className="text-sm text-neutral-500">{t('bookings.bookingNumber')}: {booking.bookingNumber}</p>
-                            <h3 className="text-xl font-semibold text-neutral-900">
-                              {booking.propertyTitle}
-                            </h3>
+                            <p className="text-sm text-neutral-500">{t('bookings.checkIn')}</p>
+                            <p className="font-semibold text-neutral-900">{formatBookingDate(booking.checkIn)}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-neutral-500">{t('bookings.checkOut')}</p>
+                            <p className="font-semibold text-neutral-900">{formatBookingDate(booking.checkOut)}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-neutral-500">{t('bookings.nights')}</p>
+                            <p className="font-semibold text-neutral-900">{booking.nights} {t('booking.nights')}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-neutral-500">{t('bookings.guests')}</p>
+                            <p className="font-semibold text-neutral-900">{booking.guests} {t('booking.guests')}</p>
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                          <div className="p-3 bg-neutral-50 border border-neutral-200">
-                            <p className="text-xs text-neutral-500">{t('bookings.checkIn')}</p>
-                            <p className="font-medium text-neutral-900">{booking.checkIn}</p>
-                          </div>
-                          <div className="p-3 bg-neutral-50 border border-neutral-200">
-                            <p className="text-xs text-neutral-500">{t('bookings.checkOut')}</p>
-                            <p className="font-medium text-neutral-900">{booking.checkOut}</p>
-                          </div>
-                          <div className="p-3 bg-neutral-50 border border-neutral-200">
-                            <p className="text-xs text-neutral-500">{t('bookings.nights')}</p>
-                            <p className="font-medium text-neutral-900">{booking.nights} {t('booking.nights')}</p>
-                          </div>
-                          <div className="p-3 bg-neutral-50 border border-neutral-200">
-                            <p className="text-xs text-neutral-500">{t('bookings.guests')}</p>
-                            <p className="font-medium text-neutral-900">{booking.guests} {t('booking.guests')}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-4">
-                          <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-neutral-500">
+                          <div className="flex items-center gap-2 text-neutral-700">
                             <CreditCard size={16} className="text-neutral-400" />
-                            <span className="text-sm">
-                              {booking.paymentStatus === 'COMPLETED' ? t('bookings.paid') : t('bookings.unpaid')}
-                            </span>
+                            <span>{booking.paymentStatus === 'COMPLETED' ? t('bookings.paid') : t('bookings.unpaid')}</span>
                           </div>
-                          <div className="text-sm text-neutral-400">
-                            {t('bookings.bookingDate')}: {booking.createdAt ? new Date(booking.createdAt).toLocaleDateString('zh-CN') : '-'}
+                          <div>
+                            {t('bookings.bookingDate')}: {booking.createdAt ? formatBookingDate(booking.createdAt) : '-'}
                           </div>
                         </div>
                       </div>
 
-                      {/* Price & Actions */}
-                      <div className="lg:text-right">
-                        <div className="mb-4">
-                          <p className="text-sm text-neutral-500">{t('bookings.totalPrice')}</p>
-                          <p className="text-2xl font-bold text-neutral-900">
-                            ${booking.totalPrice.toLocaleString()} {booking.currency}
-                          </p>
-                        </div>
+                      <div className="xl:text-right xl:min-w-56">
+                        <p className="text-sm text-neutral-500">{t('bookings.totalPrice')}</p>
+                        <p className="text-3xl font-bold text-neutral-900 whitespace-nowrap mb-6">
+                          ${booking.totalPrice.toLocaleString()} {booking.currency}
+                        </p>
 
-                        <div className="flex flex-wrap gap-2 justify-end">
+                        <div className="flex flex-wrap xl:justify-end gap-2">
                           {['PENDING', 'CONFIRMED'].includes(booking.status) && (
                             <>
-                              <Button variant="outline" size="sm">
+                              <Button variant="outline" size="sm" className="whitespace-nowrap">
                                 <MessageSquare size={14} className="mr-1" />
                                 {t('bookings.contactHost')}
                               </Button>
-                              <Button variant="outline" size="sm">
+                              <Button variant="outline" size="sm" className="whitespace-nowrap">
                                 <Download size={14} className="mr-1" />
                                 {t('bookings.downloadVoucher')}
                               </Button>
                             </>
                           )}
-                          
+
                           {booking.status === 'CHECKED_OUT' && (
-                            <Button 
+                            <Button
                               size="sm"
+                              className="whitespace-nowrap"
                               onClick={() => {
                                 setSelectedBooking(booking);
                                 setShowReviewModal(true);
@@ -377,9 +375,10 @@ export default function BookingsPage() {
                             </Button>
                           )}
 
-                          <Button 
-                            variant="ghost" 
+                          <Button
+                            variant="ghost"
                             size="sm"
+                            className="whitespace-nowrap"
                             onClick={() => setSelectedBooking(booking)}
                           >
                             {t('bookings.viewDetails')}
