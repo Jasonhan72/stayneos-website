@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { ChevronLeft, ChevronRight, X, Grid3X3 } from 'lucide-react';
 import ResponsiveImage from '@/components/ui/ResponsiveImage';
 import { Container } from '@/components/ui';
 import { useI18n } from '@/lib/i18n';
@@ -16,6 +16,7 @@ export default function ListingGallery({ images, title, className = '' }: Listin
   const { t } = useI18n();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showGallery, setShowGallery] = useState(false);
+  const [showGrid, setShowGrid] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = () => {
@@ -28,6 +29,25 @@ export default function ListingGallery({ images, title, className = '' }: Listin
   };
 
   const nextImage = () => setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+
+  // ESC key handler
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      setShowGallery(false);
+      setShowGrid(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (showGallery) {
+      document.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+    };
+  }, [showGallery, handleKeyDown]);
   const prevImage = () => setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
 
   return (
@@ -126,33 +146,107 @@ export default function ListingGallery({ images, title, className = '' }: Listin
 
       {/* Full Screen Gallery Modal */}
       {showGallery && (
-        <div className="fixed inset-0 z-50 bg-neutral-900">
-          <div className="h-full flex flex-col">
-            <div className="flex items-center justify-between p-4 bg-neutral-900">
-              <h3 className="text-white font-medium">{currentImageIndex + 1} / {images.length}</h3>
-              <button onClick={() => setShowGallery(false)} className="p-2 text-white hover:bg-neutral-800 transition-colors rounded-full" aria-label="Close gallery">
+        <div className="fixed inset-0 z-50 bg-neutral-900" onClick={() => { setShowGallery(false); setShowGrid(false); }}>
+          <div className="h-full flex flex-col" onClick={(e) => e.stopPropagation()}>
+            {/* Top bar: Close left, Counter right */}
+            <div className="flex items-center justify-between p-4 bg-neutral-900/95 backdrop-blur-sm">
+              <button
+                onClick={() => { setShowGallery(false); setShowGrid(false); }}
+                className="p-2 text-white hover:bg-neutral-800 transition-colors rounded-full"
+                aria-label="Close gallery"
+              >
                 <X size={24} />
               </button>
+              <span className="text-white font-medium text-sm">
+                {currentImageIndex + 1} / {images.length}
+              </span>
             </div>
-            <div className="flex-1 relative flex items-center justify-center bg-neutral-900">
-              <ResponsiveImage src={images[currentImageIndex]} alt={`${title} - Image ${currentImageIndex + 1}`} fill className="object-contain" />
-              <button onClick={prevImage} className="absolute left-4 p-3 bg-white/10 hover:bg-white/20 text-white transition-colors rounded-full" aria-label="Previous image">
-                <ChevronLeft size={32} />
-              </button>
-              <button onClick={nextImage} className="absolute right-4 p-3 bg-white/10 hover:bg-white/20 text-white transition-colors rounded-full" aria-label="Next image">
-                <ChevronRight size={32} />
-              </button>
-            </div>
-            <div className="p-4 bg-neutral-900">
-              <div className="flex gap-2 overflow-x-auto justify-center">
-                {images.map((image, index) => (
-                  <button key={index} onClick={() => setCurrentImageIndex(index)} className={`relative flex-shrink-0 w-20 h-14 overflow-hidden transition-all rounded-lg ${
-                    index === currentImageIndex ? 'ring-2 ring-white ring-offset-2 ring-offset-neutral-900' : 'opacity-50 hover:opacity-100'}`}>
-                    <ResponsiveImage src={image} alt={`Thumbnail ${index + 1}`} fill className="object-cover" />
-                  </button>
-                ))}
+
+            {showGrid ? (
+              /* Grid View - 4 columns */
+              <div className="flex-1 overflow-y-auto p-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                  {images.map((image, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        setCurrentImageIndex(index);
+                        setShowGrid(false);
+                      }}
+                      className={`relative aspect-[4/3] overflow-hidden rounded-lg transition-all ${
+                        index === currentImageIndex ? 'ring-2 ring-white ring-offset-2 ring-offset-neutral-900' : 'opacity-70 hover:opacity-100'
+                      }`}
+                    >
+                      <ResponsiveImage
+                        src={image}
+                        alt={`${title} - Image ${index + 1}`}
+                        fill
+                        className="object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : (
+              /* Single Image View */
+              <>
+                <div className="flex-1 relative flex items-center justify-center bg-neutral-900">
+                  <ResponsiveImage
+                    src={images[currentImageIndex]}
+                    alt={`${title} - Image ${currentImageIndex + 1}`}
+                    fill
+                    className="object-contain"
+                  />
+                  {images.length > 1 && (
+                    <>
+                      <button
+                        onClick={prevImage}
+                        className="absolute left-4 p-3 bg-white/10 hover:bg-white/20 text-white transition-colors rounded-full"
+                        aria-label="Previous image"
+                      >
+                        <ChevronLeft size={32} />
+                      </button>
+                      <button
+                        onClick={nextImage}
+                        className="absolute right-4 p-3 bg-white/10 hover:bg-white/20 text-white transition-colors rounded-full"
+                        aria-label="Next image"
+                      >
+                        <ChevronRight size={32} />
+                      </button>
+                    </>
+                  )}
+                </div>
+                {/* Bottom bar: Grid toggle + thumbnail strip */}
+                <div className="p-4 bg-neutral-900/95 backdrop-blur-sm">
+                  <div className="flex items-center justify-between mb-3">
+                    <button
+                      onClick={() => setShowGrid(true)}
+                      className="inline-flex items-center gap-2 px-3 py-2 text-white text-sm bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                    >
+                      <Grid3X3 size={16} />
+                      <span>Show grid</span>
+                    </button>
+                  </div>
+                  {images.length > 1 && (
+                    <div className="flex gap-2 overflow-x-auto justify-center">
+                      {images.map((image, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCurrentImageIndex(index)}
+                          className={`relative flex-shrink-0 w-20 h-14 overflow-hidden transition-all rounded-lg ${
+                            index === currentImageIndex
+                              ? 'ring-2 ring-white ring-offset-2 ring-offset-neutral-900'
+                              : 'opacity-50 hover:opacity-100'
+                          }`}
+                        >
+                          <ResponsiveImage src={image} alt={`Thumbnail ${index + 1}`} fill className="object-cover" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
