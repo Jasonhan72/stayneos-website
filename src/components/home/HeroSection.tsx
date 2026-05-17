@@ -36,11 +36,11 @@ export function HeroSection() {
         </video>
 
         {/* Dark overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/60 via-neutral-900/40 to-neutral-900/70 z-[1]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/60 via-neutral-900/25 to-neutral-900/70 z-[1]" />
 
         <Container className="relative z-10 text-center px-4 py-16 md:py-0">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-3 md:mb-4 leading-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-6xl lg:text-7xl font-bold text-white mb-2 md:mb-4 leading-tight">
               {t('hero.title', 'Experience Toronto, Curated by AI & Human Expertise.')}
             </h1>
 
@@ -48,7 +48,7 @@ export function HeroSection() {
               {t('hero.highlight', 'Stop searching. Start living.')}
             </p>
 
-            <p className="text-base md:text-xl text-white/90 mb-8 md:mb-12 max-w-2xl mx-auto">
+            <p className="text-base md:text-xl text-white/90 mb-6 md:mb-12 max-w-2xl mx-auto">
               {t('hero.subtitle', 'Premium furnished apartments in downtown Toronto. 30 days to 12 months. Move-in ready.')}
             </p>
 
