@@ -144,13 +144,23 @@ export async function getBookingSummary(db: D1Database, bookingId: string): Prom
     `SELECT b.id, b.bookingNumber, b.checkIn, b.checkOut, b.guests, b.status, b.paymentStatus,
             b.totalPrice, b.currency, b.propertyId,
             p.title AS propertyTitle, p.address AS propertyAddress, p.city AS propertyCity,
-            p.bedrooms, p.bathrooms, p.hostId,
+            p.bedrooms, p.bathrooms, p.createdBy AS hostId,
             (SELECT url FROM PropertyImage pi WHERE pi.propertyId = p.id ORDER BY pi.isPrimary DESC, pi."order" ASC LIMIT 1) AS propertyImageUrl
      FROM Booking b
-     LEFT JOIN Property p ON p.id = b.propertyId
+     LEFT JOIN Property p ON p.id = b.propertyId OR p.slug = b.propertyId
      WHERE b.id = ? OR b.bookingNumber = ?
      LIMIT 1`
   ).bind(bookingId, bookingId).first<BookingSummaryRow>();
+}
+
+export async function findFallbackHostUserId(db: D1Database, currentUserId: string): Promise<string | null> {
+  const row = await db.prepare(
+    `SELECT id FROM User
+     WHERE id <> ? AND role IN ('HOST', 'ADMIN', 'SUPER_ADMIN')
+     ORDER BY CASE role WHEN 'HOST' THEN 0 WHEN 'ADMIN' THEN 1 WHEN 'SUPER_ADMIN' THEN 2 ELSE 3 END, createdAt ASC
+     LIMIT 1`
+  ).bind(currentUserId).first<{ id: string }>();
+  return row?.id ?? null;
 }
 
 export async function createConversation(db: D1Database, participantUserIds: string[], type: 'dm' | 'host_guest' = 'dm', bookingId?: string | null): Promise<ConversationRow> {
