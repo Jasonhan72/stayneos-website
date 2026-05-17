@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { MapPin, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { GOOGLE_MAPS_API_KEY, hasUsableGoogleMapsKey } from '@/lib/google-maps';
 
 interface Property {
   id: string;
@@ -39,7 +40,7 @@ type GoogleMapsWindow = Window & {
   };
 };
 
-const MAPS_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
+const MAPS_KEY = GOOGLE_MAPS_API_KEY;
 const SCRIPT_ID = 'stayneos-google-maps-js';
 
 const FALLBACK_COORDS: Record<string, { lat: number; lng: number }> = {
@@ -49,7 +50,7 @@ const FALLBACK_COORDS: Record<string, { lat: number; lng: number }> = {
 };
 
 function loadGoogleMaps(): Promise<void> {
-  if (!MAPS_KEY) return Promise.reject(new Error('Google Maps API key is not configured'));
+  if (!hasUsableGoogleMapsKey(MAPS_KEY)) return Promise.reject(new Error('Google Maps API key is not configured'));
   const win = window as GoogleMapsWindow;
   if (win.google?.maps) return Promise.resolve();
 

@@ -136,6 +136,9 @@ export async function POST(request: Request) {
       type = "host_guest";
       if (booking.hostId && booking.hostId !== user.userId) {
         participants = [booking.hostId];
+      } else {
+        const fallbackHostId = await msgDb.findFallbackHostUserId(db, user.userId);
+        if (fallbackHostId) participants = [fallbackHostId];
       }
     }
 
