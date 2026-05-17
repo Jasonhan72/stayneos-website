@@ -148,6 +148,19 @@ export default function PropertiesPage() {
   const filteredProperties = useMemo(() => {
     let filtered = propertyList;
     
+    // Search query filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.trim().toLowerCase();
+      filtered = filtered.filter((p) => {
+        const pMeta = p as PropertyCardData & { city?: string; neighborhood?: string };
+        return [p.title, p.description, p.location, pMeta.city, pMeta.neighborhood, ...(p.amenities || [])]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase()
+          .includes(query);
+      });
+    }
+
     // 价格筛选
     if (selectedPriceRange.min > 0 || selectedPriceRange.max !== Infinity) {
       filtered = filtered.filter(p => 
@@ -201,7 +214,7 @@ export default function PropertiesPage() {
     }
     
     return filtered;
-  }, [propertyList, selectedPriceRange, selectedBedrooms, selectedAmenities, activeCategory]);
+  }, [propertyList, searchQuery, selectedPriceRange, selectedBedrooms, selectedAmenities, activeCategory]);
 
   // 当筛选条件变化时重置页码
   useEffect(() => {

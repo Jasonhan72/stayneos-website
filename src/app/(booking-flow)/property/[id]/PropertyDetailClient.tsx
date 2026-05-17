@@ -476,8 +476,12 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
     return parts.join(' ');
   })();
 
-  const monthlyEstimate = tierPrices.monthly || propertyCardData.price || 0;
-  const estimatedTax = Math.round(monthlyEstimate * 0.13);
+  const selectedMonthlyEstimate = effectiveStayType === 'QUARTERLY'
+    ? tierPrices.quarterly
+    : effectiveStayType === 'YEARLY'
+      ? tierPrices.annual
+      : tierPrices.monthly || propertyCardData.price || 0;
+  const estimatedTax = Math.round(selectedMonthlyEstimate * 0.13);
 
   const trustItems = [
     { icon: ShieldCheck, title: 'Verified by NEOS', text: 'Photos, location context, pricing, and stay terms are reviewed before publishing.' },
@@ -530,9 +534,9 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           <div className="min-w-0 flex-1">
             <p className="font-semibold text-neutral-950">Transparent monthly estimate</p>
             <div className="mt-3 space-y-2 text-sm">
-              <div className="flex justify-between gap-3"><span className="text-neutral-600">Monthly rent</span><span className="font-medium text-neutral-950">{fp(monthlyEstimate)}</span></div>
+              <div className="flex justify-between gap-3"><span className="text-neutral-600">Selected monthly rate</span><span className="font-medium text-neutral-950">{fp(selectedMonthlyEstimate)}</span></div>
               <div className="flex justify-between gap-3"><span className="text-neutral-600">Estimated tax</span><span className="font-medium text-neutral-950">{fp(estimatedTax)}</span></div>
-              <div className="flex justify-between gap-3 border-t border-emerald-200 pt-2"><span className="font-semibold text-neutral-950">Est. first month total</span><span className="font-bold text-neutral-950">{fp(monthlyEstimate + estimatedTax)}</span></div>
+              <div className="flex justify-between gap-3 border-t border-emerald-200 pt-2"><span className="font-semibold text-neutral-950">Est. first month total</span><span className="font-bold text-neutral-950">{fp(selectedMonthlyEstimate + estimatedTax)}</span></div>
             </div>
             <p className="mt-2 text-xs text-neutral-600">Utilities, WiFi, basic kitchenware, linens, and support are included unless noted otherwise.</p>
           </div>
