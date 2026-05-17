@@ -155,14 +155,14 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         href={`/property/${property.id}`} 
         className="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-xl"
       >
-        <div className="card h-full flex flex-col">
+        <div className="card h-full flex flex-col hover:shadow-lg transition-shadow duration-200">
           {/* Image Container */}
           <div className="relative aspect-[4/3] overflow-hidden">
             <ResponsiveImage
               src={property.images[0] || "/images/cooper-55-c5e8357d.jpg"}
               alt={`${title} - Main image`}
               fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              className="object-cover transition-transform duration-500 group-hover:scale-110"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               loading="lazy"
             />
