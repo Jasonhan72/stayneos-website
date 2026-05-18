@@ -250,7 +250,7 @@ export default function ForBusinessPageContent() {
           
           <div className="grid lg:grid-cols-2 gap-8">
             {solutions.map((solution) => (
-              <div key={solution.key} className="bg-white p-8 shadow-lg hover:shadow-xl transition-shadow duration-200">
+              <div key={solution.key} className="bg-white p-5 sm:p-8 shadow-lg hover:shadow-xl transition-shadow duration-200">
                 <div className="flex items-center mb-6">
                   <div className="flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 mr-4">
                     <solution.icon size={32} />
@@ -327,7 +327,7 @@ export default function ForBusinessPageContent() {
           
           <div className="grid lg:grid-cols-3 gap-8">
             {caseStudies.map((study, index) => (
-              <div key={index} className="bg-white p-8 shadow-lg hover:shadow-xl transition-shadow duration-200">
+              <div key={index} className="bg-white p-5 sm:p-8 shadow-lg hover:shadow-xl transition-shadow duration-200">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-2xl" aria-hidden="true">{study.label}</span>
                   <h3 className="text-xl font-bold text-gray-900"><span>{study.company}</span></h3>

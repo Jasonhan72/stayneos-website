@@ -163,7 +163,7 @@ export default async function RootLayout({
           data-cf-beacon='{"token": "d3c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0"}'
         ></script>
       </head>
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased overflow-x-hidden">
         <ToastProvider>
           <UserProvider>
           <WishlistProvider>
