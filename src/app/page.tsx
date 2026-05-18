@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 import {
   HeroSection,
   CategoryChips,
@@ -69,7 +70,13 @@ export default function HomePage() {
       <StructuredData pageType="homepage" />
       <HeroSection />
       <CategoryChips />
-      <DualPathCTASection />
+
+      {/* Below-fold sections wrapped in Suspense for streaming SSR:
+          hero + category chips arrive in the first HTML chunk so the
+          browser can start paint immediately; remaining sections
+          stream in progressively. */}
+      <Suspense fallback={<div className="min-h-[50vh]" />}>
+        <DualPathCTASection />
       <TrustBadgesSection />
       <FeaturedPropertiesSection />
       <CitiesSection />
@@ -78,6 +85,7 @@ export default function HomePage() {
       <MarketSegmentsSection />
       <HowItWorksSection />
       <CTASection />
+      </Suspense>
     </main>
   );
 }
