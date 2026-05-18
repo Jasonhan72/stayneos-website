@@ -252,7 +252,9 @@ export async function middleware(request: NextRequest) {
     },
   });
   
-  // Always sync cookie with URL locale (URL prefix takes priority)
+  // Only set locale cookie for non-default locale (en is default).
+  // This eliminates Set-Cookie from most first-visit responses, allowing
+  // Cloudflare CDN to cache the HTML (responses with Set-Cookie bypass CDN).
   const pathLocale = getLocaleFromPath(pathname);
   const existingCookie = request.cookies.get('stayneos_locale')?.value;
   if (pathLocale && pathLocale !== existingCookie) {
@@ -262,8 +264,8 @@ export async function middleware(request: NextRequest) {
       maxAge: 365 * 24 * 60 * 60,
       sameSite: 'lax',
     });
-  } else if (!existingCookie) {
-    // First visit, no cookie → set detected locale
+  } else if (!existingCookie && locale !== 'en') {
+    // First visit with non-default locale → persist it
     response.cookies.set('stayneos_locale', locale, {
       path: '/',
       maxAge: 365 * 24 * 60 * 60,
