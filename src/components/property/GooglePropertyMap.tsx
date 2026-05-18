@@ -219,17 +219,21 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
 
   // Keep marker icons in sync with selection / hover state.
   useEffect(() => {
-    markersRef.current.forEach(({ id, marker }) => {
-      const isSelected = id === selectedPropertyId;
-      const isHovered = id === internalHoveredId || id === hoveredPropertyId && !isSelected;
-      if (isHovered || isSelected) {
-        marker.setIcon(markerIcon(true, priceFor(properties.find((p) => p.id === id) || {} as Property)));
-        marker.setZIndex(20);
-      } else {
-        marker.setIcon(markerIcon(false, priceFor(properties.find((p) => p.id === id) || {} as Property)));
-        marker.setZIndex(10);
-      }
-    });
+    try {
+      markersRef.current.forEach(({ id, marker }) => {
+        const isSelected = id === selectedPropertyId;
+        const isHovered = id === internalHoveredId || id === hoveredPropertyId && !isSelected;
+        if (isHovered || isSelected) {
+          marker.setIcon(markerIcon(true, priceFor(properties.find((p) => p.id === id) || {} as Property)));
+          marker.setZIndex(20);
+        } else {
+          marker.setIcon(markerIcon(false, priceFor(properties.find((p) => p.id === id) || {} as Property)));
+          marker.setZIndex(10);
+        }
+      });
+    } catch {
+      // Ignore icon update errors
+    }
   }, [selectedPropertyId, hoveredPropertyId, internalHoveredId, properties]);
 
   // Show a floating card above the active marker (selected, hovered from sidebar, or hovered directly on map).
@@ -244,58 +248,73 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
     const markerEntry = markersRef.current.find((m) => m.id === activeCardId);
     if (!markerEntry) return;
 
-    const map = mapInstanceRef.current as {
-      getProjection: () => { fromLatLngToContainerPixel: (pos: { lat: number; lng: number }) => { x: number; y: number } };
-      getDiv: () => HTMLElement;
-    };
-    const projection = map.getProjection();
-    const markerPos = markerEntry.marker.getPosition();
-    const pixel = projection.fromLatLngToContainerPixel({ lat: markerPos.lat(), lng: markerPos.lng() });
+    try {
+      const map = mapInstanceRef.current as {
+        getProjection: () => { fromLatLngToContainerPixel: (pos: { lat: number; lng: number }) => { x: number; y: number } | null };
+        getDiv: () => HTMLElement;
+      };
+      const projection = map.getProjection();
+      if (!projection) return;
 
-    const card = document.createElement('div');
-    card.id = 'stayneos-map-infowindow';
-    card.style.cssText = `
-      position: absolute;
-      left: ${pixel.x}px;
-      top: ${pixel.y - 100}px;
-      transform: translate(-50%, -100%);
-      z-index: 30;
-      background: white;
-      border-radius: 14px;
-      padding: 10px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-      border: 1px solid rgba(0,0,0,0.08);
-      pointer-events: auto;
-    `;
-    card.innerHTML = propertyCardHTML(activeCardProperty);
-    // Append to outer container (not map div) so the card isn't clipped by overflow-hidden
-    if (containerRef.current) {
-      containerRef.current.appendChild(card);
-    } else {
-      map.getDiv().appendChild(card);
+      const markerPos = markerEntry.marker.getPosition();
+      if (!markerPos) return;
+
+      const pixel = projection.fromLatLngToContainerPixel({ lat: markerPos.lat(), lng: markerPos.lng() });
+      if (!pixel) return;
+
+      const card = document.createElement('div');
+      card.id = 'stayneos-map-infowindow';
+      card.style.cssText = `
+        position: absolute;
+        left: ${pixel.x}px;
+        top: ${pixel.y - 100}px;
+        transform: translate(-50%, -100%);
+        z-index: 30;
+        background: white;
+        border-radius: 14px;
+        padding: 10px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        border: 1px solid rgba(0,0,0,0.08);
+        pointer-events: auto;
+      `;
+      card.innerHTML = propertyCardHTML(activeCardProperty);
+      // Append to outer container (not map div) so the card isn't clipped by overflow-hidden
+      if (containerRef.current) {
+        containerRef.current.appendChild(card);
+      } else {
+        map.getDiv().appendChild(card);
+      }
+
+      // Re-position on map pan / zoom.
+      const reposition = () => {
+        try {
+          const proj = map.getProjection();
+          if (!proj) return;
+          const p = proj.fromLatLngToContainerPixel({ lat: markerPos.lat(), lng: markerPos.lng() });
+          if (!p) return;
+          card.style.left = `${p.x}px`;
+          card.style.top = `${p.y - 100}px`;
+        } catch {
+          // Ignore reposition errors during map transitions
+        }
+      };
+      const google = (window as GoogleMapsWindow).google!;
+      const idleListener = google.maps.event.addListener(
+        map as unknown as Parameters<typeof google.maps.event.addListener>[0],
+        'idle',
+        reposition
+      );
+      const resizeObserver = new ResizeObserver(reposition);
+      resizeObserver.observe(map.getDiv());
+
+      return () => {
+        card.remove();
+        google.maps.event.removeListener(idleListener);
+        resizeObserver.disconnect();
+      };
+    } catch {
+      // Silently fail — avoids crashing the page if map projection isn't ready
     }
-
-    // Re-position on map pan / zoom.
-    const reposition = () => {
-      const proj = map.getProjection();
-      const p = proj.fromLatLngToContainerPixel({ lat: markerPos.lat(), lng: markerPos.lng() });
-      card.style.left = `${p.x}px`;
-      card.style.top = `${p.y - 100}px`;
-    };
-    const google = (window as GoogleMapsWindow).google!;
-    const idleListener = google.maps.event.addListener(
-      map as unknown as Parameters<typeof google.maps.event.addListener>[0],
-      'idle',
-      reposition
-    );
-    const resizeObserver = new ResizeObserver(reposition);
-    resizeObserver.observe(map.getDiv());
-
-    return () => {
-      card.remove();
-      google.maps.event.removeListener(idleListener);
-      resizeObserver.disconnect();
-    };
   }, [activeCardId, activeCardProperty]);
 
   if (properties.length === 0) {
