@@ -221,7 +221,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
   useEffect(() => {
     markersRef.current.forEach(({ id, marker }) => {
       const isSelected = id === selectedPropertyId;
-      const isHovered = id === hoveredPropertyId && !isSelected;
+      const isHovered = id === internalHoveredId || id === hoveredPropertyId && !isSelected;
       if (isHovered || isSelected) {
         marker.setIcon(markerIcon(true, priceFor(properties.find((p) => p.id === id) || {} as Property)));
         marker.setZIndex(20);
@@ -230,7 +230,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
         marker.setZIndex(10);
       }
     });
-  }, [selectedPropertyId, hoveredPropertyId, properties]);
+  }, [selectedPropertyId, hoveredPropertyId, internalHoveredId, properties]);
 
   // Show a floating card above the active marker (selected, hovered from sidebar, or hovered directly on map).
   useEffect(() => {
