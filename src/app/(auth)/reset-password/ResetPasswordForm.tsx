@@ -4,9 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { useI18n } from "@/lib/i18n";
 
 export default function ResetPasswordForm({ initialToken = "" }: { initialToken?: string }) {
   const router = useRouter();
+  const { t, locale } = useI18n();
+  const L = (zh: string, en: string, fr: string) => locale === 'zh' ? zh : locale === 'fr' ? fr : en;
   const [token] = useState(initialToken);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -19,15 +22,15 @@ export default function ResetPasswordForm({ initialToken = "" }: { initialToken?
     setError("");
 
     if (!token) {
-      setError("无效的重置链接");
+      setError(L("无效的重置链接", "Invalid reset link", "Lien de réinitialisation invalide"));
       return;
     }
     if (password.length < 6) {
-      setError("密码至少需要6位字符");
+      setError(L("密码至少需要6位字符", "Password must be at least 6 characters", "Le mot de passe doit comporter au moins 6 caractères"));
       return;
     }
     if (password !== confirmPassword) {
-      setError("两次输入的密码不一致");
+      setError(L("两次输入的密码不一致", "Passwords do not match", "Les mots de passe ne correspondent pas"));
       return;
     }
 
@@ -39,11 +42,11 @@ export default function ResetPasswordForm({ initialToken = "" }: { initialToken?
         body: JSON.stringify({ token, password }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "重置失败");
+      if (!res.ok) throw new Error(data.message || L("重置失败", "Reset failed", "Échec de la réinitialisation"));
       setSuccess(true);
       setTimeout(() => router.push("/login"), 3000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "操作失败");
+      setError(err instanceof Error ? err.message : L("操作失败", "Operation failed", "Échec de l'opération"));
     } finally {
       setIsLoading(false);
     }
@@ -56,16 +59,24 @@ export default function ResetPasswordForm({ initialToken = "" }: { initialToken?
           <Link href="/">
             <Image src="/logo.png" alt="NEOS" width={150} height={50} className="h-12 w-auto object-contain mx-auto mb-4" />
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">Set New Password</h1>
+          <h1 className="text-2xl font-bold text-gray-900">
+            {t("auth.changePassword", "Set New Password")}
+          </h1>
         </div>
 
         {success ? (
           <div className="text-center">
             <div className="p-4 bg-green-50 border border-green-200 rounded-lg mb-4">
-              <p className="text-green-700 font-medium">密码已重置成功！</p>
-              <p className="text-sm text-green-600 mt-1">正在跳转到登录页面...</p>
+              <p className="text-green-700 font-medium">
+                {L("密码已重置成功！", "Password reset successfully!", "Mot de passe réinitialisé !")}
+              </p>
+              <p className="text-sm text-green-600 mt-1">
+                {L("正在跳转到登录页面…", "Redirecting to login…", "Redirection vers la connexion…")}
+              </p>
             </div>
-            <Link href="/login" className="text-blue-600 hover:underline">立即登录</Link>
+            <Link href="/login" className="text-blue-600 hover:underline">
+              {t("auth.signInNow", "Sign in now")}
+            </Link>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -76,27 +87,37 @@ export default function ResetPasswordForm({ initialToken = "" }: { initialToken?
             )}
             {!token && (
               <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p className="text-sm text-yellow-700">无效的重置链接，请从邮件中重新点击</p>
+                <p className="text-sm text-yellow-700">
+                  {L("无效的重置链接，请从邮件中重新点击", "Invalid reset link. Please use the link from your email.", "Lien de réinitialisation invalide. Veuillez utiliser le lien de votre courriel.")}
+                </p>
               </div>
             )}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                {t("auth.passwordPlaceholder", "New Password")}
+              </label>
               <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="At least 6 characters" required />
+                placeholder={L("至少6位字符", "At least 6 characters", "Au moins 6 caractères")} required />
             </div>
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                {t("auth.confirmPasswordPlaceholder", "Confirm Password")}
+              </label>
               <input id="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Confirm your new password" required />
+                placeholder={L("确认新密码", "Confirm your new password", "Confirmez votre nouveau mot de passe")} required />
             </div>
             <button type="submit" disabled={isLoading || !token}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-              {isLoading ? "Resetting..." : "Reset Password"}
+              {isLoading
+                ? L("重置中…", "Resetting…", "Réinitialisation…")
+                : t("auth.changePassword", "Reset Password")}
             </button>
             <div className="text-center">
-              <Link href="/login" className="text-sm text-blue-600 hover:underline">Back to Login</Link>
+              <Link href="/login" className="text-sm text-blue-600 hover:underline">
+                {t("auth.login", "Back to Login")}
+              </Link>
             </div>
           </form>
         )}

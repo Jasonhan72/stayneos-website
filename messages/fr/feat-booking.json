@@ -315,7 +315,14 @@
     "nightCount": "{count} nuits",
     "taxesHst": "Taxes (13 % TVH)",
     "totalCad": "Total CAD",
-    "youWontBeChargedYet": "Vous ne serez pas encore facturé"
+    "youWontBeChargedYet": "Vous ne serez pas encore facturé",
+    "showLess": "Afficher moins",
+    "noSmoking": "Interdiction de fumer",
+    "noParties": "Pas de fêtes ni d'événements",
+    "quietHours": "Heures calmes : 22 h – 8 h",
+    "noUnregisteredGuests": "Pas de visiteurs non déclarés",
+    "disposeGarbage": "Éliminer les déchets correctement",
+    "respectBuilding": "Respecter les équipements et les espaces communs"
   },
   "checkIn": "Arrivée",
   "checkOut": "Départ",
