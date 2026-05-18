@@ -93,9 +93,11 @@ function coordFor(property: Property, index: number) {
 
 function markerIcon(selected: boolean, price: number) {
   const label = price ? `$${Math.round(price / 1000)}k` : 'NEOS';
-  const bg = selected ? '#DC2626' : '#ffffff';
-  const fg = selected ? '#ffffff' : '#DC2626';
-  const stroke = '#DC2626';
+  const PRIMARY = '#003B5C';
+  const ACCENT = '#C9A962';
+  const bg = selected ? PRIMARY : '#ffffff';
+  const fg = selected ? '#ffffff' : PRIMARY;
+  const stroke = selected ? PRIMARY : ACCENT;
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="76" height="38" viewBox="0 0 76 38"><rect x="1" y="1" width="74" height="30" rx="15" fill="${bg}" stroke="${stroke}" stroke-width="2"/><path d="M34 30l4 6 4-6" fill="${bg}"/><text x="38" y="21" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="${fg}">${label}</text></svg>`;
   const win = window as GoogleMapsWindow;
   return {
@@ -123,6 +125,7 @@ function propertyCardHTML(property: Property): string {
 }
 
 export default function GooglePropertyMap({ properties, selectedPropertyId, hoveredPropertyId, onPropertySelect }: GooglePropertyMapProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<unknown>(null);
   const markersRef = useRef<Array<{
@@ -134,10 +137,12 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
     };
   }>>([]);
   const [mapError, setMapError] = useState('');
+  const [internalHoveredId, setInternalHoveredId] = useState<string | null>(null);
 
-  const selectedProperty = useMemo(
-    () => (selectedPropertyId ? properties.find((p) => p.id === selectedPropertyId) : null),
-    [properties, selectedPropertyId]
+  const activeCardId = internalHoveredId || hoveredPropertyId || selectedPropertyId;
+  const activeCardProperty = useMemo(
+    () => (activeCardId ? properties.find((p) => p.id === activeCardId) : null),
+    [properties, activeCardId]
   );
 
   useEffect(() => {
@@ -187,7 +192,9 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
             optimized: false,
             zIndex: 10,
           });
-          marker.addListener('click', () => onPropertySelect(property.id));
+          marker.addListener('click', () => { setInternalHoveredId(null); onPropertySelect(property.id); });
+          marker.addListener('mouseover', () => setInternalHoveredId(property.id));
+          marker.addListener('mouseout', () => setInternalHoveredId(null));
           return { id: property.id, marker };
         });
 
@@ -225,16 +232,16 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
     });
   }, [selectedPropertyId, hoveredPropertyId, properties]);
 
-  // Show a floating card above the selected marker, hidden when nothing is selected.
+  // Show a floating card above the active marker (selected, hovered from sidebar, or hovered directly on map).
   useEffect(() => {
     if (!mapInstanceRef.current) return;
 
     const existing = document.getElementById('stayneos-map-infowindow');
     if (existing) existing.remove();
 
-    if (!selectedPropertyId || !selectedProperty) return;
+    if (!activeCardId || !activeCardProperty) return;
 
-    const markerEntry = markersRef.current.find((m) => m.id === selectedPropertyId);
+    const markerEntry = markersRef.current.find((m) => m.id === activeCardId);
     if (!markerEntry) return;
 
     const map = mapInstanceRef.current as {
@@ -260,8 +267,13 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
       border: 1px solid rgba(0,0,0,0.08);
       pointer-events: auto;
     `;
-    card.innerHTML = propertyCardHTML(selectedProperty);
-    map.getDiv().appendChild(card);
+    card.innerHTML = propertyCardHTML(activeCardProperty);
+    // Append to outer container (not map div) so the card isn't clipped by overflow-hidden
+    if (containerRef.current) {
+      containerRef.current.appendChild(card);
+    } else {
+      map.getDiv().appendChild(card);
+    }
 
     // Re-position on map pan / zoom.
     const reposition = () => {
@@ -284,7 +296,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
       google.maps.event.removeListener(idleListener);
       resizeObserver.disconnect();
     };
-  }, [selectedPropertyId, selectedProperty]);
+  }, [activeCardId, activeCardProperty]);
 
   if (properties.length === 0) {
     return (
@@ -295,41 +307,44 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
   }
 
   return (
-    <div className="relative h-full min-h-[420px] overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100" data-testid="properties-map">
-      <div className="absolute left-4 top-4 z-20 rounded-full bg-white px-4 py-2 text-sm font-semibold text-neutral-900 shadow-lg">
-        Map · {properties.length} furnished stays
-      </div>
-
-      <div ref={mapRef} className={cn("absolute inset-0", mapError && "hidden")} aria-label="Properties map" />
-
-      {mapError && (
-        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_30%_20%,#e5e7eb_0,#e5e7eb_2px,transparent_3px),linear-gradient(135deg,#f5f5f4,#e7e5e4)]">
-          <div className="absolute inset-0 opacity-40 [background-image:linear-gradient(90deg,#d4d4d4_1px,transparent_1px),linear-gradient(#d4d4d4_1px,transparent_1px)] [background-size:48px_48px]" />
-          {properties.map((property, index) => {
-            const selected = property.id === selectedPropertyId;
-            const top = 28 + (index % 3) * 20;
-            const left = 28 + (index % 4) * 18;
-            return (
-              <button
-                key={property.id}
-                type="button"
-                onClick={() => onPropertySelect(property.id)}
-                className={cn(
-                  'absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full px-3 py-2 text-sm font-bold shadow-lg transition-transform hover:scale-105',
-                  selected ? 'bg-red-600 text-white' : 'bg-white text-red-600 ring-1 ring-red-600'
-                )}
-                style={{ top: `${top}%`, left: `${left}%` }}
-                aria-label={`Select ${property.title} on map`}
-              >
-                ${Math.round(priceFor(property) / 1000)}k
-              </button>
-            );
-          })}
-          <div className="absolute left-4 right-4 top-16 rounded-xl bg-white/90 p-3 text-sm text-neutral-600 shadow">
-            Google Maps could not load ({mapError}); showing fallback property pins.
-          </div>
+    <div ref={containerRef} className="relative h-full min-h-[420px] overflow-visible rounded-2xl border border-neutral-200 bg-neutral-100" data-testid="properties-map">
+      {/* Inner wrapper clips map corners while allowing the floating card to overflow */}
+      <div className="absolute inset-0 overflow-hidden rounded-2xl">
+        <div className="absolute left-4 top-4 z-20 rounded-full bg-white px-4 py-2 text-sm font-semibold text-neutral-900 shadow-lg">
+          Map · {properties.length} furnished stays
         </div>
-      )}
+
+        <div ref={mapRef} className={cn("absolute inset-0", mapError && "hidden")} aria-label="Properties map" />
+
+        {mapError && (
+          <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_30%_20%,#e5e7eb_0,#e5e7eb_2px,transparent_3px),linear-gradient(135deg,#f5f5f4,#e7e5e4)]">
+            <div className="absolute inset-0 opacity-40 [background-image:linear-gradient(90deg,#d4d4d4_1px,transparent_1px),linear-gradient(#d4d4d4_1px,transparent_1px)] [background-size:48px_48px]" />
+            {properties.map((property, index) => {
+              const selected = property.id === selectedPropertyId;
+              const top = 28 + (index % 3) * 20;
+              const left = 28 + (index % 4) * 18;
+              return (
+                <button
+                  key={property.id}
+                  type="button"
+                  onClick={() => onPropertySelect(property.id)}
+                  className={cn(
+                    'absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full px-3 py-2 text-sm font-bold shadow-lg transition-transform hover:scale-105',
+                    selected ? 'bg-[#003B5C] text-white' : 'bg-white text-[#003B5C] ring-1 ring-[#003B5C]'
+                  )}
+                  style={{ top: `${top}%`, left: `${left}%` }}
+                  aria-label={`Select ${property.title} on map`}
+                >
+                  ${Math.round(priceFor(property) / 1000)}k
+                </button>
+              );
+            })}
+            <div className="absolute left-4 right-4 top-16 rounded-xl bg-white/90 p-3 text-sm text-neutral-600 shadow">
+              Google Maps could not load ({mapError}); showing fallback property pins.
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
