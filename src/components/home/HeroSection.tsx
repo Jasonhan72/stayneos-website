@@ -57,7 +57,10 @@ export function HeroSection() {
             poster="/videos/hero-poster.jpg"
             className="absolute inset-0 w-full h-full object-cover z-0 hidden md:block"
           >
-            <source src="/videos/hero-loop.mp4" type="video/mp4" media="(min-width: 768px)" />
+            {/* WebM first (VP9, ~37% smaller than the MP4) so Chrome/Firefox grab it;
+                Safari falls back to MP4. */}
+            <source src="/videos/hero-loop.webm" type="video/webm" />
+            <source src="/videos/hero-loop.mp4" type="video/mp4" />
           </video>
         )}
 
