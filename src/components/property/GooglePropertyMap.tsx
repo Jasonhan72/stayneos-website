@@ -98,26 +98,36 @@ function markerIcon(selected: boolean, price: number) {
   const bg = selected ? PRIMARY : '#ffffff';
   const fg = selected ? '#ffffff' : PRIMARY;
   const stroke = selected ? PRIMARY : ACCENT;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="76" height="38" viewBox="0 0 76 38"><rect x="1" y="1" width="74" height="30" rx="15" fill="${bg}" stroke="${stroke}" stroke-width="2"/><path d="M34 30l4 6 4-6" fill="${bg}"/><text x="38" y="21" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="${fg}">${label}</text></svg>`;
+  const safeLabel = label.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="76" height="38" viewBox="0 0 76 38"><rect x="1" y="1" width="74" height="30" rx="15" fill="${bg}" stroke="${stroke}" stroke-width="2"/><path d="M34 30l4 6 4-6" fill="${bg}"/><text x="38" y="21" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="${fg}">${safeLabel}</text></svg>`;
   const win = window as GoogleMapsWindow;
+  if (!win.google?.maps) {
+    // Fallback icon when Google Maps not ready
+    return { url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}` };
+  }
   return {
     url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,
-    scaledSize: new win.google!.maps.Size(76, 38),
-    anchor: new win.google!.maps.Point(38, 36),
+    scaledSize: new win.google.maps.Size(76, 38),
+    anchor: new win.google.maps.Point(38, 36),
   };
+}
+
+function escapeHtml(text: string): string {
+  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
 function propertyCardHTML(property: Property): string {
   const imageUrl = property.images?.[0] || '/images/cooper-55-c5e8357d.jpg';
-  const location = property.location || property.address || '';
+  const location = escapeHtml(property.location || property.address || '');
+  const title = escapeHtml(property.title || '');
   const price = priceFor(property);
   return `
     <div style="display:flex;gap:12px;max-width:260px;font-family:system-ui,-apple-system,sans-serif;">
       <div style="width:72px;height:56px;border-radius:10px;overflow:hidden;flex-shrink:0;background:#e5e5e5;">
-        <img src="${imageUrl}" alt="${property.title}" style="width:100%;height:100%;object-fit:cover;" />
+        <img src="${escapeHtml(imageUrl)}" alt="${title}" style="width:100%;height:100%;object-fit:cover;" />
       </div>
       <div style="min-width:0;flex:1;">
-        <p style="margin:0;font-size:13px;font-weight:600;line-height:1.3;color:#171717;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${property.title}</p>
+        <p style="margin:0;font-size:13px;font-weight:600;line-height:1.3;color:#171717;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${title}</p>
         <p style="margin:4px 0 0;font-size:11px;color:#737373;display:flex;align-items:center;gap:4px;">📍 ${location}</p>
         <p style="margin:6px 0 0;font-size:13px;font-weight:700;color:#171717;">$${price.toLocaleString()} / month</p>
       </div>
@@ -298,9 +308,10 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
           // Ignore reposition errors during map transitions
         }
       };
-      const google = (window as GoogleMapsWindow).google!;
-      const idleListener = google.maps.event.addListener(
-        map as unknown as Parameters<typeof google.maps.event.addListener>[0],
+      const winG = (window as GoogleMapsWindow).google;
+      if (!winG) return;
+      const idleListener = winG.maps.event.addListener(
+        map as unknown as Parameters<typeof winG.maps.event.addListener>[0],
         'idle',
         reposition
       );
@@ -309,7 +320,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
 
       return () => {
         card.remove();
-        google.maps.event.removeListener(idleListener);
+        try { winG.maps.event.removeListener(idleListener); } catch { /* ignore */ }
         resizeObserver.disconnect();
       };
     } catch {
