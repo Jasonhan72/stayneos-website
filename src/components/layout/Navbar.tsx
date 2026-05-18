@@ -114,7 +114,15 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
             <div className="hidden lg:flex items-center gap-2">
               <LanguageCurrencySelector variant={effectiveVariant as "light" | "dark" | "transparent"} />
               
-              {/* Partner With Us button */}
+              {/* Hosting mode badge */}
+              {pathname?.startsWith("/host") && (
+                <span className="text-xs font-semibold text-[#003B5C] bg-[#003B5C]/10 px-3 py-1.5 rounded-full border border-[#003B5C]/20">
+                  Hosting
+                </span>
+              )}
+
+              {/* Partner With Us button — hide in host mode */}
+              {!pathname?.startsWith("/host") && (
               <Link
                 href="/for-agents"
                 className={cn(
@@ -125,6 +133,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
               >
                 {t("nav.partnerWithUs")}
               </Link>
+              )}
               
               {isAuthenticated ? (
               <UserMenu variant={effectiveVariant as "light" | "dark" | "transparent"} />

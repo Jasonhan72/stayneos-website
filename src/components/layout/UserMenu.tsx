@@ -3,11 +3,13 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import {
   ChevronRight,
   Globe,
   HelpCircle,
   Heart,
+  Home,
   LogOut,
   Luggage,
   Menu,
@@ -34,6 +36,7 @@ type MenuLink = {
 export function UserMenu({ variant = "light" }: UserMenuProps) {
   const { locale } = useI18n();
   const { user, logout } = useAuth();
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [unreadMessages, setUnreadMessages] = useState(0);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -117,11 +120,33 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
     );
   }
 
+  const isHost = !!(user && ["ADMIN", "SUPER_ADMIN", "HOST"].includes((user as { role?: string }).role ?? ""));
+  const isHostMode = pathname?.startsWith("/host");
+
+  const hostSwitchItem: MenuLink = isHost
+    ? {
+        label: isHostMode
+          ? L("切换到租客模式", "Switch to travelling", "Passer en mode voyageur")
+          : L("切换到房东模式", "Switch to hosting", "Passer en mode hôte"),
+        href: isHostMode ? "/" : "/host",
+        icon: isHostMode ? Luggage : Home,
+        bold: true,
+      }
+    : {
+        label: L("成为房东", "Become a host", "Devenir hôte"),
+        href: "/become-a-host",
+        icon: Home,
+        bold: true,
+      };
+
   const sections: MenuLink[][] = [
     [
       { label: L("消息", "Messages", "Messages"), href: "/dashboard/messages", icon: MessageCircle, bold: true, badge: unreadMessages },
       { label: L("我的行程", "Trips", "Voyages"), href: "/bookings", icon: Luggage, bold: true },
       { label: L("收藏", "Wishlists", "Favoris"), href: "/dashboard/wishlists", icon: Heart, bold: true },
+    ],
+    [
+      hostSwitchItem,
     ],
     [
       { label: L("个人主页", "Profile", "Profil"), href: "/profile", icon: User },
