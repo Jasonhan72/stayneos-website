@@ -53,15 +53,15 @@ export default function AccountIndexPage() {
           <div className="relative mx-auto h-[150px] w-[260px]">
             <div className="absolute left-0 top-[30px] h-[96px] w-[118px] rotate-[-7deg] overflow-hidden rounded-[24px] shadow-[0_14px_30px_rgba(0,0,0,0.12)]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/cooper-55-c5e8357d-640.webp" alt="NEOS stay" className="h-full w-full object-cover" />
+              <img src="/images/cooper-55-c5e8357d-640.webp" alt="NEOS stay" width={118} height={96} loading="lazy" decoding="async" className="h-full w-full object-cover" />
             </div>
             <div className="absolute left-[74px] top-[8px] h-[96px] w-[112px] overflow-hidden rounded-[24px] shadow-[0_14px_30px_rgba(0,0,0,0.1)]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/cooper-55-15c489d2-640.webp" alt="NEOS stay" className="h-full w-full object-cover" />
+              <img src="/images/cooper-55-15c489d2-640.webp" alt="NEOS stay" width={112} height={96} loading="lazy" decoding="async" className="h-full w-full object-cover" />
             </div>
             <div className="absolute right-0 top-[28px] h-[100px] w-[122px] rotate-[7deg] overflow-hidden rounded-[24px] shadow-[0_14px_30px_rgba(0,0,0,0.12)]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/cooper-55-dining-640.webp" alt="NEOS stay" className="h-full w-full object-cover" />
+              <img src="/images/cooper-55-dining-640.webp" alt="NEOS stay" width={122} height={100} loading="lazy" decoding="async" className="h-full w-full object-cover" />
             </div>
           </div>
 
