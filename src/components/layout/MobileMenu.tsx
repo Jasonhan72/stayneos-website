@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { X, User, Home, Heart, KeyRound, Building2, ChevronRight, Info, Globe, Luggage } from "lucide-react";
+import { X, User, Home, Heart, KeyRound, Building2, ChevronRight, Info, Globe, Luggage, MessageCircle, HelpCircle, UserCog } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/context/UserContext";
 import { useI18n } from "@/lib/i18n";
@@ -247,16 +247,28 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 </h2>
               </div>
 
-              {/* Primary Menu Items */}
+              {/* Primary Menu Items — mirrors desktop UserMenu */}
               <div className="space-y-0">
+                <Link
+                  href="/dashboard/messages"
+                  onClick={onClose}
+                  className="flex items-center justify-between py-4 border-b border-neutral-100"
+                >
+                  <div className="flex items-center gap-4">
+                    <MessageCircle className="w-5 h-5 text-neutral-600" />
+                    <span className="text-neutral-800 font-semibold">{t("nav.messages", "Messages")}</span>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-neutral-400" />
+                </Link>
+
                 <Link
                   href="/bookings"
                   onClick={onClose}
                   className="flex items-center justify-between py-4 border-b border-neutral-100"
                 >
                   <div className="flex items-center gap-4">
-                    <Home className="w-5 h-5 text-neutral-600" />
-                    <span className="text-neutral-800">{t("nav.bookings")}</span>
+                    <Luggage className="w-5 h-5 text-neutral-600" />
+                    <span className="text-neutral-800 font-semibold">{t("nav.trips", "Trips")}</span>
                   </div>
                   <ChevronRight className="w-5 h-5 text-neutral-400" />
                 </Link>
@@ -300,25 +312,43 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 )}
 
                 <Link
-                  href="/account"
-                  onClick={onClose}
-                  className="flex items-center justify-between py-4 border-b border-neutral-100"
-                >
-                  <div className="flex items-center gap-4">
-                    <User className="w-5 h-5 text-neutral-600" />
-                    <span className="text-neutral-800">{t("nav.accountSettings", "Account settings")}</span>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-neutral-400" />
-                </Link>
-
-                <Link
                   href="/dashboard/wishlists"
                   onClick={onClose}
                   className="flex items-center justify-between py-4 border-b border-neutral-100"
                 >
                   <div className="flex items-center gap-4">
                     <Heart className="w-5 h-5 text-neutral-600" />
-                    <span className="text-neutral-800">{t("nav.wishlists")}</span>
+                    <span className="text-neutral-800 font-semibold">{t("nav.wishlists", "Wishlists")}</span>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-neutral-400" />
+                </Link>
+              </div>
+
+              {/* Divider */}
+              <div className="my-4 border-t border-neutral-200" />
+
+              {/* Secondary — Profile / Account / Language / Help */}
+              <div className="space-y-0">
+                <Link
+                  href="/profile"
+                  onClick={onClose}
+                  className="flex items-center justify-between py-4 border-b border-neutral-100"
+                >
+                  <div className="flex items-center gap-4">
+                    <User className="w-5 h-5 text-neutral-600" />
+                    <span className="text-neutral-800">{t("nav.profile", "Profile")}</span>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-neutral-400" />
+                </Link>
+
+                <Link
+                  href="/account/personal-info"
+                  onClick={onClose}
+                  className="flex items-center justify-between py-4 border-b border-neutral-100"
+                >
+                  <div className="flex items-center gap-4">
+                    <UserCog className="w-5 h-5 text-neutral-600" />
+                    <span className="text-neutral-800">{t("nav.accountSettings", "Account settings")}</span>
                   </div>
                   <ChevronRight className="w-5 h-5 text-neutral-400" />
                 </Link>
@@ -333,6 +363,18 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   </div>
                   <ChevronRight className="w-5 h-5 text-neutral-400" />
                 </button>
+
+                <Link
+                  href="/help"
+                  onClick={onClose}
+                  className="flex items-center justify-between py-4 border-b border-neutral-100"
+                >
+                  <div className="flex items-center gap-4">
+                    <HelpCircle className="w-5 h-5 text-neutral-600" />
+                    <span className="text-neutral-800">{t("nav.help", "Help Centre")}</span>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-neutral-400" />
+                </Link>
               </div>
 
               {/* Divider */}
