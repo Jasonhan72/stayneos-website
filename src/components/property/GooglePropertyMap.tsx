@@ -84,9 +84,9 @@ function coordFor(property: Property, index: number) {
 
 function markerIcon(selected: boolean, price: number) {
   const label = price ? `$${Math.round(price / 1000)}k` : 'NEOS';
-  const bg = selected ? '#111111' : '#ffffff';
-  const fg = selected ? '#ffffff' : '#111111';
-  const stroke = selected ? '#111111' : '#d4d4d4';
+  const bg = selected ? '#DC2626' : '#ffffff';
+  const fg = selected ? '#ffffff' : '#DC2626';
+  const stroke = selected ? '#DC2626' : '#DC2626';
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="76" height="38" viewBox="0 0 76 38"><rect x="1" y="1" width="74" height="30" rx="15" fill="${bg}" stroke="${stroke}" stroke-width="2"/><path d="M34 30l4 6 4-6" fill="${bg}"/><text x="38" y="21" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="${fg}">${label}</text></svg>`;
   const win = window as GoogleMapsWindow;
   return {
@@ -224,7 +224,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
                 }}
                 className={cn(
                   'absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full px-3 py-2 text-sm font-bold shadow-lg transition-transform hover:scale-105',
-                  selected ? 'bg-black text-white' : 'bg-white text-neutral-900 ring-1 ring-neutral-300'
+                  selected ? 'bg-red-600 text-white' : 'bg-white text-red-600 ring-1 ring-red-600'
                 )}
                 style={{ top: `${top}%`, left: `${left}%` }}
                 aria-label={`Select ${property.title} on map`}
