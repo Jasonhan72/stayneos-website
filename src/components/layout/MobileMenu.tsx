@@ -256,7 +256,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 >
                   <div className="flex items-center gap-4">
                     <MessageCircle className="w-5 h-5 text-neutral-600" />
-                    <span className="text-neutral-800 font-semibold">{t("nav.messages", "Messages")}</span>
+                    <span className="text-neutral-800 font-semibold">{t("nav.messages")}</span>
                   </div>
                   <ChevronRight className="w-5 h-5 text-neutral-400" />
                 </Link>
@@ -268,7 +268,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 >
                   <div className="flex items-center gap-4">
                     <Luggage className="w-5 h-5 text-neutral-600" />
-                    <span className="text-neutral-800 font-semibold">{t("nav.trips", "Trips")}</span>
+                    <span className="text-neutral-800 font-semibold">{t("nav.trips")}</span>
                   </div>
                   <ChevronRight className="w-5 h-5 text-neutral-400" />
                 </Link>
@@ -285,10 +285,10 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                         : <Building2 className="w-5 h-5 text-neutral-600" />}
                       <div>
                         <span className="text-neutral-800 font-medium">
-                          {isHostMode ? "Switch to travelling" : "Switch to hosting"}
+                          {isHostMode ? t("nav.switchToTravelling") : t("nav.switchToHosting")}
                         </span>
                         {isHostMode && (
-                          <p className="text-xs text-neutral-400 mt-0.5">Currently in Hosting mode</p>
+                          <p className="text-xs text-neutral-400 mt-0.5">{t("nav.hostingMode")}</p>
                         )}
                       </div>
                     </div>
@@ -303,8 +303,8 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                     <div className="flex items-center gap-4">
                       <Building2 className="w-5 h-5 text-neutral-600" />
                       <div>
-                        <span className="text-neutral-800 font-medium">Become a host</span>
-                        <p className="text-xs text-neutral-400 mt-0.5">List your property on Neos</p>
+                        <span className="text-neutral-800 font-medium">{t("nav.becomeAHost")}</span>
+                        <p className="text-xs text-neutral-400 mt-0.5">{t("nav.listYourProperty")}</p>
                       </div>
                     </div>
                     <ChevronRight className="w-5 h-5 text-neutral-400" />
@@ -318,7 +318,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 >
                   <div className="flex items-center gap-4">
                     <Heart className="w-5 h-5 text-neutral-600" />
-                    <span className="text-neutral-800 font-semibold">{t("nav.wishlists", "Wishlists")}</span>
+                    <span className="text-neutral-800 font-semibold">{t("nav.wishlists")}</span>
                   </div>
                   <ChevronRight className="w-5 h-5 text-neutral-400" />
                 </Link>
@@ -336,7 +336,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 >
                   <div className="flex items-center gap-4">
                     <User className="w-5 h-5 text-neutral-600" />
-                    <span className="text-neutral-800">{t("nav.profile", "Profile")}</span>
+                    <span className="text-neutral-800">{t("nav.profile")}</span>
                   </div>
                   <ChevronRight className="w-5 h-5 text-neutral-400" />
                 </Link>
@@ -348,7 +348,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 >
                   <div className="flex items-center gap-4">
                     <UserCog className="w-5 h-5 text-neutral-600" />
-                    <span className="text-neutral-800">{t("nav.accountSettings", "Account settings")}</span>
+                    <span className="text-neutral-800">{t("nav.accountSettings")}</span>
                   </div>
                   <ChevronRight className="w-5 h-5 text-neutral-400" />
                 </Link>
@@ -371,7 +371,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 >
                   <div className="flex items-center gap-4">
                     <HelpCircle className="w-5 h-5 text-neutral-600" />
-                    <span className="text-neutral-800">{t("nav.help", "Help Centre")}</span>
+                    <span className="text-neutral-800">{t("nav.help")}</span>
                   </div>
                   <ChevronRight className="w-5 h-5 text-neutral-400" />
                 </Link>

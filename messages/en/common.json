@@ -48,7 +48,16 @@
     "preferences": "Preferences",
     "wishlists": "Wishlists",
     "landlords": "For Landlords",
-    "profile": "Profile"
+    "profile": "Profile",
+    "messages": "Messages",
+    "trips": "Trips",
+    "accountSettings": "Account settings",
+    "help": "Help Centre",
+    "switchToHosting": "Switch to hosting",
+    "switchToTravelling": "Switch to travelling",
+    "becomeAHost": "Become a host",
+    "hostingMode": "Currently in Hosting mode",
+    "listYourProperty": "List your property on Neos"
   },
   "footer": {
     "about": "About Us",

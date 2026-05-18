@@ -34,7 +34,7 @@ type MenuLink = {
 };
 
 export function UserMenu({ variant = "light" }: UserMenuProps) {
-  const { locale } = useI18n();
+  const { locale, t } = useI18n();
   const { user, logout } = useAuth();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -126,14 +126,14 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
   const hostSwitchItem: MenuLink = isHost
     ? {
         label: isHostMode
-          ? L("切换到租客模式", "Switch to travelling", "Passer en mode voyageur")
-          : L("切换到房东模式", "Switch to hosting", "Passer en mode hôte"),
+          ? t("nav.switchToTravelling")
+          : t("nav.switchToHosting"),
         href: isHostMode ? "/" : "/host",
         icon: isHostMode ? Luggage : Home,
         bold: true,
       }
     : {
-        label: L("成为房东", "Become a host", "Devenir hôte"),
+        label: t("nav.becomeAHost"),
         href: "/become-a-host",
         icon: Home,
         bold: true,
