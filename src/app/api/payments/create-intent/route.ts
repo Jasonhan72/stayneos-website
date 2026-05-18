@@ -83,6 +83,11 @@ export async function POST(request: NextRequest) {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amountInCents,
       currency: booking.currency.toLowerCase(),
+      // Restrict to card only. Without this Stripe auto-enables Link, which
+      // surfaces an always-English "Save info / Mobile number" prompt and a
+      // floating "1 stripe >" banner that won't translate even when Elements
+      // locale is set to 'zh' or 'fr-CA'.
+      payment_method_types: ['card'],
       metadata: {
         bookingId: booking.id,
         bookingNumber: booking.bookingNumber,

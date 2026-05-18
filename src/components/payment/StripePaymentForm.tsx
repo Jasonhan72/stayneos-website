@@ -58,6 +58,10 @@ export default function StripePaymentForm({ amount, onSuccess, onError }: Stripe
         <PaymentElement 
           options={{
             layout: 'tabs',
+            // Disable Stripe Link autofill prompt: it forces an English
+            // "Save my info / Mobile number" upsell card-element that
+            // does not translate. We only ship card-based checkout.
+            wallets: { applePay: 'never', googlePay: 'never' },
             defaultValues: {
               billingDetails: {
                 name: '',
