@@ -113,7 +113,7 @@ export default function StepReviewPage() {
           {(draft.photos?.length || 0) === 0 ? (
             <em className="text-neutral-400">No photos uploaded</em>
           ) : (
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
               {draft.photos!.slice(0, 8).map((src, i) => (
                 <div
                   key={i}

@@ -248,19 +248,19 @@ export default function BookingDetailClient() {
           {/* 预订状态卡片 */}
           <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
             <div className={`p-6 ${statusConfigItem.color} bg-opacity-10`}>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center ${statusConfigItem.color}`}>
                     <StatusIcon size={24} />
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">{t('bookingDetail.bookingNumber')}: {booking.bookingNumber}</p>
-                    <h1 className="text-2xl font-bold text-gray-900">
+                    <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
                       {statusConfigItem.label}
                     </h1>
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="sm:text-right">
                   <p className="text-sm text-gray-500">{t('bookingDetail.bookingDate')}</p>
                   <p className="font-medium">{formatDate(booking.createdAt)}</p>
                 </div>
