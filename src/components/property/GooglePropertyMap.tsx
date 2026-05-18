@@ -95,19 +95,13 @@ function markerIcon(selected: boolean, price: number) {
   const label = price ? `$${Math.round(price / 1000)}k` : 'NEOS';
   const bg = selected ? '#DC2626' : '#ffffff';
   const fg = selected ? '#ffffff' : '#DC2626';
-  const stroke = selected ? '#DC2626' : '#DC2626';
-  // Hash fragment so the browser doesn't reuse a cached data: URI
-  // when setIcon switches between selected ↔ unselected.
-  const hash = selected ? 's' : 'u';
+  const stroke = '#DC2626';
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="76" height="38" viewBox="0 0 76 38"><rect x="1" y="1" width="74" height="30" rx="15" fill="${bg}" stroke="${stroke}" stroke-width="2"/><path d="M34 30l4 6 4-6" fill="${bg}"/><text x="38" y="21" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="${fg}">${label}</text></svg>`;
   const win = window as GoogleMapsWindow;
   return {
-    url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}#${hash}`,
+    url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,
     scaledSize: new win.google!.maps.Size(76, 38),
     anchor: new win.google!.maps.Point(38, 36),
-    // Must be false — otherwise Google Maps renders the icon into an
-    // internal canvas and ignores later setIcon() calls.
-    optimized: false,
   };
 }
 
@@ -186,6 +180,11 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
             map,
             title: property.title,
             icon: markerIcon(false, priceFor(property)),
+            // optimized:false prevents Google Maps from compositing the
+            // icon into a shared canvas sprite-sheet. Without this,
+            // setIcon() calls with a different SVG data URI are silently
+            // ignored because the API reuses the cached canvas bitmap.
+            optimized: false,
             zIndex: 10,
           });
           marker.addListener('click', () => onPropertySelect(property.id));
