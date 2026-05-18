@@ -1,5 +1,5 @@
 'use client';
-
+// v2 - brand markers + hover cards (2026-05-18)
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { GOOGLE_MAPS_API_KEY, hasUsableGoogleMapsKey } from '@/lib/google-maps';
