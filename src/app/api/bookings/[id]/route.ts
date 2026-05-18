@@ -80,8 +80,8 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       return apiError('无可更新字段', 400, 'NO_UPDATE_FIELDS');
     }
 
-    await bookingDb.update(auth.db, (await params).id, updatePayload);
-    const updatedBooking = await bookingDb.findById(auth.db, (await params).id);
+    await bookingDb.update(auth.db, booking.id, updatePayload);
+    const updatedBooking = await bookingDb.findById(auth.db, booking.id);
 
     return apiSuccess({ booking: updatedBooking, message: '预订更新成功' });
   } catch {
@@ -131,14 +131,14 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
       message = '预订已取消，退款已发起';
     }
 
-    await bookingDb.update(auth.db, (await params).id, {
+    await bookingDb.update(auth.db, booking.id, {
       status: 'CANCELLED',
       paymentStatus,
       cancelledAt,
       cancelReason: body.reason || null,
     });
 
-    const updatedBooking = await bookingDb.findById(auth.db, (await params).id);
+    const updatedBooking = await bookingDb.findById(auth.db, booking.id);
     return apiSuccess({ booking: updatedBooking, message });
   } catch {
     return apiError('取消预订失败', 500, 'INTERNAL_ERROR');
