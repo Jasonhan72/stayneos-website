@@ -34,9 +34,10 @@ function buildSrcSet(entry: GeneratedVariant, format: 'avif' | 'webp' | 'jpg') {
 }
 
 function pickFallback(entry: GeneratedVariant): string {
-  // Prefer the largest jpg variant over the original (which can be many MB).
-  const variantWidths = Object.keys(entry.variants).map(Number).sort((a, b) => b - a);
-  for (const w of variantWidths) {
+  // Prefer 1080 jpg variant (webp is preferred via <source>, jpg is last-resort fallback).
+  // 1080 balances quality vs size (~150-200KB vs 500KB+ for 1920).
+  const preferredFallbackWidths = [1080, 640, 1920];
+  for (const w of preferredFallbackWidths) {
     const jpg = entry.variants[String(w)]?.jpg;
     if (jpg) return jpg;
   }
