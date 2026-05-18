@@ -67,32 +67,7 @@ const appWorker = {
       return stub.fetch(request);
     }
 
-    const response = await worker.fetch(request, env, ctx);
-
-    // For non-RSC GET requests (normal browser page loads), strip the
-    // Next.js Vary header so Cloudflare CDN can cache the response.
-    // Next.js sets Vary: rsc, next-router-state-tree, ... which makes
-    // every request look unique to the CDN → near-zero cache hit rate.
-    const isGet = request.method === 'GET';
-    const isRsc = request.headers.get('rsc') || request.headers.get('next-router-state-tree');
-    const isApi = url.pathname.startsWith('/api/');
-    const isStatic = url.pathname.startsWith('/_next/');
-
-    if (isGet && !isRsc && !isApi && !isStatic && response.ok) {
-      const newHeaders = new Headers(response.headers);
-      // Remove next.js internal vary dimensions; keep only standard ones
-      newHeaders.delete('vary');
-      // Re-set a minimal Vary: Accept-Encoding for compression
-      newHeaders.set('vary', 'Accept-Encoding');
-
-      return new Response(response.body, {
-        status: response.status,
-        statusText: response.statusText,
-        headers: newHeaders,
-      });
-    }
-
-    return response;
+    return worker.fetch(request, env, ctx);
   },
 
   async scheduled(_event: ScheduledEventLike, env: Env, ctx: ExecutionContextLike) {
