@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
+import { useAuth } from "@/lib/context/UserContext";
 import {
   Building2,
   TrendingUp,
@@ -94,6 +96,8 @@ const INITIAL: FormData = {
 
 export default function BecomeAHostPage() {
   const { locale } = useI18n();
+  const { isAuthenticated, refreshUser } = useAuth();
+  const router = useRouter();
   const L = (z: string, e: string, f: string) =>
     locale === "zh" ? z : locale === "fr" ? f : e;
 
@@ -110,7 +114,8 @@ export default function BecomeAHostPage() {
     setSubmitting(true);
     setError(null);
     try {
-      const res = await fetch("/api/contact", {
+      // 1. Send contact notification email
+      await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -121,8 +126,23 @@ export default function BecomeAHostPage() {
           subject: `Host application — ${form.propertyAddress || "No address"} (${form.bedrooms || "?"} BR)`,
           message: form.message || `New host application for property at ${form.propertyAddress || "unknown address"} in ${form.city}. Bedrooms: ${form.bedrooms || "?"}`,
         }),
-      });
-      if (!res.ok) throw new Error("Submission failed");
+      }).catch(() => {/* non-critical, continue */});
+
+      // 2. If logged in, auto-upgrade to HOST and go straight to the wizard
+      if (isAuthenticated) {
+        const hostRes = await fetch("/api/auth/become-host", {
+          method: "POST",
+          credentials: "include",
+        });
+        if (hostRes.ok) {
+          // Refresh user context so role updates everywhere
+          if (refreshUser) await refreshUser();
+          router.push("/host/listings/new");
+          return;
+        }
+      }
+
+      // Not logged in or upgrade failed — show success and prompt login
       setDone(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -139,14 +159,26 @@ export default function BecomeAHostPage() {
             <Check className="w-7 h-7 text-emerald-600" />
           </div>
           <h1 className="text-2xl font-semibold text-neutral-900">
-            {L("申请已提交！", "Application submitted!", "Candidature envoyée !")}
+            {L("申请已提交！", "You're approved!", "Vous êtes approuvé !")}
           </h1>
           <p className="mt-3 text-neutral-600">
-            {L("我们的团队会在 1-2 个工作日内与您联系。", "Our team will follow up within 1–2 business days.", "Notre équipe vous contactera sous 1 à 2 jours ouvrés.")}
+            {L(
+              "登录后即可开始发布房源。",
+              "Log in to start listing your property.",
+              "Connectez-vous pour commencer à publier votre bien."
+            )}
           </p>
-          <Link href="/" className="mt-6 inline-flex rounded-xl bg-neutral-900 px-5 py-3 text-sm font-medium text-white">
-            {L("返回首页", "Back to home", "Retour à l'accueil")}
-          </Link>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <Link
+              href="/login?redirect=/host/listings/new"
+              className="inline-flex items-center justify-center rounded-xl bg-neutral-900 px-5 py-3 text-sm font-medium text-white"
+            >
+              {L("登录并开始发布", "Log in & list your property", "Connexion et publier")}
+            </Link>
+            <Link href="/" className="inline-flex items-center justify-center rounded-xl border border-neutral-200 px-5 py-3 text-sm font-medium text-neutral-700">
+              {L("返回首页", "Back to home", "Retour à l'accueil")}
+            </Link>
+          </div>
         </div>
       </main>
     );
