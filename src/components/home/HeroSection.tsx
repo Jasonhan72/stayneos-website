@@ -19,16 +19,12 @@ export function HeroSection() {
     // Respect reduced-motion users: don't auto-play decorative video.
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const idle = (cb: () => void) => {
-      const w = window as Window & { requestIdleCallback?: (cb: () => void) => number };
-      if (w.requestIdleCallback) {
-        w.requestIdleCallback(cb);
-      } else {
-        setTimeout(cb, 1200);
-      }
-    };
-    const t1 = setTimeout(() => idle(() => setShowVideo(true)), 800);
-    return () => clearTimeout(t1);
+    // Defer 2s so the hero JPEG lands first without fighting the
+    // 1.88MB video for bandwidth. Simple timeout avoids the
+    // requestIdleCallback trap (Chromium may never go idle on a
+    // busy page with animations / network).
+    const t = setTimeout(() => setShowVideo(true), 2000);
+    return () => clearTimeout(t);
   }, []);
 
   return (
