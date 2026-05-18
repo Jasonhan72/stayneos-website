@@ -151,7 +151,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
 
   const activeCardId = internalHoveredId || hoveredPropertyId || selectedPropertyId;
   const activeCardProperty = useMemo(
-    () => (activeCardId ? properties.find((p) => p.id === activeCardId) : null),
+    () => (activeCardId ? (properties.find((p) => p?.id === activeCardId) ?? null) : null),
     [properties, activeCardId]
   );
 
@@ -232,12 +232,13 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
     try {
       markersRef.current.forEach(({ id, marker }) => {
         const isSelected = id === selectedPropertyId;
-        const isHovered = id === internalHoveredId || id === hoveredPropertyId && !isSelected;
+        const isHovered = id === internalHoveredId || (id === hoveredPropertyId && !isSelected);
+        const prop = properties.find((p) => p?.id === id);
         if (isHovered || isSelected) {
-          marker.setIcon(markerIcon(true, priceFor(properties.find((p) => p.id === id) || {} as Property)));
+          marker.setIcon(markerIcon(true, priceFor(prop || {} as Property)));
           marker.setZIndex(20);
         } else {
-          marker.setIcon(markerIcon(false, priceFor(properties.find((p) => p.id === id) || {} as Property)));
+          marker.setIcon(markerIcon(false, priceFor(prop || {} as Property)));
           marker.setZIndex(10);
         }
       });
