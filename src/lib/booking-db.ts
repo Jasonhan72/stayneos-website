@@ -43,6 +43,14 @@ export const bookingDb = {
     return result || null;
   },
 
+  async findByBookingNumber(db: ReturnType<typeof getDb>, bookingNumber: string): Promise<Booking | null> {
+    const result = await db
+      .prepare('SELECT * FROM Booking WHERE bookingNumber = ?')
+      .bind(bookingNumber)
+      .first<Booking>();
+    return result || null;
+  },
+
   async findByUserId(db: ReturnType<typeof getDb>, userId: string): Promise<Booking[]> {
     const result = await db
       .prepare('SELECT * FROM Booking WHERE userId = ? ORDER BY createdAt DESC')

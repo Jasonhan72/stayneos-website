@@ -29,7 +29,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     const auth = await getAuthorizedUser(request);
     if (!auth) return apiError('请先登录', 401, 'UNAUTHORIZED');
 
-    const booking = await bookingDb.findById(auth.db, (await params).id);
+    const idOrRef = (await params).id;
+    const booking =
+      (await bookingDb.findById(auth.db, idOrRef)) ||
+      (await bookingDb.findByBookingNumber(auth.db, idOrRef));
     if (!booking || booking.userId !== auth.user.id) return apiError('预订不存在', 404, 'BOOKING_NOT_FOUND');
 
     const property = getPropertySnapshot(booking.propertyId);
@@ -47,7 +50,10 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     const auth = await getAuthorizedUser(request);
     if (!auth) return apiError('请先登录', 401, 'UNAUTHORIZED');
 
-    const booking = await bookingDb.findById(auth.db, (await params).id);
+    const idOrRef = (await params).id;
+    const booking =
+      (await bookingDb.findById(auth.db, idOrRef)) ||
+      (await bookingDb.findByBookingNumber(auth.db, idOrRef));
     if (!booking || booking.userId !== auth.user.id) return apiError('预订不存在', 404, 'BOOKING_NOT_FOUND');
 
     const body = (await request.json().catch(() => ({}))) as {
@@ -88,7 +94,10 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     const auth = await getAuthorizedUser(request);
     if (!auth) return apiError('请先登录', 401, 'UNAUTHORIZED');
 
-    const booking = await bookingDb.findById(auth.db, (await params).id);
+    const idOrRef = (await params).id;
+    const booking =
+      (await bookingDb.findById(auth.db, idOrRef)) ||
+      (await bookingDb.findByBookingNumber(auth.db, idOrRef));
     if (!booking || booking.userId !== auth.user.id) return apiError('预订不存在', 404, 'BOOKING_NOT_FOUND');
     if (booking.status === 'CANCELLED') return apiError('预订已取消', 400, 'ALREADY_CANCELLED');
     if (booking.status === 'CHECKED_IN' || booking.status === 'CHECKED_OUT') {

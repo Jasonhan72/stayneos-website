@@ -76,6 +76,10 @@ export default function PaymentForm({ amount, currency, onSuccess, onError }: Pa
         <PaymentElement 
           options={{
             layout: 'tabs',
+            // Disable Stripe Link autofill prompt for the same reason as
+            // StripePaymentForm: Link's "Save info / Mobile number" card
+            // ships in English regardless of the Elements locale.
+            wallets: { applePay: 'never', googlePay: 'never' },
             defaultValues: {
               billingDetails: {
                 name: '',
