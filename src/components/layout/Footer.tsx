@@ -101,12 +101,12 @@ export default function Footer() {
             {/* Links Columns */}
             <div>
               <h4 className="font-semibold text-base mb-4 md:mb-5 text-white">{t("footer.companyTitle")}</h4>
-              <ul className="space-y-3">
+              <ul className="space-y-1">
                 {footerLinks.company.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-primary-100 hover:text-accent transition-colors duration-200 text-sm md:text-base"
+                      className="block py-2.5 text-primary-100 hover:text-accent transition-colors duration-200 text-sm md:text-base"
                     >
                       {link.label}
                     </Link>
@@ -117,12 +117,12 @@ export default function Footer() {
 
             <div>
               <h4 className="font-semibold text-base mb-4 md:mb-5 text-white">{t("footer.servicesTitle")}</h4>
-              <ul className="space-y-3">
+              <ul className="space-y-1">
                 {footerLinks.services.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-primary-100 hover:text-accent transition-colors duration-200 text-sm md:text-base"
+                      className="block py-2.5 text-primary-100 hover:text-accent transition-colors duration-200 text-sm md:text-base"
                     >
                       {link.label}
                     </Link>
@@ -133,12 +133,12 @@ export default function Footer() {
 
             <div>
               <h4 className="font-semibold text-base mb-4 md:mb-5 text-white">{t("footer.supportTitle")}</h4>
-              <ul className="space-y-3">
+              <ul className="space-y-1">
                 {footerLinks.support.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-primary-100 hover:text-accent transition-colors duration-200 text-sm md:text-base"
+                      className="block py-2.5 text-primary-100 hover:text-accent transition-colors duration-200 text-sm md:text-base"
                     >
                       {link.label}
                     </Link>
