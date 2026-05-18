@@ -719,6 +719,8 @@ function PropertyGridCard({
             src={property.images[0] || '/images/cooper-55-c5e8357d.jpg'}
             alt={property.title}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1536px) 30vw, 24vw"
+            loading="lazy"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
           
@@ -832,6 +834,8 @@ function PropertyListCard({ property, isSelected, onClick, onHover, cardRef }: P
             src={property.images[0] || '/images/cooper-55-c5e8357d.jpg'}
             alt={property.title}
             fill
+            sizes="(max-width: 768px) 100vw, 288px"
+            loading="lazy"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute left-3 top-3 flex flex-col gap-2">
