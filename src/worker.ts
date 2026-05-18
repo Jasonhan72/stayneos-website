@@ -84,6 +84,8 @@ const appWorker = {
       newHeaders.delete('vary');
       // Re-set a minimal Vary: Accept-Encoding for compression
       newHeaders.set('vary', 'Accept-Encoding');
+      // Diagnostic: verify worker code is deployed
+      newHeaders.set('x-perf-worker', 'vary-strip-v2');
 
       return new Response(response.body, {
         status: response.status,
