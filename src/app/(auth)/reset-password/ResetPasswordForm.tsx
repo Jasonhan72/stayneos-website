@@ -9,7 +9,8 @@ import { useI18n } from "@/lib/i18n";
 export default function ResetPasswordForm({ initialToken = "" }: { initialToken?: string }) {
   const router = useRouter();
   const { t, locale } = useI18n();
-  const L = (zh: string, en: string, fr: string) => locale === 'zh' ? zh : locale === 'fr' ? fr : en;
+  const L = (zh: string, en: string, fr: string) =>
+    locale === 'zh' ? zh : locale === 'fr' ? fr : en;
   const [token] = useState(initialToken);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -60,7 +61,7 @@ export default function ResetPasswordForm({ initialToken = "" }: { initialToken?
             <Image src="/logo.png" alt="NEOS" width={150} height={50} className="h-12 w-auto object-contain mx-auto mb-4" />
           </Link>
           <h1 className="text-2xl font-bold text-gray-900">
-            {t("auth.changePassword", "Set New Password")}
+            {t("changePassword", "Set New Password")}
           </h1>
         </div>
 
@@ -75,7 +76,7 @@ export default function ResetPasswordForm({ initialToken = "" }: { initialToken?
               </p>
             </div>
             <Link href="/login" className="text-blue-600 hover:underline">
-              {t("auth.signInNow", "Sign in now")}
+              {t("signInNow", "Sign in now")}
             </Link>
           </div>
         ) : (
@@ -94,7 +95,7 @@ export default function ResetPasswordForm({ initialToken = "" }: { initialToken?
             )}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                {t("auth.passwordPlaceholder", "New Password")}
+                {t("passwordPlaceholder", "New Password")}
               </label>
               <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -102,7 +103,7 @@ export default function ResetPasswordForm({ initialToken = "" }: { initialToken?
             </div>
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                {t("auth.confirmPasswordPlaceholder", "Confirm Password")}
+                {t("confirmPasswordPlaceholder", "Confirm Password")}
               </label>
               <input id="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -112,11 +113,11 @@ export default function ResetPasswordForm({ initialToken = "" }: { initialToken?
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
               {isLoading
                 ? L("重置中…", "Resetting…", "Réinitialisation…")
-                : t("auth.changePassword", "Reset Password")}
+                : t("changePassword", "Reset Password")}
             </button>
             <div className="text-center">
               <Link href="/login" className="text-sm text-blue-600 hover:underline">
-                {t("auth.login", "Back to Login")}
+                {t("login", "Back to Login")}
               </Link>
             </div>
           </form>

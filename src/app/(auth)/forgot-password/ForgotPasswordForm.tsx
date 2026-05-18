@@ -89,7 +89,7 @@ export default function ForgotPasswordForm() {
         <div className="w-full max-w-md">
           <div className="text-center mb-10">
             <h1 className="text-3xl font-bold text-gray-900 mb-3">
-              {t("auth.forgotPassword", "Forgot your password?")}
+              {t("forgotPassword", "Forgot your password?")}
             </h1>
             <p className="text-gray-600">
               {L("输入您的邮箱，我们会发送重置链接", "Enter your email address and we'll send you a reset link", "Entrez votre adresse courriel et nous vous enverrons un lien de réinitialisation")}
@@ -127,7 +127,7 @@ export default function ForgotPasswordForm() {
                 href="/login"
                 className="inline-block py-3 px-6 bg-[#003B5C] text-white font-medium hover:bg-[#002a42] transition-colors"
               >
-                {t("auth.login", "Back to Login")}
+                {t("login", "Back to Login")}
               </Link>
             </div>
           ) : (
@@ -143,7 +143,7 @@ export default function ForgotPasswordForm() {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  {t("auth.emailLabel", "Email Address")}
+                  {t("emailLabel", "Email Address")}
                 </label>
                 <input
                   id="email"
@@ -151,7 +151,7 @@ export default function ForgotPasswordForm() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 focus:border-[#003B5C] focus:outline-none transition-colors"
-                  placeholder={t("auth.emailPlaceholder", "Enter your registered email")}
+                  placeholder={t("emailPlaceholder", "Enter your registered email")}
                   disabled={isLoading}
                 />
               </div>
@@ -173,7 +173,7 @@ export default function ForgotPasswordForm() {
                     href="/login"
                     className="text-[#003B5C] font-medium hover:underline"
                   >
-                    {t("auth.login", "Back to Login")}
+                    {t("login", "Back to Login")}
                   </Link>
                 </p>
               </div>
