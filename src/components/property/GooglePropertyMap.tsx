@@ -1,8 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import Image from 'next/image';
-import { MapPin, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { GOOGLE_MAPS_API_KEY, hasUsableGoogleMapsKey } from '@/lib/google-maps';
 
@@ -30,13 +28,24 @@ type GoogleMapsWindow = Window & {
   gm_authFailure?: () => void;
   google?: {
     maps: {
-      Map: new (el: HTMLElement, opts: Record<string, unknown>) => unknown;
-      Marker: new (opts: Record<string, unknown>) => { addListener: (event: string, cb: () => void) => void; setIcon: (icon: Record<string, unknown>) => void };
+      Map: new (el: HTMLElement, opts: Record<string, unknown>) => {
+        getProjection: () => { fromLatLngToContainerPixel: (pos: { lat: number; lng: number }) => { x: number; y: number } };
+        getDiv: () => HTMLElement;
+      };
+      Marker: new (opts: Record<string, unknown>) => {
+        addListener: (event: string, cb: () => void) => void;
+        setIcon: (icon: Record<string, unknown>) => void;
+        getPosition: () => { lat: () => number; lng: () => number };
+        setZIndex: (z: number) => void;
+      };
       LatLngBounds: new () => { extend: (pos: { lat: number; lng: number }) => void };
-      InfoWindow: new (opts: Record<string, unknown>) => { open: (map: unknown, marker: unknown) => void; close: () => void };
       Size: new (w: number, h: number) => unknown;
       Point: new (x: number, y: number) => unknown;
-      event: { clearInstanceListeners: (obj: unknown) => void };
+      event: {
+        clearInstanceListeners: (obj: unknown) => void;
+        addListener: (instance: unknown, eventName: string, handler: () => void) => { remove: () => void };
+        removeListener: (listener: { remove: () => void }) => void;
+      };
     };
   };
 };
@@ -87,30 +96,58 @@ function markerIcon(selected: boolean, price: number) {
   const bg = selected ? '#DC2626' : '#ffffff';
   const fg = selected ? '#ffffff' : '#DC2626';
   const stroke = selected ? '#DC2626' : '#DC2626';
+  // Hash fragment so the browser doesn't reuse a cached data: URI
+  // when setIcon switches between selected ↔ unselected.
+  const hash = selected ? 's' : 'u';
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="76" height="38" viewBox="0 0 76 38"><rect x="1" y="1" width="74" height="30" rx="15" fill="${bg}" stroke="${stroke}" stroke-width="2"/><path d="M34 30l4 6 4-6" fill="${bg}"/><text x="38" y="21" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="${fg}">${label}</text></svg>`;
   const win = window as GoogleMapsWindow;
   return {
-    url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,
+    url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}#${hash}`,
     scaledSize: new win.google!.maps.Size(76, 38),
     anchor: new win.google!.maps.Point(38, 36),
+    // Must be false — otherwise Google Maps renders the icon into an
+    // internal canvas and ignores later setIcon() calls.
+    optimized: false,
   };
+}
+
+function propertyCardHTML(property: Property): string {
+  const imageUrl = property.images?.[0] || '/images/cooper-55-c5e8357d.jpg';
+  const location = property.location || property.address || '';
+  const price = priceFor(property);
+  return `
+    <div style="display:flex;gap:12px;max-width:260px;font-family:system-ui,-apple-system,sans-serif;">
+      <div style="width:72px;height:56px;border-radius:10px;overflow:hidden;flex-shrink:0;background:#e5e5e5;">
+        <img src="${imageUrl}" alt="${property.title}" style="width:100%;height:100%;object-fit:cover;" />
+      </div>
+      <div style="min-width:0;flex:1;">
+        <p style="margin:0;font-size:13px;font-weight:600;line-height:1.3;color:#171717;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${property.title}</p>
+        <p style="margin:4px 0 0;font-size:11px;color:#737373;display:flex;align-items:center;gap:4px;">📍 ${location}</p>
+        <p style="margin:6px 0 0;font-size:13px;font-weight:700;color:#171717;">$${price.toLocaleString()} / month</p>
+      </div>
+    </div>`;
 }
 
 export default function GooglePropertyMap({ properties, selectedPropertyId, hoveredPropertyId, onPropertySelect }: GooglePropertyMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
-  const markersRef = useRef<Array<{ id: string; marker: { setIcon: (icon: Record<string, unknown>) => void } }>>([]);
+  const mapInstanceRef = useRef<unknown>(null);
+  const markersRef = useRef<Array<{
+    id: string;
+    marker: {
+      setIcon: (icon: Record<string, unknown>) => void;
+      getPosition: () => { lat: () => number; lng: () => number };
+      setZIndex: (z: number) => void;
+    };
+  }>>([]);
   const [mapError, setMapError] = useState('');
-  const [isMobileCardOpen, setIsMobileCardOpen] = useState(true);
 
   const selectedProperty = useMemo(
-    () => properties.find((property) => property.id === selectedPropertyId) || properties[0],
+    () => (selectedPropertyId ? properties.find((p) => p.id === selectedPropertyId) : null),
     [properties, selectedPropertyId]
   );
 
   useEffect(() => {
     let disposed = false;
-    let map: unknown;
-    let infoWindow: { open: (map: unknown, marker: unknown) => void; close: () => void } | null = null;
 
     async function initMap() {
       if (!mapRef.current || properties.length === 0) return;
@@ -125,7 +162,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
         const win = window as GoogleMapsWindow;
         const google = win.google!.maps;
         const center = coordFor(properties[0], 0);
-        map = new google.Map(mapRef.current, {
+        const map = new google.Map(mapRef.current, {
           center,
           zoom: 13,
           disableDefaultUI: false,
@@ -138,8 +175,8 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
             { featureType: 'transit', elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
           ],
         });
+        mapInstanceRef.current = map;
         const bounds = new google.LatLngBounds();
-        infoWindow = new google.InfoWindow({ disableAutoPan: false });
 
         markersRef.current = properties.map((property, index) => {
           const position = coordFor(property, index);
@@ -151,16 +188,12 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
             icon: markerIcon(false, priceFor(property)),
             zIndex: 10,
           });
-          marker.addListener('click', () => {
-            onPropertySelect(property.id);
-            setIsMobileCardOpen(true);
-            infoWindow?.open(map, marker);
-          });
+          marker.addListener('click', () => onPropertySelect(property.id));
           return { id: property.id, marker };
         });
 
-        if (properties.length > 1 && 'fitBounds' in (map as Record<string, unknown>)) {
-          (map as { fitBounds: (bounds: unknown, padding: number) => void }).fitBounds(bounds, 64);
+        if (properties.length > 1 && typeof (map as Record<string, unknown>).fitBounds === 'function') {
+          (map as unknown as { fitBounds: (bounds: unknown, padding: number) => void }).fitBounds(bounds, 64);
         }
         setMapError('');
       } catch (error) {
@@ -175,21 +208,84 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
       if (win.gm_authFailure) win.gm_authFailure = undefined;
       markersRef.current.forEach(({ marker }) => win.google?.maps.event.clearInstanceListeners(marker));
       markersRef.current = [];
-      infoWindow?.close();
     };
   }, [properties, onPropertySelect]);
 
+  // Keep marker icons in sync with selection / hover state.
   useEffect(() => {
     markersRef.current.forEach(({ id, marker }) => {
       const isSelected = id === selectedPropertyId;
       const isHovered = id === hoveredPropertyId && !isSelected;
-      if (isHovered) {
+      if (isHovered || isSelected) {
         marker.setIcon(markerIcon(true, priceFor(properties.find((p) => p.id === id) || {} as Property)));
+        marker.setZIndex(20);
       } else {
-        marker.setIcon(markerIcon(isSelected, priceFor(properties.find((p) => p.id === id) || {} as Property)));
+        marker.setIcon(markerIcon(false, priceFor(properties.find((p) => p.id === id) || {} as Property)));
+        marker.setZIndex(10);
       }
     });
   }, [selectedPropertyId, hoveredPropertyId, properties]);
+
+  // Show a floating card above the selected marker, hidden when nothing is selected.
+  useEffect(() => {
+    if (!mapInstanceRef.current) return;
+
+    const existing = document.getElementById('stayneos-map-infowindow');
+    if (existing) existing.remove();
+
+    if (!selectedPropertyId || !selectedProperty) return;
+
+    const markerEntry = markersRef.current.find((m) => m.id === selectedPropertyId);
+    if (!markerEntry) return;
+
+    const map = mapInstanceRef.current as {
+      getProjection: () => { fromLatLngToContainerPixel: (pos: { lat: number; lng: number }) => { x: number; y: number } };
+      getDiv: () => HTMLElement;
+    };
+    const projection = map.getProjection();
+    const markerPos = markerEntry.marker.getPosition();
+    const pixel = projection.fromLatLngToContainerPixel({ lat: markerPos.lat(), lng: markerPos.lng() });
+
+    const card = document.createElement('div');
+    card.id = 'stayneos-map-infowindow';
+    card.style.cssText = `
+      position: absolute;
+      left: ${pixel.x}px;
+      top: ${pixel.y - 100}px;
+      transform: translate(-50%, -100%);
+      z-index: 30;
+      background: white;
+      border-radius: 14px;
+      padding: 10px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      border: 1px solid rgba(0,0,0,0.08);
+      pointer-events: auto;
+    `;
+    card.innerHTML = propertyCardHTML(selectedProperty);
+    map.getDiv().appendChild(card);
+
+    // Re-position on map pan / zoom.
+    const reposition = () => {
+      const proj = map.getProjection();
+      const p = proj.fromLatLngToContainerPixel({ lat: markerPos.lat(), lng: markerPos.lng() });
+      card.style.left = `${p.x}px`;
+      card.style.top = `${p.y - 100}px`;
+    };
+    const google = (window as GoogleMapsWindow).google!;
+    const idleListener = google.maps.event.addListener(
+      map as unknown as Parameters<typeof google.maps.event.addListener>[0],
+      'idle',
+      reposition
+    );
+    const resizeObserver = new ResizeObserver(reposition);
+    resizeObserver.observe(map.getDiv());
+
+    return () => {
+      card.remove();
+      google.maps.event.removeListener(idleListener);
+      resizeObserver.disconnect();
+    };
+  }, [selectedPropertyId, selectedProperty]);
 
   if (properties.length === 0) {
     return (
@@ -218,10 +314,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
               <button
                 key={property.id}
                 type="button"
-                onClick={() => {
-                  onPropertySelect(property.id);
-                  setIsMobileCardOpen(true);
-                }}
+                onClick={() => onPropertySelect(property.id)}
                 className={cn(
                   'absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full px-3 py-2 text-sm font-bold shadow-lg transition-transform hover:scale-105',
                   selected ? 'bg-red-600 text-white' : 'bg-white text-red-600 ring-1 ring-red-600'
@@ -235,31 +328,6 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
           })}
           <div className="absolute left-4 right-4 top-16 rounded-xl bg-white/90 p-3 text-sm text-neutral-600 shadow">
             Google Maps could not load ({mapError}); showing fallback property pins.
-          </div>
-        </div>
-      )}
-
-      {selectedProperty && (
-        <div className="absolute bottom-4 left-4 right-4 z-30 lg:left-auto lg:right-4 lg:w-80">
-          <button
-            type="button"
-            onClick={() => setIsMobileCardOpen((open) => !open)}
-            className="mb-2 flex w-full items-center justify-between rounded-full bg-white px-4 py-2 text-sm font-semibold text-neutral-900 shadow-lg lg:hidden"
-          >
-            Selected stay
-            {isMobileCardOpen ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
-          </button>
-          <div className={cn('rounded-2xl bg-white p-3 shadow-2xl ring-1 ring-black/10', !isMobileCardOpen && 'hidden lg:block')}>
-            <div className="flex gap-3">
-              <div className="relative h-20 w-24 shrink-0 overflow-hidden rounded-xl bg-neutral-200">
-                <Image src={selectedProperty.images?.[0] || '/images/cooper-55-c5e8357d.jpg'} alt={selectedProperty.title} fill className="object-cover" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="line-clamp-2 text-sm font-semibold text-neutral-900">{selectedProperty.title}</p>
-                <p className="mt-1 flex items-center gap-1 text-xs text-neutral-500"><MapPin size={12} />{selectedProperty.location || selectedProperty.address}</p>
-                <p className="mt-2 text-sm font-bold text-neutral-900">${priceFor(selectedProperty).toLocaleString()} / month</p>
-              </div>
-            </div>
           </div>
         </div>
       )}
