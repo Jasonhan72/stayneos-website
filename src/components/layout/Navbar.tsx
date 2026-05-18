@@ -53,10 +53,10 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
     { href: "/about", label: t("nav.about") },
   ];
 
-  // Homepage: transparent → white on scroll. Other pages: existing behavior.
-  const effectiveVariant = isHomePage
-    ? (isScrolled ? "light" : "transparent")
-    : variant;
+  // Per Jason 2026-05-17: nav is always white background with dark text
+  // across all pages, including homepage hero. No more transparent variant,
+  // no gradient scrim. Keeps things simple and readable on every viewport.
+  const effectiveVariant = isHomePage ? "light" : variant;
 
   const bgStyles = {
     light: isScrolled ? "bg-white shadow-md" : "bg-white",
@@ -67,25 +67,17 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
   const textStyles = {
     light: "text-neutral-700 hover:text-neutral-900",
     dark: "text-white/90 hover:text-white",
-    transparent: "text-white hover:text-white [text-shadow:_0_1px_2px_rgb(0_0_0_/_55%)]",
+    transparent: "text-neutral-700 hover:text-neutral-900",
   };
 
   return (
     <>
-      {/* Hero scrim: ensure transparent nav links stay legible over bright video frames */}
-      {isHomePage && !isScrolled && (
-        <div
-          aria-hidden="true"
-          className="pointer-events-none fixed top-0 left-0 right-0 h-24 md:h-28 z-40 bg-gradient-to-b from-black/55 via-black/25 to-transparent"
-        />
-      )}
-
       {/* Main Navigation */}
       <nav
         className={cn(
           "sticky top-0 z-50 transition-all duration-300",
           bgStyles[effectiveVariant],
-          isHomePage && isScrolled && "shadow-md"
+          isScrolled && "shadow-md"
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
