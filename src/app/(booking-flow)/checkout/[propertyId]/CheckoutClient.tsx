@@ -71,6 +71,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
   // Modals state
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showGuestPicker, setShowGuestPicker] = useState(false);
+  const [showAllRules, setShowAllRules] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingError, setBookingError] = useState("");
 
@@ -649,13 +650,43 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
                   <span className="w-1 h-1 bg-neutral-400 rounded-full" />
                   {t("checkout.checkoutBefore") || "Checkout before 11:00 AM"}
                 </li>
+                {showAllRules && (
+                  <>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1 h-1 bg-neutral-400 rounded-full" />
+                      {t("checkout.noSmoking") || "No smoking"}
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1 h-1 bg-neutral-400 rounded-full" />
+                      {t("checkout.noParties") || "No parties or events"}
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1 h-1 bg-neutral-400 rounded-full" />
+                      {t("checkout.quietHours") || "Quiet hours: 10:00 PM – 8:00 AM"}
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1 h-1 bg-neutral-400 rounded-full" />
+                      {t("checkout.noUnregisteredGuests") || "No unregistered guests"}
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1 h-1 bg-neutral-400 rounded-full" />
+                      {t("checkout.disposeGarbage") || "Dispose of garbage properly"}
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1 h-1 bg-neutral-400 rounded-full" />
+                      {t("checkout.respectBuilding") || "Respect building amenities and common areas"}
+                    </li>
+                  </>
+                )}
                 <li>
-                  <Link
-                    href={`/property/${propertyId}`}
+                  <button
+                    onClick={() => setShowAllRules(!showAllRules)}
                     className="font-medium underline"
                   >
-                    {t("checkout.seeAll") || "See all"}
-                  </Link>
+                    {showAllRules
+                      ? t("checkout.showLess") || "Show less"
+                      : t("checkout.seeAll") || "See all"}
+                  </button>
                 </li>
               </ul>
             </div>
