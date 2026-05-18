@@ -7,11 +7,28 @@ import WizardFooter from "@/components/host/listings/wizard/WizardFooter";
 
 const MAX_PHOTOS = 20;
 
-function readAsDataUrl(file: File): Promise<string> {
+const MAX_SIZE_MB = 4;
+
+// Compress image to JPEG at reduced quality to keep localStorage small
+function compressImage(file: File, maxPx = 1200, quality = 0.82): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result || ""));
     reader.onerror = () => reject(reader.error);
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('decode failed'));
+      img.onload = () => {
+        const scale = Math.min(1, maxPx / Math.max(img.width, img.height));
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d')!.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = reader.result as string;
+    };
     reader.readAsDataURL(file);
   });
 }
@@ -28,8 +45,12 @@ export default function StepPhotosPage() {
     for (const f of Array.from(files)) {
       if (!f.type.startsWith("image/")) continue;
       if (photos.length + accepted.length >= MAX_PHOTOS) break;
+      if (f.size > MAX_SIZE_MB * 1024 * 1024) {
+        alert(`"${f.name}" is over ${MAX_SIZE_MB}MB — please use a smaller file.`);
+        continue;
+      }
       try {
-        accepted.push(await readAsDataUrl(f));
+        accepted.push(await compressImage(f));
       } catch {
         /* skip */
       }

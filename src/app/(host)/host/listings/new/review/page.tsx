@@ -17,24 +17,20 @@ export default function StepReviewPage() {
     setError(null);
     setPublishing(true);
     try {
+      // Strip base64 data URIs — they’re too large for the DB.
+      // Only real https:// URLs survive. Base64 previews are display-only.
+      const photoUrls = (draft.photos || []).filter((p) => p.startsWith('http'));
+
       const payload = {
         title: draft.title,
         description: draft.description,
         descriptionZh: draft.descriptionZh,
-        propertyType: draft.type,
-        address: draft.location?.address,
-        city: draft.location?.city,
-        neighborhood: draft.location?.neighborhood,
-        bedrooms: draft.basics?.bedrooms,
-        bathrooms: draft.basics?.bathrooms,
-        maxGuests: draft.basics?.maxGuests,
-        area: draft.basics?.sqft,
+        type: draft.type,
+        location: draft.location,
+        basics: draft.basics,
         amenities: draft.amenities,
-        images: draft.photos,
-        basePrice: draft.pricing?.priceMonthly,
-        priceQuarterly: draft.pricing?.priceQuarterly,
-        priceAnnual: draft.pricing?.priceAnnual,
-        minStayDays: draft.pricing?.minStayDays,
+        photos: photoUrls,
+        pricing: draft.pricing,
       };
       const res = await fetch("/api/host/properties", {
         method: "POST",
@@ -43,15 +39,12 @@ export default function StepReviewPage() {
         body: JSON.stringify(payload),
       });
       if (!res.ok) {
-        // POST not yet implemented server-side — keep draft, surface the error.
         const txt = await res.text().catch(() => "");
-        setError(
-          `Publish failed (HTTP ${res.status}). Backend POST /api/host/properties is not implemented yet. ${txt.slice(0, 200)}`,
-        );
+        setError(`Publish failed (${res.status}): ${txt.slice(0, 200)}`);
         return;
       }
       clearDraft();
-      router.push("/host/listings");
+      router.push("/host/listings?published=1");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Publish failed");
     } finally {
