@@ -70,7 +70,7 @@ const nextConfig = {
     {
       source: '/:path*',
       headers: [
-        { key: 'Cache-Control', value: 'public, s-maxage=300, stale-while-revalidate=600' },
+        { key: 'Cache-Control', value: 'public, s-maxage=300, stale-while-revalidate=86400' },
         { key: 'Content-Security-Policy', value: csp },
         { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
         { key: 'X-Content-Type-Options', value: 'nosniff' },
