@@ -35,15 +35,15 @@ export function HeroSection() {
     <>
       <section className="relative h-[100svh] min-h-[600px] flex items-center justify-center overflow-hidden bg-neutral-900">
         {/* Background image (always visible, renders first).
-            sizes hint nudges the browser to prefer the 1080w webp variant
-            (~157KB) on common laptop widths instead of the 1920w (~514KB). */}
+            sizes caps mobile at 640px (24KB webp) and nudges desktop
+            to 1080w webp (~157KB) instead of 1920w (~514KB). */}
         <div className="absolute inset-0 z-0">
           <ResponsiveImage
             src="/images/cooper-55-e98a880d.jpg"
             alt="55 Cooper St lakefront view"
             fill
             priority={true}
-            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 70vw"
+            sizes="(max-width: 640px) 640px, (max-width: 1080px) 100vw, 100vw"
             className="object-cover"
           />
         </div>
