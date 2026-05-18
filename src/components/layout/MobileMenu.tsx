@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { X, User, Home, Heart, KeyRound, Building2, ChevronRight, Info, Globe } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { X, User, Home, Heart, KeyRound, Building2, ChevronRight, Info, Globe, Luggage } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/context/UserContext";
 import { useI18n } from "@/lib/i18n";
@@ -42,7 +43,9 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const selectedLang = languages.find(l => l.code === locale) || languages[0];
   const userAlt = locale === "zh" ? "用户头像" : locale === "fr" ? "Avatar utilisateur" : "User avatar";
   const defaultInitial = locale === "zh" ? "用" : locale === "fr" ? "U" : "U";
+  const pathname = usePathname();
   const isHost = user?.role === "HOST" || user?.role === "ADMIN" || user?.role === "SUPER_ADMIN";
+  const isHostMode = pathname?.startsWith("/host");
 
   // Prevent body scroll when menu is open
   useEffect(() => {
@@ -258,15 +261,39 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   <ChevronRight className="w-5 h-5 text-neutral-400" />
                 </Link>
 
-                {isHost && (
+                {isHost ? (
                   <Link
-                    href="/host"
+                    href={isHostMode ? "/" : "/host"}
+                    onClick={onClose}
+                    className="flex items-center justify-between py-4 border-b border-neutral-100"
+                  >
+                    <div className="flex items-center gap-4">
+                      {isHostMode
+                        ? <Luggage className="w-5 h-5 text-neutral-600" />
+                        : <Building2 className="w-5 h-5 text-neutral-600" />}
+                      <div>
+                        <span className="text-neutral-800 font-medium">
+                          {isHostMode ? "Switch to travelling" : "Switch to hosting"}
+                        </span>
+                        {isHostMode && (
+                          <p className="text-xs text-neutral-400 mt-0.5">Currently in Hosting mode</p>
+                        )}
+                      </div>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-neutral-400" />
+                  </Link>
+                ) : (
+                  <Link
+                    href="/become-a-host"
                     onClick={onClose}
                     className="flex items-center justify-between py-4 border-b border-neutral-100"
                   >
                     <div className="flex items-center gap-4">
                       <Building2 className="w-5 h-5 text-neutral-600" />
-                      <span className="text-neutral-800">{t("nav.manageProperties", "Manage properties")}</span>
+                      <div>
+                        <span className="text-neutral-800 font-medium">Become a host</span>
+                        <p className="text-xs text-neutral-400 mt-0.5">List your property on Neos</p>
+                      </div>
                     </div>
                     <ChevronRight className="w-5 h-5 text-neutral-400" />
                   </Link>
