@@ -203,9 +203,9 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
           ))}
           <div className="my-2 border-t border-neutral-200" />
           <button
-            onClick={() => {
+            onClick={async () => {
               setIsOpen(false);
-              logout();
+              await logout();
             }}
             className="flex min-h-[56px] w-full items-center gap-4 px-5 text-left text-[15px] text-neutral-900 transition-colors hover:bg-neutral-50"
           >

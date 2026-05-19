@@ -369,12 +369,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
     } catch (e) {
       if (process.env.NODE_ENV !== 'production') console.error('Logout API error:', e);
     }
+    // Clear localStorage synchronously before the hard redirect so the new
+    // page load doesn't briefly flash stale user data from cache.
     localStorage.removeItem(USER_KEY);
-    setUser(null);
-    // Dispatch event to notify other components (like Navbar)
-    window.dispatchEvent(new CustomEvent("localStorageChange"));
-    // Redirect to home
-    window.location.href = "/";
+    // Hard navigate away BEFORE setUser(null) — this prevents HostGuard /
+    // other guards from seeing null user and firing a competing router.replace.
+    // The page reload will re-initialise UserContext from scratch.
+    window.location.replace("/");
   }, []);
 
   const refreshUser = useCallback(async () => {
