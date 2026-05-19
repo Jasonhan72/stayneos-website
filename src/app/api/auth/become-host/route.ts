@@ -3,7 +3,7 @@ import { verifyRequestAuth } from '@/lib/auth/admin-api';
 import { signToken } from '@/lib/auth/jwt';
 import { AUTH_COOKIE_NAME, getAuthCookieOptions } from '@/lib/auth/cookie';
 import { getDb } from '@/lib/d1';
-import { checkRateLimit } from '@/lib/security/rate-limit';
+import { checkRateLimit, checkD1RateLimit } from '@/lib/security/rate-limit';
 import { validateCsrf } from '@/lib/security/csrf';
 
 export const dynamic = 'force-dynamic';
@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
  * Called after the become-a-host form is submitted.
  */
 export async function POST(request: Request) {
-  // Rate limit: max 5 attempts per minute per IP
+  // Rate limit: max 5 attempts per minute per IP (memory)
   const rate = checkRateLimit(request, 'become-host', { limit: 5, windowMs: 60_000 });
   if (!rate.allowed) return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
 
@@ -32,6 +32,10 @@ export async function POST(request: Request) {
 
   try {
     const db = getDb();
+
+    // D1-backed rate limit (survives multi-isolate Workers)
+    const d1Rate = await checkD1RateLimit(db, request, 'become-host', { limit: 5, windowMs: 60_000 });
+    if (!d1Rate.allowed) return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
 
     // Require account to be at least 1 hour old (anti-abuse: prevents
     // automated registration + instant host upgrade scripts)

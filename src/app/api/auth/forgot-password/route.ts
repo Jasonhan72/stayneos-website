@@ -4,7 +4,7 @@ import crypto from "crypto";
 import { userDb, getDb } from "@/lib/d1";
 import { sendEmail } from "@/lib/email";
 import { getBaseUrl } from "@/lib/config/env";
-import { checkRateLimit } from '@/lib/security/rate-limit';
+import { checkRateLimit, checkD1RateLimit } from '@/lib/security/rate-limit';
 import { validateCsrf } from '@/lib/security/csrf';
 
 function hashToken(token: string): string {
@@ -38,6 +38,11 @@ export async function POST(request: Request) {
 
   try {
     const db = getDb();
+
+    // D1-backed rate limit (survives multi-isolate Workers)
+    const d1Rate = await checkD1RateLimit(db, request, 'auth:forgot-password', { limit: 3, windowMs: 60_000 });
+    if (!d1Rate.allowed) return NextResponse.json({ message: '请求过于频繁，请稍后再试' }, { status: 429 });
+
     const body = await request.json();
     const { email } = body;
 

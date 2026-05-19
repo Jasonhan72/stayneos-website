@@ -6,6 +6,7 @@ import { paymentDb } from "@/lib/payment-db";
 import { stripe } from "@/lib/stripe";
 import { getPropertySnapshot } from "@/lib/property-catalog";
 import { APIError, safeApiHandler } from "@/lib/utils/error-handler";
+import { validateCsrf } from '@/lib/security/csrf';
 
 const JSON_HEADERS = {
   "Access-Control-Allow-Origin": "https://www.stayneos.com",
@@ -18,6 +19,7 @@ export async function OPTIONS() {
 }
 
 export async function POST(request: NextRequest) {
+  if (!validateCsrf(request)) return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
   return safeApiHandler<unknown>(async () => {
     const currentUser = await getCurrentUserFromRequest(request);
 

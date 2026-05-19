@@ -4,6 +4,7 @@ import { signToken } from "@/lib/auth/jwt";
 import { userDb, accountDb, getDb } from "@/lib/d1";
 import { getAuthSecret, getPublicBaseUrl } from "@/lib/config/env";
 import { AUTH_COOKIE_NAME, getAuthCookieOptions, getClearedAuthCookieOptions } from "@/lib/auth/cookie";
+import { encrypt as encryptValue } from '@/lib/security/encrypt';
 
 export const dynamic = "force-dynamic";
 const DEFAULT_REDIRECT = "/";
@@ -208,6 +209,16 @@ export async function GET(request: NextRequest) {
       }
 
       if (existingUser) {
+        // If the existing user has a password, don't auto-link Google.
+        // This prevents account hijack: an attacker with a Google account
+        // matching the victim's email could otherwise take over the account.
+        // The user must log in with their password first, then link Google
+        // from account settings.
+        if (existingUser.password) {
+          debugLog("Existing user has password — rejecting auto-link");
+          return buildLoginRedirect(baseUrl, "password_exists", parsedState.redirect);
+        }
+
         debugLog("Linking Google account to existing user:", existingUser.email);
         userId = existingUser.id;
         user = existingUser;
@@ -217,12 +228,12 @@ export async function GET(request: NextRequest) {
             type: "oauth",
             provider: "google",
             providerAccountId: googleUser.id,
-            access_token: tokenData.access_token,
-            refresh_token: tokenData.refresh_token,
+            access_token: await encryptValue(tokenData.access_token),
+            refresh_token: tokenData.refresh_token ? await encryptValue(tokenData.refresh_token) : null,
             expires_at: tokenData.expires_in ? Math.floor(Date.now() / 1000) + tokenData.expires_in : null,
             token_type: tokenData.token_type,
             scope: tokenData.scope,
-            id_token: tokenData.id_token,
+            id_token: tokenData.id_token ? await encryptValue(tokenData.id_token) : null,
           });
           debugLog("Account linked successfully");
         } catch (err) {
@@ -252,12 +263,12 @@ export async function GET(request: NextRequest) {
             type: "oauth",
             provider: "google",
             providerAccountId: googleUser.id,
-            access_token: tokenData.access_token,
-            refresh_token: tokenData.refresh_token,
+            access_token: await encryptValue(tokenData.access_token),
+            refresh_token: tokenData.refresh_token ? await encryptValue(tokenData.refresh_token) : null,
             expires_at: tokenData.expires_in ? Math.floor(Date.now() / 1000) + tokenData.expires_in : null,
             token_type: tokenData.token_type,
             scope: tokenData.scope,
-            id_token: tokenData.id_token,
+            id_token: tokenData.id_token ? await encryptValue(tokenData.id_token) : null,
           });
           debugLog("Account created successfully");
         } catch (err) {

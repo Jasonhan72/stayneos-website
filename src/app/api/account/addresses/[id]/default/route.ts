@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/d1";
 import { requireAccountUser } from "@/lib/auth/account";
+import { validateCsrf } from '@/lib/security/csrf';
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest, context: { params: Promise<{ id: string }> }) {
+  if (!validateCsrf(request)) return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
   const auth = await requireAccountUser(request);
   if (auth instanceof NextResponse) return auth;
   const { id } = await context.params;

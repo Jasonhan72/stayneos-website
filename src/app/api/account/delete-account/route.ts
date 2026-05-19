@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUserFromRequest } from "@/lib/auth";
 import { getDb } from "@/lib/d1";
+import { validateCsrf } from '@/lib/security/csrf';
 
 export const dynamic = "force-dynamic";
 const COOLING_OFF_DAYS = 30;
@@ -19,6 +20,7 @@ async function getOpenBookingCount(userId: string) {
 }
 
 export async function POST(request: NextRequest) {
+  if (!validateCsrf(request)) return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
   try {
     const auth = await getCurrentUserFromRequest(request);
     if (!auth?.userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
