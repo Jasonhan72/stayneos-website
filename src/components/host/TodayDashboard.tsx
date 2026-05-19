@@ -33,10 +33,10 @@ export default function TodayDashboard() {
   }, []);
 
   const cards = useMemo(() => [
-    { label: "Today's check-ins", value: data?.metrics.checkInsToday ?? 0 },
-    { label: "Today's check-outs", value: data?.metrics.checkOutsToday ?? 0 },
-    { label: "This month's revenue", value: `$${(data?.metrics.revenueThisMonth ?? 0).toLocaleString()} CAD` },
-    { label: "Occupancy rate", value: `${data?.metrics.occupancyRate ?? 0}%` },
+    { label: "Today's check-ins", value: data?.metrics?.checkInsToday ?? 0 },
+    { label: "Today's check-outs", value: data?.metrics?.checkOutsToday ?? 0 },
+    { label: "This month's revenue", value: `$${(data?.metrics?.revenueThisMonth ?? 0).toLocaleString()} CAD` },
+    { label: "Occupancy rate", value: `${data?.metrics?.occupancyRate ?? 0}%` },
   ], [data]);
 
   const renderList = (items: Reservation[], empty: string) => items.length ? (
