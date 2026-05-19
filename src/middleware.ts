@@ -23,12 +23,15 @@ const PROTECTED_PREFIXES = [
   '/account/',
   '/host/',
   '/booking/',
+  '/bookings/',
   '/payment/',
+  '/checkout/',
 ];
 
 // 需要 Host 角色的路由
+const HOST_EXACT = ['/host'];
 const HOST_PREFIXES = [
-  '/host/',
+  '/host/',  // /host/* sub-routes
 ];
 
 const VALID_LOCALES: Locale[] = ['en', 'fr', 'zh'];
@@ -94,12 +97,10 @@ function isProtectedRoute(pathname: string): boolean {
 
 // 检查是否是 Host 路由
 function isHostRoute(pathname: string): boolean {
+  if (HOST_EXACT.includes(pathname)) return true;
   for (const prefix of HOST_PREFIXES) {
-    if (pathname.startsWith(prefix)) {
-      return true;
-    }
+    if (pathname.startsWith(prefix)) return true;
   }
-  
   return false;
 }
 
