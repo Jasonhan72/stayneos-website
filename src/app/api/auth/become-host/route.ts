@@ -29,6 +29,20 @@ export async function POST(request: Request) {
 
   try {
     const db = getDb();
+
+    // Require account to be at least 1 hour old (anti-abuse: prevents
+    // automated registration + instant host upgrade scripts)
+    const account = await db
+      .prepare('SELECT createdAt, emailVerified FROM User WHERE id = ?')
+      .bind(user.userId)
+      .first<{ createdAt: string; emailVerified: string | null }>();
+    if (account) {
+      const ageMs = Date.now() - new Date(account.createdAt).getTime();
+      if (ageMs < 3_600_000) {
+        return NextResponse.json({ error: 'Account too new. Please wait before applying.' }, { status: 403 });
+      }
+    }
+
     const now = new Date().toISOString();
 
     // Upgrade role to HOST in the DB
