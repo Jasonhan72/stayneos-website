@@ -56,6 +56,9 @@ export async function GET(request: NextRequest) {
     const db = getDb();
     const user = await userDb.findByEmail(db, currentUser.email);
     if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+    if (!["ADMIN", "SUPER_ADMIN", "HOST"].includes(user.role)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
 
     const horizon = new Date();
     horizon.setMonth(horizon.getMonth() - (months - 1));

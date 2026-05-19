@@ -1,6 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getCurrentUserFromRequest } from "@/lib/auth";
+import { getDb, userDb } from "@/lib/d1";
 
 export const dynamic = "force-dynamic";
+
+async function ensureHost(req: NextRequest) {
+  const currentUser = await getCurrentUserFromRequest(req);
+  if (!currentUser?.email) return null;
+  const db = getDb();
+  const user = await userDb.findByEmail(db, currentUser.email);
+  if (!user) return null;
+  if (!["ADMIN", "SUPER_ADMIN", "HOST"].includes(user.role)) return null;
+  return true;
+}
 
 /**
  * PATCH /api/host/draft/[id] — stub. Drafts live in localStorage today; this
@@ -10,6 +22,9 @@ export async function PATCH(
   req: NextRequest,
   ctx: { params: Promise<{ id: string }> },
 ) {
+  if (!(await ensureHost(req))) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const { id } = await ctx.params;
   let body: Record<string, unknown> = {};
   try {
@@ -26,9 +41,12 @@ export async function PATCH(
 }
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   ctx: { params: Promise<{ id: string }> },
 ) {
+  if (!(await ensureHost(req))) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const { id } = await ctx.params;
   return NextResponse.json({
     draftId: id,
