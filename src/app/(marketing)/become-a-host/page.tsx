@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
@@ -96,10 +96,19 @@ const INITIAL: FormData = {
 
 export default function BecomeAHostPage() {
   const { locale } = useI18n();
-  const { isAuthenticated, refreshUser } = useAuth();
+  const { isAuthenticated, user, refreshUser } = useAuth();
   const router = useRouter();
   const L = (z: string, e: string, f: string) =>
     locale === "zh" ? z : locale === "fr" ? f : e;
+
+  const isAlreadyHost = !!(user && ["HOST", "ADMIN", "SUPER_ADMIN"].includes((user as { role?: string }).role ?? ""));
+
+  // Redirect hosts straight to dashboard — don't show the signup form again
+  useEffect(() => {
+    if (isAlreadyHost) {
+      router.replace("/host");
+    }
+  }, [isAlreadyHost, router]);
 
   const [form, setForm] = useState<FormData>(INITIAL);
   const [submitting, setSubmitting] = useState(false);

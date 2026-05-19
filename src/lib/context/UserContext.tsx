@@ -78,6 +78,7 @@ function toStorageProfile(user: UserProfile): Partial<UserProfile> {
     preferences: user.preferences,
     memberSince: user.memberSince,
     memberLevel: user.memberLevel,
+    role: user.role, // persist role so HOST/ADMIN state survives page reload without waiting for session API
   };
 }
 
