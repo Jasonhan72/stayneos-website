@@ -64,7 +64,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "邮箱或密码错误" }, { status: 401 });
     }
 
-    const token = await signToken({ userId: user.id, email: user.email, role: user.role });
+    const token = await signToken({ userId: user.id, email: user.email, role: user.role, tv: (user as { tokenVersion?: number }).tokenVersion ?? 0 });
 
     if (!useDevStore) {
       const now = new Date().toISOString();

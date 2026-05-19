@@ -17,6 +17,7 @@ export interface User {
   deletionScheduledAt?: string | null;
   deletionStatus?: 'active' | 'pending_deletion' | 'deleted' | null;
   bio?: string | null;
+  tokenVersion?: number;
   createdAt: string;
   updatedAt: string;
 }

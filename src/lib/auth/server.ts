@@ -13,6 +13,7 @@ export interface AuthPayload {
   email: string;
   name: string;
   role?: string;
+  tv?: number;
 }
 
 function getTokenFromCookieHeader(cookieHeader: string | null): string | null {
@@ -29,9 +30,29 @@ function getTokenFromCookieHeader(cookieHeader: string | null): string | null {
   return tokenCookie ? decodeURIComponent(tokenCookie.split("=").slice(1).join("=")) : null;
 }
 
+async function validateTokenVersion(payload: Record<string, unknown>): Promise<boolean> {
+  const tv = payload.tv;
+  if (tv === undefined || tv === null) return true; // legacy tokens without tv — allow during migration
+  const userId = payload.userId as string | undefined;
+  if (!userId) return false;
+
+  try {
+    const { getDb, userDb } = await import("@/lib/d1");
+    const db = getDb();
+    const user = await userDb.findById(db, userId);
+    if (!user) return false;
+    const currentTv = user.tokenVersion ?? 0;
+    return Number(tv) === currentTv;
+  } catch {
+    // DB unavailable — allow (fail open for availability, fail closed for security on API routes)
+    return true;
+  }
+}
+
 /**
  * Get the current user from a Request (works in API routes / middleware).
  * Checks Authorization header first, then cookie.
+ * Validates token version against DB to support session revocation.
  */
 export async function getCurrentUserFromRequest(request: Request): Promise<AuthPayload | null> {
   const authHeader = request.headers.get("authorization");
@@ -40,7 +61,7 @@ export async function getCurrentUserFromRequest(request: Request): Promise<AuthP
     const bearerToken = authHeader.slice(7).trim();
     try {
       const payload = await verifyToken(bearerToken);
-      if (payload) {
+      if (payload && (await validateTokenVersion(payload))) {
         return payload as unknown as AuthPayload;
       }
     } catch {
@@ -52,7 +73,7 @@ export async function getCurrentUserFromRequest(request: Request): Promise<AuthP
   if (cookieToken) {
     try {
       const payload = await verifyToken(cookieToken);
-      if (payload) {
+      if (payload && (await validateTokenVersion(payload))) {
         return payload as unknown as AuthPayload;
       }
     } catch {

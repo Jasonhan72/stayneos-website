@@ -32,16 +32,17 @@ export async function POST(request: Request) {
     const now = new Date().toISOString();
 
     // Upgrade role to HOST in the DB
-    await db
-      .prepare("UPDATE User SET role = 'HOST', updatedAt = ? WHERE id = ?")
+    const updated = await db
+      .prepare("UPDATE User SET role = 'HOST', updatedAt = ? WHERE id = ? RETURNING token_version")
       .bind(now, user.userId)
-      .run();
+      .first<{ token_version: number }>();
 
     // Issue a fresh JWT with the new role
     const newToken = await signToken({
       userId: user.userId,
       email: user.email,
       role: 'HOST',
+      tv: updated?.token_version ?? 0,
     });
 
     const response = NextResponse.json({ role: 'HOST', alreadyHost: false });

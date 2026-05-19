@@ -276,6 +276,7 @@ export async function GET(request: NextRequest) {
       userId: user.id,
       email: user.email,
       role: user.role,
+      tv: (user as { tokenVersion?: number }).tokenVersion ?? 0,
     });
 
     // Set cookie and redirect to dashboard

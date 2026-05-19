@@ -193,11 +193,32 @@ export async function middleware(request: NextRequest) {
   if (token) {
     const result = await verifyToken(token);
     if (result.valid && result.payload) {
-      isAuthenticated = true;
-      userPayload = result.payload;
-      requestHeaders.set('x-user-id', userPayload.userId || '');
-      requestHeaders.set('x-user-role', userPayload.role || '');
-      requestHeaders.set('x-user-email', userPayload.email || '');
+      // Check token version against DB (supports session revocation / password change)
+      let tvValid = true;
+      const tv = (result.payload as unknown as Record<string, unknown>).tv;
+      if (tv !== undefined && tv !== null) {
+        try {
+          const { getDb } = await import('@/lib/d1');
+          const db = getDb();
+          const userRow = await db
+            .prepare('SELECT token_version FROM User WHERE id = ?')
+            .bind(result.payload.userId)
+            .first<{ token_version: number }>();
+          if (userRow) {
+            tvValid = Number(tv) === userRow.token_version;
+          }
+        } catch {
+          // DB unavailable — allow (fail open for page loads)
+        }
+      }
+
+      if (tvValid) {
+        isAuthenticated = true;
+        userPayload = result.payload;
+        requestHeaders.set('x-user-id', userPayload.userId || '');
+        requestHeaders.set('x-user-role', userPayload.role || '');
+        requestHeaders.set('x-user-email', userPayload.email || '');
+      }
     }
   }
   

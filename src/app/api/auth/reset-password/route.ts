@@ -46,7 +46,7 @@ export async function POST(request: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     await db
-      .prepare("UPDATE User SET password = ?, resetToken = NULL, resetTokenExpiry = NULL, updatedAt = ? WHERE id = ?")
+      .prepare("UPDATE User SET password = ?, token_version = token_version + 1, resetToken = NULL, resetTokenExpiry = NULL, updatedAt = ? WHERE id = ?")
       .bind(hashedPassword, new Date().toISOString(), user.id)
       .run();
 

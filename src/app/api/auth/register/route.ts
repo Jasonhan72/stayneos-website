@@ -76,7 +76,7 @@ export async function POST(request: Request) {
           role: "GUEST",
         });
 
-    const token = await signToken({ userId: user.id, email: user.email, name: user.name, role: user.role });
+    const token = await signToken({ userId: user.id, email: user.email, name: user.name, role: user.role, tv: 0 });
 
     const isFormSubmit = contentType.includes("application/x-www-form-urlencoded");
     if (isFormSubmit) {

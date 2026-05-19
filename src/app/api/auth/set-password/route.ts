@@ -43,10 +43,10 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Hash and save new password
+    // Hash and save new password — also invalidate all existing sessions
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await db
-      .prepare("UPDATE User SET password = ?, updatedAt = ? WHERE id = ?")
+      .prepare("UPDATE User SET password = ?, token_version = token_version + 1, updatedAt = ? WHERE id = ?")
       .bind(hashedPassword, new Date().toISOString(), user.id)
       .run();
 
