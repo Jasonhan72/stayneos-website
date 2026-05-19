@@ -1,3 +1,4 @@
+import { verifyRequestAuth } from "@/lib/auth/admin-api";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -23,6 +24,8 @@ function fallbackSuggestions(body: TitleRequest): string[] {
 }
 
 export async function POST(req: NextRequest) {
+  const user = await verifyRequestAuth(req);
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   let body: TitleRequest = {};
   try {
     body = (await req.json()) as TitleRequest;

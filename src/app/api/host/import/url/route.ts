@@ -1,3 +1,4 @@
+import { verifyRequestAuth } from "@/lib/auth/admin-api";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -23,6 +24,8 @@ function safeNumber(v: unknown): number {
 }
 
 export async function POST(req: NextRequest) {
+  const user = await verifyRequestAuth(req);
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   let url = "";
   try {
     const body = (await req.json()) as { url?: string };
@@ -34,11 +37,14 @@ export async function POST(req: NextRequest) {
   if (!url) {
     return NextResponse.json({ error: "URL required" }, { status: 400 });
   }
-  // Basic URL validation
+  // Validate URL: must be http/https only (prevent SSRF via file:// etc.)
   try {
-    new URL(url);
+    const parsed = new URL(url);
+    if (!['http:', 'https:'].includes(parsed.protocol)) {
+      return NextResponse.json({ error: 'Only http/https URLs are supported' }, { status: 400 });
+    }
   } catch {
-    return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
   }
 
   const warnings: string[] = [];

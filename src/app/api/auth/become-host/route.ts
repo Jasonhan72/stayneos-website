@@ -3,6 +3,7 @@ import { verifyRequestAuth } from '@/lib/auth/admin-api';
 import { signToken } from '@/lib/auth/jwt';
 import { AUTH_COOKIE_NAME, getAuthCookieOptions } from '@/lib/auth/cookie';
 import { getDb } from '@/lib/d1';
+import { checkRateLimit } from '@/lib/security/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,6 +13,10 @@ export const dynamic = 'force-dynamic';
  * Called after the become-a-host form is submitted.
  */
 export async function POST(request: Request) {
+  // Rate limit: max 5 attempts per minute per IP
+  const rate = checkRateLimit(request, 'become-host', { limit: 5, windowMs: 60_000 });
+  if (!rate.allowed) return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+
   const user = await verifyRequestAuth(request);
   if (!user) {
     return NextResponse.json({ error: 'Not logged in' }, { status: 401 });

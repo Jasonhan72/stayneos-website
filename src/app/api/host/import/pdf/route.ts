@@ -1,3 +1,4 @@
+import { verifyRequestAuth } from "@/lib/auth/admin-api";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -10,6 +11,8 @@ export const dynamic = "force-dynamic";
  * can proceed without errors.
  */
 export async function POST(req: NextRequest) {
+  const user = await verifyRequestAuth(req);
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   let fileName = "";
   try {
     const contentType = req.headers.get("content-type") || "";

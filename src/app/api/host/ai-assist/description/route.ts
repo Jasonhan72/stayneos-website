@@ -1,3 +1,4 @@
+import { verifyRequestAuth } from "@/lib/auth/admin-api";
 import { NextRequest, NextResponse } from "next/server";
 import type { ListingDraft } from "@/types/listing-draft";
 
@@ -16,6 +17,8 @@ function fallback(draft: ListingDraft): { en: string; zh: string } {
 }
 
 export async function POST(req: NextRequest) {
+  const user = await verifyRequestAuth(req);
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   let draft: ListingDraft = { step: 0 };
   try {
     draft = (await req.json()) as ListingDraft;
