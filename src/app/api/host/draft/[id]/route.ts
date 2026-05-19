@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUserFromRequest } from "@/lib/auth";
 import { getDb, userDb } from "@/lib/d1";
+import { validateCsrf } from '@/lib/security/csrf';
 
 export const dynamic = "force-dynamic";
 
@@ -22,6 +23,7 @@ export async function PATCH(
   req: NextRequest,
   ctx: { params: Promise<{ id: string }> },
 ) {
+  if (!validateCsrf(req)) return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
   if (!(await ensureHost(req))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

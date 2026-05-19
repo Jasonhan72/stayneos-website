@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUserFromRequest } from "@/lib/auth";
 import { getDb, userDb } from "@/lib/d1";
+import { validateCsrf } from '@/lib/security/csrf';
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +13,7 @@ export const dynamic = "force-dynamic";
  * contract. For now it just mints an ID and echoes the payload back.
  */
 export async function POST(req: NextRequest) {
+  if (!validateCsrf(req)) return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
   const currentUser = await getCurrentUserFromRequest(req);
   if (!currentUser?.email) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUserFromRequest } from "@/lib/auth";
 import { getDb, userDb } from "@/lib/d1";
+import { validateCsrf } from '@/lib/security/csrf';
 
 export const dynamic = "force-dynamic";
 
@@ -73,6 +74,7 @@ export async function GET(request: NextRequest) {
 // PATCH /api/host/inbox — update inquiry status.
 // Body: { id: string; status: 'NEW' | 'CONTACTED' | 'QUALIFIED' | 'CLOSED' }
 export async function PATCH(request: NextRequest) {
+  if (!validateCsrf(request)) return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
   try {
     const currentUser = await getCurrentUserFromRequest(request);
     if (!currentUser?.email) {

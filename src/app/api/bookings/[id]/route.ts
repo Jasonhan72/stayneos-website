@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { getCurrentUserFromRequest } from '@/lib/auth';
 import { userDb, getDb } from '@/lib/d1';
+import { validateCsrf } from '@/lib/security/csrf';
 import { bookingDb } from '@/lib/booking-db';
 import { paymentDb } from '@/lib/payment-db';
 import { reviewDb } from '@/lib/review-db';
@@ -46,6 +47,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  if (!validateCsrf(request)) return apiError('Invalid CSRF token', 403, 'CSRF_INVALID');
   try {
     const auth = await getAuthorizedUser(request);
     if (!auth) return apiError('请先登录', 401, 'UNAUTHORIZED');
@@ -64,9 +66,24 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       status?: string;
     };
 
+    const isHost = ['HOST', 'ADMIN', 'SUPER_ADMIN'].includes(auth.user.role);
+    const GUEST_ALLOWED_STATUS: MutableBookingStatus[] = ['PENDING'];
+    const HOST_ONLY_STATUS: MutableBookingStatus[] = ['CONFIRMED', 'CHECKED_IN', 'CHECKED_OUT', 'NO_SHOW'];
+
     const nextStatus = body.status && ALLOWED_BOOKING_STATUS.includes(body.status as MutableBookingStatus)
       ? (body.status as MutableBookingStatus)
       : undefined;
+
+    // Guests can only set PENDING; HOST-only statuses require host role
+    if (nextStatus) {
+      if (!isHost && HOST_ONLY_STATUS.includes(nextStatus)) {
+        const label = nextStatus === 'CONFIRMED' ? '确认' : nextStatus === 'CHECKED_IN' ? '入住' : nextStatus === 'CHECKED_OUT' ? '退房' : '未入住';
+        return apiError(`只有房东可以标记${label}状态`, 403, 'HOST_ONLY_STATUS');
+      }
+      if (!isHost && !GUEST_ALLOWED_STATUS.includes(nextStatus)) {
+        return apiError('无权修改预订状态', 403, 'FORBIDDEN_STATUS');
+      }
+    }
 
     const updatePayload = {
       ...(body.checkIn ? { checkIn: body.checkIn } : {}),
@@ -90,6 +107,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 }
 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  if (!validateCsrf(request)) return apiError('Invalid CSRF token', 403, 'CSRF_INVALID');
   try {
     const auth = await getAuthorizedUser(request);
     if (!auth) return apiError('请先登录', 401, 'UNAUTHORIZED');

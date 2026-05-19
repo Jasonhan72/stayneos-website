@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { verifyRequestAuth } from '@/lib/auth/admin-api';
 import { getDb } from '@/lib/d1';
 import { normalizePropertyInput, toPropertyFormState, slugify } from '@/lib/admin/property';
+import { validateCsrf } from '@/lib/security/csrf';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,6 +31,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 }
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  if (!validateCsrf(request)) return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
   try {
     const user = await verifyRequestAuth(request);
     if (!user) {

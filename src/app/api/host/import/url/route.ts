@@ -1,5 +1,6 @@
 import { verifyRequestAuth } from "@/lib/auth/admin-api";
 import { NextRequest, NextResponse } from "next/server";
+import { validateCsrf } from '@/lib/security/csrf';
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +25,7 @@ function safeNumber(v: unknown): number {
 }
 
 export async function POST(req: NextRequest) {
+  if (!validateCsrf(req)) return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
   const user = await verifyRequestAuth(req);
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   let url = "";

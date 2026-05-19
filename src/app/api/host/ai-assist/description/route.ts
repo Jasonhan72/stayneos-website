@@ -1,5 +1,6 @@
 import { verifyRequestAuth } from "@/lib/auth/admin-api";
 import { NextRequest, NextResponse } from "next/server";
+import { validateCsrf } from '@/lib/security/csrf';
 import type { ListingDraft } from "@/types/listing-draft";
 
 export const dynamic = "force-dynamic";
@@ -17,6 +18,7 @@ function fallback(draft: ListingDraft): { en: string; zh: string } {
 }
 
 export async function POST(req: NextRequest) {
+  if (!validateCsrf(req)) return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
   const user = await verifyRequestAuth(req);
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   let draft: ListingDraft = { step: 0 };

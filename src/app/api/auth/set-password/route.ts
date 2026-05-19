@@ -3,8 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { getCurrentUserFromRequest } from "@/lib/auth";
 import { userDb, getDb } from "@/lib/d1";
+import { validateCsrf } from '@/lib/security/csrf';
 
 export async function POST(request: NextRequest) {
+  if (!validateCsrf(request)) return NextResponse.json({ message: 'Invalid CSRF token' }, { status: 403 });
+
   try {
     const currentUser = await getCurrentUserFromRequest(request);
     if (!currentUser?.email) {

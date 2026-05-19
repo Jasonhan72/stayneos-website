@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import { getDb } from "@/lib/d1";
+import { isValidPassword } from "@/lib/auth";
+import { validateCsrf } from '@/lib/security/csrf';
 
 interface UserRow {
   id: string;
@@ -14,6 +16,8 @@ function hashToken(token: string): string {
 }
 
 export async function POST(request: Request) {
+  if (!validateCsrf(request)) return NextResponse.json({ message: 'Invalid CSRF token' }, { status: 403 });
+
   try {
     const db = getDb();
     const body = await request.json();
@@ -23,8 +27,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "缺少必要参数" }, { status: 400 });
     }
 
-    if (password.length < 6) {
-      return NextResponse.json({ message: "密码至少需要6位字符" }, { status: 400 });
+    const pwdCheck = isValidPassword(password);
+    if (!pwdCheck.valid) {
+      return NextResponse.json({ message: pwdCheck.message || '密码不符合安全要求' }, { status: 400 });
     }
 
     // Hash the incoming token and match against stored hash

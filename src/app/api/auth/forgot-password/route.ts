@@ -4,6 +4,8 @@ import crypto from "crypto";
 import { userDb, getDb } from "@/lib/d1";
 import { sendEmail } from "@/lib/email";
 import { getBaseUrl } from "@/lib/config/env";
+import { checkRateLimit } from '@/lib/security/rate-limit';
+import { validateCsrf } from '@/lib/security/csrf';
 
 function hashToken(token: string): string {
   return crypto.createHash("sha256").update(token).digest("hex");
@@ -28,6 +30,12 @@ function buildResetEmailHtml(resetUrl: string, name?: string | null): string {
 }
 
 export async function POST(request: Request) {
+  // Rate limit: max 3 attempts per minute per IP (prevents enumeration / abuse)
+  const rate = checkRateLimit(request, 'auth:forgot-password', { limit: 3, windowMs: 60_000 });
+  if (!rate.allowed) return NextResponse.json({ message: '请求过于频繁，请稍后再试' }, { status: 429 });
+
+  if (!validateCsrf(request)) return NextResponse.json({ message: 'Invalid CSRF token' }, { status: 403 });
+
   try {
     const db = getDb();
     const body = await request.json();

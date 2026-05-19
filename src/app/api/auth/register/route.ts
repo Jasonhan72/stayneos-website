@@ -10,6 +10,7 @@ import { validateCsrf } from '@/lib/security/csrf';
 import { sanitizeEmail, sanitizeText } from '@/lib/security/sanitize';
 import { apiError } from '@/lib/api/response';
 import { addDevUser } from '@/lib/auth/dev-user-store';
+import { isValidPassword } from '@/lib/auth';
 
 export async function POST(request: Request) {
   try {
@@ -56,8 +57,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "请输入有效的邮箱地址" }, { status: 400 });
     }
 
-    if (password.length < 6) {
-      return NextResponse.json({ message: "密码至少需要6位字符" }, { status: 400 });
+    const pwdCheck = isValidPassword(password);
+    if (!pwdCheck.valid) {
+      return NextResponse.json({ message: pwdCheck.message || '密码不符合安全要求' }, { status: 400 });
     }
 
     const existingUser = useDevStore ? null : await userDb.findByEmail(db!, email);

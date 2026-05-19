@@ -4,6 +4,7 @@ import { signToken } from '@/lib/auth/jwt';
 import { AUTH_COOKIE_NAME, getAuthCookieOptions } from '@/lib/auth/cookie';
 import { getDb } from '@/lib/d1';
 import { checkRateLimit } from '@/lib/security/rate-limit';
+import { validateCsrf } from '@/lib/security/csrf';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,6 +17,8 @@ export async function POST(request: Request) {
   // Rate limit: max 5 attempts per minute per IP
   const rate = checkRateLimit(request, 'become-host', { limit: 5, windowMs: 60_000 });
   if (!rate.allowed) return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+
+  if (!validateCsrf(request)) return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
 
   const user = await verifyRequestAuth(request);
   if (!user) {
