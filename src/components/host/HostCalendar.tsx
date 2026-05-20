@@ -173,7 +173,7 @@ export default function HostCalendar() {
   }
 
   return (
-    <div className="space-y-4" onMouseUp={onMouseUp}>
+    <div className="space-y-4" onPointerUp={onMouseUp}>
       {/* Toolbar */}
       <div className="flex flex-col gap-3 rounded-3xl border border-neutral-200 bg-white p-4 shadow-sm lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-wrap items-center gap-3">
@@ -232,9 +232,9 @@ export default function HostCalendar() {
                       type="button"
                       title={cell.isBooked ? 'Booked by Guest' : date}
                       key={`${property.id}-${date}`}
-                      onMouseDown={() => onCellDown(property.id, date)}
-                      onMouseEnter={() => onCellEnter(property.id, date)}
-                      style={{ width: DAY_W, minWidth: DAY_W, height: 56 }}
+                      onPointerDown={() => onCellDown(property.id, date)}
+                      onPointerEnter={() => onCellEnter(property.id, date)}
+                      style={{ width: DAY_W, minWidth: DAY_W, height: 56, touchAction: "none" }}
                       className={cn(
                         "flex flex-col items-center justify-center gap-1 border-r border-neutral-50 text-center transition-colors select-none",
                         weekend && !cell.isBooked && cell.status !== 'blocked' && "bg-amber-50/40",

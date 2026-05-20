@@ -125,7 +125,7 @@ export default function StepPhotosPage() {
                 type="button"
                 onClick={() => removeAt(idx)}
                 aria-label="Remove photo"
-                className="absolute right-2 top-2 rounded-full bg-white/90 p-1 text-neutral-900 opacity-0 transition group-hover:opacity-100"
+                className="absolute right-2 top-2 rounded-full bg-white/90 p-1 text-neutral-900 opacity-100 md:opacity-0 md:transition md:group-hover:opacity-100"
               >
                 <X className="h-4 w-4" />
               </button>

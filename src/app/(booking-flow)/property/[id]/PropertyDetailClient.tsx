@@ -506,7 +506,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
 
   // Desktop Booking Card Component
   return (
-    <main className="min-h-screen bg-white" suppressHydrationWarning>
+    <main className="min-h-screen bg-white pb-28 md:pb-0" suppressHydrationWarning>
       {/* Navigation Bar - Desktop & Mobile */}
       <nav className="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-md border-b border-neutral-200">
         <Container>
