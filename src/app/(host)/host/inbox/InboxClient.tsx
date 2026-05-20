@@ -85,7 +85,7 @@ function InquiryTab() {
     let cancelled = false;
     setLoading(true);
     setError(null);
-    fetch(endpoint, { credentials: "include" })
+    fetch(endpoint, { credentials: "include", cache: "no-store" })
       .then(async (res) => {
         if (!res.ok) throw new Error(`Request failed (${res.status})`);
         return res.json() as Promise<InboxResponse>;

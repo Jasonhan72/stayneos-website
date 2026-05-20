@@ -76,7 +76,7 @@ export function LoginForm({ callbackUrl = '/', onSuccess, redirectOnSuccess = tr
 
   const ensureSessionReady = async () => {
     for (let i = 0; i < 4; i += 1) {
-      const res = await fetch('/api/auth/session', { credentials: 'include' });
+      const res = await fetch('/api/auth/session', { credentials: 'include', cache: 'no-store' });
       if (res.ok) return true;
       await new Promise((r) => setTimeout(r, 120 * (i + 1)));
     }

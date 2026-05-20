@@ -10,7 +10,7 @@ export function HostPropertyFormClient({ propertyId }: { propertyId: string }) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`/api/host/properties/${propertyId}`, { credentials: 'include' })
+    fetch(`/api/host/properties/${propertyId}`, { credentials: 'include', cache: 'no-store' })
       .then(async (r) => {
         if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || `Failed to load property (${r.status})`);
         return r.json();

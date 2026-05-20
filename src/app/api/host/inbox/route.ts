@@ -61,10 +61,12 @@ export async function GET(request: NextRequest) {
       byStatus[key] = (byStatus[key] ?? 0) + 1;
     }
 
-    return NextResponse.json({
+    const res = NextResponse.json({
       inquiries: results ?? [],
       counts: byStatus,
     });
+    res.headers.set('Cache-Control', 'no-store, must-revalidate');
+    return res;
   } catch (err) {
     console.error("host/inbox:get", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

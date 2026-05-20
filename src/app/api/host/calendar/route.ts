@@ -81,7 +81,9 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({ properties, days });
+    const res = NextResponse.json({ properties, days });
+    res.headers.set('Cache-Control', 'no-store, must-revalidate');
+    return res;
   } catch (error) {
     console.error('Failed to load host calendar:', error);
     const message = error instanceof Error ? error.message : String(error);

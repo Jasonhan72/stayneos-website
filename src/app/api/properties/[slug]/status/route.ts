@@ -40,11 +40,13 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ sl
       .bind(status, new Date().toISOString(), slug, slug)
       .run();
 
-    return NextResponse.json({
+    const res = NextResponse.json({
       success: true,
       id: (existing as Record<string, unknown>).id,
       status,
     });
+    res.headers.set('Cache-Control', 'no-store, must-revalidate');
+    return res;
   } catch (error) {
     console.error('Failed to update property status:', error);
     return NextResponse.json(

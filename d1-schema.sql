@@ -133,62 +133,53 @@ CREATE TABLE IF NOT EXISTS Inquiry (
     resetTokenExpiry TEXT,
 );
 
--- Property table (simplified - minimal for bookings)
+-- Property table (matches production D1 schema — 2026-05-19)
 CREATE TABLE IF NOT EXISTS Property (
     id TEXT PRIMARY KEY,
     title TEXT NOT NULL,
+    titleZh TEXT,
+    titleFr TEXT,
     slug TEXT UNIQUE NOT NULL,
-    description TEXT,
+    status TEXT DEFAULT 'DRAFT' CHECK (status IN ('DRAFT', 'PENDING_REVIEW', 'PUBLISHED', 'PAUSED', 'ARCHIVED')),
     address TEXT NOT NULL,
-    city TEXT NOT NULL,
-    neighborhood TEXT,
-    state TEXT,
-    country TEXT DEFAULT 'Canada',
-    postalCode TEXT,
+    neighborhood TEXT NOT NULL,
+    city TEXT DEFAULT 'Toronto',
     latitude REAL,
     longitude REAL,
     propertyType TEXT DEFAULT 'APARTMENT',
-    bedrooms INTEGER,
-    bathrooms REAL,
-    maxGuests INTEGER,
-    area INTEGER,
+    bedrooms INTEGER NOT NULL,
+    bathrooms INTEGER NOT NULL,
+    sqft INTEGER,
     floor INTEGER,
-    basePrice REAL NOT NULL,
-    nightlyRate REAL,
-    monthlyRate REAL,
-    quarterlyRate REAL,
-    yearlyRate REAL,
-    defaultStayType TEXT NOT NULL DEFAULT 'MONTHLY' CHECK (defaultStayType IN ('NIGHTLY', 'MONTHLY', 'QUARTERLY', 'YEARLY')),
+    facing TEXT,
+    balconySqft INTEGER,
+    buildingYear INTEGER,
+    developer TEXT,
+    description TEXT,
+    descriptionZh TEXT,
+    descriptionFr TEXT,
+    priceMonthly INTEGER,
+    priceQuarterly INTEGER,
+    priceAnnual INTEGER,
     currency TEXT DEFAULT 'CAD',
-    cleaningFee REAL,
-    serviceFee REAL,
-    monthlyDiscount REAL,
-    weeklyDiscount REAL,
-    minNights INTEGER DEFAULT 28,
-    maxNights INTEGER,
-    status TEXT DEFAULT 'DRAFT' CHECK (status IN ('DRAFT', 'PENDING_REVIEW', 'PUBLISHED', 'PAUSED', 'ARCHIVED')),
-    isFeatured INTEGER DEFAULT 0,
-    isInstantBook INTEGER DEFAULT 0,
-    hostId TEXT,
-    adminCreated INTEGER DEFAULT 0,
-    viewCount INTEGER DEFAULT 0,
-    bookingCount INTEGER DEFAULT 0,
+    includedAmenities TEXT,
+    buildingAmenities TEXT,
+    nearestSubway TEXT,
+    subwayWalkMinutes INTEGER,
+    nearbyLandmarks TEXT,
+    minStayDays INTEGER DEFAULT 30,
+    checkInTime TEXT DEFAULT '15:00',
+    checkOutTime TEXT DEFAULT '11:00',
+    selfCheckIn INTEGER DEFAULT 1,
+    images TEXT,
+    heroImage TEXT,
+    idealFor TEXT,
+    metaTitle TEXT,
+    metaDescription TEXT,
     createdAt TEXT NOT NULL DEFAULT (datetime('now')),
-    updatedAt TEXT NOT NULL DEFAULT (datetime('now'))
-    resetToken TEXT,
-    resetTokenExpiry TEXT,
-);
-
--- PropertyImage table
-CREATE TABLE IF NOT EXISTS PropertyImage (
-    id TEXT PRIMARY KEY,
-    propertyId TEXT NOT NULL,
-    url TEXT NOT NULL,
-    alt TEXT,
-    caption TEXT,
-    "order" INTEGER DEFAULT 0,
-    isPrimary INTEGER DEFAULT 0,
-    FOREIGN KEY (propertyId) REFERENCES Property(id) ON DELETE CASCADE
+    updatedAt TEXT NOT NULL DEFAULT (datetime('now')),
+    createdBy TEXT REFERENCES User(id),
+    maxGuests INTEGER
 );
 
 -- Create indexes for better performance
@@ -207,8 +198,6 @@ CREATE INDEX IF NOT EXISTS idx_inquiry_status ON Inquiry(status);
 CREATE INDEX IF NOT EXISTS idx_property_slug ON Property(slug);
 CREATE INDEX IF NOT EXISTS idx_property_city ON Property(city);
 CREATE INDEX IF NOT EXISTS idx_property_status ON Property(status);
-CREATE INDEX IF NOT EXISTS idx_property_host ON Property(hostId);
-CREATE INDEX IF NOT EXISTS idx_propertyimage_property ON PropertyImage(propertyId);
 
 -- OAuth State (CSRF protection, replaces cookies)
 CREATE TABLE IF NOT EXISTS OAuthState (

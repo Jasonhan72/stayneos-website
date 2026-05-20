@@ -35,7 +35,9 @@ export async function GET(request: NextRequest) {
       ORDER BY COALESCE(b.checkIn, b.check_in) DESC, b.createdAt DESC
     `).all<Record<string, unknown>>();
 
-    return NextResponse.json({ reservations: (result.results || []).map(normalize) });
+    const res = NextResponse.json({ reservations: (result.results || []).map(normalize) });
+    res.headers.set('Cache-Control', 'no-store, must-revalidate');
+    return res;
   } catch (error) {
     console.error('Failed to load host reservations:', error);
     return NextResponse.json({ error: 'Failed to load reservations' }, { status: 500 });

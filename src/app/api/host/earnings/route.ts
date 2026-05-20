@@ -131,7 +131,7 @@ export async function GET(request: NextRequest) {
     const monthlyArr = Array.from(monthly.values()).sort((a, b) => a.month.localeCompare(b.month));
     const propertyArr = Array.from(byProperty.values()).sort((a, b) => b.gross - a.gross);
 
-    return NextResponse.json({
+    const res = NextResponse.json({
       currency: "CAD",
       months,
       totals: {
@@ -143,6 +143,8 @@ export async function GET(request: NextRequest) {
       monthly: monthlyArr,
       byProperty: propertyArr,
     });
+    res.headers.set('Cache-Control', 'no-store, must-revalidate');
+    return res;
   } catch (err) {
     console.error("host/earnings", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

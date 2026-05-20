@@ -42,7 +42,7 @@ export default function EarningsClient() {
     let cancelled = false;
     setLoading(true);
     setError(null);
-    fetch(`/api/host/earnings?months=${months}`, { credentials: "include" })
+    fetch(`/api/host/earnings?months=${months}`, { credentials: "include", cache: "no-store" })
       .then(async (res) => {
         if (!res.ok) throw new Error(`Request failed (${res.status})`);
         return res.json() as Promise<EarningsResponse>;

@@ -97,7 +97,7 @@ export function PropertiesList() {
     setLoading(true);
     setFetchError(null);
     try {
-      const res = await fetch('/api/host/properties', { credentials: 'include' });
+      const res = await fetch('/api/host/properties', { credentials: 'include', cache: 'no-store' });
       if (!res.ok) {
         throw new Error(`Failed to load properties (${res.status})`);
       }
@@ -129,9 +129,8 @@ export function PropertiesList() {
       });
 
       if (res.ok) {
-        setProperties(prev => 
-          prev.map(p => p.id === property.id ? { ...p, status: newStatus as PropertyStatus } : p)
-        );
+        // Re-fetch to ensure consistency with server state
+        fetchProperties();
       } else {
         console.error('Failed to toggle listing status');
       }
@@ -144,7 +143,7 @@ export function PropertiesList() {
         return next;
       });
     }
-  }, []);
+  }, [fetchProperties]);
 
   // 过滤房源
   const filteredProperties = properties.filter((prop) => {

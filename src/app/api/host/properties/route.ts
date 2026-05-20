@@ -40,7 +40,9 @@ export async function GET(request: Request) {
       };
     });
 
-    return NextResponse.json({ properties });
+    const res = NextResponse.json({ properties });
+    res.headers.set('Cache-Control', 'no-store, must-revalidate');
+    return res;
   } catch (error) {
     console.error('Failed to fetch host properties:', error);
     return NextResponse.json({ error: 'Failed to fetch properties' }, { status: 500 });
