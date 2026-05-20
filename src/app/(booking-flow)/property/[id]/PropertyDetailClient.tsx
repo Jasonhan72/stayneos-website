@@ -736,7 +736,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             {/* Amenities */}
             <div className="py-6">
               <h2 className="text-xl font-semibold mb-4 tracking-tight">{t('property.whatOffers')}</h2>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {amenities.slice(0, 9).map((item) => (
                   <div key={item} className="flex items-center gap-3 text-neutral-700">
                     <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center">

@@ -138,14 +138,14 @@ export default function EarningsClient() {
           {!loading &&
             data?.monthly?.map((m) => (
               <div key={m.month} className="flex items-center gap-4">
-                <div className="w-24 shrink-0 text-sm text-neutral-600">{formatMonth(m.month)}</div>
+                <div className="w-16 sm:w-24 shrink-0 text-xs sm:text-sm text-neutral-600">{formatMonth(m.month)}</div>
                 <div className="relative h-6 flex-1 overflow-hidden rounded-full bg-neutral-100">
                   <div
                     className="absolute inset-y-0 left-0 rounded-full bg-neutral-900"
                     style={{ width: `${chartMax > 0 ? (m.gross / chartMax) * 100 : 0}%` }}
                   />
                 </div>
-                <div className="w-32 shrink-0 text-right text-sm font-medium text-neutral-900">
+                <div className="w-24 sm:w-32 shrink-0 text-right text-xs sm:text-sm font-medium text-neutral-900">
                   {formatCurrency(m.gross, data.currency)}
                 </div>
               </div>

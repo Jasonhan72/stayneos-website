@@ -35,7 +35,7 @@ export default function WizardShell({ children }: { children: React.ReactNode })
             <ChevronLeft className="h-4 w-4" />
             Back
           </button>
-          <div className="text-xs font-medium uppercase tracking-wider text-neutral-500">
+          <div className="text-xs font-medium uppercase tracking-wider text-neutral-500 truncate max-w-[160px] sm:max-w-none">
             {idx === 0 ? "New listing" : `Step ${idx} of ${total} · ${stepLabel}`}
           </div>
           <Link

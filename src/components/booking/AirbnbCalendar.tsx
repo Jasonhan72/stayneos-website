@@ -415,7 +415,7 @@ export function AirbnbCalendar({
               <p className="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">{saveError}</p>
             )}
             <div className="flex items-center justify-between">
-            <div>
+            <div className="min-w-0">
               {hasSelection ? (
                 <div>
                   <p className="text-lg font-semibold text-neutral-900">
@@ -598,7 +598,7 @@ export function AirbnbCalendar({
       {/* Bottom Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 px-4 py-4">
         <div className="flex items-center justify-between">
-          <div>
+          <div className="min-w-0">
             {hasSelection ? (
               <div>
                 <p className="text-lg font-semibold text-neutral-900">
@@ -729,7 +729,7 @@ export function AirbnbCalendar({
             <p className="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">{saveError}</p>
           )}
           <div className="flex items-center justify-between">
-          <div>
+          <div className="min-w-0">
             {hasSelection ? (
               <div className="flex items-baseline gap-2">
                 <span className="text-lg font-semibold text-neutral-900">
