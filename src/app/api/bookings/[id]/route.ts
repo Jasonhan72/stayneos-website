@@ -34,7 +34,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     const booking =
       (await bookingDb.findById(auth.db, idOrRef)) ||
       (await bookingDb.findByBookingNumber(auth.db, idOrRef));
-    if (!booking || booking.userId !== auth.user.id) return apiError('预订不存在', 404, 'BOOKING_NOT_FOUND');
+    if (!booking || booking.userId !== auth.user.id && !['HOST', 'ADMIN', 'SUPER_ADMIN'].includes(auth.user.role)) return apiError('预订不存在', 404, 'BOOKING_NOT_FOUND');
 
     const property = getPropertySnapshot(booking.propertyId);
     const payments = await paymentDb.findByBookingId(auth.db, booking.id);
@@ -56,7 +56,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     const booking =
       (await bookingDb.findById(auth.db, idOrRef)) ||
       (await bookingDb.findByBookingNumber(auth.db, idOrRef));
-    if (!booking || booking.userId !== auth.user.id) return apiError('预订不存在', 404, 'BOOKING_NOT_FOUND');
+    if (!booking || booking.userId !== auth.user.id && !['HOST', 'ADMIN', 'SUPER_ADMIN'].includes(auth.user.role)) return apiError('预订不存在', 404, 'BOOKING_NOT_FOUND');
 
     const body = (await request.json().catch(() => ({}))) as {
       checkIn?: string;
@@ -116,7 +116,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     const booking =
       (await bookingDb.findById(auth.db, idOrRef)) ||
       (await bookingDb.findByBookingNumber(auth.db, idOrRef));
-    if (!booking || booking.userId !== auth.user.id) return apiError('预订不存在', 404, 'BOOKING_NOT_FOUND');
+    if (!booking || booking.userId !== auth.user.id && !['HOST', 'ADMIN', 'SUPER_ADMIN'].includes(auth.user.role)) return apiError('预订不存在', 404, 'BOOKING_NOT_FOUND');
     if (booking.status === 'CANCELLED') return apiError('预订已取消', 400, 'ALREADY_CANCELLED');
     if (booking.status === 'CHECKED_IN' || booking.status === 'CHECKED_OUT') {
       return apiError('已入住或已完成的预订无法取消', 400, 'INVALID_CANCEL_STATE');

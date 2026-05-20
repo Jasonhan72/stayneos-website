@@ -1,4 +1,5 @@
 // D1 helpers for Airbnb-style messaging.
+import { getPropertyById } from "@/lib/data";
 
 export interface MessageRow {
   id: string;
@@ -140,7 +141,7 @@ export async function findConversationByBooking(db: D1Database, bookingId: strin
 }
 
 export async function getBookingSummary(db: D1Database, bookingId: string): Promise<BookingSummaryRow | null> {
-  return db.prepare(
+  const row = await db.prepare(
     `SELECT b.id, b.bookingNumber, b.checkIn, b.checkOut, b.guests, b.status, b.paymentStatus,
             b.totalPrice, b.currency, b.propertyId,
             p.title AS propertyTitle, p.address AS propertyAddress, p.city AS propertyCity,
@@ -151,6 +152,16 @@ export async function getBookingSummary(db: D1Database, bookingId: string): Prom
      WHERE b.id = ? OR b.bookingNumber = ?
      LIMIT 1`
   ).bind(bookingId, bookingId).first<BookingSummaryRow>();
+
+  // Fallback: if no DB image, try mock data
+  if (row && !row.propertyImageUrl) {
+    const mock = getPropertyById(row.propertyId);
+    if (mock?.images?.[0]) {
+      return { ...row, propertyImageUrl: mock.images[0] };
+    }
+  }
+
+  return row ?? null;
 }
 
 export async function findFallbackHostUserId(db: D1Database, currentUserId: string): Promise<string | null> {

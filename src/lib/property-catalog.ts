@@ -14,7 +14,16 @@ export function getPropertySnapshot(propertyId: string): PropertySnapshot | null
   const property = getPropertyById(propertyId);
 
   if (!property) {
-    return null;
+    // Return a minimal fallback so the booking detail page doesn't crash
+    return {
+      id: propertyId,
+      title: "StayNeos home",
+      address: "Toronto",
+      city: "Toronto",
+      description: undefined,
+      images: [],
+      amenities: [],
+    };
   }
 
   return {
