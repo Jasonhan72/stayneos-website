@@ -84,7 +84,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ properties, days });
   } catch (error) {
     console.error('Failed to load host calendar:', error);
-    return NextResponse.json({ error: 'Failed to load calendar' }, { status: 500 });
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: `Failed to load calendar: ${message}` }, { status: 500 });
   }
 }
 
@@ -138,6 +139,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Failed to update host calendar:', error);
-    return NextResponse.json({ error: 'Failed to update calendar' }, { status: 500 });
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: `Failed to update calendar: ${message}` }, { status: 500 });
   }
 }
