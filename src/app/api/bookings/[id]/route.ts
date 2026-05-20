@@ -28,13 +28,22 @@ async function getAuthorizedUser(request: NextRequest) {
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const auth = await getAuthorizedUser(request);
-    if (!auth) return apiError('请先登录', 401, 'UNAUTHORIZED');
+    if (!auth) return apiError('Please login first', 401, 'UNAUTHORIZED');
 
     const idOrRef = (await params).id;
     const booking =
       (await bookingDb.findById(auth.db, idOrRef)) ||
       (await bookingDb.findByBookingNumber(auth.db, idOrRef));
-    if (!booking || booking.userId !== auth.user.id && !['HOST', 'ADMIN', 'SUPER_ADMIN'].includes(auth.user.role)) return apiError('预订不存在', 404, 'BOOKING_NOT_FOUND');
+    
+    if (!booking) {
+      console.error(`[booking:GET] Booking not found: idOrRef=${idOrRef}, userRole=${auth.user.role}`);
+      return apiError(`Booking not found (id: ${idOrRef.slice(0, 8)}...)`, 404, 'BOOKING_NOT_FOUND');
+    }
+    
+    if (booking.userId !== auth.user.id && !['HOST', 'ADMIN', 'SUPER_ADMIN'].includes(auth.user.role)) {
+      console.error(`[booking:GET] Access denied: bookingUserId=${booking.userId}, authUserId=${auth.user.id}, userRole=${auth.user.role}`);
+      return apiError('Access denied', 403, 'FORBIDDEN');
+    }
 
     const property = getPropertySnapshot(booking.propertyId);
     const payments = await paymentDb.findByBookingId(auth.db, booking.id);
@@ -56,7 +65,8 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     const booking =
       (await bookingDb.findById(auth.db, idOrRef)) ||
       (await bookingDb.findByBookingNumber(auth.db, idOrRef));
-    if (!booking || booking.userId !== auth.user.id && !['HOST', 'ADMIN', 'SUPER_ADMIN'].includes(auth.user.role)) return apiError('预订不存在', 404, 'BOOKING_NOT_FOUND');
+    if (!booking) { console.error('[booking] Booking not found'); return apiError('Booking not found', 404, 'BOOKING_NOT_FOUND'); }
+    if (booking.userId !== auth.user.id && !['HOST', 'ADMIN', 'SUPER_ADMIN'].includes(auth.user.role)) { console.error('[booking] Access denied'); return apiError('Access denied', 403, 'FORBIDDEN'); }
 
     const body = (await request.json().catch(() => ({}))) as {
       checkIn?: string;
@@ -116,7 +126,8 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     const booking =
       (await bookingDb.findById(auth.db, idOrRef)) ||
       (await bookingDb.findByBookingNumber(auth.db, idOrRef));
-    if (!booking || booking.userId !== auth.user.id && !['HOST', 'ADMIN', 'SUPER_ADMIN'].includes(auth.user.role)) return apiError('预订不存在', 404, 'BOOKING_NOT_FOUND');
+    if (!booking) { console.error('[booking] Booking not found'); return apiError('Booking not found', 404, 'BOOKING_NOT_FOUND'); }
+    if (booking.userId !== auth.user.id && !['HOST', 'ADMIN', 'SUPER_ADMIN'].includes(auth.user.role)) { console.error('[booking] Access denied'); return apiError('Access denied', 403, 'FORBIDDEN'); }
     if (booking.status === 'CANCELLED') return apiError('预订已取消', 400, 'ALREADY_CANCELLED');
     if (booking.status === 'CHECKED_IN' || booking.status === 'CHECKED_OUT') {
       return apiError('已入住或已完成的预订无法取消', 400, 'INVALID_CANCEL_STATE');
