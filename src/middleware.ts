@@ -109,6 +109,7 @@ interface JWTPayload {
   userId: string;
   email: string;
   role: UserRole;
+  tv?: number;
   exp?: number;
   iat?: number;
 }
@@ -130,6 +131,7 @@ async function verifyToken(token: string): Promise<{ valid: boolean; payload?: J
         userId: payload.userId as string,
         email: payload.email as string,
         role: payload.role as UserRole,
+        tv: payload.tv as number | undefined,
         exp: payload.exp,
         iat: payload.iat,
       },

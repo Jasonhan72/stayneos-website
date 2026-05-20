@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { addDaysYmd, diffDays, eachDay, formatYmd, toDate } from "@/lib/host-date";
-import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
+import { ChevronLeft, ChevronRight, Lock, AlertTriangle, RefreshCw, Home } from "lucide-react";
 import { availableCellClassName, blockedCellClassName, bookedCellClassName } from "@/components/host/calendar-styles";
 import { cn } from "@/lib/utils";
 
@@ -14,6 +14,7 @@ function toMoney(value?: number | null) { return value == null ? '—' : `$${Mat
 
 export default function HostCalendar() {
   const [data, setData] = useState<{ properties: Property[]; days: Day[] }>({ properties: [], days: [] });
+  const [error, setError] = useState<string | null>(null);
   const [selectedPropertyId, setSelectedPropertyId] = useState('all');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selection, setSelection] = useState<{ propertyId: string; start: string; end: string } | null>(null);
@@ -25,9 +26,24 @@ export default function HostCalendar() {
   const end = addDaysYmd(start, 59);
 
   const load = useCallback(async () => {
-    const res = await fetch(`/api/host/calendar?propertyId=${selectedPropertyId}&start=${start}&end=${end}`, { credentials: 'include', cache: 'no-store' });
-    const json = await res.json();
-    setData(json);
+    try {
+      setError(null);
+      const res = await fetch(`/api/host/calendar?propertyId=${selectedPropertyId}&start=${start}&end=${end}`, { credentials: 'include', cache: 'no-store' });
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({}));
+        setError(json.error || `Server error (${res.status})`);
+        return;
+      }
+      const json = await res.json();
+      if (!json || !Array.isArray(json.properties) || !Array.isArray(json.days)) {
+        setError('Invalid response from server');
+        return;
+      }
+      setData(json);
+      setError(null);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Network error');
+    }
   }, [selectedPropertyId, start, end]);
 
   useEffect(() => { load(); }, [load]);
@@ -82,6 +98,24 @@ export default function HostCalendar() {
     const endDate = new Date(selection.start <= selection.end ? selection.end : selection.start);
     return { label: `${formatYmd(startDate)} - ${formatYmd(endDate)}`, nights: diffDays(startDate, toDate(addDaysYmd(endDate, 1))!) };
   }, [selection]);
+
+  if (error) {
+    return (
+      <div className="rounded-3xl border border-red-200 bg-red-50 p-10 text-center">
+        <AlertTriangle className="mx-auto h-12 w-12 text-red-400 mb-4" />
+        <h1 className="text-xl font-semibold text-red-800">页面加载失败</h1>
+        <p className="mt-2 text-red-600">{error}</p>
+        <div className="mt-6 flex gap-3 justify-center">
+          <button onClick={() => load()} className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-white hover:bg-red-700">
+            <RefreshCw className="h-4 w-4" />重试
+          </button>
+          <Link href="/" className="inline-flex items-center gap-2 rounded-xl border border-red-200 px-5 py-3 text-red-700 hover:bg-red-100">
+            <Home className="h-4 w-4" />返回首页
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (data.properties.length === 0) {
     return <div className="rounded-3xl border border-dashed border-neutral-300 bg-white p-10 text-center"><h1 className="text-2xl font-semibold text-neutral-900">No listings yet</h1><p className="mt-2 text-neutral-500">Add your first listing to start managing availability and pricing.</p><Link href="/host/listings/new" className="mt-6 inline-flex rounded-xl bg-neutral-900 px-5 py-3 text-white">Add your first listing</Link></div>;
