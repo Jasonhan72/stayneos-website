@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     const propertyIds = properties.map((property) => property.id);
     const placeholders = propertyIds.map(() => '?').join(', ');
     const availability = (await db.prepare(`SELECT * FROM property_availability WHERE property_id IN (${placeholders}) AND date >= ? AND date <= ?`).bind(...propertyIds, toYmd(startDate), toYmd(endDate)).all<Record<string, unknown>>()).results || [];
-    const bookings = (await db.prepare(`SELECT id, propertyId, checkIn, checkOut, check_in, check_out FROM Booking WHERE propertyId IN (${placeholders}) AND status != 'CANCELLED'`).bind(...propertyIds).all<Record<string, unknown>>()).results || [];
+    const bookings = (await db.prepare(`SELECT id, propertyId, checkIn, checkOut FROM Booking WHERE propertyId IN (${placeholders}) AND status != 'CANCELLED'`).bind(...propertyIds).all<Record<string, unknown>>()).results || [];
 
     const availabilityMap = new Map<string, Record<string, unknown>>();
     for (const row of availability) availabilityMap.set(`${row.property_id}:${row.date}`, row);
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
       for (const ymd of eachDay(startDate, endDate)) allDates.push(ymd);
     }
 
-    const bookingRows = (await db.prepare(`SELECT id, checkIn, checkOut, check_in, check_out FROM Booking WHERE propertyId = ? AND status != 'CANCELLED'`).bind(body.propertyId).all<Record<string, unknown>>()).results || [];
+    const bookingRows = (await db.prepare(`SELECT id, checkIn, checkOut FROM Booking WHERE propertyId = ? AND status != 'CANCELLED'`).bind(body.propertyId).all<Record<string, unknown>>()).results || [];
     for (const booking of bookingRows) {
       const bookingStart = asDate(String(booking.checkIn || booking.check_in));
       const bookingEnd = asDate(String(booking.checkOut || booking.check_out));
