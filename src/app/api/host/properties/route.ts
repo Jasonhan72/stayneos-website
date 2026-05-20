@@ -15,8 +15,8 @@ export async function GET(request: Request) {
 
     const db = getDb();
     const result = await db
-      .prepare('SELECT * FROM Property ORDER BY updatedAt DESC')
-      .all();
+      .prepare('SELECT * FROM Property WHERE createdBy = ? ORDER BY updatedAt DESC')
+      .bind(user.userId).all();
 
     const properties = (result.results || []).map((r: unknown) => {
       const row = r as Record<string, unknown>;

@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const rows = (await db.prepare(`SELECT b.*, p.title as propertyTitle FROM Booking b LEFT JOIN Property p ON p.id = b.propertyId`).all<Record<string, unknown>>()).results || [];
+    const rows = (await db.prepare(`SELECT b.*, p.title as propertyTitle FROM Booking b INNER JOIN Property p ON p.id = b.propertyId AND p.createdBy = ?`).bind(user.id).all<Record<string, unknown>>()).results || [];
     const today = toDate(new Date())!;
     today.setHours(0,0,0,0);
     const sevenDays = toDate(addDaysYmd(today, 7))!;

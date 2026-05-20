@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { addDaysYmd, diffDays, eachDay, formatYmd, toDate } from "@/lib/host-date";
 import { getCurrentUserFromRequest } from "@/lib/auth";
 import { getDb, userDb } from "@/lib/d1";
+import { validateCsrf } from "@/lib/security/csrf";
 
 export const dynamic = "force-dynamic";
 
@@ -35,7 +36,12 @@ export async function GET(request: NextRequest) {
     if (!startDate || !endDate) return NextResponse.json({ error: 'Missing start/end' }, { status: 400 });
     if (diffDays(startDate, endDate) > 90) return NextResponse.json({ error: 'Date range cannot exceed 90 days' }, { status: 400 });
 
-    const propertyRows = (await db.prepare(`SELECT id, title, priceMonthly, minStayDays FROM Property ${propertyId === 'all' ? '' : 'WHERE id = ?'} ORDER BY updatedAt DESC`).bind(...(propertyId === 'all' ? [] : [propertyId])).all<Record<string, unknown>>()).results || [];
+    const hostId = auth.user.id;
+    const propertyQuery = propertyId === 'all'
+      ? 'SELECT id, title, priceMonthly, minStayDays FROM Property WHERE createdBy = ? ORDER BY updatedAt DESC'
+      : 'SELECT id, title, priceMonthly, minStayDays FROM Property WHERE createdBy = ? AND id = ? ORDER BY updatedAt DESC';
+    const propertyBindings = propertyId === 'all' ? [hostId] : [hostId, propertyId];
+    const propertyRows = (await db.prepare(propertyQuery).bind(...propertyBindings).all<Record<string, unknown>>()).results || [];
     const properties = propertyRows.map((row) => ({ id: String(row.id), title: String(row.title || 'Untitled property'), basePrice: Number(row.priceMonthly || 0) / 30 }));
 
     if (properties.length === 0) return NextResponse.json({ properties: [], days: [] });
@@ -92,12 +98,21 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  if (!validateCsrf(request)) return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
   try {
     const auth = await ensureHost(request);
     if (!auth) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     const { db, user } = auth;
     const body = await request.json() as { propertyId?: string; ranges?: Array<{ start: string; end: string; status?: string; price?: number; minNights?: number; notes?: string }> };
     if (!body.propertyId || !Array.isArray(body.ranges) || body.ranges.length === 0) return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
+
+    // Verify property ownership
+    const ownerCheck = await db.prepare('SELECT createdBy FROM Property WHERE id = ?').bind(body.propertyId).first<{ createdBy: string }>();
+    if (!ownerCheck) return NextResponse.json({ error: 'Property not found' }, { status: 404 });
+    const adminRoles = ['ADMIN', 'SUPER_ADMIN'];
+    if (!adminRoles.includes(user.role) && ownerCheck.createdBy !== user.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
 
     const conflictDates = new Set<string>();
     const allDates: string[] = [];
@@ -119,12 +134,13 @@ export async function POST(request: NextRequest) {
     }
     if (conflictDates.size > 0) return NextResponse.json({ error: 'Selected range contains booked dates', conflictDates: Array.from(conflictDates).sort() }, { status: 409 });
 
+    const stmts: D1PreparedStatement[] = [];
     for (const range of body.ranges) {
       const startDate = asDate(range.start);
       const endDate = asDate(range.end);
       if (!startDate || !endDate) continue;
       for (const ymd of eachDay(startDate, endDate)) {
-        await db.prepare(`
+        stmts.push(db.prepare(`
           INSERT INTO property_availability (property_id, date, status, price_cents, min_nights, notes, updated_by, updated_at)
           VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
           ON CONFLICT(property_id, date) DO UPDATE SET
@@ -134,9 +150,10 @@ export async function POST(request: NextRequest) {
             notes = excluded.notes,
             updated_by = excluded.updated_by,
             updated_at = CURRENT_TIMESTAMP
-        `).bind(body.propertyId, ymd, range.status || 'available', typeof range.price === 'number' ? Math.round(range.price * 100) : null, typeof range.minNights === 'number' ? range.minNights : null, range.notes || null, user.id).run();
+        `).bind(body.propertyId, ymd, range.status || 'available', typeof range.price === 'number' ? Math.round(range.price * 100) : null, typeof range.minNights === 'number' ? range.minNights : null, range.notes || null, user.id));
       }
     }
+    if (stmts.length > 0) await db.batch(stmts);
 
     return NextResponse.json({ success: true });
   } catch (error) {

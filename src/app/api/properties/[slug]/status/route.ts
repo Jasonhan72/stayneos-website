@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server';
 import { getPropertyDb } from '@/lib/property-db';
 import { verifyRequestAuth } from '@/lib/auth/admin-api';
+import { validateCsrf } from '@/lib/security/csrf';
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
+    if (!validateCsrf(request)) return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
+
     // Require authenticated user (HOST, ADMIN, or SUPER_ADMIN)
     const user = await verifyRequestAuth(request);
     if (!user) {
@@ -32,6 +35,15 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ sl
 
     if (!existing) {
       return NextResponse.json({ error: 'Property not found' }, { status: 404 });
+    }
+
+    // Verify ownership (ADMIN/SUPER_ADMIN can toggle any property)
+    const adminRoles = ['ADMIN', 'SUPER_ADMIN'];
+    if (!adminRoles.includes(user.role)) {
+      const existingRecord = existing as Record<string, unknown>;
+      if (existingRecord.createdBy !== user.userId) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      }
     }
 
     // Update status

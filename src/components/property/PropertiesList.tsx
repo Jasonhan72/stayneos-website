@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
+import { ensureCsrfToken } from "@/lib/security/csrf-client";
 import Image from "next/image";
 import { 
   Plus, 
@@ -123,7 +124,7 @@ export function PropertiesList() {
     try {
       const res = await fetch(`/api/properties/${property.id}/status`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-csrf-token': ensureCsrfToken() },
         credentials: 'include',
         body: JSON.stringify({ status: newStatus === "published" ? "PUBLISHED" : "PAUSED" }),
       });

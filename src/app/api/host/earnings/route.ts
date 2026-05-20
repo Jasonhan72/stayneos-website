@@ -8,7 +8,6 @@ type BookingRow = {
   id: string;
   propertyId: string;
   propertyTitle: string | null;
-  hostId: string | null;
   checkIn: string;
   checkOut: string;
   nights: number;
@@ -70,10 +69,10 @@ export async function GET(request: NextRequest) {
       .prepare(
         `SELECT b.id, b.propertyId, b.checkIn, b.checkOut, b.nights,
                 b.totalPrice, b.status, b.currency,
-                p.hostId, p.title as propertyTitle
+                p.createdBy, p.title as propertyTitle
            FROM Booking b
       LEFT JOIN Property p ON p.id = b.propertyId
-          WHERE p.hostId = ?
+          WHERE p.createdBy = ?
             AND b.checkIn >= ?
             AND UPPER(COALESCE(b.status, '')) IN ('CONFIRMED', 'COMPLETED', 'CHECKED_IN', 'CHECKED_OUT')`
       )

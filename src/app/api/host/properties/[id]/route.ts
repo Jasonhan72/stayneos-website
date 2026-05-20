@@ -24,6 +24,12 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
 
+    // Verify ownership (ADMIN/SUPER_ADMIN can access all)
+    const adminRoles = ['ADMIN', 'SUPER_ADMIN'];
+    if (!adminRoles.includes(user.role) && (property as Record<string, unknown>).createdBy !== user.userId) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
     return NextResponse.json(property);
   } catch {
     return NextResponse.json({ error: 'Failed to fetch property' }, { status: 500 });
@@ -42,6 +48,12 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     const { id } = await params;
     const existing = await db.prepare('SELECT * FROM Property WHERE id = ?').bind(id).first<Record<string, unknown>>();
     if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+
+    // Verify ownership (ADMIN/SUPER_ADMIN can modify all)
+    const adminRolesPut = ['ADMIN', 'SUPER_ADMIN'];
+    if (!adminRolesPut.includes(user.role) && existing.createdBy !== user.userId) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
 
     const incoming = await request.json() as Record<string, unknown>;
     const mergedBody = {

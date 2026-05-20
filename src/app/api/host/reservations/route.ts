@@ -31,9 +31,9 @@ export async function GET(request: NextRequest) {
     const result = await db.prepare(`
       SELECT b.*, p.title as propertyTitle
       FROM Booking b
-      LEFT JOIN Property p ON p.id = b.propertyId
+      INNER JOIN Property p ON p.id = b.propertyId AND p.createdBy = ?
       ORDER BY COALESCE(b.checkIn, b.check_in) DESC, b.createdAt DESC
-    `).all<Record<string, unknown>>();
+    `).bind(user.id).all<Record<string, unknown>>();
 
     const res = NextResponse.json({ reservations: (result.results || []).map(normalize) });
     res.headers.set('Cache-Control', 'no-store, must-revalidate');

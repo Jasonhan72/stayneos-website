@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { ensureCsrfToken } from "@/lib/security/csrf-client";
 import dynamic from "next/dynamic";
 import { MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -110,7 +111,7 @@ function InquiryTab() {
     try {
       const res = await fetch("/api/host/inbox", {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-csrf-token": ensureCsrfToken() },
         credentials: "include",
         body: JSON.stringify({ id, status }),
       });

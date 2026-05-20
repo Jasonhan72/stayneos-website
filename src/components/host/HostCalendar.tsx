@@ -5,6 +5,7 @@ import Link from "next/link";
 import { addDaysYmd, diffDays, eachDay, formatYmd, toDate } from "@/lib/host-date";
 import { ChevronLeft, ChevronRight, Lock, AlertTriangle, RefreshCw, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ensureCsrfToken } from "@/lib/security/csrf-client";
 
 type Property = { id: string; title: string; basePrice?: number };
 type Day = { date: string; propertyId: string; status: string; price: number | null; isBooked: boolean; bookingId?: string };
@@ -128,7 +129,7 @@ export default function HostCalendar() {
     const res = await fetch('/api/host/calendar', {
       method: 'POST',
       credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-csrf-token': ensureCsrfToken() },
       body: JSON.stringify({ propertyId: selection.propertyId, ranges: [{ start: startDate, end: endDate, status: draft.status, price: draft.price ? Number(draft.price) : undefined, minNights: draft.minNights ? Number(draft.minNights) : undefined, notes: draft.notes || undefined }] })
     });
     if (res.ok) {

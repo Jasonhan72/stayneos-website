@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Pencil, Loader2 } from "lucide-react";
 import { useListingDraft } from "@/hooks/useListingDraft";
+import { ensureCsrfToken } from "@/lib/security/csrf-client";
 import WizardFooter from "@/components/host/listings/wizard/WizardFooter";
 
 export default function StepReviewPage() {
@@ -35,7 +36,7 @@ export default function StepReviewPage() {
       const res = await fetch("/api/host/properties", {
         method: "POST",
         credentials: "include",
-        headers: { "content-type": "application/json" },
+        headers: { "content-type": "application/json", "x-csrf-token": ensureCsrfToken() },
         body: JSON.stringify(payload),
       });
       if (!res.ok) {

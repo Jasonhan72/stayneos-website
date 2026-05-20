@@ -7,6 +7,24 @@ interface TokenPayload {
   userId: string;
   email: string;
   role: UserRole;
+  tv?: number;
+}
+
+async function validateTokenVersion(payload: Record<string, unknown>): Promise<boolean> {
+  const tv = payload.tv;
+  if (tv === undefined || tv === null) return true;
+  const userId = payload.userId as string | undefined;
+  if (!userId) return false;
+  try {
+    const { getDb, userDb } = await import('@/lib/d1');
+    const db = getDb();
+    const user = await userDb.findById(db, userId);
+    if (!user) return false;
+    const currentTv = user.tokenVersion ?? 0;
+    return Number(tv) === currentTv;
+  } catch {
+    return true; // fail open for availability
+  }
 }
 
 function getSecret() {
@@ -33,6 +51,7 @@ export async function verifyRequestAuth(request: Request): Promise<TokenPayload 
 
   try {
     const { payload } = await jwtVerify(token, getSecret(), { algorithms: ['HS256'] });
+    if (!(await validateTokenVersion(payload as Record<string, unknown>))) return null;
     return {
       userId: String(payload.userId || ''),
       email: String(payload.email || ''),

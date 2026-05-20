@@ -22,6 +22,18 @@ export interface User {
   updatedAt: string;
 }
 
+// Normalize snake_case D1 column names to camelCase TS property names
+function normalizeUserRow(row: Record<string, unknown>): User {
+  if (!row) return row as unknown as User;
+  const normalized = { ...row } as Record<string, unknown> & User;
+  // token_version → tokenVersion (D1 returns exact column names)
+  if ('token_version' in normalized && !normalized.tokenVersion) {
+    normalized.tokenVersion = normalized.token_version as number;
+  }
+  return normalized as unknown as User;
+}
+
+
 // Session row in D1 (used by self-hosted JWT auth)
 export interface Session {
   id: string;
@@ -81,7 +93,7 @@ export const userDb = {
         .prepare('SELECT * FROM User WHERE email = ?')
         .bind(email)
         .first<User>();
-      return result || null;
+      return result ? normalizeUserRow(result as unknown as Record<string, unknown>) : null;
     } catch (error) {
       if (process.env.NODE_ENV !== 'production') console.error('Error finding user by email:', error);
       throw error;
@@ -94,7 +106,7 @@ export const userDb = {
         .prepare('SELECT * FROM User WHERE id = ?')
         .bind(id)
         .first<User>();
-      return result || null;
+      return result ? normalizeUserRow(result as unknown as Record<string, unknown>) : null;
     } catch (error) {
       if (process.env.NODE_ENV !== 'production') console.error('Error finding user by id:', error);
       throw error;
