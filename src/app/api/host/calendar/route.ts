@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     if (diffDays(startDate, endDate) > 90) return NextResponse.json({ error: 'Date range cannot exceed 90 days' }, { status: 400 });
 
     const propertyRows = (await db.prepare(`SELECT id, title, priceMonthly, minStayDays FROM Property ${propertyId === 'all' ? '' : 'WHERE id = ?'} ORDER BY updatedAt DESC`).bind(...(propertyId === 'all' ? [] : [propertyId])).all<Record<string, unknown>>()).results || [];
-    const properties = propertyRows.map((row) => ({ id: String(row.id), title: String(row.title || 'Untitled property'), basePrice: Number(row.priceMonthly || 0) }));
+    const properties = propertyRows.map((row) => ({ id: String(row.id), title: String(row.title || 'Untitled property'), basePrice: Number(row.priceMonthly || 0) / 30 }));
 
     if (properties.length === 0) return NextResponse.json({ properties: [], days: [] });
 
