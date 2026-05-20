@@ -271,7 +271,7 @@ export default function InboxClient() {
         </div>
       </div>
       <div className="flex-1 min-h-0">
-        {tab === "messages" ? <MessagingShell /> : <div className="px-4 md:px-6 py-4"><InquiryTab /></div>}
+        {tab === "messages" ? <MessagingShell compact /> : <div className="px-4 md:px-6 py-4"><InquiryTab /></div>}
       </div>
     </div>
   );

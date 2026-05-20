@@ -11,7 +11,7 @@ import BookingCard from "@/components/messages/BookingCard";
 import type { ApiAttachment, ApiConversation, ApiMessage } from "@/types/api/messages";
 import { cn } from "@/lib/utils";
 
-export default function MessagingShell({ className }: { className?: string }) {
+export default function MessagingShell({ className, compact }: { className?: string; compact?: boolean }) {
   const { t } = useI18n();
   const { isLoading: authLoading, user } = useAuth();
   const searchParams = useSearchParams();
@@ -117,7 +117,7 @@ export default function MessagingShell({ className }: { className?: string }) {
 
   return (
     <div className={cn("flex h-full overflow-hidden rounded-none bg-white md:border-x md:border-neutral-200", className)}>
-      <div className={`${selectedConv ? "hidden md:block" : "block"} w-full shrink-0 border-r border-neutral-200 md:w-[390px]`}>
+      <div className={`${selectedConv ? "hidden md:block" : "block"} w-full shrink-0 border-r border-neutral-200 ${compact ? "md:w-[320px]" : "md:w-[390px]"}`}>
         <ConversationList conversations={conversations} selectedId={selectedId} unreadOnly={unreadOnly} loading={apiLoading} error={listError} onSelect={handleSelect} onToggleUnread={() => setUnreadOnly((v) => !v)} onRetry={() => fetchConversations()} t={t} />
       </div>
       <div className={`${selectedConv ? "flex" : "hidden md:flex"} min-w-0 flex-1`}>
@@ -127,7 +127,7 @@ export default function MessagingShell({ className }: { className?: string }) {
           <DesktopEmpty />
         )}
       </div>
-      {selectedConv ? <BookingCard conversation={selectedConv} visible={detailsVisible} onClose={() => setDetailsVisible(false)} t={t} /> : null}
+      {selectedConv ? <BookingCard conversation={selectedConv} visible={detailsVisible} onClose={() => setDetailsVisible(false)} t={t} forceOverlay={compact} /> : null}
     </div>
   );
 }
