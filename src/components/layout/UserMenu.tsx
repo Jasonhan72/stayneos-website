@@ -94,7 +94,7 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
   if (!user) {
     return (
       <div className="flex items-center gap-1" ref={menuRef}>
-        <Link
+        <a
           href="/register"
           className={cn(
             "text-sm font-medium px-3 py-2 rounded-full transition-all duration-200",
@@ -104,8 +104,8 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
           )}
         >
           {L("注册", "Sign Up", "Inscription")}
-        </Link>
-        <Link
+        </a>
+        <a
           href="/login"
           className={cn(
             "text-sm font-medium px-3 py-2 rounded-full transition-all duration-200",
@@ -115,7 +115,7 @@ export function UserMenu({ variant = "light" }: UserMenuProps) {
           )}
         >
           {L("登录", "Log In", "Connexion")}
-        </Link>
+        </a>
       </div>
     );
   }

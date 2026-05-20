@@ -139,7 +139,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
               <UserMenu variant={effectiveVariant as "light" | "dark" | "transparent"} />
             ) : (
               <>
-                <Link
+                <a
                   href="/register"
                   className={cn(
                     "text-sm font-medium px-3 py-2 rounded-full transition-all duration-200",
@@ -148,8 +148,8 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
                   )}
                 >
                   {t("nav.signup")}
-                </Link>
-                <Link
+                </a>
+                <a
                   href="/login"
                   className={cn(
                     "text-sm font-medium px-3 py-2 rounded-full transition-all duration-200",
@@ -158,7 +158,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
                   )}
                 >
                   {t("nav.login")}
-                </Link>
+                </a>
               </>
             )}
             </div>

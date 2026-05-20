@@ -177,7 +177,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           {!user ? (
             // Logged out state
             <>
-              <Link
+              <a
                 href="/login"
                 onClick={onClose}
                 className="flex items-center gap-4 mb-8"
@@ -190,7 +190,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   <span className="text-neutral-400">{t("common.or", "or")}</span>
                   <span className="text-blue-600 font-medium">{t("nav.login")}</span>
                 </div>
-              </Link>
+              </a>
 
               {publicMenuItems.map((item) => (
                 <Link
