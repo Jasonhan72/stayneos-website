@@ -1,5 +1,5 @@
 // D1 helpers for Airbnb-style messaging.
-import { getPropertyById } from "@/lib/data";
+import { getPropertyById, mockProperties } from "@/lib/data";
 
 export interface MessageRow {
   id: string;
@@ -153,11 +153,20 @@ export async function getBookingSummary(db: D1Database, bookingId: string): Prom
      LIMIT 1`
   ).bind(bookingId, bookingId).first<BookingSummaryRow>();
 
-  // Fallback: if no DB image, try mock data
+  // Fallback: if no DB image, try mock data (D1 uses UUIDs, mock uses "1"/"2"/"3")
   if (row && !row.propertyImageUrl) {
-    const mock = getPropertyById(row.propertyId);
-    if (mock?.images?.[0]) {
-      return { ...row, propertyImageUrl: mock.images[0] };
+    // Try exact ID match first
+    const mockById = getPropertyById(row.propertyId);
+    if (mockById?.images?.[0]) {
+      return { ...row, propertyImageUrl: mockById.images[0] };
+    }
+    // Fuzzy match by title (e.g. "22 Wellesley St E" matches mock title)
+    const needle = row.propertyTitle?.toLowerCase().replace(/[·•].+/, '').trim() || '';
+    const mockByTitle = mockProperties.find(p =>
+      needle && p.title.toLowerCase().includes(needle)
+    );
+    if (mockByTitle?.images?.[0]) {
+      return { ...row, propertyImageUrl: mockByTitle.images[0] };
     }
   }
 
