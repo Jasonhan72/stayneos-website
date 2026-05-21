@@ -726,7 +726,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
 
             {bookingError && (
               <p className="mb-3 text-sm text-rose-600 text-center">
-                {bookingError}
+                {typeof bookingError === 'string' ? bookingError : String(bookingError)}
               </p>
             )}
             <button

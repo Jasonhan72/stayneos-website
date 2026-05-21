@@ -110,31 +110,34 @@ export function calculateBookingPrice(
   let discountPercentage = 0;
 
   if (stayType !== 'NIGHTLY') {
-    unitCount = months;
-    unitLabel = getStayTypeUnitLabel(stayType);
-    cleaningFee = 0;
-    serviceFee = 0;
+    if (nights >= 30) {
+      unitCount = months;
+      unitLabel = getStayTypeUnitLabel(stayType);
+      cleaningFee = 0;
+      serviceFee = 0;
 
-    if (stayType === 'YEARLY') {
-      ratePerMonth = yearlyRate;
-      tierName = 'Annual';
-    } else if (stayType === 'QUARTERLY') {
-      ratePerMonth = quarterlyRate;
-      tierName = 'Quarterly';
-    } else {
-      ratePerMonth = monthlyRate;
-      tierName = 'Monthly';
-      if (property.monthlyDiscount) {
-        discountPercentage = property.monthlyDiscount;
-        discountRate = (100 - property.monthlyDiscount) / 100;
+      if (stayType === 'YEARLY') {
+        ratePerMonth = yearlyRate;
+        tierName = 'Annual';
+      } else if (stayType === 'QUARTERLY') {
+        ratePerMonth = quarterlyRate;
+        tierName = 'Quarterly';
+      } else {
+        ratePerMonth = monthlyRate;
+        tierName = 'Monthly';
+        if (property.monthlyDiscount) {
+          discountPercentage = property.monthlyDiscount;
+          discountRate = (100 - property.monthlyDiscount) / 100;
+        }
       }
-    }
 
-    unitRate = Math.round(ratePerMonth * discountRate);
-    subtotal = unitCount * unitRate;
+      unitRate = Math.round(ratePerMonth * discountRate);
+      subtotal = unitCount * unitRate;
+    }
+    // else: nights < 30 on a monthly property → use nightly pricing (already set above)
   }
 
-  const originalSubtotal = stayType === 'NIGHTLY' ? subtotal : unitCount * ratePerMonth;
+  const originalSubtotal = (stayType !== 'NIGHTLY' && nights >= 30) ? unitCount * ratePerMonth : subtotal;
   const discount = Math.max(0, originalSubtotal - subtotal);
   const tax = Math.round((subtotal + cleaningFee + serviceFee) * 0.13);
   const total = subtotal + cleaningFee + serviceFee + tax;
