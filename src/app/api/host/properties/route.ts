@@ -85,14 +85,14 @@ export async function POST(request: Request) {
 
     await db.prepare(`
       INSERT INTO Property
-        (id, title, slug, status, address, neighborhood, city, propertyType,
+        (id, title, slug, status, createdBy, address, neighborhood, city, propertyType,
          bedrooms, bathrooms, sqft, description, priceMonthly, priceQuarterly,
          priceAnnual, currency, includedAmenities, buildingAmenities,
          minStayDays, images, heroImage, checkInTime, checkOutTime,
          selfCheckIn, createdAt, updatedAt)
-      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     `).bind(
-      id, title, slug, 'DRAFT',
+      id, title, slug, 'DRAFT', user.userId,
       String(location.address || ''),
       String(location.neighborhood || ''),
       String(location.city || 'Toronto'),

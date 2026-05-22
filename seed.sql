@@ -1,13 +1,13 @@
 -- Seed remote D1 with 3 properties
 
-INSERT INTO Property (id, title, titleZh, titleFr, slug, status, address, neighborhood, city, propertyType, bedrooms, bathrooms, sqft, description, descriptionZh, descriptionFr, priceMonthly, priceQuarterly, priceAnnual, currency, includedAmenities, buildingAmenities, minStayDays, checkInTime, checkOutTime, selfCheckIn, images, heroImage, metaTitle, metaDescription, createdAt, updatedAt)
+INSERT INTO Property (id, title, titleZh, titleFr, slug, status, createdBy, address, neighborhood, city, propertyType, bedrooms, bathrooms, sqft, description, descriptionZh, descriptionFr, priceMonthly, priceQuarterly, priceAnnual, currency, includedAmenities, buildingAmenities, minStayDays, checkInTime, checkOutTime, selfCheckIn, images, heroImage, metaTitle, metaDescription, createdAt, updatedAt)
 VALUES (
   '1',
   'Luxury 3BR Lakeview Suite at 55 Cooper St',
   '55 Cooper St 豪华湖景三居套房',
   'Suite Luxueuse 3 Chambres Vue Lac au 55 Cooper St',
   'luxury-3br-lakeview-suite-55-cooper-st',
-  'PUBLISHED',
+  'PUBLISHED', '44ae7a78-a4f8-4b26-9816-07d62d17b243',
   '55 Cooper St, Toronto',
   'CityPlace',
   'Toronto',
@@ -25,16 +25,16 @@ VALUES (
   'Luxury 3BR Lakeview Suite at 55 Cooper St | NEOS',
   '3BR/2BA luxury suite on 55+ floors at 55 Cooper St, Toronto. Lake views, pool, gym, 24h concierge. All-inclusive monthly rental.',
   datetime('now'), datetime('now')
-) ON CONFLICT(id) DO UPDATE SET title=excluded.title, status='PUBLISHED', updatedAt=datetime('now');
+) ON CONFLICT(id) DO UPDATE SET title=excluded.title, status='PUBLISHED', createdBy=COALESCE(NULLIF(trim(Property.createdBy),''), excluded.createdBy), updatedAt=datetime('now');
 
-INSERT INTO Property (id, title, titleZh, titleFr, slug, status, address, neighborhood, city, propertyType, bedrooms, bathrooms, sqft, description, descriptionZh, descriptionFr, priceMonthly, priceQuarterly, priceAnnual, currency, includedAmenities, buildingAmenities, minStayDays, checkInTime, checkOutTime, selfCheckIn, images, heroImage, metaTitle, metaDescription, createdAt, updatedAt)
+INSERT INTO Property (id, title, titleZh, titleFr, slug, status, createdBy, address, neighborhood, city, propertyType, bedrooms, bathrooms, sqft, description, descriptionZh, descriptionFr, priceMonthly, priceQuarterly, priceAnnual, currency, includedAmenities, buildingAmenities, minStayDays, checkInTime, checkOutTime, selfCheckIn, images, heroImage, metaTitle, metaDescription, createdAt, updatedAt)
 VALUES (
   '2',
   'Modern 3BR at 238 Simcoe St',
   '238 Simcoe St 现代三居公寓',
   'Appartement Moderne 3 Chambres au 238 Simcoe St',
   'modern-3br-238-simcoe-st',
-  'PUBLISHED',
+  'PUBLISHED', '44ae7a78-a4f8-4b26-9816-07d62d17b243',
   '238 Simcoe St, Toronto',
   'Entertainment District',
   'Toronto',
@@ -52,16 +52,16 @@ VALUES (
   'Modern 3BR at 238 Simcoe St | NEOS',
   '3BR/2BA modern apartment at 238 Simcoe St, Toronto. Near hospitals and UofT. All-inclusive monthly rental.',
   datetime('now'), datetime('now')
-) ON CONFLICT(id) DO UPDATE SET title=excluded.title, status='PUBLISHED', updatedAt=datetime('now');
+) ON CONFLICT(id) DO UPDATE SET title=excluded.title, status='PUBLISHED', createdBy=COALESCE(NULLIF(trim(Property.createdBy),''), excluded.createdBy), updatedAt=datetime('now');
 
-INSERT INTO Property (id, title, titleZh, titleFr, slug, status, address, neighborhood, city, propertyType, bedrooms, bathrooms, sqft, description, descriptionZh, descriptionFr, priceMonthly, priceQuarterly, priceAnnual, currency, includedAmenities, buildingAmenities, minStayDays, checkInTime, checkOutTime, selfCheckIn, images, heroImage, metaTitle, metaDescription, createdAt, updatedAt)
+INSERT INTO Property (id, title, titleZh, titleFr, slug, status, createdBy, address, neighborhood, city, propertyType, bedrooms, bathrooms, sqft, description, descriptionZh, descriptionFr, priceMonthly, priceQuarterly, priceAnnual, currency, includedAmenities, buildingAmenities, minStayDays, checkInTime, checkOutTime, selfCheckIn, images, heroImage, metaTitle, metaDescription, createdAt, updatedAt)
 VALUES (
   '3',
   'Cozy 1BR at 22 Wellesley St E',
   '22 Wellesley St E 温馨一居公寓',
   'Appartement Confortable 1 Chambre au 22 Wellesley St E',
   'cozy-1br-22-wellesley-st-e',
-  'PUBLISHED',
+  'PUBLISHED', '44ae7a78-a4f8-4b26-9816-07d62d17b243',
   '22 Wellesley St E, Toronto',
   'Church-Wellesley',
   'Toronto',
@@ -79,4 +79,4 @@ VALUES (
   'Cozy 1BR at 22 Wellesley St E | NEOS',
   '1BR/1BA cozy apartment at 22 Wellesley St E, Toronto. Near Wellesley subway and UofT. All-inclusive monthly rental.',
   datetime('now'), datetime('now')
-) ON CONFLICT(id) DO UPDATE SET title=excluded.title, status='PUBLISHED', updatedAt=datetime('now');
+) ON CONFLICT(id) DO UPDATE SET title=excluded.title, status='PUBLISHED', createdBy=COALESCE(NULLIF(trim(Property.createdBy),''), excluded.createdBy), updatedAt=datetime('now');
