@@ -114,6 +114,10 @@
         "no_show": "No show"
       }
     },
+    "errorSessionExpired": "Session expired. Please refresh the page and try again.",
+    "errorLoginRequired": "Please log in to continue.",
+    "errorGeneric": "Something went wrong. Please try again.",
+    "retry": "Retry",
     "goToBooking": "Go to booking",
     "noBookingId": "No booking ID provided",
     "cancel": {

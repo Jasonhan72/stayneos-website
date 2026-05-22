@@ -111,6 +111,10 @@
         "no_show": "Non présenté"
       }
     },
+    "errorSessionExpired": "Session expirée. Veuillez actualiser la page et réessayer.",
+    "errorLoginRequired": "Veuillez vous connecter pour continuer.",
+    "errorGeneric": "Une erreur s’est produite. Veuillez réessayer.",
+    "retry": "Réessayer",
     "goToBooking": "Aller à la réservation",
     "noBookingId": "Aucun ID de réservation fourni",
     "cancel": {

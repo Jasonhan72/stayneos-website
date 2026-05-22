@@ -111,6 +111,10 @@
         "no_show": "未入住"
       }
     },
+    "errorSessionExpired": "会话已过期。请刷新页面后重试。",
+    "errorLoginRequired": "请登录后继续。",
+    "errorGeneric": "出了点问题，请重试。",
+    "retry": "重试",
     "goToBooking": "前往预订",
     "noBookingId": "未提供预订ID",
     "cancel": {
