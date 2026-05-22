@@ -511,7 +511,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
       <nav className="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-md border-b border-neutral-200">
         <Container>
           <div className="flex items-center justify-between h-14">
-            <Link href="/properties" className="p-2 -ml-2 hover:bg-neutral-100 rounded-full transition-colors">
+            <Link href="/properties" className="flex h-11 w-11 -ml-2 items-center justify-center rounded-full hover:bg-neutral-100 transition-colors">
               <ChevronLeft size={24} className="text-neutral-900" />
             </Link>
 
@@ -570,7 +570,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
           <div className="flex items-center gap-4 md:gap-6 shrink-0">
             <button
               onClick={handleShare}
-              className="rounded-full bg-white/95 backdrop-blur p-2 shadow-sm hover:bg-white transition-colors"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-white/95 backdrop-blur shadow-sm hover:bg-white transition-colors"
               aria-label="Share property"
             >
               <Share size={24} className="text-neutral-900" />

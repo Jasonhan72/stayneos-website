@@ -168,7 +168,8 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
               {isAuthenticated && user ? (
                 <button
                   onClick={() => setIsMobileMenuOpen(true)}
-                  className="flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full hover:bg-black/5 transition-all"
+                  className="flex min-h-11 items-center gap-1.5 pl-1 pr-3 py-1 rounded-full hover:bg-black/5 transition-all"
+                  aria-label={openMenuLabel}
                 >
                   {user?.avatar || user?.image ? (
                     <div className="w-9 h-9 rounded-full overflow-hidden bg-neutral-100">
@@ -193,7 +194,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
                 <button
                   onClick={() => setIsMobileMenuOpen(true)}
                   className={cn(
-                    "p-2 -mr-2 rounded-full hover:bg-black/5 transition-all",
+                    "min-h-11 min-w-11 p-2 -mr-2 rounded-full hover:bg-black/5 transition-all",
                     textStyles[effectiveVariant]
                   )}
                   aria-label={openMenuLabel}

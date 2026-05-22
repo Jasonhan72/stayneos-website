@@ -266,14 +266,14 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
           <div className="flex items-center justify-between h-16">
             <button 
               onClick={() => router.back()}
-              className="p-2 -ml-2 hover:bg-neutral-100 rounded-full transition-colors"
+              className="flex h-11 w-11 -ml-2 items-center justify-center rounded-full hover:bg-neutral-100 transition-colors"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
             <h1 className="text-lg font-semibold">{t('booking.confirmAndPay') || 'Confirm and pay'}</h1>
             <button 
               onClick={() => router.push('/properties')}
-              className="p-2 -mr-2 hover:bg-neutral-100 rounded-full transition-colors"
+              className="flex h-11 w-11 -mr-2 items-center justify-center rounded-full hover:bg-neutral-100 transition-colors"
             >
               <X className="w-6 h-6" />
             </button>

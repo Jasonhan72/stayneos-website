@@ -61,7 +61,7 @@ export default function HostSidebar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-2 rounded-full border px-4 py-2 text-sm whitespace-nowrap",
+                  "flex min-h-11 items-center gap-2 rounded-full border px-4 py-2 text-sm whitespace-nowrap",
                   active ? "border-neutral-900 bg-neutral-900 text-white" : "border-neutral-200 bg-white text-neutral-600"
                 )}
               >

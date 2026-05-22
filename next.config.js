@@ -68,9 +68,24 @@ const nextConfig = {
       headers: [{ key: 'Cache-Control', value: 'no-store, private' }],
     },
     {
+      source: '/host/:path*',
+      headers: [{ key: 'Cache-Control', value: 'no-store, private, max-age=0' }],
+    },
+    {
+      source: '/api/host/:path*',
+      headers: [{ key: 'Cache-Control', value: 'no-store, private, max-age=0' }],
+    },
+    {
+      source: '/api/auth/:path*',
+      headers: [{ key: 'Cache-Control', value: 'no-store, private, max-age=0' }],
+    },
+    {
+      source: '/api/dashboard/:path*',
+      headers: [{ key: 'Cache-Control', value: 'no-store, private, max-age=0' }],
+    },
+    {
       source: '/:path*',
       headers: [
-        { key: 'Cache-Control', value: 'public, s-maxage=300, stale-while-revalidate=86400' },
         { key: 'Content-Security-Policy', value: csp },
         { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
         { key: 'X-Content-Type-Options', value: 'nosniff' },

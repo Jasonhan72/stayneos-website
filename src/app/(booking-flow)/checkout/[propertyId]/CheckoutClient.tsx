@@ -425,7 +425,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
           <div className="flex items-center justify-between h-16">
             <button
               onClick={() => router.back()}
-              className="p-2 -ml-2 hover:bg-neutral-100 rounded-full transition-colors"
+              className="flex h-11 w-11 -ml-2 items-center justify-center rounded-full hover:bg-neutral-100 transition-colors"
             >
               <ChevronLeft size={24} />
             </button>
@@ -434,7 +434,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
             </h1>
             <button
               onClick={() => router.push("/properties")}
-              className="p-2 -mr-2 hover:bg-neutral-100 rounded-full transition-colors"
+              className="flex h-11 w-11 -mr-2 items-center justify-center rounded-full hover:bg-neutral-100 transition-colors"
             >
               <X size={24} />
             </button>

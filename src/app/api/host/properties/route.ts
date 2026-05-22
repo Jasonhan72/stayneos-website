@@ -6,11 +6,21 @@ import { validateCsrf } from '@/lib/security/csrf';
 
 export const dynamic = 'force-dynamic';
 
+// Helper: add CDN-busting headers to prevent Cloudflare from caching private data
+function addNoCacheHeaders(res: NextResponse) {
+  res.headers.set('Cache-Control', 'no-store, must-revalidate, max-age=0');
+  res.headers.set('CDN-Cache-Control', 'no-store, max-age=0');
+  res.headers.set('Cloudflare-CDN-Cache-Control', 'no-store, max-age=0');
+  return res;
+}
+
 export async function GET(request: Request) {
   try {
     const user = await verifyRequestAuth(request);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return addNoCacheHeaders(
+        NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      );
     }
 
     const db = getDb();
@@ -40,9 +50,7 @@ export async function GET(request: Request) {
       };
     });
 
-    const res = NextResponse.json({ properties });
-    res.headers.set('Cache-Control', 'no-store, must-revalidate');
-    return res;
+    return addNoCacheHeaders(NextResponse.json({ properties }));
   } catch (error) {
     console.error('Failed to fetch host properties:', error);
     return NextResponse.json({ error: 'Failed to fetch properties' }, { status: 500 });
@@ -54,7 +62,9 @@ export async function POST(request: Request) {
   try {
     const user = await verifyRequestAuth(request);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return addNoCacheHeaders(
+        NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      );
     }
 
     const body = await request.json() as Record<string, unknown>;
@@ -85,14 +95,14 @@ export async function POST(request: Request) {
 
     await db.prepare(`
       INSERT INTO Property
-        (id, title, slug, status, createdBy, address, neighborhood, city, propertyType,
+        (id, title, slug, status, address, neighborhood, city, propertyType,
          bedrooms, bathrooms, sqft, description, priceMonthly, priceQuarterly,
          priceAnnual, currency, includedAmenities, buildingAmenities,
          minStayDays, images, heroImage, checkInTime, checkOutTime,
-         selfCheckIn, createdAt, updatedAt)
+         selfCheckIn, createdAt, updatedAt, createdBy)
       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     `).bind(
-      id, title, slug, 'DRAFT', user.userId,
+      id, title, slug, 'DRAFT',
       String(location.address || ''),
       String(location.neighborhood || ''),
       String(location.city || 'Toronto'),
@@ -111,7 +121,7 @@ export async function POST(request: Request) {
       imagesJson,
       imageUrls[0] || null,
       '15:00', '11:00', 1,
-      now, now,
+      now, now, user.userId, // createdBy
     ).run();
 
     return NextResponse.json({ id, slug, status: 'draft' }, { status: 201 });

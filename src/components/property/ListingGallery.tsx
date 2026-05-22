@@ -60,7 +60,7 @@ export default function ListingGallery({ images, title, className = '', isLiked 
         {onToggleSave && !showGallery && (
           <button
             onClick={onToggleSave}
-            className="absolute top-4 right-4 z-10 rounded-full bg-white/95 backdrop-blur p-2 shadow-sm hover:bg-white transition-colors"
+            className="absolute top-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/95 backdrop-blur shadow-sm hover:bg-white transition-colors"
             aria-label={isLiked ? 'Remove from favorites' : 'Add to favorites'}
           >
             <Heart
@@ -88,12 +88,12 @@ export default function ListingGallery({ images, title, className = '', isLiked 
             <>
               <button
                 onClick={() => { if (scrollContainerRef.current) { const w = scrollContainerRef.current.offsetWidth; scrollContainerRef.current.scrollTo({ left: (currentImageIndex - 1) * w, behavior: 'smooth' }); } }}
-                className={`absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 shadow flex items-center justify-center ${currentImageIndex === 0 ? 'opacity-0 pointer-events-none' : ''}`}
+                className={`absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/90 shadow flex items-center justify-center ${currentImageIndex === 0 ? 'opacity-0 pointer-events-none' : ''}`}
                 aria-label="Previous image"
               ><ChevronLeft size={18} /></button>
               <button
                 onClick={() => { if (scrollContainerRef.current) { const w = scrollContainerRef.current.offsetWidth; scrollContainerRef.current.scrollTo({ left: (currentImageIndex + 1) * w, behavior: 'smooth' }); } }}
-                className={`absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 shadow flex items-center justify-center ${currentImageIndex === images.length - 1 ? 'opacity-0 pointer-events-none' : ''}`}
+                className={`absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/90 shadow flex items-center justify-center ${currentImageIndex === images.length - 1 ? 'opacity-0 pointer-events-none' : ''}`}
                 aria-label="Next image"
               ><ChevronRight size={18} /></button>
             </>

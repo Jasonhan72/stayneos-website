@@ -323,36 +323,39 @@ export default function PropertiesPage() {
             {/* View Mode Toggle */}
             <div className="flex items-center gap-2">
               <span className="text-sm text-neutral-500 hidden sm:inline">{t('properties.view')}:</span>
-              <div className="flex items-center border border-neutral-300">
+              <div className="flex items-center border border-neutral-300 rounded-lg overflow-hidden">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 transition-colors ${
+                  className={`min-h-11 min-w-11 p-2 transition-colors ${
                     viewMode === 'grid'
                       ? 'bg-primary text-white'
                       : 'bg-white text-neutral-600 hover:bg-neutral-50'
                   }`}
+                  aria-label={t('properties.gridView')}
                   title={t('properties.gridView')}
                 >
                   <Grid3X3 size={18} />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`p-2 transition-colors ${
+                  className={`min-h-11 min-w-11 p-2 transition-colors ${
                     viewMode === 'list'
                       ? 'bg-primary text-white'
                       : 'bg-white text-neutral-600 hover:bg-neutral-50'
                   }`}
+                  aria-label={t('properties.listView')}
                   title={t('properties.listView')}
                 >
                   <List size={18} />
                 </button>
                 <button
                   onClick={() => setViewMode('map')}
-                  className={`p-2 transition-colors ${
+                  className={`min-h-11 min-w-11 p-2 transition-colors ${
                     viewMode === 'map'
                       ? 'bg-primary text-white'
                       : 'bg-white text-neutral-600 hover:bg-neutral-50'
                   }`}
+                  aria-label={t('properties.mapView')}
                   title={t('properties.mapView')}
                 >
                   <MapIcon size={18} />
