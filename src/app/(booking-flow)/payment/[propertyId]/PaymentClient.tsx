@@ -13,7 +13,8 @@ import {
   Calendar,
   Users,
   AlertCircle,
-  Shield
+  Shield,
+  RefreshCw
 } from 'lucide-react';
 import { Container, Divider } from '@/components/ui';
 import { useProperty } from '@/hooks/useProperties';
@@ -22,10 +23,23 @@ import { useI18n } from '@/lib/i18n';
 import StripeProvider from '@/components/payment/StripeProvider';
 import PaymentForm from '@/components/payment/PaymentForm';
 import { calculateBookingPrice, normalizeStayType, getDefaultStayType } from '@/lib/booking';
-import { ensureCsrfToken } from '@/lib/security/csrf-client';
+import { ensureCsrfToken, csrfFetch } from '@/lib/security/csrf-client';
 
 interface PaymentClientProps {
   propertyId: string;
+}
+
+/** Mask raw server errors so users never see "Invalid CSRF token" or internal details. */
+function userFriendlyError(raw: string, t: (k: string) => string | undefined): string {
+  const lower = raw.toLowerCase();
+  if (lower.includes('csrf') || lower.includes('forbidden') || lower.includes('403')) {
+    return t('payment.errorSessionExpired') || 'Session expired. Please refresh the page and try again.';
+  }
+  if (lower.includes('401') || lower.includes('unauthorized') || lower.includes('登录') || lower.includes('login')) {
+    return t('payment.errorLoginRequired') || 'Please log in to continue.';
+  }
+  // Return raw but safe — strip codes like CSRF_INVALID from display
+  return raw.replace(/\b[A-Z_]{3,}\b/g, '').trim() || (t('payment.errorGeneric') || 'Something went wrong. Please try again.');
 }
 
 export default function PaymentClient({ propertyId }: PaymentClientProps) {
@@ -67,7 +81,7 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
   const total = priceCalc ? subtotal - promoDiscount + priceCalc.cleaningFee + priceCalc.serviceFee + taxes : 0;
   const unitRate = priceCalc?.unitRate || 0;
 
-  const localizedTitle = property ? getLocalizedTitle(property, locale) : t('property.notFound') || 'Property';
+  const localizedTitle = property ? getLocalizedTitle(property, locale) : t('property.notFound') || 'Property not found';
 
   const unitLabel = (count: number) => {
     if (locale === 'zh') {
@@ -88,14 +102,17 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
     return count === 1 ? 'month' : 'months';
   };
 
+  // Warm CSRF token on mount so it's ready before any API call
+  useEffect(() => {
+    ensureCsrfToken();
+  }, []);
+
   // Create payment intent on mount
   useEffect(() => {
     const initPayment = async () => {
       try {
         if (!bookingId) {
-          // If no bookingId, we can't create a payment intent via the API
-          // Show an informational state or redirect
-          setError(t('payment.noBookingId') || 'No booking found. Please start from the booking page.');
+          setError(userFriendlyError('No booking found', t));
           setIsLoading(false);
           return;
         }
@@ -103,16 +120,17 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
         const response = await fetch('/api/payments/create-intent', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           body: JSON.stringify({ bookingId }),
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-          const errorMessage = typeof data.error === 'string'
+          const rawMessage = typeof data.error === 'string'
             ? data.error
             : data.error?.message || 'Failed to initialize payment';
-          throw new Error(errorMessage);
+          throw new Error(userFriendlyError(rawMessage, t));
         }
 
         if (data.manual) {
@@ -123,7 +141,7 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
         setClientSecret(data.clientSecret);
         setPaymentReady(true);
       } catch (err: unknown) {
-        const errorMessage = err instanceof Error ? err.message : 'Payment initialization failed';
+        const errorMessage = err instanceof Error ? err.message : (t('payment.errorGeneric') || 'Payment initialization failed');
         setError(errorMessage);
       } finally {
         setIsLoading(false);
@@ -169,16 +187,27 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
   const handlePaymentSuccess = async () => {
     if (bookingId) {
       try {
-        await fetch('/api/payments/confirm', {
+        // Use csrfFetch which auto-includes credentials + retries on CSRF failure
+        const res = await csrfFetch('/api/payments/confirm', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-csrf-token': ensureCsrfToken(),
-          },
           body: JSON.stringify({ bookingId }),
         });
-      } catch {
-        // Webhook/refresh will still reconcile payment status; don't block the user from success.
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          const rawMessage = typeof data.error === 'string'
+            ? data.error
+            : data.error?.message || 'Confirmation failed';
+          // Don't block user — webhook will reconcile, but log for debugging
+          if (typeof window !== 'undefined') {
+            console.warn('[Payment] Confirm API failed:', rawMessage);
+          }
+        }
+      } catch (err) {
+        // Network error — webhook will still reconcile payment status
+        if (typeof window !== 'undefined') {
+          console.warn('[Payment] Confirm network error:', err);
+        }
       }
     }
 
@@ -193,8 +222,11 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
   };
 
   const handlePaymentError = (errorMsg: string) => {
-    setError(errorMsg);
+    setError(userFriendlyError(errorMsg, t));
   };
+
+  // Error state with retry
+  const showError = error && !paymentReady && !manualPaymentReady;
 
   // Loading state
   if (isLoading || isPropertyLoading) {
@@ -288,19 +320,37 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
               {/* Stripe Payment */}
               <section className="border border-neutral-200 rounded-2xl p-6">
                 <h2 className="text-lg font-semibold mb-4">{t('payment.paymentMethod') || 'Payment method'}</h2>
-                
-                {error && !paymentReady && (
+
+                {/* Error state with retry */}
+                {showError && (
                   <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm mb-4">
-                    <div className="flex items-center gap-2">
-                      <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                      <span>{error}</span>
+                    <div className="flex items-start gap-2">
+                      <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <p>{error}</p>
+                        <div className="flex flex-wrap gap-3 mt-3">
+                          <button
+                            onClick={() => {
+                              setError('');
+                              setIsLoading(true);
+                              // Re-trigger initPayment effect via key change is heavy;
+                              // just reload the page for a clean retry.
+                              window.location.reload();
+                            }}
+                            className="inline-flex items-center gap-1.5 text-sm font-medium text-red-800 underline hover:no-underline"
+                          >
+                            <RefreshCw className="w-3.5 h-3.5" />
+                            {t('payment.retry') || 'Retry'}
+                          </button>
+                          <button
+                            onClick={() => router.push(`/booking/${propertyId}?checkIn=${checkIn}&checkOut=${checkOut}&guests=${adults + children}`)}
+                            className="inline-flex items-center gap-1.5 text-sm font-medium text-red-800 underline hover:no-underline"
+                          >
+                            {t('payment.goToBooking') || 'Go to booking page'}
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    <button
-                      onClick={() => router.push(`/booking/${propertyId}?checkIn=${checkIn}&checkOut=${checkOut}&guests=${adults + children}`)}
-                      className="mt-3 text-sm font-medium text-red-800 underline hover:no-underline"
-                    >
-                      {t('payment.goToBooking') || 'Go to booking page'}
-                    </button>
                   </div>
                 )}
 
@@ -326,7 +376,7 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
                       Submit booking request
                     </button>
                   </div>
-                ) : !error && (
+                ) : !showError && (
                   <div className="flex items-center justify-center py-8">
                     <div className="w-6 h-6 border-2 border-neutral-300 border-t-black rounded-full animate-spin" />
                   </div>

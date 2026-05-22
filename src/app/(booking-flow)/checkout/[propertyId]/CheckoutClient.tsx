@@ -260,6 +260,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
 
     try {
       const response = await fetch("/api/bookings", {
+        credentials: "include",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
