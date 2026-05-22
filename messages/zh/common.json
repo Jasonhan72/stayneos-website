@@ -718,5 +718,9 @@
   "writeReview": "写评价",
   "youMayBeLooking": "您可能在寻找：",
   "yourMessage": "您的留言",
-  "zh": "中文"
+  "zh": "中文",
+  "propertiesPageMeta": {
+    "title": "多伦多高端精装公寓",
+    "description": "浏览NEOS精选精装公寓。多伦多市中心高端行政公寓，灵活租期可选。"
+  }
 }

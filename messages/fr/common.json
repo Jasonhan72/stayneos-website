@@ -718,5 +718,9 @@
   "writeReview": "Écrire un avis",
   "youMayBeLooking": "Vous cherchez peut-être :",
   "yourMessage": "Votre message",
-  "zh": "中文"
+  "zh": "中文",
+  "propertiesPageMeta": {
+    "title": "Appartements meublés haut de gamme à Toronto",
+    "description": "Parcourez les locations haut de gamme entièrement meublées de NEOS. Appartements de prestige au centre-ville de Toronto avec conditions de location flexibles."
+  }
 }

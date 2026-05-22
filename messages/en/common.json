@@ -718,5 +718,9 @@
   "writeReview": "Write Review",
   "youMayBeLooking": "You might be looking for:",
   "yourMessage": "Your message",
-  "zh": "中文"
+  "zh": "中文",
+  "propertiesPageMeta": {
+    "title": "Premium Furnished Apartments in Toronto",
+    "description": "Browse fully furnished premium rentals from NEOS. Executive apartments in downtown Toronto with flexible lease terms."
+  }
 }

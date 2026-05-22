@@ -4,27 +4,35 @@ import { getPublicBaseUrl } from '@/lib/config/env';
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = getPublicBaseUrl();
   const lastModified = new Date();
+  
   const routes = [
-    '/',
-    '/properties',
-    '/contact',
-    '/about',
-    '/for-business',
-    '/for-hosts',
-    '/for-agents',
-    '/for-students',
-    '/long-term',
-    '/market-insights',
-    '/faq',
-    '/help',
-    '/privacy',
-    '/terms',
+    { path: '/', priority: 1, changeFreq: 'weekly' as const },
+    { path: '/properties', priority: 0.9, changeFreq: 'weekly' as const },
+    { path: '/contact', priority: 0.7, changeFreq: 'monthly' as const },
+    { path: '/about', priority: 0.7, changeFreq: 'monthly' as const },
+    { path: '/for-business', priority: 0.7, changeFreq: 'monthly' as const },
+    { path: '/for-hosts', priority: 0.7, changeFreq: 'monthly' as const },
+    { path: '/for-agents', priority: 0.7, changeFreq: 'monthly' as const },
+    { path: '/for-students', priority: 0.7, changeFreq: 'monthly' as const },
+    { path: '/long-term', priority: 0.7, changeFreq: 'monthly' as const },
+    { path: '/market-insights', priority: 0.7, changeFreq: 'monthly' as const },
+    { path: '/faq', priority: 0.7, changeFreq: 'monthly' as const },
+    { path: '/help', priority: 0.7, changeFreq: 'monthly' as const },
+    { path: '/privacy', priority: 0.5, changeFreq: 'monthly' as const },
+    { path: '/terms', priority: 0.5, changeFreq: 'monthly' as const },
+    { path: '/services', priority: 0.7, changeFreq: 'monthly' as const },
+    { path: '/neighborhoods', priority: 0.7, changeFreq: 'monthly' as const },
+    { path: '/corporate', priority: 0.7, changeFreq: 'monthly' as const },
+    { path: '/become-a-host', priority: 0.7, changeFreq: 'monthly' as const },
+    { path: '/landlords', priority: 0.7, changeFreq: 'monthly' as const },
+    { path: '/cancellation-policy', priority: 0.5, changeFreq: 'monthly' as const },
+    { path: '/service-animals', priority: 0.5, changeFreq: 'monthly' as const },
   ];
 
-  return routes.map((route, index) => ({
-    url: route === '/' ? baseUrl : `${baseUrl}${route}`,
+  return routes.map(({ path, priority, changeFreq }) => ({
+    url: `${baseUrl}${path}`,
     lastModified,
-    changeFrequency: route === '/' || route === '/properties' ? 'weekly' : 'monthly',
-    priority: index === 0 ? 1 : route === '/properties' ? 0.9 : 0.7,
+    changeFrequency: changeFreq,
+    priority,
   }));
 }
