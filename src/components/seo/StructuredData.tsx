@@ -25,7 +25,7 @@ export function StructuredData({ pageType = 'homepage', propertyData }: Structur
     url: 'https://www.stayneos.com',
     logo: 'https://www.stayneos.com/logo.png',
     telephone: '+1-647-446-7987',
-    email: 'hello@stayneos.com',
+    email: 'support@stayneos.com',
     address: {
       '@type': 'PostalAddress',
       streetAddress: '55 Cooper St',

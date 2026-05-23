@@ -9,14 +9,14 @@ directory = ".open-next/assets"
 
 # Environment Variables
 [vars]
-RESEND_FROM_EMAIL = "reservations@send.neos.rentals"
+RESEND_FROM_EMAIL = "hello@stayneos.com"
 NODE_ENV = "production"
 AI_CONCIERGE_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
 ARIA_CHAT_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
 NEXTAUTH_URL = "https://www.stayneos.com"
 # SECURITY: NEXTAUTH_SECRET must be injected via `wrangler secret put NEXTAUTH_SECRET` — never set here
 # SECURITY: RESEND_API_KEY must be injected via GitHub Secret / `wrangler secret put RESEND_API_KEY` — never set here
-# HOST_NOTIFICATION_EMAIL is optional; inject via secret/vars to override default host@neos.rentals
+# HOST_NOTIFICATION_EMAIL is optional; inject via secret/vars to override default host@stayneos.com
 # SECURITY: Google OAuth credentials must be injected via `wrangler secret put`
 
 # D1 Database Binding

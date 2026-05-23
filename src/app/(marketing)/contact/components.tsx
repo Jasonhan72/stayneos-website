@@ -244,8 +244,8 @@ export function ContactInfoCard() {
     {
       icon: Mail,
       title: t("contact.emailLabel"),
-      content: "hello@stayneos.com",
-      href: "mailto:hello@stayneos.com",
+      content: "support@stayneos.com",
+      href: "mailto:support@stayneos.com",
       description: t("contact.responseTime")
     },
     {

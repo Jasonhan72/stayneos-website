@@ -179,12 +179,12 @@ export function CustomerChat() {
       setMessages(prev => [...prev, botMessage]);
     } catch (err) {
       console.error('Failed to send message:', err);
-      setError(t('chat.error', 'Sorry, there was an error sending your message. Please try again or email us at hello@stayneos.com.'));
+      setError(t('chat.error', 'Sorry, there was an error sending your message. Please try again or email us at support@stayneos.com.'));
       
       // Add fallback response
       const fallbackResponses = [
         t('chat.fallback.1', "For booking inquiries, please visit our properties page or use the AI concierge above."),
-        t('chat.fallback.2', "For urgent matters, please email us at hello@stayneos.com."),
+        t('chat.fallback.2', "For urgent matters, please email us at support@stayneos.com."),
         t('chat.fallback.3', "Our team typically responds within 2 hours during business hours (9am-6pm EST).")
       ];
       
