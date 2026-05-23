@@ -13,7 +13,7 @@ function getResendApiKey(): string | null {
 }
 
 function getFromEmail(): string {
-  return process.env.RESEND_FROM_EMAIL || 'reservations@send.neos.rentals';
+  return process.env.RESEND_FROM_EMAIL || 'hello@stayneos.com';
 }
 
 export async function sendEmail(payload: EmailPayload): Promise<boolean> {

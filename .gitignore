@@ -50,3 +50,12 @@ public/videos/*.original.*
 workers/*/node_modules
 workers/*/dist
 workers/*/.wrangler
+
+# OpenClaw workspace template (do not commit)
+.openclaw/
+/AGENTS.md
+/SOUL.md
+/IDENTITY.md
+/TOOLS.md
+/USER.md
+/HEARTBEAT.md

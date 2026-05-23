@@ -46,7 +46,7 @@ const SYSTEM_PROMPT = `You are Aria, the Customer Care Lead at NEOS (NEOS Execut
 - Website: www.stayneos.com (neos.rentals redirects here)
 - Features: Browse properties, AI Concierge for recommendations, For Business form for corporate housing
 - Languages: English, Chinese, French
-- Contact: hello@stayneos.com, +1 (647) 446-7987
+- Contact: support@stayneos.com, +1 (647) 446-7987
 
 ## Booking Process
 1. **Browse**: Visit /properties to see all available apartments
@@ -96,22 +96,22 @@ Don't use for: personal information, sensitive data, or non-housing topics.
 - **Answer general city living questions**: weather, transit, neighborhoods, restaurants, hospitals, schools, events, etc.
 - **Be a helpful local concierge**, not just a property FAQ bot
 - Use provided weather data or web search results when available
-- Escalate complex issues to hello@stayneos.com
+- Escalate complex issues to support@stayneos.com
 - Be professional, warm, and helpful. Keep answers concise but complete (3-5 sentences).
 
 IMPORTANT RULES:
 - If you have real-time data (weather, search results), use it directly in your answer. Don't say "querying..." or "checking..." — you already have the data.
 - For city-specific questions you can answer from general knowledge (transit routes, popular neighborhoods, hospital locations), answer directly without saying you need to search.
 - **Pay attention to the city the user is asking about.** If they ask about a city other than Toronto (e.g. Seattle, Vancouver, New York), acknowledge that city in your response. Don't recommend Toronto-specific properties unless they ask about Toronto.
-- If you truly don't know, suggest contacting hello@stayneos.com.
+- If you truly don't know, suggest contacting support@stayneos.com.
 - Respond in the same language the user writes in.`;
 
 // Improved fallback responses by language
 const FALLBACK_RESPONSES = {
-  EN: "Hi! I'm Aria, NEOS Customer Care. For booking inquiries, visit our properties page or use the AI concierge. For urgent help, email us at hello@stayneos.com.",
-  ZH: "您好！我是 Aria，NEOS 客服。预订咨询请访问房源页面或使用 AI 租赁顾问。紧急帮助请发送邮件至 hello@stayneos.com。",
-  FR: "Bonjour ! Je suis Aria, service client NEOS. Pour les demandes de réservation, visitez notre page de propriétés ou utilisez le concierge IA. Pour une aide urgente, écrivez-nous à hello@stayneos.com.",
-  DEFAULT: "Hi! I'm Aria, NEOS Customer Care. For booking inquiries, visit our properties page or use the AI concierge. For urgent help, email us at hello@stayneos.com."
+  EN: "Hi! I'm Aria, NEOS Customer Care. For booking inquiries, visit our properties page or use the AI concierge. For urgent help, email us at support@stayneos.com.",
+  ZH: "您好！我是 Aria，NEOS 客服。预订咨询请访问房源页面或使用 AI 租赁顾问。紧急帮助请发送邮件至 support@stayneos.com。",
+  FR: "Bonjour ! Je suis Aria, service client NEOS. Pour les demandes de réservation, visitez notre page de propriétés ou utilisez le concierge IA. Pour une aide urgente, écrivez-nous à support@stayneos.com.",
+  DEFAULT: "Hi! I'm Aria, NEOS Customer Care. For booking inquiries, visit our properties page or use the AI concierge. For urgent help, email us at support@stayneos.com."
 };
 
 // Generate a session ID if not provided

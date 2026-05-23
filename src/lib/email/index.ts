@@ -58,7 +58,7 @@ export async function sendHostNewReservation(
   booking: EmailBooking,
   property: EmailProperty
 ): Promise<boolean> {
-  const to = process.env.HOST_NOTIFICATION_EMAIL || 'host@neos.rentals';
+  const to = process.env.HOST_NOTIFICATION_EMAIL || 'host@stayneos.com';
 
   try {
     const message = hostNewReservationTemplate({ booking, property });

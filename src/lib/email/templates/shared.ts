@@ -42,7 +42,7 @@ export function getSiteUrl(): string {
 }
 
 export function getSupportEmail(): string {
-  return process.env.SUPPORT_EMAIL || 'hello@stayneos.com';
+  return process.env.SUPPORT_EMAIL || 'support@stayneos.com';
 }
 
 export function escapeHtml(value: string | number | null | undefined): string {
