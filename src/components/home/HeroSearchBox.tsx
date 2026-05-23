@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { Calendar, ChevronRight, Loader2, Search, SendHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { useI18n } from '@/lib/i18n';
+import { csrfFetch } from '@/lib/security/csrf-client';
 import { getVisitorId } from '@/lib/visitor';
 import { ChatPropertyCard } from '@/components/shared/chat/ChatPropertyCard';
 
@@ -103,7 +104,7 @@ export function HeroSearchBox() {
     setChatHistory(updatedHistory);
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await csrfFetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

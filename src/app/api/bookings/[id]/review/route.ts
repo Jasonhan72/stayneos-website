@@ -3,6 +3,7 @@ import { getCurrentUserFromRequest } from "@/lib/auth";
 import { userDb, getDb } from "@/lib/d1";
 import { bookingDb } from "@/lib/booking-db";
 import { reviewDb } from "@/lib/review-db";
+import { validateCsrf } from "@/lib/security/csrf";
 
 export async function GET(
   request: NextRequest,
@@ -40,6 +41,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    if (!validateCsrf(request)) return NextResponse.json({ error: "Invalid CSRF token" }, { status: 403 });
     const currentUser = await getCurrentUserFromRequest(request);
 
     if (!currentUser?.email) {

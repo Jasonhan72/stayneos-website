@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { validateCsrf } from '@/lib/security/csrf';
 
 // Type definitions for Cloudflare Workers AI
 interface CloudflareEnv {
@@ -41,6 +42,10 @@ function getAIModel(): string {
 
 export async function POST(request: NextRequest) {
   try {
+    if (!validateCsrf(request)) {
+      return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
+    }
+
     const body = await request.json();
     const { text, targetLang } = body;
     

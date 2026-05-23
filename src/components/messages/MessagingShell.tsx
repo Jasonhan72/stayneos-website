@@ -9,6 +9,7 @@ import ConversationList from "@/components/messages/ConversationList";
 import ChatArea from "@/components/messages/ChatArea";
 import BookingCard from "@/components/messages/BookingCard";
 import type { ApiAttachment, ApiConversation, ApiMessage } from "@/types/api/messages";
+import { csrfFetch } from "@/lib/security/csrf-client";
 import { cn } from "@/lib/utils";
 
 export default function MessagingShell({ className, compact }: { className?: string; compact?: boolean }) {
@@ -87,7 +88,7 @@ export default function MessagingShell({ className, compact }: { className?: str
     if (!user || initializedBookingRef.current === bookingId) return;
     initializedBookingRef.current = bookingId;
     try {
-      const res = await fetch("/api/conversations", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ booking_id: bookingId, type: "host_guest" }) });
+      const res = await csrfFetch("/api/conversations", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ booking_id: bookingId, type: "host_guest" }) });
       if (res.ok) {
         const data = await res.json();
         await fetchConversations(true);
@@ -106,7 +107,7 @@ export default function MessagingShell({ className, compact }: { className?: str
 
   const handleSendMessage = useCallback(async (text: string, attachments?: ApiAttachment[]) => {
     if (!selectedId || (!text.trim() && !attachments?.length)) return;
-    const res = await fetch(`/api/conversations/${selectedId}/messages`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ body: text, attachments }) });
+    const res = await csrfFetch(`/api/conversations/${selectedId}/messages`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ body: text, attachments }) });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     setMessages((prev) => [...prev, data.message]);

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button, Modal } from '@/components/ui';
 import { useI18n } from '@/lib/i18n';
+import { csrfFetch } from '@/lib/security/csrf-client';
 import { 
   ChevronLeft, 
   Calendar, 
@@ -150,7 +151,7 @@ export default function BookingDetailClient() {
 
     try {
       setIsSubmittingReview(true);
-      const response = await fetch(`/api/bookings/${bookingId}/review`, {
+      const response = await csrfFetch(`/api/bookings/${bookingId}/review`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ rating: reviewRating, comment }),

@@ -5,6 +5,7 @@ import { useI18n } from '@/lib/i18n';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Loader2, SendHorizontal } from 'lucide-react';
+import { csrfFetch } from '@/lib/security/csrf-client';
 import { ChatExternalPropertyCard, type ChatExternalProperty } from '@/components/shared/chat/ChatExternalPropertyCard';
 
 interface Message {
@@ -122,7 +123,7 @@ export function HeroChatInline() {
         sender: m.sender,
       }));
 
-      const res = await fetch('/api/chat', {
+      const res = await csrfFetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

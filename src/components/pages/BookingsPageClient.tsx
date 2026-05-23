@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Button, Container, Card, Badge, Divider, Modal } from '@/components/ui';
 import { useAuth } from '@/lib/context/UserContext';
 import { useI18n } from '@/lib/i18n';
+import { csrfFetch } from '@/lib/security/csrf-client';
 import { 
   Calendar,
   CreditCard,
@@ -310,7 +311,7 @@ export default function BookingsPage() {
     setIsSendingHostMessage(true);
     setHostMessageStatus('idle');
     try {
-      const conversationRes = await fetch('/api/conversations', {
+      const conversationRes = await csrfFetch('/api/conversations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ bookingId: selectedBooking.id, type: 'host_guest' }),
@@ -320,7 +321,7 @@ export default function BookingsPage() {
       const conversationId = conversationPayload.conversation?.id;
       if (!conversationId) throw new Error('Missing conversation id');
 
-      const messageRes = await fetch(`/api/conversations/${encodeURIComponent(conversationId)}/messages`, {
+      const messageRes = await csrfFetch(`/api/conversations/${encodeURIComponent(conversationId)}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ body: hostMessage.trim() }),

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/d1';
+import { validateCsrf } from '@/lib/security/csrf';
 
 // Type definitions for Cloudflare Workers AI
 interface CloudflareEnv {
@@ -295,6 +296,10 @@ function checkChatRateLimit(request: NextRequest): boolean {
 
 export async function POST(request: NextRequest) {
   try {
+    if (!validateCsrf(request)) {
+      return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
+    }
+
     // Check if it's a translation request by looking at the body
     // We need to read the body without consuming it
     const requestClone = request.clone();

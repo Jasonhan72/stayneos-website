@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getDb } from "@/lib/d1";
 import { getCurrentUserFromRequest } from "@/lib/auth/server";
 import { apiError } from "@/lib/api/response";
+import { validateCsrf } from "@/lib/security/csrf";
 import * as msgDb from "@/lib/messaging-db";
 
 function parseAttachments(json?: string | null) {
@@ -54,6 +55,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 }
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  if (!validateCsrf(request)) return apiError("Invalid CSRF token", 403, "CSRF_INVALID");
   const user = await getCurrentUserFromRequest(request);
   if (!user) return apiError("Unauthorized", 401, "UNAUTHORIZED");
   const { id: conversationId } = await params;
@@ -79,6 +81,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 }
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  if (!validateCsrf(request)) return apiError("Invalid CSRF token", 403, "CSRF_INVALID");
   const user = await getCurrentUserFromRequest(request);
   if (!user) return apiError("Unauthorized", 401, "UNAUTHORIZED");
   const { id: conversationId } = await params;

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { validateCsrf } from '@/lib/security/csrf';
 
 interface ConciergeRequest {
   message: string;
@@ -102,6 +103,10 @@ function checkConciergeRateLimit(request: NextRequest): boolean {
 
 export async function POST(request: NextRequest) {
   try {
+    if (!validateCsrf(request)) {
+      return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
+    }
+
     if (!checkConciergeRateLimit(request)) {
       return NextResponse.json(
         { error: 'Too many requests. Please wait a moment.' },

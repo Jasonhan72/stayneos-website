@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, FormEvent } from 'react';
 import { usePathname } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
+import { csrfFetch } from '@/lib/security/csrf-client';
 import { ChatExternalPropertyCard, type ChatExternalProperty } from '@/components/shared/chat/ChatExternalPropertyCard';
 
 interface Message {
@@ -136,7 +137,7 @@ export function CustomerChat() {
     setError(null);
     
     try {
-      const response = await fetch('/api/chat', {
+      const response = await csrfFetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
