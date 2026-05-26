@@ -16,8 +16,17 @@ import {
   Tv,
   ArrowUpDown,
   PawPrint,
+  Bike,
+  DoorOpen,
+  Package,
+  Boxes,
+  Baby,
+  Clapperboard,
+  Home,
 } from "lucide-react";
 import { useListingDraft } from "@/hooks/useListingDraft";
+import { useI18n } from "@/lib/i18n";
+import { amenityTranslationKey } from "@/lib/host-listing-i18n";
 import WizardFooter from "@/components/host/listings/wizard/WizardFooter";
 
 const AMENITIES = [
@@ -31,15 +40,27 @@ const AMENITIES = [
   { key: "Pool", icon: Waves },
   { key: "Parking", icon: Car },
   { key: "Concierge", icon: Bell },
+  { key: "Doorman", icon: DoorOpen },
   { key: "Balcony", icon: Trees },
   { key: "Dishwasher", icon: Refrigerator },
   { key: "TV", icon: Tv },
   { key: "Elevator", icon: ArrowUpDown },
   { key: "Pet Friendly", icon: PawPrint },
+  { key: "Washer/dryer", icon: WashingMachine },
+  { key: "Bike room", icon: Bike },
+  { key: "Laundry in building", icon: WashingMachine },
+  { key: "Live-in super", icon: Home },
+  { key: "Package room", icon: Package },
+  { key: "Storage space", icon: Boxes },
+  { key: "Children's playroom", icon: Baby },
+  { key: "Media room", icon: Clapperboard },
+  { key: "Swimming pool", icon: Waves },
+  { key: "Roof deck", icon: Trees },
 ] as const;
 
 export default function StepAmenitiesPage() {
   const { draft, updateDraft } = useListingDraft();
+  const { t } = useI18n();
   const selected = new Set(draft.amenities || []);
 
   function toggle(key: string) {
@@ -56,10 +77,10 @@ export default function StepAmenitiesPage() {
     <div className="space-y-8">
       <header className="space-y-2">
         <h1 className="text-2xl font-semibold tracking-tight text-neutral-900">
-          Tell guests what your place has to offer
+          {t("host.listingWizard.amenitiesStep.title", "Tell guests what your place has to offer")}
         </h1>
         <p className="text-sm text-neutral-600">
-          You can add more later. Pick everything that applies.
+          {t("host.listingWizard.amenitiesStep.subtitle", "You can add more later. Pick everything that applies.")}
         </p>
       </header>
 
@@ -78,7 +99,9 @@ export default function StepAmenitiesPage() {
               }`}
             >
               <Icon className="h-5 w-5 text-neutral-700" />
-              <span className="text-sm font-medium text-neutral-900">{key}</span>
+              <span className="text-sm font-medium text-neutral-900">
+                {t(amenityTranslationKey(key) || "", key)}
+              </span>
             </button>
           );
         })}

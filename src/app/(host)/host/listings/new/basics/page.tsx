@@ -2,10 +2,12 @@
 
 import { Minus, Plus } from "lucide-react";
 import { useListingDraft } from "@/hooks/useListingDraft";
+import { useI18n } from "@/lib/i18n";
 import WizardFooter from "@/components/host/listings/wizard/WizardFooter";
 
 export default function StepBasicsPage() {
   const { draft, updateDraft } = useListingDraft();
+  const { t } = useI18n();
   const basics = draft.basics || {
     bedrooms: 1,
     bathrooms: 1,
@@ -27,35 +29,41 @@ export default function StepBasicsPage() {
     <div className="space-y-8">
       <header className="space-y-2">
         <h1 className="text-2xl font-semibold tracking-tight text-neutral-900">
-          Share some basics
+          {t("host.listingWizard.basics.title", "Share some basics")}
         </h1>
-        <p className="text-sm text-neutral-600">How big is the place?</p>
+        <p className="text-sm text-neutral-600">{t("host.listingWizard.basics.subtitle", "How big is the place?")}</p>
       </header>
 
       <div className="divide-y divide-neutral-200 rounded-xl border border-neutral-200 bg-white">
         <Counter
-          label="Bedrooms"
+          label={t("host.listingWizard.basics.bedrooms", "Bedrooms")}
+          decreaseLabel={t("host.listingWizard.decrease", "Decrease {label}", { label: t("host.listingWizard.basics.bedrooms", "Bedrooms") })}
+          increaseLabel={t("host.listingWizard.increase", "Increase {label}", { label: t("host.listingWizard.basics.bedrooms", "Bedrooms") })}
           value={basics.bedrooms ?? 0}
           onChange={(v) => setField("bedrooms", v)}
           min={0}
         />
         <Counter
-          label="Bathrooms"
+          label={t("host.listingWizard.basics.bathrooms", "Bathrooms")}
+          decreaseLabel={t("host.listingWizard.decrease", "Decrease {label}", { label: t("host.listingWizard.basics.bathrooms", "Bathrooms") })}
+          increaseLabel={t("host.listingWizard.increase", "Increase {label}", { label: t("host.listingWizard.basics.bathrooms", "Bathrooms") })}
           value={basics.bathrooms ?? 0}
           onChange={(v) => setField("bathrooms", v)}
           step={0.5}
           min={0}
         />
         <Counter
-          label="Max guests"
+          label={t("host.listingWizard.basics.maxGuests", "Max guests")}
+          decreaseLabel={t("host.listingWizard.decrease", "Decrease {label}", { label: t("host.listingWizard.basics.maxGuests", "Max guests") })}
+          increaseLabel={t("host.listingWizard.increase", "Increase {label}", { label: t("host.listingWizard.basics.maxGuests", "Max guests") })}
           value={basics.maxGuests ?? 0}
           onChange={(v) => setField("maxGuests", v)}
           min={0}
         />
         <div className="flex items-center justify-between gap-4 p-4">
           <div>
-            <div className="text-sm font-medium text-neutral-900">Area (sqft)</div>
-            <div className="text-xs text-neutral-500">Optional</div>
+            <div className="text-sm font-medium text-neutral-900">{t("host.listingWizard.basics.area", "Area (sqft)")}</div>
+            <div className="text-xs text-neutral-500">{t("host.listingWizard.optional", "Optional")}</div>
           </div>
           <input
             type="number"
@@ -74,12 +82,16 @@ export default function StepBasicsPage() {
 
 function Counter({
   label,
+  decreaseLabel,
+  increaseLabel,
   value,
   onChange,
   min = 0,
   step = 1,
 }: {
   label: string;
+  decreaseLabel: string;
+  increaseLabel: string;
   value: number;
   onChange: (v: number) => void;
   min?: number;
@@ -94,7 +106,7 @@ function Counter({
       <div className="flex items-center gap-3">
         <button
           type="button"
-          aria-label={`Decrease ${label}`}
+          aria-label={decreaseLabel}
           onClick={() => onChange(Math.max(min, value - step))}
           disabled={value <= min}
           className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-300 text-neutral-700 hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-40"
@@ -106,7 +118,7 @@ function Counter({
         </div>
         <button
           type="button"
-          aria-label={`Increase ${label}`}
+          aria-label={increaseLabel}
           onClick={() => onChange(value + step)}
           className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-300 text-neutral-700 hover:bg-neutral-100"
         >

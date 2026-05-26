@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useI18n } from "@/lib/i18n";
 import { WIZARD_STEPS } from "@/types/listing-draft";
 
 interface WizardFooterProps {
@@ -29,6 +30,7 @@ export default function WizardFooter({
   hideBack = false,
 }: WizardFooterProps) {
   const router = useRouter();
+  const { t } = useI18n();
   const next = nextSlug(currentSlug);
 
   async function handleNext() {
@@ -52,7 +54,7 @@ export default function WizardFooter({
           onClick={() => router.back()}
           className="rounded-lg px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
         >
-          Back
+          {t("common.back", "Back")}
         </button>
       ) : (
         <div />
@@ -63,7 +65,7 @@ export default function WizardFooter({
         disabled={!canContinue}
         className="rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {nextLabel || (next ? "Continue" : "Finish")}
+        {nextLabel || (next ? t("host.listingWizard.continue", "Continue") : t("host.listingWizard.finish", "Finish"))}
       </button>
     </div>
   );

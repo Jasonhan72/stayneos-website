@@ -2,18 +2,20 @@
 
 import { useState } from "react";
 import { useListingDraft } from "@/hooks/useListingDraft";
+import { useI18n } from "@/lib/i18n";
 import WizardFooter from "@/components/host/listings/wizard/WizardFooter";
 
 const MIN_STAY_OPTIONS = [
-  { value: 30, label: "30 days" },
-  { value: 60, label: "60 days" },
-  { value: 90, label: "90 days" },
-  { value: 180, label: "180 days" },
-  { value: 365, label: "1 year" },
+  { value: 30, key: "host.listingWizard.pricing.minStay30", label: "30 days" },
+  { value: 60, key: "host.listingWizard.pricing.minStay60", label: "60 days" },
+  { value: 90, key: "host.listingWizard.pricing.minStay90", label: "90 days" },
+  { value: 180, key: "host.listingWizard.pricing.minStay180", label: "180 days" },
+  { value: 365, key: "host.listingWizard.pricing.minStay365", label: "1 year" },
 ];
 
 export default function StepPricingPage() {
   const { draft, updateDraft } = useListingDraft();
+  const { t } = useI18n();
   const pricing = draft.pricing || { priceMonthly: 0, minStayDays: 30 };
   const [showQuarterly, setShowQuarterly] = useState(Boolean(pricing.priceQuarterly));
   const [showAnnual, setShowAnnual] = useState(Boolean(pricing.priceAnnual));
@@ -32,16 +34,16 @@ export default function StepPricingPage() {
     <div className="space-y-8">
       <header className="space-y-2">
         <h1 className="text-2xl font-semibold tracking-tight text-neutral-900">
-          Now, set your price
+          {t("host.listingWizard.pricing.title", "Now, set your price")}
         </h1>
         <p className="text-sm text-neutral-600">
-          You can change it any time.
+          {t("host.listingWizard.pricing.subtitle", "You can change it any time.")}
         </p>
       </header>
 
       <div className="space-y-5">
         <Money
-          label="Monthly rent"
+          label={t("host.listingWizard.pricing.monthlyRent", "Monthly rent")}
           required
           value={pricing.priceMonthly}
           onChange={(v) => set("priceMonthly", v)}
@@ -57,11 +59,11 @@ export default function StepPricingPage() {
             }}
             className="h-4 w-4 rounded border-neutral-300 text-neutral-900 focus:ring-neutral-900"
           />
-          Add a quarterly rate
+          {t("host.listingWizard.pricing.addQuarterly", "Add a quarterly rate")}
         </label>
         {showQuarterly && (
           <Money
-            label="Quarterly rate (total for 3 months)"
+            label={t("host.listingWizard.pricing.quarterlyRate", "Quarterly rate (total for 3 months)")}
             value={pricing.priceQuarterly || 0}
             onChange={(v) => set("priceQuarterly", v)}
           />
@@ -77,11 +79,11 @@ export default function StepPricingPage() {
             }}
             className="h-4 w-4 rounded border-neutral-300 text-neutral-900 focus:ring-neutral-900"
           />
-          Add an annual rate
+          {t("host.listingWizard.pricing.addAnnual", "Add an annual rate")}
         </label>
         {showAnnual && (
           <Money
-            label="Annual rate (total for 12 months)"
+            label={t("host.listingWizard.pricing.annualRate", "Annual rate (total for 12 months)")}
             value={pricing.priceAnnual || 0}
             onChange={(v) => set("priceAnnual", v)}
           />
@@ -89,7 +91,7 @@ export default function StepPricingPage() {
 
         <div className="space-y-1">
           <label className="block text-sm font-medium text-neutral-900">
-            Minimum stay
+            {t("host.listingWizard.pricing.minimumStay", "Minimum stay")}
           </label>
           <select
             value={pricing.minStayDays || 30}
@@ -98,7 +100,7 @@ export default function StepPricingPage() {
           >
             {MIN_STAY_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>
-                {o.label}
+                {t(o.key, o.label)}
               </option>
             ))}
           </select>

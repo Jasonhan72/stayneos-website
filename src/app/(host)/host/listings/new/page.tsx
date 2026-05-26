@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Link as LinkIcon, FileText, Pencil, Loader2, AlertCircle } from "lucide-react";
 import { useListingDraft } from "@/hooks/useListingDraft";
 import { csrfFetch, ensureCsrfToken } from "@/lib/security/csrf-client";
+import { useI18n } from "@/lib/i18n";
 import type { ListingDraft } from "@/types/listing-draft";
 import { EMPTY_DRAFT } from "@/types/listing-draft";
 
@@ -12,6 +13,7 @@ type Mode = "none" | "url" | "pdf";
 
 export default function WizardStartPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const { replaceDraft, updateDraft } = useListingDraft();
   const [mode, setMode] = useState<Mode>("none");
   const [url, setUrl] = useState("");
@@ -50,7 +52,7 @@ export default function WizardStartPage() {
 
   async function handleUrlImport() {
     if (!url.trim()) {
-      setError("Please paste a listing URL");
+      setError(t("host.listingWizard.start.errors.urlRequired", "Please paste a listing URL"));
       return;
     }
     setError(null);
@@ -68,7 +70,7 @@ export default function WizardStartPage() {
         error?: string;
       };
       if (!res.ok) {
-        setError(data.error || `Import failed (HTTP ${res.status})`);
+        setError(data.error || t("host.listingWizard.start.errors.importHttp", "Import failed (HTTP {status})", { status: res.status }));
         return;
       }
       mergeImported(data.draft || {});
@@ -77,15 +79,17 @@ export default function WizardStartPage() {
       const summaryWarnings: string[] = [...(data.warnings || [])];
       const d = data.draft || {};
       const missing: string[] = [];
-      if (!d.basics?.bedrooms) missing.push("bedrooms");
-      if (!d.basics?.bathrooms) missing.push("bathrooms");
-      if (!d.pricing?.priceMonthly) missing.push("monthly price");
-      if (!d.description) missing.push("description");
-      if (!d.amenities?.length) missing.push("amenities");
-      if (!d.importedImages?.length) missing.push("photos");
+      if (!d.basics?.bedrooms) missing.push(t("host.listingWizard.start.missing.bedrooms", "bedrooms"));
+      if (!d.basics?.bathrooms) missing.push(t("host.listingWizard.start.missing.bathrooms", "bathrooms"));
+      if (!d.pricing?.priceMonthly) missing.push(t("host.listingWizard.start.missing.monthlyPrice", "monthly price"));
+      if (!d.description) missing.push(t("host.listingWizard.start.missing.description", "description"));
+      if (!d.amenities?.length) missing.push(t("host.listingWizard.start.missing.amenities", "amenities"));
+      if (!d.importedImages?.length) missing.push(t("host.listingWizard.start.missing.photos", "photos"));
       if (missing.length) {
         summaryWarnings.push(
-          `Couldn’t auto-fill: ${missing.join(", ")}. You can add them on the review page.`,
+          t("host.listingWizard.start.autoFillWarning", "Couldn’t auto-fill: {items}. You can add them on the review page.", {
+            items: missing.join(", "),
+          }),
         );
       }
       if (summaryWarnings.length) setWarnings(summaryWarnings);
@@ -93,7 +97,7 @@ export default function WizardStartPage() {
       // preview of everything we extracted, instead of stepping through 8 forms.
       router.push("/host/listings/new/review");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Import failed");
+      setError(e instanceof Error ? e.message : t("host.listingWizard.start.errors.importFailed", "Import failed"));
     } finally {
       setLoading(false);
     }
@@ -101,7 +105,7 @@ export default function WizardStartPage() {
 
   async function handlePdfImport() {
     if (!pdfFile) {
-      setError("Please choose a PDF file");
+      setError(t("host.listingWizard.start.errors.pdfRequired", "Please choose a PDF file"));
       return;
     }
     setError(null);
@@ -120,14 +124,14 @@ export default function WizardStartPage() {
         error?: string;
       };
       if (!res.ok) {
-        setError(data.error || `Import failed (HTTP ${res.status})`);
+        setError(data.error || t("host.listingWizard.start.errors.importHttp", "Import failed (HTTP {status})", { status: res.status }));
         return;
       }
       mergeImported({ ...(data.draft || {}), importSource: "pdf" });
       if (data.warnings && data.warnings.length) setWarnings(data.warnings);
       router.push("/host/listings/new/review");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Import failed");
+      setError(e instanceof Error ? e.message : t("host.listingWizard.start.errors.importFailed", "Import failed"));
     } finally {
       setLoading(false);
     }
@@ -142,11 +146,10 @@ export default function WizardStartPage() {
     <div className="space-y-6">
       <header className="space-y-2 text-center">
         <h1 className="text-3xl font-semibold tracking-tight text-neutral-900">
-          Tell us about your place
+          {t("host.listingWizard.start.title", "Tell us about your place")}
         </h1>
         <p className="text-base text-neutral-600">
-          We&apos;ll help you fill in the details. Import from an existing
-          listing, upload a PDF, or start from scratch.
+          {t("host.listingWizard.start.subtitle", "We’ll help you fill in the details. Import from an existing listing, upload a PDF, or start from scratch.")}
         </p>
       </header>
 
@@ -173,8 +176,8 @@ export default function WizardStartPage() {
         {/* URL import */}
         <ImportOption
           icon={<LinkIcon className="h-5 w-5" />}
-          title="Import from listing site"
-          subtitle="Airbnb, Booking.com, Kijiji, Realtor.ca…"
+          title={t("host.listingWizard.start.urlTitle", "Import from listing site")}
+          subtitle={t("host.listingWizard.start.urlSubtitle", "Airbnb, Booking.com, Kijiji, Realtor.ca…")}
           expanded={mode === "url"}
           onClick={() => setMode(mode === "url" ? "none" : "url")}
         >
@@ -193,20 +196,19 @@ export default function WizardStartPage() {
               className="flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-800 disabled:opacity-50"
             >
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-              Parse
+              {t("host.listingWizard.start.parse", "Parse")}
             </button>
           </div>
           <p className="mt-2 text-xs text-neutral-500">
-            We&apos;ll read the public page and pre-fill what we can. You can
-            edit everything afterwards.
+            {t("host.listingWizard.start.urlHelp", "We’ll read the public page and pre-fill what we can. You can edit everything afterwards.")}
           </p>
         </ImportOption>
 
         {/* PDF import */}
         <ImportOption
           icon={<FileText className="h-5 w-5" />}
-          title="Upload PDF"
-          subtitle="Floor plans, brochures, leasing flyers…"
+          title={t("host.listingWizard.start.pdfTitle", "Upload PDF")}
+          subtitle={t("host.listingWizard.start.pdfSubtitle", "Floor plans, brochures, leasing flyers…")}
           expanded={mode === "pdf"}
           onClick={() => setMode(mode === "pdf" ? "none" : "pdf")}
         >
@@ -221,7 +223,7 @@ export default function WizardStartPage() {
               {pdfFile ? (
                 <span className="text-neutral-900">{pdfFile.name}</span>
               ) : (
-                <span>Click to choose a PDF (max 10MB)</span>
+                <span>{t("host.listingWizard.start.choosePdf", "Click to choose a PDF (max 10MB)")}</span>
               )}
             </label>
             <button
@@ -231,7 +233,7 @@ export default function WizardStartPage() {
               className="flex w-full items-center justify-center gap-2 rounded-lg bg-neutral-900 px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-800 disabled:opacity-50 sm:w-auto"
             >
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-              Upload &amp; parse
+              {t("host.listingWizard.start.uploadParse", "Upload & parse")}
             </button>
           </div>
         </ImportOption>
@@ -247,10 +249,10 @@ export default function WizardStartPage() {
           </span>
           <span className="flex-1">
             <span className="block text-base font-semibold text-neutral-900">
-              Start from scratch
+              {t("host.listingWizard.start.manualTitle", "Start from scratch")}
             </span>
             <span className="block text-sm text-neutral-500">
-              I&apos;ll fill in everything myself.
+              {t("host.listingWizard.start.manualSubtitle", "I’ll fill in everything myself.")}
             </span>
           </span>
           <span className="text-neutral-400">→</span>

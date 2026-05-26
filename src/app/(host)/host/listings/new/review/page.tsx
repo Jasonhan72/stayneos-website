@@ -5,11 +5,18 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Pencil, Loader2 } from "lucide-react";
 import { useListingDraft } from "@/hooks/useListingDraft";
+import { useI18n } from "@/lib/i18n";
+import {
+  amenityTranslationKey,
+  formatCountByLocale,
+  LISTING_TYPE_KEYS,
+} from "@/lib/host-listing-i18n";
 import { ensureCsrfToken } from "@/lib/security/csrf-client";
 
 
 export default function StepReviewPage() {
   const router = useRouter();
+  const { locale, t } = useI18n();
   const { draft, clearDraft } = useListingDraft();
   const [publishing, setPublishing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,13 +48,16 @@ export default function StepReviewPage() {
       });
       if (!res.ok) {
         const txt = await res.text().catch(() => "");
-        setError(`Publish failed (${res.status}): ${txt.slice(0, 200)}`);
+        setError(t("host.listingWizard.review.publishFailedHttp", "Publish failed ({status}): {message}", {
+          status: res.status,
+          message: txt.slice(0, 200),
+        }));
         return;
       }
       clearDraft();
       router.push("/host/listings?published=1");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Publish failed");
+      setError(e instanceof Error ? e.message : t("host.listingWizard.review.publishFailed", "Publish failed"));
     } finally {
       setPublishing(false);
     }
@@ -57,10 +67,10 @@ export default function StepReviewPage() {
     <div className="space-y-8">
       <header className="space-y-2">
         <h1 className="text-2xl font-semibold tracking-tight text-neutral-900">
-          Review your listing
+          {t("host.listingWizard.review.title", "Review your listing")}
         </h1>
         <p className="text-sm text-neutral-600">
-          Double-check everything below, then publish when you&apos;re ready.
+          {t("host.listingWizard.review.subtitle", "Double-check everything below, then publish when you’re ready.")}
         </p>
       </header>
 
@@ -71,12 +81,12 @@ export default function StepReviewPage() {
       )}
 
       <div className="space-y-3">
-        <Section title="Type" editPath="/host/listings/new/type">
-          <div className="capitalize">{draft.type || <em className="text-neutral-400">Not set</em>}</div>
+        <Section title={t("host.listingWizard.review.sections.type", "Type")} editPath="/host/listings/new/type" editLabel={t("common.edit", "Edit")}>
+          <div>{draft.type ? t(LISTING_TYPE_KEYS[draft.type] || "", draft.type) : <em className="text-neutral-400">{t("host.listingWizard.review.notSet", "Not set")}</em>}</div>
         </Section>
 
-        <Section title="Location" editPath="/host/listings/new/location">
-          <div>{draft.location?.address || <em className="text-neutral-400">No address</em>}</div>
+        <Section title={t("host.listingWizard.review.sections.location", "Location")} editPath="/host/listings/new/location" editLabel={t("common.edit", "Edit")}>
+          <div>{draft.location?.address || <em className="text-neutral-400">{t("host.listingWizard.review.noAddress", "No address")}</em>}</div>
           <div className="text-sm text-neutral-500">
             {[draft.location?.neighborhood, draft.location?.city]
               .filter(Boolean)
@@ -84,18 +94,18 @@ export default function StepReviewPage() {
           </div>
         </Section>
 
-        <Section title="Basics" editPath="/host/listings/new/basics">
+        <Section title={t("host.listingWizard.review.sections.basics", "Basics")} editPath="/host/listings/new/basics" editLabel={t("common.edit", "Edit")}>
           <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm">
-            <span>🛏️ {draft.basics?.bedrooms ?? 0} bedrooms</span>
-            <span>🛁 {draft.basics?.bathrooms ?? 0} bathrooms</span>
-            <span>👥 {draft.basics?.maxGuests ?? 0} guests</span>
-            {draft.basics?.sqft ? <span>📐 {draft.basics.sqft} sqft</span> : null}
+            <span>🛏️ {formatCountByLocale(locale, draft.basics?.bedrooms ?? 0, "bedroom")}</span>
+            <span>🛁 {formatCountByLocale(locale, draft.basics?.bathrooms ?? 0, "bathroom")}</span>
+            <span>👥 {formatCountByLocale(locale, draft.basics?.maxGuests ?? 0, "guest")}</span>
+            {draft.basics?.sqft ? <span>📐 {t("host.listingWizard.review.sqft", "{count} sqft", { count: draft.basics.sqft })}</span> : null}
           </div>
         </Section>
 
-        <Section title="Amenities" editPath="/host/listings/new/amenities">
+        <Section title={t("host.listingWizard.review.sections.amenities", "Amenities")} editPath="/host/listings/new/amenities" editLabel={t("common.edit", "Edit")}>
           {(draft.amenities?.length || 0) === 0 ? (
-            <em className="text-neutral-400">None selected</em>
+            <em className="text-neutral-400">{t("host.listingWizard.review.noneSelected", "None selected")}</em>
           ) : (
             <div className="flex flex-wrap gap-1.5">
               {draft.amenities!.map((a) => (
@@ -103,53 +113,53 @@ export default function StepReviewPage() {
                   key={a}
                   className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs text-neutral-700"
                 >
-                  {a}
+                  {t(amenityTranslationKey(a) || "", a)}
                 </span>
               ))}
             </div>
           )}
         </Section>
 
-        <Section title="Photos" editPath="/host/listings/new/photos">
+        <Section title={t("host.listingWizard.review.sections.photos", "Photos")} editPath="/host/listings/new/photos" editLabel={t("common.edit", "Edit")}>
           {(draft.photos?.length || 0) === 0 ? (
-            <em className="text-neutral-400">No photos uploaded</em>
+            <em className="text-neutral-400">{t("host.listingWizard.review.noPhotos", "No photos uploaded")}</em>
           ) : (
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
               {draft.photos!.slice(0, 8).map((src, i) => (
-                <div
+                <PhotoPreview
                   key={i}
-                  className="aspect-square overflow-hidden rounded-md border border-neutral-200 bg-neutral-100"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={src} alt={`Photo ${i + 1}`} className="h-full w-full object-cover" />
-                </div>
+                  src={src}
+                  alt={t("host.listingWizard.review.photoAlt", "Photo {number}", { number: i + 1 })}
+                />
               ))}
             </div>
           )}
         </Section>
 
-        <Section title="Title & description" editPath="/host/listings/new/details">
+        <Section title={t("host.listingWizard.review.sections.details", "Title & description")} editPath="/host/listings/new/details" editLabel={t("common.edit", "Edit")}>
           <div className="font-medium text-neutral-900">
-            {draft.title || <em className="text-neutral-400">No title</em>}
+            {draft.title || <em className="text-neutral-400">{t("host.listingWizard.review.noTitle", "No title")}</em>}
           </div>
           <p className="mt-1 line-clamp-4 text-sm text-neutral-600">
-            {draft.description || <em className="text-neutral-400">No description</em>}
+            {draft.description || <em className="text-neutral-400">{t("host.listingWizard.review.noDescription", "No description")}</em>}
           </p>
         </Section>
 
-        <Section title="Pricing" editPath="/host/listings/new/pricing">
+        <Section title={t("host.listingWizard.review.sections.pricing", "Pricing")} editPath="/host/listings/new/pricing" editLabel={t("common.edit", "Edit")}>
           <div className="space-y-0.5 text-sm">
             <div>
-              <strong>${draft.pricing?.priceMonthly ?? 0}</strong> CAD / month
+              <strong>${draft.pricing?.priceMonthly ?? 0}</strong> {t("host.listingWizard.review.cadPerMonth", "CAD / month")}
             </div>
             {draft.pricing?.priceQuarterly ? (
-              <div className="text-neutral-600">${draft.pricing.priceQuarterly} / quarter</div>
+              <div className="text-neutral-600">${draft.pricing.priceQuarterly} {t("host.listingWizard.review.perQuarter", "/ quarter")}</div>
             ) : null}
             {draft.pricing?.priceAnnual ? (
-              <div className="text-neutral-600">${draft.pricing.priceAnnual} / year</div>
+              <div className="text-neutral-600">${draft.pricing.priceAnnual} {t("host.listingWizard.review.perYear", "/ year")}</div>
             ) : null}
             <div className="text-neutral-500">
-              Min stay: {draft.pricing?.minStayDays ?? 30} days
+              {t("host.listingWizard.review.minStay", "Min stay: {duration}", {
+                duration: formatCountByLocale(locale, draft.pricing?.minStayDays ?? 30, "day"),
+              })}
             </div>
           </div>
         </Section>
@@ -161,10 +171,10 @@ export default function StepReviewPage() {
           {publishing ? (
             <span className="flex items-center gap-2">
               <Loader2 className="h-4 w-4 animate-spin" />
-              Publishing your listing…
+              {t("host.listingWizard.review.publishing", "Publishing your listing...")}
             </span>
           ) : (
-            <span>Ready? You can still edit any section above.</span>
+            <span>{t("host.listingWizard.review.ready", "Ready? You can still edit any section above.")}</span>
           )}
         </div>
         <div className="flex items-center gap-2">
@@ -174,7 +184,7 @@ export default function StepReviewPage() {
             disabled={publishing}
             className="rounded-lg px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-100 disabled:opacity-50"
           >
-            Back
+            {t("common.back", "Back")}
           </button>
           <button
             type="button"
@@ -182,7 +192,7 @@ export default function StepReviewPage() {
             disabled={publishing}
             className="rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {publishing ? "Publishing…" : "🚀 Publish listing"}
+            {publishing ? t("host.listingWizard.review.publishingShort", "Publishing...") : t("host.listingWizard.review.publish", "Publish listing")}
           </button>
         </div>
       </div>
@@ -193,10 +203,12 @@ export default function StepReviewPage() {
 function Section({
   title,
   editPath,
+  editLabel,
   children,
 }: {
   title: string;
   editPath: string;
+  editLabel: string;
   children: React.ReactNode;
 }) {
   return (
@@ -210,10 +222,30 @@ function Section({
           className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-neutral-600 hover:bg-neutral-100"
         >
           <Pencil className="h-3 w-3" />
-          Edit
+          {editLabel}
         </Link>
       </div>
       <div className="text-neutral-900">{children}</div>
     </section>
+  );
+}
+
+function PhotoPreview({ src, alt }: { src: string; alt: string }) {
+  const [failed, setFailed] = useState(false);
+
+  return (
+    <div className="flex aspect-square items-center justify-center overflow-hidden rounded-md border border-neutral-200 bg-neutral-100 text-center text-xs font-medium text-neutral-500">
+      {failed ? (
+        <span className="px-2">{alt}</span>
+      ) : (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt={alt}
+          className="h-full w-full object-cover"
+          onError={() => setFailed(true)}
+        />
+      )}
+    </div>
   );
 }

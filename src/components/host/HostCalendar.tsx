@@ -6,6 +6,7 @@ import { addDaysYmd, diffDays, eachDay, formatYmd, toDate } from "@/lib/host-dat
 import { ChevronLeft, ChevronRight, Lock, AlertTriangle, RefreshCw, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ensureCsrfToken } from "@/lib/security/csrf-client";
+import { useI18n } from "@/lib/i18n";
 
 type Property = { id: string; title: string; basePrice?: number };
 type Day = { date: string; propertyId: string; status: string; price: number | null; isBooked: boolean; bookingId?: string };
@@ -24,16 +25,17 @@ function isWeekend(dateStr: string) {
   return day === 0 || day === 6;
 }
 
-function getMonthLabel(dateStr: string) {
+function getMonthLabel(dateStr: string, locale: string) {
   const d = toDate(dateStr);
   if (!d) return '';
-  return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  return d.toLocaleDateString(locale === "zh" ? "zh-CN" : locale === "fr" ? "fr-CA" : "en-US", { month: 'short', year: 'numeric' });
 }
 
 const DAY_W = 48; // px per day column
 const LABEL_W = 180; // px for property name column
 
 export default function HostCalendar() {
+  const { locale, t } = useI18n();
   const [data, setData] = useState<{ properties: Property[]; days: Day[] }>({ properties: [], days: [] });
   const [error, setError] = useState<string | null>(null);
   const [selectedPropertyId, setSelectedPropertyId] = useState('all');
@@ -53,20 +55,20 @@ export default function HostCalendar() {
       const res = await fetch(`/api/host/calendar?propertyId=${selectedPropertyId}&start=${start}&end=${end}`, { credentials: 'include', cache: 'no-store' });
       if (!res.ok) {
         const json = await res.json().catch(() => ({}));
-        setError(json.error || `Server error (${res.status})`);
+        setError(json.error || t("host.calendar.serverError", "Server error ({status})", { status: res.status }));
         return;
       }
       const json = await res.json();
       if (!json || !Array.isArray(json.properties) || !Array.isArray(json.days)) {
-        setError('Invalid response from server');
+        setError(t("host.calendar.invalidResponse", "Invalid response from server"));
         return;
       }
       setData(json);
       setError(null);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Network error');
+      setError(e instanceof Error ? e.message : t("host.calendar.networkError", "Network error"));
     }
-  }, [selectedPropertyId, start, end]);
+  }, [selectedPropertyId, start, end, t]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -94,7 +96,7 @@ export default function HostCalendar() {
     const headers: { label: string; colStart: number; colSpan: number }[] = [];
     let prev: string | null = null;
     for (let i = 0; i < dates.length; i++) {
-      const label = getMonthLabel(dates[i]);
+      const label = getMonthLabel(dates[i], locale);
       if (label !== prev) {
         headers.push({ label, colStart: i, colSpan: 1 });
         prev = label;
@@ -103,7 +105,7 @@ export default function HostCalendar() {
       }
     }
     return headers;
-  }, [dates]);
+  }, [dates, locale]);
 
   const todayStr = formatYmd(today);
 
@@ -139,7 +141,7 @@ export default function HostCalendar() {
       load();
     } else {
       const json = await res.json().catch(() => ({}));
-      alert(json.error || 'Failed to save calendar update');
+      alert(json.error || t("host.calendar.saveFailed", "Failed to save calendar update"));
     }
   };
 
@@ -154,14 +156,14 @@ export default function HostCalendar() {
     return (
       <div className="rounded-3xl border border-red-200 bg-red-50 p-10 text-center">
         <AlertTriangle className="mx-auto h-12 w-12 text-red-400 mb-4" />
-        <h1 className="text-xl font-semibold text-red-800">页面加载失败</h1>
+        <h1 className="text-xl font-semibold text-red-800">{t("host.calendar.loadFailed", "Page failed to load")}</h1>
         <p className="mt-2 text-red-600">{error}</p>
         <div className="mt-6 flex gap-3 justify-center">
           <button onClick={() => load()} className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-white hover:bg-red-700">
-            <RefreshCw className="h-4 w-4" />重试
+            <RefreshCw className="h-4 w-4" />{t("common.retry", "Retry")}
           </button>
           <Link href="/" className="inline-flex items-center gap-2 rounded-xl border border-red-200 px-5 py-3 text-red-700 hover:bg-red-100">
-            <Home className="h-4 w-4" />返回首页
+            <Home className="h-4 w-4" />{t("host.calendar.backHome", "Back home")}
           </Link>
         </div>
       </div>
@@ -169,7 +171,7 @@ export default function HostCalendar() {
   }
 
   if (data.properties.length === 0) {
-    return <div className="rounded-3xl border border-dashed border-neutral-300 bg-white p-10 text-center"><h1 className="text-2xl font-semibold text-neutral-900">No listings yet</h1><p className="mt-2 text-neutral-500">Add your first listing to start managing availability and pricing.</p><Link href="/host/listings/new" className="mt-6 inline-flex rounded-xl bg-neutral-900 px-5 py-3 text-white">Add your first listing</Link></div>;
+    return <div className="rounded-3xl border border-dashed border-neutral-300 bg-white p-10 text-center"><h1 className="text-2xl font-semibold text-neutral-900">{t("host.calendar.noListings", "No listings yet")}</h1><p className="mt-2 text-neutral-500">{t("host.calendar.noListingsHelp", "Add your first listing to start managing availability and pricing.")}</p><Link href="/host/listings/new" className="mt-6 inline-flex rounded-xl bg-neutral-900 px-5 py-3 text-white">{t("host.calendar.addFirstListing", "Add your first listing")}</Link></div>;
   }
 
   return (
@@ -178,19 +180,19 @@ export default function HostCalendar() {
       <div className="flex flex-col gap-3 rounded-3xl border border-neutral-200 bg-white p-4 shadow-sm lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-wrap items-center gap-3">
           <select value={selectedPropertyId} onChange={(e) => setSelectedPropertyId(e.target.value)} className="rounded-xl border border-neutral-200 px-4 py-2 text-sm font-medium">
-            <option value="all">All listings</option>
+            <option value="all">{t("host.calendar.allListings", "All listings")}</option>
             {data.properties.map((property) => <option key={property.id} value={property.id}>{property.title}</option>)}
           </select>
           <div className="flex items-center gap-1">
             <button onClick={() => setMonthOffset((v) => v - 1)} className="rounded-full border border-neutral-200 p-2 hover:bg-neutral-50"><ChevronLeft className="h-4 w-4" /></button>
             <button onClick={() => setMonthOffset((v) => v + 1)} className="rounded-full border border-neutral-200 p-2 hover:bg-neutral-50"><ChevronRight className="h-4 w-4" /></button>
-            <button onClick={() => setMonthOffset(0)} className="rounded-xl border border-neutral-200 px-4 py-2 text-sm font-medium hover:bg-neutral-50">Today</button>
+            <button onClick={() => setMonthOffset(0)} className="rounded-xl border border-neutral-200 px-4 py-2 text-sm font-medium hover:bg-neutral-50">{t("host.calendar.today", "Today")}</button>
           </div>
         </div>
         <div className="flex items-center gap-4 text-xs text-neutral-400">
-          <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-emerald-500" /> Available</span>
-          <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-neutral-400" /> Blocked</span>
-          <span className="flex items-center gap-1.5"><Lock className="h-3 w-3" /> Booked</span>
+          <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-emerald-500" /> {t("host.calendar.available", "Available")}</span>
+          <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-neutral-400" /> {t("host.calendar.blocked", "Blocked")}</span>
+          <span className="flex items-center gap-1.5"><Lock className="h-3 w-3" /> {t("host.calendar.booked", "Booked")}</span>
         </div>
       </div>
 
@@ -202,7 +204,7 @@ export default function HostCalendar() {
             {/* Month header row */}
             <div className="sticky top-0 z-20 flex border-b border-neutral-200 bg-white">
               <div className="sticky left-0 z-30 flex-shrink-0 border-r border-neutral-200 bg-white px-4 py-3 text-sm font-medium text-neutral-500" style={{ width: LABEL_W }}>
-                {dates.length} nights
+                {t("host.calendar.nightsCount", "{count} nights", { count: dates.length })}
               </div>
               {monthHeaders.map((mh) => (
                 <div key={mh.label} className="flex items-center justify-center border-r border-neutral-100 px-1 py-3 text-xs font-semibold text-neutral-600" style={{ width: mh.colSpan * DAY_W, minWidth: mh.colSpan * DAY_W }}>
@@ -217,7 +219,7 @@ export default function HostCalendar() {
                 {/* Property name (sticky left) */}
                 <div className="sticky left-0 z-10 flex-shrink-0 border-r border-neutral-200 bg-white px-4 py-3" style={{ width: LABEL_W }}>
                   <p className="text-sm font-medium text-neutral-900 truncate">{property.title}</p>
-                  <p className="text-xs text-neutral-400 mt-0.5">{toMoney((property.basePrice || 0) * 100)}/night</p>
+                  <p className="text-xs text-neutral-400 mt-0.5">{toMoney((property.basePrice || 0) * 100)}{t("host.calendar.perNight", "/night")}</p>
                 </div>
 
                 {/* Day cells */}
@@ -230,7 +232,7 @@ export default function HostCalendar() {
                   return (
                     <button
                       type="button"
-                      title={cell.isBooked ? 'Booked by Guest' : date}
+                      title={cell.isBooked ? t("host.calendar.bookedByGuest", "Booked by Guest") : date}
                       key={`${property.id}-${date}`}
                       onPointerDown={() => onCellDown(property.id, date)}
                       onPointerEnter={() => onCellEnter(property.id, date)}
@@ -247,7 +249,7 @@ export default function HostCalendar() {
                       {cell.isBooked ? (
                         <>
                           <Lock className="h-3.5 w-3.5 text-neutral-400" />
-                          <span className="text-[10px] text-neutral-400">Booked</span>
+                          <span className="text-[10px] text-neutral-400">{t("host.calendar.booked", "Booked")}</span>
                         </>
                       ) : cell.status === 'blocked' ? (
                         <>
@@ -274,7 +276,7 @@ export default function HostCalendar() {
             {/* Empty state row if no properties visible */}
             {properties.length === 0 && (
               <div className="flex items-center justify-center py-20 text-sm text-neutral-400">
-                No listings match the filter.
+                {t("host.calendar.noFilterMatches", "No listings match the filter.")}
               </div>
             )}
           </div>
@@ -284,17 +286,17 @@ export default function HostCalendar() {
       {/* Edit Drawer */}
       {drawerOpen && selection && selectedMeta ? (
         <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md border-l border-neutral-200 bg-white p-6 shadow-2xl">
-          <h2 className="text-xl font-semibold text-neutral-900">Edit availability</h2>
-          <p className="mt-2 text-sm text-neutral-500">{selectedMeta.label} ({selectedMeta.nights} nights)</p>
+          <h2 className="text-xl font-semibold text-neutral-900">{t("host.calendar.editAvailability", "Edit availability")}</h2>
+          <p className="mt-2 text-sm text-neutral-500">{selectedMeta.label} ({t("host.calendar.nightsCount", "{count} nights", { count: selectedMeta.nights })})</p>
           <div className="mt-6 space-y-4">
-            <label className="block text-sm font-medium text-neutral-700">Status<select value={draft.status} onChange={(e) => setDraft({ ...draft, status: e.target.value })} className="mt-2 w-full rounded-xl border border-neutral-200 px-4 py-3"><option value="available">Available</option><option value="blocked">Blocked</option></select></label>
-            <label className="block text-sm font-medium text-neutral-700">Custom price (CAD)<input value={draft.price} onChange={(e) => setDraft({ ...draft, price: e.target.value })} type="number" className="mt-2 w-full rounded-xl border border-neutral-200 px-4 py-3" /></label>
-            <label className="block text-sm font-medium text-neutral-700">Minimum nights<input value={draft.minNights} onChange={(e) => setDraft({ ...draft, minNights: e.target.value })} type="number" className="mt-2 w-full rounded-xl border border-neutral-200 px-4 py-3" /></label>
-            <label className="block text-sm font-medium text-neutral-700">Notes<textarea value={draft.notes} onChange={(e) => setDraft({ ...draft, notes: e.target.value })} className="mt-2 min-h-28 w-full rounded-xl border border-neutral-200 px-4 py-3" /></label>
+            <label className="block text-sm font-medium text-neutral-700">{t("host.calendar.status", "Status")}<select value={draft.status} onChange={(e) => setDraft({ ...draft, status: e.target.value })} className="mt-2 w-full rounded-xl border border-neutral-200 px-4 py-3"><option value="available">{t("host.calendar.available", "Available")}</option><option value="blocked">{t("host.calendar.blocked", "Blocked")}</option></select></label>
+            <label className="block text-sm font-medium text-neutral-700">{t("host.calendar.customPrice", "Custom price (CAD)")}<input value={draft.price} onChange={(e) => setDraft({ ...draft, price: e.target.value })} type="number" className="mt-2 w-full rounded-xl border border-neutral-200 px-4 py-3" /></label>
+            <label className="block text-sm font-medium text-neutral-700">{t("host.calendar.minimumNights", "Minimum nights")}<input value={draft.minNights} onChange={(e) => setDraft({ ...draft, minNights: e.target.value })} type="number" className="mt-2 w-full rounded-xl border border-neutral-200 px-4 py-3" /></label>
+            <label className="block text-sm font-medium text-neutral-700">{t("host.calendar.notes", "Notes")}<textarea value={draft.notes} onChange={(e) => setDraft({ ...draft, notes: e.target.value })} className="mt-2 min-h-28 w-full rounded-xl border border-neutral-200 px-4 py-3" /></label>
           </div>
           <div className="mt-6 flex gap-3">
-            <button onClick={() => { setDrawerOpen(false); setSelection(null); }} className="flex-1 rounded-xl border border-neutral-200 px-4 py-3">Cancel</button>
-            <button onClick={saveSelection} className="flex-1 rounded-xl bg-neutral-900 px-4 py-3 text-white">Save</button>
+            <button onClick={() => { setDrawerOpen(false); setSelection(null); }} className="flex-1 rounded-xl border border-neutral-200 px-4 py-3">{t("common.cancel", "Cancel")}</button>
+            <button onClick={saveSelection} className="flex-1 rounded-xl bg-neutral-900 px-4 py-3 text-white">{t("common.save", "Save")}</button>
           </div>
         </div>
       ) : null}

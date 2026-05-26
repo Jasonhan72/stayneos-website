@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { Upload, X } from "lucide-react";
 import { useListingDraft } from "@/hooks/useListingDraft";
+import { useI18n } from "@/lib/i18n";
 import WizardFooter from "@/components/host/listings/wizard/WizardFooter";
 
 const MAX_PHOTOS = 20;
@@ -35,6 +36,7 @@ function compressImage(file: File, maxPx = 1200, quality = 0.82): Promise<string
 
 export default function StepPhotosPage() {
   const { draft, updateDraft } = useListingDraft();
+  const { t } = useI18n();
   const photos = draft.photos || [];
   const imported = draft.importedImages || [];
   const fileInput = useRef<HTMLInputElement>(null);
@@ -46,7 +48,10 @@ export default function StepPhotosPage() {
       if (!f.type.startsWith("image/")) continue;
       if (photos.length + accepted.length >= MAX_PHOTOS) break;
       if (f.size > MAX_SIZE_MB * 1024 * 1024) {
-        alert(`"${f.name}" is over ${MAX_SIZE_MB}MB — please use a smaller file.`);
+        alert(t("host.listingWizard.photos.errors.tooLarge", "\"{name}\" is over {size}MB. Please use a smaller file.", {
+          name: f.name,
+          size: MAX_SIZE_MB,
+        }));
         continue;
       }
       try {
@@ -73,11 +78,10 @@ export default function StepPhotosPage() {
     <div className="space-y-8">
       <header className="space-y-2">
         <h1 className="text-2xl font-semibold tracking-tight text-neutral-900">
-          Add some photos
+          {t("host.listingWizard.photos.title", "Add some photos")}
         </h1>
         <p className="text-sm text-neutral-600">
-          You&apos;ll need at least 1 photo to publish. Drag &amp; drop or
-          click to upload.
+          {t("host.listingWizard.photos.subtitle", "You’ll need at least 1 photo to publish. Drag and drop or click to upload.")}
         </p>
       </header>
 
@@ -92,10 +96,10 @@ export default function StepPhotosPage() {
       >
         <Upload className="h-8 w-8 text-neutral-400" />
         <div className="text-sm font-medium text-neutral-900">
-          Drag photos here or click to browse
+          {t("host.listingWizard.photos.dropLabel", "Drag photos here or click to browse")}
         </div>
         <div className="text-xs text-neutral-500">
-          JPG / PNG / WebP — up to {MAX_PHOTOS} photos
+          {t("host.listingWizard.photos.fileHelp", "JPG / PNG / WebP - up to {count} photos", { count: MAX_PHOTOS })}
         </div>
         <input
           id="photo-input"
@@ -118,20 +122,20 @@ export default function StepPhotosPage() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={src}
-                alt={`Upload ${idx + 1}`}
+                alt={t("host.listingWizard.photos.uploadAlt", "Upload {number}", { number: idx + 1 })}
                 className="h-full w-full object-cover"
               />
               <button
                 type="button"
                 onClick={() => removeAt(idx)}
-                aria-label="Remove photo"
+                aria-label={t("host.listingWizard.photos.remove", "Remove photo")}
                 className="absolute right-2 top-2 rounded-full bg-white/90 p-1 text-neutral-900 opacity-100 md:opacity-0 md:transition md:group-hover:opacity-100"
               >
                 <X className="h-4 w-4" />
               </button>
               {idx === 0 && (
                 <div className="absolute bottom-2 left-2 rounded bg-neutral-900/80 px-2 py-0.5 text-xs font-medium text-white">
-                  Cover
+                  {t("host.listingWizard.photos.cover", "Cover")}
                 </div>
               )}
             </div>
@@ -142,11 +146,10 @@ export default function StepPhotosPage() {
       {imported.length > 0 && (
         <section className="space-y-2">
           <h2 className="text-sm font-semibold text-neutral-900">
-            Reference photos (from import source)
+            {t("host.listingWizard.photos.referenceTitle", "Reference photos (from import source)")}
           </h2>
           <p className="text-xs text-neutral-500">
-            These came from the page you imported. They&apos;re shown for
-            reference only — please upload your own photos above.
+            {t("host.listingWizard.photos.referenceHelp", "These came from the page you imported. They’re shown for reference only - please upload your own photos above.")}
           </p>
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
             {imported.slice(0, 8).map((src, idx) => (
@@ -157,7 +160,7 @@ export default function StepPhotosPage() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={src}
-                  alt={`Reference ${idx + 1}`}
+                  alt={t("host.listingWizard.photos.referenceAlt", "Reference {number}", { number: idx + 1 })}
                   className="h-full w-full object-cover"
                 />
               </div>

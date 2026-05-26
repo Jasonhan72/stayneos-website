@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { Sparkles, Loader2 } from "lucide-react";
 import { useListingDraft } from "@/hooks/useListingDraft";
+import { useI18n } from "@/lib/i18n";
 import WizardFooter from "@/components/host/listings/wizard/WizardFooter";
 
 const TITLE_MAX = 60;
 
 export default function StepDetailsPage() {
   const { draft, updateDraft } = useListingDraft();
+  const { t } = useI18n();
   const [titleSuggestions, setTitleSuggestions] = useState<string[]>([]);
   const [titleLoading, setTitleLoading] = useState(false);
   const [descLoading, setDescLoading] = useState(false);
@@ -31,7 +33,7 @@ export default function StepDetailsPage() {
       const data = (await res.json()) as { suggestions?: string[] };
       setTitleSuggestions(data.suggestions || []);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to generate titles");
+      setError(e instanceof Error ? e.message : t("host.listingWizard.details.errors.titleFailed", "Failed to generate titles"));
     } finally {
       setTitleLoading(false);
     }
@@ -53,7 +55,7 @@ export default function StepDetailsPage() {
         step: Math.max(draft.step || 0, 7),
       });
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to generate description");
+      setError(e instanceof Error ? e.message : t("host.listingWizard.details.errors.descriptionFailed", "Failed to generate description"));
     } finally {
       setDescLoading(false);
     }
@@ -67,10 +69,10 @@ export default function StepDetailsPage() {
     <div className="space-y-8">
       <header className="space-y-2">
         <h1 className="text-2xl font-semibold tracking-tight text-neutral-900">
-          Now, the words
+          {t("host.listingWizard.details.title", "Now, the words")}
         </h1>
         <p className="text-sm text-neutral-600">
-          A great title and description help your listing stand out.
+          {t("host.listingWizard.details.subtitle", "A great title and description help your listing stand out.")}
         </p>
       </header>
 
@@ -84,7 +86,7 @@ export default function StepDetailsPage() {
       <section className="space-y-3">
         <div className="flex items-center justify-between">
           <label className="text-sm font-medium text-neutral-900">
-            Title <span className="text-neutral-500">({TITLE_MAX} chars max)</span>
+            {t("host.listingWizard.details.titleLabel", "Title")} <span className="text-neutral-500">({t("host.listingWizard.details.charsMax", "{count} chars max", { count: TITLE_MAX })})</span>
           </label>
           <button
             type="button"
@@ -97,7 +99,7 @@ export default function StepDetailsPage() {
             ) : (
               <Sparkles className="h-3.5 w-3.5" />
             )}
-            Generate with AI
+            {t("host.listingWizard.details.generateTitle", "Generate with AI")}
           </button>
         </div>
         <input
@@ -107,7 +109,7 @@ export default function StepDetailsPage() {
           onChange={(e) =>
             updateDraft({ title: e.target.value, step: Math.max(draft.step || 0, 7) })
           }
-          placeholder="Bright 2-bed condo in King West"
+          placeholder={t("host.listingWizard.details.titlePlaceholder", "Bright 2-bed condo in King West")}
           className="w-full rounded-lg border border-neutral-300 px-3 py-2.5 outline-none focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900"
         />
         <div className="text-right text-xs text-neutral-400">
@@ -116,7 +118,7 @@ export default function StepDetailsPage() {
         {titleSuggestions.length > 0 && (
           <div className="space-y-2">
             <div className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-              Suggestions
+              {t("host.listingWizard.details.suggestions", "Suggestions")}
             </div>
             <div className="flex flex-col gap-2">
               {titleSuggestions.map((s, i) => (
@@ -138,7 +140,7 @@ export default function StepDetailsPage() {
       <section className="space-y-3">
         <div className="flex items-center justify-between">
           <label className="text-sm font-medium text-neutral-900">
-            Description
+            {t("host.listingWizard.details.descriptionLabel", "Description")}
           </label>
           <button
             type="button"
@@ -151,7 +153,7 @@ export default function StepDetailsPage() {
             ) : (
               <Sparkles className="h-3.5 w-3.5" />
             )}
-            Generate description
+            {t("host.listingWizard.details.generateDescription", "Generate description")}
           </button>
         </div>
         <textarea
@@ -163,13 +165,13 @@ export default function StepDetailsPage() {
             })
           }
           rows={8}
-          placeholder="Describe the space, neighborhood, and what guests will love about staying here…"
+          placeholder={t("host.listingWizard.details.descriptionPlaceholder", "Describe the space, neighborhood, and what guests will love about staying here...")}
           className="w-full rounded-lg border border-neutral-300 px-3 py-2.5 outline-none focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900"
         />
         {draft.descriptionZh ? (
           <details className="rounded-lg border border-neutral-200 bg-neutral-50 p-3">
             <summary className="cursor-pointer text-sm font-medium text-neutral-700">
-              中文描述 (auto-generated)
+              {t("host.listingWizard.details.zhDescription", "Chinese description (auto-generated)")}
             </summary>
             <textarea
               value={draft.descriptionZh}
