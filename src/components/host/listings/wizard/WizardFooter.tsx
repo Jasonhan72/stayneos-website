@@ -45,7 +45,7 @@ export default function WizardFooter({
   }
 
   return (
-    <div className="mt-10 flex items-center justify-between border-t border-neutral-200 pt-6">
+    <div className="sticky bottom-0 -mx-4 mt-10 flex items-center justify-between border-t border-neutral-200 bg-white px-4 py-4 sm:-mx-6 sm:px-6">
       {!hideBack ? (
         <button
           type="button"
