@@ -25,10 +25,25 @@ export default function WizardStartPage() {
   }, []);
 
   function mergeImported(partial: Partial<ListingDraft>) {
+    // Promote importedImages → photos so the review/preview page shows them
+    // immediately. Host can still remove/replace them on the photos step.
+    const importedPhotos =
+      partial.importedImages && partial.importedImages.length > 0
+        ? partial.importedImages.filter(
+            (p) => typeof p === "string" && /^https?:\/\//.test(p),
+          )
+        : [];
     const next: ListingDraft = {
       ...draft,
       ...partial,
-      step: Math.max(draft.step || 0, 1),
+      photos:
+        partial.photos && partial.photos.length > 0
+          ? partial.photos
+          : importedPhotos.length > 0
+            ? importedPhotos
+            : draft.photos,
+      // Mark all 8 steps as reached so progress bar shows complete on review.
+      step: Math.max(draft.step || 0, 8),
     };
     replaceDraft(next);
   }
@@ -58,7 +73,9 @@ export default function WizardStartPage() {
       }
       mergeImported(data.draft || {});
       if (data.warnings && data.warnings.length) setWarnings(data.warnings);
-      router.push("/host/listings/new/type");
+      // Jump straight to the review page so the host sees a single editable
+      // preview of everything we extracted, instead of stepping through 8 forms.
+      router.push("/host/listings/new/review");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Import failed");
     } finally {
@@ -92,7 +109,7 @@ export default function WizardStartPage() {
       }
       mergeImported({ ...(data.draft || {}), importSource: "pdf" });
       if (data.warnings && data.warnings.length) setWarnings(data.warnings);
-      router.push("/host/listings/new/type");
+      router.push("/host/listings/new/review");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Import failed");
     } finally {
