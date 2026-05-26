@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Link as LinkIcon, FileText, Pencil, Loader2, AlertCircle } from "lucide-react";
 import { useListingDraft } from "@/hooks/useListingDraft";
+import { csrfFetch, ensureCsrfToken } from "@/lib/security/csrf-client";
 import type { ListingDraft } from "@/types/listing-draft";
 
 type Mode = "none" | "url" | "pdf";
@@ -17,6 +18,11 @@ export default function WizardStartPage() {
   const [loading, setLoading] = useState(false);
   const [warnings, setWarnings] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+
+  // Warm the CSRF cookie on mount so the first POST already has it set.
+  useEffect(() => {
+    ensureCsrfToken();
+  }, []);
 
   function mergeImported(partial: Partial<ListingDraft>) {
     const next: ListingDraft = {
@@ -36,7 +42,7 @@ export default function WizardStartPage() {
     setWarnings([]);
     setLoading(true);
     try {
-      const res = await fetch("/api/host/import/url", {
+      const res = await csrfFetch("/api/host/import/url", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ url: url.trim() }),
@@ -71,7 +77,7 @@ export default function WizardStartPage() {
     try {
       const form = new FormData();
       form.append("file", pdfFile);
-      const res = await fetch("/api/host/import/pdf", {
+      const res = await csrfFetch("/api/host/import/pdf", {
         method: "POST",
         body: form,
       });

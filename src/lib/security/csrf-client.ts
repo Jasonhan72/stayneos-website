@@ -56,7 +56,16 @@ export async function csrfFetch(
       ...(init.headers || {}),
       'x-csrf-token': csrf,
     };
-    if (!headers['Content-Type'] && init.body) {
+    // Only set JSON content-type if there's a body AND it's not FormData/Blob
+    // (browser must set its own multipart boundary for FormData).
+    const isFormLike =
+      typeof FormData !== 'undefined' && init.body instanceof FormData;
+    const isBlobLike =
+      typeof Blob !== 'undefined' && init.body instanceof Blob;
+    const hasCT =
+      'Content-Type' in headers ||
+      'content-type' in headers;
+    if (!hasCT && init.body && !isFormLike && !isBlobLike) {
       headers['Content-Type'] = 'application/json';
     }
 
