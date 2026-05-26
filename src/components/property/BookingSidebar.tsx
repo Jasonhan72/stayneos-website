@@ -5,6 +5,7 @@ import { useI18n } from '@/lib/i18n';
 import { useCurrency } from '@/hooks/useCurrency';
 import { normalizeStayType, type StayType } from '@/lib/booking';
 import { formatDateLabel } from '@/components/booking/calendar-utils';
+import { getTierDiscountPercent } from '@/lib/property-pricing-discounts';
 import type { PropertyCardData } from '@/types';
 
 /** Price-tier values needed by the sidebar. */
@@ -113,36 +114,43 @@ export default function BookingSidebar({
 
       {/* ── Stay Type Toggle ──────────────────────────────────── */}
       <div className="mb-4 rounded-xl border border-neutral-200 p-3 bg-neutral-50 space-y-2">
-        {(['MONTHLY', 'QUARTERLY', 'YEARLY'] as StayType[]).map((type) => (
-          <button
-            key={type}
-            type="button"
-            onClick={() => onStayTypeChange(type)}
-            className={`flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-left text-sm ${
-              effectiveStayType === type
-                ? 'bg-white shadow-sm ring-1 ring-neutral-200'
-                : ''
-            }`}
-          >
-            <span className="text-neutral-600">
-              {type === 'MONTHLY'
-                ? t('property.monthly', 'Monthly')
-                : type === 'QUARTERLY'
-                  ? `${t('property.quarterly', 'Quarterly')} (3 ${t('common.months', 'mo')})`
-                  : `${t('property.annual', 'Annual')} (12 ${t('common.months', 'mo')})`}
-            </span>
-            <span className="font-semibold text-neutral-900">
-              {fp(
-                type === 'MONTHLY'
-                  ? tierPrices.monthly
+        {(['MONTHLY', 'QUARTERLY', 'YEARLY'] as StayType[]).map((type) => {
+          const tierKey = type === 'QUARTERLY' ? 'quarterly' : type === 'YEARLY' ? 'annual' : 'monthly';
+          const tierRate = tierPrices[tierKey];
+          const discountPercent = getTierDiscountPercent(tierPrices, tierKey);
+
+          return (
+            <button
+              key={type}
+              type="button"
+              onClick={() => onStayTypeChange(type)}
+              className={`flex w-full items-center justify-between gap-3 rounded-lg px-2 py-1.5 text-left text-sm ${
+                effectiveStayType === type
+                  ? 'bg-white shadow-sm ring-1 ring-neutral-200'
+                  : ''
+              }`}
+            >
+              <span className="text-neutral-600">
+                {type === 'MONTHLY'
+                  ? t('property.monthly', 'Monthly')
                   : type === 'QUARTERLY'
-                    ? tierPrices.quarterly
-                    : tierPrices.annual
-              )}
-              /Mo
-            </span>
-          </button>
-        ))}
+                    ? `${t('property.quarterly', 'Quarterly')} (3 ${t('common.months', 'mo')})`
+                    : `${t('property.annual', 'Annual')} (12 ${t('common.months', 'mo')})`}
+              </span>
+              <span className="flex shrink-0 items-center gap-2">
+                {discountPercent > 0 && (
+                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700">
+                    {t('property.savePercent', 'Save {percent}%', { percent: discountPercent })}
+                  </span>
+                )}
+                <span className="font-semibold text-neutral-900">
+                  {fp(tierRate)}
+                  /Mo
+                </span>
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {/* ── Transparent pricing ───────────────────────────────── */}
@@ -150,25 +158,36 @@ export default function BookingSidebar({
         <div className="flex items-start gap-3">
           <ReceiptText size={20} className="mt-0.5 text-emerald-700" />
           <div className="min-w-0 flex-1">
-            <p className="font-semibold text-neutral-950">Transparent monthly estimate</p>
+            <p className="font-semibold text-neutral-950">
+              {t('property.priceCard.transparentEstimate', 'Transparent monthly estimate')}
+            </p>
             <div className="mt-3 space-y-2 text-sm">
               <div className="flex justify-between gap-3">
-                <span className="text-neutral-600">Selected monthly rate</span>
+                <span className="text-neutral-600">
+                  {t('property.priceCard.selectedMonthlyRate', 'Selected monthly rate')}
+                </span>
                 <span className="font-medium text-neutral-950">{fp(selectedMonthlyEstimate)}</span>
               </div>
               <div className="flex justify-between gap-3">
-                <span className="text-neutral-600">Estimated tax</span>
+                <span className="text-neutral-600">
+                  {t('property.priceCard.estimatedTax', 'Estimated tax')}
+                </span>
                 <span className="font-medium text-neutral-950">{fp(estimatedTax)}</span>
               </div>
               <div className="flex justify-between gap-3 border-t border-emerald-200 pt-2">
-                <span className="font-semibold text-neutral-950">Est. first month total</span>
+                <span className="font-semibold text-neutral-950">
+                  {t('property.priceCard.firstMonthTotal', 'Est. first month total')}
+                </span>
                 <span className="font-bold text-neutral-950">
                   {fp(selectedMonthlyEstimate + estimatedTax)}
                 </span>
               </div>
             </div>
             <p className="mt-2 text-xs text-neutral-600">
-              Utilities, WiFi, basic kitchenware, linens, and support are included unless noted otherwise.
+              {t(
+                'property.priceCard.includedNote',
+                'Utilities, WiFi, basic kitchenware, linens, and support are included unless noted otherwise.'
+              )}
             </p>
           </div>
         </div>
@@ -179,20 +198,25 @@ export default function BookingSidebar({
         <div className="mb-4 rounded-2xl border border-neutral-200 bg-white px-4 py-3">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-sm font-semibold text-neutral-900">Modify reservation</p>
+              <p className="text-sm font-semibold text-neutral-900">
+                {t('property.priceCard.modifyReservation', 'Modify reservation')}
+              </p>
               <p className="mt-1 text-sm text-neutral-600">
                 {formatDateLabel(checkIn, locale === 'zh' ? 'zh-CN' : 'en-US')} –{' '}
                 {formatDateLabel(checkOut, locale === 'zh' ? 'zh-CN' : 'en-US')}
               </p>
               <p className="mt-1 text-xs text-neutral-500">
-                Change dates, extend your stay, or clear this selection.
+                {t(
+                  'property.priceCard.modifyReservationHelp',
+                  'Change dates, extend your stay, or clear this selection.'
+                )}
               </p>
             </div>
             <button
               onClick={onOpenCalendar}
               className="shrink-0 rounded-full border border-neutral-300 px-4 py-2 text-sm font-semibold text-neutral-900 transition-colors hover:border-neutral-900 hover:bg-neutral-50"
             >
-              Edit
+              {t('common.edit', 'Edit')}
             </button>
           </div>
         </div>

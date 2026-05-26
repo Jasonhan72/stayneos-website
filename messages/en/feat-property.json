@@ -126,6 +126,16 @@
     "monthly": "Monthly",
     "quarterly": "Quarterly",
     "annual": "Annual",
+    "savePercent": "Save {percent}%",
+    "priceCard": {
+      "transparentEstimate": "Transparent monthly estimate",
+      "selectedMonthlyRate": "Selected monthly rate",
+      "estimatedTax": "Estimated tax",
+      "firstMonthTotal": "Est. first month total",
+      "includedNote": "Utilities, WiFi, basic kitchenware, linens, and support are included unless noted otherwise.",
+      "modifyReservation": "Modify reservation",
+      "modifyReservationHelp": "Change dates, extend your stay, or clear this selection."
+    },
     "showMore": "Show more",
     "loadingMap": "Loading map...",
     "reserve": "Reserve",

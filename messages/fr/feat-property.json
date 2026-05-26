@@ -126,6 +126,16 @@
     "monthly": "Mensuel",
     "quarterly": "Trimestriel",
     "annual": "Annuel",
+    "savePercent": "Économisez {percent}%",
+    "priceCard": {
+      "transparentEstimate": "Estimation mensuelle transparente",
+      "selectedMonthlyRate": "Tarif mensuel sélectionné",
+      "estimatedTax": "Taxe estimée",
+      "firstMonthTotal": "Total estimé du premier mois",
+      "includedNote": "Sauf indication contraire, les services publics, le WiFi, les essentiels de cuisine, le linge et l'assistance sont inclus.",
+      "modifyReservation": "Modifier la réservation",
+      "modifyReservationHelp": "Changez les dates, prolongez votre séjour ou effacez cette sélection."
+    },
     "showMore": "Afficher plus",
     "loadingMap": "Chargement de la carte...",
     "reserve": "Réserver",

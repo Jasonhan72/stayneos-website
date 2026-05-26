@@ -40,6 +40,7 @@ import { useI18n } from '@/lib/i18n';
 import { useWishlist } from '@/lib/context/WishlistContext';
 import { useCurrency } from '@/hooks/useCurrency';
 import { getPropertyLocation, resolvePropertyPricingTiers } from '@/lib/utils/property-transform';
+import { getTierDiscountPercent, type PricingTier } from '@/lib/property-pricing-discounts';
 import FilterChips, { type FilterChip } from '@/components/property/FilterChips';
 import FilterModal, { PROPERTY_TYPES } from '@/components/property/FilterModal';
 import dynamic from 'next/dynamic';
@@ -936,7 +937,7 @@ function PropertyListCard({ property, isSelected, onClick, onHover, cardRef }: P
 
 
 function PropertyPricingTiers({ property, compact = false }: { property: PropertyCardData; compact?: boolean }) {
-  const { locale } = useI18n();
+  const { locale, t } = useI18n();
   const { formatPrice } = useCurrency();
   const tiers = resolvePropertyPricingTiers(property);
   const labels = locale === 'zh'
@@ -946,21 +947,34 @@ function PropertyPricingTiers({ property, compact = false }: { property: Propert
       : { monthly: 'Monthly', quarterly: 'Quarterly', annual: 'Annual', perMonth: '/Mo' };
 
   const rowClass = compact ? 'text-sm' : 'text-base';
+  const rows: Array<{ key: PricingTier; label: string; value: number }> = [
+    { key: 'monthly', label: labels.monthly, value: tiers.monthly },
+    { key: 'quarterly', label: labels.quarterly, value: tiers.quarterly },
+    { key: 'annual', label: labels.annual, value: tiers.annual },
+  ];
 
   return (
     <div className={`space-y-2 ${compact ? 'pt-3 border-t border-neutral-200' : 'pt-4 border-t border-neutral-200'}`}>
-      <div className="flex items-center justify-between">
-        <span className="text-neutral-600 text-sm">{labels.monthly}</span>
-        <span className={`${rowClass} font-semibold text-neutral-900`}>{formatPrice(tiers.monthly)}<span className="text-xs font-normal text-neutral-500 ml-1">{labels.perMonth}</span></span>
-      </div>
-      <div className="flex items-center justify-between">
-        <span className="text-neutral-600 text-sm">{labels.quarterly}</span>
-        <span className={`${rowClass} font-semibold text-neutral-900`}>{formatPrice(tiers.quarterly)}<span className="text-xs font-normal text-neutral-500 ml-1">{labels.perMonth}</span></span>
-      </div>
-      <div className="flex items-center justify-between">
-        <span className="text-neutral-600 text-sm">{labels.annual}</span>
-        <span className={`${rowClass} font-semibold text-neutral-900`}>{formatPrice(tiers.annual)}<span className="text-xs font-normal text-neutral-500 ml-1">{labels.perMonth}</span></span>
-      </div>
+      {rows.map((row) => {
+        const discountPercent = getTierDiscountPercent(tiers, row.key);
+
+        return (
+          <div key={row.key} className="flex items-center justify-between gap-3">
+            <span className="text-neutral-600 text-sm">{row.label}</span>
+            <span className="flex shrink-0 items-center gap-2">
+              {discountPercent > 0 && (
+                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700">
+                  {t('property.savePercent', 'Save {percent}%', { percent: discountPercent })}
+                </span>
+              )}
+              <span className={`${rowClass} font-semibold text-neutral-900`}>
+                {formatPrice(row.value)}
+                <span className="text-xs font-normal text-neutral-500 ml-1">{labels.perMonth}</span>
+              </span>
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }

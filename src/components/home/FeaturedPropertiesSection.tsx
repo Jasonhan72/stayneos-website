@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ArrowRight, MapPin, Star, Heart } from 'lucide-react';
 import { Card, Badge, Section } from '@/components/ui';
 import { useI18n } from '@/lib/i18n';
+import { getTierDiscountPercent, type PricingTiers, type PricingTier } from '@/lib/property-pricing-discounts';
 
 interface FeaturedProperty {
   id: string;
@@ -96,20 +97,39 @@ function getPricingLabelsFromT(t: (key: string, fallback?: string) => string) {
 function PricingRows({ property }: { property: FeaturedProperty }) {
   const { t } = useI18n();
   const labels = getPricingLabelsFromT(t);
+  const tiers: PricingTiers = {
+    monthly: property.monthlyPrice,
+    quarterly: property.quarterlyPrice,
+    annual: property.annualPrice,
+  };
   const rows = [
-    { label: labels.monthly, value: property.monthlyPrice },
-    { label: labels.quarterly, value: property.quarterlyPrice },
-    { label: labels.annual, value: property.annualPrice },
-  ];
+    { key: 'monthly', label: labels.monthly, value: property.monthlyPrice },
+    { key: 'quarterly', label: labels.quarterly, value: property.quarterlyPrice },
+    { key: 'annual', label: labels.annual, value: property.annualPrice },
+  ] satisfies Array<{ key: PricingTier; label: string; value: number }>;
 
   return (
     <div className="space-y-2 pt-3 border-t border-neutral-200">
-      {rows.map((row) => (
-        <div key={row.label} className="flex items-center justify-between">
-          <span className="text-sm text-neutral-600">{row.label}</span>
-          <span className="text-base font-semibold text-neutral-900">${row.value.toLocaleString()}<span className="text-xs font-normal text-neutral-500 ml-1">{labels.perMonth}</span></span>
-        </div>
-      ))}
+      {rows.map((row) => {
+        const discountPercent = getTierDiscountPercent(tiers, row.key);
+
+        return (
+          <div key={row.key} className="flex items-center justify-between gap-3">
+            <span className="text-sm text-neutral-600">{row.label}</span>
+            <span className="flex shrink-0 items-center gap-2">
+              {discountPercent > 0 && (
+                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700">
+                  {t('property.savePercent', 'Save {percent}%', { percent: discountPercent })}
+                </span>
+              )}
+              <span className="text-base font-semibold text-neutral-900">
+                ${row.value.toLocaleString()}
+                <span className="text-xs font-normal text-neutral-500 ml-1">{labels.perMonth}</span>
+              </span>
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }

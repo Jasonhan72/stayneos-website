@@ -126,6 +126,16 @@
     "monthly": "月租",
     "quarterly": "季租",
     "annual": "年租",
+    "savePercent": "省 {percent}%",
+    "priceCard": {
+      "transparentEstimate": "透明月度预估",
+      "selectedMonthlyRate": "当前月费",
+      "estimatedTax": "预计税费",
+      "firstMonthTotal": "首月预估总计",
+      "includedNote": "除非另有说明，价格包含水电、WiFi、基础厨具、床品和支持服务。",
+      "modifyReservation": "修改预订",
+      "modifyReservationHelp": "更改日期、延长入住，或清除此选择。"
+    },
     "showMore": "展开更多",
     "loadingMap": "地图加载中...",
     "reserve": "预订",
