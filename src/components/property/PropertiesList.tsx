@@ -16,12 +16,23 @@ import {
   Bed,
   Bath,
   Users,
-  DollarSign,
   Image as ImageIcon,
   AlertCircle,
   Loader2,
   RefreshCw
 } from "lucide-react";
+
+function formatCurrency(value: number, currency: string, locale: string) {
+  try {
+    return new Intl.NumberFormat(locale === "zh" ? "zh-CN" : locale === "fr" ? "fr-CA" : "en-CA", {
+      style: "currency",
+      currency: currency || "CAD",
+      maximumFractionDigits: 0,
+    }).format(value);
+  } catch {
+    return `$${value}`;
+  }
+}
 
 // Toggle Switch 组件
 function ListingToggle({ 
@@ -40,7 +51,7 @@ function ListingToggle({
   const label = isListed ? listedLabel : unlistedLabel;
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex min-w-0 items-center gap-2 whitespace-nowrap">
       <button
         onClick={onToggle}
         disabled={isLoading}
@@ -89,7 +100,7 @@ interface Property {
 }
 
 export function PropertiesList() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
@@ -224,7 +235,7 @@ export function PropertiesList() {
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
           {/* 搜索框 */}
-          <div className="relative">
+          <div className="relative w-full sm:w-auto">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
@@ -236,12 +247,12 @@ export function PropertiesList() {
           </div>
           
           {/* 状态过滤 */}
-          <div className="relative">
+          <div className="relative w-full sm:w-auto">
             <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as "all" | "listed" | "unlisted")}
-              className="pl-10 pr-8 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent appearance-none bg-white cursor-pointer"
+              className="w-full pl-10 pr-8 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent appearance-none bg-white cursor-pointer sm:w-auto"
             >
               <option value="all">{t("property.filter.all", "All")}</option>
               <option value="listed">{listedLabel}</option>
@@ -279,26 +290,26 @@ export function PropertiesList() {
       ) : (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           {/* 桌面端表格 */}
-          <div className="hidden overflow-x-auto md:block">
-            <table className="w-full min-w-[1040px] table-fixed">
+          <div className="hidden xl:block">
+            <table className="w-full table-fixed">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="w-[34%] px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="w-[31%] px-4 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider 2xl:px-5">
                     {t("property.table.property")}
                   </th>
-                  <th className="w-[15%] px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="w-[13%] px-3 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider 2xl:px-4">
                     {t("property.table.location")}
                   </th>
-                  <th className="w-[15%] px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="w-[14%] px-3 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider 2xl:px-4">
                     {t("property.table.details")}
                   </th>
-                  <th className="w-[12%] px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="w-[13%] px-3 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider 2xl:px-4">
                     {t("property.table.price")}
                   </th>
-                  <th className="w-[12%] px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="w-[17%] px-3 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider 2xl:px-4">
                     {t("property.table.listing", "Listing")}
                   </th>
-                  <th className="w-40 px-3 py-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="w-[12%] px-3 py-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {t("common.actions")}
                   </th>
                 </tr>
@@ -306,7 +317,7 @@ export function PropertiesList() {
               <tbody className="divide-y divide-gray-200">
                 {filteredProperties.map((property) => (
                   <tr key={property.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-4 2xl:px-5">
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 rounded-lg bg-gray-200 overflow-hidden flex-shrink-0">
                           {property.imageUrl ? (
@@ -326,40 +337,39 @@ export function PropertiesList() {
                         </div>
                         <div className="min-w-0">
                           <p className="truncate font-medium text-gray-900">{property.title}</p>
-                          <p className="text-sm text-gray-500">ID: {property.id}</p>
+                          <p className="truncate text-sm text-gray-500">ID: {property.id}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-1 text-gray-600">
-                        <MapPin className="w-4 h-4" />
-                        <span>{property.city}</span>
+                    <td className="px-3 py-4 2xl:px-4">
+                      <div className="flex min-w-0 items-center gap-1 text-gray-600">
+                        <MapPin className="h-4 w-4 shrink-0" />
+                        <span className="truncate">{property.city}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3 text-sm text-gray-600">
-                        <span className="flex items-center gap-1">
-                          <Bed className="w-4 h-4" />
+                    <td className="px-3 py-4 2xl:px-4">
+                      <div className="flex items-center gap-2 text-sm text-gray-600 2xl:gap-3">
+                        <span className="flex items-center gap-1 whitespace-nowrap">
+                          <Bed className="h-4 w-4 shrink-0" />
                           {property.bedrooms}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <Bath className="w-4 h-4" />
+                        <span className="flex items-center gap-1 whitespace-nowrap">
+                          <Bath className="h-4 w-4 shrink-0" />
                           {property.bathrooms}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <Users className="w-4 h-4" />
+                        <span className="flex items-center gap-1 whitespace-nowrap">
+                          <Users className="h-4 w-4 shrink-0" />
                           {property.maxGuests}
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-1 font-medium text-gray-900">
-                        <DollarSign className="w-4 h-4" />
-                        {property.basePrice}
-                        <span className="text-sm text-gray-500 font-normal">/{t("common.month")}</span>
+                    <td className="px-3 py-4 2xl:px-4">
+                      <div className="whitespace-nowrap font-medium text-gray-900">
+                        {formatCurrency(property.basePrice, property.currency, locale)}
+                        <span className="text-sm text-gray-500 font-normal"> / {t("common.month")}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 py-4 2xl:px-4">
                       <ListingToggle
                         isListed={property.status === "published"}
                         isLoading={togglingIds.has(property.id)}
@@ -368,7 +378,7 @@ export function PropertiesList() {
                         unlistedLabel={unlistedLabel}
                       />
                     </td>
-                    <td className="w-40 px-3 py-4">
+                    <td className="px-3 py-4">
                       <div className="flex items-center justify-end gap-2">
                         <Link
                           href={`/properties/${property.id}`}
@@ -403,7 +413,7 @@ export function PropertiesList() {
           </div>
 
           {/* 移动端卡片列表 */}
-          <div className="md:hidden divide-y divide-gray-200">
+          <div className="divide-y divide-gray-200 xl:hidden">
             {filteredProperties.map((property) => (
               <div key={property.id} className="p-4">
                 <div className="flex gap-4">
@@ -441,8 +451,7 @@ export function PropertiesList() {
                     </div>
                     <div className="flex items-center justify-between mt-3">
                       <div className="flex items-center gap-1 font-medium text-gray-900">
-                        <DollarSign className="w-4 h-4" />
-                        {property.basePrice}
+                        {formatCurrency(property.basePrice, property.currency, locale)}
                         <span className="text-xs text-gray-500 font-normal">/{t("common.month")}</span>
                       </div>
                       <ListingToggle
