@@ -5,6 +5,7 @@
     "addNew": "新增房源",
     "addFirst": "添加第一个房源",
     "searchPlaceholder": "搜索房源名称、地址...",
+    "loadFailed": "加载房源失败",
     "filter": {
       "all": "全部状态"
     },
@@ -13,14 +14,17 @@
       "pending": "审核中",
       "published": "已发布",
       "paused": "已暂停",
-      "archived": "已归档"
+      "archived": "已归档",
+      "listed": "已上架",
+      "unlisted": "未上架"
     },
     "table": {
       "property": "房源",
       "location": "位置",
       "details": "详情",
       "price": "价格",
-      "status": "状态"
+      "status": "状态",
+      "listing": "上架状态"
     },
     "empty": {
       "title": "暂无房源",

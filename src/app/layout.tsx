@@ -8,6 +8,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { CustomerChat } from "@/components/layout/CustomerChat";
 import { ToastProvider } from "@/components/ui/Toast";
+import StripeElementScopeGuard from "@/components/payment/StripeElementScopeGuard";
 import { getBaseUrl } from "@/lib/config/env";
 import {
   getHtmlLang,
@@ -180,6 +181,7 @@ export default async function RootLayout({
             {children}
             <Footer />
             <CustomerChat />
+            <StripeElementScopeGuard />
           </I18nProvider>
           </WishlistProvider>
           </UserProvider>

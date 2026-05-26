@@ -27,12 +27,18 @@ import {
 function ListingToggle({ 
   isListed, 
   isLoading, 
-  onToggle 
+  onToggle,
+  listedLabel,
+  unlistedLabel,
 }: { 
   isListed: boolean; 
   isLoading: boolean; 
   onToggle: () => void;
+  listedLabel: string;
+  unlistedLabel: string;
 }) {
+  const label = isListed ? listedLabel : unlistedLabel;
+
   return (
     <div className="flex items-center gap-2">
       <button
@@ -43,7 +49,7 @@ function ListingToggle({
         } ${isListed ? 'bg-green-500' : 'bg-gray-300'}`}
         role="switch"
         aria-checked={isListed}
-        aria-label={isListed ? 'Listed' : 'Unlisted'}
+        aria-label={label}
       >
         <span
           className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ease-in-out shadow-sm ${
@@ -57,7 +63,7 @@ function ListingToggle({
         )}
       </button>
       <span className={`text-xs font-medium ${isListed ? 'text-green-700' : 'text-gray-500'}`}>
-        {isListed ? 'Listed' : 'Unlisted'}
+        {label}
       </span>
     </div>
   );
@@ -92,6 +98,8 @@ export function PropertiesList() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [propertyToDelete, setPropertyToDelete] = useState<Property | null>(null);
   const [togglingIds, setTogglingIds] = useState<Set<string>>(new Set());
+  const listedLabel = t("property.status.listed", "Listed");
+  const unlistedLabel = t("property.status.unlisted", "Unlisted");
 
   // 从 API 加载房源数据
   const fetchProperties = useCallback(async () => {
@@ -197,14 +205,14 @@ export function PropertiesList() {
     return (
       <div className="text-center py-16 bg-gray-50 rounded-xl">
         <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">Failed to load properties</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-2">{t("property.loadFailed", "Failed to load properties")}</h3>
         <p className="text-gray-500 mb-6">{fetchError}</p>
         <button
           onClick={fetchProperties}
           className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
         >
           <RefreshCw className="w-4 h-4" />
-          Retry
+          {t("common.retry", "Retry")}
         </button>
       </div>
     );
@@ -236,8 +244,8 @@ export function PropertiesList() {
               className="pl-10 pr-8 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent appearance-none bg-white cursor-pointer"
             >
               <option value="all">{t("property.filter.all", "All")}</option>
-              <option value="listed">Listed</option>
-              <option value="unlisted">Unlisted</option>
+              <option value="listed">{listedLabel}</option>
+              <option value="unlisted">{unlistedLabel}</option>
             </select>
           </div>
         </div>
@@ -271,26 +279,26 @@ export function PropertiesList() {
       ) : (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           {/* 桌面端表格 */}
-          <div className="hidden md:block">
-            <table className="w-full">
+          <div className="hidden overflow-x-auto md:block">
+            <table className="w-full min-w-[1040px] table-fixed">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="w-[34%] px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {t("property.table.property")}
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="w-[15%] px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {t("property.table.location")}
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="w-[15%] px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {t("property.table.details")}
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="w-[12%] px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {t("property.table.price")}
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Listing
+                  <th className="w-[12%] px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {t("property.table.listing", "Listing")}
                   </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="w-40 px-3 py-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {t("common.actions")}
                   </th>
                 </tr>
@@ -316,8 +324,8 @@ export function PropertiesList() {
                             </div>
                           )}
                         </div>
-                        <div>
-                          <p className="font-medium text-gray-900">{property.title}</p>
+                        <div className="min-w-0">
+                          <p className="truncate font-medium text-gray-900">{property.title}</p>
                           <p className="text-sm text-gray-500">ID: {property.id}</p>
                         </div>
                       </div>
@@ -356,28 +364,33 @@ export function PropertiesList() {
                         isListed={property.status === "published"}
                         isLoading={togglingIds.has(property.id)}
                         onToggle={() => handleToggleListing(property)}
+                        listedLabel={listedLabel}
+                        unlistedLabel={unlistedLabel}
                       />
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="w-40 px-3 py-4">
                       <div className="flex items-center justify-end gap-2">
                         <Link
-                          href={`/property/${property.id}`}
-                          className="p-2 text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                          href={`/properties/${property.id}`}
+                          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-primary/10 hover:text-primary"
                           title={t("common.view")}
+                          aria-label={t("common.view")}
                         >
                           <Eye className="w-4 h-4" />
                         </Link>
                         <Link
                           href={`/host/listings/${property.id}/edit`}
-                          className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
                           title={t("common.edit")}
+                          aria-label={t("common.edit")}
                         >
                           <Edit className="w-4 h-4" />
                         </Link>
                         <button
                           onClick={() => handleDeleteClick(property)}
-                          className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
                           title={t("common.delete")}
+                          aria-label={t("common.delete")}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -436,13 +449,15 @@ export function PropertiesList() {
                         isListed={property.status === "published"}
                         isLoading={togglingIds.has(property.id)}
                         onToggle={() => handleToggleListing(property)}
+                        listedLabel={listedLabel}
+                        unlistedLabel={unlistedLabel}
                       />
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-2 mt-4">
                   <Link
-                    href={`/property/${property.id}`}
+                    href={`/properties/${property.id}`}
                     className="flex-1 flex items-center justify-center gap-1 px-3 py-2 text-sm text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                   >
                     <Eye className="w-4 h-4" />

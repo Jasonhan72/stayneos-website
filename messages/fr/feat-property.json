@@ -5,6 +5,7 @@
     "addNew": "Ajouter une Propriété",
     "addFirst": "Ajouter Votre Première Propriété",
     "searchPlaceholder": "Rechercher par nom, adresse...",
+    "loadFailed": "Échec du chargement des logements",
     "filter": {
       "all": "Tous les Statuts"
     },
@@ -13,14 +14,17 @@
       "pending": "En Révision",
       "published": "Publié",
       "paused": "En Pause",
-      "archived": "Archivé"
+      "archived": "Archivé",
+      "listed": "Publié",
+      "unlisted": "Non publié"
     },
     "table": {
       "property": "Propriété",
       "location": "Emplacement",
       "details": "Détails",
       "price": "Prix",
-      "status": "Statut"
+      "status": "Statut",
+      "listing": "Publication"
     },
     "empty": {
       "title": "Aucune Propriété",

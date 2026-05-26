@@ -5,6 +5,7 @@
     "addNew": "Add Property",
     "addFirst": "Add Your First Property",
     "searchPlaceholder": "Search property name, address...",
+    "loadFailed": "Failed to load properties",
     "filter": {
       "all": "All Status"
     },
@@ -13,14 +14,17 @@
       "pending": "Pending Review",
       "published": "Published",
       "paused": "Paused",
-      "archived": "Archived"
+      "archived": "Archived",
+      "listed": "Listed",
+      "unlisted": "Unlisted"
     },
     "table": {
       "property": "Property",
       "location": "Location",
       "details": "Details",
       "price": "Price",
-      "status": "Status"
+      "status": "Status",
+      "listing": "Listing"
     },
     "empty": {
       "title": "No Properties",
