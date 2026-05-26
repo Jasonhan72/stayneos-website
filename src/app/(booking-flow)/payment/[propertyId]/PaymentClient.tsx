@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { 
@@ -107,49 +107,52 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
     ensureCsrfToken();
   }, []);
 
-  // Create payment intent on mount
-  useEffect(() => {
-    const initPayment = async () => {
-      try {
-        if (!bookingId) {
-          setError(userFriendlyError('No booking found', t));
-          setIsLoading(false);
-          return;
-        }
+  const initializePayment = useCallback(async () => {
+    setIsLoading(true);
+    setError('');
+    setClientSecret('');
+    setPaymentReady(false);
+    setManualPaymentReady(false);
 
-        const response = await fetch('/api/payments/create-intent', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ bookingId }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          const rawMessage = typeof data.error === 'string'
-            ? data.error
-            : data.error?.message || 'Failed to initialize payment';
-          throw new Error(userFriendlyError(rawMessage, t));
-        }
-
-        if (data.manual) {
-          setManualPaymentReady(true);
-          return;
-        }
-
-        setClientSecret(data.clientSecret);
-        setPaymentReady(true);
-      } catch (err: unknown) {
-        const errorMessage = err instanceof Error ? err.message : (t('payment.errorGeneric') || 'Payment initialization failed');
-        setError(errorMessage);
-      } finally {
-        setIsLoading(false);
+    try {
+      if (!bookingId) {
+        setError(t('payment.noBookingId') || userFriendlyError('No booking found', t));
+        return;
       }
-    };
 
-    initPayment();
+      const response = await csrfFetch('/api/payments/create-intent', {
+        method: 'POST',
+        body: JSON.stringify({ bookingId }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const rawMessage = typeof data.error === 'string'
+          ? data.error
+          : data.error?.message || 'Failed to initialize payment';
+        throw new Error(userFriendlyError(rawMessage, t));
+      }
+
+      if (data.manual) {
+        setManualPaymentReady(true);
+        return;
+      }
+
+      setClientSecret(data.clientSecret);
+      setPaymentReady(true);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : (t('payment.errorGeneric') || 'Payment initialization failed');
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   }, [bookingId, t]);
+
+  // Create or refresh payment intent on mount.
+  useEffect(() => {
+    void initializePayment();
+  }, [initializePayment]);
 
   // Format date for display
   const formatDateRange = () => {
@@ -330,13 +333,7 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
                         <p>{error}</p>
                         <div className="flex flex-wrap gap-3 mt-3">
                           <button
-                            onClick={() => {
-                              setError('');
-                              setIsLoading(true);
-                              // Re-trigger initPayment effect via key change is heavy;
-                              // just reload the page for a clean retry.
-                              window.location.reload();
-                            }}
+                            onClick={() => void initializePayment()}
                             className="inline-flex items-center gap-1.5 text-sm font-medium text-red-800 underline hover:no-underline"
                           >
                             <RefreshCw className="w-3.5 h-3.5" />
@@ -366,14 +363,14 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
                 ) : manualPaymentReady ? (
                   <div className="space-y-4">
                     <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-                      Secure card payment is not configured for this deployment yet. Submit the booking request now and NEOS will follow up with payment instructions.
+                      {t('payment.manualNotConfigured') || 'Secure card payment is not configured for this deployment yet. Submit the booking request now and NEOS will follow up with payment instructions.'}
                     </div>
                     <button
                       type="button"
                       onClick={handlePaymentSuccess}
                       className="w-full rounded-xl bg-black px-6 py-4 text-base font-semibold text-white transition-colors hover:bg-neutral-800"
                     >
-                      Submit booking request
+                      {t('payment.submitBookingRequest') || 'Submit booking request'}
                     </button>
                   </div>
                 ) : !showError && (

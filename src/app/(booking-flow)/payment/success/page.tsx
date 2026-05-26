@@ -1,6 +1,8 @@
 import SuccessClient from './SuccessClient';
 import { BookingStepIndicator } from '@/components/booking/BookingStepIndicator';
 
+export const dynamic = 'force-dynamic';
+
 export default function PaymentSuccessPage() {
   return (
     <>

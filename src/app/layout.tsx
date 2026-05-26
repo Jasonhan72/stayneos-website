@@ -24,6 +24,8 @@ const inter = Inter({
 
 const BASE_URL = getBaseUrl();
 
+export const dynamic = "force-dynamic";
+
 const playfair = Playfair_Display({
   subsets: ["latin"],
   display: "swap",

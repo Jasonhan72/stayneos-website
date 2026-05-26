@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { Button } from '@/components/ui';
 import { Loader2, CreditCard, Shield } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 interface PaymentFormProps {
   amount: number;
@@ -15,6 +16,7 @@ interface PaymentFormProps {
 export default function PaymentForm({ amount, currency, onSuccess, onError }: PaymentFormProps) {
   const stripe = useStripe();
   const elements = useElements();
+  const { t, locale } = useI18n();
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -38,17 +40,17 @@ export default function PaymentForm({ amount, currency, onSuccess, onError }: Pa
       });
 
       if (error) {
-        setErrorMessage(error.message || '支付失败，请重试');
-        onError(error.message || '支付失败');
+        setErrorMessage(error.message || t('payment.errorPaymentFailed', 'Payment failed. Please try again.'));
+        onError(error.message || t('payment.errorPaymentFailed', 'Payment failed. Please try again.'));
       } else if (paymentIntent && paymentIntent.status === 'succeeded') {
         onSuccess();
       } else {
-        setErrorMessage('支付状态未知，请稍后查看订单状态');
-        onError('支付状态未知');
+        setErrorMessage(t('payment.errorUnknownStatus', 'Payment status is unknown. Please check your booking later.'));
+        onError(t('payment.errorUnknownStatus', 'Payment status is unknown. Please check your booking later.'));
       }
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : '支付处理失败';
-      setErrorMessage('支付处理失败，请重试');
+      const errorMessage = err instanceof Error ? err.message : t('payment.errorProcessingFailed', 'Payment processing failed.');
+      setErrorMessage(t('payment.errorProcessingFailedRetry', 'Payment processing failed. Please try again.'));
       onError(errorMessage);
     } finally {
       setIsProcessing(false);
@@ -57,7 +59,7 @@ export default function PaymentForm({ amount, currency, onSuccess, onError }: Pa
 
   // 格式化金额显示
   const formatAmount = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('en-CA', {
+    return new Intl.NumberFormat(locale === 'zh' ? 'zh-CN' : locale === 'fr' ? 'fr-CA' : 'en-CA', {
       style: 'currency',
       currency: currency,
     }).format(amount);
@@ -68,7 +70,7 @@ export default function PaymentForm({ amount, currency, onSuccess, onError }: Pa
       {/* 安全提示 */}
       <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 text-green-700 text-sm">
         <Shield size={16} />
-        <span>您的支付信息已加密保护</span>
+        <span>{t('payment.secureInfo', 'Your payment information is encrypted and protected')}</span>
       </div>
 
       {/* Stripe Payment Element */}
@@ -111,21 +113,29 @@ export default function PaymentForm({ amount, currency, onSuccess, onError }: Pa
         {isProcessing ? (
           <>
             <Loader2 className="animate-spin mr-2" size={20} />
-            处理中...
+            {t('booking.processing', 'Processing...')}
           </>
         ) : (
           <>
             <CreditCard className="mr-2" size={20} />
-            确认支付 {formatAmount(amount, currency)}
+            {t('payment.confirmPayAmount', 'Confirm payment {amount}', {
+              amount: formatAmount(amount, currency),
+            })}
           </>
         )}
       </Button>
 
       {/* 支付说明 */}
       <p className="text-xs text-neutral-500 text-center">
-        点击&quot;确认支付&quot;即表示您同意我们的服务条款和隐私政策。
+        {t(
+          'payment.termsNotice',
+          'By confirming payment, you agree to our Terms of Service and Privacy Policy.'
+        )}
         <br />
-        您的卡将在入住后24小时内被扣款。
+        {t(
+          'payment.chargeTiming',
+          'Your card will be charged according to the booking payment schedule.'
+        )}
       </p>
     </form>
   );

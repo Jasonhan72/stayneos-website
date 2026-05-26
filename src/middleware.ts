@@ -57,9 +57,14 @@ function stripLocaleFromPath(pathname: string): string {
 }
 
 // Detect user's preferred locale from URL, Cookie, or Accept-Language
-function detectLocale(request: NextRequest): Locale {
+function detectLocale(request: NextRequest, explicitPathLocale?: Locale | null): Locale {
+  const forwardedLocale = request.headers.get('x-locale');
+  if (forwardedLocale === 'zh' || forwardedLocale === 'en' || forwardedLocale === 'fr') {
+    return forwardedLocale;
+  }
+
   // 1. Check URL path prefix first (highest priority)
-  const pathLocale = getLocaleFromPath(request.nextUrl.pathname);
+  const pathLocale = explicitPathLocale || getLocaleFromPath(new URL(request.url).pathname) || getLocaleFromPath(request.nextUrl.pathname);
   if (pathLocale) {
     return pathLocale;
   }
@@ -170,8 +175,9 @@ export async function middleware(request: NextRequest) {
   }
 
   const { pathname } = request.nextUrl;
-  const pathLocale = getLocaleFromPath(pathname);
-  const pathnameWithoutLocale = stripLocaleFromPath(pathname);
+  const rawPathname = new URL(request.url).pathname;
+  const pathLocale = getLocaleFromPath(rawPathname) || getLocaleFromPath(pathname);
+  const pathnameWithoutLocale = pathLocale ? stripLocaleFromPath(rawPathname) : stripLocaleFromPath(pathname);
 
   // Route dedup: redirect old flat routes to /dashboard equivalents.
   // Page-level redirect() is unreliable in OpenNext + Cloudflare Workers,
@@ -187,7 +193,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url, 308);
   }
 
-  const locale = detectLocale(request);
+  const locale = detectLocale(request, pathLocale);
   const existingCookieLocale = request.cookies.get('stayneos_locale')?.value;
   if (!pathLocale && (existingCookieLocale === 'zh' || existingCookieLocale === 'fr')) {
     const url = request.nextUrl.clone();

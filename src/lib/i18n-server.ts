@@ -29,16 +29,16 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string | un
 }
 
 export async function resolveRequestLocale(): Promise<ServerLocale> {
-  const cookieStore = await cookies();
-  const cookieLocale = cookieStore.get(LOCALE_COOKIE_KEY)?.value;
-  if (isSupportedLocale(cookieLocale)) {
-    return cookieLocale;
-  }
-
   const headerStore = await headers();
   const headerLocale = headerStore.get(LOCALE_HEADER_KEY);
   if (isSupportedLocale(headerLocale)) {
     return headerLocale;
+  }
+
+  const cookieStore = await cookies();
+  const cookieLocale = cookieStore.get(LOCALE_COOKIE_KEY)?.value;
+  if (isSupportedLocale(cookieLocale)) {
+    return cookieLocale;
   }
 
   return "en";

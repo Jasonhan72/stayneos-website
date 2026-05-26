@@ -11,7 +11,7 @@ import { validateCsrf } from '@/lib/security/csrf';
 const JSON_HEADERS = {
   "Access-Control-Allow-Origin": "https://www.stayneos.com",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, x-csrf-token",
 };
 
 export async function OPTIONS() {

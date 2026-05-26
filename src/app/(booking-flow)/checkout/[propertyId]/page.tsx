@@ -1,11 +1,8 @@
 import { Suspense } from 'react';
 import CheckoutClient from './CheckoutClient';
 import { BookingStepIndicator } from '@/components/booking/BookingStepIndicator';
-import { mockProperties } from '@/lib/data';
 
-export function generateStaticParams() {
-  return mockProperties.map(p => ({ propertyId: p.id }));
-}
+export const dynamic = 'force-dynamic';
 
 async function CheckoutPageContent({ params }: { params: Promise<{ propertyId: string }> }) {
   const { propertyId } = await params;

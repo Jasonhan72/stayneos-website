@@ -1,13 +1,8 @@
 import { Suspense } from 'react';
-import { mockProperties } from '@/lib/data';
 import PaymentClient from './PaymentClient';
 import { BookingStepIndicator } from '@/components/booking/BookingStepIndicator';
 
-export function generateStaticParams() {
-  return mockProperties.map((property) => ({
-    propertyId: property.id,
-  }));
-}
+export const dynamic = 'force-dynamic';
 
 async function PaymentPageContent({ params }: { params: Promise<{ propertyId: string }> }) {
   const { propertyId } = await params;
