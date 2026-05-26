@@ -6,12 +6,13 @@ import { Link as LinkIcon, FileText, Pencil, Loader2, AlertCircle } from "lucide
 import { useListingDraft } from "@/hooks/useListingDraft";
 import { csrfFetch, ensureCsrfToken } from "@/lib/security/csrf-client";
 import type { ListingDraft } from "@/types/listing-draft";
+import { EMPTY_DRAFT } from "@/types/listing-draft";
 
 type Mode = "none" | "url" | "pdf";
 
 export default function WizardStartPage() {
   const router = useRouter();
-  const { draft, replaceDraft, updateDraft } = useListingDraft();
+  const { replaceDraft, updateDraft } = useListingDraft();
   const [mode, setMode] = useState<Mode>("none");
   const [url, setUrl] = useState("");
   const [pdfFile, setPdfFile] = useState<File | null>(null);
@@ -25,8 +26,9 @@ export default function WizardStartPage() {
   }, []);
 
   function mergeImported(partial: Partial<ListingDraft>) {
-    // Promote importedImages → photos so the review/preview page shows them
-    // immediately. Host can still remove/replace them on the photos step.
+    // For a fresh import we IGNORE any stale draft in localStorage —
+    // otherwise a previous half-baked attempt (e.g. before the CSRF fix
+    // or a prior URL) leaks into the new preview. Start from EMPTY_DRAFT.
     const importedPhotos =
       partial.importedImages && partial.importedImages.length > 0
         ? partial.importedImages.filter(
@@ -34,16 +36,14 @@ export default function WizardStartPage() {
           )
         : [];
     const next: ListingDraft = {
-      ...draft,
+      ...EMPTY_DRAFT,
       ...partial,
       photos:
         partial.photos && partial.photos.length > 0
           ? partial.photos
-          : importedPhotos.length > 0
-            ? importedPhotos
-            : draft.photos,
+          : importedPhotos,
       // Mark all 8 steps as reached so progress bar shows complete on review.
-      step: Math.max(draft.step || 0, 8),
+      step: 8,
     };
     replaceDraft(next);
   }
@@ -72,7 +72,23 @@ export default function WizardStartPage() {
         return;
       }
       mergeImported(data.draft || {});
-      if (data.warnings && data.warnings.length) setWarnings(data.warnings);
+      // Surface what we actually extracted so the host can spot a bad import
+      // before clicking through.
+      const summaryWarnings: string[] = [...(data.warnings || [])];
+      const d = data.draft || {};
+      const missing: string[] = [];
+      if (!d.basics?.bedrooms) missing.push("bedrooms");
+      if (!d.basics?.bathrooms) missing.push("bathrooms");
+      if (!d.pricing?.priceMonthly) missing.push("monthly price");
+      if (!d.description) missing.push("description");
+      if (!d.amenities?.length) missing.push("amenities");
+      if (!d.importedImages?.length) missing.push("photos");
+      if (missing.length) {
+        summaryWarnings.push(
+          `Couldn’t auto-fill: ${missing.join(", ")}. You can add them on the review page.`,
+        );
+      }
+      if (summaryWarnings.length) setWarnings(summaryWarnings);
       // Jump straight to the review page so the host sees a single editable
       // preview of everything we extracted, instead of stepping through 8 forms.
       router.push("/host/listings/new/review");

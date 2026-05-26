@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Pencil, Loader2 } from "lucide-react";
 import { useListingDraft } from "@/hooks/useListingDraft";
 import { ensureCsrfToken } from "@/lib/security/csrf-client";
-import WizardFooter from "@/components/host/listings/wizard/WizardFooter";
+
 
 export default function StepReviewPage() {
   const router = useRouter();
@@ -155,19 +155,37 @@ export default function StepReviewPage() {
         </Section>
       </div>
 
-      <WizardFooter
-        currentSlug="review"
-        nextLabel={publishing ? "Publishing…" : "Publish"}
-        canContinue={!publishing}
-        onNext={handlePublish}
-      />
-
-      {publishing && (
-        <div className="flex items-center justify-end gap-2 text-sm text-neutral-500">
-          <Loader2 className="h-4 w-4 animate-spin" />
-          Publishing your listing…
+      {/* Big, impossible-to-miss publish bar */}
+      <div className="sticky bottom-0 -mx-4 mt-10 flex flex-col gap-2 border-t border-neutral-200 bg-white px-4 py-4 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] sm:-mx-6 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div className="text-sm text-neutral-600">
+          {publishing ? (
+            <span className="flex items-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Publishing your listing…
+            </span>
+          ) : (
+            <span>Ready? You can still edit any section above.</span>
+          )}
         </div>
-      )}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => router.push("/host/listings/new/pricing")}
+            disabled={publishing}
+            className="rounded-lg px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-100 disabled:opacity-50"
+          >
+            Back
+          </button>
+          <button
+            type="button"
+            onClick={handlePublish}
+            disabled={publishing}
+            className="rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {publishing ? "Publishing…" : "🚀 Publish listing"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
