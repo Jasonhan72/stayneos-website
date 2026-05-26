@@ -1,10 +1,18 @@
 import { Metadata } from "next";
 import ForAgentsPageContent from "./ForAgentsPageContent";
+import { getServerTranslation, resolveRequestLocale } from "@/lib/i18n-server";
 
-export const metadata: Metadata = {
-  title: "Partner with NEOS - For Agents",
-  description: "Partner with NEOS as a real estate agent. Earn competitive commissions by referring properties, representing tenants, or referring guests to our premium executive apartments.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await resolveRequestLocale();
+  return {
+    title: getServerTranslation(locale, "agents.hero.title", "Partner with NEOS"),
+    description: getServerTranslation(
+      locale,
+      "agents.hero.subtitle",
+      "Partner with NEOS as a real estate agent."
+    ),
+  };
+}
 
 export default function ForAgentsPage() {
   return <ForAgentsPageContent />;

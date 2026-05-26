@@ -11,6 +11,7 @@ import { LanguageCurrencySelector } from "./LanguageCurrencySelector";
 import { MobileMenu } from "./MobileMenu";
 import { useAuth } from "@/lib/context/UserContext";
 import { useI18n } from "@/lib/i18n";
+import { localizePath } from "@/lib/i18n-routes";
 
 interface NavbarProps {
   variant?: "light" | "dark" | "transparent";
@@ -52,6 +53,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
     { href: "/for-business", label: t("nav.business") },
     { href: "/about", label: t("nav.about") },
   ];
+  const hrefFor = (href: string) => localizePath(href, locale);
 
   // Per Jason 2026-05-17: nav is always white background with dark text
   // across all pages, including homepage hero. No more transparent variant,
@@ -83,7 +85,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center shrink-0">
+            <Link href={hrefFor("/")} className="flex items-center shrink-0">
               <Image
                 src="/logo.png"
                 alt="NEOS"
@@ -99,7 +101,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
-                  href={link.href}
+                  href={hrefFor(link.href)}
                   className={cn(
                     "text-sm font-medium transition-colors duration-200 py-2",
                     textStyles[effectiveVariant]
@@ -124,7 +126,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
               {/* Partner With Us button — hide in host mode */}
               {!pathname?.startsWith("/host") && (
               <Link
-                href="/for-agents"
+                href={hrefFor("/for-agents")}
                 className={cn(
                   "text-sm font-medium px-3 py-2 rounded-full transition-all duration-200",
                   "hover:bg-black/5",
@@ -140,7 +142,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
             ) : (
               <>
                 <a
-                  href="/register"
+                  href={hrefFor("/register")}
                   className={cn(
                     "text-sm font-medium px-3 py-2 rounded-full transition-all duration-200",
                     "hover:bg-black/5",
@@ -150,7 +152,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
                   {t("nav.signup")}
                 </a>
                 <a
-                  href="/login"
+                  href={hrefFor("/login")}
                   className={cn(
                     "text-sm font-medium px-3 py-2 rounded-full transition-all duration-200",
                     "hover:bg-black/5",

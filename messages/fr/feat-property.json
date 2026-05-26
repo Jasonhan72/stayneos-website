@@ -154,6 +154,9 @@
       "wellesley": "Situé à quelques pas de la station de métro Wellesley sur la ligne Yonge, ce studio moderne met toute la ville à votre porte. Marchez jusqu'aux magasins et restaurants de la rue Yonge, faites du jogging sur les sentiers de la vallée Don, ou rendez-vous au centre-ville en quelques minutes. Idéal pour les professionnels solo qui veulent de l'efficacité sans compromettre l'énergie du quartier."
     },
     "superhost": "Superhôte",
+    "newVerified": "Nouvelle vérification",
+    "available30Days": "Disponible pour 30 jours et plus",
+    "noHiddenFees": "Aucuns frais cachés",
     "reviewScores": "Notes des voyageurs",
     "reviewDim": {
       "cleanliness": "Propreté",
@@ -220,6 +223,15 @@
         "two": "2 ch",
         "threePlus": "3+ ch"
       }
+    },
+    "categories": {
+      "all": "Tous les séjours",
+      "downtown": "Centre-ville",
+      "subway": "Près du métro",
+      "university": "Près de UofT",
+      "furnished": "Meublé",
+      "luxury": "Condo haut de gamme",
+      "verified": "Vérifié NEOS"
     },
     "amenity": {
       "wifi": "WiFi",

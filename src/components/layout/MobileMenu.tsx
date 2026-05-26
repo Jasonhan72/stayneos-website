@@ -3,11 +3,12 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { X, User, Home, Heart, KeyRound, Building2, ChevronRight, Info, Globe, Luggage, MessageCircle, HelpCircle, UserCog } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/context/UserContext";
 import { useI18n } from "@/lib/i18n";
+import { localizePath } from "@/lib/i18n-routes";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -44,8 +45,18 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const userAlt = locale === "zh" ? "用户头像" : locale === "fr" ? "Avatar utilisateur" : "User avatar";
   const defaultInitial = locale === "zh" ? "用" : locale === "fr" ? "U" : "U";
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const isHost = user?.role === "HOST" || user?.role === "ADMIN" || user?.role === "SUPER_ADMIN";
   const isHostMode = pathname?.startsWith("/host");
+  const hrefFor = (href: string) => localizePath(href, locale);
+  const switchLocale = (newLocale: "en" | "fr" | "zh") => {
+    setLocale(newLocale);
+    const nextPath = localizePath(pathname || "/", newLocale);
+    const query = searchParams?.toString();
+    router.push(query ? `${nextPath}?${query}` : nextPath);
+    router.refresh();
+  };
 
   // Prevent body scroll when menu is open
   useEffect(() => {
@@ -105,7 +116,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               {languages.map((lang) => (
                 <button
                   key={lang.code}
-                  onClick={() => setLocale(lang.code as 'en' | 'fr' | 'zh')}
+                  onClick={() => switchLocale(lang.code as 'en' | 'fr' | 'zh')}
                   className={cn(
                     "w-full flex items-center gap-3 p-3 rounded-lg transition-colors",
                     selectedLang.code === lang.code
@@ -178,7 +189,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             // Logged out state
             <>
               <a
-                href="/login"
+                href={hrefFor("/login")}
                 onClick={onClose}
                 className="flex items-center gap-4 mb-8"
               >
@@ -195,7 +206,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               {publicMenuItems.map((item) => (
                 <Link
                   key={item.href}
-                  href={item.href}
+                  href={hrefFor(item.href)}
                   onClick={onClose}
                   className="flex items-center justify-between py-4 border-b border-neutral-100"
                 >
@@ -250,7 +261,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               {/* Primary Menu Items — mirrors desktop UserMenu */}
               <div className="space-y-0">
                 <Link
-                  href="/dashboard/messages"
+                  href={hrefFor("/dashboard/messages")}
                   onClick={onClose}
                   className="flex items-center justify-between py-4 border-b border-neutral-100"
                 >
@@ -262,7 +273,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 </Link>
 
                 <Link
-                  href="/bookings"
+                  href={hrefFor("/bookings")}
                   onClick={onClose}
                   className="flex items-center justify-between py-4 border-b border-neutral-100"
                 >
@@ -275,7 +286,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
                 {isHost ? (
                   <Link
-                    href={isHostMode ? "/" : "/host"}
+                    href={hrefFor(isHostMode ? "/" : "/host")}
                     onClick={onClose}
                     className="flex items-center justify-between py-4 border-b border-neutral-100"
                   >
@@ -296,7 +307,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   </Link>
                 ) : (
                   <Link
-                    href="/become-a-host"
+                    href={hrefFor("/become-a-host")}
                     onClick={onClose}
                     className="flex items-center justify-between py-4 border-b border-neutral-100"
                   >
@@ -312,7 +323,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 )}
 
                 <Link
-                  href="/dashboard/wishlists"
+                  href={hrefFor("/dashboard/wishlists")}
                   onClick={onClose}
                   className="flex items-center justify-between py-4 border-b border-neutral-100"
                 >
@@ -330,7 +341,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               {/* Secondary — Profile / Account / Language / Help */}
               <div className="space-y-0">
                 <Link
-                  href="/profile"
+                  href={hrefFor("/profile")}
                   onClick={onClose}
                   className="flex items-center justify-between py-4 border-b border-neutral-100"
                 >
@@ -342,7 +353,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 </Link>
 
                 <Link
-                  href="/account/personal-info"
+                  href={hrefFor("/account/personal-info")}
                   onClick={onClose}
                   className="flex items-center justify-between py-4 border-b border-neutral-100"
                 >
@@ -365,7 +376,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 </button>
 
                 <Link
-                  href="/help"
+                  href={hrefFor("/help")}
                   onClick={onClose}
                   className="flex items-center justify-between py-4 border-b border-neutral-100"
                 >
@@ -383,7 +394,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               {/* Secondary Menu Items */}
               <div className="space-y-0">
                 <Link
-                  href="/landlords"
+                  href={hrefFor("/landlords")}
                   onClick={onClose}
                   className="flex items-center justify-between py-4 border-b border-neutral-100"
                 >
@@ -395,7 +406,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 </Link>
 
                 <Link
-                  href="/corporate"
+                  href={hrefFor("/corporate")}
                   onClick={onClose}
                   className="flex items-center justify-between py-4 border-b border-neutral-100"
                 >

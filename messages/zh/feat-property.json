@@ -154,6 +154,9 @@
       "wellesley": "位于央街Wellesley地铁站旁，这套现代工作室将整座城市置于您的家门口。步行可达央街的商店和餐厅，沿着当河谷步道慢跑，或几分钟通勤至市中心。适合追求效率又不愿牺牲社区活力的单身专业人士。"
     },
     "superhost": "超赞房东",
+    "newVerified": "新认证",
+    "available30Days": "30天起可订",
+    "noHiddenFees": "无隐藏费用",
     "reviewScores": "评分详情",
     "reviewDim": {
       "cleanliness": "清洁度",
@@ -220,6 +223,15 @@
         "two": "2居",
         "threePlus": "3居+"
       }
+    },
+    "categories": {
+      "all": "全部房源",
+      "downtown": "市中心",
+      "subway": "近地铁",
+      "university": "近多大",
+      "furnished": "精装家具",
+      "luxury": "高端公寓",
+      "verified": "NEOS 认证"
     },
     "amenity": {
       "wifi": "无线网络",

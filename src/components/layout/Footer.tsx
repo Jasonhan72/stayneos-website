@@ -5,15 +5,17 @@ import Image from "next/image";
 import { MapPin, Phone, Mail, Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { usePathname } from "next/navigation";
+import { localizePath } from "@/lib/i18n-routes";
 
 export default function Footer() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const pathname = usePathname();
   const currentYear = new Date().getFullYear();
 
   if (pathname === "/account") {
     return null;
   }
+  const hrefFor = (href: string) => localizePath(href, locale);
 
   const footerLinks = {
     company: [
@@ -51,7 +53,7 @@ export default function Footer() {
           <div className="py-12 md:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
             {/* Brand Column */}
             <div className="lg:col-span-2">
-              <Link href="/" className="inline-block">
+              <Link href={hrefFor("/")} className="inline-block">
                 <Image
                   src="/logo.png"
                   alt="NEOS"
@@ -105,7 +107,7 @@ export default function Footer() {
                 {footerLinks.company.map((link) => (
                   <li key={link.href}>
                     <Link
-                      href={link.href}
+                      href={hrefFor(link.href)}
                       className="block py-2.5 text-primary-100 hover:text-accent transition-colors duration-200 text-sm md:text-base"
                     >
                       {link.label}
@@ -121,7 +123,7 @@ export default function Footer() {
                 {footerLinks.services.map((link) => (
                   <li key={link.href}>
                     <Link
-                      href={link.href}
+                      href={hrefFor(link.href)}
                       className="block py-2.5 text-primary-100 hover:text-accent transition-colors duration-200 text-sm md:text-base"
                     >
                       {link.label}
@@ -137,7 +139,7 @@ export default function Footer() {
                 {footerLinks.support.map((link) => (
                   <li key={link.href}>
                     <Link
-                      href={link.href}
+                      href={hrefFor(link.href)}
                       className="block py-2.5 text-primary-100 hover:text-accent transition-colors duration-200 text-sm md:text-base"
                     >
                       {link.label}
@@ -156,7 +158,7 @@ export default function Footer() {
           <div className="py-5 md:py-6 flex flex-col gap-4">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <p className="text-sm text-primary-200 text-center sm:text-left">
-                {`© ${currentYear} NEOS. All rights reserved.`}
+                {t("footer.copyright", `© ${currentYear} NEOS. All rights reserved.`).replace("2024-2026", String(currentYear))}
               </p>
               
               {/* Social Links */}

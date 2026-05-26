@@ -48,6 +48,14 @@ function getLocaleFromPath(pathname: string): Locale | null {
   return null;
 }
 
+function stripLocaleFromPath(pathname: string): string {
+  const locale = getLocaleFromPath(pathname);
+  if (!locale) return pathname;
+
+  const stripped = pathname.slice(locale.length + 1);
+  return stripped.startsWith('/') ? stripped || '/' : `/${stripped}`;
+}
+
 // Detect user's preferred locale from URL, Cookie, or Accept-Language
 function detectLocale(request: NextRequest): Locale {
   // 1. Check URL path prefix first (highest priority)
@@ -162,6 +170,8 @@ export async function middleware(request: NextRequest) {
   }
 
   const { pathname } = request.nextUrl;
+  const pathLocale = getLocaleFromPath(pathname);
+  const pathnameWithoutLocale = stripLocaleFromPath(pathname);
 
   // Route dedup: redirect old flat routes to /dashboard equivalents.
   // Page-level redirect() is unreliable in OpenNext + Cloudflare Workers,
@@ -170,14 +180,20 @@ export async function middleware(request: NextRequest) {
     '/wishlists': '/dashboard/wishlists',
     '/messages': '/dashboard/messages',
   };
-  const redirectTarget = ROUTE_REDIRECTS[pathname];
+  const redirectTarget = ROUTE_REDIRECTS[pathnameWithoutLocale];
   if (redirectTarget) {
     const url = request.nextUrl.clone();
-    url.pathname = redirectTarget;
+    url.pathname = pathLocale && pathLocale !== 'en' ? `/${pathLocale}${redirectTarget}` : redirectTarget;
     return NextResponse.redirect(url, 308);
   }
 
   const locale = detectLocale(request);
+  const existingCookieLocale = request.cookies.get('stayneos_locale')?.value;
+  if (!pathLocale && (existingCookieLocale === 'zh' || existingCookieLocale === 'fr')) {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname === '/' ? `/${existingCookieLocale}` : `/${existingCookieLocale}${pathname}`;
+    return NextResponse.redirect(url, 307);
+  }
   
   // Clone the request headers
   const requestHeaders = new Headers(request.headers);
@@ -225,7 +241,7 @@ export async function middleware(request: NextRequest) {
   }
   
   // 检查 Host 路由权限
-  if (isHostRoute(pathname)) {
+  if (isHostRoute(pathnameWithoutLocale)) {
     if (!isAuthenticated) {
       const loginUrl = new URL('/login', request.url);
       loginUrl.searchParams.set('callbackUrl', pathname);
@@ -252,7 +268,7 @@ export async function middleware(request: NextRequest) {
   }
   
   // 检查普通受保护路由
-  if (isProtectedRoute(pathname)) {
+  if (isProtectedRoute(pathnameWithoutLocale)) {
     if (!isAuthenticated) {
       const loginUrl = new URL('/login', request.url);
       loginUrl.searchParams.set('callbackUrl', pathname);
@@ -270,16 +286,23 @@ export async function middleware(request: NextRequest) {
   }
   
   // Create response with modified headers
-  const response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
+  const rewriteUrl = request.nextUrl.clone();
+  rewriteUrl.pathname = pathnameWithoutLocale;
+  const response = pathLocale
+    ? NextResponse.rewrite(rewriteUrl, {
+        request: {
+          headers: requestHeaders,
+        },
+      })
+    : NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
   
   // Only set locale cookie for non-default locale (en is default).
   // This eliminates Set-Cookie from most first-visit responses, allowing
   // Cloudflare CDN to cache the HTML (responses with Set-Cookie bypass CDN).
-  const pathLocale = getLocaleFromPath(pathname);
   const existingCookie = request.cookies.get('stayneos_locale')?.value;
   if (pathLocale && pathLocale !== existingCookie) {
     // URL has explicit locale prefix → update cookie to match

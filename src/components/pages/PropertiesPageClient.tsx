@@ -729,7 +729,7 @@ function PropertyGridCard({
           
           <div className="absolute left-3 top-3 flex flex-col gap-2">
             <span className="inline-flex items-center gap-1 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-neutral-950 shadow-sm">
-              <ShieldCheck size={13} className="text-emerald-600" /> NEOS verified
+              <ShieldCheck size={13} className="text-emerald-600" /> {t('properties.categories.verified', 'NEOS verified')}
             </span>
             {property.featured && (
               <Badge variant="primary">{t('property.featured')}</Badge>
@@ -757,7 +757,7 @@ function PropertyGridCard({
                   <span className="text-sm font-medium">{property.rating}</span>
                 </>
               ) : (
-                <span className="rounded-full bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700">New verified</span>
+                <span className="rounded-full bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700">{t('property.newVerified', 'New verified')}</span>
               )}
             </div>
           </div>
@@ -778,7 +778,7 @@ function PropertyGridCard({
           </div>
           
           <div className="mb-3 rounded-xl border border-neutral-200 bg-neutral-50 p-3 text-xs text-neutral-600">
-            <div className="flex items-center justify-between"><span>Available for 30+ days</span><span className="font-semibold text-neutral-900">No hidden fees</span></div>
+            <div className="flex items-center justify-between"><span>{t('property.available30Days', 'Available for 30+ days')}</span><span className="font-semibold text-neutral-900">{t('property.noHiddenFees', 'No hidden fees')}</span></div>
           </div>
           <PropertyPricingTiers property={property} compact />
           {/* Hotel Comparison */}
@@ -843,7 +843,7 @@ function PropertyListCard({ property, isSelected, onClick, onHover, cardRef }: P
           />
           <div className="absolute left-3 top-3 flex flex-col gap-2">
             <span className="inline-flex items-center gap-1 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-neutral-950 shadow-sm">
-              <ShieldCheck size={13} className="text-emerald-600" /> NEOS verified
+              <ShieldCheck size={13} className="text-emerald-600" /> {t('properties.categories.verified', 'NEOS verified')}
             </span>
             {property.featured && (
               <Badge variant="primary">{t('property.featured')}</Badge>
@@ -871,7 +871,7 @@ function PropertyListCard({ property, isSelected, onClick, onHover, cardRef }: P
                     <span className="text-sm font-medium">{property.rating}</span>
                   </>
                 ) : (
-                  <span className="rounded-full bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700">New verified</span>
+                  <span className="rounded-full bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700">{t('property.newVerified', 'New verified')}</span>
                 )}
               </div>
             </div>

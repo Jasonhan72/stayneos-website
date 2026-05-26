@@ -65,19 +65,19 @@ export default function ForAgentsPageContent() {
       key: "property",
       icon: Home,
       commission: "50%",
-      commissionPeriod: "3 months",
+      commissionPeriodKey: "agents.models.property.period",
     },
     {
       key: "tenant",
       icon: Users,
       commission: "$500",
-      commissionPeriod: "per booking",
+      commissionPeriodKey: "agents.models.tenant.period",
     },
     {
       key: "guest",
       icon: UserPlus,
       commission: "$200",
-      commissionPeriod: "per referral",
+      commissionPeriodKey: "agents.models.guest.period",
     },
   ];
 
@@ -157,7 +157,7 @@ export default function ForAgentsPageContent() {
                     <p className="text-2xl font-bold text-blue-600">
                       {model.commission}
                       <span className="text-sm font-normal text-neutral-500 ml-1">
-                        / {model.commissionPeriod}
+                        / {t(model.commissionPeriodKey)}
                       </span>
                     </p>
                   </div>

@@ -446,15 +446,18 @@
       "commission": "Commission",
       "property": {
         "title": "Référer des Propriétés",
-        "desc": "Référez des propriétaires pour inscrire leurs appartements meublés avec NEOS. Gagnez une commission sur chaque inscription réussie."
+        "desc": "Référez des propriétaires pour inscrire leurs appartements meublés avec NEOS. Gagnez une commission sur chaque inscription réussie.",
+        "period": "3 mois"
       },
       "tenant": {
         "title": "Représenter des Locataires",
-        "desc": "Aidez vos clients à trouver l'appartement exécutif parfait. Gagnez une commission sur chaque réservation que vous facilitez."
+        "desc": "Aidez vos clients à trouver l'appartement exécutif parfait. Gagnez une commission sur chaque réservation que vous facilitez.",
+        "period": "par réservation"
       },
       "guest": {
         "title": "Référer des Clients",
-        "desc": "Référez des voyageurs d'affaires, des employés en relocalisation ou des équipes de projet vers NEOS et gagnez pour chaque réservation réussie."
+        "desc": "Référez des voyageurs d'affaires, des employés en relocalisation ou des équipes de projet vers NEOS et gagnez pour chaque réservation réussie.",
+        "period": "par recommandation"
       }
     },
     "process": {

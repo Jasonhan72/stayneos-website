@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChevronDown, ChevronUp, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useI18n, type Locale } from "@/lib/i18n";
+import { localizePath } from "@/lib/i18n-routes";
 
 interface LanguageCurrencySelectorProps {
   variant?: "light" | "dark" | "transparent";
@@ -27,6 +29,9 @@ export function LanguageCurrencySelector({ variant = "light" }: LanguageCurrency
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0]);
   const menuRef = useRef<HTMLDivElement>(null);
   const { locale, setLocale, t } = useI18n();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   
   // Get current language based on i18n locale
   const selectedLang = languages.find(lang => lang.locale === locale) || languages[0];
@@ -42,6 +47,15 @@ export function LanguageCurrencySelector({ variant = "light" }: LanguageCurrency
   }, []);
 
   const isDarkStyle = variant === "dark" || variant === "transparent";
+  const switchLocale = (newLocale: Locale) => {
+    setLocale(newLocale);
+    setIsOpen(false);
+
+    const nextPath = localizePath(pathname || "/", newLocale);
+    const query = searchParams?.toString();
+    router.push(query ? `${nextPath}?${query}` : nextPath);
+    router.refresh();
+  };
 
   return (
     <div className="relative" ref={menuRef}>
@@ -88,7 +102,7 @@ export function LanguageCurrencySelector({ variant = "light" }: LanguageCurrency
               <button
                 key={lang.code}
                 onClick={() => {
-                  setLocale(lang.locale);
+                  switchLocale(lang.locale);
                 }}
                 className={cn(
                   "w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors",

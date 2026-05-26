@@ -438,15 +438,18 @@
       "commission": "Commission",
       "property": {
         "title": "Refer Properties",
-        "desc": "Refer property owners to list their furnished apartments with NEOS. Earn commission on every successful listing."
+        "desc": "Refer property owners to list their furnished apartments with NEOS. Earn commission on every successful listing.",
+        "period": "3 months"
       },
       "tenant": {
         "title": "Represent Tenants",
-        "desc": "Help your clients find the perfect executive apartment. Earn commission on every booking you facilitate."
+        "desc": "Help your clients find the perfect executive apartment. Earn commission on every booking you facilitate.",
+        "period": "per booking"
       },
       "guest": {
         "title": "Refer Guests",
-        "desc": "Refer business travelers, relocating employees, or project teams to NEOS and earn for every successful booking."
+        "desc": "Refer business travelers, relocating employees, or project teams to NEOS and earn for every successful booking.",
+        "period": "per referral"
       }
     },
     "process": {

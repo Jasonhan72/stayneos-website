@@ -154,6 +154,9 @@
       "wellesley": "Located steps from Wellesley subway station on the Yonge line, this modern studio puts the entire city at your doorstep. Walk to the shops and restaurants of Yonge Street, jog through the Don Valley trails, or commute downtown in minutes. Ideal for solo professionals who want efficiency without compromising on neighborhood energy."
     },
     "superhost": "Superhost",
+    "newVerified": "New verified",
+    "available30Days": "Available for 30+ days",
+    "noHiddenFees": "No hidden fees",
     "reviewScores": "Review scores",
     "reviewDim": {
       "cleanliness": "Cleanliness",
@@ -220,6 +223,15 @@
         "two": "2 BR",
         "threePlus": "3+ BR"
       }
+    },
+    "categories": {
+      "all": "All stays",
+      "downtown": "Downtown",
+      "subway": "Near subway",
+      "university": "Near UofT",
+      "furnished": "Furnished",
+      "luxury": "Luxury condo",
+      "verified": "NEOS verified"
     },
     "amenity": {
       "wifi": "WiFi",
