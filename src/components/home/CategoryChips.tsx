@@ -33,7 +33,7 @@ const CATEGORIES: Category[] = [
 ];
 
 export function CategoryChips() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const searchParams = useSearchParams();
   const activeCategory = searchParams.get('category');
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -60,35 +60,39 @@ export function CategoryChips() {
   }, []);
 
   return (
-    <section className="relative -mt-6 mb-8">
+    <div className="relative mx-auto mt-4 w-full max-w-5xl md:mt-6">
+      <p className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.16em] text-white/75">
+        {t('categories.quickLabel', 'Popular searches')}
+      </p>
       {/* Fade edge masks */}
       {showLeftFade && (
-        <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none bg-gradient-to-r from-white to-transparent" />
+        <div className="absolute bottom-0 left-0 top-7 z-10 w-10 pointer-events-none bg-gradient-to-r from-neutral-900/35 to-transparent" />
       )}
       {showRightFade && (
-        <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none bg-gradient-to-l from-white to-transparent" />
+        <div className="absolute bottom-0 right-0 top-7 z-10 w-10 pointer-events-none bg-gradient-to-l from-neutral-900/35 to-transparent" />
       )}
 
       {/* Scrollable chip row */}
       <div
         ref={scrollRef}
-        className="flex items-center gap-2 overflow-x-auto scrollbar-none px-4 sm:px-6 lg:px-8 py-4"
+        className="flex items-center justify-start gap-2 overflow-x-auto scrollbar-none px-1 pb-1 md:justify-center"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {CATEGORIES.map((cat) => {
           const Icon = cat.icon;
+          const href = `${locale === 'en' ? '' : `/${locale}`}/properties?category=${cat.key}`;
           return (
             <Link
               key={cat.key}
-              href={`/properties?category=${cat.key}`}
+              href={href}
               className={cn(
-                'flex items-center gap-2 shrink-0 px-4 py-2.5 rounded-full relative',
-                'border border-neutral-200 bg-white',
+                'relative flex min-h-11 shrink-0 items-center gap-2 rounded-full px-4 py-2.5',
+                'border border-white/25 bg-white/90 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.12)]',
                 'text-sm font-medium',
                 'transition-all duration-200',
                 activeCategory === cat.key
-                  ? 'text-neutral-900 border-neutral-300 shadow-sm'
-                  : 'text-neutral-500 hover:text-neutral-700 hover:border-neutral-400 hover:shadow-sm',
+                  ? 'text-neutral-950 border-white shadow-md'
+                  : 'text-neutral-700 hover:text-neutral-950 hover:border-white hover:bg-white',
                 // Animated underline via ::after
                 'after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:h-[2px] after:bg-neutral-900 after:rounded-full after:transition-all after:duration-300',
                 activeCategory === cat.key
@@ -96,7 +100,7 @@ export function CategoryChips() {
                   : 'after:w-0 hover:after:w-[calc(100%-2rem)]',
               )}
             >
-              <Icon size={18} className={cn('shrink-0', activeCategory === cat.key ? 'text-neutral-900' : 'text-neutral-400')} />
+              <Icon size={18} className={cn('shrink-0', activeCategory === cat.key ? 'text-neutral-900' : 'text-neutral-500')} />
               <span className="whitespace-nowrap">
                 {t(cat.labelKey, cat.defaultLabel)}
               </span>
@@ -104,7 +108,7 @@ export function CategoryChips() {
           );
         })}
       </div>
-    </section>
+    </div>
   );
 }
 

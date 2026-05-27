@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { ArrowRight, Loader2, SendHorizontal } from 'lucide-react';
 import { csrfFetch } from '@/lib/security/csrf-client';
 import { ChatExternalPropertyCard, type ChatExternalProperty } from '@/components/shared/chat/ChatExternalPropertyCard';
+import { CategoryChips } from './CategoryChips';
 
 interface Message {
   id: string;
@@ -185,9 +186,9 @@ export function HeroChatInline() {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full max-w-5xl mx-auto">
       {/* Top Input — always visible */}
-      <form onSubmit={handleTopSubmit} className="relative group">
+      <form onSubmit={handleTopSubmit} className="relative group mx-auto max-w-2xl">
         <div className="absolute -inset-1 bg-gradient-to-r from-accent/40 via-accent/60 to-accent/40 rounded-2xl blur-lg opacity-60 group-hover:opacity-80 animate-breathing-glow transition-opacity duration-500" />
 
         {/* Desktop */}
@@ -245,6 +246,8 @@ export function HeroChatInline() {
         </div>
       </form>
 
+      <CategoryChips />
+
       {/* Prompt chips — only before first message */}
       {!showChat && (
         <>
@@ -277,7 +280,7 @@ export function HeroChatInline() {
 
       {/* Conversation panel */}
       {showChat && (
-        <div className="mt-6 bg-neutral-900/80 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden">
+        <div className="mx-auto mt-6 max-w-2xl bg-neutral-900/80 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden">
           {/* Header with clear & close buttons */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
             <div className="flex items-center gap-3">
