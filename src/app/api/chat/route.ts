@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb } from '@/lib/d1';
 import { validateCsrf } from '@/lib/security/csrf';
 import { mockProperties } from '@/lib/data';
+import { getPropertyDb, toPublicProperty, type PropertyRecord } from '@/lib/property-db';
 
 // Type definitions for Cloudflare Workers AI
 interface CloudflareEnv {
@@ -231,6 +231,14 @@ type InternalChatProperty = {
 
 function firstImageFromJson(value: unknown): string | undefined {
   if (!value) return undefined;
+  if (Array.isArray(value)) {
+    const first = value[0];
+    if (typeof first === 'string') return first;
+    if (first && typeof first === 'object' && typeof (first as { url?: unknown }).url === 'string') {
+      return (first as { url: string }).url;
+    }
+    return undefined;
+  }
   if (typeof value !== 'string') return undefined;
   try {
     const parsed = JSON.parse(value);
@@ -335,23 +343,18 @@ function pickRecommendedProperties(properties: InternalChatProperty[], query: st
     .map(({ property }) => property);
 }
 
-// Fetch live property data from D1, with mock fallback only for local/build environments.
-async function getPropertyContext(language = 'EN'): Promise<{ context: string; properties: InternalChatProperty[]; source: 'd1' | 'mock' | 'empty' }> {
+// Fetch live property data from the same internal catalog used by /api/properties.
+async function getPropertyContext(language = 'EN'): Promise<{ context: string; properties: InternalChatProperty[]; source: 'd1' | 'internal-catalog' | 'empty' }> {
   try {
-    const db = getDb();
-    const result = await db
-      .prepare(`SELECT id, title, titleZh, titleFr, slug, address, city, neighborhood,
-        priceMonthly, priceQuarterly, priceAnnual, monthlyRate, quarterlyRate, yearlyRate,
-        bedrooms, bathrooms, description, descriptionZh, descriptionFr, images, heroImage,
-        status FROM Property WHERE status = 'PUBLISHED' ORDER BY priceMonthly DESC`)
-      .all();
+    const db = getPropertyDb();
+    const result = await db.prepare("SELECT * FROM Property WHERE status='PUBLISHED' ORDER BY createdAt DESC").all();
 
     if (!result.results || result.results.length === 0) {
       return { context: 'LIVE PROPERTY DATA: No published NEOS properties are currently available.', properties: [], source: 'empty' };
     }
 
-    const rows = result.results as Record<string, unknown>[];
-    const properties = rows.map((p) => toChatProperty(p, language));
+    const rows = (result.results || []).map((item) => toPublicProperty(item as unknown as PropertyRecord));
+    const properties = rows.map((p) => toChatProperty(p as Record<string, unknown>, language));
     let context = 'LIVE PROPERTY DATA (from internal StayNeos properties API / D1):\n\n';
     rows.forEach((p, i) => {
       const property = properties[i];
@@ -362,7 +365,7 @@ async function getPropertyContext(language = 'EN'): Promise<{ context: string; p
       context += `   Monthly Price: CAD $${property.price || 'unavailable'}\n`;
       if (property.quarterlyPrice) context += `   Quarterly Price: CAD $${property.quarterlyPrice}/month\n`;
       if (property.annualPrice) context += `   Annual Price: CAD $${property.annualPrice}/month\n`;
-      const description = localizeValue(p, 'description', language);
+      const description = localizeValue(p as Record<string, unknown>, 'description', language);
       if (description) context += `   Description: ${description.substring(0, 260)}\n`;
       context += `   URL: ${property.url}\n\n`;
     });
@@ -379,7 +382,7 @@ async function getPropertyContext(language = 'EN'): Promise<{ context: string; p
       context += `   Monthly Price: CAD $${p.price || 'unavailable'}\n`;
       context += `   URL: ${p.url}\n\n`;
     });
-    return { context, properties, source: 'mock' };
+    return { context, properties, source: 'internal-catalog' };
   }
 }
 
