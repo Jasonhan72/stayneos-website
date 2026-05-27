@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateCsrf } from '@/lib/security/csrf';
+import { getPropertyDb, toPublicProperty, type PropertyRecord } from '@/lib/property-db';
 
 interface ConciergeRequest {
   message: string;
@@ -8,81 +9,216 @@ interface ConciergeRequest {
 
 interface ConciergeResponse {
   text: string;
-  recommended_property_id: number;
-  alternative_property_id: number | null;
+  recommended_property_id: string | null;
+  alternative_property_id: string | null;
   hotel_comparison: string;
 }
 
-const PROPERTIES_CONTEXT = `
-Available NEOS Properties in Toronto:
+interface LiveProperty {
+  id: string;
+  slug: string;
+  title: string;
+  titleZh?: string;
+  titleFr?: string;
+  location: string;
+  neighborhood?: string;
+  city: string;
+  price: number;
+  bedrooms: number;
+  bathrooms: number;
+  maxGuests: number;
+  area?: number;
+  description?: string;
+  descriptionZh?: string;
+  descriptionFr?: string;
+  status: string;
+}
 
-1. ID: 1 — 55 Cooper St (Sugar Wharf) · Premium 3BR Sky Suite
-   - Location: Waterfront / Sugar Wharf, downtown Toronto
-   - Bedrooms: 3, Max Guests: 6, Area: 1273 sqft
-   - Monthly: $12,000 | Quarterly: $10,800/mo | Annual: $9,600/mo
-   - Features: Lake views from 55+ floor, near Union Station (8 min walk), Financial District (5 min), Scotiabank Arena, brand new Menkes development
-   - Best for: Executives, families, luxury seekers, project teams, corporate relocations
+interface CloudflareEnv {
+  AI?: {
+    run: (model: string, input: {
+      messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>;
+      max_tokens?: number;
+      temperature?: number;
+    }) => Promise<{ response?: string }>;
+  };
+}
 
-2. ID: 2 — 238 Simcoe St (Grange Park) · Executive 3BR Suite
-   - Location: Downtown Core / Grange Park, near AGO, OCAD, UofT St. George
-   - Bedrooms: 3, Max Guests: 5, Area: 1100 sqft
-   - Monthly: $8,000 | Quarterly: $7,200/mo | Annual: $6,400/mo
-   - Features: Walking distance to 4 major hospitals (Toronto General, Mt. Sinai, SickKids, Princess Margaret), St. Patrick / Osgoode subway ~3 min
-   - Best for: Medical professionals, visiting scholars, academic stays, insurance housing, families needing hospital proximity
+function getCloudflareContext(): { env?: CloudflareEnv } | undefined {
+  const symbol = Symbol.for('__cloudflare-context__');
+  return (globalThis as typeof globalThis & { [key: symbol]: { env?: CloudflareEnv } | undefined })[symbol];
+}
 
-3. ID: 3 — 22 Wellesley St E · Modern 1BR City View
-   - Location: Midtown, near Wellesley subway station
-   - Bedrooms: 1, Max Guests: 2, Area: 550 sqft
-   - Monthly: $4,000 | Quarterly: $3,600/mo | Annual: $3,200/mo
-   - Features: Modern finishes, city view, convenient midtown location, close to UofT
-   - Best for: Solo professionals, visiting scholars, medical rotations, budget-conscious stays
+function getAI(): CloudflareEnv['AI'] | undefined {
+  const cfContext = getCloudflareContext();
+  if (cfContext?.env?.AI) return cfContext.env.AI;
+  return (process.env as unknown as CloudflareEnv).AI;
+}
 
-Matching Rules:
-- Medical/hospital needs → Property 2 (238 Simcoe) first, Property 3 as alternative
-- Luxury/executive/large family → Property 1 (55 Cooper) first
-- Budget/solo/student → Property 3 (22 Wellesley) first, Property 2 as alternative
-- Insurance housing → Property 2 (238 Simcoe) for hospital proximity
-- Corporate/project team → Property 1 (55 Cooper) first
-`;
+async function fetchLiveProperties(): Promise<LiveProperty[]> {
+  try {
+    const db = getPropertyDb();
+    const result = await db.prepare("SELECT * FROM Property WHERE status='PUBLISHED' ORDER BY createdAt DESC").all();
+    return (result.results || [])
+      .map((item) => toPublicProperty(item as unknown as PropertyRecord))
+      .filter((property) => property.status === 'PUBLISHED' && property.price > 0)
+      .map((property) => ({
+        id: property.id,
+        slug: property.slug,
+        title: property.title,
+        titleZh: property.titleZh,
+        titleFr: property.titleFr,
+        location: property.location,
+        neighborhood: property.neighborhood,
+        city: property.city,
+        price: property.price,
+        bedrooms: property.bedrooms,
+        bathrooms: property.bathrooms,
+        maxGuests: property.maxGuests,
+        area: property.area,
+        description: property.description,
+        descriptionZh: property.descriptionZh,
+        descriptionFr: property.descriptionFr,
+        status: property.status,
+      }));
+  } catch (error) {
+    console.error('Failed to fetch live concierge properties:', error);
+    return [];
+  }
+}
 
-const SYSTEM_PROMPT = `You are NEOS AI Concierge, an expert housing assistant for premium furnished apartments in Toronto.
+function extractBudget(message: string): number | null {
+  const patterns = [
+    /\$\s*([1-9][0-9,]{3,5})/,
+    /([1-9][0-9,]{3,5})\s*(?:\/月|\/mo|\/month|per month|a month|每月|月租)/i,
+    /(?:预算|budget|under|below|less than|不超过|以内|max|maximum)\s*\$?\s*([1-9][0-9,]{3,5})/i,
+    /\$?\s*([1-9][0-9,]{3,5})\s*(?:以内|以下|以下的|under|below|budget)/i,
+  ];
 
-${PROPERTIES_CONTEXT}
+  for (const pattern of patterns) {
+    const match = message.match(pattern);
+    if (!match) continue;
+    const value = Number(match[1].replace(/,/g, ''));
+    if (Number.isFinite(value)) return value;
+  }
+  return null;
+}
 
-IMPORTANT:
-- Be warm, concise, and helpful. Max 3-4 sentences for your response.
-- Always recommend a specific property based on the user's needs using the matching rules above.
-- Never invent addresses, prices, discounts, or availability. Use only the property data in this prompt.
-- Include a brief hotel comparison showing value.
-- Respond in the same language the user writes in.
-- Return ONLY valid JSON matching this format:
-{
-  "text": "Your helpful response text",
-  "recommended_property_id": 1,
-  "alternative_property_id": 2,
-  "hotel_comparison": "Brief comparison vs hotel pricing"
-}`;
+function formatCurrency(value: number, language: string): string {
+  const formatted = `$${value.toLocaleString('en-CA')}`;
+  if (language === 'zh') return `CAD ${formatted}`;
+  if (language === 'fr') return `${formatted} CAD`;
+  return `CAD ${formatted}`;
+}
 
-const FALLBACK_RESPONSES = {
-  en: {
-    text: "Based on your needs, I'd recommend our 238 Simcoe St suite — perfectly located in downtown Toronto near major hospitals, universities, and transit. It's a fully furnished 3BR at $8,000/mo, move-in ready.",
-    recommended_property_id: 2,
-    alternative_property_id: 3,
-    hotel_comparison: "Comparable hotel suites in this area cost $250-400/night ($7,500-12,000/mo). NEOS saves you up to 45% with a real home experience.",
-  },
-  zh: {
-    text: "根据您的需求，我推荐我们位于 238 Simcoe St 的套房 — 地处多伦多市中心，靠近主要医院、大学和交通枢纽。这是一个全家具的 3 卧室公寓，月租 $8,000，可随时入住。",
-    recommended_property_id: 2,
-    alternative_property_id: 3,
-    hotel_comparison: "该区域类似酒店套房价格 $250-400/晚（$7,500-12,000/月）。选择 NEOS 可节省高达 45%，享受真正的居家体验。",
-  },
-  fr: {
-    text: "En fonction de vos besoins, je recommande notre suite au 238 Simcoe St — parfaitement située au centre-ville de Toronto, près des principaux hôpitaux, universités et transports en commun. C'est un 3 chambres entièrement meublé à $8,000/mois, prêt à emménager.",
-    recommended_property_id: 2,
-    alternative_property_id: 3,
-    hotel_comparison: "Les suites d'hôtel comparables dans cette zone coûtent $250-400/nuit ($7,500-12,000/mois). NEOS vous fait économiser jusqu'à 45% avec une véritable expérience de maison.",
-  },
-};
+function getLocalizedTitle(property: LiveProperty, language: string): string {
+  if (language === 'zh' && property.titleZh) return property.titleZh;
+  if (language === 'fr' && property.titleFr) return property.titleFr;
+  return property.title;
+}
+
+function buildPropertyContext(properties: LiveProperty[], language: string): string {
+  if (properties.length === 0) return 'LIVE NEOS PROPERTIES: No current published properties are available.';
+
+  let context = 'LIVE NEOS PROPERTIES (AUTHORITATIVE: never invent or modify prices):\n\n';
+  properties.forEach((property, index) => {
+    context += `${index + 1}. ID: ${property.id}\n`;
+    context += `   Title: ${getLocalizedTitle(property, language)}\n`;
+    context += `   Address: ${property.location}\n`;
+    context += `   City: ${property.city}${property.neighborhood ? ` / ${property.neighborhood}` : ''}\n`;
+    context += `   Monthly Price: ${formatCurrency(property.price, language)}/month\n`;
+    context += `   Bedrooms: ${property.bedrooms}, Bathrooms: ${property.bathrooms}, Max Guests: ${property.maxGuests}\n`;
+    if (property.area && property.area > 0) context += `   Area: ${property.area} sqft\n`;
+    const description = language === 'zh' ? property.descriptionZh : language === 'fr' ? property.descriptionFr : property.description;
+    if (description) context += `   Description: ${description.slice(0, 220)}\n`;
+    context += `   Listing URL: https://www.stayneos.com/property/${property.slug}\n\n`;
+  });
+  return context;
+}
+
+function pickBestProperty(properties: LiveProperty[], message: string): LiveProperty | null {
+  if (properties.length === 0) return null;
+
+  const query = message.toLowerCase();
+  const scored = properties.map((property) => {
+    const haystack = `${property.title} ${property.titleZh || ''} ${property.location} ${property.neighborhood || ''} ${property.description || ''} ${property.descriptionZh || ''}`.toLowerCase();
+    let score = 0;
+    if (/hospital|medical|doctor|insurance|医院|医疗|医生|保险|rotation|轮转/i.test(message) && /simcoe|hospital|医院|university|uoft|大学|sickkids|sinai/i.test(haystack)) score += 10;
+    if (/u\s*of\s*t|uoft|university|scholar|student|多大|大学|学者|学生/i.test(message) && /wellesley|simcoe|university|uoft|多伦多大学|大学/i.test(haystack)) score += 8;
+    if (/family|corporate|executive|relocat|家庭|高管|企业|搬迁/i.test(message) && property.bedrooms >= 3) score += 7;
+    for (const token of query.replace(/[^\p{L}\p{N}\s]/gu, ' ').split(/\s+/).filter((t) => t.length > 2)) {
+      if (haystack.includes(token)) score += 1;
+    }
+    return { property, score };
+  });
+
+  scored.sort((a, b) => b.score - a.score || a.property.price - b.property.price);
+  return scored[0]?.property || null;
+}
+
+function buildNoBudgetMatchResponse(language: string, budget: number, cheapest: LiveProperty | undefined): ConciergeResponse {
+  if (!cheapest) {
+    return {
+      text: language === 'zh'
+        ? '目前没有可引用的实时房源数据。请查看房源页面或联系 hello@stayneos.com 确认最新可订房源。'
+        : language === 'fr'
+          ? "Je n'ai pas de données de logements en temps réel à citer pour le moment. Consultez la page des logements ou écrivez à hello@stayneos.com."
+          : 'I do not have live property data to cite right now. Please check our properties page or email hello@stayneos.com.',
+      recommended_property_id: null,
+      alternative_property_id: null,
+      hotel_comparison: '',
+    };
+  }
+
+  const price = formatCurrency(cheapest.price, language);
+  const title = getLocalizedTitle(cheapest, language);
+
+  return {
+    text: language === 'zh'
+      ? `目前暂无月租 ${formatCurrency(budget, language)} 以内的房源。最接近的是 ${title}，月租 ${price}，如预算有弹性我可以继续帮您比较；也可以联系 hello@stayneos.com 了解后续可用房源。`
+      : language === 'fr'
+        ? `Nous n'avons actuellement aucun logement à moins de ${formatCurrency(budget, language)} par mois. L'option la plus proche est ${title}, à ${price}/mois; contactez hello@stayneos.com pour les prochaines disponibilités.`
+        : `We do not currently have any homes under ${formatCurrency(budget, language)} per month. The closest option is ${title} at ${price}/mo; contact hello@stayneos.com for future availability.`,
+    recommended_property_id: null,
+    alternative_property_id: cheapest.id,
+    hotel_comparison: language === 'zh'
+      ? '酒店式长住通常按晚计费；NEOS 只引用当前内部房源价格，不会为了匹配预算改写价格。'
+      : language === 'fr'
+        ? "Les séjours hôteliers prolongés sont généralement facturés à la nuit; NEOS ne modifie pas les prix pour correspondre à un budget."
+        : 'Extended-stay hotels are usually priced nightly; NEOS only quotes current internal listing prices and does not alter them to fit a budget.',
+  };
+}
+
+function buildFallbackResponse(language: string, budget: number | null, properties: LiveProperty[], message: string): ConciergeResponse {
+  const sorted = [...properties].sort((a, b) => a.price - b.price);
+  if (budget !== null) {
+    const withinBudget = sorted.filter((property) => property.price <= budget);
+    if (withinBudget.length === 0) return buildNoBudgetMatchResponse(language, budget, sorted[0]);
+  }
+
+  const candidates = budget !== null ? sorted.filter((property) => property.price <= budget) : sorted;
+  const best = pickBestProperty(candidates.length ? candidates : sorted, message);
+  if (!best) return buildNoBudgetMatchResponse(language, budget || 0, undefined);
+
+  const price = formatCurrency(best.price, language);
+  const title = getLocalizedTitle(best, language);
+  const alternative = sorted.find((property) => property.id !== best.id) || null;
+
+  return {
+    text: language === 'zh'
+      ? `根据当前 NEOS 内部房源数据，我推荐 ${title}，月租 ${price}。它的位置是 ${best.location}，${best.bedrooms} 卧 ${best.bathrooms} 卫，适合您描述的需求；我只引用当前房源数据，不会编造低价。`
+      : language === 'fr'
+        ? `D'après les données internes actuelles de NEOS, je recommande ${title} à ${price}/mois. Il se trouve à ${best.location}, avec ${best.bedrooms} chambre(s) et ${best.bathrooms} salle(s) de bain; je ne cite que les prix internes actuels.`
+        : `Based on current internal NEOS property data, I recommend ${title} at ${price}/mo. It is at ${best.location}, with ${best.bedrooms} bedroom(s) and ${best.bathrooms} bathroom(s); I only quote current internal prices.`,
+    recommended_property_id: best.id,
+    alternative_property_id: alternative?.id || null,
+    hotel_comparison: language === 'zh'
+      ? '同区域长住酒店通常按晚收费；NEOS 月租提供完整厨房、家具和服务。'
+      : language === 'fr'
+        ? 'Les hôtels de séjour prolongé du secteur sont généralement facturés à la nuit; NEOS offre une cuisine complète, le mobilier et les services.'
+        : 'Comparable extended-stay hotels are usually priced nightly; NEOS monthly stays include a full kitchen, furnishings, and services.',
+  };
+}
 
 // IP-based rate limit for public concierge (10 req/min)
 const conciergeRateLimit = new Map<string, { count: number; resetAt: number }>();
@@ -116,129 +252,81 @@ export async function POST(request: NextRequest) {
     }
 
     const body: ConciergeRequest = await request.json();
-
     if (!body.message || typeof body.message !== 'string') {
-      return NextResponse.json(
-        { error: 'Message is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Message is required' }, { status: 400 });
     }
 
-    // Try Cloudflare Workers AI if available
-    const env = (process.env as Record<string, unknown>);
-    const ai = (env as { AI?: { run: (model: string, input: Record<string, unknown>) => Promise<{ response?: string }> } }).AI;
-    const model = (env.AI_CONCIERGE_MODEL as string) || '@cf/meta/llama-3.1-8b-instruct';
+    const language = body.language || 'en';
+    const liveProperties = await fetchLiveProperties();
+    const budget = extractBudget(body.message);
+    const cheapest = [...liveProperties].sort((a, b) => a.price - b.price)[0];
+
+    if (budget !== null && liveProperties.every((property) => property.price > budget)) {
+      return NextResponse.json(buildNoBudgetMatchResponse(language, budget, cheapest));
+    }
+
+    const propertyContext = buildPropertyContext(liveProperties, language);
+    const matchingProperties = budget !== null
+      ? liveProperties.filter((property) => property.price <= budget)
+      : liveProperties;
+    const budgetGuidance = budget !== null
+      ? `\n\nBUDGET NOTE: User requested max ${formatCurrency(budget, language)}/month. Only recommend properties with price <= that budget: ${matchingProperties.map((p) => `${getLocalizedTitle(p, language)} (${formatCurrency(p.price, language)}/month)`).join(', ') || 'none'}.`
+      : '';
+
+    const systemPrompt = `You are NEOS AI Concierge, an expert housing assistant for premium furnished apartments.
+
+${propertyContext}
+
+CRITICAL RULES:
+1. NEVER invent, estimate, or modify property prices, addresses, discounts, or availability.
+2. Use only LIVE NEOS PROPERTIES above as the property source.
+3. If no property matches the user's budget, explicitly say so and suggest the closest option.
+4. Respond in the same language the user writes in.
+5. When responding in Chinese, use Chinese terms for amenities and services, e.g. 水电费, 服务, 家具, not untranslated English labels.
+6. Return ONLY valid JSON:
+{
+  "text": "Your helpful response text",
+  "recommended_property_id": "property-id-or-null",
+  "alternative_property_id": "property-id-or-null",
+  "hotel_comparison": "Brief comparison vs hotel pricing"
+}
+${budgetGuidance}`;
+
+    const ai = getAI();
+    const model = process.env.AI_CONCIERGE_MODEL || '@cf/meta/llama-3.1-8b-instruct';
 
     if (ai && typeof ai.run === 'function') {
       try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 15000);
-
         const result = await ai.run(model, {
           messages: [
-            { role: 'system', content: SYSTEM_PROMPT },
+            { role: 'system', content: systemPrompt },
             { role: 'user', content: body.message },
           ],
           max_tokens: 500,
+          temperature: 0.2,
         });
 
-        clearTimeout(timeout);
-
         if (result?.response) {
-          try {
-            // Try to parse the JSON response
-            const cleanedResponse = result.response
-              .replace(/```json\n?/g, '')
-              .replace(/```\n?/g, '')
-              .trim();
-            const parsed: ConciergeResponse = JSON.parse(cleanedResponse);
-
-            // Validate required fields
-            if (parsed.text && parsed.recommended_property_id) {
-              return NextResponse.json(parsed);
-            }
-          } catch {
-            // If parsing fails, use AI text with fallback structure
-            const lang = body.language || 'en';
-            const fallback = FALLBACK_RESPONSES[lang as keyof typeof FALLBACK_RESPONSES] || FALLBACK_RESPONSES.en;
-            return NextResponse.json({
-              ...fallback,
-              text: result.response,
-            });
-          }
+          const cleanedResponse = result.response
+            .replace(/```json\n?/g, '')
+            .replace(/```\n?/g, '')
+            .trim();
+          const parsed = JSON.parse(cleanedResponse) as ConciergeResponse;
+          if (parsed.text) return NextResponse.json(parsed);
         }
-      } catch {
-        // AI timeout or error — fall through to fallback
+      } catch (error) {
+        console.error('AI concierge response failed:', error);
       }
     }
 
-    // Fallback: simple keyword matching with language support
-    const msg = body.message.toLowerCase();
-    const lang = body.language || 'en';
-    const fallback = FALLBACK_RESPONSES[lang as keyof typeof FALLBACK_RESPONSES] || FALLBACK_RESPONSES.en;
-    let response = { ...fallback };
-
-    // Medical/hospital keywords in multiple languages
-    const medicalKeywords = ['medical', 'hospital', 'doctor', 'insurance', '医疗', '医院', '医生', '保险', 'médical', 'hôpital', 'médecin', 'assurance'];
-    const executiveKeywords = ['executive', 'luxury', 'family', 'corporate', 'relocat', '高管', '豪华', '家庭', '企业', '搬迁', 'exécutif', 'luxe', 'famille', 'entreprise', 'relocalisation'];
-    const scholarKeywords = ['scholar', 'student', 'budget', 'u of t', 'university', '学者', '学生', '预算', '大学', 'chercheur', 'étudiant', 'budget', 'université'];
-
-    if (medicalKeywords.some(keyword => msg.includes(keyword))) {
-      response = lang === 'zh' ? {
-        text: "针对医疗专业人士，我强烈推荐我们位于 238 Simcoe St 的套房 — 步行即可到达多伦多总医院、西奈山医院、病童医院和玛格丽特公主医院。全家具 3 卧室公寓，月租 $8,000。",
-        recommended_property_id: 2,
-        alternative_property_id: 3,
-        hotel_comparison: "附近酒店价格 $250-400/晚。选择月租可节省高达 45%，并拥有完整厨房和家庭办公室。",
-      } : lang === 'fr' ? {
-        text: "Pour les professionnels de la santé, je recommande vivement notre suite au 238 Simcoe St — à distance de marche des hôpitaux Toronto General, Mt. Sinai, SickKids et Princess Margaret. 3 chambres entièrement meublées à $8,000/mois.",
-        recommended_property_id: 2,
-        alternative_property_id: 3,
-        hotel_comparison: "Les hôtels à proximité facturent $250-400/nuit. Notre tarif mensuel vous fait économiser jusqu'à 45% avec une cuisine complète et un bureau à domicile.",
-      } : {
-        text: "For medical professionals, I highly recommend our 238 Simcoe St suite — it's walking distance to Toronto General, Mt. Sinai, SickKids, and Princess Margaret hospitals. Fully furnished 3BR at $8,000/mo.",
-        recommended_property_id: 2,
-        alternative_property_id: 3,
-        hotel_comparison: "Nearby hotels charge $250-400/night. Our monthly rate saves you up to 45% with a full kitchen and home office.",
-      };
-    } else if (executiveKeywords.some(keyword => msg.includes(keyword))) {
-      response = lang === 'zh' ? {
-        text: "根据您的需求，我们的 55 Cooper St 湖景套房是理想选择 — 壮丽的安大略湖景，3 间卧室，步行 8 分钟到联合车站。全新的 Sugar Wharf 开发项目，月租 $12,000。",
-        recommended_property_id: 1,
-        alternative_property_id: 2,
-        hotel_comparison: "市中心豪华酒店套房起价 $500+/晚（$15,000+/月）。选择 NEOS 可节省 20% 以上，同时享受 3 倍空间。",
-      } : lang === 'fr' ? {
-        text: "Pour vos besoins, notre suite premium au 55 Cooper St est idéale — vue imprenable sur le lac Ontario, 3 chambres, 8 minutes à pied de la gare Union. Nouveau développement Sugar Wharf à $12,000/mois.",
-        recommended_property_id: 1,
-        alternative_property_id: 2,
-        hotel_comparison: "Les suites d'hôtel de luxe du centre-ville commencent à $500+/nuit ($15,000+/mois). Vous économiserez 20%+ tout en profitant de 3x plus d'espace.",
-      } : {
-        text: "For your needs, our premium 55 Cooper St Sky Suite is ideal — stunning lake views, 3 bedrooms, 8 min walk to Union Station. Brand new Sugar Wharf development at $12,000/mo.",
-        recommended_property_id: 1,
-        alternative_property_id: 2,
-        hotel_comparison: "Luxury hotel suites downtown start at $500+/night ($15,000+/mo). You'll save 20%+ while enjoying 3x the space.",
-      };
-    } else if (scholarKeywords.some(keyword => msg.includes(keyword))) {
-      response = lang === 'zh' ? {
-        text: "针对访问学者，我们位于 22 Wellesley St 的公寓非常合适 — 现代 1 卧室公寓，城市景观，靠近多伦多大学和 Wellesley 地铁站。月租仅 $4,000，全家具。",
-        recommended_property_id: 3,
-        alternative_property_id: 2,
-        hotel_comparison: "校园附近的延长住宿酒店价格 $150-250/晚（$4,500-7,500/月）。选择 NEOS 可节省高达 53%。",
-      } : lang === 'fr' ? {
-        text: "Pour les chercheurs invités, notre appartement au 22 Wellesley St est parfait — studio moderne avec vue sur la ville, près de l'Université de Toronto et de la station de métro Wellesley. Seulement $4,000/mois, entièrement meublé.",
-        recommended_property_id: 3,
-        alternative_property_id: 2,
-        hotel_comparison: "Les hôtels de séjour prolongé près du campus facturent $150-250/nuit ($4,500-7,500/mois). NEOS vous fait économiser jusqu'à 53%.",
-      } : {
-        text: "For visiting scholars, our 22 Wellesley St apartment is perfect — modern 1BR with city views, close to UofT and Wellesley subway. Just $4,000/mo, fully furnished.",
-        recommended_property_id: 3,
-        alternative_property_id: 2,
-        hotel_comparison: "Extended-stay hotels near campus charge $150-250/night ($4,500-7,500/mo). NEOS saves you up to 53%.",
-      };
-    }
-
-    return NextResponse.json(response);
-  } catch (_error) {
-    // In case of any error, return English fallback
-    return NextResponse.json(FALLBACK_RESPONSES.en);
+    return NextResponse.json(buildFallbackResponse(language, budget, liveProperties, body.message));
+  } catch (error) {
+    console.error('Concierge route error:', error);
+    return NextResponse.json({
+      text: 'I could not load current property data right now. Please check the properties page or email hello@stayneos.com.',
+      recommended_property_id: null,
+      alternative_property_id: null,
+      hotel_comparison: '',
+    } satisfies ConciergeResponse);
   }
 }
