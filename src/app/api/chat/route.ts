@@ -89,7 +89,7 @@ IMPORTANT RULES:
 - For NEOS property addresses, availability, and prices, ONLY use the LIVE PROPERTY DATA block provided by the API. Never invent or estimate an address, price, discount, or availability.
 - If LIVE PROPERTY DATA is empty or unavailable, say that current property data is unavailable and send the user to /properties or support@stayneos.com. Do not fall back to memory or examples.
 - For external marketplace listings such as realtor.ca, say external search is not enabled unless explicit EXTERNAL PROPERTY RESULTS are provided in this request. Never hallucinate realtor.ca prices.
-- When EXTERNAL PROPERTY RESULTS are provided, mention that they come from their source site such as realtor.ca, condos.ca, rentals.ca, or zolo.ca, and distinguish them from NEOS internal listings.
+- When EXTERNAL PROPERTY RESULTS are provided, mention that they come from realtor.ca and distinguish them from NEOS internal listings.
 - Always present NEOS internal properties first and label them as "我们的房源" in Chinese, "NEOS listing" in English, or "logement NEOS" in French.
 - External property results should be presented second and clearly labeled "来自 [source]" in Chinese, "from [source]" in English, or "depuis [source]" in French.
 - If you have real-time data (weather, search results), use it directly in your answer. Don't say "querying..." or "checking..." — you already have the data.
@@ -199,7 +199,7 @@ function needsWebSearch(query: string): boolean {
     'how much', 'what is the price', 'compare prices', 'market analysis',
     'rental data', 'market data', 'statistics', 'report', 'study',
     'realtor', 'mls', 'listing', 'condo', 'apartment', 'lease',
-    'zolo', 'housesigma', 'condos.ca', 'realtor.ca',
+    'realtor', 'realtor.ca', 'mls',
     // Local info
     'restaurant', 'food', 'eat', 'bar', 'nightlife', 'event', 'festival',
     'transit', 'ttc', 'subway', 'bus', 'airport', 'commute',
@@ -457,10 +457,10 @@ function needsExternalPropertySearch(query: string): boolean {
     '多大', '附近', '旁边', '周围', '靠近', '预算', '以内', '以下', '价格', '多少钱',
     '月租', '一居', '二居', '卧室', '几房', '房租', '住', '离', '学校', '多大附近',
     // Site references
-    'condos.ca', 'zolo', 'rentals.ca', 'rentfaster', 'padmapper', 'realtor.ca', 'liv.rent', 'kijiji', 'housesigma',
+    'realtor.ca', 'realtor', 'mls',
   ];
   // Also: any URL in the message that points to a property site
-  if (/https?:\/\/[^\s]*(condos\.ca|zolo\.ca|rentals\.ca|rentfaster\.ca|padmapper\.com|liv\.rent|realtor\.ca|kijiji\.ca|housesigma\.com|zumper\.com)/i.test(query)) return true;
+  if (/https?:\/\/[^\s]*(realtor\.ca)/i.test(query)) return true;
   if (/找.*房|房.*预算|预算.*房|附近.*公寓|旁边.*(公寓|房)|(多大|大学|学校).*(公寓|房|租)/.test(query)) return true;
   return propertyKeywords.some(k => q.includes(k));
 }
@@ -468,8 +468,6 @@ function needsExternalPropertySearch(query: string): boolean {
 function getExternalSearchCards(query: string): ExternalProperty[] {
   const isUoft = /多大|uoft|u\s*of\s*t|university\s+of\s+toronto/i.test(query);
   const location = isUoft ? 'University of Toronto, Toronto' : 'Toronto';
-  const encodedLocation = encodeURIComponent(location);
-
   return [
     {
       title: isUoft
@@ -479,24 +477,6 @@ function getExternalSearchCards(query: string): ExternalProperty[] {
       source: 'realtor.ca',
       location,
       snippet: 'External marketplace search link. Prices and availability must be verified on realtor.ca.',
-    },
-    {
-      title: isUoft
-        ? 'Condos.ca rentals near University of Toronto'
-        : 'Condos.ca Toronto rentals',
-      url: `https://condos.ca/toronto/condos-for-rent?search=${encodedLocation}`,
-      source: 'condos.ca',
-      location,
-      snippet: 'External marketplace search link. Prices and availability must be verified on condos.ca.',
-    },
-    {
-      title: isUoft
-        ? 'Rentals.ca listings near University of Toronto'
-        : 'Rentals.ca Toronto rentals',
-      url: `https://rentals.ca/toronto?bbox=-79.44,43.635,-79.35,43.69&keywords=${encodedLocation}`,
-      source: 'rentals.ca',
-      location,
-      snippet: 'External marketplace search link. Prices and availability must be verified on rentals.ca.',
     },
   ];
 }
@@ -593,7 +573,7 @@ export async function POST(request: NextRequest) {
       // text summary (for the AI) and structured cards (for the UI) in parallel.
       if (isPropertyListingRequest && externalPropertySearchEnabled) {
         const [textResults, cards] = await Promise.allSettled([
-          callWebSearch(message),
+          callWebSearch(`realtor.ca ${message}`),
           searchExternalProperties(message, 3),
         ]);
         webSearchResults = textResults.status === 'fulfilled' ? textResults.value : '';
@@ -653,7 +633,7 @@ export async function POST(request: NextRequest) {
     } else if (isPropertyListingRequest && !externalPropertySearchEnabled) {
       messages.push({
         role: 'system' as const,
-        content: 'EXTERNAL PROPERTY RESULTS: Not enabled. Do not mention realtor.ca, condos.ca, zolo.ca, or other external listing details. Recommend only LIVE PROPERTY DATA above.'
+        content: 'EXTERNAL PROPERTY RESULTS: Not enabled. Do not mention realtor.ca or other external listing details. Recommend only LIVE PROPERTY DATA above.'
       });
     }
     

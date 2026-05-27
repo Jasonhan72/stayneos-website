@@ -329,7 +329,7 @@ export function isAllowedDomain(): boolean { return true; }
 export interface ExternalProperty {
   title: string;
   url: string;
-  source: string;        // hostname (e.g. realtor.ca, condos.ca)
+  source: string;        // hostname (currently realtor.ca for external listing search)
   price?: number;        // monthly CAD
   priceText?: string;    // raw price string for display when number can't be parsed
   bedrooms?: number;
@@ -445,13 +445,9 @@ function extractFirstImage(html: string, baseUrl: string): string | undefined {
   }
 }
 
-// Hosts that typically list rental properties (US + Canada + international)
+// External listing search is intentionally scoped to realtor.ca.
 const PROPERTY_HOSTS = [
-  'realtor.ca', 'condos.ca', 'zolo.ca', 'rentals.ca', 'rentfaster.ca',
-  'kijiji.ca', 'padmapper.com', 'liv.rent', 'rentseeker.ca', 'rentboard.ca',
-  'housesigma.com', 'royallepage.ca', 'remax.ca', 'zumper.com', 'apartments.com',
-  'zillow.com', 'hotpads.com', 'trulia.com', 'redfin.com', 'realtor.com',
-  'streeteasy.com', 'apartmentguide.com', 'rent.com', 'forrent.com',
+  'realtor.ca',
 ];
 
 function looksLikePropertyHost(hostname: string): boolean {
@@ -647,7 +643,7 @@ export async function searchExternalProperties(query: string, maxResults = 3): P
     .filter(Boolean)
     .join(' ');
   
-  const siteFilter = '(site:condos.ca OR site:zolo.ca OR site:rentals.ca OR site:rentfaster.ca OR site:padmapper.com OR site:liv.rent OR site:zumper.com OR site:realtor.ca OR site:apartments.com OR site:zillow.com OR site:hotpads.com)';
+  const siteFilter = 'site:realtor.ca';
   const searchQuery = `${searchTerms} rent ${siteFilter}`;
 
   const ddg = await searchDuckDuckGo(searchQuery, maxResults + 4);
