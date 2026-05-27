@@ -235,6 +235,9 @@ type InternalChatProperty = {
   annualPrice?: number | null;
 };
 
+const GTA_LOCATION_RE = /\b(toronto|north york|scarborough|etobicoke|east york|york|mississauga|markham|vaughan|richmond hill|brampton|oakville|burlington|pickering|ajax|whitby|oshawa|gta|ontario|on)\b/i;
+const NON_GTA_LOCATION_RE = /\b(manhattan|new york|nyc|brooklyn|queens|jersey|seattle|vancouver|montreal|calgary|ottawa|chicago|boston|miami|los angeles|san francisco)\b/i;
+
 function firstImageFromJson(value: unknown): string | undefined {
   if (!value) return undefined;
   if (Array.isArray(value)) {
@@ -313,6 +316,22 @@ function getQueryBudget(query: string): number | undefined {
   return values.length ? Math.max(...values) : undefined;
 }
 
+function isGtaSearchIntent(query: string): boolean {
+  return /多大|uoft|u\s*of\s*t|university\s+of\s+toronto|toronto|gta|多伦多|市中心|安省|ontario/i.test(query);
+}
+
+function isGtaInternalProperty(property: InternalChatProperty, requireGta = false): boolean {
+  const haystack = `${property.title} ${property.location} ${property.url}`.toLowerCase();
+  if (NON_GTA_LOCATION_RE.test(haystack)) return false;
+  return !requireGta || GTA_LOCATION_RE.test(haystack);
+}
+
+function isGtaExternalProperty(property: ExternalProperty, requireGta = false): boolean {
+  const haystack = `${property.title} ${property.location || ''} ${property.snippet || ''} ${property.url}`.toLowerCase();
+  if (NON_GTA_LOCATION_RE.test(haystack)) return false;
+  return !requireGta || GTA_LOCATION_RE.test(haystack);
+}
+
 function getQueryBedrooms(query: string): number | undefined {
   const normalized = query.toLowerCase();
   const match = normalized.match(/\b([1-4])\s*(?:br|bed|bedroom|bedrooms)\b/);
@@ -340,12 +359,58 @@ function scoreProperty(property: InternalChatProperty, query: string, budget?: n
 function pickRecommendedProperties(properties: InternalChatProperty[], query: string, limit = 5): InternalChatProperty[] {
   const budget = getQueryBudget(query);
   const bedrooms = getQueryBedrooms(query);
+  const requireGta = isGtaSearchIntent(query);
   return [...properties]
+    .filter((property) => isGtaInternalProperty(property, requireGta))
     .filter((property) => !bedrooms || property.bedrooms >= bedrooms)
+    .filter((property) => !budget || (property.price > 0 && property.price <= budget))
     .map((property) => ({ property, score: scoreProperty(property, query, budget, bedrooms) }))
     .sort((a, b) => b.score - a.score || a.property.price - b.property.price)
     .slice(0, limit)
     .map(({ property }) => property);
+}
+
+function findClosestInternalProperty(properties: InternalChatProperty[], query: string): InternalChatProperty | undefined {
+  const bedrooms = getQueryBedrooms(query);
+  const requireGta = isGtaSearchIntent(query);
+  return [...properties]
+    .filter((property) => isGtaInternalProperty(property, requireGta))
+    .filter((property) => property.price > 0)
+    .filter((property) => !bedrooms || property.bedrooms >= bedrooms)
+    .sort((a, b) => a.price - b.price)[0];
+}
+
+function filterExternalPropertiesForQuery(properties: ExternalProperty[], query: string, budget?: number, limit = 3): ExternalProperty[] {
+  const requireGta = isGtaSearchIntent(query);
+  return properties
+    .filter((property) => isGtaExternalProperty(property, requireGta))
+    .filter((property) => !budget || (typeof property.price === 'number' && property.price <= budget))
+    .slice(0, limit);
+}
+
+function formatChatCurrency(value: number, language: string): string {
+  const amount = `$${value.toLocaleString('en-CA')}`;
+  if (language === 'FR') return `${amount} CAD`;
+  if (language === 'ZH') return `${amount}`;
+  return `CAD ${amount}`;
+}
+
+function getNoBudgetMatchResponse(language: string, budget: number, closest?: InternalChatProperty): string {
+  const budgetText = formatChatCurrency(budget, language);
+  if (!closest) {
+    if (language === 'ZH') return `目前暂无月租 ${budgetText} 以内的 GTA 房源。请调整预算或位置，或联系 support@stayneos.com 确认最新可订房源。`;
+    if (language === 'FR') return `Nous n'avons actuellement aucun logement dans la région du Grand Toronto à moins de ${budgetText} par mois. Essayez un autre budget ou écrivez à support@stayneos.com.`;
+    return `We do not currently have any GTA listings under ${budgetText} per month. Try a different budget or email support@stayneos.com for current availability.`;
+  }
+
+  const priceText = formatChatCurrency(closest.price, language);
+  if (language === 'ZH') {
+    return `目前暂无月租 ${budgetText} 以内的 GTA 房源。最接近的是 ${closest.title}，月租 ${priceText} 起。要不要我帮你看这个预算外选项，或换一个预算继续找？`;
+  }
+  if (language === 'FR') {
+    return `Nous n'avons actuellement aucun logement dans la région du Grand Toronto à moins de ${budgetText} par mois. L'option la plus proche est ${closest.title}, à partir de ${priceText}/mois. Voulez-vous voir cette option hors budget ou essayer un autre budget ?`;
+  }
+  return `We do not currently have any GTA listings under ${budgetText} per month. The closest option is ${closest.title}, starting at ${priceText}/mo. Would you like to review that over-budget option or try another budget?`;
 }
 
 // Fetch live property data from the same internal catalog used by /api/properties.
@@ -581,13 +646,29 @@ export async function POST(request: NextRequest) {
     
     // Fetch live property data from database
     const propertyData = await getPropertyContext(language);
+    const budget = getQueryBudget(message);
     const recommendedProperties = isPropertyListingRequest
       ? pickRecommendedProperties(propertyData.properties, message, 5)
       : [];
 
     if (isPropertyListingRequest) {
       const externalLimit = Math.max(0, 5 - recommendedProperties.length);
-      externalProperties = externalProperties.slice(0, externalLimit);
+      externalProperties = filterExternalPropertiesForQuery(externalProperties, message, budget, externalLimit);
+      if (budget && recommendedProperties.length === 0 && externalProperties.length === 0) {
+        return NextResponse.json({
+          text: getNoBudgetMatchResponse(language, budget, findClosestInternalProperty(propertyData.properties, message)),
+          sessionId,
+          source: 'budget-guardrail',
+          language,
+          usedWebSearch,
+          webSearchQuery: usedWebSearch ? message : undefined,
+          propertySource: propertyData.source,
+        }, {
+          headers: {
+            'Cache-Control': 'no-store, no-cache, must-revalidate',
+          }
+        });
+      }
       return NextResponse.json({
         text: getListingResultsResponse(language, recommendedProperties.length, externalProperties.length),
         sessionId,

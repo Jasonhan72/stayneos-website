@@ -13,6 +13,7 @@ export type ChatExternalProperty = {
   bathrooms?: number;
   location?: string;
   image?: string;
+  imageUrl?: string;
   snippet?: string;
 };
 
@@ -52,6 +53,7 @@ export function ChatExternalPropertyCard({ property, variant = 'dark' }: Props) 
     ? 'bg-white/15 text-white/85'
     : 'bg-neutral-100 text-neutral-700';
   const iconClr = isDark ? 'text-white/70' : 'text-neutral-500';
+  const imageSrc = property.image || property.imageUrl || '/images/placeholder-property.jpg';
 
   return (
     <a
@@ -60,19 +62,18 @@ export function ChatExternalPropertyCard({ property, variant = 'dark' }: Props) 
       rel="noopener noreferrer"
       className={`group block w-[260px] shrink-0 overflow-hidden rounded-2xl border transition ${cardBg}`}
     >
-      <div className="relative h-32 w-full overflow-hidden bg-gradient-to-br from-neutral-800 via-neutral-700 to-neutral-500">
-        {property.image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={property.image}
-            alt={property.title}
-            loading="lazy"
-            className="h-full w-full object-cover transition group-hover:scale-[1.03]"
-            onError={(e) => {
-              (e.target as HTMLImageElement).style.display = 'none';
-            }}
-          />
-        ) : null}
+      <div className="relative h-32 w-full overflow-hidden bg-neutral-100">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={imageSrc}
+          alt={property.title}
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover transition group-hover:scale-[1.03]"
+          onError={(event) => {
+            (event.currentTarget as HTMLImageElement).src = '/images/wellesley-1607-living.jpg';
+          }}
+        />
         <span className={`absolute right-2 top-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${badgeClr}`}>
           <ExternalLink size={10} />
           {cleanSource(property.source)}

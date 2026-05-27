@@ -13,6 +13,8 @@ type ChatProperty = {
   location: string;
   price: number;
   bedrooms: number;
+  image?: string;
+  url?: string;
 };
 
 interface Message {
@@ -186,6 +188,8 @@ export function CustomerChat() {
               location: string;
               price?: number;
               monthlyPrice?: number;
+              image?: string;
+              url?: string;
               bedrooms?: number;
             }) => ({
               id: property.id,
@@ -193,6 +197,8 @@ export function CustomerChat() {
               location: property.location,
               price: Number(property.price ?? property.monthlyPrice ?? 0),
               bedrooms: Number(property.bedrooms || 0),
+              image: property.image,
+              url: property.url,
             }))
           : undefined;
 

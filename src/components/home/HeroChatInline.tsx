@@ -24,6 +24,7 @@ interface PropertyRecommendation {
   location: string;
   monthlyPrice: number;
   image: string;
+  url?: string;
   bedrooms: number;
 }
 
@@ -115,6 +116,7 @@ export function HeroChatInline() {
               price?: number;
               monthlyPrice?: number;
               image?: string;
+              url?: string;
               bedrooms?: number;
             }) => ({
               id: property.id,
@@ -122,6 +124,7 @@ export function HeroChatInline() {
               location: property.location,
               monthlyPrice: Number(property.price ?? property.monthlyPrice ?? 0),
               image: property.image || '',
+              url: property.url,
               bedrooms: Number(property.bedrooms || 0),
             }))
           : undefined;
@@ -340,6 +343,8 @@ export function HeroChatInline() {
                           location: property.location,
                           price: property.monthlyPrice,
                           bedrooms: property.bedrooms,
+                          image: property.image,
+                          url: property.url,
                         }}
                       />
                     ))}

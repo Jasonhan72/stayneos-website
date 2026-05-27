@@ -11,6 +11,8 @@ type ChatPropertyCardProps = {
     location: string;
     price: number;
     bedrooms: number;
+    image?: string;
+    url?: string;
   };
 };
 
@@ -19,10 +21,22 @@ export function ChatPropertyCard({ property }: ChatPropertyCardProps) {
 
   return (
     <Link
-      href={`/property/${property.id}`}
+      href={property.url || `/property/${property.id}`}
       className="block w-[200px] shrink-0 overflow-hidden rounded-2xl border border-neutral-200 bg-white/90 transition hover:-translate-y-0.5 hover:shadow-lg"
     >
-      <div className="h-24 bg-gradient-to-br from-neutral-900 via-neutral-700 to-amber-200" />
+      <div className="h-24 overflow-hidden bg-neutral-100">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={property.image || '/images/placeholder-property.jpg'}
+          alt={property.title}
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover transition hover:scale-[1.03]"
+          onError={(event) => {
+            (event.currentTarget as HTMLImageElement).src = '/images/wellesley-1607-living.jpg';
+          }}
+        />
+      </div>
       <div className="space-y-2 p-4">
         <h3 className="line-clamp-2 text-sm font-semibold text-neutral-900">{property.title}</h3>
         <div className="flex items-start gap-1.5 text-xs text-neutral-500">
