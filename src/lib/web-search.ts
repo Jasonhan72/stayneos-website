@@ -339,6 +339,192 @@ export interface ExternalProperty {
   snippet?: string;      // short description
 }
 
+const REALTOR_USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
+const REALTOR_API_URL = 'https://api2.realtor.ca/Listing.svc/PropertySearch_Post';
+const REALTOR_MAP_URL = 'https://www.realtor.ca/map#ZoomLevel=14&Center=43.6629%2C-79.3957&LatitudeMax=43.6900&LongitudeMax=-79.3500&LatitudeMin=43.6350&LongitudeMin=-79.4400&Sort=6-D&PropertyTypeGroupID=1&PropertySearchTypeId=1&TransactionTypeId=3&RentMax=3500&Currency=CAD';
+
+function splitSetCookieHeader(header: string | null): string[] {
+  if (!header) return [];
+  return header
+    .split(/,(?=\s*[^;,=\s]+=[^;,]+)/g)
+    .map((cookie) => cookie.trim())
+    .filter(Boolean);
+}
+
+function extractBudget(query: string): number | undefined {
+  const matches = [...query.matchAll(/\$?\s*([1-9][0-9,]{3,5})\s*(?:cad|\/?mo|monthly|per month|月|以内|以下|under|below|budget|预算)?/gi)];
+  const values = matches
+    .map((match) => Number(match[1].replace(/,/g, '')))
+    .filter((value) => Number.isFinite(value) && value >= 1000 && value <= 50000);
+  return values.length ? Math.max(...values) : undefined;
+}
+
+function isGtaListingText(value: string): boolean {
+  return /\b(toronto|north york|scarborough|etobicoke|east york|york|mississauga|markham|vaughan|richmond hill|brampton|oakville|burlington|pickering|ajax|whitby|oshawa|ontario|on)\b/i.test(value)
+    && !/\b(manhattan|new york|nyc|brooklyn|queens|jersey|seattle|vancouver|montreal|calgary|ottawa|chicago|boston|miami|los angeles|san francisco)\b/i.test(value);
+}
+
+async function getRealtorCookieHeader(): Promise<string> {
+  const response = await fetch(REALTOR_MAP_URL, {
+    headers: {
+      'User-Agent': REALTOR_USER_AGENT,
+      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'Accept-Language': 'en-CA,en-US;q=0.9,en;q=0.8',
+      'Cache-Control': 'no-cache',
+    },
+    redirect: 'follow',
+  });
+
+  const headersWithCookies = response.headers as Headers & { getSetCookie?: () => string[] };
+  const setCookies = headersWithCookies.getSetCookie?.() || splitSetCookieHeader(response.headers.get('set-cookie'));
+  return setCookies
+    .map((cookie) => cookie.split(';')[0]?.trim())
+    .filter(Boolean)
+    .join('; ');
+}
+
+function parseRealtorPrice(value: unknown): { price?: number; text?: string } {
+  if (typeof value !== 'string' || !value.trim()) return {};
+  const parsed = parsePrice(value);
+  return { price: parsed.num, text: parsed.raw || value };
+}
+
+function normalizeRealtorBedrooms(value: unknown, buildingType?: unknown): number | undefined {
+  if (typeof value === 'number' && Number.isFinite(value)) return value;
+  if (typeof value === 'string' && value.trim()) {
+    const first = Number(value.match(/\d+/)?.[0]);
+    if (Number.isFinite(first)) return first;
+  }
+  return String(buildingType || '').toLowerCase().includes('apartment') ? 0 : undefined;
+}
+
+function normalizeRealtorImage(photo: unknown): string | undefined {
+  if (!Array.isArray(photo) || !photo[0] || typeof photo[0] !== 'object') return undefined;
+  const first = photo[0] as { HighResPath?: unknown; MedResPath?: unknown; LowResPath?: unknown };
+  const image = first.HighResPath || first.MedResPath || first.LowResPath;
+  return typeof image === 'string' && image.startsWith('http') ? image : undefined;
+}
+
+function isBadRealtorRental(address: string, title: string): boolean {
+  return /\b(locker|parking|bike locker|storage|room only|master bedroom)\b/i.test(`${address} ${title}`);
+}
+
+type RealtorSearchResult = {
+  RelativeDetailsURL?: string;
+  PublicRemarks?: string;
+  Property?: {
+    LeaseRent?: string;
+    LeaseRentUnformattedValue?: string;
+    Type?: string;
+    Address?: {
+      AddressText?: string;
+    };
+    Photo?: unknown;
+  };
+  Building?: {
+    Bedrooms?: unknown;
+    BathroomTotal?: unknown;
+    Type?: unknown;
+  };
+};
+
+function mapRealtorResult(result: RealtorSearchResult, budget?: number): ExternalProperty | null {
+  const property = result.Property || {};
+  const building = result.Building || {};
+  const address = property.Address?.AddressText || '';
+  const title = address.split('|')[0]?.trim() || '';
+  const location = address.replace('|', ', ');
+  const price = Number(property.LeaseRentUnformattedValue || 0);
+  const parsedRent = parseRealtorPrice(property.LeaseRent);
+  const image = normalizeRealtorImage(property.Photo);
+  const bedrooms = normalizeRealtorBedrooms(building.Bedrooms, building.Type);
+  const bathrooms = typeof building.BathroomTotal === 'string'
+    ? Number(building.BathroomTotal.match(/\d+(?:\.\d+)?/)?.[0])
+    : undefined;
+
+  if (!title || !result.RelativeDetailsURL) return null;
+  if (isBadRealtorRental(address, title)) return null;
+  if (!isGtaListingText(location)) return null;
+  if (!Number.isFinite(price) || price < 1000 || (budget && price > budget)) return null;
+  if (!image) return null;
+  if (bedrooms === undefined) return null;
+
+  return {
+    title,
+    url: `https://www.realtor.ca${result.RelativeDetailsURL}`,
+    source: 'realtor.ca',
+    price,
+    priceText: parsedRent.text || `$${price.toLocaleString('en-CA')}/Monthly`,
+    bedrooms,
+    bathrooms: Number.isFinite(bathrooms) ? bathrooms : undefined,
+    location,
+    image,
+    snippet: result.PublicRemarks?.substring(0, 240),
+  };
+}
+
+async function searchRealtorApiListings(query: string, maxResults: number): Promise<ExternalProperty[]> {
+  const budget = extractBudget(query);
+  const rentMax = budget || 4500;
+  const cookie = await getRealtorCookieHeader();
+  if (!cookie) return [];
+
+  const body = new URLSearchParams({
+    CultureId: '1',
+    ApplicationId: '1',
+    RecordsPerPage: '50',
+    MaximumResults: '50',
+    PropertyTypeGroupID: '1',
+    PropertySearchTypeId: '1',
+    TransactionTypeId: '3',
+    SortOrder: 'A',
+    SortBy: '1',
+    RentMin: '1500',
+    RentMax: String(rentMax),
+    BedRange: '0-0',
+    BathRange: '0-0',
+    LongitudeMin: '-79.4400',
+    LongitudeMax: '-79.3500',
+    LatitudeMin: '43.6350',
+    LatitudeMax: '43.6900',
+    Longitude: '-79.3957',
+    Latitude: '43.6629',
+    ZoomLevel: '14',
+    CurrentPage: '1',
+    Currency: 'CAD',
+  });
+
+  const response = await fetch(REALTOR_API_URL, {
+    method: 'POST',
+    headers: {
+      'User-Agent': REALTOR_USER_AGENT,
+      Accept: 'application/json, text/javascript, */*; q=0.01',
+      'Accept-Language': 'en-CA,en-US;q=0.9,en;q=0.8',
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      Origin: 'https://www.realtor.ca',
+      Referer: 'https://www.realtor.ca/map',
+      'X-Requested-With': 'XMLHttpRequest',
+      Cookie: cookie,
+    },
+    body,
+  });
+
+  if (!response.ok) {
+    console.error('realtor.ca listing search failed:', response.status);
+    return [];
+  }
+
+  const data = await response.json() as { Results?: RealtorSearchResult[] };
+  const cards: ExternalProperty[] = [];
+  for (const result of data.Results || []) {
+    const card = mapRealtorResult(result, budget);
+    if (!card || cards.some((existing) => existing.url === card.url)) continue;
+    cards.push(card);
+    if (cards.length >= maxResults) break;
+  }
+  return cards;
+}
+
 // Try to pull a price like "$3,250/mo", "$3250 monthly", "CAD 3,500 / month" out of text.
 function parsePrice(text: string): { num?: number; raw?: string } {
   if (!text) return {};
@@ -608,6 +794,11 @@ export async function searchExternalProperties(query: string, maxResults = 3): P
     return card ? [card] : [];
   }
 
+  const realtorCards = await searchRealtorApiListings(query, maxResults);
+  if (realtorCards.length > 0) {
+    return realtorCards;
+  }
+
   // 2. Detect ANY city/location in the query to avoid defaulting to Toronto
   // Common city names (US + Canada + major international)
   const cityPattern = /(?:in|near|around|for|at)\s+([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+){0,2})(?:\b|[,?.!])/;
@@ -664,34 +855,6 @@ export async function searchExternalProperties(query: string, maxResults = 3): P
         cards.push(r.value);
         if (cards.length >= maxResults) break;
       }
-    }
-  }
-
-  // Some marketplace pages are heavy SPAs and do not expose enough HTML for
-  // structured extraction. Keep the external-search behavior useful by falling
-  // back to clickable source cards from the search results, clearly marked as
-  // external and without invented prices.
-  if (cards.length < maxResults) {
-    for (const result of ddg) {
-      const source = extractSource(result.url);
-      if (!looksLikePropertyHost(source)) continue;
-      if (cards.some(c => c.url === result.url)) continue;
-      const title = (result.title || '').replace(/\s+/g, ' ').trim();
-      const snippet = (result.snippet || '').replace(/\s+/g, ' ').trim();
-      if (title.length < 5 && snippet.length < 20) continue;
-      const price = parsePrice(`${title} ${snippet}`);
-      cards.push({
-        title: title || `${source} listing`,
-        url: result.url,
-        source,
-        price: price.num,
-        priceText: price.raw,
-        bedrooms: parseBedrooms(`${title} ${snippet}`),
-        bathrooms: parseBathrooms(`${title} ${snippet}`),
-        location: parseLocation(`${title}\n${snippet}`, title),
-        snippet: snippet ? snippet.substring(0, 240) : undefined,
-      });
-      if (cards.length >= maxResults) break;
     }
   }
 

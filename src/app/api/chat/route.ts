@@ -385,6 +385,12 @@ function filterExternalPropertiesForQuery(properties: ExternalProperty[], query:
   return properties
     .filter((property) => isGtaExternalProperty(property, requireGta))
     .filter((property) => !budget || (typeof property.price === 'number' && property.price <= budget))
+    .filter((property) =>
+      property.source === 'realtor.ca'
+      && typeof property.price === 'number'
+      && typeof property.bedrooms === 'number'
+      && Boolean(property.title && property.url && property.location && property.image)
+    )
     .slice(0, limit);
 }
 
@@ -489,22 +495,6 @@ function needsExternalPropertySearch(query: string): boolean {
   if (/https?:\/\/[^\s]*(realtor\.ca)/i.test(query)) return true;
   if (/找.*房|房.*预算|预算.*房|附近.*公寓|旁边.*(公寓|房)|(多大|大学|学校).*(公寓|房|租)/.test(query)) return true;
   return propertyKeywords.some(k => q.includes(k));
-}
-
-function getExternalSearchCards(query: string): ExternalProperty[] {
-  const isUoft = /多大|uoft|u\s*of\s*t|university\s+of\s+toronto/i.test(query);
-  const location = isUoft ? 'University of Toronto, Toronto' : 'Toronto';
-  return [
-    {
-      title: isUoft
-        ? 'Realtor.ca rentals near University of Toronto'
-        : 'Realtor.ca Toronto rental search',
-      url: 'https://www.realtor.ca/map#ZoomLevel=14&Center=43.6629%2C-79.3957&LatitudeMax=43.6900&LongitudeMax=-79.3500&LatitudeMin=43.6350&LongitudeMin=-79.4400&Sort=6-D&TransactionTypeId=2',
-      source: 'realtor.ca',
-      location,
-      snippet: 'External marketplace search link. Prices and availability must be verified on realtor.ca.',
-    },
-  ];
 }
 
 function getListingResultsResponse(
@@ -636,9 +626,6 @@ export async function POST(request: NextRequest) {
         ]);
         webSearchResults = textResults.status === 'fulfilled' ? textResults.value : '';
         externalProperties = cards.status === 'fulfilled' ? cards.value : [];
-        if (externalProperties.length === 0) {
-          externalProperties = getExternalSearchCards(message);
-        }
       } else {
         webSearchResults = await callWebSearch(message);
       }
@@ -654,7 +641,8 @@ export async function POST(request: NextRequest) {
     if (isPropertyListingRequest) {
       const externalLimit = Math.max(0, 5 - recommendedProperties.length);
       externalProperties = filterExternalPropertiesForQuery(externalProperties, message, budget, externalLimit);
-      if (budget && recommendedProperties.length === 0 && externalProperties.length === 0) {
+      const totalCards = recommendedProperties.length + externalProperties.length;
+      if (budget && totalCards < 3) {
         return NextResponse.json({
           text: getNoBudgetMatchResponse(language, budget, findClosestInternalProperty(propertyData.properties, message)),
           sessionId,
