@@ -671,5 +671,33 @@ export async function searchExternalProperties(query: string, maxResults = 3): P
     }
   }
 
+  // Some marketplace pages are heavy SPAs and do not expose enough HTML for
+  // structured extraction. Keep the external-search behavior useful by falling
+  // back to clickable source cards from the search results, clearly marked as
+  // external and without invented prices.
+  if (cards.length < maxResults) {
+    for (const result of ddg) {
+      const source = extractSource(result.url);
+      if (!looksLikePropertyHost(source)) continue;
+      if (cards.some(c => c.url === result.url)) continue;
+      const title = (result.title || '').replace(/\s+/g, ' ').trim();
+      const snippet = (result.snippet || '').replace(/\s+/g, ' ').trim();
+      if (title.length < 5 && snippet.length < 20) continue;
+      const price = parsePrice(`${title} ${snippet}`);
+      cards.push({
+        title: title || `${source} listing`,
+        url: result.url,
+        source,
+        price: price.num,
+        priceText: price.raw,
+        bedrooms: parseBedrooms(`${title} ${snippet}`),
+        bathrooms: parseBathrooms(`${title} ${snippet}`),
+        location: parseLocation(`${title}\n${snippet}`, title),
+        snippet: snippet ? snippet.substring(0, 240) : undefined,
+      });
+      if (cards.length >= maxResults) break;
+    }
+  }
+
   return cards;
 }

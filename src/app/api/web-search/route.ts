@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { validateCsrf } from '@/lib/security/csrf';
+import { performWebSearch } from '@/lib/web-search';
 
 export async function POST(request: Request) {
   try {
@@ -14,21 +15,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'query is required' }, { status: 400 });
     }
 
-    // Safe fallback: return canonical links instead of scraping external sites in server runtime.
-    const results = [
-      {
-        title: `Search: ${query}`,
-        url: `https://www.google.com/search?q=${encodeURIComponent(query)}`,
-        snippet: 'Fallback search link (real crawler integration pending).',
-      },
-      {
-        title: 'NEOS Properties',
-        url: 'https://www.stayneos.com/properties',
-        snippet: 'Browse current furnished apartment inventory.',
-      },
-    ];
+    const text = await performWebSearch(query, 5);
 
-    return NextResponse.json({ results, total: results.length, mode: 'fallback' });
+    return NextResponse.json({ text, mode: 'live' });
   } catch {
     return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 });
   }
