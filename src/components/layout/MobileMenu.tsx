@@ -99,11 +99,11 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
-          <button onClick={() => setShowLangCurrency(false)} className="p-2">
+          <button onClick={() => setShowLangCurrency(false)} className="flex min-h-11 min-w-11 items-center justify-center rounded-full p-2 hover:bg-neutral-100">
             <span className="text-2xl">←</span>
           </button>
           <h2 className="text-lg font-semibold">{t("language.title")} / {t("currency.title")}</h2>
-          <button onClick={onClose} className="p-2">
+          <button onClick={onClose} className="flex min-h-11 min-w-11 items-center justify-center rounded-full p-2 hover:bg-neutral-100">
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -176,9 +176,9 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       >
         {/* Close Button */}
         <div className="flex justify-end p-4">
-          <button
-            onClick={onClose}
-            className="p-2 rounded-full hover:bg-neutral-100 transition-colors"
+            <button
+              onClick={onClose}
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-full p-2 hover:bg-neutral-100 transition-colors"
           >
             <X className="w-6 h-6 text-neutral-600" />
           </button>

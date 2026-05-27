@@ -55,15 +55,20 @@ function ListingToggle({
       <button
         onClick={onToggle}
         disabled={isLoading}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+        className={`relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
           isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-        } ${isListed ? 'bg-green-500' : 'bg-gray-300'}`}
+        }`}
         role="switch"
         aria-checked={isListed}
         aria-label={label}
       >
         <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ease-in-out shadow-sm ${
+          className={`absolute left-0 top-1/2 h-6 w-11 -translate-y-1/2 rounded-full transition-colors ${
+            isListed ? 'bg-green-500' : 'bg-gray-300'
+          }`}
+        />
+        <span
+          className={`absolute left-0 top-1/2 inline-block h-4 w-4 -translate-y-1/2 transform rounded-full bg-white transition-transform duration-200 ease-in-out shadow-sm ${
             isListed ? 'translate-x-6' : 'translate-x-1'
           }`}
         />
@@ -242,7 +247,7 @@ export function PropertiesList() {
               placeholder={t("property.searchPlaceholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent w-full sm:w-64"
+              className="min-h-11 pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent w-full sm:w-64"
             />
           </div>
           
@@ -252,7 +257,7 @@ export function PropertiesList() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as "all" | "listed" | "unlisted")}
-              className="w-full pl-10 pr-8 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent appearance-none bg-white cursor-pointer sm:w-auto"
+              className="min-h-11 w-full pl-10 pr-8 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent appearance-none bg-white cursor-pointer sm:w-auto"
             >
               <option value="all">{t("property.filter.all", "All")}</option>
               <option value="listed">{listedLabel}</option>
@@ -264,7 +269,7 @@ export function PropertiesList() {
         {/* 新增房源按钮 */}
         <Link
           href="/host/listings/new"
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors w-full sm:w-auto justify-center"
+          className="flex min-h-11 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-white transition-colors hover:bg-primary-dark w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" />
           {t("property.addNew")}
@@ -281,7 +286,7 @@ export function PropertiesList() {
           <p className="text-gray-500 mb-6">{t("property.empty.description")}</p>
           <Link
             href="/host/listings/new"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+            className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-4 py-2 text-white transition-colors hover:bg-primary-dark"
           >
             <Plus className="w-4 h-4" />
             {t("property.addFirst")}
@@ -467,21 +472,21 @@ export function PropertiesList() {
                 <div className="flex gap-2 mt-4">
                   <Link
                     href={`/properties/${property.id}`}
-                    className="flex-1 flex items-center justify-center gap-1 px-3 py-2 text-sm text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                    className="flex min-h-11 flex-1 items-center justify-center gap-1 rounded-lg bg-gray-100 px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-200"
                   >
                     <Eye className="w-4 h-4" />
                     {t("common.view")}
                   </Link>
                   <Link
                     href={`/host/listings/${property.id}/edit`}
-                    className="flex-1 flex items-center justify-center gap-1 px-3 py-2 text-sm text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                    className="flex min-h-11 flex-1 items-center justify-center gap-1 rounded-lg bg-blue-50 px-3 py-2 text-sm text-blue-600 transition-colors hover:bg-blue-100"
                   >
                     <Edit className="w-4 h-4" />
                     {t("common.edit")}
                   </Link>
                   <button
                     onClick={() => handleDeleteClick(property)}
-                    className="flex-1 flex items-center justify-center gap-1 px-3 py-2 text-sm text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
+                    className="flex min-h-11 flex-1 items-center justify-center gap-1 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600 transition-colors hover:bg-red-100"
                   >
                     <Trash2 className="w-4 h-4" />
                     {t("common.delete")}

@@ -90,7 +90,7 @@ export function AccountActionLink({ children, onClick, danger, disabled }: { chi
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        "text-sm font-medium underline underline-offset-4 transition-colors disabled:cursor-not-allowed disabled:opacity-40",
+        "inline-flex min-h-11 min-w-11 items-center text-sm font-medium underline underline-offset-4 transition-colors disabled:cursor-not-allowed disabled:opacity-40",
         danger ? "text-red-600 hover:text-red-700" : "text-neutral-950 hover:text-neutral-700"
       )}
     >

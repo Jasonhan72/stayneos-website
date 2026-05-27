@@ -182,7 +182,7 @@ export default function StepReviewPage() {
             type="button"
             onClick={() => router.push("/host/listings/new/pricing")}
             disabled={publishing}
-            className="rounded-lg px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-100 disabled:opacity-50"
+            className="min-h-11 rounded-lg px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-100 disabled:opacity-50"
           >
             {t("common.back", "Back")}
           </button>
@@ -190,7 +190,7 @@ export default function StepReviewPage() {
             type="button"
             onClick={handlePublish}
             disabled={publishing}
-            className="rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
+            className="min-h-11 rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {publishing ? t("host.listingWizard.review.publishingShort", "Publishing...") : t("host.listingWizard.review.publish", "Publish listing")}
           </button>
@@ -219,7 +219,7 @@ function Section({
         </h3>
         <Link
           href={editPath}
-          className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-neutral-600 hover:bg-neutral-100"
+          className="flex min-h-11 items-center gap-1 rounded-md px-3 py-1 text-xs font-medium text-neutral-600 hover:bg-neutral-100"
         >
           <Pencil className="h-3 w-3" />
           {editLabel}

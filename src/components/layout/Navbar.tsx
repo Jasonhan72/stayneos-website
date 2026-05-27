@@ -85,7 +85,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
-            <Link href={hrefFor("/")} className="flex items-center shrink-0">
+            <Link href={hrefFor("/")} className="flex min-h-11 items-center shrink-0">
               <Image
                 src="/logo.png"
                 alt="NEOS"

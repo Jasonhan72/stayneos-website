@@ -172,7 +172,7 @@ export function HeroSearchBox() {
                         key={`${msg.id}-${i}`}
                         type="button"
                         onClick={() => sendMessage(suggestion)}
-                        className="rounded-full border border-neutral-200 bg-white/80 px-3 py-1.5 text-sm text-neutral-700 transition hover:border-neutral-300 hover:bg-white"
+                        className="inline-flex min-h-11 items-center rounded-full border border-neutral-200 bg-white/80 px-4 py-2 text-sm text-neutral-700 transition hover:border-neutral-300 hover:bg-white"
                       >
                         {suggestion}
                       </button>

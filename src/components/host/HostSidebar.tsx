@@ -51,8 +51,8 @@ export default function HostSidebar() {
         </div>
       </aside>
 
-      <div className="md:hidden -mx-4 overflow-x-auto border-b border-neutral-200 bg-white">
-        <nav className="flex min-w-max gap-2 px-4 py-3">
+      <div className="md:hidden -mx-4 border-b border-neutral-200 bg-white">
+        <nav className="grid grid-cols-3 gap-2 px-4 py-3">
           {items.map((item) => {
             const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
             const Icon = item.icon;
@@ -61,7 +61,7 @@ export default function HostSidebar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex min-h-11 items-center gap-2 rounded-full border px-4 py-2 text-sm whitespace-nowrap",
+                  "flex min-h-11 min-w-0 items-center justify-center gap-1.5 rounded-full border px-2 py-2 text-xs leading-tight",
                   active ? "border-neutral-900 bg-neutral-900 text-white" : "border-neutral-200 bg-white text-neutral-600"
                 )}
               >

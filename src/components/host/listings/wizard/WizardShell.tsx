@@ -33,7 +33,7 @@ export default function WizardShell({ children }: { children: React.ReactNode })
           <button
             type="button"
             onClick={() => router.back()}
-            className="flex items-center gap-1 rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-100"
+            className="flex min-h-11 items-center gap-1 rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-100"
           >
             <ChevronLeft className="h-4 w-4" />
             {t("common.back", "Back")}
@@ -49,7 +49,7 @@ export default function WizardShell({ children }: { children: React.ReactNode })
           </div>
           <Link
             href="/host/listings"
-            className="flex items-center gap-1 rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-100"
+            className="flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-100"
             aria-label="Close wizard"
           >
             <X className="h-4 w-4" />

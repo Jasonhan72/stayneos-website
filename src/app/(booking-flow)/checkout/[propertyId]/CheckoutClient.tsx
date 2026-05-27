@@ -497,7 +497,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
                 </div>
                 <button
                   onClick={() => setShowDatePicker(true)}
-                  className="px-4 py-2 text-sm font-semibold underline rounded-lg hover:bg-neutral-50 transition-colors"
+                  className="min-h-11 px-4 py-2 text-sm font-semibold underline rounded-lg hover:bg-neutral-50 transition-colors"
                 >
                   {t("common.change") || "Change"}
                 </button>
@@ -515,7 +515,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
                 </div>
                 <button
                   onClick={() => setShowGuestPicker(true)}
-                  className="px-4 py-2 text-sm font-semibold underline rounded-lg hover:bg-neutral-50 transition-colors"
+                  className="min-h-11 px-4 py-2 text-sm font-semibold underline rounded-lg hover:bg-neutral-50 transition-colors"
                 >
                   {t("common.change") || "Change"}
                 </button>
@@ -620,7 +620,7 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
                       `Strict cancellation policy. Get a 50% refund if you cancel before ${getCancellationDeadline()}.`}{" "}
                     <Link
                       href="/cancellation-policy"
-                      className="underline font-medium"
+                      className="inline-flex min-h-11 items-center underline font-medium"
                     >
                       {t("checkout.readFullPolicy") || "Read full policy"}
                     </Link>
@@ -745,15 +745,15 @@ export default function CheckoutClient({ propertyId }: CheckoutClientProps) {
             <p className="text-xs text-neutral-500 text-center mt-3">
               {t("checkout.agreement") ||
                 "By selecting the button below, I agree to the"}{" "}
-              <Link href="/terms" className="underline">
+              <Link href="/terms" className="inline-flex min-h-11 items-center underline">
                 {t("footer.terms") || "booking terms"}
               </Link>
               ,{" "}
-              <Link href="/cancellation-policy" className="underline">
+              <Link href="/cancellation-policy" className="inline-flex min-h-11 items-center underline">
                 {t("checkout.cancellationPolicy") || "cancellation policy"}
               </Link>
               , {t("common.and") || "and"}{" "}
-              <Link href="/privacy" className="underline">
+              <Link href="/privacy" className="inline-flex min-h-11 items-center underline">
                 {t("footer.privacy") || "privacy policy"}
               </Link>
               .

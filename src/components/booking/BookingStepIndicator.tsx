@@ -35,20 +35,20 @@ export async function BookingStepIndicator({ current }: Props) {
   };
 
   return (
-    <ol className="mx-auto mb-8 flex w-full max-w-2xl items-center justify-between">
+    <ol className="mx-auto mb-6 flex w-full max-w-2xl items-center justify-between px-1 sm:mb-8 sm:px-0">
       {ORDER.map((step, i) => {
         const done = i < idx;
         const active = i === idx;
         return (
           <li
             key={step}
-            className="flex flex-1 items-center last:flex-none"
+            className="flex min-w-0 flex-1 items-center last:flex-none"
             aria-current={active ? 'step' : undefined}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
               <span
                 className={[
-                  'flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold transition',
+                  'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition sm:h-8 sm:w-8',
                   done
                     ? 'bg-neutral-900 text-white'
                     : active
@@ -60,7 +60,7 @@ export async function BookingStepIndicator({ current }: Props) {
               </span>
               <span
                 className={[
-                  'text-sm font-medium',
+                  'truncate text-xs font-medium leading-tight sm:text-sm',
                   done || active ? 'text-neutral-900' : 'text-neutral-400',
                 ].join(' ')}
               >
@@ -70,7 +70,7 @@ export async function BookingStepIndicator({ current }: Props) {
             {i < ORDER.length - 1 ? (
               <div
                 className={[
-                  'mx-3 h-px flex-1 transition md:mx-4',
+                  'mx-2 h-px min-w-4 flex-1 transition sm:mx-3 md:mx-4',
                   done ? 'bg-neutral-900' : 'bg-neutral-200',
                 ].join(' ')}
                 aria-hidden

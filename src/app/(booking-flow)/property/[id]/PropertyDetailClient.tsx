@@ -524,7 +524,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
       <div className="h-14" />
 
       <Container className="pt-6 pb-2">
-        <nav aria-label="Breadcrumb" className="mb-4 text-sm text-neutral-500">
+        <nav aria-label="Breadcrumb" className="mb-4 hidden text-sm text-neutral-500 sm:block">
           <ol className="flex items-center gap-2 flex-wrap">
             <li><Link href="/" className="hover:text-neutral-800">{t('nav.home')}</Link></li>
             <li>/</li>

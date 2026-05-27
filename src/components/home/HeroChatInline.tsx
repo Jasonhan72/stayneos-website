@@ -230,7 +230,7 @@ export function HeroChatInline() {
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="w-full py-2.5 bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5"
+              className="flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -256,7 +256,7 @@ export function HeroChatInline() {
                   key={key}
                   onClick={() => void sendMessage(chipText)}
                   disabled={isLoading}
-                  className="px-3 py-1.5 bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white/90 text-xs sm:text-sm rounded-full border border-white/20 transition-all duration-200 hover:scale-105 disabled:opacity-50"
+                  className="inline-flex min-h-11 items-center rounded-full border border-white/20 bg-white/15 px-4 py-2 text-xs text-white/90 backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:bg-white/25 disabled:opacity-50 sm:text-sm"
                 >
                   {chipText}
                 </button>
@@ -267,7 +267,7 @@ export function HeroChatInline() {
           <div className="mt-5 text-center">
             <Link
               href="/properties"
-              className="text-white/70 hover:text-white text-sm transition-colors duration-200 underline underline-offset-4"
+              className="inline-flex min-h-11 items-center text-sm text-white/70 underline underline-offset-4 transition-colors duration-200 hover:text-white"
             >
               {t('aiConcierge.fallbackLink', 'Or browse our full collection →')}
             </Link>
@@ -298,7 +298,7 @@ export function HeroChatInline() {
                   setMessages([]);
                   setSessionId(`hero_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
                 }}
-                className="p-1.5 text-white/40 hover:text-white/80 transition-colors"
+                className="flex min-h-11 min-w-11 items-center justify-center rounded-full p-2 text-white/40 transition-colors hover:bg-white/10 hover:text-white/80"
                 title={t('chat.clear', 'Clear chat history')}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -314,7 +314,7 @@ export function HeroChatInline() {
                   setBottomInput('');
                   setSessionId(`hero_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
                 }}
-                className="p-1.5 text-white/40 hover:text-white/80 transition-colors"
+                className="flex min-h-11 min-w-11 items-center justify-center rounded-full p-2 text-white/40 transition-colors hover:bg-white/10 hover:text-white/80"
                 title={t('chat.close', 'Close chat')}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -374,7 +374,7 @@ export function HeroChatInline() {
                       <div className="flex gap-3">
                         <Link
                           href={`/property/${msg.property.id}`}
-                          className="px-4 py-2 bg-accent hover:bg-accent/90 text-white font-semibold rounded-lg transition-colors text-sm"
+                          className="inline-flex min-h-11 items-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent/90"
                         >
                           {t('aiConcierge.scheduleViewing', 'Schedule a Viewing')}
                         </Link>
@@ -382,7 +382,7 @@ export function HeroChatInline() {
                           href="https://wa.me/16474467987?text=Hi%2C%20I'm%20interested%20in%20NEOS%20apartments"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-4 py-2 bg-[#25D366] hover:bg-[#20bd5a] text-white font-semibold rounded-lg transition-colors text-sm"
+                          className="inline-flex min-h-11 items-center rounded-lg bg-[#25D366] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#20bd5a]"
                         >
                           WhatsApp
                         </a>
@@ -421,7 +421,7 @@ export function HeroChatInline() {
               <button
                 type="submit"
                 disabled={!bottomInput.trim() || isLoading}
-                className="p-2.5 bg-accent hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-full transition-all duration-200 flex-shrink-0"
+                className="flex min-h-11 min-w-11 flex-shrink-0 items-center justify-center rounded-full bg-accent p-2.5 text-white transition-all duration-200 hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {isLoading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -433,7 +433,7 @@ export function HeroChatInline() {
             <div className="flex items-center justify-center gap-3 mt-2">
               <Link
                 href="/properties"
-                className="text-white/40 hover:text-white/70 text-xs transition-colors underline underline-offset-4"
+                className="inline-flex min-h-11 items-center text-xs text-white/40 underline underline-offset-4 transition-colors hover:text-white/70"
               >
                 {t('aiConcierge.fallbackLink', 'Browse all properties →')}
               </Link>

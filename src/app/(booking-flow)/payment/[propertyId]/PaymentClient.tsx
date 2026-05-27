@@ -296,7 +296,7 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
               </div>
 
               {/* Trip details */}
-              <section className="border border-neutral-200 rounded-2xl p-6">
+              <section className="border border-neutral-200 rounded-2xl p-4 sm:p-6">
                 <h2 className="text-lg font-semibold mb-4">{t('booking.tripDetails') || 'Your trip'}</h2>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
@@ -321,7 +321,7 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
               </section>
 
               {/* Stripe Payment */}
-              <section className="border border-neutral-200 rounded-2xl p-6">
+              <section className="border border-neutral-200 rounded-2xl p-4 sm:p-6">
                 <h2 className="text-lg font-semibold mb-4">{t('payment.paymentMethod') || 'Payment method'}</h2>
 
                 {/* Error state with retry */}
@@ -381,24 +381,24 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
               </section>
 
               {/* Promo code */}
-              <section className="border border-neutral-200 rounded-2xl p-6">
+              <section className="border border-neutral-200 rounded-2xl p-4 sm:p-6">
                 <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
                   <Tag className="w-5 h-5" />
                   {t('payment.promoCode') || 'Promo code'}
                 </h2>
-                <div className="flex gap-3">
+                <div className="flex flex-col gap-3 sm:flex-row">
                   <input
                     type="text"
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
                     placeholder={t('payment.enterPromoCode') || 'Enter promo code'}
                     disabled={promoApplied}
-                    className="flex-1 px-4 py-3 border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black disabled:bg-neutral-100"
+                    className="min-h-11 flex-1 px-4 py-3 border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black disabled:bg-neutral-100"
                   />
                   <button
                     onClick={applyPromoCode}
                     disabled={promoApplied || !promoCode.trim()}
-                    className="px-6 py-3 bg-black text-white font-medium rounded-xl hover:bg-neutral-800 disabled:bg-neutral-300 disabled:cursor-not-allowed transition-colors"
+                    className="min-h-11 px-6 py-3 bg-black text-white font-medium rounded-xl hover:bg-neutral-800 disabled:bg-neutral-300 disabled:cursor-not-allowed transition-colors"
                   >
                     {promoApplied ? <Check className="w-5 h-5" /> : (t('payment.apply') || 'Apply')}
                   </button>
@@ -417,7 +417,7 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
 
             {/* Right column - Order summary */}
             <div className="lg:col-span-2">
-              <div className="sticky top-24 border border-neutral-200 rounded-xl p-6 space-y-6">
+              <div className="sticky top-24 border border-neutral-200 rounded-xl p-4 space-y-6 sm:p-6">
                 {/* Property card */}
                 <div className="flex gap-4">
                   <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
@@ -446,37 +446,37 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
                 <div>
                   <h3 className="text-lg font-semibold mb-4">{t('booking.priceDetails') || 'Price details'}</h3>
                   <div className="space-y-3 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-neutral-600">
+                    <div className="flex justify-between gap-3">
+                      <span className="min-w-0 text-neutral-600">
                         ${unitRate.toLocaleString()} CAD × {unitCount} {unitLabel(unitCount)}
                       </span>
-                      <span>${subtotal.toLocaleString()} CAD</span>
+                      <span className="shrink-0">${subtotal.toLocaleString()} CAD</span>
                     </div>
                     
                     {priceCalc && priceCalc.discount > 0 && (
-                      <div className="flex justify-between text-rose-600">
+                      <div className="flex justify-between gap-3 text-rose-600">
                         <span>{t('properties.monthlyDiscount', { percent: priceCalc.discountPercentage })}</span>
-                        <span>-${priceCalc.discount.toLocaleString()} CAD</span>
+                        <span className="shrink-0">-${priceCalc.discount.toLocaleString()} CAD</span>
                       </div>
                     )}
 
                     {promoApplied && promoDiscount > 0 && (
-                      <div className="flex justify-between text-green-600">
+                      <div className="flex justify-between gap-3 text-green-600">
                         <span>{t('payment.promoDiscount') || 'Promo discount'}</span>
-                        <span>-${promoDiscount.toLocaleString()} CAD</span>
+                        <span className="shrink-0">-${promoDiscount.toLocaleString()} CAD</span>
                       </div>
                     )}
                     
-                    <div className="flex justify-between">
+                    <div className="flex justify-between gap-3">
                       <span className="text-neutral-600">{t('booking.taxHST') || 'Taxes (13% HST)'}</span>
-                      <span>${taxes.toLocaleString()} CAD</span>
+                      <span className="shrink-0">${taxes.toLocaleString()} CAD</span>
                     </div>
                     
                     <Divider />
                     
-                    <div className="flex justify-between font-semibold text-base">
+                    <div className="flex justify-between gap-3 font-semibold text-base">
                       <span>{t('booking.total') || 'Total'} (CAD)</span>
-                      <span>${total.toLocaleString()} CAD</span>
+                      <span className="shrink-0">${total.toLocaleString()} CAD</span>
                     </div>
                   </div>
                 </div>

@@ -136,7 +136,7 @@ function InquiryTab() {
               key={opt.key}
               onClick={() => setFilter(opt.key)}
               className={cn(
-                "rounded-full border px-4 py-1.5 text-sm transition-colors",
+                "min-h-11 rounded-full border px-4 py-1.5 text-sm transition-colors",
                 filter === opt.key
                   ? "border-neutral-900 bg-neutral-900 text-white"
                   : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300"
@@ -214,7 +214,7 @@ function InquiryTab() {
                     disabled={selected.status === s}
                     onClick={() => updateStatus(selected.id, s)}
                     className={cn(
-                      "rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors",
+                      "min-h-11 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors",
                       selected.status === s
                         ? "cursor-default bg-neutral-900 text-white"
                         : "border border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400"
@@ -259,7 +259,7 @@ export default function InboxClient() {
               key={t.key}
               onClick={() => setTab(t.key)}
               className={cn(
-                "flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-colors",
+                "flex min-h-11 items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-colors",
                 tab === t.key
                   ? "bg-white text-neutral-900 shadow-sm"
                   : "text-neutral-500 hover:text-neutral-700"

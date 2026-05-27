@@ -197,11 +197,11 @@ export function FeaturedPropertiesSection() {
         </div>
       ) : (
         <>
-          {/* Mobile: horizontal swipe cards */}
-          <div className="md:hidden -mx-4 px-4 overflow-x-auto snap-x snap-mandatory">
-            <div className="flex gap-4 w-max pb-2">
+          {/* Mobile: stacked cards, no horizontal scrolling. */}
+          <div className="md:hidden">
+            <div className="grid gap-4">
               {featuredProperties.map((property) => (
-                <div key={property.id} className="w-[84vw] max-w-sm snap-start">
+                <div key={property.id}>
                   <Card className="group h-full">
                     <Link href={`/property/${property.id}`}>
                       <div className="aspect-[4/3] overflow-hidden relative">

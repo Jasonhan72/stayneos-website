@@ -53,7 +53,7 @@ export default function Footer() {
           <div className="py-12 md:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
             {/* Brand Column */}
             <div className="lg:col-span-2">
-              <Link href={hrefFor("/")} className="inline-block">
+              <Link href={hrefFor("/")} className="inline-flex min-h-11 items-center">
                 <Image
                   src="/logo.png"
                   alt="NEOS"
@@ -70,18 +70,18 @@ export default function Footer() {
               <div className="mt-6 space-y-3">
                 <a
                   href="mailto:support@stayneos.com"
-                  className="flex items-center gap-3 text-primary-100 hover:text-accent transition-colors duration-200 group"
+                  className="flex min-h-11 items-center gap-3 text-primary-100 hover:text-accent transition-colors duration-200 group"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-primary-700/50 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                  <div className="w-11 h-11 rounded-lg bg-primary-700/50 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                     <Mail className="w-5 h-5" />
                   </div>
                   <span>support@stayneos.com</span>
                 </a>
                 <a
                   href="tel:+16474467987"
-                  className="flex items-center gap-3 text-primary-100 hover:text-accent transition-colors duration-200 group"
+                  className="flex min-h-11 items-center gap-3 text-primary-100 hover:text-accent transition-colors duration-200 group"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-primary-700/50 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                  <div className="w-11 h-11 rounded-lg bg-primary-700/50 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                     <Phone className="w-5 h-5" />
                   </div>
                   <span>+1 (647) 446-7987</span>
@@ -90,9 +90,9 @@ export default function Footer() {
                   href="https://maps.google.com/?q=20+Upjohn+Rd+North+York+ON+M3B+2V9"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-primary-100 hover:text-accent transition-colors duration-200 group"
+                  className="flex min-h-11 items-center gap-3 text-primary-100 hover:text-accent transition-colors duration-200 group"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-primary-700/50 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                  <div className="w-11 h-11 rounded-lg bg-primary-700/50 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                     <MapPin className="w-5 h-5" />
                   </div>
                   <span>{t("footer.corporateOffice", "Corporate Office: 20 Upjohn Rd, North York, ON, M3B 2V9")}</span>
@@ -108,7 +108,7 @@ export default function Footer() {
                   <li key={link.href}>
                     <Link
                       href={hrefFor(link.href)}
-                      className="block py-2.5 text-primary-100 hover:text-accent transition-colors duration-200 text-sm md:text-base"
+                      className="flex min-h-11 items-center py-2.5 text-primary-100 hover:text-accent transition-colors duration-200 text-sm md:text-base"
                     >
                       {link.label}
                     </Link>
@@ -124,7 +124,7 @@ export default function Footer() {
                   <li key={link.href}>
                     <Link
                       href={hrefFor(link.href)}
-                      className="block py-2.5 text-primary-100 hover:text-accent transition-colors duration-200 text-sm md:text-base"
+                      className="flex min-h-11 items-center py-2.5 text-primary-100 hover:text-accent transition-colors duration-200 text-sm md:text-base"
                     >
                       {link.label}
                     </Link>
@@ -140,7 +140,7 @@ export default function Footer() {
                   <li key={link.href}>
                     <Link
                       href={hrefFor(link.href)}
-                      className="block py-2.5 text-primary-100 hover:text-accent transition-colors duration-200 text-sm md:text-base"
+                      className="flex min-h-11 items-center py-2.5 text-primary-100 hover:text-accent transition-colors duration-200 text-sm md:text-base"
                     >
                       {link.label}
                     </Link>
@@ -167,7 +167,7 @@ export default function Footer() {
                   <a
                     key={social.label}
                     href={social.href}
-                    className="w-10 h-10 rounded-lg flex items-center justify-center text-primary-200 hover:text-accent hover:bg-primary-700/50 transition-all duration-200"
+                    className="w-11 h-11 rounded-lg flex items-center justify-center text-primary-200 hover:text-accent hover:bg-primary-700/50 transition-all duration-200"
                     aria-label={social.label}
                   >
                     <social.icon className="w-5 h-5" />

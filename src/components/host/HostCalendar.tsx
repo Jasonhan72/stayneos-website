@@ -108,6 +108,7 @@ export default function HostCalendar() {
   }, [dates, locale]);
 
   const todayStr = formatYmd(today);
+  const mobileDates = dates.slice(0, 14);
 
   const onCellDown = (propertyId: string, date: string) => {
     const cell = dayMap.get(`${propertyId}:${date}`);
@@ -178,15 +179,15 @@ export default function HostCalendar() {
     <div className="space-y-4" onPointerUp={onMouseUp}>
       {/* Toolbar */}
       <div className="flex flex-col gap-3 rounded-3xl border border-neutral-200 bg-white p-4 shadow-sm lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex flex-wrap items-center gap-3">
-          <select value={selectedPropertyId} onChange={(e) => setSelectedPropertyId(e.target.value)} className="rounded-xl border border-neutral-200 px-4 py-2 text-sm font-medium">
+        <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <select value={selectedPropertyId} onChange={(e) => setSelectedPropertyId(e.target.value)} className="min-h-11 w-full min-w-0 rounded-xl border border-neutral-200 px-4 py-2 text-sm font-medium sm:w-auto sm:max-w-xs">
             <option value="all">{t("host.calendar.allListings", "All listings")}</option>
             {data.properties.map((property) => <option key={property.id} value={property.id}>{property.title}</option>)}
           </select>
           <div className="flex items-center gap-1">
-            <button onClick={() => setMonthOffset((v) => v - 1)} className="rounded-full border border-neutral-200 p-2 hover:bg-neutral-50"><ChevronLeft className="h-4 w-4" /></button>
-            <button onClick={() => setMonthOffset((v) => v + 1)} className="rounded-full border border-neutral-200 p-2 hover:bg-neutral-50"><ChevronRight className="h-4 w-4" /></button>
-            <button onClick={() => setMonthOffset(0)} className="rounded-xl border border-neutral-200 px-4 py-2 text-sm font-medium hover:bg-neutral-50">{t("host.calendar.today", "Today")}</button>
+            <button onClick={() => setMonthOffset((v) => v - 1)} className="flex h-11 w-11 items-center justify-center rounded-full border border-neutral-200 hover:bg-neutral-50"><ChevronLeft className="h-4 w-4" /></button>
+            <button onClick={() => setMonthOffset((v) => v + 1)} className="flex h-11 w-11 items-center justify-center rounded-full border border-neutral-200 hover:bg-neutral-50"><ChevronRight className="h-4 w-4" /></button>
+            <button onClick={() => setMonthOffset(0)} className="min-h-11 rounded-xl border border-neutral-200 px-4 py-2 text-sm font-medium hover:bg-neutral-50">{t("host.calendar.today", "Today")}</button>
           </div>
         </div>
         <div className="flex items-center gap-4 text-xs text-neutral-400">
@@ -196,8 +197,51 @@ export default function HostCalendar() {
         </div>
       </div>
 
+      {/* Mobile agenda: avoids horizontal timeline scrolling on phones. */}
+      <div className="space-y-3 md:hidden">
+        {properties.map((property) => (
+          <article key={property.id} className="rounded-3xl border border-neutral-200 bg-white p-4 shadow-sm">
+            <div className="mb-3">
+              <h2 className="truncate text-base font-semibold text-neutral-900">{property.title}</h2>
+              <p className="mt-0.5 text-xs text-neutral-500">{toMoney((property.basePrice || 0) * 100)}{t("host.calendar.perNight", "/night")}</p>
+            </div>
+            <div className="grid grid-cols-7 gap-1.5">
+              {mobileDates.map((date) => {
+                const cell = dayMap.get(`${property.id}:${date}`) || { date, propertyId: property.id, status: 'available', price: (property.basePrice || 0) * 100, isBooked: false };
+                const isToday = date === todayStr;
+                return (
+                  <button
+                    type="button"
+                    key={`${property.id}-${date}-mobile`}
+                    disabled={cell.isBooked}
+                    onClick={() => {
+                      if (cell.isBooked) return;
+                      setSelection({ propertyId: property.id, start: date, end: date });
+                      setDrawerOpen(true);
+                    }}
+                    className={cn(
+                      "flex min-h-11 min-w-11 flex-col items-center justify-center rounded-xl border px-1 py-1 text-center text-[10px] transition-colors",
+                      cell.isBooked
+                        ? "border-neutral-100 bg-neutral-100 text-neutral-400"
+                        : cell.status === 'blocked'
+                          ? "border-neutral-200 bg-neutral-50 text-neutral-500"
+                          : "border-emerald-100 bg-emerald-50 text-emerald-700",
+                      isToday && "ring-2 ring-neutral-900"
+                    )}
+                    aria-label={`${date} ${cell.isBooked ? t("host.calendar.booked", "Booked") : cell.status}`}
+                  >
+                    <span className="font-semibold">{date.slice(8)}</span>
+                    <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-current" />
+                  </button>
+                );
+              })}
+            </div>
+          </article>
+        ))}
+      </div>
+
       {/* Timeline */}
-      <div className="overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-sm">
+      <div className="hidden overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-sm md:block">
         {/* Scrollable area */}
         <div ref={scrollRef} className="overflow-x-auto" style={{ scrollBehavior: 'smooth' }}>
           <div style={{ width: LABEL_W + dates.length * DAY_W, minWidth: '100%' }}>

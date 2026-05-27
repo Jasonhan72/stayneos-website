@@ -461,7 +461,7 @@ export default function PropertiesPage() {
                   key={category.id}
                   type="button"
                   onClick={() => setActiveCategory(category.id)}
-                  className={`flex shrink-0 flex-col items-center gap-2 border-b-2 pb-2 text-xs font-semibold transition-colors ${active ? 'border-neutral-950 text-neutral-950' : 'border-transparent text-neutral-500 hover:text-neutral-950'}`}
+                  className={`flex min-h-11 min-w-11 shrink-0 flex-col items-center gap-1.5 border-b-2 px-1 pb-2 text-xs font-semibold transition-colors ${active ? 'border-neutral-950 text-neutral-950' : 'border-transparent text-neutral-500 hover:text-neutral-950'}`}
                 >
                   <Icon size={23} strokeWidth={active ? 2.4 : 1.8} />
                   <span>{category.label}</span>
@@ -546,7 +546,7 @@ export default function PropertiesPage() {
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="appearance-none bg-white border border-neutral-300 pr-8 pl-3 py-2 text-sm font-medium text-neutral-700 focus:outline-none focus:border-primary cursor-pointer"
+                      className="min-h-11 appearance-none bg-white border border-neutral-300 pr-8 pl-3 py-2 text-sm font-medium text-neutral-700 focus:outline-none focus:border-primary cursor-pointer"
                     >
                       {sortOptions.map((option) => (
                         <option key={option.value} value={option.value}>
@@ -738,7 +738,7 @@ function PropertyGridCard({
           </div>
           
           <button 
-            className="absolute top-3 right-3 p-2 bg-white/90 hover:bg-white transition-colors rounded-full"
+            className="absolute top-3 right-3 flex min-h-11 min-w-11 items-center justify-center rounded-full bg-white/90 p-2 transition-colors hover:bg-white"
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlist(property.id); }}
           >
             <Heart size={18} className={liked ? 'fill-rose-500 text-rose-500' : 'text-neutral-400 hover:text-rose-500'} />
@@ -851,7 +851,7 @@ function PropertyListCard({ property, isSelected, onClick, onHover, cardRef }: P
             )}
           </div>
           <button 
-            className="absolute top-3 right-3 p-2 bg-white/90 hover:bg-white transition-colors rounded-full"
+            className="absolute top-3 right-3 flex min-h-11 min-w-11 items-center justify-center rounded-full bg-white/90 p-2 transition-colors hover:bg-white"
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlist(property.id); }}
           >
             <Heart size={18} className={liked ? 'fill-rose-500 text-rose-500' : 'text-neutral-400 hover:text-rose-500'} />

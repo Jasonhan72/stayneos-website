@@ -19,9 +19,9 @@ const RANGE_OPTIONS = [
   { key: "host.earnings.last12Months", label: "Last 12 months", months: 12 },
 ];
 
-function formatCurrency(amount: number, currency: string) {
+function formatCurrency(amount: number, currency: string, locale = "en") {
   try {
-    return new Intl.NumberFormat("en-CA", { style: "currency", currency }).format(amount);
+    return new Intl.NumberFormat(locale === "zh" ? "zh-CN" : locale === "fr" ? "fr-CA" : "en-CA", { style: "currency", currency }).format(amount);
   } catch {
     return `$${amount.toFixed(2)}`;
   }
@@ -82,7 +82,7 @@ export default function EarningsClient() {
             <button
               key={opt.months}
               onClick={() => setMonths(opt.months)}
-              className={`rounded-full px-4 py-1.5 text-sm transition-colors ${
+              className={`min-h-11 rounded-full px-4 py-1.5 text-sm transition-colors ${
                 months === opt.months
                   ? "bg-neutral-900 text-white"
                   : "text-neutral-600 hover:text-neutral-900"
@@ -103,7 +103,7 @@ export default function EarningsClient() {
       <div className="grid gap-4 md:grid-cols-4">
         <StatCard
           label={t("host.earnings.grossRevenue", "Gross revenue")}
-          value={data ? formatCurrency(data.totals.gross, data.currency) : "—"}
+          value={data ? formatCurrency(data.totals.gross, data.currency, locale) : "—"}
           loading={loading}
         />
         <StatCard
@@ -118,7 +118,7 @@ export default function EarningsClient() {
         />
         <StatCard
           label={t("host.earnings.avgNightly", "Avg nightly")}
-          value={data ? formatCurrency(data.totals.averageNightly, data.currency) : "—"}
+          value={data ? formatCurrency(data.totals.averageNightly, data.currency, locale) : "—"}
           loading={loading}
         />
       </div>
@@ -147,7 +147,7 @@ export default function EarningsClient() {
                   />
                 </div>
                 <div className="w-24 sm:w-32 shrink-0 text-right text-xs sm:text-sm font-medium text-neutral-900">
-                  {formatCurrency(m.gross, data.currency)}
+                  {formatCurrency(m.gross, data.currency, locale)}
                 </div>
               </div>
             ))}
@@ -159,7 +159,38 @@ export default function EarningsClient() {
 
       <div className="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-neutral-900">{t("host.earnings.byProperty", "By property")}</h2>
-        <div className="mt-4 overflow-x-auto">
+        <div className="mt-4 space-y-3 md:hidden">
+          {!loading &&
+            data?.byProperty?.map((p) => (
+              <article key={p.propertyId} className="rounded-2xl border border-neutral-100 bg-neutral-50 p-4">
+                <h3 className="text-sm font-semibold text-neutral-900">{p.propertyTitle}</h3>
+                <dl className="mt-3 grid grid-cols-3 gap-3 text-sm">
+                  <div>
+                    <dt className="text-xs uppercase tracking-wide text-neutral-400">{t("host.earnings.bookings", "Bookings")}</dt>
+                    <dd className="mt-1 text-neutral-800">{p.bookings}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs uppercase tracking-wide text-neutral-400">{t("host.earnings.nights", "Nights")}</dt>
+                    <dd className="mt-1 text-neutral-800">{p.nights}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs uppercase tracking-wide text-neutral-400">{t("host.earnings.gross", "Gross")}</dt>
+                    <dd className="mt-1 font-semibold text-neutral-900">{formatCurrency(p.gross, data.currency, locale)}</dd>
+                  </div>
+                </dl>
+              </article>
+            ))}
+          {!loading && data && data.byProperty.length === 0 && (
+            <p className="py-6 text-center text-sm text-neutral-500">
+              {t("host.earnings.noPropertyRevenue", "No property revenue in this range yet.")}
+            </p>
+          )}
+          {loading &&
+            Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="h-24 animate-pulse rounded-2xl bg-neutral-100" />
+            ))}
+        </div>
+        <div className="mt-4 hidden md:block overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead className="text-left text-xs font-medium uppercase tracking-wider text-neutral-500">
               <tr>
@@ -177,7 +208,7 @@ export default function EarningsClient() {
                     <td className="py-3 text-right text-neutral-700">{p.bookings}</td>
                     <td className="py-3 text-right text-neutral-700">{p.nights}</td>
                     <td className="py-3 text-right font-medium text-neutral-900">
-                      {formatCurrency(p.gross, data.currency)}
+                      {formatCurrency(p.gross, data.currency, locale)}
                     </td>
                   </tr>
                 ))}

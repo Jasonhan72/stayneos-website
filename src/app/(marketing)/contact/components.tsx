@@ -289,7 +289,7 @@ export function ContactInfoCard() {
                     href={item.href}
                     target={item.external ? "_blank" : undefined}
                     rel={item.external ? "noopener noreferrer" : undefined}
-                    className="text-lg font-semibold text-neutral-900 hover:text-primary transition-colors"
+                    className="inline-flex min-h-11 items-center text-lg font-semibold text-neutral-900 hover:text-primary transition-colors"
                   >
                     {item.content}
                   </a>

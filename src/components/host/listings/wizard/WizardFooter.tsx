@@ -52,7 +52,7 @@ export default function WizardFooter({
         <button
           type="button"
           onClick={() => router.back()}
-          className="rounded-lg px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
+          className="min-h-11 rounded-lg px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
         >
           {t("common.back", "Back")}
         </button>
@@ -63,7 +63,7 @@ export default function WizardFooter({
         type="button"
         onClick={handleNext}
         disabled={!canContinue}
-        className="rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
+        className="min-h-11 rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {nextLabel || (next ? t("host.listingWizard.continue", "Continue") : t("host.listingWizard.finish", "Finish"))}
       </button>
