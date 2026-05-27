@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useI18n } from '@/lib/i18n';
 import Link from 'next/link';
 import { ArrowRight, Loader2 } from 'lucide-react';
@@ -27,12 +27,20 @@ const defaultChips = [
 export function AIConciergeInput({ onSubmit, isLoading }: AIConciergeInputProps) {
   const { t } = useI18n();
   const [input, setInput] = useState('');
+  const desktopInputRef = useRef<HTMLInputElement>(null);
+  const mobileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (input.trim() && !isLoading) {
-      onSubmit(input.trim());
+    const trimmed = input.trim();
+    if (!trimmed) {
+      const inputRef = window.matchMedia('(min-width: 640px)').matches
+        ? desktopInputRef
+        : mobileInputRef;
+      inputRef.current?.focus();
+      return;
     }
+    if (!isLoading) onSubmit(trimmed);
   };
 
   const handleChipClick = (chipText: string) => {
@@ -53,6 +61,7 @@ export function AIConciergeInput({ onSubmit, isLoading }: AIConciergeInputProps)
         {/* Desktop: inline layout */}
         <div className="relative hidden sm:flex items-center bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl overflow-hidden">
           <input
+            ref={desktopInputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -62,8 +71,8 @@ export function AIConciergeInput({ onSubmit, isLoading }: AIConciergeInputProps)
           />
           <button
             type="submit"
-            disabled={!input.trim() || isLoading}
-            className="mr-2 px-5 py-2.5 bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-all duration-200 whitespace-nowrap flex items-center gap-1.5"
+            disabled={isLoading}
+            className="mr-2 flex items-center gap-1.5 whitespace-nowrap rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-accent transition-all duration-200 hover:bg-accent-hover active:bg-accent-hover disabled:cursor-wait"
           >
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -79,6 +88,7 @@ export function AIConciergeInput({ onSubmit, isLoading }: AIConciergeInputProps)
         {/* Mobile: stacked layout */}
         <div className="relative sm:hidden bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl overflow-hidden">
           <input
+            ref={mobileInputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -89,8 +99,8 @@ export function AIConciergeInput({ onSubmit, isLoading }: AIConciergeInputProps)
           <div className="px-3 pb-3">
             <button
               type="submit"
-              disabled={!input.trim() || isLoading}
-              className="w-full py-2.5 bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5"
+              disabled={isLoading}
+              className="flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-white shadow-accent transition-all duration-200 hover:bg-accent-hover active:bg-accent-hover disabled:cursor-wait"
             >
               {isLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />

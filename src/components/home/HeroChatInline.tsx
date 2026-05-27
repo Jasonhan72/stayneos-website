@@ -50,6 +50,8 @@ export function HeroChatInline() {
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState('');
   const [showChat, setShowChat] = useState(false);
+  const desktopTopInputRef = useRef<HTMLInputElement>(null);
+  const mobileTopInputRef = useRef<HTMLInputElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const bottomInputRef = useRef<HTMLInputElement>(null);
 
@@ -163,6 +165,13 @@ export function HeroChatInline() {
 
   const handleTopSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!input.trim()) {
+      const inputRef = window.matchMedia('(min-width: 640px)').matches
+        ? desktopTopInputRef
+        : mobileTopInputRef;
+      inputRef.current?.focus();
+      return;
+    }
     void sendMessage(input);
   };
 
@@ -180,6 +189,7 @@ export function HeroChatInline() {
         {/* Desktop */}
         <div className="relative hidden sm:flex items-center bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl overflow-hidden">
           <input
+            ref={desktopTopInputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -189,8 +199,8 @@ export function HeroChatInline() {
           />
           <button
             type="submit"
-            disabled={!input.trim() || isLoading}
-            className="mr-2 px-5 py-2.5 bg-accent hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-all duration-200 whitespace-nowrap flex items-center gap-1.5"
+            disabled={isLoading}
+            className="mr-2 flex items-center gap-1.5 whitespace-nowrap rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-accent transition-all duration-200 hover:bg-accent-hover active:bg-accent-hover disabled:cursor-wait"
           >
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -206,6 +216,7 @@ export function HeroChatInline() {
         {/* Mobile */}
         <div className="relative sm:hidden bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl overflow-hidden">
           <input
+            ref={mobileTopInputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -216,8 +227,8 @@ export function HeroChatInline() {
           <div className="px-3 pb-3">
             <button
               type="submit"
-              disabled={!input.trim() || isLoading}
-              className="flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={isLoading}
+              className="flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-white shadow-accent transition-all duration-200 hover:bg-accent-hover active:bg-accent-hover disabled:cursor-wait"
             >
               {isLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
