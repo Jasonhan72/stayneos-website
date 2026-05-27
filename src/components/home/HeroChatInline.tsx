@@ -28,20 +28,6 @@ interface PropertyRecommendation {
   bedrooms: number;
 }
 
-const promptChipKeys = [
-  'aiConcierge.chip1',
-  'aiConcierge.chip2',
-  'aiConcierge.chip3',
-  'aiConcierge.chip4',
-] as const;
-
-const defaultChips = [
-  'Medical rotation, 3 months',
-  'Relocating for work, family of 4',
-  'Visiting scholar at U of T',
-  'Insurance housing, immediate',
-];
-
 export function HeroChatInline() {
   const { t } = useI18n();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -245,34 +231,16 @@ export function HeroChatInline() {
 
       <CategoryChips />
 
-      {/* Prompt chips — only before first message */}
+      {/* Browse all link — only before first message */}
       {!showChat && (
-        <>
-          <div className="flex flex-wrap justify-center gap-2 mt-5">
-            {promptChipKeys.map((key, i) => {
-              const chipText = t(key, defaultChips[i]);
-              return (
-                <button
-                  key={key}
-                  onClick={() => void sendMessage(chipText)}
-                  disabled={isLoading}
-                  className="inline-flex min-h-11 items-center rounded-full border border-white/20 bg-white/15 px-4 py-2 text-xs text-white/90 backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:bg-white/25 disabled:opacity-50 sm:text-sm"
-                >
-                  {chipText}
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="mt-5 text-center">
-            <Link
-              href="/properties"
-              className="inline-flex min-h-11 items-center text-sm text-white/70 underline underline-offset-4 transition-colors duration-200 hover:text-white"
-            >
-              {t('aiConcierge.fallbackLink', 'Or browse our full collection →')}
-            </Link>
-          </div>
-        </>
+        <div className="mt-5 text-center">
+          <Link
+            href="/properties"
+            className="inline-flex min-h-11 items-center text-sm text-white/70 underline underline-offset-4 transition-colors duration-200 hover:text-white"
+          >
+            {t('aiConcierge.fallbackLink', 'Or browse our full collection →')}
+          </Link>
+        </div>
       )}
 
       {/* Conversation panel */}
