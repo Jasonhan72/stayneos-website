@@ -723,5 +723,11 @@
   "propertiesPageMeta": {
     "title": "多伦多高端精装公寓",
     "description": "浏览NEOS精选精装公寓。多伦多市中心高端行政公寓，灵活租期可选。"
-  }
+  },
+  "errorBoundary": {
+    "accountTitle": "页面加载异常",
+    "accountSubtitle": "请刷新后重试。我们已记录该客户端错误便于排查。",
+    "refreshPage": "刷新页面"
+  },
+  "clear": "清除"
 }

@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { X, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 import { BookedDateRange, formatDateKey, formatDateLabel, hasBookedDateInRange, isDateBooked, nightsBetween, normalizeDate } from './calendar-utils';
 
 export interface FullscreenCalendarProps {
@@ -20,11 +21,7 @@ export interface FullscreenCalendarProps {
   bookedRanges?: BookedDateRange[];
 }
 
-const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-const MONTH_NAMES = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
-];
+
 
 interface DayInfo {
   date: Date;
@@ -46,6 +43,21 @@ export function FullscreenCalendar({
   currency = 'CAD',
   bookedRanges = [],
 }: FullscreenCalendarProps) {
+  const { t } = useI18n();
+
+  const WEEKDAYS = useMemo(() => [
+    t('calendar.daysSingle.s', 'S'), t('calendar.daysSingle.m', 'M'), t('calendar.daysSingle.t', 'T'),
+    t('calendar.daysSingle.w', 'W'), t('calendar.daysSingle.th', 'T'), t('calendar.daysSingle.f', 'F'), t('calendar.daysSingle.sa', 'S')
+  ], [t]);
+
+  const MONTH_NAMES = useMemo(() => [
+    t('calendar.months.january', 'January'), t('calendar.months.february', 'February'),
+    t('calendar.months.march', 'March'), t('calendar.months.april', 'April'),
+    t('calendar.months.may', 'May'), t('calendar.months.june', 'June'),
+    t('calendar.months.july', 'July'), t('calendar.months.august', 'August'),
+    t('calendar.months.september', 'September'), t('calendar.months.october', 'October'),
+    t('calendar.months.november', 'November'), t('calendar.months.december', 'December'),
+  ], [t]);
   const [selectedStart, setSelectedStart] = useState<string>(checkIn);
   const [selectedEnd, setSelectedEnd] = useState<string>(checkOut);
   const [currentMonthOffset, setCurrentMonthOffset] = useState(0);
@@ -88,7 +100,7 @@ export function FullscreenCalendar({
       });
     }
     return months;
-  }, [currentMonthOffset]);
+  }, [currentMonthOffset, MONTH_NAMES]);
 
   const getDateStatus = useCallback((date: Date): 'none' | 'start' | 'end' | 'between' | 'disabled' | 'booked' => {
     if (date < today) return 'disabled';
@@ -309,7 +321,7 @@ export function FullscreenCalendar({
               </div>
             ) : (
               <div>
-                <p className="text-neutral-900">Add dates for prices</p>
+                <p className="text-neutral-900">{t('calendar.addDatesForPrices', 'Add dates for prices')}</p>
                 {hasRating && (
                   <div className="flex items-center gap-2 mt-1">
                     <Star size={14} className="fill-black" />
@@ -330,7 +342,7 @@ export function FullscreenCalendar({
                 : "bg-neutral-300 cursor-not-allowed"
             )}
           >
-            Save
+            {t("common.save", "Save")}
           </button>
         </div>
       </div>
@@ -356,7 +368,7 @@ export function FullscreenCalendar({
           
           <div className="text-center">
             <h2 className="text-lg font-semibold text-neutral-900">
-              {hasSelection ? `${nights} nights` : 'Select dates'}
+              {hasSelection ? `${nights} nights` : t('calendar.selectDates', 'Select dates')}
             </h2>
             {hasSelection && <p className="text-sm text-neutral-500">{formatDateRange()}</p>}
           </div>
@@ -367,7 +379,7 @@ export function FullscreenCalendar({
                 onClick={handleClear}
                 className="text-sm font-medium text-neutral-900 underline underline-offset-4 hover:text-neutral-600"
               >
-                Clear
+                {t("common.clear", "Clear")}
               </button>
             )}
           </div>
@@ -445,8 +457,8 @@ export function FullscreenCalendar({
                   : "bg-neutral-300 cursor-not-allowed"
               )}
             >
-              Save
-            </button>
+            {t("common.save", "Save")}
+          </button>
           </div>
         </div>
       </div>

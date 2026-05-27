@@ -723,5 +723,11 @@
   "propertiesPageMeta": {
     "title": "Premium Furnished Apartments in Toronto",
     "description": "Browse fully furnished premium rentals from NEOS. Executive apartments in downtown Toronto with flexible lease terms."
-  }
+  },
+  "errorBoundary": {
+    "accountTitle": "Account page crashed",
+    "accountSubtitle": "Please refresh and try again. We logged the client error for debugging.",
+    "refreshPage": "Refresh page"
+  },
+  "clear": "Clear"
 }

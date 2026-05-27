@@ -376,5 +376,45 @@
   "requestToBook": "Request to book",
   "booking.stepReview": "Review",
   "booking.stepPayment": "Payment",
-  "booking.stepConfirm": "Confirmed"
+  "booking.stepConfirm": "Confirmed",
+  "calendar": {
+    "addDatesForPrices": "Add dates for prices",
+    "selectDates": "Select dates",
+    "nights": "nights",
+    "clearDates": "Clear dates",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "days": {
+      "su": "Su",
+      "mo": "Mo",
+      "tu": "Tu",
+      "we": "We",
+      "th": "Th",
+      "fr": "Fr",
+      "sa": "Sa"
+    },
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "daysSingle": {
+      "s": "S",
+      "m": "M",
+      "t": "T",
+      "w": "W",
+      "th": "T",
+      "f": "F",
+      "sa": "S"
+    }
+  }
 }

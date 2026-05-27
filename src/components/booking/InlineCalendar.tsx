@@ -3,9 +3,10 @@
 
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 
 interface InlineCalendarProps {
   checkIn: string;
@@ -16,13 +17,6 @@ interface InlineCalendarProps {
   className?: string;
 }
 
-const monthNames = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
-];
-
-const weekDays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-
 export function InlineCalendar({
   checkIn,
   checkOut,
@@ -31,6 +25,27 @@ export function InlineCalendar({
   onClearDates,
   className
 }: InlineCalendarProps) {
+  const { t } = useI18n();
+
+  const monthNames = useMemo(() => [
+    t('calendar.months.january', 'January'),
+    t('calendar.months.february', 'February'),
+    t('calendar.months.march', 'March'),
+    t('calendar.months.april', 'April'),
+    t('calendar.months.may', 'May'),
+    t('calendar.months.june', 'June'),
+    t('calendar.months.july', 'July'),
+    t('calendar.months.august', 'August'),
+    t('calendar.months.september', 'September'),
+    t('calendar.months.october', 'October'),
+    t('calendar.months.november', 'November'),
+    t('calendar.months.december', 'December'),
+  ], [t]);
+
+  const weekDays = useMemo(() => [
+    t('calendar.days.su', 'Su'), t('calendar.days.mo', 'Mo'), t('calendar.days.tu', 'Tu'),
+    t('calendar.days.we', 'We'), t('calendar.days.th', 'Th'), t('calendar.days.fr', 'Fr'), t('calendar.days.sa', 'Sa')
+  ], [t]);
   const [today] = useState(() => {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
@@ -271,7 +286,7 @@ export function InlineCalendar({
             onClick={onClearDates}
             className="text-sm font-medium underline hover:text-neutral-900 transition-colors"
           >
-            Clear dates
+            {t('calendar.clearDates', 'Clear dates')}
           </button>
         )}
       </div>
