@@ -16,7 +16,8 @@
       "1": "Pour les demandes de réservation, veuillez visiter notre page de propriétés ou utiliser le concierge IA ci-dessus.",
       "2": "Pour les questions urgentes, veuillez nous contacter par email à hello@stayneos.com.",
       "3": "Notre équipe répond généralement dans les 2 heures pendant les heures ouvrables (9h-18h HNE)."
-    }
+    },
+    "followUp": "Posez une question..."
   },
   "ai": {
     "assistant": {

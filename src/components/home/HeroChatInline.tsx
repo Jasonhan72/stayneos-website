@@ -25,6 +25,7 @@ interface PropertyRecommendation {
   bedrooms: number;
 }
 
+// NOTE: Prices synced with live API on 2025-07-15. Update when DB prices change.
 const PROPERTIES: Record<string, PropertyRecommendation> = {
   '1': {
     id: '1',
@@ -38,7 +39,7 @@ const PROPERTIES: Record<string, PropertyRecommendation> = {
     id: '2',
     title: '238 Simcoe St (Grange Park) · Executive 3BR Suite',
     location: '238 Simcoe St, Toronto',
-    monthlyPrice: 6500,
+    monthlyPrice: 8000,
     image: '/images/simcoe-238-kitchen.jpg',
     bedrooms: 3,
   },
@@ -46,7 +47,7 @@ const PROPERTIES: Record<string, PropertyRecommendation> = {
     id: '3',
     title: '22 Wellesley St E · Modern 1BR City View',
     location: '22 Wellesley St E, Toronto',
-    monthlyPrice: 3500,
+    monthlyPrice: 4000,
     image: '/images/wellesley-1607-living.jpg',
     bedrooms: 1,
   },
@@ -287,7 +288,7 @@ export function HeroChatInline() {
               </div>
               <div>
                 <h3 className="text-white font-semibold text-sm">NEOS AI</h3>
-                <p className="text-white/50 text-xs">Aria · Customer Care</p>
+                <p className="text-white/50 text-xs">{t('chat.subtitle', 'Aria · Customer Care')}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
