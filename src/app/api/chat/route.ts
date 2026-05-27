@@ -89,9 +89,13 @@ IMPORTANT RULES:
 - For NEOS property addresses, availability, and prices, ONLY use the LIVE PROPERTY DATA block provided by the API. Never invent or estimate an address, price, discount, or availability.
 - If LIVE PROPERTY DATA is empty or unavailable, say that current property data is unavailable and send the user to /properties or support@stayneos.com. Do not fall back to memory or examples.
 - For external marketplace listings such as realtor.ca, say external search is not enabled unless explicit EXTERNAL PROPERTY RESULTS are provided in this request. Never hallucinate realtor.ca prices.
+- When EXTERNAL PROPERTY RESULTS are provided, mention that they come from their source site such as realtor.ca, condos.ca, rentals.ca, or zolo.ca, and distinguish them from NEOS internal listings.
+- Always present NEOS internal properties first and label them as "我们的房源" in Chinese, "NEOS listing" in English, or "logement NEOS" in French.
+- External property results should be presented second and clearly labeled "来自 [source]" in Chinese, "from [source]" in English, or "depuis [source]" in French.
 - If you have real-time data (weather, search results), use it directly in your answer. Don't say "querying..." or "checking..." — you already have the data.
 - For city-specific questions you can answer from general knowledge (transit routes, popular neighborhoods, hospital locations), answer directly without saying you need to search.
 - **Pay attention to the city the user is asking about.** If they ask about a city other than Toronto (e.g. Seattle, Vancouver, New York), acknowledge that city in your response. Don't recommend Toronto-specific properties unless they ask about Toronto.
+- When responding in Chinese (ZH), use Chinese terminology for amenities and services, for example 水电费 instead of "utilities", 服务 instead of "services", 家具 instead of "furnishings".
 - If you truly don't know, suggest contacting support@stayneos.com.
 - Respond in the same language the user writes in.`;
 
@@ -201,10 +205,12 @@ function needsWebSearch(query: string): boolean {
     'transit', 'ttc', 'subway', 'bus', 'airport', 'commute',
     'school', 'university', 'hospital', 'clinic', 'gym', 'park',
     'neighborhood', 'neighbourhood', 'area', 'district',
-    // Chinese keywords
+    // Chinese keywords — general
     '餐厅', '美食', '交通', '地铁', '学校', '医院', '公园',
     '房价', '房源', '租金', '挂牌', '小区', '社区', '公寓',
     '房产', '楼盘', '二手房', '新房', '出租', '求租',
+    '找', '附近', '周围', '旁边', '预算', '价格', '多少钱',
+    '租房', '月租', '多大', '市中心', '学区', '华人',
     // Direct URL or search intent
     'search', 'find', 'look up', 'check', 'latest', 'recent', 'current',
     '搜索', '查找', '查一下', '帮我查', '最新', '最近',
@@ -353,7 +359,12 @@ function getPropertyTitle(property: InternalChatProperty): string {
   return property.title || property.location || 'NEOS property';
 }
 
-function getNoBudgetMatchResponse(language: string, budget: number, cheapest?: InternalChatProperty): string {
+function getNoBudgetMatchResponse(
+  language: string,
+  budget: number,
+  cheapest?: InternalChatProperty,
+  externalCount = 0
+): string {
   if (!cheapest) {
     if (language === 'ZH') return '我现在没有可引用的实时房源数据。请查看 /properties，或联系 support@stayneos.com 确认最新可订房源。';
     if (language === 'FR') return "Je n'ai pas de données de logements en temps réel à citer pour le moment. Consultez /properties ou écrivez à support@stayneos.com.";
@@ -365,12 +376,15 @@ function getNoBudgetMatchResponse(language: string, budget: number, cheapest?: I
   const title = getPropertyTitle(cheapest);
 
   if (language === 'ZH') {
-    return `目前暂无月租 ${budgetText} 以内的房源。最接近的是 ${title}，月租 ${priceText}。我只引用 NEOS 当前内部房源数据，不会为了匹配预算改写价格；如果预算有弹性，可以继续比较这个选项，或联系 support@stayneos.com 了解后续可用房源。`;
+    const externalText = externalCount > 0 ? ` 下方还有 ${externalCount} 个来自外部平台的补充结果卡片，请以原网站信息为准。` : '';
+    return `目前我们的房源里暂无月租 ${budgetText} 以内的选项。最接近的是 ${title}，月租 ${priceText}。我只引用 NEOS 当前内部房源数据，不会为了匹配预算改写价格；如果预算有弹性，可以继续比较这个选项，或联系 support@stayneos.com 了解后续可用房源。${externalText}`;
   }
   if (language === 'FR') {
-    return `Nous n'avons actuellement aucun logement à moins de ${budgetText} par mois. L'option la plus proche est ${title}, à ${priceText}/mois. Je cite uniquement les données internes actuelles de NEOS et je ne modifie pas les prix pour correspondre à un budget.`;
+    const externalText = externalCount > 0 ? ` ${externalCount} résultat(s) externe(s) sont aussi affichés ci-dessous; vérifiez les détails sur le site source.` : '';
+    return `Nous n'avons actuellement aucun logement NEOS à moins de ${budgetText} par mois. L'option la plus proche est ${title}, à ${priceText}/mois. Je cite uniquement les données internes actuelles de NEOS et je ne modifie pas les prix pour correspondre à un budget.${externalText}`;
   }
-  return `We do not currently have any homes under ${budgetText} per month. The closest option is ${title} at ${priceText}/mo. I only quote current internal NEOS listing data and will not change prices to fit a budget.`;
+  const externalText = externalCount > 0 ? ` ${externalCount} external result(s) are also shown below; please verify details on the source site.` : '';
+  return `We do not currently have any NEOS listings under ${budgetText} per month. The closest option is ${title} at ${priceText}/mo. I only quote current internal NEOS listing data and will not change prices to fit a budget.${externalText}`;
 }
 
 // Fetch live property data from the same internal catalog used by /api/properties.
@@ -435,14 +449,19 @@ function needsExternalPropertySearch(query: string): boolean {
   const propertyKeywords = [
     'rent', 'rental', 'lease', 'apartment', 'condo', 'house', 'studio',
     'bedroom', '1br', '2br', '3br', 'br ', 'unit', 'suite', 'listing',
-    'find', 'looking for', 'show me', 'available',
+    'find', 'looking for', 'show me', 'available', 'furnished', 'monthly',
+    'budget', 'under', 'below',
     // Chinese
     '房源', '出租', '出售', '公寓', '单间', '两居', '三居', '套房', '帮我找', '查一下房', '找房子',
+    '找房', '找一下', '找找', '有没有', '有什么', '租房', '租房子', '求租', '租',
+    '多大', '附近', '旁边', '周围', '靠近', '预算', '以内', '以下', '价格', '多少钱',
+    '月租', '一居', '二居', '卧室', '几房', '房租', '住', '离', '学校', '多大附近',
     // Site references
     'condos.ca', 'zolo', 'rentals.ca', 'rentfaster', 'padmapper', 'realtor.ca', 'liv.rent', 'kijiji', 'housesigma',
   ];
   // Also: any URL in the message that points to a property site
   if (/https?:\/\/[^\s]*(condos\.ca|zolo\.ca|rentals\.ca|rentfaster\.ca|padmapper\.com|liv\.rent|realtor\.ca|kijiji\.ca|housesigma\.com|zumper\.com)/i.test(query)) return true;
+  if (/找.*房|房.*预算|预算.*房|附近.*公寓|旁边.*(公寓|房)|(多大|大学|学校).*(公寓|房|租)/.test(query)) return true;
   return propertyKeywords.some(k => q.includes(k));
 }
 
@@ -563,7 +582,7 @@ export async function POST(request: NextRequest) {
 
       if (!hasMonthlyMatch) {
         return NextResponse.json({
-          text: getNoBudgetMatchResponse(language, budget, sortedByPrice[0]),
+          text: getNoBudgetMatchResponse(language, budget, sortedByPrice[0], externalProperties.length),
           sessionId,
           source: 'budget-guardrail',
           language,

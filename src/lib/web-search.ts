@@ -620,6 +620,19 @@ export async function searchExternalProperties(query: string, maxResults = 3): P
   // Broader location detection: any major city mention
   const hasLocation = /toronto|gta|ontario|canada|多伦多|vancouver|montreal|ottawa|calgary|edmonton|quebec|halifax|winnipeg|seattle|portland|san\s*francisco|los\s*angeles|new\s*york|boston|chicago|austin|miami|houston|dallas|denver|phoenix|san\s*diego|london|paris|berlin|tokyo|sydney|dubai|singapore|hong\s*kong|shanghai|beijing/i.test(lowerQuery);
   
+  const normalizedTerms: string[] = [];
+  if (/多大|uoft|u\s*of\s*t|university\s+of\s+toronto/i.test(query)) {
+    normalizedTerms.push('University of Toronto');
+  }
+  const budget = query.match(/(?:预算|budget|under|below|less than|以内|以下|max|maximum)\s*\$?\s*([1-9][0-9,]{3,5})/i)
+    || query.match(/\$?\s*([1-9][0-9,]{3,5})\s*(?:以内|以下|under|below|budget)/i);
+  if (budget?.[1]) {
+    normalizedTerms.push(`under ${budget[1].replace(/,/g, '')}`);
+  }
+  if (/一居|1室|一室|一卧/.test(query)) normalizedTerms.push('1 bedroom');
+  if (/两居|二居|2室|两室|二室|两卧|二卧/.test(query)) normalizedTerms.push('2 bedroom');
+  if (/三居|3室|三室|三卧/.test(query)) normalizedTerms.push('3 bedroom');
+
   // Extract location if present, otherwise use empty (don't default to Toronto)
   let locationPrefix = '';
   if (hasLocation) {
@@ -630,9 +643,12 @@ export async function searchExternalProperties(query: string, maxResults = 3): P
     // No location detected — search as-is but add "rent" context
     locationPrefix = query;
   }
+  const searchTerms = [locationPrefix, ...normalizedTerms, hasLocation ? '' : 'Toronto']
+    .filter(Boolean)
+    .join(' ');
   
   const siteFilter = '(site:condos.ca OR site:zolo.ca OR site:rentals.ca OR site:rentfaster.ca OR site:padmapper.com OR site:liv.rent OR site:zumper.com OR site:realtor.ca OR site:apartments.com OR site:zillow.com OR site:hotpads.com)';
-  const searchQuery = `${locationPrefix} rent ${siteFilter}`;
+  const searchQuery = `${searchTerms} rent ${siteFilter}`;
 
   const ddg = await searchDuckDuckGo(searchQuery, maxResults + 4);
   if (ddg.length === 0) return [];
