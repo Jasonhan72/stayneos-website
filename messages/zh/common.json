@@ -729,5 +729,6 @@
     "accountSubtitle": "请刷新后重试。我们已记录该客户端错误便于排查。",
     "refreshPage": "刷新页面"
   },
-  "clear": "清除"
+  "clear": "清除",
+  "chatOnWhatsApp": "通过 WhatsApp 咨询"
 }

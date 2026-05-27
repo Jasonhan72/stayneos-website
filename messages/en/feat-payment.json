@@ -150,7 +150,9 @@
     "comingSoonDescription": "{method} payment is not yet available. Please use a credit or debit card for now.",
     "useCard": "Use Card",
     "addPaymentMethod": "Add a payment method",
-    "choosePayment": "Choose your preferred payment method"
+    "choosePayment": "Choose your preferred payment method",
+    "failed": "Payment failed",
+    "authRequired": "Additional authentication required..."
   },
   "paymentMethod": "Payment Method",
   "paymentRecord": "Payment Record",

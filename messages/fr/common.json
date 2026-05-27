@@ -729,5 +729,6 @@
     "accountSubtitle": "Veuillez actualiser la page. L'erreur a été enregistrée.",
     "refreshPage": "Actualiser"
   },
-  "clear": "Effacer"
+  "clear": "Effacer",
+  "chatOnWhatsApp": "Discuter sur WhatsApp"
 }

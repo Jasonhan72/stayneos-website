@@ -150,7 +150,9 @@
     "comingSoonDescription": "Le paiement {method} n’est pas encore disponible. Veuillez utiliser une carte de crédit ou de débit pour le moment.",
     "useCard": "Utiliser la carte",
     "addPaymentMethod": "Ajouter un mode de paiement",
-    "choosePayment": "Choisissez votre mode de paiement"
+    "choosePayment": "Choisissez votre mode de paiement",
+    "failed": "Paiement échoué",
+    "authRequired": "Authentification supplémentaire requise..."
   },
   "paymentMethod": "Mode de paiement",
   "paymentRecord": "Historique de paiement",

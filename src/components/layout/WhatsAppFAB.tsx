@@ -1,12 +1,15 @@
 'use client';
 
+import { useI18n } from '@/lib/i18n';
+
 export function WhatsAppFAB() {
+  const { t } = useI18n();
   return (
     <a
       href="https://wa.me/16474467987?text=Hi%2C%20I'm%20interested%20in%20NEOS%20apartments"
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Chat on WhatsApp"
+      aria-label={t("common.chatOnWhatsApp", "Chat on WhatsApp")}
       className="fixed bottom-6 right-6 z-[1000] w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200"
     >
       <svg

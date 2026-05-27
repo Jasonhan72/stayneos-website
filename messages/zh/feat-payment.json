@@ -150,7 +150,9 @@
     "comingSoonDescription": "{method} 支付方式暂不可用。请先使用信用卡或借记卡。",
     "useCard": "使用银行卡",
     "addPaymentMethod": "添加支付方式",
-    "choosePayment": "选择您的支付方式"
+    "choosePayment": "选择您的支付方式",
+    "failed": "支付失败",
+    "authRequired": "需要额外身份验证..."
   },
   "paymentMethod": "支付方式",
   "paymentRecord": "支付记录",

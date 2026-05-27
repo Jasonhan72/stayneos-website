@@ -729,5 +729,6 @@
     "accountSubtitle": "Please refresh and try again. We logged the client error for debugging.",
     "refreshPage": "Refresh page"
   },
-  "clear": "Clear"
+  "clear": "Clear",
+  "chatOnWhatsApp": "Chat on WhatsApp"
 }

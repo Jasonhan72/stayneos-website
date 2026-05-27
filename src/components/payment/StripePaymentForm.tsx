@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useI18n } from '@/lib/i18n';
 import {
   PaymentElement,
   useStripe,
@@ -13,10 +14,12 @@ interface StripePaymentFormProps {
 }
 
 export default function StripePaymentForm({ amount, onSuccess, onError }: StripePaymentFormProps) {
+  const { t } = useI18n();
   const stripe = useStripe();
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
   const [message, setMessage] = useState('');
+  const [paymentStatus, setPaymentStatus] = useState<'idle' | 'success' | 'error' | 'processing' | 'auth'>('idle');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,16 +40,16 @@ export default function StripePaymentForm({ amount, onSuccess, onError }: Stripe
     });
 
     if (error) {
-      setMessage(error.message || 'Payment failed');
+      setPaymentStatus("error"); setMessage(error.message || t('payment.failed', 'Payment failed'));
       onError(error.message || 'Payment failed');
     } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-      setMessage('Payment successful!');
+      setPaymentStatus('success'); setMessage(t('payment.success', 'Payment successful!'));
       onSuccess();
     } else if (paymentIntent && paymentIntent.status === 'requires_action') {
       // 3D Secure or other authentication required
-      setMessage('Additional authentication required...');
+      setPaymentStatus('auth'); setMessage(t('payment.authRequired', 'Additional authentication required...'));
     } else {
-      setMessage('Processing payment...');
+      setPaymentStatus('processing'); setMessage(t('payment.processing', 'Processing payment...'));
     }
 
     setIsProcessing(false);
@@ -74,7 +77,7 @@ export default function StripePaymentForm({ amount, onSuccess, onError }: Stripe
 
       {message && (
         <div className={`p-3 rounded-lg text-sm ${
-          message.includes('successful') 
+          paymentStatus === "success" 
             ? 'bg-green-50 text-green-700' 
             : 'bg-red-50 text-red-700'
         }`}>
