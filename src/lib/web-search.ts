@@ -346,7 +346,7 @@ function parsePrice(text: string): { num?: number; raw?: string } {
   const m = text.match(re);
   if (!m) return {};
   const num = parseFloat(m[1].replace(/,/g, ''));
-  if (!Number.isFinite(num) || num < 500 || num > 50000) return { raw: m[0] };
+  if (!Number.isFinite(num) || num < 700 || num > 50000) return { raw: m[0] };
   return { num: Math.round(num), raw: m[0] };
 }
 
