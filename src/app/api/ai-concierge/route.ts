@@ -26,14 +26,14 @@ Available NEOS Properties in Toronto:
 2. ID: 2 — 238 Simcoe St (Grange Park) · Executive 3BR Suite
    - Location: Downtown Core / Grange Park, near AGO, OCAD, UofT St. George
    - Bedrooms: 3, Max Guests: 5, Area: 1100 sqft
-   - Monthly: $6,500 | Quarterly: $5,850/mo | Annual: $5,200/mo
+   - Monthly: $8,000 | Quarterly: $7,200/mo | Annual: $6,400/mo
    - Features: Walking distance to 4 major hospitals (Toronto General, Mt. Sinai, SickKids, Princess Margaret), St. Patrick / Osgoode subway ~3 min
    - Best for: Medical professionals, visiting scholars, academic stays, insurance housing, families needing hospital proximity
 
 3. ID: 3 — 22 Wellesley St E · Modern 1BR City View
    - Location: Midtown, near Wellesley subway station
    - Bedrooms: 1, Max Guests: 2, Area: 550 sqft
-   - Monthly: $3,500 | Quarterly: $3,150/mo | Annual: $2,800/mo
+   - Monthly: $4,000 | Quarterly: $3,600/mo | Annual: $3,200/mo
    - Features: Modern finishes, city view, convenient midtown location, close to UofT
    - Best for: Solo professionals, visiting scholars, medical rotations, budget-conscious stays
 
@@ -52,6 +52,7 @@ ${PROPERTIES_CONTEXT}
 IMPORTANT:
 - Be warm, concise, and helpful. Max 3-4 sentences for your response.
 - Always recommend a specific property based on the user's needs using the matching rules above.
+- Never invent addresses, prices, discounts, or availability. Use only the property data in this prompt.
 - Include a brief hotel comparison showing value.
 - Respond in the same language the user writes in.
 - Return ONLY valid JSON matching this format:
@@ -64,19 +65,19 @@ IMPORTANT:
 
 const FALLBACK_RESPONSES = {
   en: {
-    text: "Based on your needs, I'd recommend our 238 Simcoe St suite — perfectly located in downtown Toronto near major hospitals, universities, and transit. It's a fully furnished 3BR at $6,500/mo, move-in ready.",
+    text: "Based on your needs, I'd recommend our 238 Simcoe St suite — perfectly located in downtown Toronto near major hospitals, universities, and transit. It's a fully furnished 3BR at $8,000/mo, move-in ready.",
     recommended_property_id: 2,
     alternative_property_id: 3,
     hotel_comparison: "Comparable hotel suites in this area cost $250-400/night ($7,500-12,000/mo). NEOS saves you up to 45% with a real home experience.",
   },
   zh: {
-    text: "根据您的需求，我推荐我们位于 238 Simcoe St 的套房 — 地处多伦多市中心，靠近主要医院、大学和交通枢纽。这是一个全家具的 3 卧室公寓，月租 $6,500，可随时入住。",
+    text: "根据您的需求，我推荐我们位于 238 Simcoe St 的套房 — 地处多伦多市中心，靠近主要医院、大学和交通枢纽。这是一个全家具的 3 卧室公寓，月租 $8,000，可随时入住。",
     recommended_property_id: 2,
     alternative_property_id: 3,
     hotel_comparison: "该区域类似酒店套房价格 $250-400/晚（$7,500-12,000/月）。选择 NEOS 可节省高达 45%，享受真正的居家体验。",
   },
   fr: {
-    text: "En fonction de vos besoins, je recommande notre suite au 238 Simcoe St — parfaitement située au centre-ville de Toronto, près des principaux hôpitaux, universités et transports en commun. C'est un 3 chambres entièrement meublé à $6,500/mois, prêt à emménager.",
+    text: "En fonction de vos besoins, je recommande notre suite au 238 Simcoe St — parfaitement située au centre-ville de Toronto, près des principaux hôpitaux, universités et transports en commun. C'est un 3 chambres entièrement meublé à $8,000/mois, prêt à emménager.",
     recommended_property_id: 2,
     alternative_property_id: 3,
     hotel_comparison: "Les suites d'hôtel comparables dans cette zone coûtent $250-400/nuit ($7,500-12,000/mois). NEOS vous fait économiser jusqu'à 45% avec une véritable expérience de maison.",
@@ -184,17 +185,17 @@ export async function POST(request: NextRequest) {
 
     if (medicalKeywords.some(keyword => msg.includes(keyword))) {
       response = lang === 'zh' ? {
-        text: "针对医疗专业人士，我强烈推荐我们位于 238 Simcoe St 的套房 — 步行即可到达多伦多总医院、西奈山医院、病童医院和玛格丽特公主医院。全家具 3 卧室公寓，月租 $6,500。",
+        text: "针对医疗专业人士，我强烈推荐我们位于 238 Simcoe St 的套房 — 步行即可到达多伦多总医院、西奈山医院、病童医院和玛格丽特公主医院。全家具 3 卧室公寓，月租 $8,000。",
         recommended_property_id: 2,
         alternative_property_id: 3,
         hotel_comparison: "附近酒店价格 $250-400/晚。选择月租可节省高达 45%，并拥有完整厨房和家庭办公室。",
       } : lang === 'fr' ? {
-        text: "Pour les professionnels de la santé, je recommande vivement notre suite au 238 Simcoe St — à distance de marche des hôpitaux Toronto General, Mt. Sinai, SickKids et Princess Margaret. 3 chambres entièrement meublées à $6,500/mois.",
+        text: "Pour les professionnels de la santé, je recommande vivement notre suite au 238 Simcoe St — à distance de marche des hôpitaux Toronto General, Mt. Sinai, SickKids et Princess Margaret. 3 chambres entièrement meublées à $8,000/mois.",
         recommended_property_id: 2,
         alternative_property_id: 3,
         hotel_comparison: "Les hôtels à proximité facturent $250-400/nuit. Notre tarif mensuel vous fait économiser jusqu'à 45% avec une cuisine complète et un bureau à domicile.",
       } : {
-        text: "For medical professionals, I highly recommend our 238 Simcoe St suite — it's walking distance to Toronto General, Mt. Sinai, SickKids, and Princess Margaret hospitals. Fully furnished 3BR at $6,500/mo.",
+        text: "For medical professionals, I highly recommend our 238 Simcoe St suite — it's walking distance to Toronto General, Mt. Sinai, SickKids, and Princess Margaret hospitals. Fully furnished 3BR at $8,000/mo.",
         recommended_property_id: 2,
         alternative_property_id: 3,
         hotel_comparison: "Nearby hotels charge $250-400/night. Our monthly rate saves you up to 45% with a full kitchen and home office.",
@@ -218,17 +219,17 @@ export async function POST(request: NextRequest) {
       };
     } else if (scholarKeywords.some(keyword => msg.includes(keyword))) {
       response = lang === 'zh' ? {
-        text: "针对访问学者，我们位于 22 Wellesley St 的公寓非常合适 — 现代 1 卧室公寓，城市景观，靠近多伦多大学和 Wellesley 地铁站。月租仅 $3,500，全家具。",
+        text: "针对访问学者，我们位于 22 Wellesley St 的公寓非常合适 — 现代 1 卧室公寓，城市景观，靠近多伦多大学和 Wellesley 地铁站。月租仅 $4,000，全家具。",
         recommended_property_id: 3,
         alternative_property_id: 2,
         hotel_comparison: "校园附近的延长住宿酒店价格 $150-250/晚（$4,500-7,500/月）。选择 NEOS 可节省高达 53%。",
       } : lang === 'fr' ? {
-        text: "Pour les chercheurs invités, notre appartement au 22 Wellesley St est parfait — studio moderne avec vue sur la ville, près de l'Université de Toronto et de la station de métro Wellesley. Seulement $3,500/mois, entièrement meublé.",
+        text: "Pour les chercheurs invités, notre appartement au 22 Wellesley St est parfait — studio moderne avec vue sur la ville, près de l'Université de Toronto et de la station de métro Wellesley. Seulement $4,000/mois, entièrement meublé.",
         recommended_property_id: 3,
         alternative_property_id: 2,
         hotel_comparison: "Les hôtels de séjour prolongé près du campus facturent $150-250/nuit ($4,500-7,500/mois). NEOS vous fait économiser jusqu'à 53%.",
       } : {
-        text: "For visiting scholars, our 22 Wellesley St apartment is perfect — modern 1BR with city views, close to UofT and Wellesley subway. Just $3,500/mo, fully furnished.",
+        text: "For visiting scholars, our 22 Wellesley St apartment is perfect — modern 1BR with city views, close to UofT and Wellesley subway. Just $4,000/mo, fully furnished.",
         recommended_property_id: 3,
         alternative_property_id: 2,
         hotel_comparison: "Extended-stay hotels near campus charge $150-250/night ($4,500-7,500/mo). NEOS saves you up to 53%.",
