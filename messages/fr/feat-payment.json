@@ -148,7 +148,9 @@
     "next": "Suivant",
     "comingSoonTitle": "{method} bientôt disponible",
     "comingSoonDescription": "Le paiement {method} n’est pas encore disponible. Veuillez utiliser une carte de crédit ou de débit pour le moment.",
-    "useCard": "Utiliser la carte"
+    "useCard": "Utiliser la carte",
+    "addPaymentMethod": "Ajouter un mode de paiement",
+    "choosePayment": "Choisissez votre mode de paiement"
   },
   "paymentMethod": "Mode de paiement",
   "paymentRecord": "Historique de paiement",

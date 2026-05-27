@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useI18n } from '@/lib/i18n';
 import { X, Star, ChevronLeft, Diamond } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
@@ -47,6 +48,7 @@ export function ReviewAndContinue({
   bookingDetails,
   cancellationDate = 'Mar 6',
 }: ReviewAndContinueProps) {
+  const { t } = useI18n();
   const [paymentOption, setPaymentOption] = useState<PaymentOption>('full');
   const [showPriceDetails, setShowPriceDetails] = useState(false);
 
@@ -108,7 +110,7 @@ export function ReviewAndContinue({
 
       {/* Title */}
       <div className="px-4 pt-6 pb-4">
-        <h1 className="text-2xl font-semibold text-neutral-900">Review and continue</h1>
+        <h1 className="text-2xl font-semibold text-neutral-900">{t("booking.reviewAndContinue", "Review and continue")}</h1>
       </div>
 
       {/* Scrollable Content */}
@@ -131,7 +133,7 @@ export function ReviewAndContinue({
                   <Star size={14} className="fill-black" />
                   <span className="text-sm">{property.rating} ({property.reviewCount})</span>
                   {property.isGuestFavourite && (
-                    <span className="text-sm text-neutral-600">Guest favourite</span>
+                    <span className="text-sm text-neutral-600">{t("property.guestFavourite", "Guest favourite")}</span>
                   )}
                 </div>
               )}
@@ -143,11 +145,11 @@ export function ReviewAndContinue({
           {/* Dates Row */}
           <div className="flex items-center justify-between py-3">
             <div>
-              <p className="font-medium text-neutral-900">Dates</p>
+              <p className="font-medium text-neutral-900">{t("booking.dates", "Dates")}</p>
               <p className="text-sm text-neutral-600">{formatDateRange()}</p>
               <div className="flex items-center gap-1 mt-1">
                 <Diamond size={14} className="text-rose-500" />
-                <span className="text-sm text-rose-600 font-medium">Rare find</span>
+                <span className="text-sm text-rose-600 font-medium">{t('property.rareFind', 'Rare find')}</span>
               </div>
             </div>
             <button 
@@ -163,8 +165,8 @@ export function ReviewAndContinue({
           {/* Guests Row */}
           <div className="flex items-center justify-between py-3">
             <div>
-              <p className="font-medium text-neutral-900">Guests</p>
-              <p className="text-sm text-neutral-600">{guests} {guests === 1 ? 'adult' : 'adults'}</p>
+              <p className="font-medium text-neutral-900">{t("booking.guests", "Guests")}</p>
+              <p className="text-sm text-neutral-600">{guests} {guests === 1 ? t("booking.adult", "adult") : t("booking.adults", "adults")}</p>
             </div>
             <button 
               onClick={onChangeGuests}
@@ -180,7 +182,7 @@ export function ReviewAndContinue({
           <div className="py-3">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-neutral-900">Total price</p>
+                <p className="font-medium text-neutral-900">{t("booking.totalPrice", "Total price")}</p>
                 <p className="text-sm text-neutral-600">
                   ${total.toLocaleString()} including taxes 
                   <span className="underline">{currency}</span>
@@ -198,15 +200,15 @@ export function ReviewAndContinue({
             {showPriceDetails && (
               <div className="mt-4 space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-neutral-600 underline">${pricePerNight.toLocaleString()} x {months} months</span>
+                  <span className="text-neutral-600 underline">${pricePerNight.toLocaleString()} x {months} {t('booking.months', 'months')}</span>
                   <span className="text-neutral-900">${subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-neutral-600 underline">Cleaning fee</span>
+                  <span className="text-neutral-600 underline">{t("booking.cleaningFee", "Cleaning fee")}</span>
                   <span className="text-neutral-900">${cleaningFee.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-neutral-600 underline">Service fee</span>
+                  <span className="text-neutral-600 underline">{t("booking.serviceFee", "Service fee")}</span>
                   <span className="text-neutral-900">${serviceFee.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
@@ -214,7 +216,7 @@ export function ReviewAndContinue({
                   <span className="text-neutral-900">${tax.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between pt-2 border-t border-neutral-200">
-                  <span className="font-medium text-neutral-900">Total ({currency})</span>
+                  <span className="font-medium text-neutral-900">{t("booking.total", "Total")} ({currency})</span>
                   <span className="font-semibold text-neutral-900">${total.toLocaleString()}</span>
                 </div>
               </div>
@@ -225,7 +227,7 @@ export function ReviewAndContinue({
 
           {/* Free Cancellation */}
           <div className="py-3">
-            <p className="font-medium text-neutral-900">Free cancellation</p>
+            <p className="font-medium text-neutral-900">{t("booking.freeCancellation", "Free cancellation")}</p>
             <p className="text-sm text-neutral-600">
               Cancel before {cancellationDate} for a full refund. 
               <span className="underline font-medium">Full policy</span>
@@ -235,7 +237,7 @@ export function ReviewAndContinue({
 
         {/* Payment Options */}
         <div className="mb-6">
-          <h2 className="text-lg font-semibold text-neutral-900 mb-4">Choose when to pay</h2>
+          <h2 className="text-lg font-semibold text-neutral-900 mb-4">{t('booking.chooseWhenToPay', 'Choose when to pay')}</h2>
           
           {/* Pay Now Option */}
           <button
@@ -269,7 +271,7 @@ export function ReviewAndContinue({
             <div className="text-left">
               <p className="font-medium text-neutral-900">Pay part now, part later</p>
               <p className="text-sm text-neutral-600">
-                ${firstPayment.toLocaleString()} {currency} now, ${secondPayment.toLocaleString()} {currency} charged on {secondPaymentDate}. No extra fees. <span className="underline">More info</span>
+                ${firstPayment.toLocaleString()} {currency} now, ${secondPayment.toLocaleString()} {currency} charged on {secondPaymentDate}. {t('booking.noExtraFees', 'No extra fees')}. <span className="underline">{t('common.moreInfo', 'More info')}</span>
               </p>
             </div>
             <div className={cn(
@@ -314,7 +316,7 @@ export function ReviewAndContinue({
             <ChevronLeft size={24} className="text-neutral-900" />
           </button>
           
-          <h1 className="text-lg font-semibold text-neutral-900">Review and continue</h1>
+          <h1 className="text-lg font-semibold text-neutral-900">{t("booking.reviewAndContinue", "Review and continue")}</h1>
           
           <button 
             onClick={onClose}
@@ -360,7 +362,7 @@ export function ReviewAndContinue({
             {/* Dates Row */}
             <div className="flex items-center justify-between py-3 border-b border-neutral-100">
               <div>
-                <p className="font-medium text-neutral-900">Dates</p>
+                <p className="font-medium text-neutral-900">{t("booking.dates", "Dates")}</p>
                 <p className="text-sm text-neutral-600">{formatDateRange()}</p>
               </div>
               <button 
@@ -374,8 +376,8 @@ export function ReviewAndContinue({
             {/* Guests Row */}
             <div className="flex items-center justify-between py-3 border-b border-neutral-100">
               <div>
-                <p className="font-medium text-neutral-900">Guests</p>
-                <p className="text-sm text-neutral-600">{guests} {guests === 1 ? 'adult' : 'adults'}</p>
+                <p className="font-medium text-neutral-900">{t("booking.guests", "Guests")}</p>
+                <p className="text-sm text-neutral-600">{guests} {guests === 1 ? t("booking.adult", "adult") : t("booking.adults", "adults")}</p>
               </div>
               <button 
                 onClick={onChangeGuests}
@@ -388,18 +390,18 @@ export function ReviewAndContinue({
 
           {/* Price Details */}
           <div className="mb-6">
-            <h2 className="text-lg font-semibold text-neutral-900 mb-4">Price Summary</h2>
+            <h2 className="text-lg font-semibold text-neutral-900 mb-4">{t('booking.priceSummary', 'Price Summary')}</h2>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
-                <span className="text-neutral-600 underline">${pricePerNight.toLocaleString()} x {months} months</span>
+                <span className="text-neutral-600 underline">${pricePerNight.toLocaleString()} x {months} {t('booking.months', 'months')}</span>
                 <span className="text-neutral-900">${subtotal.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-neutral-600 underline">Cleaning fee</span>
+                <span className="text-neutral-600 underline">{t("booking.cleaningFee", "Cleaning fee")}</span>
                 <span className="text-neutral-900">${cleaningFee.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-neutral-600 underline">Service fee</span>
+                <span className="text-neutral-600 underline">{t("booking.serviceFee", "Service fee")}</span>
                 <span className="text-neutral-900">${serviceFee.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
@@ -407,7 +409,7 @@ export function ReviewAndContinue({
                 <span className="text-neutral-900">${tax.toLocaleString()}</span>
               </div>
               <div className="flex justify-between pt-3 border-t border-neutral-200">
-                <span className="font-semibold text-neutral-900">Total ({currency})</span>
+                <span className="font-semibold text-neutral-900">{t("booking.total", "Total")} ({currency})</span>
                 <span className="font-semibold text-neutral-900">${total.toLocaleString()}</span>
               </div>
             </div>
@@ -415,7 +417,7 @@ export function ReviewAndContinue({
 
           {/* Payment Options */}
           <div className="mb-6">
-            <h2 className="text-lg font-semibold text-neutral-900 mb-4">Choose when to pay</h2>
+            <h2 className="text-lg font-semibold text-neutral-900 mb-4">{t('booking.chooseWhenToPay', 'Choose when to pay')}</h2>
             
             {/* Pay Now Option */}
             <button
@@ -463,7 +465,7 @@ export function ReviewAndContinue({
 
           {/* Cancellation Policy */}
           <div className="p-4 bg-neutral-50 rounded-xl">
-            <p className="font-medium text-neutral-900 mb-1">Free cancellation</p>
+            <p className="font-medium text-neutral-900 mb-1">{t("booking.freeCancellation", "Free cancellation")}</p>
             <p className="text-sm text-neutral-600">
               Cancel before {cancellationDate} for a full refund.
             </p>

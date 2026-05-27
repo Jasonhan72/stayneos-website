@@ -39,6 +39,7 @@ import { ApiErrorAlert } from '@/components/error';
 import { ReviewAndContinue, PaymentMethod, GuestSelector, type GuestCounts } from '@/components/booking';
 // CardDetailsForm removed - PCI compliance: all card input handled by Stripe Elements
 import { useI18n } from '@/lib/i18n';
+import { normalizeAmenityForI18n } from '@/lib/amenity-i18n';
 import { useWishlist } from '@/lib/context/WishlistContext';
 import { useAuth } from '@/lib/context/UserContext';
 import { LoginModal } from '@/components/auth/LoginModal';
@@ -742,7 +743,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                     <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
                       {amenityIcon(item, 24)}
                     </span>
-                    <span className="text-sm">{t(`amenities.${item}`, item)}</span>
+                    <span className="text-sm">{t(`amenities.${normalizeAmenityForI18n(item)}`, item)}</span>
                   </div>
                 ))}
               </div>
@@ -774,7 +775,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                           <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
                             {amenityIcon(item, 24)}
                           </span>
-                          <span>{t(`amenities.${item}`, item)}</span>
+                          <span>{t(`amenities.${normalizeAmenityForI18n(item)}`, item)}</span>
                         </div>
                       ))}
                     </div>

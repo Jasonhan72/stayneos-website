@@ -115,7 +115,14 @@
       "minNights": "Minimum {count} nights required"
     },
     "trustLine": "Secure booking · Free cancellation within 24h",
-    "monthlyDiscountHint": "for stays of 28+ nights"
+    "monthlyDiscountHint": "for stays of 28+ nights",
+    "reviewAndContinue": "Review and continue",
+    "adult": "adult",
+    "adults": "adults",
+    "freeCancellation": "Free cancellation",
+    "payNow": "Pay {amount} {currency} now",
+    "chooseWhenToPay": "Choose when to pay",
+    "noExtraFees": "No extra fees"
   },
   "bookings": {
     "title": "My Bookings",

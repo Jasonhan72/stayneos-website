@@ -2,6 +2,7 @@
 // v2 - brand markers + hover cards (2026-05-18)
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 import { GOOGLE_MAPS_API_KEY, hasUsableGoogleMapsKey } from '@/lib/google-maps';
 
 interface Property {
@@ -135,6 +136,7 @@ function propertyCardHTML(property: Property): string {
 }
 
 export default function GooglePropertyMap({ properties, selectedPropertyId, hoveredPropertyId, onPropertySelect }: GooglePropertyMapProps) {
+  const { t } = useI18n();
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<unknown>(null);
@@ -332,7 +334,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
   if (properties.length === 0) {
     return (
       <div className="w-full h-full bg-neutral-100 flex items-center justify-center rounded-2xl">
-        <div className="text-neutral-500">No properties to show on map</div>
+        <div className="text-neutral-500">{t("property.mapNoProperties", "No properties to show on map")}</div>
       </div>
     );
   }
@@ -345,7 +347,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
           Map · {properties.length} furnished stays
         </div>
 
-        <div ref={mapRef} className={cn("absolute inset-0", mapError && "hidden")} aria-label="Properties map" />
+        <div ref={mapRef} className={cn("absolute inset-0", mapError && "hidden")} aria-label={t("property.mapTitle", "Properties map")} />
 
         {mapError && (
           <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_30%_20%,#e5e7eb_0,#e5e7eb_2px,transparent_3px),linear-gradient(135deg,#f5f5f4,#e7e5e4)]">

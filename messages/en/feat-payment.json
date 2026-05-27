@@ -148,7 +148,9 @@
     "next": "Next",
     "comingSoonTitle": "{method} Coming Soon",
     "comingSoonDescription": "{method} payment is not yet available. Please use a credit or debit card for now.",
-    "useCard": "Use Card"
+    "useCard": "Use Card",
+    "addPaymentMethod": "Add a payment method",
+    "choosePayment": "Choose your preferred payment method"
   },
   "paymentMethod": "Payment Method",
   "paymentRecord": "Payment Record",

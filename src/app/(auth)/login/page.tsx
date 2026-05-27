@@ -3,16 +3,28 @@ import Link from 'next/link';
 import ResponsiveImage from '@/components/ui/ResponsiveImage';
 import { LoginForm } from '@/components/auth/LoginForm';
 
-export const metadata: Metadata = {
-  title: 'Log In - NEOS',
-  description: 'Log in to your NEOS account to manage bookings and access premium furnished apartments.',
-};
+import { resolveRequestLocale, getServerTranslation, getOgLocale } from '@/lib/i18n-server';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await resolveRequestLocale();
+  return {
+    title: getServerTranslation(locale, 'pagesAuth.loginPage.title', 'Log In - NEOS'),
+    description: getServerTranslation(locale, 'pagesAuth.loginPage.description', 'Log in to your NEOS account to manage bookings and access premium furnished apartments.'),
+    openGraph: { locale: getOgLocale(locale) },
+  };
+}
 
 export default async function LoginPage({
   searchParams,
 }: {
   searchParams?: Promise<{ callbackUrl?: string; callback?: string; redirect?: string; next?: string }>;
 }) {
+    const locale = await resolveRequestLocale();
+  const loginHeroTitle = getServerTranslation(locale, 'loginPage.heroTitle', 'Welcome Back to Your Home Away From Home');
+  const loginHeroSubtitle = getServerTranslation(locale, 'loginPage.heroSubtitle', 'Access your account and manage your luxury living experience');
+  const loginTitle = getServerTranslation(locale, 'loginPage.loginTitle', 'Welcome Back');
+  const loginSubtitle = getServerTranslation(locale, 'loginPage.loginSubtitle', 'Sign in to access your account');
+
   const resolvedSearchParams = await searchParams;
   const callbackUrl = resolvedSearchParams?.redirect || resolvedSearchParams?.callbackUrl || resolvedSearchParams?.callback || resolvedSearchParams?.next || '/';
 
@@ -28,8 +40,8 @@ export default async function LoginPage({
             </Link>
           </div>
           <div className="max-w-lg">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">Welcome Back to<br />Your Home Away From Home</h1>
-            <p className="text-lg text-white/90 leading-relaxed">Access your account and manage your luxury living experience</p>
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">{loginHeroTitle}</h1>
+            <p className="text-lg text-white/90 leading-relaxed">{loginHeroSubtitle}</p>
           </div>
         </div>
       </div>
@@ -43,8 +55,8 @@ export default async function LoginPage({
           </div>
 
           <div className="text-center mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 mb-2">Welcome Back</h1>
-            <p className="text-neutral-600">Sign in to access your account</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 mb-2">{loginTitle}</h1>
+            <p className="text-neutral-600">{loginSubtitle}</p>
           </div>
 
           <LoginForm callbackUrl={callbackUrl} />

@@ -115,7 +115,14 @@
       "minNights": "Séjour minimum de {count} nuits"
     },
     "trustLine": "Réservation sécurisée · Annulation gratuite sous 24h",
-    "monthlyDiscountHint": "pour les séjours de 28 nuits et plus"
+    "monthlyDiscountHint": "pour les séjours de 28 nuits et plus",
+    "reviewAndContinue": "Vérifier et continuer",
+    "adult": "adulte",
+    "adults": "adultes",
+    "freeCancellation": "Annulation gratuite",
+    "payNow": "Payer {amount} {currency} maintenant",
+    "chooseWhenToPay": "Choisir quand payer",
+    "noExtraFees": "Aucun frais supplémentaire"
   },
   "bookings": {
     "title": "Mes Réservations",

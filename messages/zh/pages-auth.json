@@ -85,7 +85,11 @@
     "heroSubtitle": "加入数千名发现精装租赁未来的专业人士。",
     "apartments": "公寓",
     "cities": "城市",
-    "satisfaction": "满意度"
+    "satisfaction": "满意度",
+    "registerTitle": "创建账户",
+    "registerSubtitle": "加入数千名找到理想家的用户",
+    "title": "注册 - NEOS",
+    "description": "创建您的 NEOS 账户，开启精装生活之旅"
   },
   "loginButton": "立即登录",
   "registerButton": "立即加入",

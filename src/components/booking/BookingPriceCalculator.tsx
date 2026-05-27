@@ -4,6 +4,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { useI18n } from '@/lib/i18n';
 import { Sparkles, Info } from 'lucide-react';
 import { calculateBookingPrice, type BookingCalculation } from '@/lib/booking';
 import { cn } from '@/lib/utils';
@@ -61,13 +62,14 @@ export function BookingPriceCalculator({
   className,
   compact = false,
 }: BookingPriceCalculatorProps) {
+  const { t } = useI18n();
   const price = useMemo(
     () => buildPriceCalculation({ basePrice, checkIn, checkOut, monthlyDiscount, cleaningFee }),
     [basePrice, checkIn, checkOut, monthlyDiscount, cleaningFee]
   );
 
   if (!price) {
-    return <div className={cn('text-center py-4 text-neutral-500', className)}>Select dates to see pricing</div>;
+    return <div className={cn('text-center py-4 text-neutral-500', className)}>{t('booking.selectDatesToSeePrice', 'Select dates to see pricing')}</div>;
   }
 
   const formatCurrency = (amount: number) => `$${amount.toLocaleString()} ${currency}`;

@@ -115,7 +115,14 @@
       "minNights": "至少入住 {count} 晚"
     },
     "trustLine": "安全预订 · 24小时内可免费取消",
-    "monthlyDiscountHint": "入住 28 晚及以上可享优惠"
+    "monthlyDiscountHint": "入住 28 晚及以上可享优惠",
+    "reviewAndContinue": "审核并继续",
+    "adult": "位成人",
+    "adults": "位成人",
+    "freeCancellation": "免费取消",
+    "payNow": "现在支付 {amount} {currency}",
+    "chooseWhenToPay": "选择支付时间",
+    "noExtraFees": "无额外费用"
   },
   "bookings": {
     "title": "我的预订",

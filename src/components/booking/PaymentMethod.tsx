@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { X, ChevronLeft, CreditCard } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 
 export interface PaymentMethodProps {
   isOpen: boolean;
@@ -59,6 +60,7 @@ export function PaymentMethod({
   onBack,
   onNext,
 }: PaymentMethodProps) {
+  const { t } = useI18n();
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>('card');
 
   if (!isOpen) return null;
@@ -103,7 +105,7 @@ export function PaymentMethod({
 
       {/* Title */}
       <div className="px-4 pt-6 pb-4">
-        <h1 className="text-2xl font-semibold text-neutral-900">Add a payment method</h1>
+        <h1 className="text-2xl font-semibold text-neutral-900">{t("payment.addPaymentMethod", "Add a payment method")}</h1>
       </div>
 
       {/* Payment Options */}
@@ -181,7 +183,7 @@ export function PaymentMethod({
             <ChevronLeft size={24} className="text-neutral-900" />
           </button>
           
-          <h1 className="text-lg font-semibold text-neutral-900">Add payment method</h1>
+          <h1 className="text-lg font-semibold text-neutral-900">{t("payment.addPaymentMethod", "Add payment method")}</h1>
           
           <button 
             onClick={onClose}
@@ -193,7 +195,7 @@ export function PaymentMethod({
 
         {/* Content */}
         <div className="flex-1 px-6 py-6">
-          <p className="text-neutral-600 mb-6">Choose your preferred payment method</p>
+          <p className="text-neutral-600 mb-6">{t("payment.choosePayment", "Choose your preferred payment method")}</p>
           
           <div className="border border-neutral-200 rounded-xl overflow-hidden">
             {paymentOptions.map((option, index) => (

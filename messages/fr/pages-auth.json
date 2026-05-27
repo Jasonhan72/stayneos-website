@@ -85,7 +85,11 @@
     "heroSubtitle": "Rejoignez des milliers de professionnels.",
     "apartments": "Appartements",
     "cities": "Villes",
-    "satisfaction": "Satisfaction"
+    "satisfaction": "Satisfaction",
+    "registerTitle": "Créer un compte",
+    "registerSubtitle": "Rejoignez ceux qui ont trouvé leur chez-soi",
+    "title": "Inscription - NEOS",
+    "description": "Créez votre compte NEOS et commencez votre aventure"
   },
   "loginButton": "Se Connecter",
   "registerButton": "Rejoindre Maintenant",

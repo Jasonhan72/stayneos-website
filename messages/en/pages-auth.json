@@ -85,7 +85,11 @@
     "heroSubtitle": "Join thousands of professionals who have discovered the future of furnished rentals.",
     "apartments": "Apartments",
     "cities": "Cities",
-    "satisfaction": "Satisfaction"
+    "satisfaction": "Satisfaction",
+    "registerTitle": "Create Account",
+    "registerSubtitle": "Join thousands who found their perfect home",
+    "title": "Sign Up - NEOS",
+    "description": "Create your NEOS account and start your luxury living journey"
   },
   "loginButton": "Sign In",
   "registerButton": "Join Now",
