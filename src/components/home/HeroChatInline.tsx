@@ -358,7 +358,7 @@ export function HeroChatInline() {
           </div>
 
           {/* Bottom input — inside the conversation panel */}
-          <div className="border-t border-white/10 p-3">
+          <div className="border-t border-white/10 bg-white/5 backdrop-blur-sm p-3">
             <form onSubmit={handleBottomSubmit} className="flex items-center gap-2">
               <input
                 ref={bottomInputRef}
@@ -372,7 +372,7 @@ export function HeroChatInline() {
               <button
                 type="submit"
                 disabled={!bottomInput.trim() || isLoading}
-                className="flex min-h-11 min-w-11 flex-shrink-0 items-center justify-center rounded-full bg-accent p-2.5 text-white transition-all duration-200 hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex min-h-11 min-w-11 flex-shrink-0 items-center justify-center rounded-full bg-accent/60 p-2.5 text-white backdrop-blur-sm transition-all duration-200 hover:bg-accent/80 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {isLoading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />

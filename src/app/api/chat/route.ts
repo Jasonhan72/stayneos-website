@@ -382,9 +382,11 @@ function findClosestInternalProperty(properties: InternalChatProperty[], query: 
 
 function filterExternalPropertiesForQuery(properties: ExternalProperty[], query: string, budget?: number, limit = 3): ExternalProperty[] {
   const requireGta = isGtaSearchIntent(query);
+  const bedrooms = getQueryBedrooms(query);
   return properties
     .filter((property) => isGtaExternalProperty(property, requireGta))
     .filter((property) => !budget || (typeof property.price === 'number' && property.price <= budget))
+    .filter((property) => !bedrooms || (typeof property.bedrooms === 'number' && property.bedrooms >= bedrooms))
     .filter((property) =>
       property.source === 'realtor.ca'
       && typeof property.price === 'number'
