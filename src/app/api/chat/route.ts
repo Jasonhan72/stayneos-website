@@ -106,6 +106,9 @@ IMPORTANT RULES:
 - If you have real-time data (weather, search results), use it directly in your answer. Don't say "querying..." or "checking..." — you already have the data.
 - For city-specific questions you can answer from general knowledge (transit routes, popular neighborhoods, hospital locations), answer directly without saying you need to search.
 - **Pay attention to the city the user is asking about.** If they ask about a city other than Toronto (e.g. Seattle, Vancouver, New York), acknowledge that city in your response. Don't recommend Toronto-specific properties unless they ask about Toronto.
+- When the frontend passes external property cards (marked as "EXTERNAL PROPERTY RESULTS"), mention in your response that these are from realtor.ca/condos.ca and distinguish them from NEOS internal listings.
+- Always present NEOS internal properties FIRST and highlight them as "我们的房源" (in Chinese) or "NEOS listing" (in English).
+- External realtor.ca results should be presented SECOND and clearly labeled "来自 realtor.ca" (in Chinese) or "from realtor.ca" (in English).
 - When responding in Chinese (ZH), use Chinese terminology for amenities (e.g. 水电费 not "utilities", 服务 not "services"). Never leave English keywords in a Chinese response.
 - If you truly don't know, suggest contacting hello@stayneos.com.
 - Respond in the same language the user writes in.`;
@@ -203,10 +206,12 @@ function needsWebSearch(query: string): boolean {
     'transit', 'ttc', 'subway', 'bus', 'airport', 'commute',
     'school', 'university', 'hospital', 'clinic', 'gym', 'park',
     'neighborhood', 'neighbourhood', 'area', 'district',
-    // Chinese keywords
+    // Chinese keywords — general
     '餐厅', '美食', '交通', '地铁', '学校', '医院', '公园',
     '房价', '房源', '租金', '挂牌', '小区', '社区', '公寓',
     '房产', '楼盘', '二手房', '新房', '出租', '求租',
+    '找', '附近', '周围', '旁边', '预算', '价格', '多少钱',
+    '租房', '月租', '多大', '市中心', '学区', '华人',
     // Direct URL or search intent
     'search', 'find', 'look up', 'check', 'latest', 'recent', 'current',
     '搜索', '查找', '查一下', '帮我查', '最新', '最近',
@@ -266,16 +271,25 @@ async function callWebSearch(query: string): Promise<string> {
 function needsExternalPropertySearch(query: string): boolean {
   const q = query.toLowerCase();
   const propertyKeywords = [
+    // English
     'rent', 'rental', 'lease', 'apartment', 'condo', 'house', 'studio',
     'bedroom', '1br', '2br', '3br', 'br ', 'unit', 'suite', 'listing',
-    'find', 'looking for', 'show me', 'available',
-    // Chinese
-    '房源', '出租', '出售', '公寓', '单间', '两居', '三居', '套房', '帮我找', '查一下房', '找房子',
+    'find', 'looking for', 'show me', 'available', 'furnished', 'monthly',
+    'budget', 'under', 'below',
+    // Chinese — comprehensive property search intent
+    '房源', '出租', '出售', '公寓', '单间', '两居', '三居', '套房', '帮我找',
+    '查一下房', '找房子', '找房', '找一下', '找找', '有没有', '有什么',
+    '租房', '租房子', '求租', '租', '多大', '附近', '旁边', '周围', '靠近',
+    '预算', '以内', '以下', '价格', '多少钱', '月租', '一居', '二居',
+    '卧室', '几房', '房租', '住', '离', '学校', '多大附近',
     // Site references
-    'condos.ca', 'zolo', 'rentals.ca', 'rentfaster', 'padmapper', 'realtor.ca', 'liv.rent', 'kijiji', 'housesigma',
+    'condos.ca', 'zolo', 'rentals.ca', 'rentfaster', 'padmapper',
+    'realtor.ca', 'liv.rent', 'kijiji', 'housesigma',
   ];
   // Also: any URL in the message that points to a property site
   if (/https?:\/\/[^\s]*(condos\.ca|zolo\.ca|rentals\.ca|rentfaster\.ca|padmapper\.com|liv\.rent|realtor\.ca|kijiji\.ca|housesigma\.com|zumper\.com)/i.test(query)) return true;
+  // Also: Chinese patterns that indicate property intent
+  if (/找.*房|房.*预算|预算.*房|附近.*公寓|旁边.*(公寓|房)|(多大|大学|学校).*(公寓|房|租)/.test(query)) return true;
   return propertyKeywords.some(k => q.includes(k));
 }
 
