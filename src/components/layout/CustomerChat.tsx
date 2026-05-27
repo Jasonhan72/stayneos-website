@@ -365,17 +365,17 @@ export function CustomerChat() {
                     {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 </div>
-                {message.externalProperties && message.externalProperties.length > 0 && (
-                  <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
-                    {message.externalProperties.map((p, i) => (
-                      <ChatExternalPropertyCard key={`${p.url}-${i}`} property={p} variant="light" />
-                    ))}
-                  </div>
-                )}
                 {message.properties && message.properties.length > 0 && (
                   <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
                     {message.properties.map((property) => (
                       <ChatPropertyCard key={property.id} property={property} />
+                    ))}
+                  </div>
+                )}
+                {message.externalProperties && message.externalProperties.length > 0 && (
+                  <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
+                    {message.externalProperties.map((p, i) => (
+                      <ChatExternalPropertyCard key={`${p.url}-${i}`} property={p} variant="light" />
                     ))}
                   </div>
                 )}

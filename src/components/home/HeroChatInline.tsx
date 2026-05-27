@@ -329,18 +329,6 @@ export function HeroChatInline() {
                   </div>
                 </div>
 
-                {msg.externalProperties && msg.externalProperties.length > 0 && (
-                  <div className="mt-3 -mx-1 flex gap-3 overflow-x-auto pb-2 pl-1 pr-1 scrollbar-thin scrollbar-thumb-white/20">
-                    {msg.externalProperties.map((p, i) => (
-                      <ChatExternalPropertyCard
-                        key={`${p.url}-${i}`}
-                        property={p}
-                        variant="dark"
-                      />
-                    ))}
-                  </div>
-                )}
-
                 {msg.properties && msg.properties.length > 0 && (
                   <div className="mt-3 -mx-1 flex gap-3 overflow-x-auto pb-2 pl-1 pr-1 scrollbar-thin scrollbar-thumb-white/20">
                     {msg.properties.map((property) => (
@@ -353,6 +341,18 @@ export function HeroChatInline() {
                           price: property.monthlyPrice,
                           bedrooms: property.bedrooms,
                         }}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {msg.externalProperties && msg.externalProperties.length > 0 && (
+                  <div className="mt-3 -mx-1 flex gap-3 overflow-x-auto pb-2 pl-1 pr-1 scrollbar-thin scrollbar-thumb-white/20">
+                    {msg.externalProperties.map((p, i) => (
+                      <ChatExternalPropertyCard
+                        key={`${p.url}-${i}`}
+                        property={p}
+                        variant="dark"
                       />
                     ))}
                   </div>

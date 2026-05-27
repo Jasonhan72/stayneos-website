@@ -337,54 +337,15 @@ function scoreProperty(property: InternalChatProperty, query: string, budget?: n
   return score;
 }
 
-function pickRecommendedProperties(properties: InternalChatProperty[], query: string): InternalChatProperty[] {
+function pickRecommendedProperties(properties: InternalChatProperty[], query: string, limit = 5): InternalChatProperty[] {
   const budget = getQueryBudget(query);
   const bedrooms = getQueryBedrooms(query);
   return [...properties]
     .filter((property) => !bedrooms || property.bedrooms >= bedrooms)
-    .filter((property) => !budget || property.price <= budget || property.price === 0)
     .map((property) => ({ property, score: scoreProperty(property, query, budget, bedrooms) }))
     .sort((a, b) => b.score - a.score || a.property.price - b.property.price)
-    .slice(0, 4)
+    .slice(0, limit)
     .map(({ property }) => property);
-}
-
-function formatChatCurrency(value: number, language: string): string {
-  const amount = `$${value.toLocaleString('en-CA')}`;
-  if (language === 'FR') return `${amount} CAD`;
-  return `CAD ${amount}`;
-}
-
-function getPropertyTitle(property: InternalChatProperty): string {
-  return property.title || property.location || 'NEOS property';
-}
-
-function getNoBudgetMatchResponse(
-  language: string,
-  budget: number,
-  cheapest?: InternalChatProperty,
-  externalCount = 0
-): string {
-  if (!cheapest) {
-    if (language === 'ZH') return '我现在没有可引用的实时房源数据。请查看 /properties，或联系 support@stayneos.com 确认最新可订房源。';
-    if (language === 'FR') return "Je n'ai pas de données de logements en temps réel à citer pour le moment. Consultez /properties ou écrivez à support@stayneos.com.";
-    return 'I do not have live property data to cite right now. Please check /properties or email support@stayneos.com.';
-  }
-
-  const budgetText = formatChatCurrency(budget, language);
-  const priceText = formatChatCurrency(cheapest.price, language);
-  const title = getPropertyTitle(cheapest);
-
-  if (language === 'ZH') {
-    const externalText = externalCount > 0 ? ` 下方还有 ${externalCount} 个来自外部平台的补充结果卡片，请以原网站信息为准。` : '';
-    return `目前我们的房源里暂无月租 ${budgetText} 以内的选项。最接近的是 ${title}，月租 ${priceText}。我只引用 NEOS 当前内部房源数据，不会为了匹配预算改写价格；如果预算有弹性，可以继续比较这个选项，或联系 support@stayneos.com 了解后续可用房源。${externalText}`;
-  }
-  if (language === 'FR') {
-    const externalText = externalCount > 0 ? ` ${externalCount} résultat(s) externe(s) sont aussi affichés ci-dessous; vérifiez les détails sur le site source.` : '';
-    return `Nous n'avons actuellement aucun logement NEOS à moins de ${budgetText} par mois. L'option la plus proche est ${title}, à ${priceText}/mois. Je cite uniquement les données internes actuelles de NEOS et je ne modifie pas les prix pour correspondre à un budget.${externalText}`;
-  }
-  const externalText = externalCount > 0 ? ` ${externalCount} external result(s) are also shown below; please verify details on the source site.` : '';
-  return `We do not currently have any NEOS listings under ${budgetText} per month. The closest option is ${title} at ${priceText}/mo. I only quote current internal NEOS listing data and will not change prices to fit a budget.${externalText}`;
 }
 
 // Fetch live property data from the same internal catalog used by /api/properties.
@@ -479,6 +440,38 @@ function getExternalSearchCards(query: string): ExternalProperty[] {
       snippet: 'External marketplace search link. Prices and availability must be verified on realtor.ca.',
     },
   ];
+}
+
+function getListingResultsResponse(
+  language: string,
+  internalCount: number,
+  externalCount: number
+): string {
+  if (language === 'ZH') {
+    if (externalCount > 0) {
+      return `我先列 NEOS 站内房源，再补 realtor.ca 外部结果；最多 5 个，点击下方卡片查看链接。`;
+    }
+    if (internalCount > 0) {
+      return `我先列 NEOS 站内房源；最多 5 个，点击下方卡片查看链接。`;
+    }
+    return '目前没有可展示的 NEOS 站内房源或 realtor.ca 外部结果。请调整预算或位置再试。';
+  }
+  if (language === 'FR') {
+    if (externalCount > 0) {
+      return 'Je liste d’abord les logements NEOS, puis les résultats realtor.ca; 5 résultats maximum. Ouvrez les cartes ci-dessous pour les liens.';
+    }
+    if (internalCount > 0) {
+      return 'Je liste d’abord les logements NEOS; 5 résultats maximum. Ouvrez les cartes ci-dessous pour les liens.';
+    }
+    return "Aucun logement NEOS ni résultat realtor.ca à afficher pour l'instant. Essayez un autre budget ou emplacement.";
+  }
+  if (externalCount > 0) {
+    return 'NEOS listings are shown first, followed by realtor.ca results; 5 results maximum. Open the cards below for links.';
+  }
+  if (internalCount > 0) {
+    return 'NEOS listings are shown first; 5 results maximum. Open the cards below for links.';
+  }
+  return 'No NEOS listings or realtor.ca results are available for that search yet. Try a different budget or location.';
 }
 
 // Simple IP-based rate limit for public chat (20 req/min)
@@ -589,31 +582,28 @@ export async function POST(request: NextRequest) {
     // Fetch live property data from database
     const propertyData = await getPropertyContext(language);
     const recommendedProperties = isPropertyListingRequest
-      ? pickRecommendedProperties(propertyData.properties, message)
+      ? pickRecommendedProperties(propertyData.properties, message, 5)
       : [];
-    const budget = getQueryBudget(message);
 
-    if (isPropertyListingRequest && budget && propertyData.properties.length > 0) {
-      const sortedByPrice = [...propertyData.properties]
-        .filter((property) => property.price > 0)
-        .sort((a, b) => a.price - b.price);
-      const hasMonthlyMatch = sortedByPrice.some((property) => property.price <= budget);
-
-      if (!hasMonthlyMatch) {
-        return NextResponse.json({
-          text: getNoBudgetMatchResponse(language, budget, sortedByPrice[0], externalProperties.length),
-          sessionId,
-          source: 'budget-guardrail',
-          language,
-          usedWebSearch,
-          propertySource: propertyData.source,
-          externalProperties: externalProperties.length > 0 ? externalProperties : undefined,
-        }, {
-          headers: {
-            'Cache-Control': 'no-store, no-cache, must-revalidate',
-          }
-        });
-      }
+    if (isPropertyListingRequest) {
+      const externalLimit = Math.max(0, 5 - recommendedProperties.length);
+      externalProperties = externalProperties.slice(0, externalLimit);
+      return NextResponse.json({
+        text: getListingResultsResponse(language, recommendedProperties.length, externalProperties.length),
+        sessionId,
+        source: 'listing-results',
+        language,
+        usedWebSearch,
+        webSearchQuery: usedWebSearch ? message : undefined,
+        properties: recommendedProperties.length > 0 ? recommendedProperties : undefined,
+        recommendations: recommendedProperties.length > 0 ? recommendedProperties : undefined,
+        propertySource: propertyData.source,
+        externalProperties: externalProperties.length > 0 ? externalProperties : undefined,
+      }, {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate',
+        }
+      });
     }
 
     // Prepare messages for AI
