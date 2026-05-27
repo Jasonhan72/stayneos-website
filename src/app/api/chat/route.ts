@@ -504,6 +504,7 @@ function getListingResultsResponse(
 ): string {
   if (language === 'ZH') {
     if (externalCount > 0) {
+      if (internalCount === 0) return `NEOS 当前没有符合预算的站内房源；下面是 realtor.ca 外部结果，最多 5 个，点击卡片查看详情。`;
       return `我先列 NEOS 站内房源，再补 realtor.ca 外部结果；最多 5 个，点击下方卡片查看链接。`;
     }
     if (internalCount > 0) {
@@ -513,6 +514,7 @@ function getListingResultsResponse(
   }
   if (language === 'FR') {
     if (externalCount > 0) {
+      if (internalCount === 0) return "Aucun logement NEOS ne correspond au budget pour l'instant; voici les résultats realtor.ca, 5 maximum. Ouvrez les cartes ci-dessous pour les détails.";
       return 'Je liste d’abord les logements NEOS, puis les résultats realtor.ca; 5 résultats maximum. Ouvrez les cartes ci-dessous pour les liens.';
     }
     if (internalCount > 0) {
@@ -521,6 +523,7 @@ function getListingResultsResponse(
     return "Aucun logement NEOS ni résultat realtor.ca à afficher pour l'instant. Essayez un autre budget ou emplacement.";
   }
   if (externalCount > 0) {
+    if (internalCount === 0) return 'No NEOS listings currently match the budget; realtor.ca results are shown below, 5 maximum. Open the cards for details.';
     return 'NEOS listings are shown first, followed by realtor.ca results; 5 results maximum. Open the cards below for links.';
   }
   if (internalCount > 0) {
@@ -622,7 +625,7 @@ export async function POST(request: NextRequest) {
       if (isPropertyListingRequest && externalPropertySearchEnabled) {
         const [textResults, cards] = await Promise.allSettled([
           callWebSearch(`realtor.ca ${message}`),
-          searchExternalProperties(message, 3),
+          searchExternalProperties(message, 5),
         ]);
         webSearchResults = textResults.status === 'fulfilled' ? textResults.value : '';
         externalProperties = cards.status === 'fulfilled' ? cards.value : [];
