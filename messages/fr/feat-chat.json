@@ -11,6 +11,8 @@
     "send": "Envoyer",
     "typing": "Aria est en train d'écrire...",
     "disclaimer": "Les réponses peuvent prendre quelques instants",
+    "heroSubtitle": "Aria · Service client",
+    "followUp": "Posez une autre question...",
     "error": "Désolé, une erreur s'est produite lors de l'envoi de votre message. Veuillez réessayer ou nous contacter par email à hello@stayneos.com.",
     "fallback": {
       "1": "Pour les demandes de réservation, veuillez visiter notre page de propriétés ou utiliser le concierge IA ci-dessus.",

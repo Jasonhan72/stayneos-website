@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/d1';
 import { validateCsrf } from '@/lib/security/csrf';
+import { mockProperties } from '@/lib/data';
 
 // Type definitions for Cloudflare Workers AI
 interface CloudflareEnv {
@@ -63,22 +64,6 @@ const SYSTEM_PROMPT = `You are Aria, the Customer Care Lead at NEOS (NEOS Execut
 - Cancellation: 30-day notice for monthly stays
 - Pets: Case-by-case approval (contact for details)
 
-## Current Properties (Toronto)
-1. **55 Cooper St (Sugar Wharf)** - Premium 3BR Sky Suite
-   - Price: $12,000/mo (monthly), $10,800/mo (quarterly), $9,600/mo (annual)
-   - Features: Lake views, 55+ floor, near Union Station (8 min walk)
-   - Best for: Executives, families, luxury seekers
-
-2. **238 Simcoe St (Artist Alley)** - Executive 3BR Suite  
-   - Price: $6,500/mo (monthly), $5,850/mo (quarterly), $5,200/mo (annual)
-   - Features: Near hospitals (Toronto General, Mt. Sinai, SickKids), universities
-   - Best for: Medical professionals, visiting scholars, insurance housing
-
-3. **22 Wellesley St E** - Modern 1BR City View
-   - Price: $3,500/mo (monthly), $3,150/mo (quarterly), $2,800/mo (annual)
-   - Features: Midtown, near Wellesley subway, modern finishes
-   - Best for: Solo professionals, students, budget-conscious stays
-
 ## Special Services
 - **Corporate Housing**: Custom solutions for project teams, relocations
 - **Medical Stays**: Proximity to major hospitals, insurance coordination
@@ -88,7 +73,7 @@ const SYSTEM_PROMPT = `You are Aria, the Customer Care Lead at NEOS (NEOS Execut
 ## Web Search Capability
 If you need current Toronto rental market data, local news, or competitor pricing, you can query external websites through our web search API.
 Use this for: Toronto rental trends, local events affecting housing, competitor pricing comparisons.
-Don't use for: personal information, sensitive data, or non-housing topics.
+Don't use for: personal information, sensitive data, non-housing topics, or making up property listings.
 
 ## Your Role
 - Answer questions about properties, pricing, availability
@@ -101,6 +86,9 @@ Don't use for: personal information, sensitive data, or non-housing topics.
 - Be professional, warm, and helpful. Keep answers concise but complete (3-5 sentences).
 
 IMPORTANT RULES:
+- For NEOS property addresses, availability, and prices, ONLY use the LIVE PROPERTY DATA block provided by the API. Never invent or estimate an address, price, discount, or availability.
+- If LIVE PROPERTY DATA is empty or unavailable, say that current property data is unavailable and send the user to /properties or support@stayneos.com. Do not fall back to memory or examples.
+- For external marketplace listings such as realtor.ca, say external search is not enabled unless explicit EXTERNAL PROPERTY RESULTS are provided in this request. Never hallucinate realtor.ca prices.
 - If you have real-time data (weather, search results), use it directly in your answer. Don't say "querying..." or "checking..." — you already have the data.
 - For city-specific questions you can answer from general knowledge (transit routes, popular neighborhoods, hospital locations), answer directly without saying you need to search.
 - **Pay attention to the city the user is asking about.** If they ask about a city other than Toronto (e.g. Seattle, Vancouver, New York), acknowledge that city in your response. Don't recommend Toronto-specific properties unless they ask about Toronto.
@@ -141,6 +129,19 @@ function detectLanguage(text: string): string {
 // Get fallback response based on language
 function getFallbackResponse(language: string = 'EN'): string {
   return FALLBACK_RESPONSES[language as keyof typeof FALLBACK_RESPONSES] || FALLBACK_RESPONSES.DEFAULT;
+}
+
+function getPropertyFallbackResponse(language: string, properties: InternalChatProperty[]): string {
+  if (properties.length === 0) {
+    if (language === 'ZH') return '我现在没有可引用的实时房源数据。请先查看 /properties，或发送邮件到 support@stayneos.com 让团队确认最新可订房源。';
+    if (language === 'FR') return "Je n'ai pas de données de propriétés en temps réel à citer pour le moment. Consultez /properties ou écrivez à support@stayneos.com pour confirmer les disponibilités.";
+    return 'I do not have live property data to cite right now. Please check /properties or email support@stayneos.com for current availability.';
+  }
+
+  const lines = properties.map((property) => `${property.title} — CAD $${property.price.toLocaleString('en-CA')}/mo — ${property.location}`);
+  if (language === 'ZH') return `我根据 NEOS 当前内部房源数据找到这些匹配项：\n${lines.join('\n')}\n请以房源卡片和详情页为准；我不会引用未验证的外部挂牌价格。`;
+  if (language === 'FR') return `D'après les données internes actuelles de NEOS, voici les logements correspondants :\n${lines.join('\n')}\nVeuillez vous fier aux cartes et aux pages de détail; je ne cite pas de prix externes non vérifiés.`;
+  return `Based on current internal NEOS property data, these homes match:\n${lines.join('\n')}\nPlease use the cards and detail pages as the source of truth; I will not cite unverified external listing prices.`;
 }
 
 // Get AI model from environment variable
@@ -215,34 +216,170 @@ function needsWebSearch(query: string): boolean {
   return searchKeywords.some(keyword => lowerQuery.includes(keyword));
 }
 
-// Fetch live property data from D1
-async function getPropertyContext(): Promise<string> {
+type InternalChatProperty = {
+  id: string;
+  title: string;
+  location: string;
+  price: number;
+  bedrooms: number;
+  bathrooms: number;
+  url: string;
+  image?: string;
+  quarterlyPrice?: number | null;
+  annualPrice?: number | null;
+};
+
+function firstImageFromJson(value: unknown): string | undefined {
+  if (!value) return undefined;
+  if (typeof value !== 'string') return undefined;
+  try {
+    const parsed = JSON.parse(value);
+    if (!Array.isArray(parsed)) return undefined;
+    const first = parsed[0];
+    if (typeof first === 'string') return first;
+    if (first && typeof first === 'object' && typeof (first as { url?: unknown }).url === 'string') {
+      return (first as { url: string }).url;
+    }
+  } catch {
+    return value.startsWith('/') || value.startsWith('http') ? value : undefined;
+  }
+  return undefined;
+}
+
+function localizeValue(row: Record<string, unknown>, key: 'title' | 'description', language: string): string {
+  const suffix = language === 'ZH' ? 'Zh' : language === 'FR' ? 'Fr' : '';
+  const localized = suffix ? row[`${key}${suffix}`] : undefined;
+  return String(localized || row[key] || '');
+}
+
+function toChatProperty(row: Record<string, unknown>, language = 'EN'): InternalChatProperty {
+  const id = String(row.id || row.slug || '');
+  const slug = String(row.slug || id);
+  const address = String(row.address || row.location || '');
+  const city = String(row.city || 'Toronto');
+  const location = address.includes(city) ? address : `${address}, ${city}`.replace(/^,\s*/, '');
+  const monthly = Number(row.monthlyRate || row.priceMonthly || row.price || 0);
+  const image = String(row.heroImage || firstImageFromJson(row.images) || '');
+
+  return {
+    id,
+    title: localizeValue(row, 'title', language),
+    location,
+    price: Number.isFinite(monthly) ? monthly : 0,
+    bedrooms: Number(row.bedrooms || 0),
+    bathrooms: Number(row.bathrooms || 0),
+    url: `/property/${slug}`,
+    image: image || undefined,
+    quarterlyPrice: row.quarterlyRate || row.priceQuarterly ? Number(row.quarterlyRate || row.priceQuarterly) : null,
+    annualPrice: row.yearlyRate || row.priceAnnual ? Number(row.yearlyRate || row.priceAnnual) : null,
+  };
+}
+
+function mockChatProperties(language = 'EN'): InternalChatProperty[] {
+  return mockProperties.map((property) => toChatProperty({
+    id: property.id,
+    slug: property.id,
+    title: property.title,
+    titleZh: property.titleZh,
+    titleFr: property.titleFr,
+    address: property.location,
+    city: 'Toronto',
+    priceMonthly: property.price,
+    bedrooms: property.bedrooms,
+    bathrooms: property.bathrooms,
+    images: JSON.stringify(property.images),
+  }, language));
+}
+
+function getQueryBudget(query: string): number | undefined {
+  const matches = [...query.matchAll(/\$?\s*([1-9][0-9,]{3,5})\s*(?:cad|\/?mo|monthly|per month|月)?/gi)];
+  const values = matches
+    .map((match) => Number(match[1].replace(/,/g, '')))
+    .filter((value) => Number.isFinite(value) && value >= 1000);
+  return values.length ? Math.max(...values) : undefined;
+}
+
+function getQueryBedrooms(query: string): number | undefined {
+  const normalized = query.toLowerCase();
+  const match = normalized.match(/\b([1-4])\s*(?:br|bed|bedroom|bedrooms)\b/);
+  if (match) return Number(match[1]);
+  if (/一居|1室|一室|一卧/.test(query)) return 1;
+  if (/两居|二居|2室|两室|二室|两卧|二卧/.test(query)) return 2;
+  if (/三居|3室|三室|三卧/.test(query)) return 3;
+  return undefined;
+}
+
+function scoreProperty(property: InternalChatProperty, query: string, budget?: number, bedrooms?: number): number {
+  const haystack = `${property.title} ${property.location}`.toLowerCase();
+  const tokens = query.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, ' ').split(/\s+/).filter((token) => token.length > 2);
+  let score = 0;
+  for (const token of tokens) {
+    if (haystack.includes(token)) score += token.length > 4 ? 3 : 2;
+  }
+  if (bedrooms && property.bedrooms >= bedrooms) score += 6;
+  if (budget && property.price > 0 && property.price <= budget) score += 6;
+  if (/medical|hospital|医生|医疗|医院|rotation|academic|scholar|学者|university|大学/i.test(query) && /simcoe|hospital|university|grange/i.test(haystack)) score += 4;
+  if (/family|relocat|家庭|搬迁|executive|高管/i.test(query) && property.bedrooms >= 3) score += 3;
+  return score;
+}
+
+function pickRecommendedProperties(properties: InternalChatProperty[], query: string): InternalChatProperty[] {
+  const budget = getQueryBudget(query);
+  const bedrooms = getQueryBedrooms(query);
+  return [...properties]
+    .filter((property) => !bedrooms || property.bedrooms >= bedrooms)
+    .filter((property) => !budget || property.price <= budget || property.price === 0)
+    .map((property) => ({ property, score: scoreProperty(property, query, budget, bedrooms) }))
+    .sort((a, b) => b.score - a.score || a.property.price - b.property.price)
+    .slice(0, 4)
+    .map(({ property }) => property);
+}
+
+// Fetch live property data from D1, with mock fallback only for local/build environments.
+async function getPropertyContext(language = 'EN'): Promise<{ context: string; properties: InternalChatProperty[]; source: 'd1' | 'mock' | 'empty' }> {
   try {
     const db = getDb();
     const result = await db
-      .prepare("SELECT id, title, slug, address, city, neighborhood, priceMonthly, bedrooms, bathrooms, description, status FROM Property WHERE status = 'PUBLISHED' ORDER BY priceMonthly DESC")
+      .prepare(`SELECT id, title, titleZh, titleFr, slug, address, city, neighborhood,
+        priceMonthly, priceQuarterly, priceAnnual, monthlyRate, quarterlyRate, yearlyRate,
+        bedrooms, bathrooms, description, descriptionZh, descriptionFr, images, heroImage,
+        status FROM Property WHERE status = 'PUBLISHED' ORDER BY priceMonthly DESC`)
       .all();
 
     if (!result.results || result.results.length === 0) {
-      return '(No properties currently available in the database)';
+      return { context: 'LIVE PROPERTY DATA: No published NEOS properties are currently available.', properties: [], source: 'empty' };
     }
 
-    let context = 'LIVE PROPERTY DATA (from database):\n\n';
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (result.results as any[]).forEach((p: any, i: number) => {
-      context += `${i + 1}. ID: ${p.id} — ${p.title}\n`;
-      context += `   Address: ${p.address}, ${p.city}\n`;
+    const rows = result.results as Record<string, unknown>[];
+    const properties = rows.map((p) => toChatProperty(p, language));
+    let context = 'LIVE PROPERTY DATA (from internal StayNeos properties API / D1):\n\n';
+    rows.forEach((p, i) => {
+      const property = properties[i];
+      context += `${i + 1}. ID: ${property.id} — ${property.title}\n`;
+      context += `   Address: ${property.location}\n`;
       if (p.neighborhood) context += `   Neighborhood: ${p.neighborhood}\n`;
-      context += `   Bedrooms: ${p.bedrooms}, Bathrooms: ${p.bathrooms}\n`;
-      context += `   Monthly Price: $${p.priceMonthly}\n`;
-      if (p.description) context += `   Description: ${String(p.description).substring(0, 200)}\n`;
-      context += `   Status: ${p.status}\n\n`;
+      context += `   Bedrooms: ${property.bedrooms}, Bathrooms: ${property.bathrooms}\n`;
+      context += `   Monthly Price: CAD $${property.price || 'unavailable'}\n`;
+      if (property.quarterlyPrice) context += `   Quarterly Price: CAD $${property.quarterlyPrice}/month\n`;
+      if (property.annualPrice) context += `   Annual Price: CAD $${property.annualPrice}/month\n`;
+      const description = localizeValue(p, 'description', language);
+      if (description) context += `   Description: ${description.substring(0, 260)}\n`;
+      context += `   URL: ${property.url}\n\n`;
     });
 
-    return context;
+    return { context, properties, source: 'd1' };
   } catch (error) {
     console.error('Failed to fetch property context:', error);
-    return '(Property database temporarily unavailable — use the hardcoded property info in your system prompt)';
+    const properties = mockChatProperties(language);
+    let context = 'LIVE PROPERTY DATA (internal fallback catalog because D1 binding is unavailable in this environment):\n\n';
+    properties.forEach((p, i) => {
+      context += `${i + 1}. ID: ${p.id} — ${p.title}\n`;
+      context += `   Address: ${p.location}\n`;
+      context += `   Bedrooms: ${p.bedrooms}, Bathrooms: ${p.bathrooms}\n`;
+      context += `   Monthly Price: CAD $${p.price || 'unavailable'}\n`;
+      context += `   URL: ${p.url}\n\n`;
+    });
+    return { context, properties, source: 'mock' };
   }
 }
 
@@ -356,15 +493,17 @@ export async function POST(request: NextRequest) {
     let usedWebSearch = false;
     
     let externalProperties: ExternalProperty[] = [];
+    const isPropertyListingRequest = needsExternalPropertySearch(message);
+    const externalPropertySearchEnabled = process.env.ENABLE_EXTERNAL_PROPERTY_SEARCH === 'true';
 
     if (needsWeather(message)) {
       usedWebSearch = true;
       webSearchResults = await getWeather(message);
-    } else if (needsWebSearch(message)) {
+    } else if (needsWebSearch(message) && (!isPropertyListingRequest || externalPropertySearchEnabled)) {
       usedWebSearch = true;
       // If the user is specifically asking for listings, fetch both the
       // text summary (for the AI) and structured cards (for the UI) in parallel.
-      if (needsExternalPropertySearch(message)) {
+      if (isPropertyListingRequest && externalPropertySearchEnabled) {
         const [textResults, cards] = await Promise.allSettled([
           callWebSearch(message),
           searchExternalProperties(message, 3),
@@ -377,13 +516,16 @@ export async function POST(request: NextRequest) {
     }
     
     // Fetch live property data from database
-    const propertyContext = await getPropertyContext();
+    const propertyData = await getPropertyContext(language);
+    const recommendedProperties = isPropertyListingRequest
+      ? pickRecommendedProperties(propertyData.properties, message)
+      : [];
 
     // Prepare messages for AI
     const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
       {
         role: 'system' as const,
-        content: SYSTEM_PROMPT + '\n\n' + propertyContext
+        content: `${SYSTEM_PROMPT}\n\n${propertyData.context}\n\nMATCHING_INTERNAL_PROPERTY_CARDS:\n${JSON.stringify(recommendedProperties)}`
       }
     ];
     
@@ -392,6 +534,11 @@ export async function POST(request: NextRequest) {
       messages.push({
         role: 'system' as const,
         content: `REAL-TIME DATA (use this directly in your answer, do NOT say "querying" or "checking"):\n\n${webSearchResults}`
+      });
+    } else if (isPropertyListingRequest && !externalPropertySearchEnabled) {
+      messages.push({
+        role: 'system' as const,
+        content: 'EXTERNAL PROPERTY RESULTS: Not enabled. Do not mention realtor.ca, condos.ca, zolo.ca, or other external listing details. Recommend only LIVE PROPERTY DATA above.'
       });
     }
     
@@ -423,7 +570,7 @@ export async function POST(request: NextRequest) {
       const aiResponse = await ai.run(model, {
         messages,
         max_tokens: 512,
-        temperature: 0.7,
+        temperature: 0.2,
       });
       
       clearTimeout(timeoutId);
@@ -436,6 +583,9 @@ export async function POST(request: NextRequest) {
           language,
           usedWebSearch,
           webSearchQuery: usedWebSearch ? message : undefined,
+          properties: recommendedProperties.length > 0 ? recommendedProperties : undefined,
+          recommendations: recommendedProperties.length > 0 ? recommendedProperties : undefined,
+          propertySource: propertyData.source,
           externalProperties: externalProperties.length > 0 ? externalProperties : undefined,
         }, {
           headers: {
@@ -451,12 +601,17 @@ export async function POST(request: NextRequest) {
       
       // Use language-specific fallback response
       return NextResponse.json({
-        text: getFallbackResponse(language),
+        text: isPropertyListingRequest
+          ? getPropertyFallbackResponse(language, recommendedProperties)
+          : getFallbackResponse(language),
         sessionId,
         source: 'fallback-ai-error',
         language,
         usedWebSearch,
         webSearchQuery: usedWebSearch ? message : undefined,
+        properties: recommendedProperties.length > 0 ? recommendedProperties : undefined,
+        recommendations: recommendedProperties.length > 0 ? recommendedProperties : undefined,
+        propertySource: propertyData.source,
         externalProperties: externalProperties.length > 0 ? externalProperties : undefined,
       }, {
         headers: {

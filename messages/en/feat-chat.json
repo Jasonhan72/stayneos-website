@@ -11,6 +11,8 @@
     "send": "Send",
     "typing": "Aria is typing...",
     "disclaimer": "Responses may take a few moments",
+    "heroSubtitle": "Aria · Customer Care",
+    "followUp": "Ask a follow-up...",
     "error": "Sorry, there was an error sending your message. Please try again or email us at hello@stayneos.com.",
     "fallback": {
       "1": "For booking inquiries, please visit our properties page or use the AI concierge above.",

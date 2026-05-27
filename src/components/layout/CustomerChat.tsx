@@ -5,6 +5,15 @@ import { usePathname } from 'next/navigation';
 import { useI18n } from '@/lib/i18n';
 import { csrfFetch } from '@/lib/security/csrf-client';
 import { ChatExternalPropertyCard, type ChatExternalProperty } from '@/components/shared/chat/ChatExternalPropertyCard';
+import { ChatPropertyCard } from '@/components/shared/chat/ChatPropertyCard';
+
+type ChatProperty = {
+  id: string;
+  title: string;
+  location: string;
+  price: number;
+  bedrooms: number;
+};
 
 interface Message {
   id: string;
@@ -12,6 +21,7 @@ interface Message {
   sender: 'user' | 'bot';
   timestamp: Date;
   externalProperties?: ChatExternalProperty[];
+  properties?: ChatProperty[];
 }
 
 interface ChatHistory {
@@ -168,6 +178,23 @@ export function CustomerChat() {
         Array.isArray(data.externalProperties) && data.externalProperties.length > 0
           ? data.externalProperties
           : undefined;
+      const properties: ChatProperty[] | undefined =
+        Array.isArray(data.properties) && data.properties.length > 0
+          ? data.properties.map((property: {
+              id: string;
+              title: string;
+              location: string;
+              price?: number;
+              monthlyPrice?: number;
+              bedrooms?: number;
+            }) => ({
+              id: property.id,
+              title: property.title,
+              location: property.location,
+              price: Number(property.price ?? property.monthlyPrice ?? 0),
+              bedrooms: Number(property.bedrooms || 0),
+            }))
+          : undefined;
 
       const botMessage: Message = {
         id: Date.now().toString(),
@@ -175,6 +202,7 @@ export function CustomerChat() {
         sender: 'bot',
         timestamp: new Date(),
         externalProperties,
+        properties,
       };
       
       setMessages(prev => [...prev, botMessage]);
@@ -341,6 +369,13 @@ export function CustomerChat() {
                   <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
                     {message.externalProperties.map((p, i) => (
                       <ChatExternalPropertyCard key={`${p.url}-${i}`} property={p} variant="light" />
+                    ))}
+                  </div>
+                )}
+                {message.properties && message.properties.length > 0 && (
+                  <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
+                    {message.properties.map((property) => (
+                      <ChatPropertyCard key={property.id} property={property} />
                     ))}
                   </div>
                 )}

@@ -11,6 +11,8 @@
     "send": "发送",
     "typing": "Aria 正在输入...",
     "disclaimer": "回复可能需要一些时间",
+    "heroSubtitle": "Aria · 客户服务",
+    "followUp": "继续提问...",
     "error": "抱歉，发送消息时出错。请重试或发送邮件至 hello@stayneos.com 联系我们。",
     "fallback": {
       "1": "如需预订咨询，请访问我们的房源页面或使用上方的 AI 礼宾服务。",

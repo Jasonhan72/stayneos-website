@@ -3,17 +3,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { useI18n } from '@/lib/i18n';
 import Link from 'next/link';
-import Image from 'next/image';
 import { ArrowRight, Loader2, SendHorizontal } from 'lucide-react';
 import { csrfFetch } from '@/lib/security/csrf-client';
 import { ChatExternalPropertyCard, type ChatExternalProperty } from '@/components/shared/chat/ChatExternalPropertyCard';
+import { ChatPropertyCard } from '@/components/shared/chat/ChatPropertyCard';
 import { CategoryChips } from './CategoryChips';
 
 interface Message {
   id: string;
   text: string;
   sender: 'user' | 'bot';
-  property?: PropertyRecommendation | null;
+  properties?: PropertyRecommendation[];
   hotelComparison?: string;
   externalProperties?: ChatExternalProperty[];
 }
@@ -26,33 +26,6 @@ interface PropertyRecommendation {
   image: string;
   bedrooms: number;
 }
-
-const PROPERTIES: Record<string, PropertyRecommendation> = {
-  '1': {
-    id: '1',
-    title: '55 Cooper St (Sugar Wharf) · Premium 3BR Sky Suite',
-    location: '55 Cooper St, Toronto',
-    monthlyPrice: 12000,
-    image: '/images/cooper-55-c5e8357d.jpg',
-    bedrooms: 3,
-  },
-  '2': {
-    id: '2',
-    title: '238 Simcoe St (Grange Park) · Executive 3BR Suite',
-    location: '238 Simcoe St, Toronto',
-    monthlyPrice: 6500,
-    image: '/images/simcoe-238-kitchen.jpg',
-    bedrooms: 3,
-  },
-  '3': {
-    id: '3',
-    title: '22 Wellesley St E · Modern 1BR City View',
-    location: '22 Wellesley St E, Toronto',
-    monthlyPrice: 3500,
-    image: '/images/wellesley-1607-living.jpg',
-    bedrooms: 1,
-  },
-};
 
 const promptChipKeys = [
   'aiConcierge.chip1',
@@ -67,13 +40,6 @@ const defaultChips = [
   'Visiting scholar at U of T',
   'Insurance housing, immediate',
 ];
-
-function extractPropertyId(text: string): string | null {
-  if (/55\s*cooper|sugar\s*wharf/i.test(text)) return '1';
-  if (/238\s*simcoe|grange\s*park/i.test(text)) return '2';
-  if (/22\s*wellesley/i.test(text)) return '3';
-  return null;
-}
 
 export function HeroChatInline() {
   const { t } = useI18n();
@@ -140,8 +106,25 @@ export function HeroChatInline() {
       if (data.sessionId) setSessionId(data.sessionId);
 
       const replyText = data.text || 'Sorry, I could not process that request.';
-      const propertyId = extractPropertyId(replyText);
-      const property = propertyId ? PROPERTIES[propertyId] || null : null;
+      const properties: PropertyRecommendation[] | undefined =
+        Array.isArray(data.properties) && data.properties.length > 0
+          ? data.properties.map((property: {
+              id: string;
+              title: string;
+              location: string;
+              price?: number;
+              monthlyPrice?: number;
+              image?: string;
+              bedrooms?: number;
+            }) => ({
+              id: property.id,
+              title: property.title,
+              location: property.location,
+              monthlyPrice: Number(property.price ?? property.monthlyPrice ?? 0),
+              image: property.image || '',
+              bedrooms: Number(property.bedrooms || 0),
+            }))
+          : undefined;
 
       let hotelComparison: string | undefined;
       const hotelMatch = replyText.match(/(该区域类似酒店.*?。|Hotel.*?saving.*?\.)/);
@@ -156,7 +139,7 @@ export function HeroChatInline() {
         id: `b-${Date.now()}`,
         text: replyText,
         sender: 'bot',
-        property,
+        properties,
         hotelComparison,
         externalProperties,
       };
@@ -291,7 +274,7 @@ export function HeroChatInline() {
               </div>
               <div>
                 <h3 className="text-white font-semibold text-sm">NEOS AI</h3>
-                <p className="text-white/50 text-xs">Aria · Customer Care</p>
+                <p className="text-white/50 text-xs">{t('chat.heroSubtitle', 'Aria · Customer Care')}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -358,39 +341,20 @@ export function HeroChatInline() {
                   </div>
                 )}
 
-                {msg.property && (
-                  <div className="mt-3 bg-white/10 rounded-xl overflow-hidden flex flex-col md:flex-row border border-white/10">
-                    <div className="relative w-full md:w-56 h-40 md:h-auto flex-shrink-0">
-                      <Image
-                        src={msg.property.image}
-                        alt={msg.property.title}
-                        fill
-                        className="object-cover"
+                {msg.properties && msg.properties.length > 0 && (
+                  <div className="mt-3 -mx-1 flex gap-3 overflow-x-auto pb-2 pl-1 pr-1 scrollbar-thin scrollbar-thumb-white/20">
+                    {msg.properties.map((property) => (
+                      <ChatPropertyCard
+                        key={property.id}
+                        property={{
+                          id: property.id,
+                          title: property.title,
+                          location: property.location,
+                          price: property.monthlyPrice,
+                          bedrooms: property.bedrooms,
+                        }}
                       />
-                    </div>
-                    <div className="p-5 flex-1">
-                      <h3 className="text-white font-semibold text-base mb-1">{msg.property.title}</h3>
-                      <p className="text-white/60 text-sm mb-2">{msg.property.location}</p>
-                      <p className="text-accent font-bold text-xl mb-3">
-                        ${msg.property.monthlyPrice.toLocaleString()}/{t('common.month', 'mo')}
-                      </p>
-                      <div className="flex gap-3">
-                        <Link
-                          href={`/property/${msg.property.id}`}
-                          className="inline-flex min-h-11 items-center rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent/90"
-                        >
-                          {t('aiConcierge.scheduleViewing', 'Schedule a Viewing')}
-                        </Link>
-                        <a
-                          href="https://wa.me/16474467987?text=Hi%2C%20I'm%20interested%20in%20NEOS%20apartments"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex min-h-11 items-center rounded-lg bg-[#25D366] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#20bd5a]"
-                        >
-                          WhatsApp
-                        </a>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 )}
               </div>
