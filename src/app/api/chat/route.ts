@@ -465,6 +465,42 @@ function needsExternalPropertySearch(query: string): boolean {
   return propertyKeywords.some(k => q.includes(k));
 }
 
+function getExternalSearchCards(query: string): ExternalProperty[] {
+  const isUoft = /多大|uoft|u\s*of\s*t|university\s+of\s+toronto/i.test(query);
+  const location = isUoft ? 'University of Toronto, Toronto' : 'Toronto';
+  const encodedLocation = encodeURIComponent(location);
+
+  return [
+    {
+      title: isUoft
+        ? 'Realtor.ca rentals near University of Toronto'
+        : 'Realtor.ca Toronto rental search',
+      url: 'https://www.realtor.ca/map#ZoomLevel=14&Center=43.6629%2C-79.3957&LatitudeMax=43.6900&LongitudeMax=-79.3500&LatitudeMin=43.6350&LongitudeMin=-79.4400&Sort=6-D&TransactionTypeId=2',
+      source: 'realtor.ca',
+      location,
+      snippet: 'External marketplace search link. Prices and availability must be verified on realtor.ca.',
+    },
+    {
+      title: isUoft
+        ? 'Condos.ca rentals near University of Toronto'
+        : 'Condos.ca Toronto rentals',
+      url: `https://condos.ca/toronto/condos-for-rent?search=${encodedLocation}`,
+      source: 'condos.ca',
+      location,
+      snippet: 'External marketplace search link. Prices and availability must be verified on condos.ca.',
+    },
+    {
+      title: isUoft
+        ? 'Rentals.ca listings near University of Toronto'
+        : 'Rentals.ca Toronto rentals',
+      url: `https://rentals.ca/toronto?bbox=-79.44,43.635,-79.35,43.69&keywords=${encodedLocation}`,
+      source: 'rentals.ca',
+      location,
+      snippet: 'External marketplace search link. Prices and availability must be verified on rentals.ca.',
+    },
+  ];
+}
+
 // Simple IP-based rate limit for public chat (20 req/min)
 const chatRateLimit = new Map<string, { count: number; resetAt: number }>();
 
@@ -562,6 +598,9 @@ export async function POST(request: NextRequest) {
         ]);
         webSearchResults = textResults.status === 'fulfilled' ? textResults.value : '';
         externalProperties = cards.status === 'fulfilled' ? cards.value : [];
+        if (externalProperties.length === 0) {
+          externalProperties = getExternalSearchCards(message);
+        }
       } else {
         webSearchResults = await callWebSearch(message);
       }
