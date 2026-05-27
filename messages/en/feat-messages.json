@@ -27,6 +27,18 @@
     "backToList": "Back to messages",
     "you": "You",
     "new": "New",
-    "previewBanner": "Messaging is in preview — conversations shown are sample data. Real messaging coming soon."
+    "previewBanner": "Messaging is in preview — conversations shown are sample data. Real messaging coming soon.",
+    "searchMessages": "Search messages",
+    "loadError": "Messages could not load.",
+    "emptyState": "When guests or hosts contact you about a stay, the conversation will show up here.",
+    "details": "Details",
+    "tripDetails": "Trip details",
+    "noBookingAttached": "No booking attached",
+    "chooseThread": "Choose a guest or host message to see the full thread and reservation details.",
+    "noUnreadMessages": "No unread messages",
+    "noMessagesYet": "No messages yet",
+    "stayNeosHost": "StayNeos host",
+    "sentAPhoto": "Sent a photo",
+    "stayNeosConversation": "StayNeos conversation"
   }
 }

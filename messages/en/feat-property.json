@@ -179,7 +179,9 @@
       "communication": "Communication",
       "location": "Location",
       "value": "Value"
-    }
+    },
+    "min30days": "Minimum 30 days",
+    "allInclusiveEstimate": "All-inclusive estimate"
   },
   "properties": {
     "title": "Featured Properties",

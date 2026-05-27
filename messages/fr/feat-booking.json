@@ -122,7 +122,10 @@
     "freeCancellation": "Annulation gratuite",
     "payNow": "Payer {amount} {currency} maintenant",
     "chooseWhenToPay": "Choisir quand payer",
-    "noExtraFees": "Aucun frais supplémentaire"
+    "noExtraFees": "Aucun frais supplémentaire",
+    "fullPolicy": "Politique complète",
+    "payPartNowPartLater": "Payer une partie maintenant, le reste plus tard",
+    "taxesWithRate": "Taxes (13%)"
   },
   "bookings": {
     "title": "Mes Réservations",

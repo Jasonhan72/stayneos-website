@@ -104,7 +104,7 @@ export function BookingPriceCalculator({
 
         {price.cleaningFee > 0 && (
           <div className="flex justify-between text-sm">
-            <span className="text-neutral-600 underline decoration-dotted cursor-help">Cleaning fee</span>
+            <span className="text-neutral-600 underline decoration-dotted cursor-help">{t('booking.cleaningFee', 'Cleaning fee')}</span>
             <span className="text-neutral-900">{formatCurrency(price.cleaningFee)}</span>
           </div>
         )}
@@ -117,7 +117,7 @@ export function BookingPriceCalculator({
         </div>
 
         <div className="flex justify-between text-sm">
-          <span className="text-neutral-600">Taxes (13%)</span>
+          <span className="text-neutral-600">{t('booking.taxesWithRate', 'Taxes (13%)')}</span>
           <span className="text-neutral-900">{formatCurrency(price.tax)}</span>
         </div>
 
@@ -157,7 +157,7 @@ export function BookingPriceCalculator({
 
         {price.cleaningFee > 0 && (
           <div className="flex justify-between text-sm">
-            <span className="text-neutral-600 underline decoration-dotted cursor-help">Cleaning fee</span>
+            <span className="text-neutral-600 underline decoration-dotted cursor-help">{t('booking.cleaningFee', 'Cleaning fee')}</span>
             <span className="text-neutral-900">{formatCurrency(price.cleaningFee)}</span>
           </div>
         )}
@@ -170,14 +170,14 @@ export function BookingPriceCalculator({
         </div>
 
         <div className="flex justify-between text-sm">
-          <span className="text-neutral-600">Taxes (13%)</span>
+          <span className="text-neutral-600">{t('booking.taxesWithRate', 'Taxes (13%)')}</span>
           <span className="text-neutral-900">{formatCurrency(price.tax)}</span>
         </div>
       </div>
 
       <div className="pt-3 border-t border-neutral-200">
         <div className="flex justify-between items-baseline">
-          <span className="font-semibold text-neutral-900">Total</span>
+          <span className="font-semibold text-neutral-900">{t('booking.total', 'Total')}</span>
           <div className="text-right">
             <span className="font-bold text-2xl text-neutral-900">{formatCurrency(price.total)}</span>
             <span className="text-sm text-neutral-500 block">{currency}</span>

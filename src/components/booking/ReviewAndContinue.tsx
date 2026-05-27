@@ -212,7 +212,7 @@ export function ReviewAndContinue({
                   <span className="text-neutral-900">${serviceFee.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-neutral-600">Taxes</span>
+                  <span className="text-neutral-600">{t("booking.taxes", "Taxes")}</span>
                   <span className="text-neutral-900">${tax.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between pt-2 border-t border-neutral-200">
@@ -230,7 +230,7 @@ export function ReviewAndContinue({
             <p className="font-medium text-neutral-900">{t("booking.freeCancellation", "Free cancellation")}</p>
             <p className="text-sm text-neutral-600">
               Cancel before {cancellationDate} for a full refund. 
-              <span className="underline font-medium">Full policy</span>
+              <span className="underline font-medium">{t('booking.fullPolicy', 'Full policy')}</span>
             </p>
           </div>
         </div>
@@ -269,7 +269,7 @@ export function ReviewAndContinue({
             )}
           >
             <div className="text-left">
-              <p className="font-medium text-neutral-900">Pay part now, part later</p>
+              <p className="font-medium text-neutral-900">{t('booking.payPartNowPartLater', 'Pay part now, part later')}</p>
               <p className="text-sm text-neutral-600">
                 ${firstPayment.toLocaleString()} {currency} now, ${secondPayment.toLocaleString()} {currency} charged on {secondPaymentDate}. {t('booking.noExtraFees', 'No extra fees')}. <span className="underline">{t('common.moreInfo', 'More info')}</span>
               </p>

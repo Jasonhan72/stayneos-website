@@ -912,7 +912,7 @@ function PropertyListCard({ property, isSelected, onClick, onHover, cardRef }: P
           
           <div className="mt-4">
             <div className="mb-3 rounded-xl border border-neutral-200 bg-neutral-50 p-3 text-sm text-neutral-600">
-              <div className="flex items-center justify-between"><span>Minimum 30 days</span><span className="font-semibold text-neutral-900">All-inclusive estimate</span></div>
+              <div className="flex items-center justify-between"><span>{t('property.min30days', 'Minimum 30 days')}</span><span className="font-semibold text-neutral-900">{t('property.allInclusiveEstimate', 'All-inclusive estimate')}</span></div>
             </div>
             <PropertyPricingTiers property={property} />
             {/* Hotel Comparison */}

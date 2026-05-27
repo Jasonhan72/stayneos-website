@@ -179,7 +179,9 @@
       "communication": "Communication",
       "location": "Emplacement",
       "value": "Rapport qualité-prix"
-    }
+    },
+    "min30days": "Minimum 30 jours",
+    "allInclusiveEstimate": "Estimation tout inclus"
   },
   "properties": {
     "title": "Propriétés en Vedette",

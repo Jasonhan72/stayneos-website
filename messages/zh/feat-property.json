@@ -179,7 +179,9 @@
       "communication": "沟通",
       "location": "位置",
       "value": "性价比"
-    }
+    },
+    "min30days": "最少30天",
+    "allInclusiveEstimate": "全包估价"
   },
   "properties": {
     "title": "精选房源",

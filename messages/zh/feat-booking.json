@@ -122,7 +122,10 @@
     "freeCancellation": "免费取消",
     "payNow": "现在支付 {amount} {currency}",
     "chooseWhenToPay": "选择支付时间",
-    "noExtraFees": "无额外费用"
+    "noExtraFees": "无额外费用",
+    "fullPolicy": "完整政策",
+    "payPartNowPartLater": "先付部分，后付余款",
+    "taxesWithRate": "税费 (13%)"
   },
   "bookings": {
     "title": "我的预订",

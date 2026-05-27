@@ -27,6 +27,18 @@
     "backToList": "Retour aux messages",
     "you": "Vous",
     "new": "Nouveau",
-    "previewBanner": "La messagerie est en aperçu — les conversations affichées sont des données d'exemple. La messagerie réelle arrive bientôt."
+    "previewBanner": "La messagerie est en aperçu — les conversations affichées sont des données d'exemple. La messagerie réelle arrive bientôt.",
+    "searchMessages": "Rechercher des messages",
+    "loadError": "Impossible de charger les messages.",
+    "emptyState": "Lorsque des voyageurs ou des hôtes vous contactent au sujet d'un séjour, la conversation apparaîtra ici.",
+    "details": "Détails",
+    "tripDetails": "Détails du séjour",
+    "noBookingAttached": "Aucune réservation associée",
+    "chooseThread": "Choisissez un message pour voir la conversation complète et les détails de la réservation.",
+    "noUnreadMessages": "Aucun message non lu",
+    "noMessagesYet": "Aucun message",
+    "stayNeosHost": "Hôte StayNeos",
+    "sentAPhoto": "A envoyé une photo",
+    "stayNeosConversation": "Conversation StayNeos"
   }
 }
