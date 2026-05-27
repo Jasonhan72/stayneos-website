@@ -343,6 +343,36 @@ function pickRecommendedProperties(properties: InternalChatProperty[], query: st
     .map(({ property }) => property);
 }
 
+function formatChatCurrency(value: number, language: string): string {
+  const amount = `$${value.toLocaleString('en-CA')}`;
+  if (language === 'FR') return `${amount} CAD`;
+  return `CAD ${amount}`;
+}
+
+function getPropertyTitle(property: InternalChatProperty): string {
+  return property.title || property.location || 'NEOS property';
+}
+
+function getNoBudgetMatchResponse(language: string, budget: number, cheapest?: InternalChatProperty): string {
+  if (!cheapest) {
+    if (language === 'ZH') return '我现在没有可引用的实时房源数据。请查看 /properties，或联系 support@stayneos.com 确认最新可订房源。';
+    if (language === 'FR') return "Je n'ai pas de données de logements en temps réel à citer pour le moment. Consultez /properties ou écrivez à support@stayneos.com.";
+    return 'I do not have live property data to cite right now. Please check /properties or email support@stayneos.com.';
+  }
+
+  const budgetText = formatChatCurrency(budget, language);
+  const priceText = formatChatCurrency(cheapest.price, language);
+  const title = getPropertyTitle(cheapest);
+
+  if (language === 'ZH') {
+    return `目前暂无月租 ${budgetText} 以内的房源。最接近的是 ${title}，月租 ${priceText}。我只引用 NEOS 当前内部房源数据，不会为了匹配预算改写价格；如果预算有弹性，可以继续比较这个选项，或联系 support@stayneos.com 了解后续可用房源。`;
+  }
+  if (language === 'FR') {
+    return `Nous n'avons actuellement aucun logement à moins de ${budgetText} par mois. L'option la plus proche est ${title}, à ${priceText}/mois. Je cite uniquement les données internes actuelles de NEOS et je ne modifie pas les prix pour correspondre à un budget.`;
+  }
+  return `We do not currently have any homes under ${budgetText} per month. The closest option is ${title} at ${priceText}/mo. I only quote current internal NEOS listing data and will not change prices to fit a budget.`;
+}
+
 // Fetch live property data from the same internal catalog used by /api/properties.
 async function getPropertyContext(language = 'EN'): Promise<{ context: string; properties: InternalChatProperty[]; source: 'd1' | 'internal-catalog' | 'empty' }> {
   try {
@@ -523,6 +553,30 @@ export async function POST(request: NextRequest) {
     const recommendedProperties = isPropertyListingRequest
       ? pickRecommendedProperties(propertyData.properties, message)
       : [];
+    const budget = getQueryBudget(message);
+
+    if (isPropertyListingRequest && budget && propertyData.properties.length > 0) {
+      const sortedByPrice = [...propertyData.properties]
+        .filter((property) => property.price > 0)
+        .sort((a, b) => a.price - b.price);
+      const hasMonthlyMatch = sortedByPrice.some((property) => property.price <= budget);
+
+      if (!hasMonthlyMatch) {
+        return NextResponse.json({
+          text: getNoBudgetMatchResponse(language, budget, sortedByPrice[0]),
+          sessionId,
+          source: 'budget-guardrail',
+          language,
+          usedWebSearch,
+          propertySource: propertyData.source,
+          externalProperties: externalProperties.length > 0 ? externalProperties : undefined,
+        }, {
+          headers: {
+            'Cache-Control': 'no-store, no-cache, must-revalidate',
+          }
+        });
+      }
+    }
 
     // Prepare messages for AI
     const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
