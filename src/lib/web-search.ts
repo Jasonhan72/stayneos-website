@@ -474,12 +474,17 @@ function parseQueryBedrooms(query: string): number | undefined {
   return undefined;
 }
 
-async function searchRealtorApiListings(query: string, maxResults: number): Promise<ExternalProperty[]> {
-  const budget = extractBudget(query);
-  const rentMax = budget || 4500;
-  const bedrooms = parseQueryBedrooms(query);
+async function searchRealtorApiListings(
+  query: string,
+  maxResults: number,
+  bedrooms?: number,
+  budget?: number
+): Promise<ExternalProperty[]> {
+  const resolvedBudget = budget ?? extractBudget(query);
+  const rentMax = resolvedBudget || 4500;
+  const resolvedBedrooms = bedrooms ?? parseQueryBedrooms(query);
   // realtor.ca BedRange uses "min-max"; "N-0" means N+ bedrooms.
-  const bedRange = bedrooms ? `${bedrooms}-0` : '0-0';
+  const bedRange = resolvedBedrooms ? `${resolvedBedrooms}-0` : '0-0';
   const cookie = await getRealtorCookieHeader();
   if (!cookie) return [];
 
@@ -531,7 +536,7 @@ async function searchRealtorApiListings(query: string, maxResults: number): Prom
   const data = await response.json() as { Results?: RealtorSearchResult[] };
   const cards: ExternalProperty[] = [];
   for (const result of data.Results || []) {
-    const card = mapRealtorResult(result, budget);
+    const card = mapRealtorResult(result, resolvedBudget);
     if (!card || cards.some((existing) => existing.url === card.url)) continue;
     cards.push(card);
     if (cards.length >= maxResults) break;
@@ -797,7 +802,12 @@ async function extractPropertyFromURL(url: string, fallback: { title?: string; s
  * structured property cards (max 4). Used by the chat API so the UI can
  * render external listings the same way as internal ones.
  */
-export async function searchExternalProperties(query: string, maxResults = 3): Promise<ExternalProperty[]> {
+export async function searchExternalProperties(
+  query: string,
+  maxResults = 3,
+  bedrooms?: number,
+  budget?: number
+): Promise<ExternalProperty[]> {
   const lowerQuery = query.toLowerCase();
 
   // 1. Direct URL — just read it
@@ -808,7 +818,7 @@ export async function searchExternalProperties(query: string, maxResults = 3): P
     return card ? [card] : [];
   }
 
-  const realtorCards = await searchRealtorApiListings(query, maxResults);
+  const realtorCards = await searchRealtorApiListings(query, maxResults, bedrooms, budget);
   if (realtorCards.length > 0) {
     return realtorCards;
   }
@@ -825,10 +835,12 @@ export async function searchExternalProperties(query: string, maxResults = 3): P
   if (/多大|uoft|u\s*of\s*t|university\s+of\s+toronto/i.test(query)) {
     normalizedTerms.push('University of Toronto');
   }
-  const budget = query.match(/(?:预算|budget|under|below|less than|以内|以下|max|maximum)\s*\$?\s*([1-9][0-9,]{3,5})/i)
+  const budgetMatch = query.match(/(?:预算|budget|under|below|less than|以内|以下|max|maximum)\s*\$?\s*([1-9][0-9,]{3,5})/i)
     || query.match(/\$?\s*([1-9][0-9,]{3,5})\s*(?:以内|以下|under|below|budget)/i);
-  if (budget?.[1]) {
-    normalizedTerms.push(`under ${budget[1].replace(/,/g, '')}`);
+  if (budgetMatch?.[1]) {
+    normalizedTerms.push(`under ${budgetMatch[1].replace(/,/g, '')}`);
+  } else if (budget) {
+    normalizedTerms.push(`under ${budget}`);
   }
   if (/一居|1室|一室|一卧/.test(query)) normalizedTerms.push('1 bedroom');
   if (/两居|二居|2室|两室|二室|两卧|二卧/.test(query)) normalizedTerms.push('2 bedroom');

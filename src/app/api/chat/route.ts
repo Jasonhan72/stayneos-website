@@ -2,6 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { validateCsrf } from '@/lib/security/csrf';
 import { mockProperties } from '@/lib/data';
 import { getPropertyDb, toPublicProperty, type PropertyRecord } from '@/lib/property-db';
+import {
+  fallbackGetQueryBedrooms,
+  fallbackGetQueryBudget,
+  fallbackIsGtaSearchIntent,
+  fallbackNeedsExternalPropertySearch,
+  fallbackNeedsWeather,
+  understandQuery,
+  type QuerySlots,
+} from '@/lib/query-understanding';
 
 // Type definitions for Cloudflare Workers AI
 interface CloudflareEnv {
@@ -154,10 +163,9 @@ function getAIModel(): string {
 }
 
 // Check if a query needs weather info
-function needsWeather(query: string): boolean {
-  const q = query.toLowerCase();
-  const keywords = ['weather', 'temperature', 'forecast', '天气', '气温', '温度', '预报', 'météo', 'température'];
-  return keywords.some(k => q.includes(k));
+function needsWeather(query: string, slots?: QuerySlots): boolean {
+  if (slots?.intent === 'weather') return true;
+  return fallbackNeedsWeather(query);
 }
 
 // Fetch weather from wttr.in (free, no API key)
@@ -188,7 +196,8 @@ ${forecast ? `- Today's forecast: High ${forecast.maxtempC}°C / Low ${forecast.
 }
 
 // Check if a query needs external web search
-function needsWebSearch(query: string): boolean {
+function needsWebSearch(query: string, slots?: QuerySlots): boolean {
+  if (slots?.intent === 'web_search') return true;
   const lowerQuery = query.toLowerCase();
   const searchKeywords = [
     // Real estate & market
@@ -308,16 +317,12 @@ function mockChatProperties(language = 'EN'): InternalChatProperty[] {
   }, language));
 }
 
-function getQueryBudget(query: string): number | undefined {
-  const matches = [...query.matchAll(/\$?\s*([1-9][0-9,]{3,5})\s*(?:cad|\/?mo|monthly|per month|月)?/gi)];
-  const values = matches
-    .map((match) => Number(match[1].replace(/,/g, '')))
-    .filter((value) => Number.isFinite(value) && value >= 1000);
-  return values.length ? Math.max(...values) : undefined;
+function getQueryBudget(query: string, slots?: QuerySlots): number | undefined {
+  return slots?.budget ?? fallbackGetQueryBudget(query);
 }
 
-function isGtaSearchIntent(query: string): boolean {
-  return /多大|uoft|u\s*of\s*t|university\s+of\s+toronto|toronto|gta|多伦多|市中心|安省|ontario/i.test(query);
+function isGtaSearchIntent(query: string, slots?: QuerySlots): boolean {
+  return slots?.requireGta ?? fallbackIsGtaSearchIntent(query);
 }
 
 function isGtaInternalProperty(property: InternalChatProperty, requireGta = false): boolean {
@@ -332,16 +337,8 @@ function isGtaExternalProperty(property: ExternalProperty, requireGta = false): 
   return !requireGta || GTA_LOCATION_RE.test(haystack);
 }
 
-function getQueryBedrooms(query: string): number | undefined {
-  const normalized = query.toLowerCase();
-  const match = normalized.match(/\b([1-4])\s*(?:br|bed|bedroom|bedrooms)\b/);
-  if (match) return Number(match[1]);
-  // Chinese: 一/两/三/四 + 居|室|卧|房|间 (备选 卧室 / 房间)
-  if (/(?:一|1)\s*(?:居|室|卧|房|间)(?:室)?/.test(query)) return 1;
-  if (/(?:两|二|2)\s*(?:居|室|卧|房|间)(?:室)?/.test(query)) return 2;
-  if (/(?:三|3)\s*(?:居|室|卧|房|间)(?:室)?/.test(query)) return 3;
-  if (/(?:四|4)\s*(?:居|室|卧|房|间)(?:室)?/.test(query)) return 4;
-  return undefined;
+function getQueryBedrooms(query: string, slots?: QuerySlots): number | undefined {
+  return slots?.bedrooms ?? fallbackGetQueryBedrooms(query);
 }
 
 function scoreProperty(property: InternalChatProperty, query: string, budget?: number, bedrooms?: number): number {
@@ -358,10 +355,10 @@ function scoreProperty(property: InternalChatProperty, query: string, budget?: n
   return score;
 }
 
-function pickRecommendedProperties(properties: InternalChatProperty[], query: string, limit = 5): InternalChatProperty[] {
-  const budget = getQueryBudget(query);
-  const bedrooms = getQueryBedrooms(query);
-  const requireGta = isGtaSearchIntent(query);
+function pickRecommendedProperties(properties: InternalChatProperty[], query: string, slots?: QuerySlots, limit = 5): InternalChatProperty[] {
+  const budget = getQueryBudget(query, slots);
+  const bedrooms = getQueryBedrooms(query, slots);
+  const requireGta = isGtaSearchIntent(query, slots);
   return [...properties]
     .filter((property) => isGtaInternalProperty(property, requireGta))
     .filter((property) => !bedrooms || property.bedrooms >= bedrooms)
@@ -372,9 +369,9 @@ function pickRecommendedProperties(properties: InternalChatProperty[], query: st
     .map(({ property }) => property);
 }
 
-function findClosestInternalProperty(properties: InternalChatProperty[], query: string): InternalChatProperty | undefined {
-  const bedrooms = getQueryBedrooms(query);
-  const requireGta = isGtaSearchIntent(query);
+function findClosestInternalProperty(properties: InternalChatProperty[], query: string, slots?: QuerySlots): InternalChatProperty | undefined {
+  const bedrooms = getQueryBedrooms(query, slots);
+  const requireGta = isGtaSearchIntent(query, slots);
   return [...properties]
     .filter((property) => isGtaInternalProperty(property, requireGta))
     .filter((property) => property.price > 0)
@@ -382,9 +379,9 @@ function findClosestInternalProperty(properties: InternalChatProperty[], query: 
     .sort((a, b) => a.price - b.price)[0];
 }
 
-function filterExternalPropertiesForQuery(properties: ExternalProperty[], query: string, budget?: number, limit = 3): ExternalProperty[] {
-  const requireGta = isGtaSearchIntent(query);
-  const bedrooms = getQueryBedrooms(query);
+function filterExternalPropertiesForQuery(properties: ExternalProperty[], query: string, slots?: QuerySlots, budget?: number, limit = 3): ExternalProperty[] {
+  const requireGta = isGtaSearchIntent(query, slots);
+  const bedrooms = getQueryBedrooms(query, slots);
   return properties
     .filter((property) => isGtaExternalProperty(property, requireGta))
     .filter((property) => !budget || (typeof property.price === 'number' && property.price <= budget))
@@ -480,25 +477,9 @@ async function callWebSearch(query: string): Promise<string> {
 
 // Detect whether the user is specifically looking for property listings
 // (so we should try to render external property cards, not just news).
-function needsExternalPropertySearch(query: string): boolean {
-  const q = query.toLowerCase();
-  const propertyKeywords = [
-    'rent', 'rental', 'lease', 'apartment', 'condo', 'house', 'studio',
-    'bedroom', '1br', '2br', '3br', 'br ', 'unit', 'suite', 'listing',
-    'find', 'looking for', 'show me', 'available', 'furnished', 'monthly',
-    'budget', 'under', 'below',
-    // Chinese
-    '房源', '出租', '出售', '公寓', '单间', '两居', '三居', '套房', '帮我找', '查一下房', '找房子',
-    '找房', '找一下', '找找', '有没有', '有什么', '租房', '租房子', '求租', '租',
-    '多大', '附近', '旁边', '周围', '靠近', '预算', '以内', '以下', '价格', '多少钱',
-    '月租', '一居', '二居', '卧室', '几房', '房租', '住', '离', '学校', '多大附近',
-    // Site references
-    'realtor.ca', 'realtor', 'mls',
-  ];
-  // Also: any URL in the message that points to a property site
-  if (/https?:\/\/[^\s]*(realtor\.ca)/i.test(query)) return true;
-  if (/找.*房|房.*预算|预算.*房|附近.*公寓|旁边.*(公寓|房)|(多大|大学|学校).*(公寓|房|租)/.test(query)) return true;
-  return propertyKeywords.some(k => q.includes(k));
+function needsExternalPropertySearch(query: string, slots?: QuerySlots): boolean {
+  if (slots?.intent === 'property_listing') return true;
+  return fallbackNeedsExternalPropertySearch(query);
 }
 
 function getListingResultsResponse(
@@ -604,9 +585,13 @@ export async function POST(request: NextRequest) {
 
     // Generate or use provided session ID
     const sessionId = providedSessionId || generateSessionId();
+
+    const slots = await understandQuery(message, {
+      GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+    });
     
     // Detect language from user message
-    const language = detectLanguage(message);
+    const language = slots.language || detectLanguage(message);
     
     // Get AI model
     const model = getAIModel();
@@ -616,20 +601,20 @@ export async function POST(request: NextRequest) {
     let usedWebSearch = false;
     
     let externalProperties: ExternalProperty[] = [];
-    const isPropertyListingRequest = needsExternalPropertySearch(message);
+    const isPropertyListingRequest = needsExternalPropertySearch(message, slots);
     const externalPropertySearchEnabled = process.env.ENABLE_EXTERNAL_PROPERTY_SEARCH === 'true';
 
-    if (needsWeather(message)) {
+    if (needsWeather(message, slots)) {
       usedWebSearch = true;
       webSearchResults = await getWeather(message);
-    } else if (needsWebSearch(message) && (!isPropertyListingRequest || externalPropertySearchEnabled)) {
+    } else if (needsWebSearch(message, slots) && (!isPropertyListingRequest || externalPropertySearchEnabled)) {
       usedWebSearch = true;
       // If the user is specifically asking for listings, fetch both the
       // text summary (for the AI) and structured cards (for the UI) in parallel.
       if (isPropertyListingRequest && externalPropertySearchEnabled) {
         const [textResults, cards] = await Promise.allSettled([
           callWebSearch(`realtor.ca ${message}`),
-          searchExternalProperties(message, 5),
+          searchExternalProperties(message, 5, getQueryBedrooms(message, slots), getQueryBudget(message, slots)),
         ]);
         webSearchResults = textResults.status === 'fulfilled' ? textResults.value : '';
         externalProperties = cards.status === 'fulfilled' ? cards.value : [];
@@ -640,18 +625,18 @@ export async function POST(request: NextRequest) {
     
     // Fetch live property data from database
     const propertyData = await getPropertyContext(language);
-    const budget = getQueryBudget(message);
+    const budget = getQueryBudget(message, slots);
     const recommendedProperties = isPropertyListingRequest
-      ? pickRecommendedProperties(propertyData.properties, message, 5)
+      ? pickRecommendedProperties(propertyData.properties, message, slots, 5)
       : [];
 
     if (isPropertyListingRequest) {
       const externalLimit = Math.max(0, 5 - recommendedProperties.length);
-      externalProperties = filterExternalPropertiesForQuery(externalProperties, message, budget, externalLimit);
+      externalProperties = filterExternalPropertiesForQuery(externalProperties, message, slots, budget, externalLimit);
       const totalCards = recommendedProperties.length + externalProperties.length;
       if (budget && totalCards < 3) {
         return NextResponse.json({
-          text: getNoBudgetMatchResponse(language, budget, findClosestInternalProperty(propertyData.properties, message)),
+          text: getNoBudgetMatchResponse(language, budget, findClosestInternalProperty(propertyData.properties, message, slots)),
           sessionId,
           source: 'budget-guardrail',
           language,
