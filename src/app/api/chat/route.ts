@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { validateCsrf } from '@/lib/security/csrf';
 import { mockProperties } from '@/lib/data';
 import { getPropertyDb, toPublicProperty, type PropertyRecord } from '@/lib/property-db';
+import { generateChatReply, type DeepSeekChatEnv } from '@/lib/deepseek-chat';
 import {
   fallbackGetQueryBedrooms,
   fallbackGetQueryBudget,
@@ -21,7 +22,10 @@ interface CloudflareEnv {
       temperature?: number;
     }) => Promise<{ response: string }>;
   };
+  DEEPSEEK_API_KEY?: string;
 }
+
+let warnedMissingDeepSeekKey = false;
 
 // Get Cloudflare context from global symbol
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,6 +52,15 @@ function getAI(): CloudflareEnv['AI'] {
   
   if (process.env.NODE_ENV !== 'production') console.error("AI binding not found");
   throw new Error("AI binding not found. Make sure AI is bound in wrangler.toml");
+}
+
+function getDeepSeekEnv(): DeepSeekChatEnv {
+  const cfContext = getCloudflareContext();
+  if (cfContext?.env) {
+    return cfContext.env as DeepSeekChatEnv;
+  }
+
+  return process.env as DeepSeekChatEnv;
 }
 
 // System prompt for Aria
@@ -706,11 +719,46 @@ export async function POST(request: NextRequest) {
       content: message.trim()
     });
 
-    // Call Cloudflare Workers AI
+    // Call DeepSeek first, then fall back to Cloudflare Workers AI.
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
-      
+      const deepSeekResponse = await generateChatReply({
+        messages,
+        env: getDeepSeekEnv(),
+        maxTokens: 512,
+        temperature: 0.2,
+      });
+
+      return NextResponse.json({
+        text: deepSeekResponse.text,
+        sessionId,
+        source: 'deepseek-v4',
+        language,
+        usedWebSearch,
+        webSearchQuery: usedWebSearch ? message : undefined,
+        properties: recommendedProperties.length > 0 ? recommendedProperties : undefined,
+        recommendations: recommendedProperties.length > 0 ? recommendedProperties : undefined,
+        propertySource: propertyData.source,
+        externalProperties: externalProperties.length > 0 ? externalProperties : undefined,
+      }, {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate',
+        }
+      });
+    } catch (deepSeekError) {
+      const isMissingDeepSeekKey = deepSeekError instanceof Error
+        && deepSeekError.message.includes('DEEPSEEK_API_KEY');
+
+      if (isMissingDeepSeekKey) {
+        if (!warnedMissingDeepSeekKey) {
+          console.warn('DeepSeek API key is not configured; falling back to Cloudflare Workers AI.');
+          warnedMissingDeepSeekKey = true;
+        }
+      } else {
+        console.warn('DeepSeek chat failed; falling back to Cloudflare Workers AI:', deepSeekError);
+      }
+    }
+
+    try {
       // Access Cloudflare Workers AI binding
       const ai = getAI();
       const aiResponse = await ai.run(model, {
@@ -718,14 +766,12 @@ export async function POST(request: NextRequest) {
         max_tokens: 512,
         temperature: 0.2,
       });
-      
-      clearTimeout(timeoutId);
-      
+
       if (aiResponse && aiResponse.response) {
         return NextResponse.json({
           text: aiResponse.response,
           sessionId,
-          source: 'cloudflare-ai',
+          source: 'cloudflare-ai-fallback',
           language,
           usedWebSearch,
           webSearchQuery: usedWebSearch ? message : undefined,
