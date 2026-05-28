@@ -463,9 +463,23 @@ function mapRealtorResult(result: RealtorSearchResult, budget?: number): Externa
   };
 }
 
+function parseQueryBedrooms(query: string): number | undefined {
+  const lower = query.toLowerCase();
+  const m = lower.match(/\b([1-5])\s*(?:br|bed|bedroom|bedrooms)\b/);
+  if (m) return Number(m[1]);
+  if (/(?:一|1)\s*(?:居|室|卧|房|间)(?:室)?/.test(query)) return 1;
+  if (/(?:两|二|2)\s*(?:居|室|卧|房|间)(?:室)?/.test(query)) return 2;
+  if (/(?:三|3)\s*(?:居|室|卧|房|间)(?:室)?/.test(query)) return 3;
+  if (/(?:四|4)\s*(?:居|室|卧|房|间)(?:室)?/.test(query)) return 4;
+  return undefined;
+}
+
 async function searchRealtorApiListings(query: string, maxResults: number): Promise<ExternalProperty[]> {
   const budget = extractBudget(query);
   const rentMax = budget || 4500;
+  const bedrooms = parseQueryBedrooms(query);
+  // realtor.ca BedRange uses "min-max"; "N-0" means N+ bedrooms.
+  const bedRange = bedrooms ? `${bedrooms}-0` : '0-0';
   const cookie = await getRealtorCookieHeader();
   if (!cookie) return [];
 
@@ -481,7 +495,7 @@ async function searchRealtorApiListings(query: string, maxResults: number): Prom
     SortBy: '1',
     RentMin: '1500',
     RentMax: String(rentMax),
-    BedRange: '0-0',
+    BedRange: bedRange,
     BathRange: '0-0',
     LongitudeMin: '-79.4400',
     LongitudeMax: '-79.3500',

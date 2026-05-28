@@ -336,9 +336,11 @@ function getQueryBedrooms(query: string): number | undefined {
   const normalized = query.toLowerCase();
   const match = normalized.match(/\b([1-4])\s*(?:br|bed|bedroom|bedrooms)\b/);
   if (match) return Number(match[1]);
-  if (/一居|1室|一室|一卧/.test(query)) return 1;
-  if (/两居|二居|2室|两室|二室|两卧|二卧/.test(query)) return 2;
-  if (/三居|3室|三室|三卧/.test(query)) return 3;
+  // Chinese: 一/两/三/四 + 居|室|卧|房|间 (备选 卧室 / 房间)
+  if (/(?:一|1)\s*(?:居|室|卧|房|间)(?:室)?/.test(query)) return 1;
+  if (/(?:两|二|2)\s*(?:居|室|卧|房|间)(?:室)?/.test(query)) return 2;
+  if (/(?:三|3)\s*(?:居|室|卧|房|间)(?:室)?/.test(query)) return 3;
+  if (/(?:四|4)\s*(?:居|室|卧|房|间)(?:室)?/.test(query)) return 4;
   return undefined;
 }
 
