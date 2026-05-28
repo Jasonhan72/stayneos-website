@@ -87,20 +87,20 @@ export function CategoryChips() {
               href={href}
               className={cn(
                 'relative flex min-h-11 shrink-0 items-center gap-2 rounded-full px-4 py-2.5',
-                'border border-white/25 bg-white/90 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.12)]',
+                'border border-white/20 bg-white/15 backdrop-blur-md shadow-[0_4px_16px_rgba(0,0,0,0.18)]',
                 'text-sm font-medium',
                 'transition-all duration-200',
                 activeCategory === cat.key
-                  ? 'text-neutral-950 border-white shadow-md'
-                  : 'text-neutral-700 hover:text-neutral-950 hover:border-white hover:bg-white',
+                  ? 'text-white border-white/60 bg-white/25'
+                  : 'text-white/90 hover:text-white hover:border-white/40 hover:bg-white/25',
                 // Animated underline via ::after
-                'after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:h-[2px] after:bg-neutral-900 after:rounded-full after:transition-all after:duration-300',
+                'after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:h-[2px] after:bg-white after:rounded-full after:transition-all after:duration-300',
                 activeCategory === cat.key
                   ? 'after:w-[calc(100%-2rem)]'
                   : 'after:w-0 hover:after:w-[calc(100%-2rem)]',
               )}
             >
-              <Icon size={18} className={cn('shrink-0', activeCategory === cat.key ? 'text-neutral-900' : 'text-neutral-500')} />
+              <Icon size={18} className={cn('shrink-0', activeCategory === cat.key ? 'text-white' : 'text-white/70')} />
               <span className="whitespace-nowrap">
                 {t(cat.labelKey, cat.defaultLabel)}
               </span>
