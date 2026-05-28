@@ -38,6 +38,7 @@ export interface ListingDraft {
   titleZh?: string;
   description?: string;
   descriptionZh?: string;
+  descriptionFr?: string;
   pricing?: ListingDraftPricing;
   availability?: ListingDraftAvailability;
   importSource?: 'url' | 'pdf' | 'manual';

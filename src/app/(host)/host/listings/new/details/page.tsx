@@ -48,10 +48,11 @@ export default function StepDetailsPage() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify(draft),
       });
-      const data = (await res.json()) as { en?: string; zh?: string };
+      const data = (await res.json()) as { en?: string; zh?: string; fr?: string };
       updateDraft({
         description: data.en || draft.description || "",
         descriptionZh: data.zh || draft.descriptionZh || "",
+        descriptionFr: data.fr || draft.descriptionFr || "",
         step: Math.max(draft.step || 0, 7),
       });
     } catch (e) {
@@ -168,19 +169,35 @@ export default function StepDetailsPage() {
           placeholder={t("host.listingWizard.details.descriptionPlaceholder", "Describe the space, neighborhood, and what guests will love about staying here...")}
           className="w-full rounded-lg border border-neutral-300 px-3 py-2.5 outline-none focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900"
         />
-        {draft.descriptionZh ? (
-          <details className="rounded-lg border border-neutral-200 bg-neutral-50 p-3">
-            <summary className="cursor-pointer text-sm font-medium text-neutral-700">
-              {t("host.listingWizard.details.zhDescription", "Chinese description (auto-generated)")}
-            </summary>
-            <textarea
-              value={draft.descriptionZh}
-              onChange={(e) => updateDraft({ descriptionZh: e.target.value })}
-              rows={6}
-              className="mt-2 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900"
-            />
-          </details>
-        ) : null}
+        <details className="rounded-lg border border-neutral-200 bg-neutral-50 p-3" open={Boolean(draft.descriptionZh || draft.descriptionFr)}>
+          <summary className="cursor-pointer text-sm font-medium text-neutral-700">
+            {t("host.listingWizard.details.localizedDescriptions", "Optional translated descriptions")}
+          </summary>
+          <div className="mt-3 space-y-3">
+            <label className="block">
+              <span className="mb-1 block text-sm font-medium text-neutral-700">
+                {t("host.listingWizard.details.zhDescription", "中文描述（可选，自动翻译填充）")}
+              </span>
+              <textarea
+                value={draft.descriptionZh || ""}
+                onChange={(e) => updateDraft({ descriptionZh: e.target.value })}
+                rows={6}
+                className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900"
+              />
+            </label>
+            <label className="block">
+              <span className="mb-1 block text-sm font-medium text-neutral-700">
+                {t("host.listingWizard.details.frDescription", "Description en français (optionnel, traduction auto)")}
+              </span>
+              <textarea
+                value={draft.descriptionFr || ""}
+                onChange={(e) => updateDraft({ descriptionFr: e.target.value })}
+                rows={6}
+                className="w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm outline-none focus:border-neutral-900 focus:ring-1 focus:ring-neutral-900"
+              />
+            </label>
+          </div>
+        </details>
       </section>
 
       <WizardFooter currentSlug="details" canContinue={ready} />

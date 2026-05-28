@@ -96,11 +96,11 @@ export async function POST(request: Request) {
     await db.prepare(`
       INSERT INTO Property
         (id, title, slug, status, address, neighborhood, city, propertyType,
-         bedrooms, bathrooms, sqft, description, priceMonthly, priceQuarterly,
+         bedrooms, bathrooms, sqft, description, descriptionZh, descriptionFr, priceMonthly, priceQuarterly,
          priceAnnual, currency, includedAmenities, buildingAmenities,
          minStayDays, images, heroImage, checkInTime, checkOutTime,
          selfCheckIn, createdAt, updatedAt, createdBy)
-      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     `).bind(
       id, title, slug, 'DRAFT',
       String(location.address || ''),
@@ -111,6 +111,8 @@ export async function POST(request: Request) {
       Number(basics.bathrooms) || 0,
       Number(basics.sqft) || null,
       String(body.description || ''),
+      typeof body.descriptionZh === 'string' && body.descriptionZh.trim() ? body.descriptionZh.trim() : null,
+      typeof body.descriptionFr === 'string' && body.descriptionFr.trim() ? body.descriptionFr.trim() : null,
       Number(pricing.priceMonthly) || 0,
       Number(pricing.priceQuarterly) || null,
       Number(pricing.priceAnnual) || null,

@@ -5,7 +5,7 @@ import type { ListingDraft } from "@/types/listing-draft";
 
 export const dynamic = "force-dynamic";
 
-function fallback(draft: ListingDraft): { en: string; zh: string } {
+function fallback(draft: ListingDraft): { en: string; zh: string; fr: string } {
   const city = draft.location?.city || "Toronto";
   const nb = draft.location?.neighborhood ? ` in ${draft.location.neighborhood}` : "";
   const type = draft.type || "apartment";
@@ -14,7 +14,8 @@ function fallback(draft: ListingDraft): { en: string; zh: string } {
   const ams = (draft.amenities || []).slice(0, 6).join(", ");
   const en = `Comfortable ${type}${nb} in ${city} with ${beds} bedroom(s) and ${baths} bathroom(s). ${ams ? `Features include ${ams}. ` : ""}A great base for medium and long-term stays.`;
   const zh = `位于${city}${draft.location?.neighborhood ? `（${draft.location.neighborhood}）` : ""}的舒适${type}，${beds} 卧 ${baths} 卫。${ams ? `配备 ${ams}。` : ""}适合中长期入住。`;
-  return { en, zh };
+  const fr = `${type} confortable${nb} à ${city}, avec ${beds} chambre(s) et ${baths} salle(s) de bain. ${ams ? `Comprend ${ams}. ` : ""}Une excellente base pour les séjours de moyenne et longue durée.`;
+  return { en, zh, fr };
 }
 
 export async function POST(req: NextRequest) {
@@ -36,8 +37,8 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const prompt = `Write a warm, factual rental listing description (about 120-180 words) in BOTH English and Simplified Chinese, based on this data.
-Return ONLY valid JSON: {"en": "...", "zh": "..."} — no markdown.
+  const prompt = `Write a warm, factual rental listing description (about 120-180 words) in English, Simplified Chinese, and French, based on this data.
+Return ONLY valid JSON: {"en": "...", "zh": "...", "fr": "..."} — no markdown.
 
 Listing:
 - type: ${draft.type || "apartment"}
@@ -81,10 +82,11 @@ Listing:
         warnings: ["AI returned no JSON."],
       });
     }
-    const parsed = JSON.parse(match[0]) as { en?: string; zh?: string };
+    const parsed = JSON.parse(match[0]) as { en?: string; zh?: string; fr?: string };
     return NextResponse.json({
       en: String(parsed.en || fallback(draft).en),
       zh: String(parsed.zh || fallback(draft).zh),
+      fr: String(parsed.fr || fallback(draft).fr),
     });
   } catch (err) {
     return NextResponse.json({

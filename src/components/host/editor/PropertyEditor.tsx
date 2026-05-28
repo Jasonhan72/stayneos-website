@@ -11,6 +11,7 @@ import {
   slugify,
   toPropertyFormState,
 } from '@/lib/admin/property';
+import { ensureCsrfToken } from '@/lib/security/csrf-client';
 
 interface PropertyEditorProps {
   initial?: unknown;
@@ -250,7 +251,8 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
     try {
       const response = await fetch(id ? `${apiBase}/${id}` : apiBase, {
         method: id ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json', 'x-csrf-token': ensureCsrfToken() },
         body: JSON.stringify(payload),
       });
 
@@ -469,10 +471,10 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
           <Field label="英文描述">
             <textarea className={`${inputClassName} min-h-28`} value={form.description} onChange={(event) => updateField('description', event.target.value)} />
           </Field>
-          <Field label="中文描述">
+          <Field label="中文描述（可选，自动翻译填充）">
             <textarea className={`${inputClassName} min-h-28`} value={form.descriptionZh} onChange={(event) => updateField('descriptionZh', event.target.value)} />
           </Field>
-          <Field label="法文描述">
+          <Field label="Description en français (optionnel, traduction auto)">
             <textarea className={`${inputClassName} min-h-28`} value={form.descriptionFr} onChange={(event) => updateField('descriptionFr', event.target.value)} />
           </Field>
           <Field label="全包内容（逗号或换行分隔）">

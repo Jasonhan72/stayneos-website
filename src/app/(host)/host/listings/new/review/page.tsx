@@ -33,6 +33,7 @@ export default function StepReviewPage() {
         title: draft.title,
         description: draft.description,
         descriptionZh: draft.descriptionZh,
+        descriptionFr: draft.descriptionFr,
         type: draft.type,
         location: draft.location,
         basics: draft.basics,
