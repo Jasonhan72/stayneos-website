@@ -405,8 +405,33 @@ function normalizeRealtorImage(photo: unknown): string | undefined {
   return typeof image === 'string' && image.startsWith('http') ? image : undefined;
 }
 
-function isBadRealtorRental(address: string, title: string): boolean {
-  return /\b(locker|parking|bike locker|storage|room only|master bedroom)\b/i.test(`${address} ${title}`);
+function isBadRealtorRental(
+  address: string,
+  title: string,
+  remarks?: string,
+  propertyType?: string,
+  price?: number,
+  bedrooms?: number,
+): boolean {
+  const haystack = `${address} ${title}`;
+  // Storage / parking / locker / studio-room rentals
+  if (/\b(locker|parking|bike locker|storage|room only|master bedroom)\b/i.test(haystack)) return true;
+  // "Room A/B/C/D" or "#X - Room Y" patterns in the title (single-room rentals)
+  if (/\bRoom\s+[A-Z0-9]\b/i.test(haystack)) return true;
+  if (/\b(?:bedroom|room|master|den)\s+(?:for\s+)?rent\b/i.test(haystack)) return true;
+  // Property type explicitly "Room" or "Other" for single-room shares
+  if (typeof propertyType === 'string' && /\b(room|shared)\b/i.test(propertyType)) return true;
+  // PublicRemarks signals — sharing / shared / room only / female only etc.
+  if (remarks) {
+    if (/\b(room\s+for\s+rent|shared\s+(?:kitchen|bathroom|washroom|living)|share\s+the\s+(?:kitchen|bathroom)|female\s+only|male\s+only|students?\s+only|one\s+room\s+only|single\s+room|private\s+room|individual\s+room|roommate)\b/i.test(remarks)) return true;
+  }
+  // Sanity check: suspiciously cheap for stated bedroom count
+  // (4-bed unit for $1,600 → obviously a room rental, not a real 4-bed unit)
+  if (typeof price === 'number' && typeof bedrooms === 'number' && bedrooms >= 2) {
+    const minPerBedroom = 1000; // GTA realistic floor for a real multi-bed unit
+    if (price / bedrooms < minPerBedroom) return true;
+  }
+  return false;
 }
 
 type RealtorSearchResult = {
@@ -443,7 +468,8 @@ function mapRealtorResult(result: RealtorSearchResult, budget?: number): Externa
     : undefined;
 
   if (!title || !result.RelativeDetailsURL) return null;
-  if (isBadRealtorRental(address, title)) return null;
+  const propertyType = typeof property.Type === 'string' ? property.Type : undefined;
+  if (isBadRealtorRental(address, title, result.PublicRemarks, propertyType, price, bedrooms)) return null;
   if (!isGtaListingText(location)) return null;
   if (!Number.isFinite(price) || price < 1000 || (budget && price > budget)) return null;
   if (!image) return null;
