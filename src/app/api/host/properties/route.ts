@@ -3,6 +3,7 @@ import { verifyRequestAuth } from '@/lib/auth/admin-api';
 import { getDb } from '@/lib/d1';
 import { parseImages } from '@/lib/property-db';
 import { validateCsrf } from '@/lib/security/csrf';
+import { fillMissingDescriptionTranslations } from '@/lib/translate-description';
 
 export const dynamic = 'force-dynamic';
 
@@ -92,6 +93,15 @@ export async function POST(request: Request) {
     const basics = (body.basics || {}) as Record<string, unknown>;
     const pricing = (body.pricing || {}) as Record<string, unknown>;
     const now = new Date().toISOString();
+    const description = String(body.description || '');
+    const descriptions = await fillMissingDescriptionTranslations(
+      description,
+      {
+        descriptionZh: typeof body.descriptionZh === 'string' && body.descriptionZh.trim() ? body.descriptionZh.trim() : null,
+        descriptionFr: typeof body.descriptionFr === 'string' && body.descriptionFr.trim() ? body.descriptionFr.trim() : null,
+      },
+      { DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY }
+    );
 
     await db.prepare(`
       INSERT INTO Property
@@ -110,9 +120,9 @@ export async function POST(request: Request) {
       Number(basics.bedrooms) || 0,
       Number(basics.bathrooms) || 0,
       Number(basics.sqft) || null,
-      String(body.description || ''),
-      typeof body.descriptionZh === 'string' && body.descriptionZh.trim() ? body.descriptionZh.trim() : null,
-      typeof body.descriptionFr === 'string' && body.descriptionFr.trim() ? body.descriptionFr.trim() : null,
+      description,
+      descriptions.descriptionZh,
+      descriptions.descriptionFr,
       Number(pricing.priceMonthly) || 0,
       Number(pricing.priceQuarterly) || null,
       Number(pricing.priceAnnual) || null,

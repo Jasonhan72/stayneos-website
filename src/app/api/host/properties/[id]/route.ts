@@ -3,8 +3,13 @@ import { verifyRequestAuth } from '@/lib/auth/admin-api';
 import { getDb } from '@/lib/d1';
 import { normalizePropertyInput, toPropertyFormState, slugify } from '@/lib/admin/property';
 import { validateCsrf } from '@/lib/security/csrf';
+import { fillMissingDescriptionTranslations } from '@/lib/translate-description';
 
 export const dynamic = 'force-dynamic';
+
+function hasNonEmptyString(value: unknown): value is string {
+  return typeof value === 'string' && value.trim().length > 0;
+}
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -64,6 +69,26 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     };
     const body = normalizePropertyInput(mergedBody);
     const slug = body.slug || slugify(body.title);
+    const descriptionChanged = hasNonEmptyString(incoming.description)
+      && incoming.description.trim() !== (typeof existing.description === 'string' ? existing.description.trim() : '');
+    const autoRequestedZh = incoming.descriptionZh === undefined
+      || incoming.descriptionZh === null
+      || (typeof incoming.descriptionZh === 'string' && incoming.descriptionZh.trim().length === 0);
+    const autoRequestedFr = incoming.descriptionFr === undefined
+      || incoming.descriptionFr === null
+      || (typeof incoming.descriptionFr === 'string' && incoming.descriptionFr.trim().length === 0);
+    const translations = await fillMissingDescriptionTranslations(
+      body.description,
+      {
+        descriptionZh: body.descriptionZh,
+        descriptionFr: body.descriptionFr,
+      },
+      { DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY },
+      {
+        forceZh: descriptionChanged && autoRequestedZh,
+        forceFr: descriptionChanged && autoRequestedFr,
+      }
+    );
 
     await db.prepare(`
       UPDATE Property SET
@@ -79,7 +104,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       body.neighborhood, body.city, body.latitude, body.longitude,
       body.propertyType, body.bedrooms, body.bathrooms, body.sqft,
       body.floor, body.facing, body.balconySqft, body.buildingYear,
-      body.developer, body.description, body.descriptionZh, body.descriptionFr,
+      body.developer, body.description, translations.descriptionZh, translations.descriptionFr,
       body.priceMonthly, body.priceQuarterly, body.priceAnnual, body.currency,
       JSON.stringify(body.includedAmenities), JSON.stringify(body.buildingAmenities),
       body.nearestSubway, body.subwayWalkMinutes, JSON.stringify(body.nearbyLandmarks),

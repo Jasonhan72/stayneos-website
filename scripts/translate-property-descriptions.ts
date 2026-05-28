@@ -1,12 +1,17 @@
 #!/usr/bin/env node
 
-const { execFileSync } = require('node:child_process');
-const { readFileSync } = require('node:fs');
+import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+import { translateDescription } from '../src/lib/translate-description';
 
-const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
-const DEEPSEEK_MODEL = 'deepseek-chat';
+type PropertyDescriptionRow = {
+  id: string;
+  description: string | null;
+  descriptionZh: string | null;
+  descriptionFr: string | null;
+};
 
-function getDatabaseName() {
+function getDatabaseName(): string {
   if (process.env.D1_DATABASE_NAME) return process.env.D1_DATABASE_NAME;
   if (process.env.DB_NAME) return process.env.DB_NAME;
 
@@ -21,47 +26,17 @@ function getDatabaseName() {
   return 'stayneos-db';
 }
 
-function sqlString(value) {
+function sqlString(value: string | null): string {
   if (value === null) return 'NULL';
   return `'${value.replace(/'/g, "''")}'`;
 }
 
-function runD1(sql) {
+function runD1(sql: string): PropertyDescriptionRow[] {
   const database = getDatabaseName();
   const args = ['wrangler', 'd1', 'execute', database, '--remote', '--json', '--command', sql];
   const output = execFileSync('npx', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
-  const parsed = JSON.parse(output);
+  const parsed = JSON.parse(output) as Array<{ results?: PropertyDescriptionRow[] }>;
   return parsed.flatMap((item) => item.results || []);
-}
-
-async function translate(description, language) {
-  const response = await fetch(DEEPSEEK_API_URL, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${process.env.DEEPSEEK_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: DEEPSEEK_MODEL,
-      messages: [
-        {
-          role: 'user',
-          content: `Translate the following furnished apartment listing description from English to ${language}, preserving tone and any markdown structure. Output only the translation, no explanation. Source: ${description}`,
-        },
-      ],
-      temperature: 0.2,
-    }),
-  });
-
-  if (!response.ok) {
-    const body = await response.text().catch(() => '');
-    throw new Error(`DeepSeek HTTP ${response.status}: ${body.slice(0, 300)}`);
-  }
-
-  const data = await response.json();
-  const content = data.choices?.[0]?.message?.content?.trim();
-  if (!content) throw new Error('DeepSeek returned an empty translation');
-  return content;
 }
 
 async function main() {
@@ -91,13 +66,15 @@ async function main() {
 
       if (!row.descriptionZh?.trim()) {
         console.log(`[${row.id}] translating Chinese description...`);
-        const translated = await translate(description, 'Simplified Chinese');
+        const translated = await translateDescription(description, 'zh', { DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY });
+        if (!translated) throw new Error('DeepSeek returned an empty Chinese translation');
         updates.push(`descriptionZh = ${sqlString(translated)}`);
       }
 
       if (!row.descriptionFr?.trim()) {
         console.log(`[${row.id}] translating French description...`);
-        const translated = await translate(description, 'French');
+        const translated = await translateDescription(description, 'fr', { DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY });
+        if (!translated) throw new Error('DeepSeek returned an empty French translation');
         updates.push(`descriptionFr = ${sqlString(translated)}`);
       }
 
