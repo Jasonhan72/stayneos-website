@@ -489,10 +489,10 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   const estimatedTax = Math.round(selectedMonthlyEstimate * 0.13);
 
   const trustItems = [
-    { icon: ShieldCheck, title: 'Verified by NEOS', text: 'Photos, location context, pricing, and stay terms are reviewed before publishing.' },
-    { icon: ReceiptText, title: 'Transparent pricing', text: 'Monthly, quarterly, and annual rates are visible before checkout. No surprise service or cleaning fees.' },
-    { icon: MessageCircle, title: 'Human support', text: 'Contact the host or NEOS support from your booking once reserved.' },
-    { icon: KeyRound, title: 'Move-in ready', text: 'Furnished stay with utilities, WiFi, kitchenware, linens, and building essentials.' },
+    { icon: ShieldCheck, title: t('property.trust1Title', 'Verified by NEOS'), text: t('property.trust1Text', 'Photos, location context, pricing, and stay terms are reviewed before publishing.') },
+    { icon: ReceiptText, title: t('property.trust2Title', 'Transparent pricing'), text: t('property.trust2Text', 'Monthly, quarterly, and annual rates are visible before checkout. No surprise service or cleaning fees.') },
+    { icon: MessageCircle, title: t('property.trust3Title', 'Human support'), text: t('property.trust3Text', 'Contact the host or NEOS support from your booking once reserved.') },
+    { icon: KeyRound, title: t('property.trust4Title', 'Move-in ready'), text: t('property.trust4Text', 'Furnished stay with utilities, WiFi, kitchenware, linens, and building essentials.') },
   ];
 
   // Airbnb-style 6-dimension review scores (mock data, backend to provide real values)
@@ -646,11 +646,11 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             <section className="py-8">
               <div className="mb-5 flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-sm font-semibold uppercase tracking-wide text-emerald-700">NEOS trust layer</p>
-                  <h2 className="mt-1 text-2xl font-semibold text-neutral-950 tracking-tight">Book with confidence</h2>
+                  <p className="text-sm font-semibold uppercase tracking-wide text-emerald-700">{t('property.trustLayer', 'NEOS trust layer')}</p>
+                  <h2 className="mt-1 text-2xl font-semibold text-neutral-950 tracking-tight">{t('property.bookWithConfidence', 'Book with confidence')}</h2>
                 </div>
                 <span className="hidden rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800 md:inline-flex">
-                  <BadgeCheck size={16} className="mr-2" /> Verified stay
+                  <BadgeCheck size={16} className="mr-2" /> {t('property.verifiedStay', 'Verified stay')}
                 </span>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
@@ -838,10 +838,10 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {([
-                  { name: 'Sarah M.', date: 'March 2025', rating: 5, text: 'Absolutely stunning property! The views of the lake are incredible, and the apartment is exactly as described. The host was very responsive and accommodating. Would definitely stay again!' },
-                  { name: 'James K.', date: 'February 2025', rating: 4, text: 'Great location and very clean space. The building amenities are top-notch. Only minor issue was the street noise at night, but nothing too disruptive. Highly recommend for business travelers.' },
-                  { name: 'Emily R.', date: 'January 2025', rating: 5, text: 'This was the perfect home base for our month-long stay in Toronto. Close to transit, restaurants, and everything we needed. The apartment felt like a real home, not just a rental.' },
-                  { name: 'Michael T.', date: 'December 2024', rating: 5, text: 'Exceptional quality throughout. From the high-end finishes to the thoughtful amenities, everything exceeded expectations. The NEOS team made the booking process seamless.' },
+                  { name: t('property.review1Name', 'Sarah M.'), date: t('property.review1Date', 'March 2025'), rating: 5, text: t('property.review1Text', 'Absolutely stunning property! The views of the lake are incredible, and the apartment is exactly as described. The host was very responsive and accommodating. Would definitely stay again!') },
+                  { name: t('property.review2Name', 'James K.'), date: t('property.review2Date', 'February 2025'), rating: 4, text: t('property.review2Text', 'Great location and very clean space. The building amenities are top-notch. Only minor issue was the street noise at night, but nothing too disruptive. Highly recommend for business travelers.') },
+                  { name: t('property.review3Name', 'Emily R.'), date: t('property.review3Date', 'January 2025'), rating: 5, text: t('property.review3Text', 'This was the perfect home base for our month-long stay in Toronto. Close to transit, restaurants, and everything we needed. The apartment felt like a real home, not just a rental.') },
+                  { name: t('property.review4Name', 'Michael T.'), date: t('property.review4Date', 'December 2024'), rating: 5, text: t('property.review4Text', 'Exceptional quality throughout. From the high-end finishes to the thoughtful amenities, everything exceeded expectations. The NEOS team made the booking process seamless.') },
                 ]).map((review, idx) => (
                   <div
                     key={idx}
