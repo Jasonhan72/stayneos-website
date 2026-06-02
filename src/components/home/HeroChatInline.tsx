@@ -22,36 +22,23 @@ interface PropertyRecommendation {
   location: string;
   monthlyPrice: number;
   image: string;
+  images?: string[];   // From API response (preferred over single image)
   bedrooms: number;
+  maxGuests?: number;
 }
 
 // NOTE: Prices synced with live API on 2025-07-15. Update when DB prices change.
-const PROPERTIES: Record<string, PropertyRecommendation> = {
-  '1': {
-    id: '1',
-    title: '55 Cooper St (Sugar Wharf) · Premium 3BR Sky Suite',
-    location: '55 Cooper St, Toronto',
-    monthlyPrice: 12000,
-    image: '/images/cooper-55-c5e8357d.jpg',
-    bedrooms: 3,
-  },
-  '2': {
-    id: '2',
-    title: '238 Simcoe St (Grange Park) · Executive 3BR Suite',
-    location: '238 Simcoe St, Toronto',
-    monthlyPrice: 8000,
-    image: '/images/simcoe-238-kitchen.jpg',
-    bedrooms: 3,
-  },
-  '3': {
-    id: '3',
-    title: '22 Wellesley St E · Modern 1BR City View',
-    location: '22 Wellesley St E, Toronto',
-    monthlyPrice: 4000,
-    image: '/images/wellesley-1607-living.jpg',
-    bedrooms: 1,
-  },
+// Fallback image map (used when API doesn't provide images)
+const PROPERTY_IMAGE_FALLBACKS: Record<string, string> = {
+  '1': '/images/cooper-55-c5e8357d.jpg',
+  '2': '/images/simcoe-238-kitchen.jpg',
+  '3': '/images/wellesley-1607-living.jpg',
 };
+
+function resolvePropertyImage(id: string, apiImages?: string[]): string {
+  if (apiImages && apiImages.length > 0) return apiImages[0];
+  return PROPERTY_IMAGE_FALLBACKS[String(id)] || '';
+}
 
 const promptChipKeys = [
   'aiConcierge.chip1',
@@ -70,7 +57,9 @@ const defaultChips = [
 function extractPropertyId(text: string): string | null {
   if (/55\s*cooper|sugar\s*wharf/i.test(text)) return '1';
   if (/238\s*simcoe|grange\s*park/i.test(text)) return '2';
-  if (/22\s*wellesley/i.test(text)) return '3';
+  if (/22\s*wellesley|wellesley\s*st/i.test(text)) return '3';
+  // DO NOT match Manhattan / Water Street / non-Toronto — these are filtered server-side
+  if (/water\s*street|manhattan|new\s*york|brooklyn|queens/i.test(text)) return null;
   return null;
 }
 

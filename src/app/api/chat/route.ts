@@ -100,9 +100,11 @@ Don't use for: personal information, sensitive data, or non-housing topics.
 - Be professional, warm, and helpful. Keep answers concise but complete (3-5 sentences).
 
 IMPORTANT RULES:
-- NEVER invent, estimate, or modify any property price. Use ONLY the exact prices from the LIVE PROPERTY DATA provided in the next system message.
-- NEVER mention a property address, price, or availability that is not confirmed in the live data.
-- If the user states a budget and no properties match, explicitly say so and mention the closest available option with its real price.
+- NEVER invent, estimate, or modify any property price. Use ONLY the exact prices from the LIVE PROPERTY DATA.
+- NEVER mention any property from outside Toronto/GTA. The live data below is filtered to Toronto ONLY.
+- If the user states a budget X, only recommend properties with price ≤ X. Properties above budget MUST NOT be suggested.
+- If NO properties match the budget, explicitly say: "目前暂无 ${X}/月以内的房源。最接近的是 [name] 月租 $[Y]。" and suggest contacting hello@neos.rentals.
+- The LIVE PROPERTY DATA contains ONLY properties within the user's budget (pre-filtered). Do NOT override this filter.
 - If you have real-time data (weather, search results), use it directly in your answer. Don't say "querying..." or "checking..." — you already have the data.
 - For city-specific questions you can answer from general knowledge (transit routes, popular neighborhoods, hospital locations), answer directly without saying you need to search.
 - **Pay attention to the city the user is asking about.** If they ask about a city other than Toronto (e.g. Seattle, Vancouver, New York), acknowledge that city in your response. Don't recommend Toronto-specific properties unless they ask about Toronto.
@@ -224,34 +226,91 @@ function needsWebSearch(query: string): boolean {
 }
 
 // Fetch live property data from D1
-async function getPropertyContext(): Promise<string> {
+interface InternalProperty {
+  id: string | number;
+  title: string;
+  slug: string;
+  address: string;
+  city: string;
+  neighborhood?: string;
+  priceMonthly: number;
+  bedrooms: number;
+  bathrooms: number;
+  images?: string[];
+  description?: string;
+}
+
+// Cache live properties between requests (TTL 60s)
+let _propertyCache: { data: InternalProperty[]; ts: number } | null = null;
+
+async function getLiveProperties(): Promise<InternalProperty[]> {
+  const now = Date.now();
+  if (_propertyCache && now - _propertyCache.ts < 60_000) return _propertyCache.data;
+  
   try {
     const db = getDb();
     const result = await db
-      .prepare("SELECT id, title, slug, address, city, neighborhood, priceMonthly, bedrooms, bathrooms, description, status FROM Property WHERE status = 'PUBLISHED' ORDER BY priceMonthly DESC")
+      .prepare(`SELECT id, title, slug, address, city, neighborhood, priceMonthly, bedrooms, 
+                bathrooms, description, images, status 
+                FROM Property WHERE status = 'PUBLISHED' 
+                AND city = 'Toronto'
+                ORDER BY priceMonthly ASC`)
       .all();
 
     if (!result.results || result.results.length === 0) {
-      return '(No properties currently available in the database)';
+      _propertyCache = { data: [], ts: now };
+      return [];
     }
 
-    let context = 'LIVE PROPERTY DATA (from database):\n\n';
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (result.results as any[]).forEach((p: any, i: number) => {
-      context += `${i + 1}. ID: ${p.id} — ${p.title}\n`;
-      context += `   Address: ${p.address}, ${p.city}\n`;
-      if (p.neighborhood) context += `   Neighborhood: ${p.neighborhood}\n`;
-      context += `   Bedrooms: ${p.bedrooms}, Bathrooms: ${p.bathrooms}\n`;
-      context += `   Monthly Price: $${p.priceMonthly}\n`;
-      if (p.description) context += `   Description: ${String(p.description).substring(0, 200)}\n`;
-      context += `   Status: ${p.status}\n\n`;
+    const properties: InternalProperty[] = (result.results as any[]).map((p: any) => {
+      let images: string[] = [];
+      try {
+        if (typeof p.images === 'string') {
+          images = JSON.parse(p.images);
+        } else if (Array.isArray(p.images)) {
+          images = p.images;
+        }
+      } catch { /* leave empty */ }
+      return { ...p, images };
     });
 
-    return context;
-  } catch (error) {
-    console.error('Failed to fetch property context:', error);
-    return '(Property database temporarily unavailable — use the hardcoded property info in your system prompt)';
+    _propertyCache = { data: properties, ts: now };
+    return properties;
+  } catch (err) {
+    console.error('Failed to fetch property data:', err);
+    return _propertyCache?.data || [];
   }
+}
+
+function buildPropertyContext(properties: InternalProperty[]): string {
+  if (properties.length === 0) return '(No Toronto properties currently available)';
+
+  let context = 'LIVE PROPERTY DATA (from database, Toronto only):\n\n';
+  properties.forEach((p, i) => {
+    context += `${i + 1}. ID: ${p.id} — ${p.title}\n`;
+    context += `   Address: ${p.address}, ${p.city}\n`;
+    if (p.neighborhood) context += `   Neighborhood: ${p.neighborhood}\n`;
+    context += `   Price: $${p.priceMonthly.toLocaleString()}/month\n`;
+    context += `   Bedrooms: ${p.bedrooms}, Bathrooms: ${p.bathrooms}\n`;
+    if (p.images && p.images.length > 0) {
+      context += `   Image: ${p.images[0]}\n`;
+    }
+    if (p.description) {
+      const desc = p.description.substring(0, 200);
+      context += `   Description: ${desc}${p.description.length > 200 ? '...' : ''}\n`;
+    }
+    context += '\n';
+  });
+  return context;
+}
+
+function filterPropertiesByBudget(properties: InternalProperty[], budget?: number): { matching: InternalProperty[]; closest: InternalProperty | null } {
+  if (!budget) return { matching: properties, closest: null };
+  const matching = properties.filter(p => p.priceMonthly <= budget);
+  const closest = matching.length === 0
+    ? properties.reduce((best, p) => !best || Math.abs(p.priceMonthly - budget) < Math.abs(best.priceMonthly - budget) ? p : best, null as InternalProperty | null)
+    : null;
+  return { matching, closest };
 }
 
 // Direct web search (shared lib, no HTTP round-trip)
@@ -291,6 +350,23 @@ function needsExternalPropertySearch(query: string): boolean {
   // Also: Chinese patterns that indicate property intent
   if (/找.*房|房.*预算|预算.*房|附近.*公寓|旁边.*(公寓|房)|(多大|大学|学校).*(公寓|房|租)/.test(query)) return true;
   return propertyKeywords.some(k => q.includes(k));
+}
+
+// Extract budget from user message (returns null if not mentioned)
+function extractBudget(message: string): number | null {
+  const patterns = [
+    /\$\s*(\d{3,5})\s*(?:\/\s*(?:mo|month|月)|per\s*month|a\s*month)?/i,
+    /(?:预算|budget|under|below|less than|不超过|以内|以下)\s*\$?\s*(\d{3,5})/i,
+    /(\d{3,5})\s*(?:\/\s*(?:月|mo|month)|元?\s*(?:一个)?月|per\s*month|monthly)/i,
+  ];
+  for (const re of patterns) {
+    const m = message.match(re);
+    if (m && m[1]) {
+      const val = parseInt(m[1], 10);
+      if (val >= 100 && val <= 99999) return val;
+    }
+  }
+  return null;
 }
 
 // Simple IP-based rate limit for public chat (20 req/min)
@@ -370,6 +446,13 @@ export async function POST(request: NextRequest) {
     
     let externalProperties: ExternalProperty[] = [];
 
+    // Extract budget early (needed for filtering external results too)
+    const budget = extractBudget(message);
+
+    // Fetch live property data from database (Toronto only, cached)
+    const liveProperties = await getLiveProperties();
+    const { matching: budgetProperties, closest: closestAboveBudget } = filterPropertiesByBudget(liveProperties, budget);
+
     if (needsWeather(message)) {
       usedWebSearch = true;
       webSearchResults = await getWeather(message);
@@ -380,17 +463,28 @@ export async function POST(request: NextRequest) {
       if (needsExternalPropertySearch(message)) {
         const [textResults, cards] = await Promise.allSettled([
           callWebSearch(message),
-          searchExternalProperties(message, 3),
+          searchExternalProperties(message, 5),  // Request 5, filter down after
         ]);
         webSearchResults = textResults.status === 'fulfilled' ? textResults.value : '';
-        externalProperties = cards.status === 'fulfilled' ? cards.value : [];
+        const rawCards = cards.status === 'fulfilled' ? cards.value : [];
+        // Hard budget filter for external results
+        externalProperties = budget
+          ? rawCards.filter(c => c.price === undefined || c.price <= budget)
+          : rawCards;
+        // Add closest-above-budget if all were filtered out
+        if (budget && externalProperties.length === 0 && rawCards.length > 0) {
+          const closest = rawCards.reduce((best, c) => {
+            if (c.price === undefined) return best;
+            return !best || Math.abs(c.price - budget) < Math.abs(best.price - budget) ? c : best;
+          }, null as ExternalProperty | null);
+          if (closest) externalProperties = [closest]; // Include closest for reference, mark as over-budget
+        }
       } else {
         webSearchResults = await callWebSearch(message);
       }
     }
-    
-    // Fetch live property data from database
-    const propertyContext = await getPropertyContext();
+
+    const propertyContext = buildPropertyContext(budgetProperties.length > 0 ? budgetProperties : liveProperties);
 
     // Prepare messages for AI
     const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
@@ -450,6 +544,20 @@ export async function POST(request: NextRequest) {
           usedWebSearch,
           webSearchQuery: usedWebSearch ? message : undefined,
           externalProperties: externalProperties.length > 0 ? externalProperties : undefined,
+          matchingProperties: budgetProperties.map(p => ({
+            id: p.id,
+            title: p.title,
+            location: p.address + ', ' + p.city,
+            monthlyPrice: p.priceMonthly,
+            bedrooms: p.bedrooms,
+            maxGuests: p.bedrooms,
+            images: p.images || [],
+          })),
+          budgetApplied: budget || undefined,
+          closestAboveBudget: closestAboveBudget ? {
+            title: closestAboveBudget.title,
+            price: closestAboveBudget.priceMonthly,
+          } : undefined,
         }, {
           headers: {
             'Cache-Control': 'no-store, no-cache, must-revalidate',
@@ -471,6 +579,20 @@ export async function POST(request: NextRequest) {
         usedWebSearch,
         webSearchQuery: usedWebSearch ? message : undefined,
         externalProperties: externalProperties.length > 0 ? externalProperties : undefined,
+        matchingProperties: budgetProperties.map(p => ({
+          id: p.id,
+          title: p.title,
+          location: p.address + ', ' + p.city,
+          monthlyPrice: p.priceMonthly,
+          bedrooms: p.bedrooms,
+          maxGuests: p.bedrooms,
+          images: p.images || [],
+        })),
+        budgetApplied: budget || undefined,
+        closestAboveBudget: closestAboveBudget ? {
+          title: closestAboveBudget.title,
+          price: closestAboveBudget.priceMonthly,
+        } : undefined,
       }, {
         headers: {
           'Cache-Control': 'no-store, no-cache, must-revalidate',

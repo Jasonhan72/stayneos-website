@@ -65,7 +65,10 @@
     "error": "Our AI is taking a moment. Browse our collection or chat with us.",
     "browseCta": "Browse Properties",
     "whatsappCta": "Chat on WhatsApp",
-    "scheduleViewing": "Schedule a Viewing"
+    "scheduleViewing": "Schedule a Viewing",
+    "noMatch": "No listings under your budget.",
+    "closestOption": "Closest:",
+    "externalResults": "Also from realtor.ca / condos.ca"
   },
   "concierge": {
     "title": "Personal Concierge",
@@ -81,5 +84,9 @@
   "messageExample3": "This will be my first time staying in this city. Excited to explore from your conveniently located place!",
   "messagePlaceholder": "Please describe your needs or questions...",
   "messageTooShort": "Please write a bit more about your trip",
-  "writeMessage": "Write a message to the host"
+  "writeMessage": "Write a message to the host",
+  "common": {
+    "listingTag": " Featured",
+    "view": "View"
+  }
 }

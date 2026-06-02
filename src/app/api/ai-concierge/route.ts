@@ -168,6 +168,26 @@ CRITICAL RULES — VIOLATION IS NOT PERMITTED:
 }
 ${budgetGuidance}`;
 
+    // Search external property sites for the user's query
+    let externalProperties: Array<{
+      title: string; url: string; source: string; price?: number; priceText?: string;
+      bedrooms?: number; location?: string; image?: string; snippet?: string;
+    }> = [];
+    try {
+      const { searchExternalProperties } = await import('@/lib/web-search');
+      const rawExternal = await searchExternalProperties(body.message, 5);
+      // Hard budget filter
+      externalProperties = budget
+        ? rawExternal.filter(p => p.price === undefined || p.price <= budget)
+        : rawExternal;
+      if (budget && externalProperties.length === 0 && rawExternal.length > 0) {
+        // Keep the closest one for reference
+        const sorted = [...rawExternal].filter(p => p.price !== undefined)
+          .sort((a, b) => Math.abs(a.price! - budget!) - Math.abs(b.price! - budget!));
+        if (sorted.length > 0) externalProperties = [sorted[0]];
+      }
+    } catch { /* external search is best-effort */ }
+
     // Try Cloudflare Workers AI if available
     const env = (process.env as Record<string, unknown>);
     const ai = (env as { AI?: { run: (model: string, input: Record<string, unknown>) => Promise<{ response?: string }> } }).AI;

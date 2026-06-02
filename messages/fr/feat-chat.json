@@ -65,7 +65,10 @@
     "error": "Notre IA prend un moment. Parcourez notre collection ou contactez-nous.",
     "browseCta": "Parcourir les propriétés",
     "whatsappCta": "Discuter sur WhatsApp",
-    "scheduleViewing": "Planifier une visite"
+    "scheduleViewing": "Planifier une visite",
+    "noMatch": "Aucune annonce dans votre budget.",
+    "closestOption": "Le plus proche :",
+    "externalResults": "Également de realtor.ca / condos.ca"
   },
   "concierge": {
     "title": "Conciergerie personnelle",
@@ -81,5 +84,9 @@
   "messageExample3": "Ce sera ma première fois à Toronto. Je suis excité d'explorer la ville depuis votre emplacement pratique !",
   "messagePlaceholder": "Veuillez décrire vos besoins ou questions...",
   "messageTooShort": "Veuillez écrire un peu plus sur votre voyage",
-  "writeMessage": "Écrire un message à l'hôte"
+  "writeMessage": "Écrire un message à l'hôte",
+  "common": {
+    "listingTag": " En vedette",
+    "view": "Voir"
+  }
 }

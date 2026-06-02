@@ -632,7 +632,10 @@ export async function searchExternalProperties(query: string, maxResults = 3): P
   }
   
   const siteFilter = '(site:condos.ca OR site:zolo.ca OR site:rentals.ca OR site:rentfaster.ca OR site:padmapper.com OR site:liv.rent OR site:zumper.com OR site:realtor.ca OR site:apartments.com OR site:zillow.com OR site:hotpads.com)';
-  const searchQuery = `${locationPrefix} rent ${siteFilter}`;
+  // Add Toronto/GTA constraint to the search query if not already specified
+  const hasExplicitLocation = /toronto|gta|mississauga|north york|scarborough|etobicoke|markham|richmond hill|vaughan|brampton|oakville|burlington|downtown toronto/i.test(locationPrefix);
+  const geoPrefix = hasExplicitLocation ? locationPrefix : `Toronto ${locationPrefix}`;
+  const searchQuery = `${geoPrefix} rent ${siteFilter}`;
 
   const ddg = await searchDuckDuckGo(searchQuery, maxResults + 4);
   if (ddg.length === 0) return [];
