@@ -27,6 +27,21 @@ interface PropertyRecommendation {
   maxGuests?: number;
 }
 
+interface ChatApiResponse {
+  text?: string;
+  sessionId?: string;
+  matchingProperties?: Array<{
+    id: string | number;
+    title?: string;
+    location?: string;
+    monthlyPrice?: number;
+    images?: string[];
+    bedrooms?: number;
+    maxGuests?: number;
+  }>;
+  externalProperties?: ChatExternalProperty[];
+}
+
 // NOTE: Prices synced with live API on 2025-07-15. Update when DB prices change.
 // Fallback image map (used when API doesn't provide images)
 const PROPERTY_IMAGE_FALLBACKS: Record<string, string> = {
@@ -54,13 +69,22 @@ const defaultChips = [
   'Insurance housing, immediate',
 ];
 
-function extractPropertyId(text: string): string | null {
-  if (/55\s*cooper|sugar\s*wharf/i.test(text)) return '1';
-  if (/238\s*simcoe|grange\s*park/i.test(text)) return '2';
-  if (/22\s*wellesley|wellesley\s*st/i.test(text)) return '3';
-  // DO NOT match Manhattan / Water Street / non-Toronto — these are filtered server-side
-  if (/water\s*street|manhattan|new\s*york|brooklyn|queens/i.test(text)) return null;
-  return null;
+function propertyFromApi(data: ChatApiResponse): PropertyRecommendation | null {
+  const apiProperties = Array.isArray(data?.matchingProperties) ? data.matchingProperties : [];
+  const apiProperty = apiProperties[0];
+  if (!apiProperty) return null;
+
+  const id = String(apiProperty.id);
+  return {
+    id,
+    title: String(apiProperty.title || ''),
+    location: String(apiProperty.location || ''),
+    monthlyPrice: Number(apiProperty.monthlyPrice || 0),
+    image: resolvePropertyImage(id, apiProperty.images),
+    images: Array.isArray(apiProperty.images) ? apiProperty.images : [],
+    bedrooms: Number(apiProperty.bedrooms || 0),
+    maxGuests: Number(apiProperty.maxGuests || 0),
+  };
 }
 
 export function HeroChatInline() {
@@ -124,12 +148,11 @@ export function HeroChatInline() {
 
       if (!res.ok) throw new Error('API error');
 
-      const data = await res.json();
+      const data = (await res.json()) as ChatApiResponse;
       if (data.sessionId) setSessionId(data.sessionId);
 
       const replyText = data.text || 'Sorry, I could not process that request.';
-      const propertyId = extractPropertyId(replyText);
-      const property = propertyId ? PROPERTIES[propertyId] || null : null;
+      const property = propertyFromApi(data);
 
       let hotelComparison: string | undefined;
       const hotelMatch = replyText.match(/(该区域类似酒店.*?。|Hotel.*?saving.*?\.)/);
@@ -347,19 +370,31 @@ export function HeroChatInline() {
                 {msg.property && (
                   <div className="mt-3 bg-white/10 rounded-xl overflow-hidden flex flex-col md:flex-row border border-white/10">
                     <div className="relative w-full md:w-56 h-40 md:h-auto flex-shrink-0">
-                      <Image
-                        src={msg.property.image}
-                        alt={msg.property.title}
-                        fill
-                        className="object-cover"
-                      />
+                      {msg.property.image ? (
+                        <Image
+                          src={msg.property.image}
+                          alt={msg.property.title}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-neutral-800 flex items-center justify-center text-white/30 text-sm">
+                          NEOS
+                        </div>
+                      )}
                     </div>
                     <div className="p-5 flex-1">
-                      <h3 className="text-white font-semibold text-base mb-1">{msg.property.title}</h3>
-                      <p className="text-white/60 text-sm mb-2">{msg.property.location}</p>
-                      <p className="text-accent font-bold text-xl mb-3">
-                        ${msg.property.monthlyPrice.toLocaleString()}/{t('common.month', 'mo')}
-                      </p>
+                      {msg.property.title && (
+                        <h3 className="text-white font-semibold text-base mb-1">{msg.property.title}</h3>
+                      )}
+                      {msg.property.location && (
+                        <p className="text-white/60 text-sm mb-2">{msg.property.location}</p>
+                      )}
+                      {msg.property.monthlyPrice > 0 && (
+                        <p className="text-accent font-bold text-xl mb-3">
+                          ${msg.property.monthlyPrice.toLocaleString()}/{t('common.month', 'mo')}
+                        </p>
+                      )}
                       <div className="flex gap-3">
                         <Link
                           href={`/property/${msg.property.id}`}

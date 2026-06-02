@@ -7,9 +7,24 @@ interface ConciergeRequest {
 
 interface ConciergeResponse {
   text: string;
-  recommended_property_id: number | null;
-  alternative_property_id: number | null;
+  recommended_property_id: string | number | null;
+  alternative_property_id: string | number | null;
   hotel_comparison: string;
+  matchingProperties?: Array<{
+    id: string;
+    title: string;
+    location: string;
+    monthlyPrice: number;
+    images: string[];
+    bedrooms: number;
+    maxGuests: number;
+  }>;
+  externalProperties?: Array<{
+    title: string; url: string; source: string; price?: number; priceText?: string;
+    bedrooms?: number; location?: string; image?: string; snippet?: string;
+  }>;
+  budgetApplied?: number;
+  closestAboveBudget?: { title: string; price: number };
 }
 
 interface LiveProperty {
@@ -27,6 +42,7 @@ interface LiveProperty {
   area?: number;
   description?: string;
   status: string;
+  images?: string[];
 }
 
 // Fetch live properties from the internal API
@@ -141,7 +157,7 @@ export async function POST(request: NextRequest) {
         `DO NOT recommend any property as if it fits the budget. ` +
         `Instead, clearly state that we currently have no listings under $${budget}/month, ` +
         `and mention our most affordable option (${cheapest?.title} at $${cheapest?.price}/month) as a reference. ` +
-        `Suggest the user contact us at hello@neos.rentals for custom solutions or future availability.`;
+        `Suggest the user contact us at hello@stayneos.com for custom solutions or future availability.`;
     } else if (budget && matchingProperties.length > 0) {
       budgetGuidance = `\n\nBUDGET NOTE: User requested max $${budget}/month. Only recommend properties with price ≤ $${budget}: ` +
         matchingProperties.map(p => `${p.title} ($${p.price}/month)`).join(', ');
@@ -176,16 +192,11 @@ ${budgetGuidance}`;
     try {
       const { searchExternalProperties } = await import('@/lib/web-search');
       const rawExternal = await searchExternalProperties(body.message, 5);
-      // Hard budget filter
+      // Hard budget filter. Do not show above-budget external cards; unknown
+      // price cards are allowed because snippets may omit pricing.
       externalProperties = budget
         ? rawExternal.filter(p => p.price === undefined || p.price <= budget)
         : rawExternal;
-      if (budget && externalProperties.length === 0 && rawExternal.length > 0) {
-        // Keep the closest one for reference
-        const sorted = [...rawExternal].filter(p => p.price !== undefined)
-          .sort((a, b) => Math.abs(a.price! - budget!) - Math.abs(b.price! - budget!));
-        if (sorted.length > 0) externalProperties = [sorted[0]];
-      }
     } catch { /* external search is best-effort */ }
 
     // Try Cloudflare Workers AI if available
@@ -217,11 +228,11 @@ ${budgetGuidance}`;
             const parsed: ConciergeResponse = JSON.parse(cleanedResponse);
 
             if (parsed.text) {
-              return NextResponse.json(parsed);
+              return NextResponse.json(enrichConciergeResponse(parsed, budget, liveProperties, externalProperties));
             }
           } catch {
             const lang = body.language || 'en';
-            return NextResponse.json(buildFallbackResponse(lang, budget, liveProperties));
+            return NextResponse.json(enrichConciergeResponse(buildFallbackResponse(lang, budget, liveProperties), budget, liveProperties, externalProperties));
           }
         }
       } catch {
@@ -230,10 +241,41 @@ ${budgetGuidance}`;
     }
 
     // Fallback: keyword matching
-    return NextResponse.json(buildFallbackResponse(body.language || 'en', budget, liveProperties));
+    return NextResponse.json(enrichConciergeResponse(buildFallbackResponse(body.language || 'en', budget, liveProperties), budget, liveProperties, externalProperties));
   } catch (_error) {
     return NextResponse.json(buildFallbackResponse('en', null, []));
   }
+}
+
+function enrichConciergeResponse(
+  response: ConciergeResponse,
+  budget: number | null,
+  properties: LiveProperty[],
+  externalProperties: ConciergeResponse['externalProperties']
+): ConciergeResponse {
+  const matchingProperties = (budget ? properties.filter(p => p.price <= budget) : properties)
+    .map(p => ({
+      id: p.id,
+      title: p.title,
+      location: p.location,
+      monthlyPrice: p.price,
+      images: p.images || [],
+      bedrooms: p.bedrooms,
+      maxGuests: p.maxGuests,
+    }));
+  const closestAboveBudget = budget && matchingProperties.length === 0
+    ? [...properties].sort((a, b) => Math.abs(a.price - budget) - Math.abs(b.price - budget))[0]
+    : undefined;
+
+  return {
+    ...response,
+    matchingProperties,
+    externalProperties: externalProperties && externalProperties.length > 0 ? externalProperties : undefined,
+    budgetApplied: budget || undefined,
+    closestAboveBudget: closestAboveBudget
+      ? { title: closestAboveBudget.title, price: closestAboveBudget.price }
+      : undefined,
+  };
 }
 
 function buildFallbackResponse(
@@ -249,14 +291,14 @@ function buildFallbackResponse(
     const cheapest = [...properties].sort((a, b) => a.price - b.price)[0];
     if (lang === 'zh') {
       return {
-        text: `抱歉，我们目前暂无月租 $${budget} 以内的房源。最实惠的选择是 ${cheapest?.title || '22 Wellesley St'}，月租 $${cheapest?.price || 4000}。如需了解更多或有特殊需求，请联系 hello@neos.rentals。`,
+        text: `抱歉，我们目前暂无月租 $${budget} 以内的房源。最实惠的选择是 ${cheapest?.title || '22 Wellesley St'}，月租 $${cheapest?.price || 4000}。如需了解更多或有特殊需求，请联系 hello@stayneos.com。`,
         recommended_property_id: cheapest ? parseInt(cheapest.id) || null : null,
         alternative_property_id: null,
         hotel_comparison: lang === 'zh' ? '多伦多同区酒店通常 $150-300/晚，月度住宿性价比更优。' : 'Hotels in the area typically cost $150-300/night.',
       };
     }
     return {
-      text: `We currently don't have any listings under $${budget}/month. Our most affordable option is ${cheapest?.title} at $${cheapest?.price}/month — fully furnished and move-in ready. Contact hello@neos.rentals for future availability.`,
+      text: `We currently don't have any listings under $${budget}/month. Our most affordable option is ${cheapest?.title} at $${cheapest?.price}/month — fully furnished and move-in ready. Contact hello@stayneos.com for future availability.`,
       recommended_property_id: cheapest ? parseInt(cheapest.id) || null : null,
       alternative_property_id: null,
       hotel_comparison: 'Comparable extended-stay hotels cost $150-250/night. Our monthly rate offers significantly better value.',

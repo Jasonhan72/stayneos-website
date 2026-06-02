@@ -103,7 +103,7 @@ IMPORTANT RULES:
 - NEVER invent, estimate, or modify any property price. Use ONLY the exact prices from the LIVE PROPERTY DATA.
 - NEVER mention any property from outside Toronto/GTA. The live data below is filtered to Toronto ONLY.
 - If the user states a budget X, only recommend properties with price ≤ X. Properties above budget MUST NOT be suggested.
-- If NO properties match the budget, explicitly say: "目前暂无 ${X}/月以内的房源。最接近的是 [name] 月租 $[Y]。" and suggest contacting hello@neos.rentals.
+- If NO properties match the budget, explicitly say the requested budget amount has no matching listing, mention the closest available option with its real price, and suggest contacting hello@stayneos.com.
 - The LIVE PROPERTY DATA contains ONLY properties within the user's budget (pre-filtered). Do NOT override this filter.
 - If you have real-time data (weather, search results), use it directly in your answer. Don't say "querying..." or "checking..." — you already have the data.
 - For city-specific questions you can answer from general knowledge (transit routes, popular neighborhoods, hospital locations), answer directly without saying you need to search.
@@ -240,6 +240,8 @@ interface InternalProperty {
   description?: string;
 }
 
+type PropertyRow = Omit<InternalProperty, 'images'> & { images?: unknown };
+
 // Cache live properties between requests (TTL 60s)
 let _propertyCache: { data: InternalProperty[]; ts: number } | null = null;
 
@@ -262,7 +264,7 @@ async function getLiveProperties(): Promise<InternalProperty[]> {
       return [];
     }
 
-    const properties: InternalProperty[] = (result.results as any[]).map((p: any) => {
+    const properties: InternalProperty[] = (result.results as PropertyRow[]).map((p) => {
       let images: string[] = [];
       try {
         if (typeof p.images === 'string') {
@@ -451,7 +453,7 @@ export async function POST(request: NextRequest) {
 
     // Fetch live property data from database (Toronto only, cached)
     const liveProperties = await getLiveProperties();
-    const { matching: budgetProperties, closest: closestAboveBudget } = filterPropertiesByBudget(liveProperties, budget);
+    const { matching: budgetProperties, closest: closestAboveBudget } = filterPropertiesByBudget(liveProperties, budget ?? undefined);
 
     if (needsWeather(message)) {
       usedWebSearch = true;
@@ -467,18 +469,12 @@ export async function POST(request: NextRequest) {
         ]);
         webSearchResults = textResults.status === 'fulfilled' ? textResults.value : '';
         const rawCards = cards.status === 'fulfilled' ? cards.value : [];
-        // Hard budget filter for external results
+        // Hard budget filter for external results. Do not show above-budget
+        // external cards; unknown-price cards are allowed because snippets may
+        // omit pricing.
         externalProperties = budget
           ? rawCards.filter(c => c.price === undefined || c.price <= budget)
           : rawCards;
-        // Add closest-above-budget if all were filtered out
-        if (budget && externalProperties.length === 0 && rawCards.length > 0) {
-          const closest = rawCards.reduce((best, c) => {
-            if (c.price === undefined) return best;
-            return !best || Math.abs(c.price - budget) < Math.abs(best.price - budget) ? c : best;
-          }, null as ExternalProperty | null);
-          if (closest) externalProperties = [closest]; // Include closest for reference, mark as over-budget
-        }
       } else {
         webSearchResults = await callWebSearch(message);
       }

@@ -4,16 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useI18n } from '@/lib/i18n';
 
-interface PropertyRecommendation {
-  id: string;
-  title: string;
-  location: string;
-  monthlyPrice: number;
-  images: string[];
-  bedrooms: number;
-  maxGuests: number;
-}
-
 interface APIProperty {
   id: string;
   title: string;
@@ -243,11 +233,13 @@ export function AIResponsePanel({ state, response, visible }: AIResponsePanelPro
                       >
                         <div className="relative h-32 bg-gradient-to-br from-neutral-800 to-neutral-700">
                           {prop.image ? (
-                            <img
+                            <Image
                               src={prop.image}
                               alt={prop.title}
-                              className="h-full w-full object-cover"
-                              loading="lazy"
+                              fill
+                              unoptimized
+                              sizes="260px"
+                              className="object-cover"
                             />
                           ) : null}
                           <span className="absolute right-2 top-2 text-[10px] bg-white/15 text-white/80 px-2 py-0.5 rounded-full">
