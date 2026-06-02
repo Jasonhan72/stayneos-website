@@ -315,6 +315,18 @@ function filterPropertiesByBudget(properties: InternalProperty[], budget?: numbe
   return { matching, closest };
 }
 
+function buildNoBudgetMatchText(language: string, budget: number | null, closest: InternalProperty | null): string | null {
+  if (!budget || !closest) return null;
+  const price = closest.priceMonthly.toLocaleString();
+  if (language === 'ZH') {
+    return `目前暂无 $${budget.toLocaleString()}/月以内的 NEOS 多伦多房源。最接近的是 ${closest.title}，月租 $${price}/月。我们不会把它标记为预算内房源；如需更低预算或未来空房，请联系 hello@stayneos.com。`;
+  }
+  if (language === 'FR') {
+    return `Nous n'avons actuellement aucun logement NEOS à Toronto à moins de $${budget.toLocaleString()}/mois. L'option la plus proche est ${closest.title} à $${price}/mois. Nous ne la présentons pas comme une option dans votre budget; contactez hello@stayneos.com pour des disponibilités futures ou une solution sur mesure.`;
+  }
+  return `We currently do not have any NEOS Toronto listings at or under $${budget.toLocaleString()}/month. The closest option is ${closest.title} at $${price}/month. We are not presenting it as within budget; contact hello@stayneos.com for future availability or a custom solution.`;
+}
+
 // Direct web search (shared lib, no HTTP round-trip)
 import { performWebSearch, searchExternalProperties, type ExternalProperty } from '@/lib/web-search';
 
@@ -480,7 +492,8 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const propertyContext = buildPropertyContext(budgetProperties.length > 0 ? budgetProperties : liveProperties);
+    const noBudgetMatchText = buildNoBudgetMatchText(language, budget, closestAboveBudget);
+    const propertyContext = buildPropertyContext(budgetProperties);
 
     // Prepare messages for AI
     const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
@@ -533,7 +546,7 @@ export async function POST(request: NextRequest) {
       
       if (aiResponse && aiResponse.response) {
         return NextResponse.json({
-          text: aiResponse.response,
+          text: noBudgetMatchText || aiResponse.response,
           sessionId,
           source: 'cloudflare-ai',
           language,
@@ -568,7 +581,7 @@ export async function POST(request: NextRequest) {
       
       // Use language-specific fallback response
       return NextResponse.json({
-        text: getFallbackResponse(language),
+        text: noBudgetMatchText || getFallbackResponse(language),
         sessionId,
         source: 'fallback-ai-error',
         language,

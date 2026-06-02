@@ -228,11 +228,11 @@ ${budgetGuidance}`;
             const parsed: ConciergeResponse = JSON.parse(cleanedResponse);
 
             if (parsed.text) {
-              return NextResponse.json(enrichConciergeResponse(parsed, budget, liveProperties, externalProperties));
+              return NextResponse.json(enrichConciergeResponse(parsed, budget, liveProperties, externalProperties, body.language || 'en'));
             }
           } catch {
             const lang = body.language || 'en';
-            return NextResponse.json(enrichConciergeResponse(buildFallbackResponse(lang, budget, liveProperties), budget, liveProperties, externalProperties));
+            return NextResponse.json(enrichConciergeResponse(buildFallbackResponse(lang, budget, liveProperties), budget, liveProperties, externalProperties, lang));
           }
         }
       } catch {
@@ -241,7 +241,7 @@ ${budgetGuidance}`;
     }
 
     // Fallback: keyword matching
-    return NextResponse.json(enrichConciergeResponse(buildFallbackResponse(body.language || 'en', budget, liveProperties), budget, liveProperties, externalProperties));
+    return NextResponse.json(enrichConciergeResponse(buildFallbackResponse(body.language || 'en', budget, liveProperties), budget, liveProperties, externalProperties, body.language || 'en'));
   } catch (_error) {
     return NextResponse.json(buildFallbackResponse('en', null, []));
   }
@@ -251,7 +251,8 @@ function enrichConciergeResponse(
   response: ConciergeResponse,
   budget: number | null,
   properties: LiveProperty[],
-  externalProperties: ConciergeResponse['externalProperties']
+  externalProperties: ConciergeResponse['externalProperties'],
+  lang: string
 ): ConciergeResponse {
   const matchingProperties = (budget ? properties.filter(p => p.price <= budget) : properties)
     .map(p => ({
@@ -269,6 +270,7 @@ function enrichConciergeResponse(
 
   return {
     ...response,
+    text: buildNoBudgetMatchText(lang, budget, closestAboveBudget) || response.text,
     matchingProperties,
     externalProperties: externalProperties && externalProperties.length > 0 ? externalProperties : undefined,
     budgetApplied: budget || undefined,
@@ -276,6 +278,18 @@ function enrichConciergeResponse(
       ? { title: closestAboveBudget.title, price: closestAboveBudget.price }
       : undefined,
   };
+}
+
+function buildNoBudgetMatchText(lang: string, budget: number | null, closest?: LiveProperty): string | null {
+  if (!budget || !closest) return null;
+  const price = closest.price.toLocaleString();
+  if (lang === 'fr') {
+    return `Nous n'avons actuellement aucun logement NEOS à Toronto à moins de $${budget.toLocaleString()}/mois. L'option la plus proche est ${closest.title} à $${price}/mois. Nous ne la présentons pas comme une option dans votre budget; contactez hello@stayneos.com pour des disponibilités futures ou une solution sur mesure.`;
+  }
+  if (lang !== 'zh') {
+    return `We currently do not have any NEOS Toronto listings at or under $${budget.toLocaleString()}/month. The closest option is ${closest.title} at $${price}/month. We are not presenting it as within budget; contact hello@stayneos.com for future availability or a custom solution.`;
+  }
+  return `目前暂无 $${budget.toLocaleString()}/月以内的 NEOS 多伦多房源。最接近的是 ${closest.title}，月租 $${closest.price.toLocaleString()}/月。我们不会把它标记为预算内房源；如需更低预算或未来空房，请联系 hello@stayneos.com。`;
 }
 
 function buildFallbackResponse(
