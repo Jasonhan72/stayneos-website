@@ -335,7 +335,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
   // Format property type and location
   const propertyType = propertyCardData.bedrooms <= 1 ? t('property.entireCondo') : t('property.entireHome');
   const locationShort = getPropertyLocation(propertyCardData);
-  const canEmbedGoogleMap = hasUsableGoogleMapsKey();
+  const canEmbedGoogleMap = hasUsableGoogleMapsKey(GOOGLE_MAPS_API_KEY) && GOOGLE_MAPS_API_KEY.length > 0;
 
   // Format guest info
   const guestInfo = t('property.guestInfo', {

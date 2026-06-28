@@ -396,7 +396,7 @@ export function FAQQuickLinks() {
 export function MapSection() {
   const { t } = useI18n();
   const officeAddress = '20 Upjohn Rd, North York, ON, M3B 2V9';
-  const canEmbedGoogleMap = hasUsableGoogleMapsKey();
+  const canEmbedGoogleMap = hasUsableGoogleMapsKey(GOOGLE_MAPS_API_KEY) && GOOGLE_MAPS_API_KEY.length > 0;
 
   return (
     <div className="w-full h-[400px] bg-neutral-100 relative overflow-hidden">

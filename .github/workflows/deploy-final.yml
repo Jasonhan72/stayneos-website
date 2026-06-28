@@ -39,7 +39,7 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
       - name: Build for Cloudflare
-        run: npx --yes opennextjs-cloudflare build --dangerouslyUseUnsupportedNextVersion || echo "OpenNext build skipped/failed, using standard build"
+        run: npx --yes opennextjs-cloudflare build --dangerouslyUseUnsupportedNextVersion
         env:
           NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
           NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
