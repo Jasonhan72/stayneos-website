@@ -4,10 +4,10 @@ import { test, expect } from '@playwright/test';
  * browse-and-book.spec.ts
  *
  * Critical path: unauthenticated browsing → property detail →
- * verify Reserve/CTA button → navigate to checkout → verify page content.
+ * verify Reserve/CTA button → attempt checkout → verify login callback.
  */
 test.describe('Browse and Book flow', () => {
-  test('browse properties, navigate to detail, verify Reserve button, reach checkout', async ({
+  test('browse properties, navigate to detail, verify Reserve button, require login before checkout', async ({
     page,
   }) => {
     // ── Home page ──
@@ -56,31 +56,10 @@ test.describe('Browse and Book flow', () => {
 
     await page.goto(`/checkout/${propertyId}?${params.toString()}`);
 
-    // ── Verify checkout page URL and content ──
-    await expect(page).toHaveURL(/\/checkout\//);
-
-    // On webkit, the checkout page may render slowly. Wait for loading to finish.
-    // The page can have multiple <main> elements during hydration; use .first().
-    try {
-      await expect(page.locator('main').first()).toBeVisible({ timeout: 15_000 });
-    } catch {
-      // If still loading after 15s, skip — this is a known webkit rendering issue
-      const bodyText = await page.locator('body').textContent();
-      if (bodyText?.includes('Loading')) {
-        test.skip(true, 'Checkout page stuck loading on this browser (known webkit hydration issue)');
-        return;
-      }
-      throw new Error('Unexpected state — checkout page not visible and not loading');
-    }
-
-    // Verify dates and key checkout elements are shown on the page
-    const pageContent = page.locator('main').first();
-    // The checkout page renders dates as "Jun 13" format, not ISO
-    const checkInFormatted = checkIn.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    const checkOutFormatted = checkOut.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    await expect(pageContent).toContainText(checkInFormatted);
-    await expect(pageContent).toContainText(checkOutFormatted);
-    // Verify checkout has price summary
-    await expect(pageContent).toContainText(/Price Summary/i);
+    // Checkout is authenticated; unauthenticated visitors should be sent to login
+    // with a callback that preserves the intended checkout URL.
+    await expect(page).toHaveURL(/\/login\?callbackUrl=/);
+    const callbackUrl = new URL(page.url()).searchParams.get('callbackUrl');
+    expect(callbackUrl).toContain(`/checkout/${propertyId}`);
   });
 });

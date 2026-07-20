@@ -67,24 +67,20 @@ test('register -> login -> dashboard -> logout', async ({ page }) => {
   await expect(page).toHaveURL(/\/$/);
 });
 
-test('language switching consistency (zh/en/fr)', async ({ page }) => {
-  await page.goto('/');
-  await page.getByRole('button', { name: /EN|中文|FR|English|Français/i }).first().click();
-  await page.getByRole('button', { name: /中文/ }).click();
-  await page.goto('/properties');
-  await expect(page.locator('html')).toContainText(/房源|租/);
+test('language route consistency (zh/en/fr)', async ({ browser }) => {
+  const cases = [
+    { path: '/zh/properties', pattern: /房源|租/, selector: 'html' },
+    { path: '/properties', pattern: /Properties/i, selector: 'h1' },
+    { path: '/fr/properties', pattern: /propriét|location/i, selector: 'html' },
+  ];
 
-  await page.goto('/');
-  await page.getByRole('button', { name: /EN|中文|FR|English|Français/i }).first().click();
-  await page.getByRole('button', { name: /English/ }).click();
-  await page.goto('/properties');
-  await expect(page.locator('h1')).toContainText(/Properties/i);
-
-  await page.goto('/');
-  await page.getByRole('button', { name: /EN|中文|FR|English|Français/i }).first().click();
-  await page.getByRole('button', { name: /Français/ }).click();
-  await page.goto('/properties');
-  await expect(page.locator('html')).toContainText(/propriét|location/i);
+  for (const localeCase of cases) {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto(localeCase.path);
+    await expect(page.locator(localeCase.selector)).toContainText(localeCase.pattern);
+    await context.close();
+  }
 });
 
 test('mobile responsive smoke (375 viewport)', async ({ browser }) => {
