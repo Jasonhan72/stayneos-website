@@ -77,7 +77,7 @@ jobs:
 
       - name: Check site
         run: |
-          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://neos.rentals")
+          HTTP_STATUS=$(curl -L -s -o /dev/null -w "%{http_code}" "https://neos.rentals")
           echo "neos.rentals → HTTP $HTTP_STATUS"
           if [ "$HTTP_STATUS" != "200" ]; then
             echo "⚠️ Check deployment"
