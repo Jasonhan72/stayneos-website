@@ -1,4 +1,18 @@
 import { render, screen } from '@testing-library/react';
+
+jest.mock('@/lib/i18n', () => ({
+  useI18n: () => ({
+    t: (key: string, fallback?: string) => {
+      if (key === 'booking.selectDatesToSeePricing') return 'Select dates to see pricing';
+      if (key === 'booking.monthlyDiscount') return 'Monthly discount';
+      if (key === 'booking.taxes') return 'Taxes';
+      if (key === 'booking.total') return 'Total';
+      if (fallback) return fallback;
+      return key;
+    },
+  }),
+}));
+
 import { BookingPriceCalculator } from '@/components/booking/BookingPriceCalculator';
 
 describe('BookingPriceCalculator', () => {
