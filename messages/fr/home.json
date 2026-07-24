@@ -1,8 +1,8 @@
 {
   "hero": {
-    "title": "Découvrez Toronto, sélectionné par l'IA et l'expertise humaine.",
-    "highlight": "Arrêtez de chercher. Commencez à vivre.",
-    "subtitle": "Appartements meublés premium au centre-ville de Toronto. 30 jours à 12 mois. Prêts à emménager.",
+    "title": "Appartements meubles pour sejours mensuels a Toronto",
+    "highlight": "Logements prets a vivre avec conditions mensuelles flexibles",
+    "subtitle": "Residences verifiees dans les quartiers les mieux connectes de Toronto. Meublees, accompagnees et pretes pour affaires, relocalisation et sejours prolonges.",
     "cta": "Listez Votre Propriété",
     "ctaQuote": "Demander un Devis",
     "ctaBrowse": "Parcourir les Propriétés",
@@ -61,7 +61,10 @@
   "trust": {
     "verified": "Logements Vérifiés",
     "support": "Support 24/7",
-    "selection": "Sélection premium"
+    "selection": "Sélection premium",
+    "licensed": "Courtage agree en Ontario",
+    "concierge": "Immeubles avec conciergerie",
+    "insurance": "Couverture responsabilite 2M$"
   },
   "trustNote": "🔒 Vos informations sont sécurisées · Réponse sous 24h · Sans engagement",
   "howItWorks": {
@@ -218,13 +221,14 @@
   "scenariosTitle": "Des Solutions pour Chaque Besoin d'Entreprise",
   "reasonsTitle": "Pourquoi mon paiement a-t-il été annulé ?",
   "categories": {
-    "quickLabel": "Recherches populaires",
+    "quickLabel": "Commencer par le type de sejour",
+    "corporateStays": "Sejours corporate",
     "executive": "Affaires",
     "family": "Famille",
     "medicalAcademic": "Médical-Académique",
     "relocation": "Relocalisation",
-    "longTerm": "Long terme",
+    "longTerm": "30+ jours",
     "waterfront": "Bord de l'eau",
-    "downtownCore": "Centre-ville"
+    "downtownCore": "Toronto centre"
   }
 }

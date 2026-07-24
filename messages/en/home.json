@@ -1,8 +1,8 @@
 {
   "hero": {
-    "title": "Experience Toronto, Curated by AI & Human Expertise.",
-    "highlight": "Stop searching. Start living.",
-    "subtitle": "Premium furnished apartments in downtown Toronto. 30 days to 12 months. Move-in ready.",
+    "title": "Furnished apartments for monthly stays in Toronto",
+    "highlight": "Move-in ready homes with flexible monthly terms",
+    "subtitle": "Verified residences in Toronto's best-connected neighborhoods. Furnished, supported, and ready for business travel, relocation, and extended stays.",
     "cta": "List Your Property",
     "ctaQuote": "Request a Quote",
     "ctaBrowse": "Browse Properties",
@@ -61,7 +61,10 @@
   "trust": {
     "verified": "Verified Homes",
     "support": "24/7 Support",
-    "selection": "Premium Selection"
+    "selection": "Premium Selection",
+    "licensed": "Licensed Ontario brokerage",
+    "concierge": "Concierge buildings",
+    "insurance": "$2M liability coverage"
   },
   "trustNote": "🔒 Your information is secure · Response within 24h · No obligation",
   "howItWorks": {
@@ -218,13 +221,14 @@
   "scenariosTitle": "Solutions for Every Business Need",
   "reasonsTitle": "Why was my payment cancelled?",
   "categories": {
-    "quickLabel": "Popular searches",
+    "quickLabel": "Start with a stay type",
+    "corporateStays": "Corporate stays",
     "executive": "Executive",
     "family": "Family",
     "medicalAcademic": "Medical-Academic",
     "relocation": "Relocation",
-    "longTerm": "Long-term",
+    "longTerm": "30+ days",
     "waterfront": "Waterfront",
-    "downtownCore": "Downtown Core"
+    "downtownCore": "Downtown Toronto"
   }
 }

@@ -55,8 +55,8 @@
     "suggestAmenities": "AI 推荐设施"
   },
   "aiConcierge": {
-    "placeholder": "告诉我您的多伦多计划...",
-    "submit": "咨询 NEOS AI",
+    "placeholder": "想住多伦多哪里？",
+    "submit": "查找房源",
     "chip1": "医疗轮转，3个月",
     "chip2": "工作搬迁，4口之家",
     "chip3": "多大访问学者",

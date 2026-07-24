@@ -5,11 +5,8 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import {
   Briefcase,
-  Users,
-  GraduationCap,
   Truck,
   CalendarDays,
-  Waves,
   Building2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -23,13 +20,10 @@ interface Category {
 }
 
 const CATEGORIES: Category[] = [
-  { key: 'executive', icon: Briefcase, labelKey: 'categories.executive', defaultLabel: 'Executive' },
-  { key: 'family', icon: Users, labelKey: 'categories.family', defaultLabel: 'Family' },
-  { key: 'medical-academic', icon: GraduationCap, labelKey: 'categories.medicalAcademic', defaultLabel: 'Medical-Academic' },
+  { key: 'corporate', icon: Briefcase, labelKey: 'categories.corporateStays', defaultLabel: 'Corporate stays' },
   { key: 'relocation', icon: Truck, labelKey: 'categories.relocation', defaultLabel: 'Relocation' },
-  { key: 'long-term', icon: CalendarDays, labelKey: 'categories.longTerm', defaultLabel: 'Long-term' },
-  { key: 'waterfront', icon: Waves, labelKey: 'categories.waterfront', defaultLabel: 'Waterfront' },
-  { key: 'downtown-core', icon: Building2, labelKey: 'categories.downtownCore', defaultLabel: 'Downtown Core' },
+  { key: 'long-term', icon: CalendarDays, labelKey: 'categories.longTerm', defaultLabel: '30+ days' },
+  { key: 'downtown-core', icon: Building2, labelKey: 'categories.downtownCore', defaultLabel: 'Downtown Toronto' },
 ];
 
 export function CategoryChips() {
@@ -61,7 +55,7 @@ export function CategoryChips() {
 
   return (
     <div className="relative mx-auto mt-4 w-full max-w-5xl md:mt-6">
-      <p className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.16em] text-white/75">
+      <p className="mb-3 text-left text-xs font-semibold uppercase text-white/75 md:text-center">
         {t('categories.quickLabel', 'Popular searches')}
       </p>
       {/* Fade edge masks */}
@@ -75,7 +69,7 @@ export function CategoryChips() {
       {/* Scrollable chip row */}
       <div
         ref={scrollRef}
-        className="flex items-center justify-start gap-2 overflow-x-auto scrollbar-none px-1 pb-1 md:justify-center"
+        className="flex snap-x items-center justify-start gap-2 overflow-x-auto scrollbar-none px-1 pb-1 md:flex-wrap md:justify-center md:overflow-visible"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {CATEGORIES.map((cat) => {
@@ -86,15 +80,15 @@ export function CategoryChips() {
               key={cat.key}
               href={href}
               className={cn(
-                'relative flex min-h-11 shrink-0 items-center gap-2 rounded-full px-4 py-2.5',
-                'border border-white/20 bg-white/15 backdrop-blur-md shadow-[0_4px_16px_rgba(0,0,0,0.18)]',
+                'relative flex min-h-11 shrink-0 snap-start items-center gap-2 px-4 py-2.5',
+                'border border-white/30 bg-white/10 backdrop-blur-sm',
                 'text-sm font-medium',
-                'transition-all duration-200',
+                'transition-colors duration-200',
                 activeCategory === cat.key
-                  ? 'text-white border-white/60 bg-white/25'
-                  : 'text-white/90 hover:text-white hover:border-white/40 hover:bg-white/25',
+                  ? 'text-white border-white/70 bg-white/20'
+                  : 'text-white/90 hover:text-white hover:border-white/50 hover:bg-white/15',
                 // Animated underline via ::after
-                'after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:h-[2px] after:bg-white after:rounded-full after:transition-all after:duration-300',
+                'after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:h-[2px] after:bg-white after:transition-all after:duration-300',
                 activeCategory === cat.key
                   ? 'after:w-[calc(100%-2rem)]'
                   : 'after:w-0 hover:after:w-[calc(100%-2rem)]',

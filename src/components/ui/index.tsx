@@ -1,5 +1,4 @@
-// Square UI Components - Blueground Style
-// All components have border-radius: 0 (square design)
+// Core UI components for the restrained NEOS visual system.
 
 import React from 'react';
 import Image from 'next/image';

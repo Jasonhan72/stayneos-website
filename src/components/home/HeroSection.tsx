@@ -29,14 +29,14 @@ export function HeroSection() {
 
   return (
     <>
-      <section className="relative h-[100svh] min-h-[600px] flex items-center justify-center overflow-hidden bg-neutral-900">
+      <section className="relative flex h-[92svh] min-h-[620px] items-center justify-center overflow-hidden bg-neutral-900 md:h-[88svh]">
         {/* Background image (always visible, renders first).
             sizes caps mobile at 640px (24KB webp) and nudges desktop
             to 1080w webp (~157KB) instead of 1920w (~514KB). */}
         <div className="absolute inset-0 z-0">
           <ResponsiveImage
-            src="/images/cooper-55-e98a880d.jpg"
-            alt="55 Cooper St lakefront view"
+            src="/images/cooper-55-c5e8357d.jpg"
+            alt="Furnished living room at 55 Cooper St"
             fill
             priority={true}
             sizes="(max-width: 640px) 640px, (max-width: 1080px) 100vw, 100vw"
@@ -65,19 +65,19 @@ export function HeroSection() {
         )}
 
         {/* Dark overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/60 via-neutral-900/25 to-neutral-900/70 z-[1]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-neutral-950/65 via-neutral-900/20 to-neutral-950/70 z-[1]" />
 
-        <Container className="relative z-10 text-center px-4 py-16 md:py-0">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl sm:text-3xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight mb-2 md:mb-4 leading-tight tracking-tight">
-              {t('hero.title', 'Experience Toronto, Curated by AI & Human Expertise.')}
+        <Container className="relative z-10 px-4 py-16 md:py-0">
+          <div className="max-w-4xl">
+            <h1 className="max-w-3xl text-left text-3xl font-semibold leading-tight text-white sm:text-4xl md:text-6xl lg:text-7xl">
+              {t('hero.title', 'Furnished apartments for monthly stays in Toronto')}
             </h1>
 
-            <p className="text-lg md:text-2xl text-accent font-semibold mb-3 md:mb-4">
-              {t('hero.highlight', 'Stop searching. Start living.')}
+            <p className="mt-4 max-w-2xl text-left text-lg font-medium text-accent md:text-2xl">
+              {t('hero.highlight', 'Move-in ready homes with flexible monthly terms')}
             </p>
 
-            <p className="text-base md:text-xl text-white/90 mb-6 md:mb-12 max-w-2xl mx-auto">
+            <p className="mb-7 mt-4 max-w-2xl text-left text-base leading-7 text-white/90 md:mb-10 md:text-xl">
               {t('hero.subtitle', 'Premium furnished apartments in downtown Toronto. 30 days to 12 months. Move-in ready.')}
             </p>
 

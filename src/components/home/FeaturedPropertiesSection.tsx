@@ -3,10 +3,10 @@
 import { useState, useCallback } from 'react';
 import ResponsiveImage from '@/components/ui/ResponsiveImage';
 import Link from 'next/link';
-import { ArrowRight, MapPin, Star, Heart } from 'lucide-react';
-import { Card, Badge, Section } from '@/components/ui';
+import { ArrowRight, Heart, MapPin, Star } from 'lucide-react';
+import { Card, Section } from '@/components/ui';
 import { useI18n } from '@/lib/i18n';
-import { getTierDiscountPercent, type PricingTiers, type PricingTier } from '@/lib/property-pricing-discounts';
+import { getTierDiscountPercent, type PricingTiers } from '@/lib/property-pricing-discounts';
 
 interface FeaturedProperty {
   id: string;
@@ -102,34 +102,22 @@ function PricingRows({ property }: { property: FeaturedProperty }) {
     quarterly: property.quarterlyPrice,
     annual: property.annualPrice,
   };
-  const rows = [
-    { key: 'monthly', label: labels.monthly, value: property.monthlyPrice },
-    { key: 'quarterly', label: labels.quarterly, value: property.quarterlyPrice },
-    { key: 'annual', label: labels.annual, value: property.annualPrice },
-  ] satisfies Array<{ key: PricingTier; label: string; value: number }>;
+  const annualDiscount = getTierDiscountPercent(tiers, 'annual');
 
   return (
-    <div className="space-y-2 pt-3 border-t border-neutral-200">
-      {rows.map((row) => {
-        const discountPercent = getTierDiscountPercent(tiers, row.key);
-
-        return (
-          <div key={row.key} className="flex items-center justify-between gap-3">
-            <span className="text-sm text-neutral-600">{row.label}</span>
-            <span className="flex shrink-0 items-center gap-2">
-              {discountPercent > 0 && (
-                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700">
-                  {t('property.savePercent', 'Save {percent}%', { percent: discountPercent })}
-                </span>
-              )}
-              <span className="text-base font-semibold text-neutral-900">
-                ${row.value.toLocaleString()}
-                <span className="text-xs font-normal text-neutral-500 ml-1">{labels.perMonth}</span>
-              </span>
-            </span>
-          </div>
-        );
-      })}
+    <div className="border-t border-neutral-200 pt-4">
+      <div className="flex items-end justify-between gap-3">
+        <span className="text-sm text-neutral-600">{t('property.from', 'From')}</span>
+        <span className="text-xl font-semibold text-neutral-900">
+          ${property.monthlyPrice.toLocaleString()}
+          <span className="ml-1 text-sm font-normal text-neutral-500">{labels.perMonth}</span>
+        </span>
+      </div>
+      {annualDiscount > 0 && (
+        <p className="mt-2 text-right text-xs font-medium uppercase text-neutral-500">
+          {labels.annual} ${property.annualPrice.toLocaleString()} {labels.perMonth}
+        </p>
+      )}
     </div>
   );
 }
@@ -160,7 +148,7 @@ function FavoriteButton({ propertyId }: { propertyId: string }) {
   return (
     <button
       onClick={toggle}
-      className="absolute top-4 right-4 p-2 bg-white/90 hover:bg-white transition-colors rounded-full z-10"
+      className="absolute top-4 right-4 p-2 bg-white/90 hover:bg-white transition-colors z-10"
       aria-label={isFav ? 'Remove from favorites' : 'Add to favorites'}
     >
       <Heart size={18} className={isFav ? 'text-red-500 fill-red-500' : 'text-neutral-400'} />
@@ -211,11 +199,6 @@ export function FeaturedPropertiesSection() {
                           fill
                           className="object-cover transition-transform duration-500 group-hover:scale-105"
                         />
-                        {property.featured && (
-                          <div className="absolute top-4 left-4 flex gap-2">
-                            <Badge variant="primary">{t('properties.featured', 'Featured')}</Badge>
-                          </div>
-                        )}
                       </div>
 
                       <div className="p-5">
@@ -245,15 +228,6 @@ export function FeaturedPropertiesSection() {
                         </div>
 
                         <PricingRows property={property} />
-                        {/* Hotel Comparison */}
-                        <div className="hotel-comparison mt-1">
-                          <span className="text-xs text-neutral-500">
-                            {t('property.hotelEquivalent', 'Hotel equivalent:')}{' '}
-                            <span className="text-neutral-400 line-through">
-                              {property.id === '1' ? '~$18,000/mo' : property.id === '2' ? '~$10,500/mo' : '~$7,500/mo'}
-                            </span>
-                          </span>
-                        </div>
                         {property.reviewCount > 0 && (
                           <p className="mt-2 text-xs text-neutral-400">{property.reviewCount} {t('pricing.reviews', 'reviews')}</p>
                         )}
@@ -277,12 +251,6 @@ export function FeaturedPropertiesSection() {
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-
-                    {property.featured && (
-                      <div className="absolute top-4 left-4 flex gap-2">
-                        <Badge variant="primary">{t('properties.featured', 'Featured')}</Badge>
-                      </div>
-                    )}
 
                     <FavoriteButton propertyId={property.id} />
                   </div>
@@ -314,15 +282,6 @@ export function FeaturedPropertiesSection() {
                     </div>
 
                     <PricingRows property={property} />
-                    {/* Hotel Comparison */}
-                    <div className="hotel-comparison mt-1">
-                      <span className="text-sm text-neutral-500">
-                        {t('property.hotelEquivalent', 'Hotel equivalent:')}{' '}
-                        <span className="text-neutral-400 line-through">
-                          {property.id === '1' ? '~$18,000/mo' : property.id === '2' ? '~$10,500/mo' : '~$7,500/mo'}
-                        </span>
-                      </span>
-                    </div>
                     {property.reviewCount > 0 && (
                       <p className="mt-2 text-sm text-neutral-400">{property.reviewCount} {t('pricing.reviews', 'reviews')}</p>
                     )}

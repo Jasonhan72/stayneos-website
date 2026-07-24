@@ -1,8 +1,8 @@
 {
   "hero": {
-    "title": "体验多伦多，AI 与专业团队为您精选",
-    "highlight": "停止搜索，开始生活",
-    "subtitle": "多伦多市中心高端精装公寓。30天到12个月。拎包入住。",
+    "title": "多伦多高端月租精装公寓",
+    "highlight": "拎包入住，灵活月租，专人支持",
+    "subtitle": "位于多伦多核心社区的真实认证公寓，适合商务差旅、搬迁安置与中长期住宿。",
     "cta": "发布房源",
     "ctaQuote": "获取报价",
     "ctaBrowse": "浏览房源",
@@ -61,7 +61,10 @@
   "trust": {
     "verified": "真实房源认证",
     "support": "24/7 专属支持",
-    "selection": "精选房源"
+    "selection": "精选房源",
+    "licensed": "安大略省持牌经纪",
+    "concierge": "礼宾服务公寓楼",
+    "insurance": "200万美元责任保障"
   },
   "trustNote": "🔒 企业信息严格保密 · 24小时内回复 · 无强制购买义务",
   "howItWorks": {
@@ -218,13 +221,14 @@
   "scenariosTitle": "为企业各种场景提供解决方案",
   "reasonsTitle": "为什么我的支付被取消了？",
   "categories": {
-    "quickLabel": "热门场景",
+    "quickLabel": "按入住需求开始",
+    "corporateStays": "企业住宿",
     "executive": "高管商务",
     "family": "家庭出行",
     "medicalAcademic": "医疗学术",
     "relocation": "搬迁安置",
-    "longTerm": "长租",
+    "longTerm": "30天起租",
     "waterfront": "湖畔",
-    "downtownCore": "市中心核心"
+    "downtownCore": "多伦多市中心"
   }
 }

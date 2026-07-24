@@ -10,6 +10,14 @@ export function CitiesSection() {
   const { t, locale } = useI18n();
   const cityName = locale === 'zh' ? '多伦多' : locale === 'fr' ? 'Toronto' : 'Toronto';
   const [email, setEmail] = useState('');
+  const neighborhoods = [
+    t('cities.areaDowntown', 'Downtown Core'),
+    t('cities.areaWaterfront', 'Waterfront'),
+    t('cities.areaFinancial', 'Financial District'),
+    t('cities.areaUniversity', 'University District'),
+    t('cities.areaYorkville', 'Yorkville'),
+    t('cities.areaMidtown', 'Midtown'),
+  ];
 
   const [notifyStatus, setNotifyStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
 
@@ -38,78 +46,66 @@ export function CitiesSection() {
   };
 
   return (
-    <section className="py-20 bg-neutral-50">
+    <section className="bg-neutral-50 py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight mb-4">{t('cities.title')}</h2>
-          <p className="text-lg text-neutral-600 max-w-2xl mx-auto">{t('cities.subtitleCurrent', "Starting in Toronto — Canada's business capital")}</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Link href="/properties?city=toronto">
-            <div className="group relative overflow-hidden rounded-xl aspect-[4/5] bg-neutral-900">
-              <Image src="/images/cities/toronto.jpg" alt={cityName} fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch">
+          <Link href="/properties?city=toronto" className="group block">
+            <div className="relative min-h-[28rem] overflow-hidden bg-neutral-900">
+              <Image src="/images/cities/toronto.jpg" alt={cityName} fill className="object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
               <div className="absolute top-4 left-4">
-                <span className="inline-flex rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-neutral-900">
+                <span className="inline-flex bg-white/90 px-3 py-1 text-xs font-semibold uppercase text-neutral-900">
                   {t('cities.availableNowBadge', 'Available Now')}
                 </span>
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-6">
-                <h3 className="text-2xl font-bold text-white tracking-tight mb-1">{cityName}</h3>
-                <p className="text-white/80 text-sm">{t('cities.availableNow', 'Available now')}</p>
+                <h2 className="mb-3 text-3xl font-semibold text-white md:text-5xl">{t('cities.titleCurrent', 'Toronto furnished apartments')}</h2>
+                <p className="max-w-xl text-base text-white/85 md:text-lg">{t('cities.subtitleCurrent', "Move-in ready homes across Toronto's business, university, and waterfront neighborhoods.")}</p>
               </div>
-              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="bg-white rounded-full p-2"><ArrowRight size={20} className="text-neutral-900" /></div>
+              <div className="absolute top-4 right-4 opacity-0 transition-opacity group-hover:opacity-100">
+                <div className="bg-white p-2"><ArrowRight size={20} className="text-neutral-900" /></div>
               </div>
             </div>
           </Link>
 
-          <div className="group relative overflow-hidden rounded-xl aspect-[4/5] bg-neutral-900">
-            <Image src="/images/cities/niagara.jpg" alt={t('cities.niagaraFalls', 'Niagara Falls')} fill className="object-cover grayscale opacity-50 transition-transform duration-500 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-            <div className="absolute top-4 left-4">
-              <span className="inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-white ring-1 ring-white/20">
-                {t('cities.comingSoon', 'Coming Soon')}
-              </span>
-            </div>
-            <div className="absolute bottom-0 left-0 right-0 p-6">
-              <h3 className="text-2xl font-bold text-white tracking-tight mb-1">{t('cities.niagaraFalls', 'Niagara Falls')}</h3>
-              <p className="text-white/75 text-sm">{t('cities.niagaraDesc', 'A new market in development.')}</p>
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-dashed border-neutral-300 bg-white p-6 flex flex-col justify-between min-h-[24rem]">
+          <div className="border border-neutral-200 bg-white p-6 md:p-8">
             <div>
-              <div className="mb-6 flex h-28 items-center justify-center rounded-lg bg-[radial-gradient(circle_at_center,_rgba(23,37,84,0.12),_transparent_60%),linear-gradient(135deg,rgba(15,23,42,0.04),rgba(15,23,42,0.08))]">
-                <span className="text-6xl font-bold text-neutral-400">?</span>
+              <p className="mb-3 text-xs font-semibold uppercase text-primary">{t('cities.serviceAreaLabel', 'Service areas')}</p>
+              <h3 className="text-2xl font-semibold text-neutral-900">{t('cities.serviceAreaTitle', 'Built around the places guests actually need to be')}</h3>
+              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {neighborhoods.map((area) => (
+                  <Link
+                    key={area}
+                    href={`/properties?city=toronto&area=${encodeURIComponent(area)}`}
+                    className="border border-neutral-200 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:border-primary hover:text-primary"
+                  >
+                    {area}
+                  </Link>
+                ))}
               </div>
-              <h3 className="text-2xl font-bold text-neutral-900 tracking-tight mb-2">{t('cities.yourCity', 'Your City?')}</h3>
-              <p className="text-neutral-600 mb-2">{t('cities.yourCityNotify', 'Get notified when we expand')}</p>
-              <p className="text-sm text-neutral-500">{t('cities.yourCityDesc', 'Tell us where you need premium furnished stays next.')}</p>
             </div>
 
-            <form onSubmit={handleNotify} className="mt-6 space-y-3">
-              <input
-                type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder={t('cities.emailPlaceholder', 'Email address')}
-                className="w-full rounded-lg border border-neutral-300 px-4 py-3 text-sm text-neutral-900 outline-none focus:border-primary"
-                required
-              />
-              <button
-                type="submit"
-                disabled={notifyStatus === 'sending' || notifyStatus === 'done'}
-                className={`w-full rounded-lg px-4 py-3 text-sm font-semibold text-white transition-colors ${
-                  notifyStatus === 'done'
-                    ? 'bg-emerald-600 hover:bg-emerald-700'
-                    : 'bg-primary hover:bg-primary-700'
-                } disabled:opacity-60`}
-              >
-                {notifyStatus === 'sending' ? 'Sending...' : notifyStatus === 'done' ? 'Done ✓' : t('cities.notifyMe', 'Notify Me')}
-              </button>
-            </form>
+            <div className="mt-8 border-t border-neutral-200 pt-6">
+              <h4 className="text-base font-semibold text-neutral-900">{t('cities.yourCityNotify', 'Need another city?')}</h4>
+              <p className="mt-2 text-sm text-neutral-600">{t('cities.yourCityDesc', 'Tell us where your team or family needs furnished housing next.')}</p>
+              <form onSubmit={handleNotify} className="mt-4 flex flex-col gap-3 sm:flex-row">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder={t('cities.emailPlaceholder', 'Email address')}
+                  className="min-h-11 flex-1 border border-neutral-300 px-4 py-3 text-sm text-neutral-900 outline-none focus:border-primary"
+                  required
+                />
+                <button
+                  type="submit"
+                  disabled={notifyStatus === 'sending' || notifyStatus === 'done'}
+                  className="min-h-11 bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-700 disabled:opacity-60"
+                >
+                  {notifyStatus === 'sending' ? 'Sending...' : notifyStatus === 'done' ? t('cities.done', 'Done') : t('cities.notifyMe', 'Notify me')}
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
