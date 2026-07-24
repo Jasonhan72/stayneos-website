@@ -5,8 +5,11 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import {
   Briefcase,
+  Users,
+  GraduationCap,
   Truck,
   CalendarDays,
+  Waves,
   Building2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -20,10 +23,13 @@ interface Category {
 }
 
 const CATEGORIES: Category[] = [
-  { key: 'corporate', icon: Briefcase, labelKey: 'categories.corporateStays', defaultLabel: 'Corporate stays' },
+  { key: 'executive', icon: Briefcase, labelKey: 'categories.executive', defaultLabel: 'Executive' },
+  { key: 'family', icon: Users, labelKey: 'categories.family', defaultLabel: 'Family' },
+  { key: 'medical-academic', icon: GraduationCap, labelKey: 'categories.medicalAcademic', defaultLabel: 'Medical-Academic' },
   { key: 'relocation', icon: Truck, labelKey: 'categories.relocation', defaultLabel: 'Relocation' },
-  { key: 'long-term', icon: CalendarDays, labelKey: 'categories.longTerm', defaultLabel: '30+ days' },
-  { key: 'downtown-core', icon: Building2, labelKey: 'categories.downtownCore', defaultLabel: 'Downtown Toronto' },
+  { key: 'long-term', icon: CalendarDays, labelKey: 'categories.longTerm', defaultLabel: 'Long-term' },
+  { key: 'waterfront', icon: Waves, labelKey: 'categories.waterfront', defaultLabel: 'Waterfront' },
+  { key: 'downtown-core', icon: Building2, labelKey: 'categories.downtownCore', defaultLabel: 'Downtown Core' },
 ];
 
 export function CategoryChips() {

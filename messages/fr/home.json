@@ -221,14 +221,13 @@
   "scenariosTitle": "Des Solutions pour Chaque Besoin d'Entreprise",
   "reasonsTitle": "Pourquoi mon paiement a-t-il été annulé ?",
   "categories": {
-    "quickLabel": "Commencer par le type de sejour",
-    "corporateStays": "Sejours corporate",
+    "quickLabel": "Recherches populaires",
     "executive": "Affaires",
     "family": "Famille",
     "medicalAcademic": "Médical-Académique",
     "relocation": "Relocalisation",
-    "longTerm": "30+ jours",
+    "longTerm": "Long terme",
     "waterfront": "Bord de l'eau",
-    "downtownCore": "Toronto centre"
+    "downtownCore": "Centre-ville"
   }
 }

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useI18n } from '@/lib/i18n';
 import Link from 'next/link';
-import { ArrowRight, CalendarDays, Loader2, MapPin, SendHorizontal, Users } from 'lucide-react';
+import { ArrowRight, Loader2, SendHorizontal } from 'lucide-react';
 import { csrfFetch } from '@/lib/security/csrf-client';
 import { ChatExternalPropertyCard, type ChatExternalProperty } from '@/components/shared/chat/ChatExternalPropertyCard';
 import { ChatPropertyCard } from '@/components/shared/chat/ChatPropertyCard';
@@ -168,49 +168,31 @@ export function HeroChatInline() {
 
   return (
     <div className="w-full max-w-5xl mx-auto">
-      {/* Top search module - always visible */}
-      <form onSubmit={handleTopSubmit} className="mx-0 max-w-3xl">
+      {/* Top Input - always visible */}
+      <form onSubmit={handleTopSubmit} className="relative group mx-auto max-w-3xl">
+        <div className="absolute -inset-1 bg-gradient-to-r from-accent/40 via-accent/60 to-accent/40 rounded-2xl blur-lg opacity-60 group-hover:opacity-80 animate-breathing-glow transition-opacity duration-500" />
+
         {/* Desktop */}
-        <div className="relative hidden border border-white/35 bg-white shadow-xl sm:grid sm:grid-cols-[minmax(0,1.4fr)_1fr_1fr_auto]">
-          <label className="flex min-w-0 items-center gap-3 border-r border-neutral-200 px-4 py-3 text-left">
-            <MapPin className="h-5 w-5 shrink-0 text-primary" />
-            <span className="min-w-0 flex-1">
-              <span className="block text-xs font-semibold uppercase text-neutral-500">{t('search.location', 'Location')}</span>
-              <input
-                ref={desktopTopInputRef}
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder={t('aiConcierge.placeholder', 'Where in Toronto?')}
-                className="mt-1 w-full bg-transparent text-sm font-medium text-neutral-900 outline-none placeholder:text-neutral-400"
-                disabled={isLoading}
-              />
-            </span>
-          </label>
-          <div className="flex items-center gap-3 border-r border-neutral-200 px-4 py-3 text-left">
-            <CalendarDays className="h-5 w-5 shrink-0 text-primary" />
-            <span>
-              <span className="block text-xs font-semibold uppercase text-neutral-500">{t('search.term', 'Term')}</span>
-              <span className="mt-1 block text-sm font-medium text-neutral-900">{t('search.termValue', '30+ days')}</span>
-            </span>
-          </div>
-          <div className="flex items-center gap-3 px-4 py-3 text-left">
-            <Users className="h-5 w-5 shrink-0 text-primary" />
-            <span>
-              <span className="block text-xs font-semibold uppercase text-neutral-500">{t('search.support', 'Support')}</span>
-              <span className="mt-1 block text-sm font-medium text-neutral-900">{t('search.supportValue', 'NEOS advisor')}</span>
-            </span>
-          </div>
+        <div className="relative hidden sm:flex items-center bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl overflow-hidden">
+          <input
+            ref={desktopTopInputRef}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={t('aiConcierge.placeholder', 'Where are you looking to stay?')}
+            className="min-w-0 flex-1 px-5 py-4 text-gray-800 placeholder-gray-400 bg-transparent outline-none text-base"
+            disabled={isLoading}
+          />
           <button
             type="submit"
             disabled={isLoading}
-            className="m-2 flex min-h-12 items-center gap-2 whitespace-nowrap bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-700 disabled:cursor-wait"
+            className="mr-2 flex items-center gap-1.5 whitespace-nowrap rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-accent transition-all duration-200 hover:bg-accent-hover active:bg-accent-hover disabled:cursor-wait"
           >
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <>
-                {t('aiConcierge.submit', 'Find stays')}
+                {t('aiConcierge.submit', 'Ask NEOS AI')}
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
@@ -218,49 +200,27 @@ export function HeroChatInline() {
         </div>
 
         {/* Mobile */}
-        <div className="relative border border-white/35 bg-white shadow-xl sm:hidden">
-          <label className="flex items-center gap-3 border-b border-neutral-200 px-4 py-3 text-left">
-            <MapPin className="h-5 w-5 shrink-0 text-primary" />
-            <span className="min-w-0 flex-1">
-              <span className="block text-xs font-semibold uppercase text-neutral-500">{t('search.location', 'Location')}</span>
-              <input
-                ref={mobileTopInputRef}
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder={t('aiConcierge.placeholder', 'Where in Toronto?')}
-                className="mt-1 w-full bg-transparent text-sm font-medium text-neutral-900 outline-none placeholder:text-neutral-400"
-                disabled={isLoading}
-              />
-            </span>
-          </label>
-          <div className="grid grid-cols-2 border-b border-neutral-200 text-left">
-            <div className="flex items-center gap-3 border-r border-neutral-200 px-4 py-3">
-              <CalendarDays className="h-5 w-5 shrink-0 text-primary" />
-              <span>
-                <span className="block text-xs font-semibold uppercase text-neutral-500">{t('search.term', 'Term')}</span>
-                <span className="mt-1 block text-sm font-medium text-neutral-900">{t('search.termValue', '30+ days')}</span>
-              </span>
-            </div>
-            <div className="flex items-center gap-3 px-4 py-3">
-              <Users className="h-5 w-5 shrink-0 text-primary" />
-              <span>
-                <span className="block text-xs font-semibold uppercase text-neutral-500">{t('search.support', 'Support')}</span>
-                <span className="mt-1 block text-sm font-medium text-neutral-900">{t('search.supportValue', 'Advisor')}</span>
-              </span>
-            </div>
-          </div>
+        <div className="relative sm:hidden bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl overflow-hidden">
+          <input
+            ref={mobileTopInputRef}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={t('aiConcierge.placeholder', 'Where are you looking to stay?')}
+            className="w-full px-4 py-3.5 text-gray-800 placeholder-gray-400 bg-transparent outline-none text-base"
+            disabled={isLoading}
+          />
           <div className="px-3 pb-3">
             <button
               type="submit"
               disabled={isLoading}
-              className="mt-3 flex min-h-11 w-full items-center justify-center gap-2 bg-primary px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-700 disabled:cursor-wait"
+              className="flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-white shadow-accent transition-all duration-200 hover:bg-accent-hover active:bg-accent-hover disabled:cursor-wait"
             >
               {isLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 <>
-                  {t('aiConcierge.submit', 'Find stays')}
+                  {t('aiConcierge.submit', 'Ask NEOS AI')}
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}

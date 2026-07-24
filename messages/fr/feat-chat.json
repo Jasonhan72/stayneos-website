@@ -55,8 +55,8 @@
     "suggestAmenities": "IA Recommander Équipements"
   },
   "aiConcierge": {
-    "placeholder": "Ou a Toronto ?",
-    "submit": "Trouver un sejour",
+    "placeholder": "Parlez-moi de vos projets à Toronto...",
+    "submit": "Demander à NEOS AI",
     "chip1": "Rotation médicale, 3 mois",
     "chip2": "Relocalisation professionnelle, famille de 4",
     "chip3": "Chercheur invité à U of T",

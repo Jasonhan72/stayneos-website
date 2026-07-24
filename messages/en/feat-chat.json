@@ -55,8 +55,8 @@
     "suggestAmenities": "AI Recommend Amenities"
   },
   "aiConcierge": {
-    "placeholder": "Where in Toronto?",
-    "submit": "Find stays",
+    "placeholder": "Tell me about your Toronto plans...",
+    "submit": "Ask NEOS AI",
     "chip1": "Medical rotation, 3 months",
     "chip2": "Relocating for work, family of 4",
     "chip3": "Visiting scholar at U of T",

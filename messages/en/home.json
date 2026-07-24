@@ -221,14 +221,13 @@
   "scenariosTitle": "Solutions for Every Business Need",
   "reasonsTitle": "Why was my payment cancelled?",
   "categories": {
-    "quickLabel": "Start with a stay type",
-    "corporateStays": "Corporate stays",
+    "quickLabel": "Popular searches",
     "executive": "Executive",
     "family": "Family",
     "medicalAcademic": "Medical-Academic",
     "relocation": "Relocation",
-    "longTerm": "30+ days",
+    "longTerm": "Long-term",
     "waterfront": "Waterfront",
-    "downtownCore": "Downtown Toronto"
+    "downtownCore": "Downtown Core"
   }
 }
