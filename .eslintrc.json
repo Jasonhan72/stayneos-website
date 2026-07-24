@@ -5,6 +5,95 @@
       "argsIgnorePattern": "^_",
       "varsIgnorePattern": "^_",
       "caughtErrorsIgnorePattern": "^_"
-    }]
-  }
+    }],
+    "complexity": ["error", { "max": 15 }],
+    "max-lines": ["warn", { "max": 500, "skipBlankLines": true, "skipComments": true }]
+  },
+  "overrides": [
+    {
+      "files": [
+        "src/app/(account)/dashboard/bookings/*/BookingDetailClient.tsx",
+        "src/app/(account)/profile/page.tsx",
+        "src/app/(booking-flow)/checkout/*/CheckoutClient.tsx",
+        "src/app/(booking-flow)/payment/*/PaymentClient.tsx",
+        "src/app/(booking-flow)/payment/success/SuccessClient.tsx",
+        "src/app/(booking-flow)/property/*/PropertyDetailClient.tsx",
+        "src/app/(host)/host/earnings/EarningsClient.tsx",
+        "src/app/(host)/host/listings/new/page.tsx",
+        "src/app/(host)/host/listings/new/review/page.tsx",
+        "src/app/api/account/addresses/*/route.ts",
+        "src/app/api/account/addresses/route.ts",
+        "src/app/api/ai-concierge/route.ts",
+        "src/app/api/auth/google/callback/route.ts",
+        "src/app/api/auth/login/route.ts",
+        "src/app/api/auth/profile/route.ts",
+        "src/app/api/auth/register/route.ts",
+        "src/app/api/bookings/*/route.ts",
+        "src/app/api/bookings/route.ts",
+        "src/app/api/chat/route.ts",
+        "src/app/api/conversations/route.ts",
+        "src/app/api/host/ai-assist/description/route.ts",
+        "src/app/api/host/ai-assist/title/route.ts",
+        "src/app/api/host/calendar/route.ts",
+        "src/app/api/host/earnings/route.ts",
+        "src/app/api/host/import/url/route.ts",
+        "src/app/api/host/properties/*/route.ts",
+        "src/app/api/host/properties/route.ts",
+        "src/app/api/inquiries/route.ts",
+        "src/app/api/market-posts/route.ts",
+        "src/app/api/payments/confirm/route.ts",
+        "src/app/api/properties/*/route.ts",
+        "src/components/auth/RegisterForm.tsx",
+        "src/components/booking/AirbnbCalendar.tsx",
+        "src/components/booking/BookingCard.tsx",
+        "src/components/booking/FullscreenCalendar.tsx",
+        "src/components/booking/ReviewAndContinue.tsx",
+        "src/components/host/HostCalendar.tsx",
+        "src/components/host/editor/PropertyEditor.tsx",
+        "src/components/layout/MobileMenu.tsx",
+        "src/components/layout/Navbar.tsx",
+        "src/components/layout/UserMenu.tsx",
+        "src/components/messages/ChatArea.tsx",
+        "src/components/messages/ConversationList.tsx",
+        "src/components/pages/BookingsPageClient.tsx",
+        "src/components/pages/PropertiesPageClient.tsx",
+        "src/components/property/BookingSidebar.tsx",
+        "src/components/property/ListingGallery.tsx",
+        "src/components/property/PropertyCard.tsx",
+        "src/components/property/PropertyForm.tsx",
+        "src/components/ui/SearchBar.tsx",
+        "src/lib/admin/property.ts",
+        "src/lib/context/UserContext.tsx",
+        "src/lib/d1.ts",
+        "src/lib/property-db.ts",
+        "src/lib/query-understanding.ts",
+        "src/lib/utils/property-transform.ts",
+        "src/lib/web-search.ts",
+        "src/middleware.ts"
+      ],
+      "rules": {
+        "complexity": "off"
+      }
+    },
+    {
+      "files": [
+        "src/app/(booking-flow)/checkout/*/CheckoutClient.tsx",
+        "src/app/(booking-flow)/property/*/PropertyDetailClient.tsx",
+        "src/app/(marketing)/for-business/ForBusinessPageContent.tsx",
+        "src/app/(marketing)/long-term/LongTermPageContent.tsx",
+        "src/app/(marketing)/market-insights/MarketInsightsPageContent.tsx",
+        "src/app/api/chat/route.ts",
+        "src/components/booking/AirbnbCalendar.tsx",
+        "src/components/host/editor/PropertyEditor.tsx",
+        "src/components/pages/BookingsPageClient.tsx",
+        "src/components/pages/PropertiesPageClient.tsx",
+        "src/components/property/PropertiesList.tsx",
+        "src/components/property/PropertyForm.tsx",
+        "src/lib/web-search.ts"
+      ],
+      "rules": {
+        "max-lines": "off"
+      }
+    }
+  ]
 }

@@ -67,3 +67,19 @@
 ## 修订
 
 - v1.0 (2026-07-23)：初版，Neos 制定
+
+## 附录 A — Phase 1 存量复杂度豁免清单
+
+> 这些文件在接入 Gate 1 时已存在 `complexity > 15` 的函数。Phase 1 通过 `.eslintrc.json` 集中豁免，禁止在源码里使用 inline `eslint-disable`。新文件和未列入文件继续受 `complexity <= 15` 硬门槛约束；清单文件后续重构到阈值内后，应从 ESLint override 和本附录同时移除。`src/lib/booking.ts` 已在 Phase 1 拆分，不列入豁免。
+
+- Account / booking flow pages: `src/app/(account)/dashboard/bookings/[id]/BookingDetailClient.tsx`, `src/app/(account)/profile/page.tsx`, `src/app/(booking-flow)/checkout/[propertyId]/CheckoutClient.tsx`, `src/app/(booking-flow)/payment/[propertyId]/PaymentClient.tsx`, `src/app/(booking-flow)/payment/success/SuccessClient.tsx`, `src/app/(booking-flow)/property/[id]/PropertyDetailClient.tsx`
+- Host pages: `src/app/(host)/host/earnings/EarningsClient.tsx`, `src/app/(host)/host/listings/new/page.tsx`, `src/app/(host)/host/listings/new/review/page.tsx`
+- API routes: `src/app/api/account/addresses/[id]/route.ts`, `src/app/api/account/addresses/route.ts`, `src/app/api/ai-concierge/route.ts`, `src/app/api/auth/google/callback/route.ts`, `src/app/api/auth/login/route.ts`, `src/app/api/auth/profile/route.ts`, `src/app/api/auth/register/route.ts`, `src/app/api/bookings/[id]/route.ts`, `src/app/api/bookings/route.ts`, `src/app/api/chat/route.ts`, `src/app/api/conversations/route.ts`, `src/app/api/host/ai-assist/description/route.ts`, `src/app/api/host/ai-assist/title/route.ts`, `src/app/api/host/calendar/route.ts`, `src/app/api/host/earnings/route.ts`, `src/app/api/host/import/url/route.ts`, `src/app/api/host/properties/[id]/route.ts`, `src/app/api/host/properties/route.ts`, `src/app/api/inquiries/route.ts`, `src/app/api/market-posts/route.ts`, `src/app/api/payments/confirm/route.ts`, `src/app/api/properties/[slug]/route.ts`
+- Components: `src/components/auth/RegisterForm.tsx`, `src/components/booking/AirbnbCalendar.tsx`, `src/components/booking/BookingCard.tsx`, `src/components/booking/FullscreenCalendar.tsx`, `src/components/booking/ReviewAndContinue.tsx`, `src/components/host/HostCalendar.tsx`, `src/components/host/editor/PropertyEditor.tsx`, `src/components/layout/MobileMenu.tsx`, `src/components/layout/Navbar.tsx`, `src/components/layout/UserMenu.tsx`, `src/components/messages/ChatArea.tsx`, `src/components/messages/ConversationList.tsx`, `src/components/pages/BookingsPageClient.tsx`, `src/components/pages/PropertiesPageClient.tsx`, `src/components/property/BookingSidebar.tsx`, `src/components/property/ListingGallery.tsx`, `src/components/property/PropertyCard.tsx`, `src/components/property/PropertyForm.tsx`, `src/components/ui/SearchBar.tsx`
+- Shared libs / middleware: `src/lib/admin/property.ts`, `src/lib/context/UserContext.tsx`, `src/lib/d1.ts`, `src/lib/property-db.ts`, `src/lib/query-understanding.ts`, `src/lib/utils/property-transform.ts`, `src/lib/web-search.ts`, `src/middleware.ts`
+
+## 附录 B — Phase 1 存量文件长度豁免清单
+
+> 本仓库 pre-commit 使用 `--max-warnings=0`，因此 `max-lines` warning 在提交链路中会阻断。以下存量文件已集中豁免 `max-lines`；新文件和未列入文件继续受 500 行 warning 约束。
+
+- `src/app/(booking-flow)/checkout/[propertyId]/CheckoutClient.tsx`, `src/app/(booking-flow)/property/[id]/PropertyDetailClient.tsx`, `src/app/(marketing)/for-business/ForBusinessPageContent.tsx`, `src/app/(marketing)/long-term/LongTermPageContent.tsx`, `src/app/(marketing)/market-insights/MarketInsightsPageContent.tsx`, `src/app/api/chat/route.ts`, `src/components/booking/AirbnbCalendar.tsx`, `src/components/host/editor/PropertyEditor.tsx`, `src/components/pages/BookingsPageClient.tsx`, `src/components/pages/PropertiesPageClient.tsx`, `src/components/property/PropertiesList.tsx`, `src/components/property/PropertyForm.tsx`, `src/lib/web-search.ts`

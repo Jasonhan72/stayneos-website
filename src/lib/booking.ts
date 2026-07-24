@@ -58,16 +58,34 @@ export function getDefaultStayType(property: Property): StayType {
 }
 
 export function getStayTypeMinimumUnits(stayType: StayType): number {
-  if (stayType === 'QUARTERLY') return 3;
-  if (stayType === 'YEARLY') return 12;
-  return 1;
+  return {
+    NIGHTLY: 1,
+    MONTHLY: 1,
+    QUARTERLY: 3,
+    YEARLY: 12,
+  }[stayType];
 }
 
 export function getStayTypeUnitLabel(stayType: StayType): BookingCalculation['unitLabel'] {
-  if (stayType === 'NIGHTLY') return 'night';
-  if (stayType === 'QUARTERLY') return 'quarter';
-  if (stayType === 'YEARLY') return 'year';
-  return 'month';
+  return {
+    NIGHTLY: 'night',
+    MONTHLY: 'month',
+    QUARTERLY: 'quarter',
+    YEARLY: 'year',
+  }[stayType] as BookingCalculation['unitLabel'];
+}
+
+function getLongStayTier(
+  stayType: StayType,
+  rates: { monthly: number; quarterly: number; yearly: number }
+): Pick<BookingCalculation, 'ratePerMonth' | 'tierName'> {
+  const tiers: Record<Exclude<StayType, 'NIGHTLY'>, Pick<BookingCalculation, 'ratePerMonth' | 'tierName'>> = {
+    MONTHLY: { ratePerMonth: rates.monthly, tierName: 'Monthly' },
+    QUARTERLY: { ratePerMonth: rates.quarterly, tierName: 'Quarterly' },
+    YEARLY: { ratePerMonth: rates.yearly, tierName: 'Annual' },
+  };
+
+  return tiers[stayType as Exclude<StayType, 'NIGHTLY'>];
 }
 
 /**
@@ -113,16 +131,11 @@ export function calculateBookingPrice(
 
   if (stayType !== 'NIGHTLY') {
     unitLabel = getStayTypeUnitLabel(stayType);
-    if (stayType === 'YEARLY') {
-      tierName = 'Annual';
-      ratePerMonth = yearlyRate;
-    } else if (stayType === 'QUARTERLY') {
-      tierName = 'Quarterly';
-      ratePerMonth = quarterlyRate;
-    } else {
-      tierName = 'Monthly';
-      ratePerMonth = monthlyRate;
-    }
+    ({ ratePerMonth, tierName } = getLongStayTier(stayType, {
+      monthly: monthlyRate,
+      quarterly: quarterlyRate,
+      yearly: yearlyRate,
+    }));
 
     if (nights >= longStayPricingThreshold) {
       unitCount = months;

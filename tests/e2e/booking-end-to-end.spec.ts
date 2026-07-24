@@ -55,7 +55,7 @@ async function registerUser(
   page: import('@playwright/test').Page,
   email: string,
 ): Promise<void> {
-  await page.goto('/register', { waitUntil: 'networkidle' });
+  await page.goto('/register', { waitUntil: 'domcontentloaded' });
   // Wait for the register form
   await expect(page.locator('h2')).toContainText(/create account|注册/i, { timeout: 10_000 });
 
@@ -91,7 +91,7 @@ async function loginUser(
   page: import('@playwright/test').Page,
   email: string,
 ): Promise<void> {
-  await page.goto('/login', { waitUntil: 'networkidle' });
+  await page.goto('/login', { waitUntil: 'domcontentloaded' });
   await page.fill('#email', email);
   await page.fill('#password', TEST_PASSWORD);
   await page.getByRole('button', { name: /sign in|登录/i }).click();
@@ -221,7 +221,7 @@ test.describe('Booking end-to-end', () => {
       pets: '0',
     });
     await page.goto(`/checkout/${propertyId}?${checkoutParams.toString()}`, {
-      waitUntil: 'networkidle',
+      waitUntil: 'domcontentloaded',
     });
 
     // ── Step 3: Verify checkout page rendered ────────────────────────────
@@ -302,7 +302,7 @@ test.describe('Booking end-to-end', () => {
     if (await itineraryBtn.isVisible({ timeout: 3_000 }).catch(() => false)) {
       await itineraryBtn.click();
     } else {
-      await page.goto('/dashboard/bookings', { waitUntil: 'networkidle' });
+      await page.goto('/dashboard/bookings', { waitUntil: 'domcontentloaded' });
     }
 
     // ── Step 10: Verify booking appears in dashboard ─────────────────────
@@ -329,7 +329,7 @@ test.describe('Booking end-to-end', () => {
     if (bookingId) {
       try {
         await page.goto(`/dashboard/bookings/${bookingId}`, {
-          waitUntil: 'networkidle',
+          waitUntil: 'domcontentloaded',
         });
         const detailMain = page.locator('main, [role="main"]').first();
         await expect(detailMain).toBeVisible({ timeout: 10_000 });
@@ -353,7 +353,7 @@ test.describe('Booking end-to-end', () => {
 
     const { checkIn, checkOut } = computeDateRange();
     const params = new URLSearchParams({ checkIn, checkOut, guests: '1' });
-    await page.goto(`/checkout/1?${params.toString()}`, { waitUntil: 'networkidle' });
+    await page.goto(`/checkout/1?${params.toString()}`, { waitUntil: 'domcontentloaded' });
 
     await expect(page).toHaveURL(/\/login/, { timeout: 10_000 });
     await expect(page.locator('input[name="email"]')).toBeVisible();
