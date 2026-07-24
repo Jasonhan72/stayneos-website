@@ -68,16 +68,16 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-gradient-to-b from-neutral-950/65 via-neutral-900/20 to-neutral-950/70 z-[1]" />
 
         <Container className="relative z-10 px-4 py-16 md:py-0">
-          <div className="max-w-4xl">
-            <h1 className="max-w-3xl text-left text-3xl font-semibold leading-tight text-white sm:text-4xl md:text-6xl lg:text-7xl">
+          <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
+            <h1 className="mx-auto max-w-4xl text-3xl font-semibold leading-tight text-white sm:text-4xl md:text-6xl lg:text-7xl">
               {t('hero.title', 'Furnished apartments for monthly stays in Toronto')}
             </h1>
 
-            <p className="mt-4 max-w-2xl text-left text-lg font-medium text-accent md:text-2xl">
+            <p className="mx-auto mt-4 max-w-2xl text-lg font-medium text-accent md:text-2xl">
               {t('hero.highlight', 'Move-in ready homes with flexible monthly terms')}
             </p>
 
-            <p className="mb-7 mt-4 max-w-2xl text-left text-base leading-7 text-white/90 md:mb-10 md:text-xl">
+            <p className="mx-auto mb-7 mt-4 max-w-2xl text-base leading-7 text-white/90 md:mb-10 md:text-xl">
               {t('hero.subtitle', 'Premium furnished apartments in downtown Toronto. 30 days to 12 months. Move-in ready.')}
             </p>
 
