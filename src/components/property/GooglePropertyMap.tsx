@@ -1,12 +1,18 @@
 'use client';
-// v2 - brand markers + hover cards (2026-05-18)
+// v3 - red price markers + clustering + cluster card strip + fullscreen (2026-09-07)
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { Maximize, Minimize } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useI18n } from '@/lib/i18n';
 import { GOOGLE_MAPS_API_KEY, hasUsableGoogleMapsKey } from '@/lib/google-maps';
+import { clusterPoints } from '@/lib/map/clustering';
+import { priceLabelSvg, clusterSvg, svgDataUri } from '@/lib/map/marker-icons';
+import { useFullscreen } from '@/hooks/useFullscreen';
+import MapClusterCards from './MapClusterCards';
 
 interface Property {
   id: string;
+  slug?: string;
   title: string;
   location?: string;
   address?: string;
@@ -25,20 +31,30 @@ interface GooglePropertyMapProps {
   onPropertySelect: (id: string) => void;
 }
 
+type GoogleMapInstance = {
+  getProjection: () => {
+    fromLatLngToContainerPixel: (pos: { lat: number; lng: number }) => { x: number; y: number } | null;
+  };
+  getDiv: () => HTMLElement;
+  addListener: (event: string, handler: () => void) => void;
+  getZoom: () => number;
+  fitBounds: (bounds: unknown, padding?: number) => void;
+};
+
+type GoogleMarkerInstance = {
+  addListener: (event: string, cb: () => void) => void;
+  setIcon: (icon: Record<string, unknown>) => void;
+  getPosition: () => { lat: () => number; lng: () => number };
+  setZIndex: (z: number) => void;
+  setMap: (map: unknown | null) => void;
+};
+
 type GoogleMapsWindow = Window & {
   gm_authFailure?: () => void;
   google?: {
     maps: {
-      Map: new (el: HTMLElement, opts: Record<string, unknown>) => {
-        getProjection: () => { fromLatLngToContainerPixel: (pos: { lat: number; lng: number }) => { x: number; y: number } };
-        getDiv: () => HTMLElement;
-      };
-      Marker: new (opts: Record<string, unknown>) => {
-        addListener: (event: string, cb: () => void) => void;
-        setIcon: (icon: Record<string, unknown>) => void;
-        getPosition: () => { lat: () => number; lng: () => number };
-        setZIndex: (z: number) => void;
-      };
+      Map: new (el: HTMLElement, opts: Record<string, unknown>) => GoogleMapInstance;
+      Marker: new (opts: Record<string, unknown>) => GoogleMarkerInstance;
       LatLngBounds: new () => { extend: (pos: { lat: number; lng: number }) => void };
       Size: new (w: number, h: number) => unknown;
       Point: new (x: number, y: number) => unknown;
@@ -46,6 +62,7 @@ type GoogleMapsWindow = Window & {
         clearInstanceListeners: (obj: unknown) => void;
         addListener: (instance: unknown, eventName: string, handler: () => void) => { remove: () => void };
         removeListener: (listener: { remove: () => void }) => void;
+        trigger: (instance: unknown, eventName: string) => void;
       };
     };
   };
@@ -92,25 +109,30 @@ function coordFor(property: Property, index: number) {
   return FALLBACK_COORDS[property.id] || { lat: 43.6532 + index * 0.006, lng: -79.3832 - index * 0.006 };
 }
 
-function markerIcon(selected: boolean, price: number) {
-  const label = price ? `$${Math.round(price / 1000)}k` : 'NEOS';
-  const PRIMARY = '#003B5C';
-  const ACCENT = '#C9A962';
-  const bg = selected ? PRIMARY : '#ffffff';
-  const fg = selected ? '#ffffff' : PRIMARY;
-  const stroke = selected ? PRIMARY : ACCENT;
-  const safeLabel = label.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="76" height="38" viewBox="0 0 76 38"><rect x="1" y="1" width="74" height="30" rx="15" fill="${bg}" stroke="${stroke}" stroke-width="2"/><path d="M34 30l4 6 4-6" fill="${bg}"/><text x="38" y="21" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="${fg}">${safeLabel}</text></svg>`;
-  const win = window as GoogleMapsWindow;
+function iconObject(
+  win: GoogleMapsWindow,
+  svg: string,
+  width: number,
+  height: number,
+  anchorX: number,
+  anchorY: number
+): Record<string, unknown> {
   if (!win.google?.maps) {
-    // Fallback icon when Google Maps not ready
-    return { url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}` };
+    return { url: svgDataUri(svg) };
   }
   return {
-    url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,
-    scaledSize: new win.google.maps.Size(76, 38),
-    anchor: new win.google.maps.Point(38, 36),
+    url: svgDataUri(svg),
+    scaledSize: new win.google.maps.Size(width, height),
+    anchor: new win.google.maps.Point(anchorX, anchorY),
   };
+}
+
+function priceLabelIcon(win: GoogleMapsWindow, selected: boolean, price: number): Record<string, unknown> {
+  return iconObject(win, priceLabelSvg(selected, price), 76, 38, 38, 36);
+}
+
+function clusterMarkerIcon(win: GoogleMapsWindow, count: number): Record<string, unknown> {
+  return iconObject(win, clusterSvg(count), 56, 56, 28, 28);
 }
 
 function escapeHtml(text: string): string {
@@ -137,24 +159,30 @@ function propertyCardHTML(property: Property): string {
 
 export default function GooglePropertyMap({ properties, selectedPropertyId, hoveredPropertyId, onPropertySelect }: GooglePropertyMapProps) {
   const { t } = useI18n();
+  const { isFullscreen, toggle: toggleFullscreen } = useFullscreen(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<unknown>(null);
-  const markersRef = useRef<Array<{
-    id: string;
-    marker: {
-      setIcon: (icon: Record<string, unknown>) => void;
-      getPosition: () => { lat: () => number; lng: () => number };
-      setZIndex: (z: number) => void;
-    };
-  }>>([]);
+  const mapInstanceRef = useRef<GoogleMapInstance | null>(null);
+  const markersRef = useRef<Array<{ id: string; marker: GoogleMarkerInstance }>>([]);
+  const clusterMarkersRef = useRef<GoogleMarkerInstance[]>([]);
+  const renderMarkersRef = useRef<() => void>(() => {});
   const [mapError, setMapError] = useState('');
   const [internalHoveredId, setInternalHoveredId] = useState<string | null>(null);
+  const [activeClusterIds, setActiveClusterIds] = useState<string[] | null>(null);
+
+  // Keep a ref mirroring selection/hover state so the zoom listener can read
+  // the latest values without re-registering listeners on every change.
+  const selectionRef = useRef({ selectedPropertyId, hoveredPropertyId, internalHoveredId });
+  selectionRef.current = { selectedPropertyId, hoveredPropertyId, internalHoveredId };
 
   const activeCardId = internalHoveredId || hoveredPropertyId || selectedPropertyId;
   const activeCardProperty = useMemo(
     () => (activeCardId ? (properties.find((p) => p?.id === activeCardId) ?? null) : null),
     [properties, activeCardId]
+  );
+  const activeClusterProperties = useMemo(
+    () => (activeClusterIds ? properties.filter((p) => activeClusterIds.includes(p.id)) : []),
+    [properties, activeClusterIds]
   );
 
   useEffect(() => {
@@ -187,32 +215,82 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
           ],
         });
         mapInstanceRef.current = map;
-        const bounds = new google.LatLngBounds();
 
-        markersRef.current = properties.map((property, index) => {
-          const position = coordFor(property, index);
-          bounds.extend(position);
-          const marker = new google.Marker({
-            position,
-            map,
-            title: property.title,
-            icon: markerIcon(false, priceFor(property)),
-            // optimized:false prevents Google Maps from compositing the
-            // icon into a shared canvas sprite-sheet. Without this,
-            // setIcon() calls with a different SVG data URI are silently
-            // ignored because the API reuses the cached canvas bitmap.
-            optimized: false,
-            zIndex: 10,
+        const renderMarkers = () => {
+          const mapInstance = mapInstanceRef.current;
+          if (!mapInstance || !win.google?.maps) return;
+          const { selectedPropertyId: sel, hoveredPropertyId: hov, internalHoveredId: hovInternal } = selectionRef.current;
+
+          markersRef.current.forEach(({ marker }) => {
+            try { marker.setMap(null); } catch { /* ignore */ }
           });
-          marker.addListener('click', () => { setInternalHoveredId(null); onPropertySelect(property.id); });
-          marker.addListener('mouseover', () => setInternalHoveredId(property.id));
-          marker.addListener('mouseout', () => setInternalHoveredId(null));
-          return { id: property.id, marker };
-        });
+          markersRef.current = [];
+          clusterMarkersRef.current.forEach((marker) => {
+            try { marker.setMap(null); } catch { /* ignore */ }
+          });
+          clusterMarkersRef.current = [];
 
-        if (properties.length > 1 && typeof (map as Record<string, unknown>).fitBounds === 'function') {
-          (map as unknown as { fitBounds: (bounds: unknown, padding: number) => void }).fitBounds(bounds, 64);
+          const zoom = typeof mapInstance.getZoom === 'function' ? mapInstance.getZoom() : 13;
+          const points = properties.map((property, index) => {
+            const c = coordFor(property, index);
+            return { id: property.id, lat: c.lat, lng: c.lng };
+          });
+          const clusters = clusterPoints(points, zoom);
+
+          clusters.forEach((cluster) => {
+            if (cluster.count > 1) {
+              const marker = new google.Marker({
+                position: { lat: cluster.lat, lng: cluster.lng },
+                map: mapInstance,
+                title: `${cluster.count} stays`,
+                icon: clusterMarkerIcon(win, cluster.count),
+                optimized: false,
+                zIndex: 1000 + cluster.count,
+              });
+              marker.addListener('click', () => {
+                setInternalHoveredId(null);
+                setActiveClusterIds(cluster.pointIds);
+              });
+              clusterMarkersRef.current.push(marker);
+              return;
+            }
+
+            const propertyId = cluster.pointIds[0];
+            const property = properties.find((p) => p.id === propertyId);
+            if (!property) return;
+            const isSelected = propertyId === sel;
+            const isHovered = propertyId === hovInternal || (propertyId === hov && !isSelected);
+            const marker = new google.Marker({
+              position: { lat: cluster.lat, lng: cluster.lng },
+              map: mapInstance,
+              title: property.title,
+              icon: priceLabelIcon(win, isSelected || isHovered, priceFor(property)),
+              optimized: false,
+              zIndex: isSelected || isHovered ? 20 : 10,
+            });
+            marker.addListener('click', () => {
+              setInternalHoveredId(null);
+              setActiveClusterIds(null);
+              onPropertySelect(propertyId);
+            });
+            marker.addListener('mouseover', () => setInternalHoveredId(propertyId));
+            marker.addListener('mouseout', () => setInternalHoveredId(null));
+            markersRef.current.push({ id: propertyId, marker });
+          });
+        };
+        renderMarkersRef.current = renderMarkers;
+
+        // Close the cluster card strip when the user clicks empty map space.
+        map.addListener('click', () => setActiveClusterIds(null));
+        // Re-cluster whenever the map settles (zoom / pan).
+        map.addListener('idle', renderMarkers);
+
+        const bounds = new google.LatLngBounds();
+        properties.forEach((property, index) => bounds.extend(coordFor(property, index)));
+        if (properties.length > 1) {
+          map.fitBounds(bounds, 64);
         }
+        renderMarkers();
         setMapError('');
       } catch (error) {
         setMapError(error instanceof Error ? error.message : 'Map unavailable');
@@ -224,32 +302,56 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
       disposed = true;
       const win = window as GoogleMapsWindow;
       if (win.gm_authFailure) win.gm_authFailure = undefined;
-      markersRef.current.forEach(({ marker }) => win.google?.maps.event.clearInstanceListeners(marker));
+      markersRef.current.forEach(({ marker }) => {
+        try { win.google?.maps.event.clearInstanceListeners(marker); } catch { /* ignore */ }
+      });
+      clusterMarkersRef.current.forEach((marker) => {
+        try { win.google?.maps.event.clearInstanceListeners(marker); } catch { /* ignore */ }
+      });
       markersRef.current = [];
+      clusterMarkersRef.current = [];
     };
   }, [properties, onPropertySelect]);
 
-  // Keep marker icons in sync with selection / hover state.
+  // Keep marker icons in sync with selection / hover state (no rebuild → no flicker on hover).
   useEffect(() => {
     try {
+      const win = window as GoogleMapsWindow;
+      if (!win.google?.maps) return;
       markersRef.current.forEach(({ id, marker }) => {
         const isSelected = id === selectedPropertyId;
         const isHovered = id === internalHoveredId || (id === hoveredPropertyId && !isSelected);
-        const prop = properties.find((p) => p?.id === id);
-        if (isHovered || isSelected) {
-          marker.setIcon(markerIcon(true, priceFor(prop || {} as Property)));
-          marker.setZIndex(20);
-        } else {
-          marker.setIcon(markerIcon(false, priceFor(prop || {} as Property)));
-          marker.setZIndex(10);
-        }
+        const property = properties.find((p) => p?.id === id);
+        marker.setIcon(priceLabelIcon(win, isSelected || isHovered, priceFor(property || ({} as Property))));
+        marker.setZIndex(isSelected || isHovered ? 20 : 10);
       });
     } catch {
       // Ignore icon update errors
     }
   }, [selectedPropertyId, hoveredPropertyId, internalHoveredId, properties]);
 
-  // Show a floating card above the active marker (selected, hovered from sidebar, or hovered directly on map).
+  // Close any open cluster card strip when the property list changes (filter/search).
+  useEffect(() => {
+    setActiveClusterIds(null);
+  }, [properties]);
+
+  // Trigger a map resize when entering/leaving fullscreen (container size changes).
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      const win = window as GoogleMapsWindow;
+      if (win.google?.maps && mapInstanceRef.current) {
+        try {
+          win.google.maps.event.trigger(mapInstanceRef.current, 'resize');
+          renderMarkersRef.current();
+        } catch {
+          // Ignore resize errors
+        }
+      }
+    }, 60);
+    return () => window.clearTimeout(id);
+  }, [isFullscreen]);
+
+  // Show a floating card above the active single marker (selected/hovered).
   useEffect(() => {
     if (!mapInstanceRef.current) return;
 
@@ -262,10 +364,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
     if (!markerEntry) return;
 
     try {
-      const map = mapInstanceRef.current as {
-        getProjection: () => { fromLatLngToContainerPixel: (pos: { lat: number; lng: number }) => { x: number; y: number } | null };
-        getDiv: () => HTMLElement;
-      };
+      const map = mapInstanceRef.current;
       const projection = map.getProjection();
       if (!projection) return;
 
@@ -291,14 +390,12 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
         pointer-events: auto;
       `;
       card.innerHTML = propertyCardHTML(activeCardProperty);
-      // Append to outer container (not map div) so the card isn't clipped by overflow-hidden
       if (containerRef.current) {
         containerRef.current.appendChild(card);
       } else {
         map.getDiv().appendChild(card);
       }
 
-      // Re-position on map pan / zoom.
       const reposition = () => {
         try {
           const proj = map.getProjection();
@@ -340,14 +437,29 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
   }
 
   return (
-    <div ref={containerRef} className="relative h-full min-h-[420px] overflow-visible rounded-2xl border border-neutral-200 bg-neutral-100" data-testid="properties-map">
-      {/* Inner wrapper clips map corners while allowing the floating card to overflow */}
-      <div className="absolute inset-0 overflow-hidden rounded-2xl">
+    <div
+      ref={containerRef}
+      className={cn(
+        'relative h-full min-h-[420px] overflow-visible rounded-2xl border border-neutral-200 bg-neutral-100',
+        isFullscreen && 'fixed inset-0 z-[999] h-screen w-screen rounded-none border-0'
+      )}
+      data-testid="properties-map"
+    >
+      <div className="absolute inset-0 overflow-hidden">
         <div className="absolute left-4 top-4 z-20 rounded-full bg-white px-4 py-2 text-sm font-semibold text-neutral-900 shadow-lg">
           Map · {properties.length} furnished stays
         </div>
 
-        <div ref={mapRef} className={cn("absolute inset-0", mapError && "hidden")} aria-label={t("property.mapTitle", "Properties map")} />
+        <button
+          type="button"
+          onClick={toggleFullscreen}
+          aria-label={isFullscreen ? t('property.mapExitFullscreen', 'Exit fullscreen') : t('property.mapFullscreen', 'Fullscreen')}
+          className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white text-neutral-700 shadow-lg transition hover:bg-neutral-100"
+        >
+          {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
+        </button>
+
+        <div ref={mapRef} className={cn('absolute inset-0', mapError && 'hidden')} aria-label={t('property.mapTitle', 'Properties map')} />
 
         {mapError && (
           <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_30%_20%,#e5e7eb_0,#e5e7eb_2px,transparent_3px),linear-gradient(135deg,#f5f5f4,#e7e5e4)]">
@@ -363,7 +475,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
                   onClick={() => onPropertySelect(property.id)}
                   className={cn(
                     'absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full px-3 py-2 text-sm font-bold shadow-lg transition-transform hover:scale-105',
-                    selected ? 'bg-[#003B5C] text-white' : 'bg-white text-[#003B5C] ring-1 ring-[#003B5C]'
+                    selected ? 'bg-[#991B1B] text-white' : 'bg-[#DC2626] text-white'
                   )}
                   style={{ top: `${top}%`, left: `${left}%` }}
                   aria-label={`Select ${property.title} on map`}
@@ -377,6 +489,13 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
             </div>
           </div>
         )}
+
+        <MapClusterCards
+          properties={activeClusterProperties}
+          count={activeClusterIds?.length}
+          onSelect={(id) => onPropertySelect(id)}
+          onClose={() => setActiveClusterIds(null)}
+        />
       </div>
     </div>
   );
