@@ -2,7 +2,7 @@
 'use client';
 import { PropertyCardData } from '@/types';
 
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -126,6 +126,12 @@ export default function PropertiesPage() {
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
   const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(null);
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  // Stable callback so the map doesn't rebuild on every render (hover).
+  const handlePropertySelect = useCallback((id: string) => {
+    setSelectedPropertyId(id);
+    cardRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, []);
   
   // Filters
   const [selectedPriceRange, setSelectedPriceRange] = useState(priceRanges[0]);
@@ -609,10 +615,7 @@ export default function PropertiesPage() {
                     properties={filteredProperties}
                     selectedPropertyId={selectedPropertyId}
                     hoveredPropertyId={hoveredPropertyId}
-                    onPropertySelect={(id) => {
-                      setSelectedPropertyId(id);
-                      cardRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }}
+                    onPropertySelect={handlePropertySelect}
                   />
                 </div>
               )}
@@ -682,10 +685,7 @@ export default function PropertiesPage() {
             properties={filteredProperties}
             selectedPropertyId={selectedPropertyId}
             hoveredPropertyId={hoveredPropertyId}
-            onPropertySelect={(id) => {
-              setSelectedPropertyId(id);
-              cardRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }}
+            onPropertySelect={handlePropertySelect}
           />
         </div>
       </div>

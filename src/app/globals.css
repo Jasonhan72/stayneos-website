@@ -49,6 +49,33 @@ body {
 }
 
 /* ============================================
+   Google Maps — 撤销 Tailwind preflight 对地图控件的干扰
+   Tailwind base 的 img/button/svg 重置会把 Google 注入的缩放/平移控件、
+   信息窗压坏（控件 0 尺寸或图片错位）。限定在 .gm-style 作用域内恢复。
+   ============================================ */
+.gm-style img {
+  max-width: none;
+  height: auto;
+}
+.gm-style button {
+  background: none;
+  border: 0;
+  padding: 0;
+}
+/* 信息窗（infowindow）里的图片仍要保持响应式，避免溢出卡片 */
+.gm-style .gm-style-iw img {
+  max-width: 100%;
+}
+
+/* ============================================
+   地图全屏 — 锁定背景滚动
+   进入全屏时由 GooglePropertyMap 给 body 加上这个 class。
+   ============================================ */
+body.stayneos-map-fullscreen {
+  overflow: hidden;
+}
+
+/* ============================================
    滚动条样式
    ============================================ */
 

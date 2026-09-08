@@ -58,6 +58,13 @@ type GoogleMapsWindow = Window & {
       LatLngBounds: new () => { extend: (pos: { lat: number; lng: number }) => void };
       Size: new (w: number, h: number) => unknown;
       Point: new (x: number, y: number) => unknown;
+      ControlPosition: {
+        RIGHT_CENTER: number;
+        RIGHT_BOTTOM: number;
+        BOTTOM_CENTER: number;
+        BOTTOM_RIGHT: number;
+        TOP_RIGHT: number;
+      };
       event: {
         clearInstanceListeners: (obj: unknown) => void;
         addListener: (instance: unknown, eventName: string, handler: () => void) => { remove: () => void };
@@ -166,6 +173,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
   const markersRef = useRef<Array<{ id: string; marker: GoogleMarkerInstance }>>([]);
   const clusterMarkersRef = useRef<GoogleMarkerInstance[]>([]);
   const renderMarkersRef = useRef<() => void>(() => {});
+  const activeStateRef = useRef<Record<string, boolean>>({});
   const [mapError, setMapError] = useState('');
   const [internalHoveredId, setInternalHoveredId] = useState<string | null>(null);
   const [activeClusterIds, setActiveClusterIds] = useState<string[] | null>(null);
@@ -205,6 +213,14 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
           center,
           zoom: 13,
           disableDefaultUI: false,
+          // Explicitly enable the zoom control (classic +/- buttons). Without
+          // this the weekly renderer folds zoom into the camera-control popup
+          // and leaves it visually collapsed.
+          zoomControl: true,
+          zoomControlOptions: { position: google.ControlPosition.RIGHT_BOTTOM },
+          // Capture scroll/touch gestures so wheel & two-finger zoom always work
+          // instead of scrolling the surrounding page.
+          gestureHandling: 'greedy',
           mapTypeControl: false,
           streetViewControl: false,
           fullscreenControl: false,
@@ -221,6 +237,9 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
           if (!mapInstance || !win.google?.maps) return;
           const { selectedPropertyId: sel, hoveredPropertyId: hov, internalHoveredId: hovInternal } = selectionRef.current;
 
+          // Rebuild: reset the active-state cache so the icon-sync effect
+          // below only touches markers whose state actually changes.
+          activeStateRef.current = {};
           markersRef.current.forEach(({ marker }) => {
             try { marker.setMap(null); } catch { /* ignore */ }
           });
@@ -260,6 +279,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
             if (!property) return;
             const isSelected = propertyId === sel;
             const isHovered = propertyId === hovInternal || (propertyId === hov && !isSelected);
+            activeStateRef.current[propertyId] = isSelected || isHovered;
             const marker = new google.Marker({
               position: { lat: cluster.lat, lng: cluster.lng },
               map: mapInstance,
@@ -321,9 +341,15 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
       markersRef.current.forEach(({ id, marker }) => {
         const isSelected = id === selectedPropertyId;
         const isHovered = id === internalHoveredId || (id === hoveredPropertyId && !isSelected);
+        const active = isSelected || isHovered;
+        // Only touch markers whose active state actually changed. Calling
+        // setIcon on an unchanged marker rebuilds its DOM node (optimized:false)
+        // and produces the visible hover flicker.
+        if (activeStateRef.current[id] === active) return;
+        activeStateRef.current[id] = active;
         const property = properties.find((p) => p?.id === id);
-        marker.setIcon(priceLabelIcon(win, isSelected || isHovered, priceFor(property || ({} as Property))));
-        marker.setZIndex(isSelected || isHovered ? 20 : 10);
+        marker.setIcon(priceLabelIcon(win, active, priceFor(property || ({} as Property))));
+        marker.setZIndex(active ? 20 : 10);
       });
     } catch {
       // Ignore icon update errors
@@ -349,6 +375,35 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
       }
     }, 60);
     return () => window.clearTimeout(id);
+  }, [isFullscreen]);
+
+  // Fullscreen: lift the map above the site chrome and lock background scroll.
+  // The map is rendered inside a `position: sticky` panel (a stacking context),
+  // so a plain z-index on our fixed container can't beat the header's z-50.
+  // Raise the sticky panel's z-index while fullscreen and hide body overflow.
+  useEffect(() => {
+    const panel = containerRef.current?.parentElement;
+    if (!panel) return;
+
+    if (isFullscreen) {
+      if (!('stayneosPrevZ' in panel.dataset)) {
+        panel.dataset.stayneosPrevZ = panel.style.zIndex;
+      }
+      panel.style.zIndex = '10000';
+      document.body.classList.add('stayneos-map-fullscreen');
+    } else {
+      panel.style.zIndex = panel.dataset.stayneosPrevZ || '';
+      delete panel.dataset.stayneosPrevZ;
+      document.body.classList.remove('stayneos-map-fullscreen');
+    }
+
+    return () => {
+      document.body.classList.remove('stayneos-map-fullscreen');
+      if (panel.dataset.stayneosPrevZ !== undefined) {
+        panel.style.zIndex = panel.dataset.stayneosPrevZ;
+        delete panel.dataset.stayneosPrevZ;
+      }
+    };
   }, [isFullscreen]);
 
   // Show a floating card above the active single marker (selected/hovered).
