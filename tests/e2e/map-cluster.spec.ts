@@ -6,35 +6,26 @@ import { test, expect } from '@playwright/test';
  * Google Maps integration: zoom controls render, zooming out clusters nearby
  * markers, and clicking a cluster reveals the bottom card strip.
  *
- * The Maps API key is referrer-restricted to production domains, so on
- * localhost / CI this test skips (same pattern as the D1-dependent tests).
- * Against a production/preview origin with a usable key it exercises the
- * full zoom → cluster → card-strip flow.
+ * The Maps API key is referrer-restricted to production domains, so the real
+ * map (and its zoom/cluster controls) only render against a production origin.
+ * This spec is therefore opt-in: set RUN_MAP_E2E=1 and point Playwright's
+ * baseURL at a production/preview origin with a usable key. In CI (and any
+ * local run without the flag) it skips cleanly.
  */
 test('map zoom-out reveals cluster marker and opens card strip', async ({ page }) => {
+  test.skip(
+    !process.env.RUN_MAP_E2E,
+    'Google Maps key is referrer-restricted to production; set RUN_MAP_E2E=1 to run against a production origin'
+  );
+
   await page.goto('/properties');
 
   const map = page.getByTestId('properties-map');
   await expect(map).toBeVisible({ timeout: 25_000 });
 
-  // Wait for either the Google map to render or the auth-failure fallback.
-  await page.waitForFunction(
-    () =>
-      document.querySelector('.gm-style') !== null ||
-      document.body.innerText.includes('Google Maps could not load'),
-    null,
-    { timeout: 25_000 }
-  );
-
-  const fallback = page.locator('text=Google Maps could not load');
-  if ((await fallback.count()) > 0) {
-    test.skip(true, 'Google Maps API key unavailable in this environment (referrer-restricted)');
-    return;
-  }
-
   // Google Maps zoom-out control ("Zoom out").
   const zoomOut = page.locator('button[aria-label="Zoom out"], [title="Zoom out"]').first();
-  await expect(zoomOut).toBeVisible({ timeout: 10_000 });
+  await expect(zoomOut).toBeVisible({ timeout: 15_000 });
 
   // Zoom out until a cluster marker ("N stays") appears. The initial fit-bounds
   // zoom keeps the few properties spread apart, so this may take several clicks.
