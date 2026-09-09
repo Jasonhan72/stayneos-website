@@ -139,7 +139,7 @@ function priceLabelIcon(win: GoogleMapsWindow, selected: boolean, price: number)
 }
 
 function clusterMarkerIcon(win: GoogleMapsWindow, count: number): Record<string, unknown> {
-  return iconObject(win, clusterSvg(count), 56, 56, 28, 28);
+  return iconObject(win, clusterSvg(count), 36, 36, 18, 18);
 }
 
 function escapeHtml(text: string): string {

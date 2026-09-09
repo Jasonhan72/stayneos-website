@@ -28,11 +28,11 @@ export function priceLabelSvg(selected: boolean, price: number): string {
 /** Red circular cluster marker displaying the number of properties. */
 export function clusterSvg(count: number): string {
   const label = count > 99 ? '99+' : String(count);
-  const fontSize = label.length >= 3 ? 26 : 30;
+  const fontSize = label.length >= 3 ? 13 : 16;
   return (
-    `<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 56 56">` +
-    `<circle cx="28" cy="28" r="26" fill="${RED}" stroke="${WHITE}" stroke-width="3"/>` +
-    `<text x="28" y="38" text-anchor="middle" font-family="Arial, sans-serif" font-size="${fontSize}" font-weight="700" fill="${WHITE}">${escapeXml(label)}</text>` +
+    `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">` +
+    `<circle cx="18" cy="18" r="16" fill="${RED}" stroke="${WHITE}" stroke-width="2"/>` +
+    `<text x="18" y="24" text-anchor="middle" font-family="Arial, sans-serif" font-size="${fontSize}" font-weight="700" fill="${WHITE}">${escapeXml(label)}</text>` +
     `</svg>`
   );
 }
