@@ -183,7 +183,9 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
   const selectionRef = useRef({ selectedPropertyId, hoveredPropertyId, internalHoveredId });
   selectionRef.current = { selectedPropertyId, hoveredPropertyId, internalHoveredId };
 
-  const activeCardId = internalHoveredId || hoveredPropertyId || selectedPropertyId;
+  // Floating in-map card only follows hover; clicks open the bottom card
+  // strip instead (which is always fully visible inside the map viewport).
+  const activeCardId = internalHoveredId || hoveredPropertyId;
   const activeCardProperty = useMemo(
     () => (activeCardId ? (properties.find((p) => p?.id === activeCardId) ?? null) : null),
     [properties, activeCardId]
@@ -290,7 +292,10 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
             });
             marker.addListener('click', () => {
               setInternalHoveredId(null);
-              setActiveClusterIds(null);
+              // Single marker click also opens the bottom card strip (Jason:
+              // clicking a red price label should show the mini property card
+              // at the bottom of the map, fully visible within the page).
+              setActiveClusterIds([propertyId]);
               onPropertySelect(propertyId);
             });
             marker.addListener('mouseover', () => setInternalHoveredId(propertyId));
@@ -445,11 +450,26 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
         pointer-events: auto;
       `;
       card.innerHTML = propertyCardHTML(activeCardProperty);
-      if (containerRef.current) {
-        containerRef.current.appendChild(card);
-      } else {
-        map.getDiv().appendChild(card);
-      }
+      const host = containerRef.current || map.getDiv();
+      host.appendChild(card);
+
+      // Clamp the card inside the map viewport so it is always fully visible
+      // (markers near the top/left/right edges used to push it off-screen).
+      const place = (x: number, y: number) => {
+        const hostRect = host.getBoundingClientRect();
+        const w = card.offsetWidth;
+        const h = card.offsetHeight;
+        const margin = 8;
+        // Anchor uses translate(-50%, -100%): left is the card's center X,
+        // top is the card's bottom Y.
+        const minLeft = margin + w / 2;
+        const maxLeft = Math.max(minLeft, hostRect.width - margin - w / 2);
+        const minTop = margin + h;
+        const maxTop = Math.max(minTop, hostRect.height - margin);
+        card.style.left = `${Math.min(Math.max(x, minLeft), maxLeft)}px`;
+        card.style.top = `${Math.min(Math.max(y - 100, minTop), maxTop)}px`;
+      };
+      place(pixel.x, pixel.y);
 
       const reposition = () => {
         try {
@@ -457,8 +477,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
           if (!proj) return;
           const p = proj.fromLatLngToContainerPixel({ lat: markerPos.lat(), lng: markerPos.lng() });
           if (!p) return;
-          card.style.left = `${p.x}px`;
-          card.style.top = `${p.y - 100}px`;
+          place(p.x, p.y);
         } catch {
           // Ignore reposition errors during map transitions
         }
