@@ -45,5 +45,15 @@ tag = "v1"
 new_classes = ["ConversationDO"]
 
 
+# Durable Objects for messaging
+[[durable_objects.bindings]]
+name = "CONVERSATIONS"
+class_name = "ConversationDO"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["ConversationDO"]
+
+
 [triggers]
 crons = ["0 3 * * *"]
