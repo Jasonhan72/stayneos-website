@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -19,6 +20,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, isAuthenticated } = useAuth();
+  const pathname = usePathname();
   const { t, locale } = useI18n();
   const userAlt = locale === "zh" ? "用户头像" : locale === "fr" ? "Avatar utilisateur" : "User avatar";
   const openMenuLabel = locale === "zh" ? "打开菜单" : locale === "fr" ? "Ouvrir le menu" : "Open menu";
@@ -51,6 +53,10 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
   };
 
   const currentVariant = isScrolled ? "light" : variant;
+
+  if (pathname?.startsWith("/property/")) {
+    return null;
+  }
 
   return (
     <>

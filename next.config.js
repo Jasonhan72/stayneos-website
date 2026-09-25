@@ -11,7 +11,7 @@ const csp = [
   "default-src 'self'",
   "base-uri 'self'",
   "frame-ancestors 'none'",
-  "img-src 'self' data: blob: https://images.unsplash.com https://*.unsplash.com https://*.cloudflare.com https://*.r2.cloudflarestorage.com https://*.googleusercontent.com",
+  "img-src 'self' data: blob: https://images.unsplash.com https://*.unsplash.com https://*.cloudflare.com https://*.r2.cloudflarestorage.com https://*.googleusercontent.com https://photos.zillowstatic.com https://*.zillowstatic.com",
   "font-src 'self' data: https://fonts.gstatic.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com",

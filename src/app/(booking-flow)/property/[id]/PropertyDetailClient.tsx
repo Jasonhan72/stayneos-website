@@ -530,10 +530,10 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
 
   return (
     <main className="min-h-screen bg-white" suppressHydrationWarning>
-      {/* Navigation Bar - Desktop & Mobile */}
-      <nav className="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-md border-b border-neutral-200">
+      {/* Mobile navigation bar */}
+      <nav className="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-md border-b border-neutral-200 md:hidden">
         <Container>
-          <div className="flex items-center justify-between h-14">
+          <div className="flex h-12 items-center justify-between">
             <Link href="/properties" className="p-2 -ml-2 hover:bg-neutral-100 rounded-full transition-colors">
               <ChevronLeft size={24} className="text-neutral-900" />
             </Link>
@@ -541,14 +541,14 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
             <div className="flex items-center gap-2">
               <button 
                 onClick={handleShare}
-                className="p-2.5 hover:bg-neutral-100 rounded-full transition-colors"
+                className="p-2 hover:bg-neutral-100 rounded-full transition-colors"
                 aria-label="Share property"
               >
                 <Share size={20} className="text-neutral-900" />
               </button>
               <button 
                 onClick={() => toggleWishlist(propertyId)} 
-                className="p-2.5 hover:bg-neutral-100 rounded-full transition-colors"
+                className="p-2 hover:bg-neutral-100 rounded-full transition-colors"
                 aria-label={isLiked ? 'Remove from favorites' : 'Add to favorites'}
               >
                 <Heart 
@@ -562,10 +562,10 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
       </nav>
 
       {/* Spacer for fixed nav */}
-      <div className="h-14" />
+      <div className="h-12 md:hidden" />
 
-      <Container className="pt-6 pb-2">
-        <nav aria-label="Breadcrumb" className="mb-4 text-sm text-neutral-500">
+      <Container className="pt-3 pb-2 md:pt-5">
+        <nav aria-label="Breadcrumb" className="sr-only">
           <ol className="flex items-center gap-2 flex-wrap">
             <li><Link href="/" className="hover:text-neutral-800">{t('nav.home')}</Link></li>
             <li>/</li>
@@ -575,26 +575,26 @@ export default function PropertyDetailClient({ propertyId }: PropertyDetailClien
           </ol>
         </nav>
 
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between mb-6">
+        <div className="mb-3 flex flex-col gap-3 md:mb-4 md:flex-row md:items-start md:justify-between">
           <div className="min-w-0">
-            <h1 className="text-2xl md:text-3xl font-bold text-neutral-900">{localizedTitle}</h1>
-            <p className="mt-2 text-sm md:text-base text-neutral-600">
+            <h1 className="text-2xl font-semibold text-neutral-900 md:text-[26px] md:leading-tight">{localizedTitle}</h1>
+            <p className="mt-1.5 text-sm text-neutral-600 md:text-base">
               {locationShort} · {propertyType}
             </p>
             <p className="mt-1 text-sm md:text-base text-neutral-600">{guestInfo}</p>
           </div>
 
-          <div className="flex items-center gap-4 md:gap-6 shrink-0">
+          <div className="hidden shrink-0 items-center gap-1 md:flex">
             <button
               onClick={handleShare}
-              className="inline-flex items-center gap-2 text-sm font-medium text-neutral-900 underline underline-offset-2"
+              className="inline-flex h-9 items-center gap-2 rounded-lg px-2 text-sm font-medium text-neutral-900 underline underline-offset-2 hover:bg-neutral-100"
             >
               <Share size={16} />
               <span>{t('property.share', 'Share')}</span>
             </button>
             <button
               onClick={() => toggleWishlist(propertyId)}
-              className="inline-flex items-center gap-2 text-sm font-medium text-neutral-900 underline underline-offset-2"
+              className="inline-flex h-9 items-center gap-2 rounded-lg px-2 text-sm font-medium text-neutral-900 underline underline-offset-2 hover:bg-neutral-100"
               aria-label={isLiked ? 'Remove from favorites' : 'Add to favorites'}
             >
               <Heart size={16} className={isLiked ? 'fill-rose-500 text-rose-500' : 'text-neutral-900'} />
