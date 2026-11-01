@@ -3,7 +3,7 @@ name: Preview Deploy
 on:
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
 
 concurrency:
   group: preview-pr-${{ github.event.pull_request.number }}
@@ -46,6 +46,8 @@ jobs:
   # ── Gate 2: Build + Deploy Preview ──
   build-and-deploy:
     name: Build + Deploy Preview
+    # Drafts may contain setup work; do not deploy or run remote write tests yet.
+    if: github.event.pull_request.draft == false
     needs: [typecheck, tests]
     runs-on: ubuntu-latest
     timeout-minutes: 20
