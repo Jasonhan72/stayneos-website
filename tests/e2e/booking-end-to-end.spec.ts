@@ -73,6 +73,7 @@ async function registerUser(
   } catch {
     const stillOnRegister = /\/register/.test(page.url());
     if (stillOnRegister) {
+      if (process.env.PLAYWRIGHT_BASE_URL || process.env.E2E_REQUIRE_AUTH) throw new Error('Registration API unavailable in configured preview');
       test.skip(true, 'Registration API unavailable (no D1 locally or on preview)');
       return;
     }
@@ -94,11 +95,12 @@ async function loginUser(
   await page.goto('/login', { waitUntil: 'domcontentloaded' });
   await page.fill('#email', email);
   await page.fill('#password', TEST_PASSWORD);
-  await page.getByRole('button', { name: /sign in|登录/i }).click();
+  await page.locator('form').filter({ has: page.locator('#password') }).locator('button[type="submit"]').click();
 
   try {
     await page.waitForURL(/\/$/, { timeout: 15_000 });
   } catch {
+    if (process.env.PLAYWRIGHT_BASE_URL || process.env.E2E_REQUIRE_AUTH) throw new Error('Login API unavailable in configured preview');
     test.skip(true, 'Login API unavailable');
     return;
   }

@@ -12,9 +12,9 @@ CREATE TABLE IF NOT EXISTS User (
     password TEXT,
     role TEXT DEFAULT 'GUEST' CHECK (role IN ('GUEST', 'HOST', 'ADMIN', 'SUPER_ADMIN')),
     createdAt TEXT NOT NULL DEFAULT (datetime('now')),
-    updatedAt TEXT NOT NULL DEFAULT (datetime('now'))
+    updatedAt TEXT NOT NULL DEFAULT (datetime('now')),
     resetToken TEXT,
-    resetTokenExpiry TEXT,
+    resetTokenExpiry TEXT
 );
 
 -- Session table for NextAuth
@@ -128,9 +128,9 @@ CREATE TABLE IF NOT EXISTS Inquiry (
     status TEXT DEFAULT 'NEW' CHECK (status IN ('NEW', 'CONTACTED', 'QUALIFIED', 'CLOSED')),
     metadata TEXT,
     createdAt TEXT NOT NULL DEFAULT (datetime('now')),
-    updatedAt TEXT NOT NULL DEFAULT (datetime('now'))
+    updatedAt TEXT NOT NULL DEFAULT (datetime('now')),
     resetToken TEXT,
-    resetTokenExpiry TEXT,
+    resetTokenExpiry TEXT
 );
 
 -- Property table (matches production D1 schema — 2026-05-19)
@@ -161,6 +161,11 @@ CREATE TABLE IF NOT EXISTS Property (
     priceMonthly INTEGER,
     priceQuarterly INTEGER,
     priceAnnual INTEGER,
+    defaultStayType TEXT NOT NULL DEFAULT 'MONTHLY' CHECK (defaultStayType IN ('NIGHTLY', 'MONTHLY', 'QUARTERLY', 'YEARLY')),
+    nightlyRate REAL,
+    monthlyRate REAL,
+    quarterlyRate REAL,
+    yearlyRate REAL,
     currency TEXT DEFAULT 'CAD',
     includedAmenities TEXT,
     buildingAmenities TEXT,

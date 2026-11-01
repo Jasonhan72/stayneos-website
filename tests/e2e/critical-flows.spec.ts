@@ -15,7 +15,7 @@ test('home -> properties -> property detail', async ({ page }) => {
   await expect(page.locator('main')).toBeVisible();
 });
 
-test('register -> login -> dashboard -> logout', async ({ page }) => {
+test('register -> login -> bookings -> logout', async ({ page }) => {
   const seed = Date.now();
   const email = `e2e+${seed}@example.com`;
   const password = 'Passw0rd!';
@@ -36,34 +36,39 @@ test('register -> login -> dashboard -> logout', async ({ page }) => {
   } catch {
     const stillOnRegister = /\/register/.test(page.url());
     if (stillOnRegister) {
+      if (process.env.PLAYWRIGHT_BASE_URL || process.env.E2E_REQUIRE_AUTH) throw new Error('Registration API unavailable in configured preview');
       test.skip(true, 'Registration API unavailable (likely no D1 on preview)');
       return;
     }
   }
 
-  // Navigate to dashboard (cookie should be set)
-  await page.goto('/dashboard');
-  await expect(page).toHaveURL(/\/dashboard/);
+  // Verify the guest booking area after registration
+  await page.goto('/bookings');
+  await expect(page).toHaveURL(/\/bookings/);
 
   // Logout and login again
+  await page.getByRole('button', { name: /^(User menu|用户菜单|Menu utilisateur)$/i }).click();
+  await page.locator('nav').getByRole('button', { name: /log out|logout|退出|déconnexion/i }).click();
+  await expect(page).toHaveURL(/\/$/);
   await page.goto('/login');
   await page.fill('#email', email);
   await page.fill('#password', password);
-  await page.getByRole('button', { name: /sign in|登录|connexion/i }).click();
+  await page.locator('form').filter({ has: page.locator('#password') }).locator('button[type="submit"]').click();
 
   try {
     await page.waitForURL(/\/$/, { timeout: 15_000 });
   } catch {
+    if (process.env.PLAYWRIGHT_BASE_URL || process.env.E2E_REQUIRE_AUTH) throw new Error('Login API unavailable in configured preview');
     test.skip(true, 'Login API unavailable (likely no D1 on preview)');
     return;
   }
 
-  await page.goto('/dashboard');
-  await expect(page).toHaveURL(/\/dashboard/);
+  await page.goto('/bookings');
+  await expect(page).toHaveURL(/\/bookings/);
 
   // Logout
-  await page.locator('button[aria-haspopup="true"]').first().click();
-  await page.getByRole('button', { name: /logout|退出|déconnexion/i }).click();
+  await page.getByRole('button', { name: /^(User menu|用户菜单|Menu utilisateur)$/i }).click();
+  await page.locator('nav').getByRole('button', { name: /log out|logout|退出|déconnexion/i }).click();
   await expect(page).toHaveURL(/\/$/);
 });
 

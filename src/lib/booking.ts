@@ -1,4 +1,13 @@
-import { Property } from "@/components/property/PropertyCard";
+// Pricing is shared by the Next API and the standalone booking Worker.
+// Keep this contract independent of React and browser globals.
+export interface PricingProperty {
+  price: number;
+  minNights?: number;
+  priceUnit?: string;
+  cleaningFee?: number;
+  monthlyDiscount?: number;
+  currency?: string;
+}
 
 export type StayType = 'NIGHTLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
 export type StayTypeParam = string | StayType | Lowercase<StayType> | null | undefined;
@@ -40,7 +49,7 @@ export function stayTypeToQuery(stayType: StayType): string {
   return stayType.toLowerCase();
 }
 
-function getNumber(property: Property, keys: string[], fallback = 0): number {
+function getNumber(property: PricingProperty, keys: string[], fallback = 0): number {
   const record = property as unknown as Record<string, unknown>;
   for (const key of keys) {
     const value = record[key];
@@ -52,7 +61,7 @@ function getNumber(property: Property, keys: string[], fallback = 0): number {
   return fallback;
 }
 
-export function getDefaultStayType(property: Property): StayType {
+export function getDefaultStayType(property: PricingProperty): StayType {
   const record = property as unknown as Record<string, unknown>;
   return normalizeStayType(record.defaultStayType as StayTypeParam, (property.minNights || 0) >= 28 || property.priceUnit === 'month' ? 'monthly' : 'nightly');
 }
@@ -96,8 +105,8 @@ function getLongStayTier(
  * @param stayTypeParam 短租/长租类型
  * @returns 预订计算结果
  */
-export function calculateBookingPrice(
-  property: Property,
+export function calculateBookingPrice<T extends PricingProperty>(
+  property: T,
   checkIn: string,
   checkOut: string,
   stayTypeParam?: StayTypeParam

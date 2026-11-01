@@ -20,7 +20,7 @@ test.describe('Wishlist Add and Remove', () => {
     await page.goto('/login');
     await page.fill('#email', email);
     await page.fill('#password', password);
-    await page.getByRole('button', { name: /sign in/i }).click();
+    await page.locator('form').filter({ has: page.locator('#password') }).locator('button[type="submit"]').click();
 
     // Wait for redirect to home after login.
     // On preview environments without D1, the login API may fail silently.
@@ -29,6 +29,7 @@ test.describe('Wishlist Add and Remove', () => {
     } catch {
       const stillOnLogin = /\/login/.test(page.url());
       if (stillOnLogin) {
+        if (process.env.PLAYWRIGHT_BASE_URL || process.env.E2E_REQUIRE_AUTH) throw new Error('Login API unavailable in configured preview');
         test.skip(true, 'Login API unavailable (likely no D1 on preview)');
         return;
       }
@@ -38,7 +39,7 @@ test.describe('Wishlist Add and Remove', () => {
     await page.waitForTimeout(1500);
 
     // Confirm authenticated
-    await expect(page.locator('button[aria-haspopup="true"]')).toBeVisible({
+    await expect(page.getByRole('button', { name: /^(User menu|用户菜单|Menu utilisateur)$/i })).toBeVisible({
       timeout: 5_000,
     });
 

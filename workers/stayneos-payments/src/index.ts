@@ -1,3 +1,4 @@
+import { authenticateWorkerRequest, type SessionEnv } from '../../../src/lib/auth/edge-session';
 /**
  * stayneos-payments worker
  *
@@ -11,7 +12,7 @@
  * main worker (which would then forward via service binding).
  */
 
-interface Env {
+interface Env extends SessionEnv {
   DB: D1Database;
   STRIPE_SECRET_KEY: string;
   STRIPE_WEBHOOK_SECRET: string;
@@ -174,30 +175,20 @@ interface StripeCharge {
 async function verifyStripeWebhook(
   payload: string, signature: string, secret: string, tolerance: number = 300
 ): Promise<StripeEvent> {
-  // Strip the timestamp-scheme prefix
-  const parts = signature.split(',').reduce<Record<string, string>>((acc, part) => {
-    const [k, v] = part.trim().split('=');
-    acc[k] = v;
-    return acc;
-  }, {});
-
-  const ts = parts.t;
-  const v1 = parts.v1;
-  if (!ts || !v1) throw new Error('Invalid Stripe signature format');
-
-  // Check timestamp tolerance
-  const now = Math.floor(Date.now() / 1000);
-  if (Math.abs(now - parseInt(ts, 10)) > tolerance) {
-    throw new Error('Timestamp outside tolerance');
-  }
-
-  // HMAC-SHA256 verification
-  const signedPayload = `${ts}.${payload}`;
+  const parts = signature.split(',').map(part => part.trim().split('='));
+  const ts = parts.find(([key]) => key === 't')?.[1];
+  const signatures = parts.filter(([key]) => key === 'v1').map(([, value]) => value);
+  if (!ts || !/^\d+$/.test(ts) || !Number.isSafeInteger(Number(ts))) throw new Error('Invalid timestamp');
+  if (Math.abs(Date.now() / 1000 - Number(ts)) > tolerance) throw new Error('Timestamp outside tolerance');
   const encoder = new TextEncoder();
   const key = await crypto.subtle.importKey('raw', encoder.encode(secret),
     { name: 'HMAC', hash: 'SHA-256' }, false, ['verify']);
-  const sigBytes = Uint8Array.from(atob(v1), c => c.charCodeAt(0));
-  const valid = await crypto.subtle.verify('HMAC', key, sigBytes, encoder.encode(signedPayload));
+  let valid = false;
+  for (const signature of signatures) {
+    if (!/^[a-fA-F0-9]{64}$/.test(signature || '')) continue;
+    const bytes = new Uint8Array(signature.match(/.{2}/g)!.map(byte => parseInt(byte, 16)));
+    if (await crypto.subtle.verify('HMAC', key, bytes, encoder.encode(`${ts}.${payload}`))) valid = true;
+  }
   if (!valid) throw new Error('Invalid signature');
 
   return JSON.parse(payload) as StripeEvent;
@@ -219,10 +210,13 @@ function stripeApi(env: Env) {
       const body = new URLSearchParams();
       for (const [k, v] of Object.entries(params)) {
         if (v !== undefined && v !== null) {
-          body.append(k, typeof v === 'object' ? JSON.stringify(v) : String(v));
+          if (v && typeof v === 'object') {
+            for (const [nestedKey, value] of Object.entries(v)) body.append(`${k}[${nestedKey}]`, String(value));
+          } else body.append(k, String(v));
         }
       }
-      const res = await fetch('https://api.stripe.com/v1/payment_intents', { method: 'POST', headers, body });
+      const bookingId = (params.metadata as { bookingId: string }).bookingId;
+      const res = await fetch('https://api.stripe.com/v1/payment_intents', { method: 'POST', headers: { ...headers, 'Idempotency-Key': `stayneos-booking-${bookingId}` }, body });
       if (!res.ok) {
         const err = await res.json() as { error?: { message: string } };
         throw new Error(err.error?.message || `Stripe API error ${res.status}`);
@@ -313,7 +307,7 @@ function corsHeaders(request: Request): Record<string, string> {
   return {
     'Access-Control-Allow-Origin': allowed.includes(origin) ? origin : 'https://www.stayneos.com',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-CSRF-Token',
     'Access-Control-Max-Age': '86400',
   };
 }
@@ -364,16 +358,19 @@ async function handleWebhook(env: Env, request: Request): Promise<Response> {
 }
 
 async function handleCreateIntent(env: Env, request: Request): Promise<Response> {
+  const identity = await authenticateWorkerRequest(request, env);
+  if (!identity) return apiError('Unauthorized', 401, 'UNAUTHORIZED');
   const body = await request.json() as { bookingId?: string };
   const bookingId = body.bookingId;
   if (!bookingId) return apiError('预订ID不能为空', 400, 'BAD_REQUEST');
 
   const booking = await findBookingById(env.DB, bookingId);
-  if (!booking) return apiError('预订不存在', 404, 'NOT_FOUND');
+  if (!booking || booking.userId !== identity.userId) return apiError('预订不存在', 404, 'NOT_FOUND');
   if (booking.status === 'CANCELLED') return apiError('预订已取消', 400, 'BAD_REQUEST');
   if (booking.paymentStatus === 'COMPLETED') return apiError('预订已支付', 400, 'BAD_REQUEST');
 
   const amountInCents = Math.round(Number(booking.totalPrice) * 100);
+  if (!Number.isSafeInteger(amountInCents) || amountInCents <= 0) return apiError('Invalid booking amount', 400, 'INVALID_AMOUNT');
   const stripe = stripeApi(env);
 
   const paymentIntent = await stripe.createPaymentIntent({
@@ -438,7 +435,9 @@ export default {
 
     // Create payment intent
     if (method === 'POST' && path === '/api/payments/create-intent') {
-      const res = await handleCreateIntent(env, request);
+      let res: Response;
+      try { res = await handleCreateIntent(env, request); }
+      catch { return apiError('Payment request could not be processed', 502, 'PAYMENT_ERROR'); }
       // Merge CORS headers
       const body = await res.json();
       return json(body, res.status, cors);

@@ -4,6 +4,7 @@ jest.mock('jose', () => ({
     payload: any;
     constructor(payload: any) { this.payload = payload; }
     setProtectedHeader() { return this; }
+    setJti() { return this; }
     setIssuedAt() { return this; }
     setExpirationTime() { return this; }
     async sign() { return 'mock.jwt.token'; }

@@ -69,3 +69,7 @@ workers/*/.wrangler
 /TOOLS.md
 /USER.md
 /HEARTBEAT.md
+
+# Generated isolated preview configuration
+/wrangler.preview.toml
+/wrangler.local-test.toml
