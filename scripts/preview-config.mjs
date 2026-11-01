@@ -18,6 +18,6 @@ const config = source
   .replace(/database_id\s*=\s*"[^"]+"/, `database_id = "${database}"`)
   .replace(/bucket_name\s*=\s*"[^"]+"/, `bucket_name = "${bucket}"`)
   .replace('ENABLE_EXTERNAL_PROPERTY_SEARCH = "true"', 'ENABLE_EXTERNAL_PROPERTY_SEARCH = "false"')
-  .replace('NEXTAUTH_URL = "https://www.stayneos.com"', 'NEXTAUTH_URL = "https://stayneos-preview.neos-lab.workers.dev"')
+  .replace('NEXTAUTH_URL = "https://www.stayneos.com"', 'NEXTAUTH_URL = "https://stayneos-preview.jasonhan72.workers.dev"')
   .replace(/\[triggers\][\s\S]*$/, '');
 writeFileSync('wrangler.preview.toml', config);

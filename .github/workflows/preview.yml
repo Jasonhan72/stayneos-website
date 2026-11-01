@@ -97,7 +97,7 @@ jobs:
           npx wrangler deploy --config wrangler.preview.toml 2>&1 | tee deploy-output.txt
           DEPLOY_URL=$(grep -o 'https://stayneos-preview[^ ]*\.workers\.dev' deploy-output.txt | head -1 || true)
           if [ -z "$DEPLOY_URL" ]; then
-            DEPLOY_URL="https://stayneos-preview.neos-lab.workers.dev"
+            DEPLOY_URL="https://stayneos-preview.jasonhan72.workers.dev"
           fi
           echo "url=$DEPLOY_URL" >> "$GITHUB_OUTPUT"
         env:

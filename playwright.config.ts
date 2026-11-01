@@ -15,7 +15,7 @@ const localHTTPS = process.env.E2E_LOCAL_HTTPS === '1';
 if (remoteURL && (!process.env.E2E_USER_EMAIL || !process.env.E2E_USER_PASSWORD)) {
   throw new Error('Remote E2E requires dedicated preview account credentials');
 }
-if (remoteURL && new URL(remoteURL).hostname !== 'stayneos-preview.neos-lab.workers.dev') {
+if (remoteURL && new URL(remoteURL).hostname !== 'stayneos-preview.jasonhan72.workers.dev') {
   throw new Error('Remote E2E requires the isolated stayneos-preview worker');
 }
 export default defineConfig({

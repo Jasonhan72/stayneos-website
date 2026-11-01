@@ -47,6 +47,18 @@ jobs:
       - name: Clean previous build cache
         run: rm -rf .next .open-next
 
+      - name: Validate production payment credentials
+        run: |
+          node - <<'JS'
+          const e = process.env;
+          if (!e.STRIPE_SECRET_KEY?.startsWith('sk_live_') || !e.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?.startsWith('pk_live_')) throw Error('Production requires Stripe live keys');
+          if (!e.STRIPE_WEBHOOK_SECRET?.startsWith('whsec_')) throw Error('Missing production webhook secret');
+          JS
+        env:
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+
       - name: Build for Cloudflare
         run: npm run build:worker
         env:
@@ -60,6 +72,18 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+
+      - name: Configure production payment secrets
+        run: |
+          node - <<'JS' | npx wrangler secret bulk
+          const { STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET } = process.env;
+          process.stdout.write(JSON.stringify({ STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET }));
+          JS
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
 
       - name: Purge Cloudflare CDN cache
         run: |

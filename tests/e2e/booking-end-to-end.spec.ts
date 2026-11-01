@@ -245,7 +245,7 @@ test.describe('Booking end-to-end', () => {
 
     // Listen for the API response to verify booking creation
     const bookingResponse = page.waitForResponse(
-      (res) => res.url().includes('/api/bookings') && res.status() === 201,
+      (res) => res.url().endsWith('/api/bookings') && res.request().method() === 'POST' && res.status() === 200,
       { timeout: 15_000 },
     );
     await reviewBtn.click();
