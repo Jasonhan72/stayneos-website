@@ -10,7 +10,7 @@ const STORAGE_KEY = 'stayneos_wishlist';
 interface WishlistContextType {
   wishlist: string[];
   isWishlisted: (id: string) => boolean;
-  toggleWishlist: (id: string) => void;
+  toggleWishlist: (id: string, intent?: 'add' | 'remove') => Promise<void>;
   clearWishlist: () => void;
 }
 
@@ -120,30 +120,30 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
   );
 
   const toggleWishlist = useCallback(
-    (id: string) => {
-      // Redirect to login if not authenticated
+    async (id: string, intent?: 'add' | 'remove') => {
       if (!isLoggedIn()) {
-        const loginUrl = `/login?callbackUrl=${encodeURIComponent(pathname)}`;
-        router.push(loginUrl);
+        router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
         return;
       }
-
-      const next = wishlist.includes(id)
-        ? wishlist.filter((x) => x !== id)
-        : [...wishlist, id];
-      setWishlist(next);
-      saveLocal(next);
-
-      const action = wishlist.includes(id) ? 'remove' : 'add';
-      fetch('/api/wishlist', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-csrf-token': ensureCsrfToken(),
-        },
-        credentials: 'include',
-        body: JSON.stringify({ propertyId: id, action }),
-      }).catch(() => {});
+      const action = intent ?? (wishlist.includes(id) ? 'remove' : 'add');
+      try {
+        const response = await fetch('/api/wishlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-csrf-token': ensureCsrfToken() },
+          credentials: 'include',
+          body: JSON.stringify({ propertyId: id, action }),
+        });
+        if (!response.ok) return;
+        // Consumers refetch on change. Publish only after D1 has committed the mutation.
+        setWishlist(current => {
+          const next = current.filter(item => item !== id);
+          if (action === 'add') next.push(id);
+          saveLocal(next);
+          return next;
+        });
+      } catch {
+        // An unacknowledged mutation must not change the last saved list.
+      }
     },
     [wishlist, router, pathname]
   );

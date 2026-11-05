@@ -189,7 +189,8 @@ export async function middleware(request: NextRequest) {
   const redirectTarget = ROUTE_REDIRECTS[pathnameWithoutLocale];
   if (redirectTarget) {
     const url = request.nextUrl.clone();
-    url.pathname = pathLocale && pathLocale !== 'en' ? `/${pathLocale}${redirectTarget}` : redirectTarget;
+    // Keep explicit English too: dropping /en would reapply an older FR or ZH cookie.
+    url.pathname = pathLocale ? `/${pathLocale}${redirectTarget}` : redirectTarget;
     return NextResponse.redirect(url, 308);
   }
 

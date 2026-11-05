@@ -141,7 +141,9 @@ jobs:
   e2e:
     name: E2E Tests
     needs: [build-and-deploy]
-    runs-on: ubuntu-latest
+    # Exercise the live Stripe iframe with native WebKit certificate validation.
+    # Both browser projects still run on Linux in the local-runtime workflows.
+    runs-on: macos-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4

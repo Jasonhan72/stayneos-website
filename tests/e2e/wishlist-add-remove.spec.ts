@@ -44,7 +44,6 @@ test.describe('Wishlist Add and Remove', () => {
       throw new Error('Unexpected state after login');
     }
 
-    await page.waitForTimeout(1500);
 
     // Confirm authenticated
     await expect(page.getByRole('button', { name: /^(User menu|用户菜单|Menu utilisateur)$/i })).toBeVisible({
@@ -69,10 +68,13 @@ test.describe('Wishlist Add and Remove', () => {
     // Click the heart button inside the card (it has a lucide-heart SVG)
     const heartBtn = firstPropertyCard.locator('button svg.lucide-heart').locator('..');
     await expect(heartBtn).toBeVisible();
+    const added = page.waitForResponse(response =>
+      new URL(response.url()).pathname === '/api/wishlist' && response.request().method() === 'POST'
+    );
     await heartBtn.click();
+    expect((await added).ok()).toBeTruthy();
 
     // Wait for the wishlist API call to complete
-    await page.waitForTimeout(1500);
 
     // Verify heart is filled (rose-500 color class)
     const heartSvg = heartBtn.locator('svg.lucide-heart');
@@ -81,32 +83,23 @@ test.describe('Wishlist Add and Remove', () => {
     // ── Navigate to Wishlists ──
     await page.goto('/dashboard/wishlists');
     await expect(page).toHaveURL(/\/wishlists/);
-    await page.waitForTimeout(3000); // Allow API + render
 
     // Verify the property appears on the wishlist page
     if (propertyTitle) {
       await expect(page.getByText(propertyTitle).first()).toBeVisible({ timeout: 8_000 });
     }
 
-    // ── Remove from wishlist ──
-    // Wishlist cards are div.group elements. The Trash2 button is hidden by default
-    // (opacity-0) and becomes visible on hover (group-hover:opacity-100).
-    const wishlistCard = page.locator('div.group').first();
-    if (await wishlistCard.isVisible().catch(() => false)) {
-      // Hover to reveal the remove button
-      await wishlistCard.hover();
-      await page.waitForTimeout(500);
-
-      // Click the Trash2 button inside the card
-      const trashBtn = wishlistCard.locator('button svg.lucide-trash-2').locator('..');
-      if (await trashBtn.isVisible().catch(() => false)) {
-        await trashBtn.click();
-        await page.waitForTimeout(1500);
-      }
-    }
-
-    // ── Verify wishlist is empty ──
-    // Empty state shows a big Heart icon with text-neutral-300 class
-    await expect(page.locator('svg.text-neutral-300').first()).toBeVisible({ timeout: 5_000 });
+    const savedCard = page.locator('main div.group').filter({
+      has: page.getByRole('heading', { name: propertyTitle!, exact: true }),
+    });
+    await savedCard.hover();
+    const removed = page.waitForResponse(response =>
+      new URL(response.url()).pathname === '/api/wishlist' && response.request().method() === 'POST'
+    );
+    await savedCard.getByRole('button', { name: 'Remove', exact: true }).click();
+    expect((await removed).ok()).toBeTruthy();
+    await expect(page.getByRole('heading', { name: 'Your wishlist is empty' })).toBeVisible();
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await expect(page.getByRole('heading', { name: 'Your wishlist is empty' })).toBeVisible();
   });
 });

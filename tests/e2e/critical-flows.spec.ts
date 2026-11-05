@@ -127,3 +127,13 @@ test('prefetching a translation leaves the visitor’s language preference intac
   const navigation = await request.get('/zh/about', { headers: { 'sec-fetch-dest': 'document', accept: 'text/html' } });
   expect(navigation.headers()['set-cookie']).toContain('stayneos_locale=zh');
 });
+
+test('a legacy alias keeps explicit English over a previous language preference', async ({ request }) => {
+  const response = await request.get('/en/wishlists?ref=account', {
+    headers: { cookie: 'stayneos_locale=fr' },
+    maxRedirects: 0,
+  });
+  expect(response.status()).toBe(308);
+  const location = new URL(response.headers().location, response.url());
+  expect(location.pathname + location.search).toBe('/en/dashboard/wishlists?ref=account');
+});
