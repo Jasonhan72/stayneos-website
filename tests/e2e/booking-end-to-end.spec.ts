@@ -107,84 +107,14 @@ async function loginUser(
   await page.waitForTimeout(1500);
 }
 
-/**
- * Fill Stripe PaymentElement test card fields via iframes.
- *
- * Stripe's PaymentElement (layout: 'tabs') renders each card field in a
- * separate iframe identified by title attribute.  This helper tries the
- * modern tabbed iframes first, then falls back to a single-iframe legacy
- * PaymentElement.
- */
-async function fillStripePayment(
-  page: import('@playwright/test').Page,
-): Promise<void> {
-  // Give Stripe.js time to mount its iframes
-  await page.waitForTimeout(3000);
-
-  // ── Strategy 1: Modern PaymentElement with tabbed iframes ──────────────
-  const cardNumberFrame = page.frameLocator(
-    'iframe[title*="card number" i], iframe[title*="cardnumber" i]',
-  );
-  const expiryFrame = page.frameLocator('iframe[title*="expir" i]');
-  const cvcFrame = page.frameLocator(
-    'iframe[title*="cvc" i], iframe[title*="CVC" i], iframe[title*="security" i]',
-  );
-  const postalFrame = page.frameLocator(
-    'iframe[title*="postal" i], iframe[title*="zip" i]',
-  );
-
-  // Fallback: single-iframe PaymentElement
-  const singleFrame = page.frameLocator('iframe');
-
-  // Card number
-  try {
-    await cardNumberFrame.locator('input').first().fill(STRIPE_CARD.number, { timeout: 5_000 });
-  } catch {
-    try {
-      await singleFrame
-        .locator('input[name="number"], [data-elements-stable-field-name="cardNumber"]')
-        .first()
-        .fill(STRIPE_CARD.number, { timeout: 5_000 });
-    } catch {
-      console.warn('Could not locate Stripe card number iframe; proceeding anyway');
-    }
-  }
-
-  // Expiry
-  try {
-    await expiryFrame.locator('input').first().fill(STRIPE_CARD.expiry, { timeout: 5_000 });
-  } catch {
-    try {
-      await singleFrame
-        .locator('input[name="expiry"], [data-elements-stable-field-name="cardExpiry"]')
-        .first()
-        .fill(STRIPE_CARD.expiry, { timeout: 5_000 });
-    } catch { /* ignore */ }
-  }
-
-  // CVC
-  try {
-    await cvcFrame.locator('input').first().fill(STRIPE_CARD.cvc, { timeout: 5_000 });
-  } catch {
-    try {
-      await singleFrame
-        .locator('input[name="cvc"], [data-elements-stable-field-name="cardCvc"]')
-        .first()
-        .fill(STRIPE_CARD.cvc, { timeout: 5_000 });
-    } catch { /* ignore */ }
-  }
-
-  // Postal code
-  try {
-    await postalFrame.locator('input').first().fill(STRIPE_CARD.postal, { timeout: 5_000 });
-  } catch {
-    try {
-      await singleFrame
-        .locator('input[name="postalCode"], [data-elements-stable-field-name="postalCode"]')
-        .first()
-        .fill(STRIPE_CARD.postal, { timeout: 5_000 });
-    } catch { /* ignore */ }
-  }
+/** Fill the accessible fields in the Stripe Payment Element mounted by PaymentForm. */
+async function fillStripePayment(page: import('@playwright/test').Page): Promise<void> {
+  const frame = page.frameLocator('.StripeElement iframe').first();
+  await frame.getByRole('textbox', { name: 'Card number' }).fill(STRIPE_CARD.number);
+  await frame.getByRole('textbox', { name: 'Expiration date' }).fill(STRIPE_CARD.expiry);
+  await frame.getByRole('textbox', { name: 'Security code' }).fill(STRIPE_CARD.cvc);
+  const postal = frame.getByRole('textbox', { name: /postal|zip/i });
+  if (await postal.isVisible()) await postal.fill(STRIPE_CARD.postal);
 }
 
 // ─── Tests ──────────────────────────────────────────────────────────────────
@@ -288,7 +218,7 @@ test.describe('Booking end-to-end', () => {
 
     // Should show a success message (multi-language support)
     await expect(successMain).toContainText(
-      /booking confirmed|payment successful|预订确认|支付成功/i,
+      /your trip is booked|booking confirmed|payment successful|行程已预订|预订确认|支付成功/i,
     );
 
     // The booking number should be displayed prominently
@@ -296,54 +226,14 @@ test.describe('Booking end-to-end', () => {
       await expect(successMain).toContainText(bookingNumber, { timeout: 5_000 });
     }
 
-    // ── Step 9: Navigate to dashboard ────────────────────────────────────
-    // Click "View itinerary" or navigate directly
-    const itineraryBtn = page.getByRole('link', {
-      name: /view itinerary|查看行程|voir l'itinéraire/i,
-    });
-    if (await itineraryBtn.isVisible({ timeout: 3_000 }).catch(() => false)) {
-      await itineraryBtn.click();
-    } else {
-      await page.goto('/dashboard/bookings', { waitUntil: 'domcontentloaded' });
-    }
-
-    // ── Step 10: Verify booking appears in dashboard ─────────────────────
-    const dashboardMain = page.locator('main, [role="main"]').first();
-    await expect(dashboardMain).toBeVisible({ timeout: 10_000 });
-
-    // Poll for CONFIRMED status (webhook may take 10-30s)
-    // The booking should show either PENDING or CONFIRMED
-    const pageText = await dashboardMain.textContent();
-    const isConfirmed = /confirmed/i.test(pageText || '');
-    const isPending = /pending/i.test(pageText || '');
-
-    if (isConfirmed) {
-      console.log('✅ Booking status: CONFIRMED');
-    } else if (isPending) {
-      console.log('⚠️ Booking status: PENDING (webhook may not have fired yet — acceptable)');
-    } else if (bookingNumber) {
-      // Fallback: at least verify the booking number is on the page
-      await expect(dashboardMain).toContainText(bookingNumber, { timeout: 15_000 });
-      console.log('✅ Booking found in dashboard (status text not detected)');
-    }
-
-    // ── Step 11 (optional): verify the booking detail page ───────────────
-    if (bookingId) {
-      try {
-        await page.goto(`/dashboard/bookings/${bookingId}`, {
-          waitUntil: 'domcontentloaded',
-        });
-        const detailMain = page.locator('main, [role="main"]').first();
-        await expect(detailMain).toBeVisible({ timeout: 10_000 });
-
-        if (bookingNumber) {
-          await expect(detailMain).toContainText(bookingNumber, { timeout: 5_000 });
-        }
-        console.log('✅ Booking detail page verified');
-      } catch {
-        console.log('⚠️ Booking detail page redirect not yet implemented (BOOK-008)');
-      }
-    }
+    const itinerary = page.locator(`main a[href$="/dashboard/bookings/${bookingId}"]`);
+    await itinerary.click();
+    await expect(page).toHaveURL(url => url.pathname.endsWith(`/dashboard/bookings/${bookingId}`));
+    await expect(page.locator('main')).toContainText(bookingNumber);
+    await expect.poll(async () => {
+      const response = await page.request.get(`/api/bookings/${bookingId}`);
+      return (await response.json()).data?.booking?.status;
+    }, { timeout: 30_000 }).toBe('CONFIRMED');
   });
 
   test('unauthenticated user redirected to login', async ({ page }) => {

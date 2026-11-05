@@ -10,11 +10,19 @@ import { test, expect } from '@playwright/test';
  *   E2E_USER_EMAIL / E2E_USER_PASSWORD
  */
 test.describe('Wishlist Add and Remove', () => {
-  test('login, add to wishlist, verify, remove, verify empty', async ({ page }) => {
-    const email = process.env.E2E_USER_EMAIL;
-    const password = process.env.E2E_USER_PASSWORD;
+  test('login, add to wishlist, verify, remove, verify empty', async ({ page, request }) => {
+    const email = `wishlist-${crypto.randomUUID()}@example.test`;
+    const password = `Aq3!${crypto.randomUUID()}`;
 
-    test.skip(!email || !password, 'Skipping: E2E_USER_EMAIL and E2E_USER_PASSWORD env vars required');
+    test.skip(!process.env.E2E_USER_EMAIL || !process.env.E2E_USER_PASSWORD, 'Skipping: E2E_USER_EMAIL and E2E_USER_PASSWORD env vars required');
+
+    // A fresh account keeps parallel browsers and retries from toggling each other's saves.
+    const csrf = crypto.randomUUID();
+    const signup = await request.post('/api/auth/register', {
+      headers: { cookie: `stayneos_csrf=${csrf}`, 'x-csrf-token': csrf },
+      data: { firstName: 'Wishlist', lastName: 'Guest', email, password },
+    });
+    expect(signup.status()).toBe(201);
 
     // ── Login ──
     await page.goto('/login');
