@@ -138,7 +138,7 @@ export function RegisterForm({ onSuccess, redirectOnSuccess = true, compact = fa
               errors.firstName ? 'border-error' : 'border-neutral-300'
             }`}
             placeholder={t('auth.firstNamePlaceholder', 'Enter your first name')}
-            disabled={isLoading}
+            disabled={!isClient || isLoading}
           />
           {errors.firstName && (
             <p className="mt-2 text-sm text-error">{errors.firstName}</p>
@@ -158,7 +158,7 @@ export function RegisterForm({ onSuccess, redirectOnSuccess = true, compact = fa
               errors.lastName ? 'border-error' : 'border-neutral-300'
             }`}
             placeholder={t('auth.lastNamePlaceholder', 'Enter your last name')}
-            disabled={isLoading}
+            disabled={!isClient || isLoading}
           />
           {errors.lastName && (
             <p className="mt-2 text-sm text-error">{errors.lastName}</p>
@@ -179,7 +179,7 @@ export function RegisterForm({ onSuccess, redirectOnSuccess = true, compact = fa
             errors.email ? 'border-error' : 'border-neutral-300'
           }`}
           placeholder={t('auth.emailPlaceholder', 'Enter your email')}
-          disabled={isLoading}
+          disabled={!isClient || isLoading}
         />
         {errors.email && (
           <p className="mt-2 text-sm text-error">{errors.email}</p>
@@ -199,7 +199,7 @@ export function RegisterForm({ onSuccess, redirectOnSuccess = true, compact = fa
             errors.password ? 'border-error' : 'border-neutral-300'
           }`}
           placeholder={t('auth.passwordPlaceholder', 'Create a password')}
-          disabled={isLoading}
+          disabled={!isClient || isLoading}
         />
         {errors.password && (
           <p className="mt-2 text-sm text-error">{errors.password}</p>
@@ -219,7 +219,7 @@ export function RegisterForm({ onSuccess, redirectOnSuccess = true, compact = fa
             errors.confirmPassword ? 'border-error' : 'border-neutral-300'
           }`}
           placeholder={t('auth.confirmPasswordPlaceholder', 'Confirm your password')}
-          disabled={isLoading}
+          disabled={!isClient || isLoading}
         />
         {errors.confirmPassword && (
           <p className="mt-2 text-sm text-error">{errors.confirmPassword}</p>
@@ -234,7 +234,7 @@ export function RegisterForm({ onSuccess, redirectOnSuccess = true, compact = fa
 
       <button
         type="submit"
-        disabled={isLoading}
+        disabled={!isClient || isLoading}
         className="w-full py-3.5 bg-primary text-white font-semibold rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isLoading ? t('auth.creatingAccount', 'Creating account...') : t('auth.createAccount', 'Create Account')}

@@ -13,12 +13,20 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const en = require(path.join(ROOT, 'messages/en.json'));
-const zh = require(path.join(ROOT, 'messages/zh.json'));
-const fr = require(path.join(ROOT, 'messages/fr.json'));
+function loadLocale(locale) {
+  const directory = path.join(ROOT, 'messages', locale);
+  const barrel = fs.readFileSync(path.join(directory, 'index.ts'), 'utf8');
+  const imports = [...barrel.matchAll(/import (\w+) from '\.\/([^']+\.json)'/g)];
+  const modules = Object.fromEntries(imports.map(([, name, file]) => [name, JSON.parse(fs.readFileSync(path.join(directory, file), 'utf8'))]));
+  const spreads = [...barrel.matchAll(/\.\.\.(\w+)/g)].map(([, name]) => name);
+  if (!spreads.length || spreads.some(name => !modules[name])) throw new Error(`Cannot read translation barrel: ${locale}`);
+  return Object.assign({}, ...spreads.map(name => modules[name]));
+}
+const en = loadLocale('en');
+const zh = loadLocale('zh');
+const fr = loadLocale('fr');
 
 function getKeys(obj, prefix = '') {
   let keys = [];

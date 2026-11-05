@@ -2,27 +2,22 @@
 
 StayNeos - Premium Executive Apartment Rentals in Toronto
 
+## Codex workspace
+
+Start with [project status](docs/PROJECT_STATUS.md), [current tasks](docs/TASK_BOARD.md),
+and the [development guide](docs/DEVELOPMENT.md). Project rules live in [AGENTS.md](AGENTS.md).
+The [migration archive index](docs/handoff/openclaw/README.md) summarizes the original documents, which remain local to the migration machine.
+
 ## 🌐 Live Site
 - **Production**: https://stayneos.com
 - **Staging**: https://stayneos.pages.dev
 
 ## 🚀 Deployment Strategy
 
-### Option 1: GitHub + Cloudflare Pages (Recommended)
-This repository is configured with GitHub Actions for automatic deployment to Cloudflare Pages.
-
-**Setup Steps:**
-1. Create a new repository on GitHub named `stayneos-website`
-2. Push this code to the repository
-3. Add `CLOUDFLARE_API_TOKEN` secret in GitHub repository settings
-4. Every push to `main` branch will automatically deploy
-
-### Option 2: Direct Cloudflare Pages
-Deploy directly via Wrangler CLI:
-```bash
-npm run build
-npx wrangler pages deploy dist --project-name=stayneos
-```
+Use a feature branch and PR. Merge only after required CI checks pass; updates to
+`main` trigger GitHub Actions to build OpenNext and deploy to Cloudflare Workers.
+Never push directly to `main` or deploy from a local machine with Wrangler / `npm run deploy`.
+Production `NEXT_PUBLIC_*` values are injected from GitHub Secrets at build time.
 
 ## 🛠️ Tech Stack
 - Next.js 15 + TypeScript
@@ -40,11 +35,12 @@ The project uses multiple Cloudflare Workers:
 | `stayneos-payments` | Stripe webhook + payment API | [docs/workers.md](docs/workers.md) |
 | `stayneos-booking` | Booking CRUD API | [docs/workers.md](docs/workers.md) |
 
-See [docs/workers.md](docs/workers.md) for full worker documentation, deployment steps, and traffic switch plan.
+See [docs/workers.md](docs/workers.md) for worker architecture and the historical traffic switch plan.
+For current deployment rules, follow [AGENTS.md](AGENTS.md) and [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
 
 ## 🌍 Features
 - Multi-language support (EN/FR/ZH)
-- Static export for optimal performance
+- App Router rendered through OpenNext on Cloudflare Workers
 - 17 optimized property images
 - 2 premium Toronto properties listed
 
@@ -59,8 +55,9 @@ Transactional guest emails use Resend over HTTPS. Configure `RESEND_API_KEY` as 
 
 ## 🚀 Quick Start
 ```bash
-# Install dependencies
-npm install
+# Use Node.js 24 (see .nvmrc), then install locked dependencies
+npm ci --legacy-peer-deps
+npm run db:generate
 
 # Development
 npm run dev
@@ -68,8 +65,9 @@ npm run dev
 # Build
 npm run build
 
-# Deploy main worker
-npm run deploy
+# Validate locally; release through a PR and GitHub Actions
+npm run typecheck
+npm test -- --runInBand
 ```
 
 ## 📁 Project Structure

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUserFromRequest } from '@/lib/auth';
+import { parseImages } from '@/lib/property-db';
 import { getDb } from '@/lib/d1';
 import { checkRateLimit } from '@/lib/security/rate-limit';
 import { validateCsrf } from '@/lib/security/csrf';
@@ -12,6 +13,31 @@ export const dynamic = 'force-dynamic';
 interface WishlistRow {
   propertyId: string;
   addedAt: string;
+}
+
+async function loadWishlistImages(db: ReturnType<typeof getDb>, propertyRows: Record<string, unknown>[]) {
+  // D1 stores gallery images on Property. Older databases can also contain
+  // a separate image table; use it for listings without an inline gallery.
+  const imagesByProperty: Record<string, Array<{ url: string; isPrimary: boolean }>> = {};
+  const missingGallery: string[] = [];
+  for (const row of propertyRows) {
+    const id = String(row.id);
+    const gallery = parseImages(typeof row.images === 'string' ? row.images : null);
+    imagesByProperty[id] = gallery.map(({ url }, index) => ({ url, isPrimary: index === 0 }));
+    if (!gallery.length) missingGallery.push(id);
+  }
+  if (missingGallery.length && await db.prepare(
+    "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'PropertyImage'"
+  ).first()) {
+    const ids = missingGallery.map(() => '?').join(',');
+    const { results } = await db.prepare(
+      `SELECT propertyId, url, isPrimary FROM PropertyImage WHERE propertyId IN (${ids}) ORDER BY "order"`
+    ).bind(...missingGallery).all<{ propertyId: string; url: string; isPrimary: number }>();
+    for (const image of results ?? []) {
+      imagesByProperty[image.propertyId].push({ url: image.url, isPrimary: Boolean(image.isPrimary) });
+    }
+  }
+  return imagesByProperty;
 }
 
 // GET /api/wishlist — return the user's saved properties with full property data.
@@ -47,27 +73,9 @@ export async function GET(request: NextRequest) {
         `SELECT * FROM Property WHERE id IN (${placeholders})`
       )
       .bind(...propertyIds)
-      .all();
+      .all<Record<string, unknown>>();
 
-    // 3. Fetch images for those properties
-    const { results: imageRows } = await db
-      .prepare(
-        `SELECT * FROM PropertyImage WHERE propertyId IN (${placeholders}) ORDER BY "order" ASC`
-      )
-      .bind(...propertyIds)
-      .all();
-
-    // Index images by propertyId
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const imagesByProperty: Record<string, Array<{ url: string; isPrimary: boolean }>> = {};
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    for (const img of (imageRows ?? []) as any[]) {
-      if (!imagesByProperty[img.propertyId]) imagesByProperty[img.propertyId] = [];
-      imagesByProperty[img.propertyId].push({
-        url: img.url as string,
-        isPrimary: img.isPrimary === 1,
-      });
-    }
+    const imagesByProperty = await loadWishlistImages(db, propertyRows ?? []);
 
     // 4. Aggregate review counts and average ratings from Review table
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -107,6 +115,8 @@ export async function GET(request: NextRequest) {
       return {
         id: p.id as string,
         title: p.title as string,
+        titleZh: p.titleZh as string | undefined,
+        titleFr: p.titleFr as string | undefined,
         slug: p.slug as string,
         address: p.address as string,
         city: p.city as string,

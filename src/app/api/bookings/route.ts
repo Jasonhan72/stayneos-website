@@ -108,8 +108,8 @@ export async function POST(request: NextRequest) {
     if (!dateValidation.valid) return apiError(dateValidation.error || '日期无效', 400, 'INVALID_DATES');
 
     const priceCalc = calculateBookingPrice(property, checkIn, checkOut, stayType);
-    const requestedUnitCount = Number(body.unitCount || priceCalc.unitCount);
-    const requestedUnitRate = Number(body.unitRate || priceCalc.unitRate);
+    const requestedUnitCount = priceCalc.unitCount;
+    const requestedUnitRate = priceCalc.unitRate;
     if (stayType !== 'NIGHTLY' && requestedUnitCount < getStayTypeMinimumUnits(stayType)) {
       return apiError('预订期限不满足最短要求', 400, 'INVALID_STAY_TYPE_DURATION');
     }

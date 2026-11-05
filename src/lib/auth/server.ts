@@ -1,4 +1,6 @@
 // Server-side auth helpers (no next/headers cookies(), works with Request)
+import { createHash } from "node:crypto";
+import { isSessionActive } from "./edge-session";
 import { verifyToken } from "@/lib/auth/jwt";
 
 export interface User {
@@ -27,26 +29,19 @@ function getTokenFromCookieHeader(cookieHeader: string | null): string | null {
       part.startsWith("auth_token=")
   );
 
-  return tokenCookie ? decodeURIComponent(tokenCookie.split("=").slice(1).join("=")) : null;
+  try { return tokenCookie ? decodeURIComponent(tokenCookie.split("=").slice(1).join("=")) : null; }
+  catch { return null; }
 }
 
-async function validateTokenVersion(payload: Record<string, unknown>): Promise<boolean> {
-  const tv = payload.tv;
-  if (tv === undefined || tv === null) return true; // legacy tokens without tv — allow during migration
-  const userId = payload.userId as string | undefined;
-  if (!userId) return false;
-
+async function validateTokenVersion(payload: Record<string, unknown>, token: string): Promise<boolean> {
+  const userId = payload.userId;
+  const tv = payload.tv ?? 0;
+  if (typeof userId !== 'string' || !userId || !Number.isInteger(tv) || Number(tv) < 0 || typeof payload.exp !== 'number') return false;
   try {
-    const { getDb, userDb } = await import("@/lib/d1");
-    const db = getDb();
-    const user = await userDb.findById(db, userId);
-    if (!user) return false;
-    const currentTv = user.tokenVersion ?? 0;
-    return Number(tv) === currentTv;
-  } catch {
-    // DB unavailable — allow (fail open for availability, fail closed for security on API routes)
-    return true;
-  }
+    const { getDb } = await import("@/lib/d1");
+    return await isSessionActive({ userId, tv: Number(tv), exp: payload.exp,
+      tokenHash: createHash('sha256').update(token).digest('hex') }, getDb());
+  } catch { return false; }
 }
 
 /**
@@ -61,19 +56,20 @@ export async function getCurrentUserFromRequest(request: Request): Promise<AuthP
     const bearerToken = authHeader.slice(7).trim();
     try {
       const payload = await verifyToken(bearerToken);
-      if (payload && (await validateTokenVersion(payload))) {
+      if (payload && (await validateTokenVersion(payload, bearerToken))) {
         return payload as unknown as AuthPayload;
       }
     } catch {
-      // fall through to cookie
+      return null;
     }
+    return null;
   }
 
   const cookieToken = getTokenFromCookieHeader(request.headers.get("cookie"));
   if (cookieToken) {
     try {
       const payload = await verifyToken(cookieToken);
-      if (payload && (await validateTokenVersion(payload))) {
+      if (payload && (await validateTokenVersion(payload, cookieToken))) {
         return payload as unknown as AuthPayload;
       }
     } catch {

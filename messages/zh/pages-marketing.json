@@ -259,52 +259,52 @@
     "hero": {
       "cta": "获取报价",
       "savingsCta": "查看优惠",
-      "subtitle": "保存 significantly on extended stays with our flexible long-term lease options. Choose 3, 6, or 12-month terms and enjoy up to 30% off monthly rates in 多伦多's premium furnished apartments.",
-      "title": "长租方案 Rental Discounts"
+      "subtitle": "选择 3、6 或 12 个月的租期，入住多伦多高端家具公寓，月租最高可省 30%。",
+      "title": "长租优惠"
     },
     "advantages": {
-      "title": "为什么选择 长租方案 with NEOS",
+      "title": "为什么选择 NEOS 长租",
       "subtitle": "除了节省费用，长期入住还能带来稳定性、便利性和真正的家外之家体验。"
     },
     "form": {
       "submit": "获取报价和优惠",
       "message": "请告诉我们您的需求",
       "bedroom": "卧室",
-      "firstName": "First 姓名",
-      "title": "Get Your 长租方案 Rental Quote",
-      "bedrooms": "卧室s",
+      "firstName": "名字",
+      "title": "获取长租报价",
+      "bedrooms": "卧室数量",
       "subtitle": "告诉我们您的长期住房需求，我们将为您定制一份包含节省明细的方案。",
-      "phone": "电话 Number",
+      "phone": "电话号码",
       "phonePlaceholder": "+1 (555) 000-0000",
       "studio": "开间",
       "selectLocation": "请选择区域",
-      "moveInDate": "Desired Move-in 日期",
+      "moveInDate": "预计入住日期",
       "messagePlaceholder": "请描述您的长期住房需求、特殊要求、延长住宿的原因，以及关于长租计划的任何问题...",
       "location": "首选区域",
       "firstNamePlaceholder": "请输入名字",
-      "submitting": "提交ting...",
+      "submitting": "正在提交…",
       "emailPlaceholder": "your@email.com",
-      "lastName": "Last 姓名",
+      "lastName": "姓氏",
       "propertyType": "物业 类型",
       "success": {
         "message": "感谢您对长期租赁的关注！我们的团队将准备详细报价和节省明细，并在24小时内与您联系。",
-        "title": "Quote Request 提交ted!"
+        "title": "报价申请已提交"
       },
       "selectBudget": "请选择预算",
-      "email": "邮箱 地址",
-      "leaseDuration": "Preferred 租约 Duration",
+      "email": "电子邮箱",
+      "leaseDuration": "希望租多久？",
       "selectType": "请选择类型",
       "lastNamePlaceholder": "请输入姓氏",
       "months": "个月",
       "budget": "月租 预算"
     },
     "testimonials": {
-      "title": "长租方案 Resident Stories",
-      "subtitle": "See how our long-term residents have saved money and enjoyed their extended 多伦多 stays."
+      "title": "长租住客的故事",
+      "subtitle": "看看住客如何节省租金，在多伦多安心长住。"
     },
     "usecases": {
       "title": "适合您的场景",
-      "subtitle": "长租 rentals work for a variety of life and business situations requiring extended 多伦多 stays."
+      "subtitle": "无论因工作还是生活需要在多伦多停留一段时间，您都可以选择长租。"
     },
     "pricing": {
       "select": "选择此方案",
@@ -318,44 +318,44 @@
   },
   "hosts": {
     "form": {
-      "condo": "Condo",
+      "condo": "共管公寓",
       "phonePlaceholder": "+1 (555) 000-0000",
       "lastNamePlaceholder": "请输入姓氏",
-      "monthlyRent": "Current 月租 Rent",
+      "monthlyRent": "当前月租",
       "subtitle": "填写以下表格，我们的团队将在24小时内联系您讨论您的物业。",
       "selectBedrooms": "请选择",
-      "bedrooms": "卧室s",
-      "submitting": "提交ting...",
+      "bedrooms": "卧室数量",
+      "submitting": "正在提交…",
       "propertyType": "物业 类型",
-      "house": "House",
+      "house": "独立屋",
       "message": "介绍您的物业",
       "propertyAddressPlaceholder": "请输入物业地址",
-      "lastName": "Last 姓名",
+      "lastName": "姓氏",
       "propertyAddress": "物业 地址",
-      "submit": "提交 Application",
-      "phone": "电话 Number",
+      "submit": "提交申请",
+      "phone": "电话号码",
       "firstNamePlaceholder": "请输入名字",
       "success": {
-        "title": "Application 提交ted!",
+        "title": "申请已提交",
         "message": "感谢您的关注！我们的团队将审核您的申请，并在24小时内联系您讨论后续步骤。"
       },
       "messagePlaceholder": "描述您的物业状况、装修情况，以及关于我们计划的任何问题...",
-      "title": "List Your 物业 Today",
-      "email": "邮箱 地址",
+      "title": "登记您的房源",
+      "email": "电子邮箱",
       "selectType": "请选择类型",
       "emailPlaceholder": "your@email.com",
       "studio": "开间",
       "bedroom": "卧室",
       "rentPlaceholder": "选填",
-      "firstName": "First 姓名",
+      "firstName": "名字",
       "apartment": "公寓"
     },
     "calculator": {
       "title": "计算您的潜在收益",
-      "guarantee": "月租 payments regardless of occupancy, plus professional management included.",
+      "guarantee": "无论入住率如何，您都能每月收取租金并享受专业管理服务。",
       "subtitle": "了解与传统租赁相比，NEOS 能为您带来多少额外收入。",
-      "currentRent": "Current 月租 Rent",
-      "occupancyRate": "Current 入住率 费率"
+      "currentRent": "当前月租",
+      "occupancyRate": "当前入住率"
     },
     "process": {
       "subtitle": "四个简单步骤即可开始，为您的房产赚取稳定收入。",
@@ -364,8 +364,8 @@
     "hero": {
       "cta": "立即开始",
       "calculateCta": "计算您的收益",
-      "title": "List Your 物业",
-      "subtitle": "Earn guaranteed monthly income with zero vacancy risk. Join 多伦多's premium executive housing platform and let us handle everything while you collect steady payments."
+      "title": "发布您的房源",
+      "subtitle": "加入 NEOS 多伦多高端住房平台，由我们管理房源，您每月收取稳定租金，无需承担空置风险。"
     },
     "advantages": {
       "title": "为什么选择 NEOS",
@@ -373,7 +373,7 @@
     },
     "benefits": {
       "subtitle": "更多业主选择 NEOS 管理投资物业的理由。",
-      "title": "Additional 优势"
+      "title": "其他优势"
     }
   },
   "landlords": {
@@ -843,5 +843,23 @@
       "title": "黄金地段",
       "desc": "核心商务区及主要城市"
     }
+  },
+  "marketHub": {
+    "title": "市场洞察",
+    "subtitle": "查看多伦多房地产市场报告、TRREB 数据分析、租赁趋势和投资动态。内容定期更新。",
+    "searchPlaceholder": "搜索报告和市场洞察",
+    "noPosts": "暂无报告",
+    "noPostsDesc": "市场报告和 TRREB 数据分析将在发布后显示在这里。",
+    "notFound": "找不到这篇文章",
+    "backToHub": "返回市场洞察",
+    "views": "次浏览",
+    "viewSource": "查看原始来源",
+    "catAll": "全部",
+    "catReport": "市场报告",
+    "catTrreb": "TRREB 数据",
+    "catRental": "租赁趋势",
+    "catNeighborhood": "社区",
+    "catInvestment": "投资",
+    "catNews": "行业新闻"
   }
 }

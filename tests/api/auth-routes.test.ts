@@ -88,6 +88,13 @@ describe('auth routes', () => {
     expect(res.headers.get('set-cookie')).toContain('Max-Age=0');
   });
 
+  it('/api/auth/logout records revocation for sessions without an existing row', async () => {
+    const req = new NextRequest('http://localhost/api/auth/logout', { method: 'POST', headers: { cookie: 'stayneos_auth_token=local-test-token' } });
+    const res = await logoutPost(req);
+    expect(res.status).toBe(200);
+    expect(mockDb.prepare).toHaveBeenCalledWith(expect.stringContaining('ON CONFLICT(token_hash)'));
+  });
+
   it('/api/auth/session returns unauthenticated when no token', async () => {
     const req = new NextRequest('http://localhost/api/auth/session');
     const res = await sessionGet(req);

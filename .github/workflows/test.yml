@@ -14,11 +14,16 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: "24"
           cache: npm
       - run: npm ci --legacy-peer-deps
       - run: npm run typecheck
       - run: npm run lint
+      - run: npm run typecheck:workers
+      - run: npm run test:workers
+      - run: npm run test:config
+      - run: npm run check:i18n
+      - run: npm audit --omit=dev --audit-level=moderate
       - run: npm run test:coverage -- --runInBand
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
@@ -34,13 +39,18 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: "24"
           cache: npm
       - run: npm ci --legacy-peer-deps
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium webkit
       - run: npm run build
-        env:
-          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
-          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      - run: bash scripts/tests/e2e-cert.sh
       - run: npm run test:e2e
+        env:
+          E2E_LOCAL_HTTPS: "1"
+          NODE_EXTRA_CA_CERTS: ${{ github.workspace }}/.local/e2e/cert.pem
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: local-browser-report
+          path: playwright-report/

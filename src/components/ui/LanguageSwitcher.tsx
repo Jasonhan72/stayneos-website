@@ -1,10 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Globe, Check } from 'lucide-react';
-import { useI18n, type Locale } from '@/lib/i18n';
-import { localizePath } from '@/lib/i18n-routes';
+import { useSwitchLocale, useI18n, type Locale } from '@/lib/i18n';
 
 const localeLabels: Record<Locale, string> = {
   en: 'English',
@@ -18,18 +16,12 @@ interface LanguageSwitcherProps {
 
 export default function LanguageSwitcher({ isScrolled = false }: LanguageSwitcherProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { locale, setLocale } = useI18n();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const router = useRouter();
+  const { locale } = useI18n();
+  const changeLanguage = useSwitchLocale();
 
   const handleLocaleChange = (newLocale: Locale) => {
-    setLocale(newLocale);
+    changeLanguage(newLocale);
     setIsOpen(false);
-    const nextPath = localizePath(pathname || '/', newLocale);
-    const query = searchParams?.toString();
-    router.push(query ? `${nextPath}?${query}` : nextPath);
-    router.refresh();
   };
 
   return (

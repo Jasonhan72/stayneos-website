@@ -28,6 +28,16 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+/.local/
+
+# Original migration notes are machine-local; commit only the archive index.
+/docs/handoff/openclaw/*.md
+!/docs/handoff/openclaw/README.md
 
 # vercel
 .vercel
@@ -54,9 +64,12 @@ workers/*/.wrangler
 
 # OpenClaw workspace template (do not commit)
 .openclaw/
-/AGENTS.md
 /SOUL.md
 /IDENTITY.md
 /TOOLS.md
 /USER.md
 /HEARTBEAT.md
+
+# Generated isolated preview configuration
+/wrangler.preview.toml
+/wrangler.local-test.toml

@@ -35,6 +35,7 @@ test.describe('Register and Login flow', () => {
     } catch {
       const stillOnRegister = /\/register/.test(page.url());
       if (stillOnRegister) {
+        if (process.env.PLAYWRIGHT_BASE_URL || process.env.E2E_REQUIRE_AUTH) throw new Error('Registration API unavailable in configured preview');
         test.skip(true, 'Registration API unavailable (likely no D1 on preview)');
         return;
       }
@@ -47,7 +48,7 @@ test.describe('Register and Login flow', () => {
     // ── Verify auth: no "Sign Up" / "Log In" links visible ──
     await expect(page.getByRole('link', { name: /sign up|register/i })).not.toBeVisible();
     // UserMenu button should be present (aria-haspopup="true")
-    const userMenuBtn = page.locator('button[aria-haspopup="true"]');
+    const userMenuBtn = page.getByRole('button', { name: /^(User menu|用户菜单|Menu utilisateur)$/i });
     await expect(userMenuBtn).toBeVisible({ timeout: 5000 });
 
     // ── Navigate to profile and confirm email ──
@@ -58,22 +59,22 @@ test.describe('Register and Login flow', () => {
     await page.goto('/');
     await page.waitForTimeout(500);
     // Open the user menu
-    await page.locator('button[aria-haspopup="true"]').first().click();
-    await page.getByRole('button', { name: /log out|logout|déconnexion/i }).click();
+    await page.getByRole('button', { name: /^(User menu|用户菜单|Menu utilisateur)$/i }).click();
+    await page.locator('nav').getByRole('button', { name: /log out|logout|退出|déconnexion/i }).click();
     await page.waitForTimeout(1000);
 
     // ── Log back in ──
     await page.goto('/login');
     await page.fill('#email', email);
     await page.fill('#password', PASSWORD);
-    await page.getByRole('button', { name: /sign in/i }).click();
+    await page.locator('form').filter({ has: page.locator('#password') }).locator('button[type="submit"]').click();
 
     // After login the app redirects to / (home)
     await page.waitForURL(/\/$/);
     await page.waitForTimeout(1500);
 
     // ── Verify auth again ──
-    await expect(page.locator('button[aria-haspopup="true"]')).toBeVisible({ timeout: 5000 });
+    await expect(page.getByRole('button', { name: /^(User menu|用户菜单|Menu utilisateur)$/i })).toBeVisible({ timeout: 5000 });
 
     // ── Profile still shows email ──
     await page.goto('/profile');

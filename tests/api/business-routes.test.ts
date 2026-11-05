@@ -107,7 +107,7 @@ describe('booking & properties routes', () => {
   it('/api/bookings creates booking', async () => {
     const req = new NextRequest('http://localhost/api/bookings', {
       method: 'POST',
-      body: JSON.stringify({ propertyId: 'p1', checkIn: '2099-04-01', checkOut: '2099-05-01', guests: 1 }),
+      body: JSON.stringify({ propertyId: 'p1', checkIn: '2099-04-01', checkOut: '2099-05-01', guests: 1, unitCount: 999, unitRate: 1337 }),
       headers: { 'content-type': 'application/json' },
     });
 
@@ -116,6 +116,8 @@ describe('booking & properties routes', () => {
     const body = await res.json();
     expect(body.success).toBe(true);
     expect(body.booking.id).toBe('b1');
+    expect(body.booking.unitCount).toBe(30);
+    expect(body.booking.unitRate).not.toBe(1337);
   });
 
   it('/api/properties returns property list', async () => {

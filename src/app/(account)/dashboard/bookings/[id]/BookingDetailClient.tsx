@@ -121,13 +121,14 @@ export default function BookingDetailClient() {
     setIsLoading(true);
     try {
       const response = await fetch(`/api/bookings/${bookingId}`);
-      const data = await response.json() as { error?: string; booking: BookingDetail };
+      const payload = await response.json() as { data?: { booking: BookingDetail } };
 
-      if (!response.ok) {
-        throw new Error(data.error || t('bookingDetail.error.fetchFailed'));
+      if (!response.ok || !payload.data?.booking) {
+        throw new Error(t('bookingDetail.error.fetchFailed'));
       }
 
-      setBooking(data.booking);
+      setError('');
+      setBooking(payload.data.booking);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : t('bookingDetail.error.fetchFailed');
       setError(errorMessage);
@@ -175,8 +176,9 @@ export default function BookingDetailClient() {
   };
 
   // 格式化日期
+  const formatLocale = { en: 'en-CA', zh: 'zh-CN', fr: 'fr-CA' }[locale];
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-CA', {
+    return new Date(dateString).toLocaleDateString(formatLocale, {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -185,7 +187,7 @@ export default function BookingDetailClient() {
 
   // 格式化金额
   const formatAmount = (amount: number) => {
-    return new Intl.NumberFormat('en-CA', {
+    return new Intl.NumberFormat(formatLocale, {
       style: 'currency',
       currency: booking?.currency || 'CAD',
     }).format(amount);
@@ -357,7 +359,7 @@ export default function BookingDetailClient() {
             <div className="space-y-3">
               <div className="flex justify-between">
                 <span className="text-gray-600">{t('bookingDetail.roomFee')}</span>
-                <span>{formatAmount(booking.basePrice * booking.nights)}</span>
+                <span>{formatAmount(booking.basePrice)}</span>
               </div>
               
               {booking.discount > 0 && (

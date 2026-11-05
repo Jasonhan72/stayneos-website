@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Button from '@/components/ui/Button';
 import { Container } from '@/components/ui';
 import { useI18n } from '@/lib/i18n';
+import { getLocalizedTitle } from '@/components/property/PropertyCard';
 import { useWishlist } from '@/lib/context/WishlistContext';
 import { Heart, MapPin, Star, ArrowRight, Trash2, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -14,7 +15,7 @@ import type { WishlistGetResponse } from '@/types/api';
 type Property = WishlistGetResponse['properties'][number];
 
 export default function DashboardWishlistsPage() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { wishlist: wishlistIds, toggleWishlist } = useWishlist();
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,9 +39,9 @@ export default function DashboardWishlistsPage() {
     return () => { active = false; };
   }, [wishlistIds]);
 
-  const wishlist = useMemo(() => properties.map((property) => ({ id: property.id, title: property.title, location: [property.neighborhood, property.city].filter(Boolean).join(', ') || property.address || '', price: property.priceMonthly ?? property.basePrice ?? 0, currency: property.currency || 'CAD', priceUnit: t('wishlists.priceUnit'), rating: property.averageRating || 0, reviewCount: property.reviewCount || 0, bedrooms: property.bedrooms || 0, bathrooms: property.bathrooms || 0, image: property.images?.find((image) => image.isPrimary)?.url || property.images?.[0]?.url || '/images/cooper-55-c5e8357d.jpg', slug: property.slug || property.id })), [properties, t]);
+  const wishlist = useMemo(() => properties.map((property) => ({ id: property.id, title: getLocalizedTitle(property, locale), location: [property.neighborhood, property.city].filter(Boolean).join(', ') || property.address || '', price: property.priceMonthly ?? property.basePrice ?? 0, currency: property.currency || 'CAD', priceUnit: t('wishlists.priceUnit'), rating: property.averageRating || 0, reviewCount: property.reviewCount || 0, bedrooms: property.bedrooms || 0, bathrooms: property.bathrooms || 0, image: property.images?.find((image) => image.isPrimary)?.url || property.images?.[0]?.url || '/images/cooper-55-c5e8357d.jpg', slug: property.slug || property.id })), [properties, t, locale]);
 
-  const handleRemove = async (propertyId: string) => { setRemovingId(propertyId); try { await toggleWishlist(propertyId); } finally { setTimeout(() => setRemovingId(null), 300); } };
+  const handleRemove = async (propertyId: string) => { setRemovingId(propertyId); try { await toggleWishlist(propertyId, 'remove'); } finally { setTimeout(() => setRemovingId(null), 300); } };
 
   if (loading) return <main className="min-h-screen bg-neutral-50"><div className="pt-20 pb-12"><Container><div className="py-20 text-center text-neutral-400">Loading…</div></Container></div></main>;
   if (wishlist.length === 0) return <main className="min-h-screen bg-neutral-50"><div className="pt-20 pb-12"><Container><div className="max-w-2xl mx-auto text-center"><div className="w-20 h-20 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-6"><Heart size={40} className="text-neutral-300" /></div><h1 className="text-3xl font-bold text-neutral-900 mb-4">{t('wishlists.emptyTitle')}</h1><p className="text-neutral-600 mb-8">{t('wishlists.emptyDescription')}</p><Link href="/properties"><Button size="lg">{t('wishlists.explore')}<ArrowRight size={18} className="ml-2" /></Button></Link></div></Container></div></main>;

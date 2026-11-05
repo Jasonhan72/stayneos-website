@@ -186,7 +186,7 @@ export function LoginForm({ callbackUrl = '/', onSuccess, redirectOnSuccess = tr
         <button
           type="button"
           onClick={handleGoogleLogin}
-          disabled={isLoading}
+          disabled={!isClient || isLoading}
           className="w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
@@ -227,6 +227,7 @@ export function LoginForm({ callbackUrl = '/', onSuccess, redirectOnSuccess = tr
         <input
           id="email"
           type="email"
+          disabled={!isClient}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder={t('auth.emailPlaceholder', 'john@example.com')}
@@ -244,6 +245,7 @@ export function LoginForm({ callbackUrl = '/', onSuccess, redirectOnSuccess = tr
         <input
           id="password"
           type="password"
+          disabled={!isClient}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder={t('auth.passwordPlaceholder', 'Enter your password')}
@@ -270,7 +272,7 @@ export function LoginForm({ callbackUrl = '/', onSuccess, redirectOnSuccess = tr
       {/* Submit Button */}
       <button
         type="submit"
-        disabled={isLoading}
+        disabled={!isClient || isLoading}
         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {isLoading ? t('auth.signingIn', 'Signing in...') : t('auth.loginButton', 'Sign In')}

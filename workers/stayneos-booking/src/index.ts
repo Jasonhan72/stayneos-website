@@ -1,3 +1,5 @@
+import { calculateBookingPrice, normalizeStayType, validateBookingDates } from '../../../src/lib/booking';
+import { authenticateWorkerRequest, type SessionEnv } from '../../../src/lib/auth/edge-session';
 /**
  * stayneos-booking worker
  *
@@ -14,7 +16,7 @@
  * Shares D1 (stayneos-db) with the main worker.
  */
 
-interface Env {
+interface Env extends SessionEnv {
   DB: D1Database;
   STRIPE_SECRET_KEY?: string;
   NEXTAUTH_SECRET?: string;
@@ -45,7 +47,7 @@ interface ReviewRow {
   rating: number; comment: string; createdAt: string; updatedAt: string;
 }
 
-type BookingStatus = 'PENDING' | 'CONFIRMED' | 'CHECKED_IN' | 'CHECKED_OUT' | 'CANCELLED' | 'NO_SHOW';
+
 
 // ── Helpers ─────────────────────────────────────────────────────────────
 
@@ -76,7 +78,7 @@ function corsHeaders(request: Request): Record<string, string> {
   return {
     'Access-Control-Allow-Origin': allowed.includes(origin) ? origin : 'https://www.stayneos.com',
     'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-CSRF-Token',
     'Access-Control-Max-Age': '86400',
   };
 }
@@ -200,54 +202,7 @@ async function updatePaymentByIntentId(db: D1Database, pi: string, fields: Recor
 
 // ── Auth helpers (minimal JWT verification without full Next.js Auth) ───
 
-async function extractUserId(_request: Request, _env: Env): Promise<string | null> {
-  // IMPORTANT: In staging mode, the worker runs standalone.
-  // In production (after traffic switch), auth will be done by the main worker
-  // which calls this one via service binding with an internal JWT or shared session.
-  //
-  // For the staging phase: read a header `X-StayNeos-User-Id` set by the main
-  // worker when forwarding. For standalone testing, this header can be set
-  // manually to a test user ID.
-  //
-  // When NEXTAUTH_SECRET is configured, also support JWT cookie auth.
-  const cookie = _request.headers.get('Cookie') || '';
-  // This is a simplified check — full JWT auth is handled by the main worker
-  // in production. The staging worker accepts `X-StayNeos-User-Id` header
-  // for testing purposes.
-  const headerUserId = _request.headers.get('X-StayNeos-User-Id');
-  if (headerUserId) return headerUserId;
-
-  // Fallback: try to extract from Authorization header (Bearer JWT)
-  const authHeader = _request.headers.get('Authorization');
-  if (authHeader?.startsWith('Bearer ')) {
-    // In staging, accept raw user ID as Bearer token for testing
-    const token = authHeader.slice(7);
-    if (token.length > 10 && !token.includes('.')) {
-      // Not a JWT - could be a raw user ID for dev/testing
-      return token;
-    }
-    // TODO: full JWT verify when NEXTAUTH_SECRET is set
-  }
-
-  return null;
-}
-
 // ── Booking validation ──────────────────────────────────────────────────
-
-function validateBookingDates(checkIn: string, checkOut: string, minNights: number = 1): { valid: boolean; error?: string } {
-  const ci = new Date(checkIn);
-  const co = new Date(checkOut);
-  if (isNaN(ci.getTime()) || isNaN(co.getTime())) return { valid: false, error: '无效的日期格式' };
-  if (ci <= new Date()) return { valid: false, error: '入住日期必须在今天之后' };
-  if (co <= ci) return { valid: false, error: '退房日期必须在入住日期之后' };
-  const nights = Math.round((co.getTime() - ci.getTime()) / (86400000));
-  if (nights < minNights) return { valid: false, error: `最少需要预订${minNights}天` };
-  return { valid: true };
-}
-
-// ── Route handlers ──────────────────────────────────────────────────────
-
-const ALLOWED_STATUS: BookingStatus[] = ['PENDING', 'CONFIRMED', 'CHECKED_IN', 'CHECKED_OUT', 'NO_SHOW'];
 
 async function handleCreateBooking(env: Env, request: Request, userId: string): Promise<Response> {
   const body = await request.json() as {
@@ -267,31 +222,30 @@ async function handleCreateBooking(env: Env, request: Request, userId: string): 
   ).bind(propertyId, propertyId).first();
   if (!property) return apiError('房源不存在', 404, 'PROPERTY_NOT_FOUND');
 
-  const dateValidation = validateBookingDates(checkIn, checkOut, 1);
+  const stayType = normalizeStayType(body.stayType);
+  const dateValidation = validateBookingDates(checkIn, checkOut, Number(property.minStayDays || 1), stayType);
+  if (!Number.isInteger(guests) || guests < 1 || guests > Math.max(1, Number(property.bedrooms || 1) * 2)) return apiError('Invalid guest count', 400, 'VALIDATION_ERROR');
   if (!dateValidation.valid) return apiError(dateValidation.error || '日期无效', 400, 'INVALID_DATES');
 
-  const nights = Math.round((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / 86400000);
-  const stayTypeRaw = String(body.stayType || 'NIGHTLY').toUpperCase();
-  const stayType = (['NIGHTLY', 'MONTHLY', 'QUARTERLY', 'YEARLY'].includes(stayTypeRaw) ? stayTypeRaw : 'NIGHTLY') as BookingRow['stayType'];
-  const unitCount = Number(body.unitCount || (stayType === 'NIGHTLY' ? nights : Math.max(1, Math.ceil(nights / 30))));
-  const minUnits = stayType === 'QUARTERLY' ? 3 : stayType === 'YEARLY' ? 12 : 1;
-  if (stayType !== 'NIGHTLY' && unitCount < minUnits) return apiError('预订期限不满足最短要求', 400, 'INVALID_STAY_TYPE_DURATION');
-  // Simple pricing: base price * nights, 10% service fee, 13% HST
-  const basePrice = Number(body.unitRate || 200); // Default rate — real pricing uses property stay-type rates
-  const serviceFee = Math.round(basePrice * nights * 0.10);
-  const tax = Math.round((basePrice * nights + serviceFee) * 0.13);
-  const total = basePrice * nights + serviceFee + tax;
+  // Client prices and unit counts are never authoritative.
+  const price = calculateBookingPrice({
+    ...property,
+    price: Number(property.monthlyRate || property.priceMonthly || 0),
+    minNights: Number(property.minStayDays || 1),
+    currency: String(property.currency || 'CAD'),
+  }, checkIn, checkOut, stayType);
+  if (!Number.isFinite(price.total) || price.total <= 0) return apiError('Invalid price', 400, 'INVALID_AMOUNT');
 
   const booking = await createBooking(env.DB, {
     bookingNumber: generateBookingNumber(),
-    propertyId,
+    propertyId: String(property.id),
     userId,
-    checkIn, checkOut, nights, stayType, unitCount, unitRate: basePrice, guests: Number(guests),
+    checkIn, checkOut, nights: price.nights, stayType, unitCount: price.unitCount, unitRate: price.unitRate, guests: Number(guests),
     guestName: body.guestName || null,
     guestEmail: body.guestEmail || null,
     guestPhone: body.guestPhone || null,
-    basePrice, cleaningFee: 50, serviceFee, discount: null, discountRate: null,
-    tax, totalPrice: total, currency: 'CAD',
+    basePrice: price.basePrice, cleaningFee: price.cleaningFee, serviceFee: price.serviceFee, discount: price.discount, discountRate: price.discountRate,
+    tax: price.tax, totalPrice: price.total, currency: price.currency,
     specialRequests: body.specialRequests || null,
     status: 'PENDING', paymentStatus: 'PENDING',
     stripePaymentIntentId: null, cancelledAt: null, cancelReason: null,
@@ -351,15 +305,15 @@ async function handleUpdateBooking(env: Env, _request: Request, userId: string, 
     specialRequests?: string | null; status?: string;
   };
 
-  const nextStatus = body.status && ALLOWED_STATUS.includes(body.status as BookingStatus)
-    ? body.status as BookingStatus : undefined;
-
+  // Changing a paid quote needs the main booking amendment/payment flow.
+  if (body.status !== undefined || body.checkIn !== undefined || body.checkOut !== undefined || body.guests !== undefined) {
+    return apiError('Only special requests can be edited here', 400, 'IMMUTABLE_BOOKING_FIELDS');
+  }
   const payload: Record<string, unknown> = {};
-  if (body.checkIn) payload.checkIn = body.checkIn;
-  if (body.checkOut) payload.checkOut = body.checkOut;
-  if (typeof body.guests === 'number') payload.guests = body.guests;
-  if (body.specialRequests !== undefined) payload.specialRequests = body.specialRequests;
-  if (nextStatus) payload.status = nextStatus;
+  if (body.specialRequests !== undefined) {
+    if (body.specialRequests !== null && (typeof body.specialRequests !== 'string' || body.specialRequests.length > 4000)) return apiError('Invalid special requests', 400, 'VALIDATION_ERROR');
+    payload.specialRequests = body.specialRequests;
+  }
 
   if (Object.keys(payload).length === 0) {
     return apiError('无可更新字段', 400, 'NO_UPDATE_FIELDS');
@@ -460,7 +414,8 @@ async function route(env: Env, request: Request): Promise<Response> {
   }
 
   // Extract user identity
-  const userId = await extractUserId(request, env);
+  const identity = await authenticateWorkerRequest(request, env);
+  const userId = identity?.userId;
 
   // Booking review routes (before general /:id routes)
   const reviewMatch = path.match(/^\/api\/bookings\/([^\/]+)\/review$/);
@@ -500,4 +455,9 @@ async function route(env: Env, request: Request): Promise<Response> {
   return apiError('Not found', 404, 'NOT_FOUND');
 }
 
-export default { fetch: route };
+export default {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    try { return await route(env, request); }
+    catch { return apiError('Request could not be processed', 500, 'INTERNAL_ERROR'); }
+  },
+};

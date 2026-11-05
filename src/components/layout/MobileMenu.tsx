@@ -3,12 +3,12 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { X, User, Home, Heart, KeyRound, Building2, ChevronRight, Info, Globe, Luggage, MessageCircle, HelpCircle, UserCog } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/context/UserContext";
-import { useI18n } from "@/lib/i18n";
-import { localizePath } from "@/lib/i18n-routes";
+import { useSwitchLocale, useI18n } from "@/lib/i18n";
+import { localizePath, stripLocalePrefix } from "@/lib/i18n-routes";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -31,7 +31,8 @@ const getGreeting = (t: (key: string) => string, hour: number) => {
 
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const { user, logout } = useAuth();
-  const { t, locale, setLocale } = useI18n();
+  const { t, locale } = useI18n();
+  const changeLanguage = useSwitchLocale();
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0]);
   const [showLangCurrency, setShowLangCurrency] = useState(false);
   
@@ -45,17 +46,12 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const userAlt = locale === "zh" ? "用户头像" : locale === "fr" ? "Avatar utilisateur" : "User avatar";
   const defaultInitial = locale === "zh" ? "用" : locale === "fr" ? "U" : "U";
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const router = useRouter();
   const isHost = user?.role === "HOST" || user?.role === "ADMIN" || user?.role === "SUPER_ADMIN";
-  const isHostMode = pathname?.startsWith("/host");
+  const isHostMode = stripLocalePrefix(pathname || "/").startsWith("/host");
   const hrefFor = (href: string) => localizePath(href, locale);
   const switchLocale = (newLocale: "en" | "fr" | "zh") => {
-    setLocale(newLocale);
-    const nextPath = localizePath(pathname || "/", newLocale);
-    const query = searchParams?.toString();
-    router.push(query ? `${nextPath}?${query}` : nextPath);
-    router.refresh();
+    changeLanguage(newLocale);
+    onClose();
   };
 
   // Prevent body scroll when menu is open
@@ -92,6 +88,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   if (showLangCurrency) {
     return (
       <div
+        inert={!isOpen}
         className={cn(
           "fixed inset-0 bg-white z-50 transition-transform duration-300",
           isOpen ? "translate-x-0" : "translate-x-full"
@@ -168,6 +165,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
       {/* Drawer */}
       <div
+        inert={!isOpen}
         className={cn(
           "fixed top-0 right-0 bottom-0 w-full max-w-sm bg-white z-50 shadow-2xl",
           "transition-transform duration-300 ease-out",

@@ -47,6 +47,7 @@
     "**/*.test.ts",
     "**/*.test.tsx",
     "**/*.spec.ts",
-    "**/*.spec.tsx"
+    "**/*.spec.tsx",
+    "tests/workers/**/*.node.ts"
   ]
 }

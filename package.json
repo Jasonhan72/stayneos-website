@@ -27,7 +27,12 @@
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit",
     "images:optimize": "node scripts/optimize-images.mjs",
-    "analyze": "ANALYZE=true next build"
+    "analyze": "ANALYZE=true next build",
+    "test:workers": "node scripts/tests/workers.mjs",
+    "check:i18n": "node scripts/check-i18n.js",
+    "typecheck:workers": "tsc -p tsconfig.workers.json",
+    "test:config": "node --test tests/deployment-config.test.mjs",
+    "test:worker-auth": "node scripts/tests/worker-auth.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -40,7 +45,7 @@
     "jose": "^6.2.1",
     "lucide-react": "^0.563.0",
     "mapbox-gl": "^3.18.1",
-    "next": "15.5.10",
+    "next": "15.5.28",
     "prisma": "^5.22.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
@@ -48,7 +53,7 @@
     "stripe": "^20.3.1",
     "swr": "^2.4.1",
     "tailwind-merge": "^3.4.0",
-    "zod": "^4.3.6"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^16.2.6",
@@ -65,14 +70,25 @@
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "eslint": "^8",
-    "eslint-config-next": "15.5.10",
+    "eslint-config-next": "15.5.28",
     "jest": "^30.3.0",
     "jest-environment-jsdom": "^30.3.0",
-    "postcss": "^8",
-    "sharp": "^0.34.4",
+    "postcss": "^8.5.32",
+    "sharp": "^0.35.5",
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
     "whatwg-fetch": "^3.6.20",
-    "wrangler": "^4.78.0"
+    "wrangler": "^4.78.0",
+    "@cloudflare/workers-types": "^5.20261101.1",
+    "esbuild": "^0.27.3"
+  },
+  "overrides": {
+    "next": {
+      "postcss": "$postcss"
+    },
+    "@node-minify/core": {
+      "glob": "^10.5.0"
+    },
+    "brace-expansion@1": "^1.1.21"
   }
 }

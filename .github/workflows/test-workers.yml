@@ -1,40 +1,59 @@
 name: Test Workers
-
 on:
   pull_request:
-    paths:
-      - 'workers/stayneos-payments/**'
-      - 'workers/stayneos-booking/**'
-
+  push:
+    branches: [main]
 jobs:
-  typecheck-payments:
-    name: Typecheck Payments
+  workers:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: workers/stayneos-payments
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v5
         with:
           node-version: "24"
           cache: npm
-      - run: npm ci
-      - name: Check wrangler config
-        run: npx wrangler deploy --dry-run --outdir dist
+      - run: npm ci --legacy-peer-deps
+      - run: npm run typecheck:workers
+      - run: npm run test:workers
+      - run: npx wrangler deploy --dry-run --config workers/stayneos-booking/wrangler.toml --outdir /tmp/booking-build
+      - run: npx wrangler deploy --dry-run --config workers/stayneos-payments/wrangler.toml --outdir /tmp/payments-build
 
-  typecheck-booking:
-    name: Typecheck Booking
+  worker-runtime:
+    name: Build and test Cloudflare runtime
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: workers/stayneos-booking
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v5
         with:
           node-version: "24"
           cache: npm
-      - run: npm ci
-      - name: Check wrangler config
-        run: npx wrangler deploy --dry-run --outdir dist
+      - run: npm ci --legacy-peer-deps
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run build:worker
+      - run: bash scripts/tests/e2e-cert.sh
+      - run: node scripts/tests/local-worker-config.mjs
+      - run: npx wrangler d1 execute DB --local --config wrangler.local-test.toml --file .local/e2e/schema.sql
+      - name: Run isolated runtime acceptance
+        env:
+          NODE_EXTRA_CA_CERTS: ${{ github.workspace }}/.local/e2e/cert.pem
+          WRANGLER_SEND_METRICS: "false"
+        run: |
+          set -euo pipefail
+          npx wrangler dev --local --config wrangler.local-test.toml --ip 127.0.0.1 --port 3173 --local-protocol https --https-key-path .local/e2e/key.pem --https-cert-path .local/e2e/cert.pem > .local/e2e/worker.log 2>&1 &
+          WORKER_PID=$!
+          trap 'kill "$WORKER_PID" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail --cacert .local/e2e/cert.pem https://127.0.0.1:3173/api/health > /dev/null; then break; fi
+            sleep 2
+          done
+          npm run test:worker-auth
+          npx playwright test --config playwright.worker.config.ts
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: worker-runtime-log
+          path: |
+            .local/e2e/worker.log
+            .local/e2e/browser-auth.json
+            test-results/

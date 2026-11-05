@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 
+import { localizePath } from './i18n-routes';
+
 export type Locale = 'en' | 'fr' | 'zh';
 
 interface I18nContextType {
@@ -225,4 +227,15 @@ export function useI18n() {
     throw new Error('useI18n must be used within an I18nProvider');
   }
   return context;
+}
+
+// Navigate with the saved preference so server and client render the same locale.
+export function useSwitchLocale() {
+  const { setLocale } = useI18n();
+  return (locale: Locale) => {
+    setLocale(locale);
+    const destination = new URL(window.location.href);
+    destination.pathname = localizePath(destination.pathname, locale);
+    if (destination.href !== window.location.href) window.location.assign(destination.href);
+  };
 }

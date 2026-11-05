@@ -1,4 +1,4 @@
-/// <reference types="@cloudflare/workers-types" />
+// App-only D1 interfaces. Worker globals are checked separately in tsconfig.workers.json.
 
 // Extend the global scope to include D1Database
 declare global {

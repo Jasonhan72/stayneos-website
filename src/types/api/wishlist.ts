@@ -32,6 +32,8 @@ export interface WishlistPostResponse {
 export interface WishlistPropertyCard {
   id: string;
   title: string;
+  titleZh?: string | null;
+  titleFr?: string | null;
   slug?: string;
   address?: string;
   city?: string;

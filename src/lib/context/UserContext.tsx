@@ -54,7 +54,7 @@ interface UserContextType {
 
 // Default preferences
 const defaultPreferences: UserPreferences = {
-  language: 'zh',
+  language: 'en',
   currency: 'CAD',
   notifications: {
     email: true,
@@ -78,7 +78,7 @@ function toStorageProfile(user: UserProfile): Partial<UserProfile> {
     preferences: user.preferences,
     memberSince: user.memberSince,
     memberLevel: user.memberLevel,
-    role: user.role, // persist role so HOST/ADMIN state survives page reload without waiting for session API
+    role: user.role, // display cache only; the server session remains authoritative
   };
 }
 
@@ -183,46 +183,52 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load user from localStorage/cookie-backed session after hydration
+  // Cached display preferences are not proof of an active session. Always
+  // restore identity and private profile fields from the HttpOnly session.
   useEffect(() => {
-    const loadUserFromStorage = async () => {
-      if (typeof window === 'undefined') return;
-
+    let generation = 0;
+    let disposed = false;
+    const loadSession = async () => {
+      const current = ++generation;
+      setIsLoading(true);
       try {
-        const storedUser = localStorage.getItem(USER_KEY);
-        if (storedUser) {
-          const parsedUser = normalizeUserProfile(JSON.parse(storedUser));
-          if (parsedUser) {
-            setUser(parsedUser);
-            localStorage.setItem(USER_KEY, JSON.stringify(toStorageProfile(parsedUser)));
-            return;
+        const response = await fetch('/api/auth/session', { credentials: 'include', cache: 'no-store' });
+        const data = response.ok ? await response.json() : null;
+        if (disposed || current !== generation) return;
+        if (data?.user) {
+          const profile = toUserProfile(data.user);
+          const stored = localStorage.getItem(USER_KEY);
+          if (stored) {
+            try {
+              const cached = normalizeUserProfile(JSON.parse(stored));
+              if (cached?.id === profile.id) profile.preferences = cached.preferences;
+            } catch { /* Discard malformed cached preferences. */ }
           }
+          setUser(profile);
+          localStorage.setItem(USER_KEY, JSON.stringify(toStorageProfile(profile)));
+        } else {
+          setUser(null);
           localStorage.removeItem(USER_KEY);
         }
-
-        // OAuth flow uses HttpOnly cookie, so bootstrap user from server session API
-        const response = await fetch('/api/auth/session', {
-          credentials: 'include',
-          cache: 'no-store',
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          if (data?.user) {
-            const profile = toUserProfile(data.user);
-            setUser(profile);
-            localStorage.setItem(USER_KEY, JSON.stringify(toStorageProfile(profile)));
-          }
+      } catch {
+        if (!disposed && current === generation) {
+          setUser(null);
+          localStorage.removeItem(USER_KEY);
         }
-      } catch (error) {
-        if (process.env.NODE_ENV !== 'production') console.error('Error loading user session:', error);
-        localStorage.removeItem(USER_KEY);
       } finally {
-        setIsLoading(false);
+        if (!disposed && current === generation) setIsLoading(false);
       }
     };
-
-    loadUserFromStorage();
+    const onStorage = (event: StorageEvent) => { if (event.key === USER_KEY) void loadSession(); };
+    const onLocalChange = () => { void loadSession(); };
+    void loadSession();
+    window.addEventListener('storage', onStorage);
+    window.addEventListener('localStorageChange', onLocalChange);
+    return () => {
+      disposed = true;
+      window.removeEventListener('storage', onStorage);
+      window.removeEventListener('localStorageChange', onLocalChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -246,44 +252,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
       8000,
     );
   }, [showWarningToast, user]);
-
-  // Listen for storage changes (for login/logout across tabs)
-  useEffect(() => {
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === USER_KEY) {
-        if (e.newValue) {
-          try {
-            setUser(normalizeUserProfile(JSON.parse(e.newValue)));
-          } catch {
-            setUser(null);
-          }
-        } else {
-          setUser(null);
-        }
-      }
-    };
-
-    const handleCustomEvent = () => {
-      const storedUser = localStorage.getItem(USER_KEY);
-      if (storedUser) {
-        try {
-          setUser(normalizeUserProfile(JSON.parse(storedUser)));
-        } catch {
-          setUser(null);
-        }
-      } else {
-        setUser(null);
-      }
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-    window.addEventListener("localStorageChange", handleCustomEvent);
-    
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-      window.removeEventListener("localStorageChange", handleCustomEvent);
-    };
-  }, []);
 
   const updateProfile = useCallback(async (data: Partial<UserProfile>) => {
     if (!user) {
@@ -365,9 +333,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(async () => {
     // Clear HttpOnly auth cookie via API
     try {
-      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+      const response = await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+      if (!response.ok) throw new Error('Session revocation failed');
     } catch (e) {
       if (process.env.NODE_ENV !== 'production') console.error('Logout API error:', e);
+      showWarningToast('Unable to log out', 'Please try again. Your session has not been closed.');
+      return;
     }
     // Clear localStorage synchronously before the hard redirect so the new
     // page load doesn't briefly flash stale user data from cache.
@@ -376,7 +347,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     // other guards from seeing null user and firing a competing router.replace.
     // The page reload will re-initialise UserContext from scratch.
     window.location.replace("/");
-  }, []);
+  }, [showWarningToast]);
 
   const refreshUser = useCallback(async () => {
     try {
@@ -396,6 +367,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
           }
           setUser(profile);
           localStorage.setItem(USER_KEY, JSON.stringify(toStorageProfile(profile)));
+        } else {
+          setUser(null);
+          localStorage.removeItem(USER_KEY);
         }
       } else if (response.status === 401) {
         await logout();

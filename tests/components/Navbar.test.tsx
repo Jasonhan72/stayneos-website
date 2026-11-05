@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, act, within } from '@testing-library/react';
 
 jest.mock('@/lib/i18n', () => ({
+  useSwitchLocale: () => jest.fn(),
   useI18n: () => ({
     t: (key: string) => ({
       'nav.properties': 'Properties',
@@ -18,10 +19,6 @@ jest.mock('@/lib/i18n', () => ({
 let mockAuth = { user: null, isAuthenticated: false };
 jest.mock('@/lib/context/UserContext', () => ({
   useAuth: () => mockAuth,
-}));
-
-jest.mock('@/lib/i18n-routes', () => ({
-  localizePath: (path: string) => path,
 }));
 
 import Navbar from '@/components/layout/Navbar';
