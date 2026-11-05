@@ -260,7 +260,7 @@ test.describe('Booking end-to-end', () => {
 
     // Should now be on the payment page
     await expect(page).toHaveURL(
-      new RegExp(`/payment/${propertyId}\\?bookingId=${bookingId}`),
+      url => url.pathname.endsWith(`/payment/${propertyId}`) && url.searchParams.get('bookingId') === bookingId,
       { timeout: 15_000 },
     );
 

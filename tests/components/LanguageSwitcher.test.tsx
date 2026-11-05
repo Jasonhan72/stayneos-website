@@ -1,18 +1,11 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
 
-const setLocale = jest.fn();
-const push = jest.fn();
-const refresh = jest.fn();
+const changeLanguage = jest.fn();
 
 jest.mock('@/lib/i18n', () => ({
-  useI18n: () => ({ locale: 'en', setLocale }),
-}));
-
-jest.mock('next/navigation', () => ({
-  usePathname: () => '/about',
-  useSearchParams: () => new URLSearchParams('ref=test'),
-  useRouter: () => ({ push, refresh }),
+  useI18n: () => ({ locale: 'en' }),
+  useSwitchLocale: () => changeLanguage,
 }));
 
 describe('LanguageSwitcher', () => {
@@ -24,8 +17,7 @@ describe('LanguageSwitcher', () => {
     render(<LanguageSwitcher isScrolled />);
     fireEvent.click(screen.getByRole('button'));
     fireEvent.click(screen.getByText('Français'));
-    expect(setLocale).toHaveBeenCalledWith('fr');
-    expect(push).toHaveBeenCalledWith('/fr/about?ref=test');
-    expect(refresh).toHaveBeenCalled();
+    expect(changeLanguage).toHaveBeenCalledWith('fr');
+    expect(screen.queryByText('Français')).not.toBeInTheDocument();
   });
 });

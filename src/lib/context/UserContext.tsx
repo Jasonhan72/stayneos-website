@@ -54,7 +54,7 @@ interface UserContextType {
 
 // Default preferences
 const defaultPreferences: UserPreferences = {
-  language: 'zh',
+  language: 'en',
   currency: 'CAD',
   notifications: {
     email: true,

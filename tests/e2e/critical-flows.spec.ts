@@ -101,3 +101,29 @@ test('404 page is shown', async ({ page }) => {
   await page.goto('/this-page-should-not-exist-404');
   await expect(page.getByRole('heading', { name: /not found|页面未找到|introuvable/i })).toBeVisible();
 });
+
+test('switching languages keeps the current page, query and anchor after reload', async ({ page }) => {
+  await page.goto('/login?next=%2Fprofile#form');
+  for (const [label, prefix, lang] of [
+    ['中文', '/zh', 'zh-CN'],
+    ['Français', '/fr', 'fr-CA'],
+    ['English', '', 'en'],
+  ]) {
+    const toggle = page.locator('nav').getByRole('button', { name: /^(EN|FR|中文),/ });
+    await toggle.click();
+    await toggle.locator('..').getByRole('button', { name: new RegExp(label + '$') }).click();
+    const target = prefix + '/login?next=%2Fprofile#form';
+    await expect(page).toHaveURL(url => url.pathname + url.search + url.hash === target);
+    await page.reload();
+    await expect(page.locator('html')).toHaveAttribute('lang', lang);
+    await expect(page.locator('#password')).toBeVisible();
+  }
+});
+
+test('prefetching a translation leaves the visitor’s language preference intact', async ({ request }) => {
+  const response = await request.get('/zh/about', { headers: { rsc: '1', 'sec-fetch-dest': 'empty' } });
+  expect(response.ok()).toBeTruthy();
+  expect(response.headers()['set-cookie'] || '').not.toContain('stayneos_locale=');
+  const navigation = await request.get('/zh/about', { headers: { 'sec-fetch-dest': 'document', accept: 'text/html' } });
+  expect(navigation.headers()['set-cookie']).toContain('stayneos_locale=zh');
+});

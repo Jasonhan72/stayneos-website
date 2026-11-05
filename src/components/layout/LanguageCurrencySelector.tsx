@@ -1,11 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChevronDown, ChevronUp, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useI18n, type Locale } from "@/lib/i18n";
-import { localizePath } from "@/lib/i18n-routes";
+import { useSwitchLocale, useI18n, type Locale } from "@/lib/i18n";
 
 interface LanguageCurrencySelectorProps {
   variant?: "light" | "dark" | "transparent";
@@ -28,10 +26,8 @@ export function LanguageCurrencySelector({ variant = "light" }: LanguageCurrency
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState(currencies[0]);
   const menuRef = useRef<HTMLDivElement>(null);
-  const { locale, setLocale, t } = useI18n();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const router = useRouter();
+  const { locale, t, isHydrated } = useI18n();
+  const changeLanguage = useSwitchLocale();
   
   // Get current language based on i18n locale
   const selectedLang = languages.find(lang => lang.locale === locale) || languages[0];
@@ -48,18 +44,14 @@ export function LanguageCurrencySelector({ variant = "light" }: LanguageCurrency
 
   const isDarkStyle = variant === "dark" || variant === "transparent";
   const switchLocale = (newLocale: Locale) => {
-    setLocale(newLocale);
+    changeLanguage(newLocale);
     setIsOpen(false);
-
-    const nextPath = localizePath(pathname || "/", newLocale);
-    const query = searchParams?.toString();
-    router.push(query ? `${nextPath}?${query}` : nextPath);
-    router.refresh();
   };
 
   return (
     <div className="relative" ref={menuRef}>
       <button
+        disabled={isHydrated === false}
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           "flex items-center gap-1.5 px-3 py-2 rounded-full transition-all duration-200",
@@ -84,6 +76,7 @@ export function LanguageCurrencySelector({ variant = "light" }: LanguageCurrency
 
       {/* Dropdown */}
       <div
+        inert={!isOpen}
         className={cn(
           "absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-neutral-100",
           "transition-all duration-200 origin-top-right z-50",

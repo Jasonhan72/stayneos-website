@@ -260,10 +260,10 @@
       "cta": "Obtenir un devis",
       "savingsCta": "Voir les économies",
       "subtitle": "Économisez considérablement sur les séjours prolongés avec nos options de bail flexibles à long terme. Choisissez des durées de 3, 6 ou 12 mois et profitez de jusqu'à 30% de réduction sur les tarifs mensuels dans les appartements meublés premium de Toronto.",
-      "title": "Long terme Rental Discounts"
+      "title": "Rabais sur les locations de longue durée"
     },
     "advantages": {
-      "title": "Pourquoi choisir Long terme with NEOS",
+      "title": "Pourquoi choisir NEOS pour un séjour prolongé ?",
       "subtitle": "Au-delà des économies, les séjours longue durée offrent stabilité, commodité et une véritable expérience de chez-soi."
     },
     "form": {
@@ -271,7 +271,7 @@
       "message": "Décrivez vos besoins",
       "bedroom": "Chambre",
       "firstName": "Prénom",
-      "title": "Get Your Long terme Rental Quote",
+      "title": "Obtenez une estimation pour votre séjour",
       "bedrooms": "Chambres",
       "subtitle": "Décrivez vos besoins en logement longue durée et nous créerons une proposition personnalisée avec le détail de vos économies.",
       "phone": "Numéro de téléphone",
@@ -282,13 +282,13 @@
       "messagePlaceholder": "Veuillez décrire vos besoins en logement longue durée, exigences particulières, raisons du séjour prolongé et toute question sur notre programme...",
       "location": "Quartier préféré",
       "firstNamePlaceholder": "Entrez votre prénom",
-      "submitting": "Soumettreting...",
+      "submitting": "Envoi en cours…",
       "emailPlaceholder": "votre@email.com",
       "lastName": "Nom de famille",
       "propertyType": "Type de propriété",
       "success": {
         "message": "Merci pour votre intérêt ! Notre équipe préparera un devis détaillé avec vos économies exactes et vous contactera dans les 24 heures.",
-        "title": "Quote Request Soumettreted!"
+        "title": "Votre demande a été envoyée"
       },
       "selectBudget": "Sélectionner le budget",
       "email": "Adresse courriel",
@@ -299,7 +299,7 @@
       "budget": "Budget mensuel"
     },
     "testimonials": {
-      "title": "Long terme Resident Stories",
+      "title": "Témoignages de locataires de longue durée",
       "subtitle": "Découvrez comment nos résidents longue durée ont économisé et profité de leur séjour prolongé à Toronto."
     },
     "usecases": {
@@ -325,18 +325,18 @@
       "subtitle": "Remplissez le formulaire et notre équipe vous contactera dans les 24 heures.",
       "selectBedrooms": "Sélectionner",
       "bedrooms": "Chambres",
-      "submitting": "Soumettreting...",
+      "submitting": "Envoi en cours…",
       "propertyType": "Type de propriété",
-      "house": "House",
+      "house": "Maison",
       "message": "Décrivez votre propriété",
       "propertyAddressPlaceholder": "Entrez l'adresse de la propriété",
       "lastName": "Nom de famille",
       "propertyAddress": "Adresse de la propriété",
-      "submit": "Soumettre Application",
+      "submit": "Envoyer la demande",
       "phone": "Numéro de téléphone",
       "firstNamePlaceholder": "Entrez votre prénom",
       "success": {
-        "title": "Application Soumettreted!",
+        "title": "Votre demande a été envoyée",
         "message": "Merci ! Notre équipe examinera votre demande et vous contactera dans les 24 heures."
       },
       "messagePlaceholder": "Décrivez votre propriété, son état actuel, l'ameublement et vos questions sur notre programme...",
@@ -843,5 +843,23 @@
       "title": "Emplacements Privilégiés",
       "desc": "Centre-ville de Toronto et GTA"
     }
+  },
+  "marketHub": {
+    "title": "Analyses du marché",
+    "subtitle": "Rapports sur le marché immobilier de Toronto, analyses des données de TRREB, tendances locatives et perspectives de placement. Mise à jour régulière.",
+    "searchPlaceholder": "Rechercher des rapports et des analyses",
+    "noPosts": "Aucun rapport pour le moment",
+    "noPostsDesc": "Les rapports de marché et les analyses des données de TRREB paraîtront ici dès leur publication.",
+    "notFound": "Article introuvable",
+    "backToHub": "Retour aux analyses du marché",
+    "views": "vues",
+    "viewSource": "Consulter la source",
+    "catAll": "Tout",
+    "catReport": "Rapports de marché",
+    "catTrreb": "Données de TRREB",
+    "catRental": "Tendances locatives",
+    "catNeighborhood": "Quartiers",
+    "catInvestment": "Investissement",
+    "catNews": "Actualités du secteur"
   }
 }

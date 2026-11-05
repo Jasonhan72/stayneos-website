@@ -835,5 +835,23 @@
       "title": "Prime Locations",
       "desc": "Prime business districts & major cities"
     }
+  },
+  "marketHub": {
+    "title": "Market Insights Hub",
+    "subtitle": "Toronto real estate market reports, TRREB data analysis, rental trends, and investment insights. Updated regularly.",
+    "searchPlaceholder": "Search reports and insights...",
+    "noPosts": "No reports yet",
+    "noPostsDesc": "Market reports and TRREB data analysis will appear here as they are published. Check back soon!",
+    "notFound": "Post not found",
+    "backToHub": "Back to Market Insights",
+    "views": "views",
+    "viewSource": "View original source",
+    "catAll": "All",
+    "catReport": "Market Reports",
+    "catTrreb": "TRREB Data",
+    "catRental": "Rental Trends",
+    "catNeighborhood": "Neighborhoods",
+    "catInvestment": "Investment",
+    "catNews": "Industry News"
   }
 }

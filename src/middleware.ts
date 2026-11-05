@@ -194,6 +194,11 @@ export async function middleware(request: NextRequest) {
   }
 
   const locale = detectLocale(request, pathLocale);
+  // A speculative navigation must not change preferences for the active page.
+  const destination = request.headers.get('sec-fetch-dest');
+  const isDocument = destination ? destination === 'document' : request.headers.get('accept')?.includes('text/html');
+  const isPrefetch = request.headers.has('next-router-prefetch') ||
+    [request.headers.get('purpose'), request.headers.get('sec-purpose')].some(value => value?.includes('prefetch'));
   const existingCookieLocale = request.cookies.get('stayneos_locale')?.value;
   if (!pathLocale && (existingCookieLocale === 'zh' || existingCookieLocale === 'fr')) {
     const url = request.nextUrl.clone();
@@ -254,7 +259,7 @@ export async function middleware(request: NextRequest) {
       loginUrl.searchParams.set('error', 'host_required');
       
       const response = NextResponse.redirect(loginUrl);
-      if (!request.cookies.get('stayneos_locale')?.value) {
+      if (isDocument && !isPrefetch && !existingCookieLocale) {
         response.cookies.set('stayneos_locale', locale, {
           path: '/',
           maxAge: 365 * 24 * 60 * 60,
@@ -280,7 +285,7 @@ export async function middleware(request: NextRequest) {
       loginUrl.searchParams.set('callbackUrl', pathname);
       
       const response = NextResponse.redirect(loginUrl);
-      if (!request.cookies.get('stayneos_locale')?.value) {
+      if (isDocument && !isPrefetch && !existingCookieLocale) {
         response.cookies.set('stayneos_locale', locale, {
           path: '/',
           maxAge: 365 * 24 * 60 * 60,
@@ -310,14 +315,14 @@ export async function middleware(request: NextRequest) {
   // This eliminates Set-Cookie from most first-visit responses, allowing
   // Cloudflare CDN to cache the HTML (responses with Set-Cookie bypass CDN).
   const existingCookie = request.cookies.get('stayneos_locale')?.value;
-  if (pathLocale && pathLocale !== existingCookie) {
+  if (isDocument && !isPrefetch && pathLocale && pathLocale !== existingCookie) {
     // URL has explicit locale prefix → update cookie to match
     response.cookies.set('stayneos_locale', pathLocale, {
       path: '/',
       maxAge: 365 * 24 * 60 * 60,
       sameSite: 'lax',
     });
-  } else if (!existingCookie && locale !== 'en') {
+  } else if (isDocument && !isPrefetch && !existingCookie && locale !== 'en') {
     // First visit with non-default locale → persist it
     response.cookies.set('stayneos_locale', locale, {
       path: '/',

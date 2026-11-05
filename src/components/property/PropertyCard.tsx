@@ -48,7 +48,7 @@ export interface Property {
 }
 
 // Helper function to get localized title
-export function getLocalizedTitle(property: Property, locale: string): string {
+export function getLocalizedTitle(property: { title: string; titleZh?: string | null; titleFr?: string | null }, locale: string): string {
   switch (locale) {
     case 'zh':
       return property.titleZh || property.title;
