@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const https = require('node:https');
 const next = require('next');
 const port = 3143;
-const app = next({ dev: false, hostname: '127.0.0.1', port });
+const app = next({ dev: false, hostname: 'localhost', port });
 let server;
 app.prepare().then(() => {
   const handler = app.getRequestHandler();

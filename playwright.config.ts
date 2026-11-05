@@ -29,7 +29,7 @@ export default defineConfig({
   reporter: process.env.CI ? [['html', { open: 'never' }], ['list']] : 'list',
 
   use: {
-    baseURL: remoteURL || (localHTTPS ? 'https://127.0.0.1:3143' : 'http://127.0.0.1:3000'),
+    baseURL: remoteURL || (localHTTPS ? 'https://localhost:3143' : 'http://127.0.0.1:3000'),
     ignoreHTTPSErrors: !remoteURL && localHTTPS,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
@@ -42,7 +42,7 @@ export default defineConfig({
 
   webServer: remoteURL ? undefined : localHTTPS ? {
     command: 'node scripts/tests/https-server.cjs',
-    url: 'https://127.0.0.1:3143',
+    url: 'https://localhost:3143',
     ignoreHTTPSErrors: true,
     reuseExistingServer: false,
     timeout: 120_000,
