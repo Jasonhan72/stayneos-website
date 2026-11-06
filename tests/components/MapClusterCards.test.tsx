@@ -1,3 +1,4 @@
+import { I18nProvider } from '@/lib/i18n';
 import { render, screen, fireEvent } from '@testing-library/react';
 import MapClusterCards, {
   propertyPrice,
@@ -26,29 +27,29 @@ const properties: ClusterCardProperty[] = [
 
 describe('MapClusterCards', () => {
   it('renders a card for each property', () => {
-    render(<MapClusterCards properties={properties} onClose={jest.fn()} />);
+    render(<MapClusterCards properties={properties} onClose={jest.fn()} />, { wrapper: I18nProvider });
     expect(screen.getByText('Luxury Downtown Condo')).toBeInTheDocument();
     expect(screen.getByText('Modern Simcoe Suite')).toBeInTheDocument();
     expect(screen.getByText('Wellesley Garden Flat')).toBeInTheDocument();
   });
 
   it('shows the total count in the header', () => {
-    render(<MapClusterCards properties={properties} onClose={jest.fn()} />);
+    render(<MapClusterCards properties={properties} onClose={jest.fn()} />, { wrapper: I18nProvider });
     expect(screen.getByText(/3 stays in this area/)).toBeInTheDocument();
   });
 
   it('uses singular wording for a single stay', () => {
-    render(<MapClusterCards properties={[base]} onClose={jest.fn()} />);
+    render(<MapClusterCards properties={[base]} onClose={jest.fn()} />, { wrapper: I18nProvider });
     expect(screen.getByText(/1 stay in this area/)).toBeInTheDocument();
   });
 
   it('renders prices', () => {
-    render(<MapClusterCards properties={[base]} onClose={jest.fn()} />);
+    render(<MapClusterCards properties={[base]} onClose={jest.fn()} />, { wrapper: I18nProvider });
     expect(screen.getByText('$3,200')).toBeInTheDocument();
   });
 
   it('links each card to its property detail page', () => {
-    render(<MapClusterCards properties={properties} onClose={jest.fn()} />);
+    render(<MapClusterCards properties={properties} onClose={jest.fn()} />, { wrapper: I18nProvider });
     const links = screen.getAllByRole('link');
     expect(links.map((l) => l.getAttribute('href'))).toEqual([
       '/property/cooper-55',
@@ -59,25 +60,25 @@ describe('MapClusterCards', () => {
 
   it('calls onClose when the close button is clicked', () => {
     const onClose = jest.fn();
-    render(<MapClusterCards properties={properties} onClose={onClose} />);
+    render(<MapClusterCards properties={properties} onClose={onClose} />, { wrapper: I18nProvider });
     fireEvent.click(screen.getByLabelText('Close cluster cards'));
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
   it('renders left/right scroll controls', () => {
-    render(<MapClusterCards properties={properties} onClose={jest.fn()} />);
+    render(<MapClusterCards properties={properties} onClose={jest.fn()} />, { wrapper: I18nProvider });
     expect(screen.getByLabelText('Scroll left')).toBeInTheDocument();
     expect(screen.getByLabelText('Scroll right')).toBeInTheDocument();
   });
 
   it('renders nothing when there are no properties', () => {
-    const { container } = render(<MapClusterCards properties={[]} onClose={jest.fn()} />);
+    const { container } = render(<MapClusterCards properties={[]} onClose={jest.fn()} />, { wrapper: I18nProvider });
     expect(container).toBeEmptyDOMElement();
   });
 
   it('calls onSelect when a card is clicked', () => {
     const onSelect = jest.fn();
-    render(<MapClusterCards properties={[base]} onSelect={onSelect} onClose={jest.fn()} />);
+    render(<MapClusterCards properties={[base]} onSelect={onSelect} onClose={jest.fn()} />, { wrapper: I18nProvider });
     fireEvent.click(screen.getByText('Luxury Downtown Condo'));
     expect(onSelect).toHaveBeenCalledWith('1');
   });

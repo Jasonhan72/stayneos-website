@@ -237,7 +237,13 @@
       "self": "Arrivée autonome",
       "gallery": "Galerie de photos du logement",
       "photos": "Afficher toutes les photos"
-    }
+    },
+    "mapFallback": "Google Maps est indisponible. Sélectionnez un repère pour consulter le logement.",
+    "clusterOne": "{count} logement dans ce secteur",
+    "clusterMany": "{count} logements dans ce secteur",
+    "closeCluster": "Fermer les fiches",
+    "scrollLeft": "Défiler vers la gauche",
+    "scrollRight": "Défiler vers la droite"
   },
   "properties": {
     "title": "Propriétés en Vedette",

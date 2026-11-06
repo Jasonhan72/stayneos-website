@@ -237,7 +237,13 @@
       "self": "Self check-in",
       "gallery": "Property photo gallery",
       "photos": "Show all photos"
-    }
+    },
+    "mapFallback": "Google Maps is unavailable. Select a property pin below to see the listing.",
+    "clusterOne": "{count} stay in this area",
+    "clusterMany": "{count} stays in this area",
+    "closeCluster": "Close cluster cards",
+    "scrollLeft": "Scroll left",
+    "scrollRight": "Scroll right"
   },
   "properties": {
     "title": "Featured Properties",

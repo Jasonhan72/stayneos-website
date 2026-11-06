@@ -237,7 +237,13 @@
       "self": "自助入住",
       "gallery": "房源照片展示",
       "photos": "查看全部照片"
-    }
+    },
+    "mapFallback": "谷歌地图暂时无法加载。您可以选择房源标记查看详情。",
+    "clusterOne": "本区域有 {count} 套房源",
+    "clusterMany": "本区域有 {count} 套房源",
+    "closeCluster": "关闭房源卡片",
+    "scrollLeft": "向左滚动",
+    "scrollRight": "向右滚动"
   },
   "properties": {
     "title": "精选房源",

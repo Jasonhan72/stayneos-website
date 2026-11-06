@@ -14,3 +14,14 @@ export function getTierDiscountPercent(tiers: PricingTiers, tier: PricingTier): 
   if (tier === 'monthly') return 0;
   return calculateTierDiscountPercent(tiers.monthly, tiers[tier]);
 }
+
+const comparableHotelRates: Record<string, string> = {
+  '1': '~$18,000',
+  '2': '~$10,500',
+  '3': '~$7,500',
+};
+
+export function hotelComparisonLabel(propertyId: string, monthlyUnit: string): string {
+  const rate = comparableHotelRates[propertyId];
+  return rate ? rate + monthlyUnit : '';
+}

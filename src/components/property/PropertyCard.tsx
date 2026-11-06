@@ -1,3 +1,4 @@
+import { hotelComparisonLabel } from "@/lib/property-pricing-discounts";
 import { Heart, Star, MapPin, Users, Maximize } from "lucide-react";
 import ResponsiveImage from '@/components/ui/ResponsiveImage';
 import Link from "next/link";
@@ -221,17 +222,17 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             <div className="flex items-center gap-4 text-neutral-500 text-sm mb-4">
               <div 
                 className="flex items-center gap-1.5" 
-                aria-label={`Max ${maxGuests} guests`}
+                aria-label={t('property.maxGuestsValue', { count: maxGuests })}
               >
                 <Users size={16} aria-hidden="true" />
                 <span>{t('property.maxGuestsValue', { count: maxGuests })}</span>
               </div>
               <div 
                 className="flex items-center gap-1.5" 
-                aria-label={`Area ${property.area} sqft`}
+                aria-label={`${property.area} ${t('property.sqft')}`}
               >
                 <Maximize size={16} aria-hidden="true" />
-                <span>{property.area.toLocaleString()} sqft</span>
+                <span>{property.area.toLocaleString()} {t("property.sqft")}</span>
               </div>
             </div>
 
@@ -239,7 +240,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             <div className="flex items-baseline justify-between pt-4 mt-auto border-t border-neutral-100">
               <div className="flex items-baseline gap-1">
                 <span className="text-xl font-bold text-neutral-900">
-                  From ${getPropertyPrice(property).toLocaleString()}
+                  {t("property.from", "From")} ${getPropertyPrice(property).toLocaleString()}
                 </span>
                 <span className="text-sm text-neutral-500">{t("pricing.perMonth")}</span>
               </div>
@@ -257,7 +258,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
               <span className="text-xs text-neutral-500">
                 {t('property.hotelEquivalent', 'Hotel equivalent:')}{' '}
                 <span className="text-neutral-400 line-through">
-                  {property.id === '1' ? '~$18,000/mo' : property.id === '2' ? '~$10,500/mo' : property.id === '3' ? '~$7,500/mo' : ''}
+                  {hotelComparisonLabel(property.id, t("pricing.perMonth"))}
                 </span>
               </span>
             </div>

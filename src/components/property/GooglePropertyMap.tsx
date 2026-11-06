@@ -559,7 +559,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
               );
             })}
             <div className="absolute left-4 right-4 top-16 rounded-xl bg-white/90 p-3 text-sm text-neutral-600 shadow">
-              Google Maps could not load ({mapError}); showing fallback property pins.
+              {t("property.mapFallback")}
             </div>
           </div>
         )}

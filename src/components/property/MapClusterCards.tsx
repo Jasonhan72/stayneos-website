@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { useI18n } from '@/lib/i18n';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
@@ -40,6 +41,7 @@ export function propertyLocation(property: ClusterCardProperty): string {
 }
 
 export default function MapClusterCards({ properties, count, onSelect, onClose }: MapClusterCardsProps) {
+  const { t } = useI18n();
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -61,12 +63,12 @@ export default function MapClusterCards({ properties, count, onSelect, onClose }
       <div className="relative mx-auto max-w-4xl overflow-hidden rounded-2xl bg-white/95 shadow-2xl ring-1 ring-black/10 backdrop-blur">
         <div className="flex items-center justify-between border-b border-neutral-100 px-4 py-3">
           <p className="text-sm font-semibold text-neutral-900">
-            {total} {total === 1 ? 'stay' : 'stays'} in this area
+            {t(total === 1 ? 'property.clusterOne' : 'property.clusterMany', { count: total })}
           </p>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close cluster cards"
+            aria-label={t("property.closeCluster")}
             className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-100 text-neutral-600 transition-colors hover:bg-neutral-200"
           >
             <X size={16} />
@@ -77,7 +79,7 @@ export default function MapClusterCards({ properties, count, onSelect, onClose }
           <button
             type="button"
             onClick={() => scrollBy(-1)}
-            aria-label="Scroll left"
+            aria-label={t("property.scrollLeft")}
             className="absolute left-2 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-md ring-1 ring-black/10 transition hover:bg-neutral-50 md:flex"
           >
             <ChevronLeft size={18} />
@@ -108,7 +110,7 @@ export default function MapClusterCards({ properties, count, onSelect, onClose }
                   <p className="truncate text-xs text-neutral-500">{propertyLocation(property)}</p>
                   <p className="mt-1 text-sm font-bold text-[#DC2626]">
                     ${propertyPrice(property).toLocaleString()}
-                    <span className="text-xs font-normal text-neutral-500">/mo</span>
+                    <span className="text-xs font-normal text-neutral-500">{t("pricing.perMonth")}</span>
                   </p>
                 </div>
               </Link>
@@ -118,7 +120,7 @@ export default function MapClusterCards({ properties, count, onSelect, onClose }
           <button
             type="button"
             onClick={() => scrollBy(1)}
-            aria-label="Scroll right"
+            aria-label={t("property.scrollRight")}
             className="absolute right-2 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-md ring-1 ring-black/10 transition hover:bg-neutral-50 md:flex"
           >
             <ChevronRight size={18} />

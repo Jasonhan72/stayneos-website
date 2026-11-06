@@ -8,7 +8,7 @@ jest.mock('@/lib/i18n', () => ({
       // Handle params passed as second argument (matching real t() behavior)
       const p = (!params && typeof defaultValue === 'object' && defaultValue !== null) ? defaultValue : params;
       if (key === 'property.monthlyDiscountLabel') return `${(p as any)?.percent}% off`;
-      if (key === 'property.maxGuestsValue') return `${(p as any)?.count} guests`;
+      if (key === 'property.maxGuestsValue') return `Max ${(p as any)?.count} guests`;
       if (key === 'properties.featured') return 'Featured';
       if (key === 'properties.details.reviews') return ' reviews';
       if (key === 'property.hotelEquivalent') return 'Hotel equivalent:';
