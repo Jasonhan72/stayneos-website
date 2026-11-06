@@ -11,7 +11,7 @@ import { LanguageCurrencySelector } from "./LanguageCurrencySelector";
 import { MobileMenu } from "./MobileMenu";
 import { useAuth } from "@/lib/context/UserContext";
 import { useI18n } from "@/lib/i18n";
-import { localizePath } from "@/lib/i18n-routes";
+import { localizePath, stripLocalePrefix } from "@/lib/i18n-routes";
 
 interface NavbarProps {
   variant?: "light" | "dark" | "transparent";
@@ -21,8 +21,8 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, isAuthenticated } = useAuth();
-  const { t, locale } = useI18n();
-  const pathname = usePathname();
+  const { t, locale, isHydrated } = useI18n();
+  const pathname = stripLocalePrefix(usePathname() || "/");
   const isHomePage = pathname === "/";
   const rafRef = useRef<number | null>(null);
   const userAlt = locale === "zh" ? "用户头像" : locale === "fr" ? "Avatar utilisateur" : "User avatar";
@@ -119,7 +119,7 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
               {/* Hosting mode badge */}
               {pathname?.startsWith("/host") && (
                 <span className="text-xs font-semibold text-[#003B5C] bg-[#003B5C]/10 px-3 py-1.5 rounded-full border border-[#003B5C]/20">
-                  Hosting
+                  {t("nav.hostingMode")}
                 </span>
               )}
 
@@ -169,6 +169,8 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
             <div className="lg:hidden flex items-center gap-2">
               {isAuthenticated && user ? (
                 <button
+                  disabled={!isHydrated}
+                  aria-expanded={isMobileMenuOpen}
                   onClick={() => setIsMobileMenuOpen(true)}
                   className="flex min-h-11 items-center gap-1.5 pl-1 pr-3 py-1 rounded-full hover:bg-black/5 transition-all"
                   aria-label={openMenuLabel}
@@ -194,6 +196,8 @@ export default function Navbar({ variant = "light" }: NavbarProps) {
                 </button>
               ) : (
                 <button
+                  disabled={!isHydrated}
+                  aria-expanded={isMobileMenuOpen}
                   onClick={() => setIsMobileMenuOpen(true)}
                   className={cn(
                     "min-h-11 min-w-11 p-2 -mr-2 rounded-full hover:bg-black/5 transition-all",
