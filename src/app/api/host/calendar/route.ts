@@ -38,11 +38,11 @@ export async function GET(request: NextRequest) {
 
     const hostId = auth.user.id;
     const propertyQuery = propertyId === 'all'
-      ? 'SELECT id, title, priceMonthly, minStayDays FROM Property WHERE createdBy = ? ORDER BY updatedAt DESC'
-      : 'SELECT id, title, priceMonthly, minStayDays FROM Property WHERE createdBy = ? AND id = ? ORDER BY updatedAt DESC';
+      ? 'SELECT id, title, titleZh, titleFr, priceMonthly, minStayDays FROM Property WHERE createdBy = ? ORDER BY updatedAt DESC'
+      : 'SELECT id, title, titleZh, titleFr, priceMonthly, minStayDays FROM Property WHERE createdBy = ? AND id = ? ORDER BY updatedAt DESC';
     const propertyBindings = propertyId === 'all' ? [hostId] : [hostId, propertyId];
     const propertyRows = (await db.prepare(propertyQuery).bind(...propertyBindings).all<Record<string, unknown>>()).results || [];
-    const properties = propertyRows.map((row) => ({ id: String(row.id), title: String(row.title || 'Untitled property'), basePrice: Number(row.priceMonthly || 0) / 30 }));
+    const properties = propertyRows.map((row) => ({ id: String(row.id), title: String(row.title || 'Untitled property'), titleZh: row.titleZh, titleFr: row.titleFr, basePrice: Number(row.priceMonthly || 0) / 30 }));
 
     if (properties.length === 0) return NextResponse.json({ properties: [], days: [] });
 

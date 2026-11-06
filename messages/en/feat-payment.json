@@ -152,7 +152,8 @@
     "addPaymentMethod": "Add a payment method",
     "choosePayment": "Choose your preferred payment method",
     "failed": "Payment failed",
-    "authRequired": "Additional authentication required..."
+    "authRequired": "Additional authentication required...",
+    "networkError": "Check your connection and try again."
   },
   "paymentMethod": "Payment Method",
   "paymentRecord": "Payment Record",

@@ -38,6 +38,9 @@ function userFriendlyError(raw: string, t: (k: string) => string | undefined): s
   if (lower.includes('401') || lower.includes('unauthorized') || lower.includes('登录') || lower.includes('login')) {
     return t('payment.errorLoginRequired') || 'Please log in to continue.';
   }
+  if (/failed to fetch|networkerror|load failed/i.test(raw)) {
+    return t('payment.networkError') || 'Please check your connection and try again.';
+  }
   // Return raw but safe — strip codes like CSRF_INVALID from display
   return raw.replace(/\b[A-Z_]{3,}\b/g, '').trim() || (t('payment.errorGeneric') || 'Something went wrong. Please try again.');
 }
@@ -142,7 +145,7 @@ export default function PaymentClient({ propertyId }: PaymentClientProps) {
       setClientSecret(data.clientSecret);
       setPaymentReady(true);
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : (t('payment.errorGeneric') || 'Payment initialization failed');
+      const errorMessage = err instanceof Error ? userFriendlyError(err.message, t) : t('payment.errorGeneric');
       setError(errorMessage);
     } finally {
       setIsLoading(false);

@@ -6,9 +6,10 @@ import { addDaysYmd, diffDays, eachDay, formatYmd, toDate } from "@/lib/host-dat
 import { ChevronLeft, ChevronRight, Lock, AlertTriangle, RefreshCw, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ensureCsrfToken } from "@/lib/security/csrf-client";
+import { getLocalizedTitle } from "@/components/property/PropertyCard";
 import { useI18n } from "@/lib/i18n";
 
-type Property = { id: string; title: string; basePrice?: number };
+type Property = { id: string; title: string; titleZh?: string; titleFr?: string; basePrice?: number };
 type Day = { date: string; propertyId: string; status: string; price: number | null; isBooked: boolean; bookingId?: string };
 
 function toMoney(value?: number | null) {
@@ -182,7 +183,7 @@ export default function HostCalendar() {
         <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
           <select value={selectedPropertyId} onChange={(e) => setSelectedPropertyId(e.target.value)} className="min-h-11 w-full min-w-0 rounded-xl border border-neutral-200 px-4 py-2 text-sm font-medium sm:w-auto sm:max-w-xs">
             <option value="all">{t("host.calendar.allListings", "All listings")}</option>
-            {data.properties.map((property) => <option key={property.id} value={property.id}>{property.title}</option>)}
+            {data.properties.map((property) => <option key={property.id} value={property.id}>{getLocalizedTitle(property, locale)}</option>)}
           </select>
           <div className="flex items-center gap-1">
             <button onClick={() => setMonthOffset((v) => v - 1)} className="flex h-11 w-11 items-center justify-center rounded-full border border-neutral-200 hover:bg-neutral-50"><ChevronLeft className="h-4 w-4" /></button>
@@ -202,7 +203,7 @@ export default function HostCalendar() {
         {properties.map((property) => (
           <article key={property.id} className="rounded-3xl border border-neutral-200 bg-white p-4 shadow-sm">
             <div className="mb-3">
-              <h2 className="truncate text-base font-semibold text-neutral-900">{property.title}</h2>
+              <h2 className="truncate text-base font-semibold text-neutral-900">{getLocalizedTitle(property, locale)}</h2>
               <p className="mt-0.5 text-xs text-neutral-500">{toMoney((property.basePrice || 0) * 100)}{t("host.calendar.perNight", "/night")}</p>
             </div>
             <div className="grid grid-cols-7 gap-1.5">
@@ -262,7 +263,7 @@ export default function HostCalendar() {
               <div key={property.id} className={cn("flex", pi > 0 && "border-t border-neutral-100")}>
                 {/* Property name (sticky left) */}
                 <div className="sticky left-0 z-10 flex-shrink-0 border-r border-neutral-200 bg-white px-4 py-3" style={{ width: LABEL_W }}>
-                  <p className="text-sm font-medium text-neutral-900 truncate">{property.title}</p>
+                  <p className="text-sm font-medium text-neutral-900 truncate">{getLocalizedTitle(property, locale)}</p>
                   <p className="text-xs text-neutral-400 mt-0.5">{toMoney((property.basePrice || 0) * 100)}{t("host.calendar.perNight", "/night")}</p>
                 </div>
 

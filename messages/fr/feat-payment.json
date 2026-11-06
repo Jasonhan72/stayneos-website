@@ -152,7 +152,8 @@
     "addPaymentMethod": "Ajouter un mode de paiement",
     "choosePayment": "Choisissez votre mode de paiement",
     "failed": "Paiement échoué",
-    "authRequired": "Authentification supplémentaire requise..."
+    "authRequired": "Authentification supplémentaire requise...",
+    "networkError": "Vérifiez votre connexion et réessayez."
   },
   "paymentMethod": "Mode de paiement",
   "paymentRecord": "Historique de paiement",

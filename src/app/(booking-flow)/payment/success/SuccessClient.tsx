@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui';
+import { getLocalizedTitle } from '@/components/property/PropertyCard';
 import { useI18n } from '@/lib/i18n';
 import { CheckCircle, Calendar, Mail, ArrowRight, Loader2, MessageCircle, Home, Users } from 'lucide-react';
 
@@ -19,6 +20,8 @@ type BookingDetail = {
   status: string;
   property?: {
     title?: string;
+    titleZh?: string;
+    titleFr?: string;
     images?: Array<{ url: string; alt?: string | null }>;
   } | null;
 };
@@ -99,6 +102,7 @@ function PaymentSuccessContent() {
   const statusLabel = booking?.status
     ? t(`payment.success.status.${statusKey}`, booking.status.replace(/_/g, ' ').toLowerCase())
     : t('payment.success.status.confirmed');
+  const propertyTitle = getLocalizedTitle({ ...booking?.property, title: booking?.property?.title || t('payment.success.yourStay') }, locale);
   const coverImage = booking?.property?.images?.[0];
 
   return (
@@ -135,7 +139,7 @@ function PaymentSuccessContent() {
                 {coverImage?.url ? (
                   <Image
                     src={coverImage.url}
-                    alt={coverImage.alt || booking.property?.title || t('payment.success.tripImageAlt')}
+                    alt={propertyTitle}
                     fill
                     className="object-cover"
                     sizes="(max-width: 640px) 100vw, 176px"
@@ -154,7 +158,7 @@ function PaymentSuccessContent() {
                       {t('payment.success.tripBooked')}
                     </p>
                     <h2 className="text-lg font-semibold text-gray-900">
-                      {booking.property?.title || t('payment.success.yourStay')}
+                      {propertyTitle}
                     </h2>
                   </div>
                   <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700 whitespace-nowrap">
