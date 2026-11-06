@@ -37,6 +37,8 @@ function toPropertySnapshot(row: PropertyRecord) {
   return {
     id: property.id,
     title: property.title,
+    titleZh: property.titleZh,
+    titleFr: property.titleFr,
     address: property.address || property.location,
     city: property.city || 'Toronto',
     description: property.description,

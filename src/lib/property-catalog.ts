@@ -3,6 +3,8 @@ import { getPropertyById } from "@/lib/data";
 export interface PropertySnapshot {
   id: string;
   title: string;
+  titleZh?: string;
+  titleFr?: string;
   address: string;
   city: string;
   description: string | undefined;
@@ -18,6 +20,8 @@ export function getPropertySnapshot(propertyId: string): PropertySnapshot | null
     return {
       id: propertyId,
       title: "StayNeos home",
+      titleZh: "StayNeos 房源",
+      titleFr: "Logement StayNeos",
       address: "Toronto",
       city: "Toronto",
       description: undefined,
@@ -29,6 +33,8 @@ export function getPropertySnapshot(propertyId: string): PropertySnapshot | null
   return {
     id: property.id,
     title: property.title,
+    titleZh: property.titleZh,
+    titleFr: property.titleFr,
     address: property.location,
     city: "Toronto",
     description: property.description,

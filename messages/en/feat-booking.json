@@ -241,7 +241,27 @@
       "cancelFailed": "Failed to cancel booking",
       "cancelAlert": "Cancellation failed. Please try again."
     },
-    "fetchFailed": "Failed to fetch bookings"
+    "fetchFailed": "Failed to fetch bookings",
+    "stay": "NEOS stay",
+    "hostNote": "Message to host",
+    "messageSent": "Message sent. You can continue the conversation in Messages.",
+    "messageFailed": "Could not send this message. Please try again or open Messages.",
+    "openMessages": "Open Messages",
+    "sending": "Sending…",
+    "send": "Send message",
+    "voucher": {
+      "title": "NEOS Booking Voucher",
+      "number": "Booking number",
+      "status": "Status",
+      "checkIn": "Check-in",
+      "checkOut": "Check-out",
+      "guest": "Guest",
+      "stay": "Guests / nights",
+      "counts": "{guests} guests · {nights} nights",
+      "payment": "Payment",
+      "issued": "Issued by NEOS. Please keep this voucher for check-in and support."
+    },
+    "contactDraft": "Hi, I have a question about booking {number} for {title} ({dates})."
   },
   "bookingDetail": {
     "loading": "Loading...",

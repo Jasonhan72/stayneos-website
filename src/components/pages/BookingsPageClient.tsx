@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button, Container, Card, Badge, Divider, Modal } from '@/components/ui';
 import { useAuth } from '@/lib/context/UserContext';
+import { getLocalizedTitle } from '@/components/property/PropertyCard';
 import { useI18n } from '@/lib/i18n';
 import { csrfFetch } from '@/lib/security/csrf-client';
 import { 
@@ -42,6 +43,8 @@ interface Booking {
   createdAt: string;
   property?: {
     title?: string;
+    titleZh?: string;
+    titleFr?: string;
     images?: Array<{ url: string; alt?: string | null }>;
   } | null;
 }
@@ -61,7 +64,7 @@ type ApiBooking = Partial<Booking> & {
   created_at?: string;
 };
 
-function normalizeBooking(booking: ApiBooking): Booking {
+function normalizeBooking(booking: ApiBooking, locale: string, fallbackTitle: string): Booking {
   return {
     id: booking.id || '',
     bookingNumber: booking.bookingNumber || booking.booking_number || '',
@@ -74,7 +77,7 @@ function normalizeBooking(booking: ApiBooking): Booking {
     status: booking.status || 'PENDING',
     paymentStatus: booking.paymentStatus || booking.payment_status || 'PENDING',
     propertyId: booking.propertyId || booking.property_id || '',
-    propertyTitle: booking.propertyTitle || booking.property_title || booking.property?.title || 'NEOS Stay',
+    propertyTitle: getLocalizedTitle({ ...booking.property, title: booking.propertyTitle || booking.property_title || booking.property?.title || fallbackTitle }, locale),
     guestName: booking.guestName || booking.guest_name || '',
     guestEmail: booking.guestEmail || booking.guest_email || '',
     guestPhone: booking.guestPhone || booking.guest_phone || '',
@@ -84,10 +87,10 @@ function normalizeBooking(booking: ApiBooking): Booking {
   };
 }
 
-function formatBookingDate(value: string): string {
+function formatBookingDate(value: string, locale: string): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value || '-';
-  return date.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' });
+  return date.toLocaleDateString(locale, { timeZone: /^\d{4}-\d{2}-\d{2}$/.test(value) ? 'UTC' : undefined, year: 'numeric', month: '2-digit', day: '2-digit' });
 }
 
 function getStatusConfig(t: (key: string) => string): Record<string, { label: string; color: string; bgColor: string; icon: LucideIcon }> {
@@ -130,7 +133,7 @@ type BookingModal = 'details' | 'contact' | 'voucher' | null;
 
 export default function BookingsPage() {
   const { user, isAuthenticated } = useAuth();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [activeTab, setActiveTab] = useState<TabType>('upcoming');
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -163,13 +166,13 @@ export default function BookingsPage() {
       
       const data = await response.json();
       const rawBookings = (data?.data?.bookings || data?.bookings || []) as ApiBooking[];
-      setBookings(rawBookings.map(normalizeBooking));
+      setBookings(rawBookings.map(booking => normalizeBooking(booking, locale, t("bookings.stay"))));
     } catch (_err) {
       setError(t('bookings.errorLoading'));
     } finally {
       setIsLoading(false);
     }
-  }, [isAuthenticated, user, t]);
+  }, [isAuthenticated, user, t, locale]);
 
   useEffect(() => {
     fetchBookings();
@@ -222,7 +225,7 @@ export default function BookingsPage() {
     if (modal === 'contact') {
       setHostMessageStatus('idle');
       setHostMessage(
-        `Hi, I have a question about booking ${booking.bookingNumber} for ${booking.propertyTitle} (${formatBookingDate(booking.checkIn)} - ${formatBookingDate(booking.checkOut)}).`
+        t('bookings.contactDraft', { number: booking.bookingNumber, title: booking.propertyTitle, dates: `${formatBookingDate(booking.checkIn, locale)} - ${formatBookingDate(booking.checkOut, locale)}` })
       );
     }
   };
@@ -241,14 +244,14 @@ export default function BookingsPage() {
     const propertyTitle = escapeVoucherText(booking.propertyTitle);
     const bookingNumber = escapeVoucherText(booking.bookingNumber);
     const statusLabel = escapeVoucherText(statusConfig[booking.status]?.label || booking.status);
-    const guestName = escapeVoucherText(booking.guestName || 'Guest');
+    const guestName = escapeVoucherText(booking.guestName || t('bookings.voucher.guest'));
     const paymentStatus = escapeVoucherText(booking.paymentStatus);
     const currency = escapeVoucherText(booking.currency);
     return `<!doctype html>
-<html>
+<html lang="${locale}">
 <head>
   <meta charset="utf-8" />
-  <title>NEOS booking voucher ${bookingNumber}</title>
+  <title>${t("bookings.voucher.title")} ${bookingNumber}</title>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #171717; margin: 40px; }
     .voucher { max-width: 760px; border: 1px solid #e5e5e5; border-radius: 24px; padding: 32px; }
@@ -265,21 +268,21 @@ export default function BookingsPage() {
 </head>
 <body>
   <section class="voucher">
-    <div class="brand">NEOS Booking Voucher</div>
+    <div class="brand">${t("bookings.voucher.title")}</div>
     <h1>${propertyTitle}</h1>
     <div class="grid">
-      <div class="box"><div class="label">Booking number</div><div class="value">${bookingNumber}</div></div>
-      <div class="box"><div class="label">Status</div><div class="value">${statusLabel}</div></div>
-      <div class="box"><div class="label">Check-in</div><div class="value">${formatBookingDate(booking.checkIn)}</div></div>
-      <div class="box"><div class="label">Check-out</div><div class="value">${formatBookingDate(booking.checkOut)}</div></div>
-      <div class="box"><div class="label">Guest</div><div class="value">${guestName}</div></div>
-      <div class="box"><div class="label">Guests / nights</div><div class="value">${booking.guests} guests · ${booking.nights} nights</div></div>
+      <div class="box"><div class="label">${t("bookings.voucher.number")}</div><div class="value">${bookingNumber}</div></div>
+      <div class="box"><div class="label">${t("bookings.voucher.status")}</div><div class="value">${statusLabel}</div></div>
+      <div class="box"><div class="label">${t("bookings.voucher.checkIn")}</div><div class="value">${escapeVoucherText(formatBookingDate(booking.checkIn, locale))}</div></div>
+      <div class="box"><div class="label">${t("bookings.voucher.checkOut")}</div><div class="value">${escapeVoucherText(formatBookingDate(booking.checkOut, locale))}</div></div>
+      <div class="box"><div class="label">${t("bookings.voucher.guest")}</div><div class="value">${guestName}</div></div>
+      <div class="box"><div class="label">${t("bookings.voucher.stay")}</div><div class="value">${escapeVoucherText(t("bookings.voucher.counts", { guests: booking.guests, nights: booking.nights }))}</div></div>
     </div>
     <div class="total">
-      <div><div class="label">Payment</div><div class="value">${paymentStatus}</div></div>
+      <div><div class="label">${t("bookings.voucher.payment")}</div><div class="value">${paymentStatus}</div></div>
       <div class="price">$${booking.totalPrice.toLocaleString()} ${currency}</div>
     </div>
-    <div class="footer">Issued by NEOS. Please keep this voucher for check-in and support.</div>
+    <div class="footer">${t("bookings.voucher.issued")}</div>
   </section>
 </body>
 </html>`;
@@ -462,11 +465,11 @@ export default function BookingsPage() {
                       <div className="mt-6 grid grid-cols-2 lg:grid-cols-4 divide-x divide-neutral-200 overflow-hidden rounded-2xl border border-neutral-200 bg-white">
                         <div className="px-4 py-3">
                           <p className="text-xs font-medium text-neutral-500 whitespace-nowrap">{t('bookings.checkIn')}</p>
-                          <p className="mt-1 font-semibold text-neutral-950 whitespace-nowrap">{formatBookingDate(booking.checkIn)}</p>
+                          <p className="mt-1 font-semibold text-neutral-950 whitespace-nowrap">{formatBookingDate(booking.checkIn, locale)}</p>
                         </div>
                         <div className="px-4 py-3">
                           <p className="text-xs font-medium text-neutral-500 whitespace-nowrap">{t('bookings.checkOut')}</p>
-                          <p className="mt-1 font-semibold text-neutral-950 whitespace-nowrap">{formatBookingDate(booking.checkOut)}</p>
+                          <p className="mt-1 font-semibold text-neutral-950 whitespace-nowrap">{formatBookingDate(booking.checkOut, locale)}</p>
                         </div>
                         <div className="px-4 py-3 border-t lg:border-t-0 border-neutral-200">
                           <p className="text-xs font-medium text-neutral-500 whitespace-nowrap">{t('bookings.nights')}</p>
@@ -485,7 +488,7 @@ export default function BookingsPage() {
                             <span>{booking.paymentStatus === 'COMPLETED' ? t('bookings.paid') : t('bookings.unpaid')}</span>
                           </div>
                           <span className="hidden sm:inline text-neutral-300">•</span>
-                          <div>{t('bookings.bookingDate')}: {booking.createdAt ? formatBookingDate(booking.createdAt) : '-'}</div>
+                          <div>{t('bookings.bookingDate')}: {booking.createdAt ? formatBookingDate(booking.createdAt, locale) : '-'}</div>
                         </div>
 
                         <div className="flex flex-wrap lg:justify-end gap-3">
@@ -620,12 +623,12 @@ export default function BookingsPage() {
               <p className="text-sm text-neutral-500">{selectedBooking.bookingNumber}</p>
               <p className="font-semibold text-neutral-950">{selectedBooking.propertyTitle}</p>
               <p className="mt-1 text-sm text-neutral-500">
-                {formatBookingDate(selectedBooking.checkIn)} - {formatBookingDate(selectedBooking.checkOut)}
+                {formatBookingDate(selectedBooking.checkIn, locale)} - {formatBookingDate(selectedBooking.checkOut, locale)}
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-800 mb-2">Message to host</label>
+              <label className="block text-sm font-medium text-neutral-800 mb-2">{t("bookings.hostNote")}</label>
               <textarea
                 value={hostMessage}
                 onChange={(event) => setHostMessage(event.target.value)}
@@ -635,22 +638,22 @@ export default function BookingsPage() {
             </div>
 
             {hostMessageStatus === 'sent' && (
-              <div className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700">Message sent. You can continue the conversation in Messages.</div>
+              <div className="rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700">{t("bookings.messageSent")}</div>
             )}
             {hostMessageStatus === 'error' && (
-              <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">Could not send this message. Please try again or open Messages.</div>
+              <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{t("bookings.messageFailed")}</div>
             )}
 
             <div className="flex flex-col sm:flex-row sm:justify-end gap-3">
               <Link href="/dashboard/messages" className="inline-flex justify-center rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium hover:border-neutral-900">
-                Open Messages
+                {t("bookings.openMessages")}
               </Link>
               <Button
                 onClick={sendHostMessage}
                 disabled={isSendingHostMessage || !hostMessage.trim()}
                 className="rounded-full px-5"
               >
-                {isSendingHostMessage ? 'Sending...' : 'Send message'}
+                {isSendingHostMessage ? t('bookings.sending') : t('bookings.send')}
               </Button>
             </div>
           </div>
@@ -666,16 +669,16 @@ export default function BookingsPage() {
         {selectedBooking && (
           <div className="space-y-5">
             <div className="rounded-3xl border border-neutral-200 p-6">
-              <p className="text-xs font-medium uppercase tracking-[0.18em] text-neutral-400">NEOS Booking Voucher</p>
+              <p className="text-xs font-medium uppercase tracking-[0.18em] text-neutral-400">{t("bookings.voucher.title")}</p>
               <h3 className="mt-2 text-2xl font-semibold text-neutral-950">{selectedBooking.propertyTitle}</h3>
               <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
-                <div className="rounded-xl bg-neutral-50 p-3"><p className="text-neutral-500">Booking</p><p className="font-semibold">{selectedBooking.bookingNumber}</p></div>
-                <div className="rounded-xl bg-neutral-50 p-3"><p className="text-neutral-500">Status</p><p className="font-semibold">{statusConfig[selectedBooking.status]?.label || selectedBooking.status}</p></div>
-                <div className="rounded-xl bg-neutral-50 p-3"><p className="text-neutral-500">Check-in</p><p className="font-semibold">{formatBookingDate(selectedBooking.checkIn)}</p></div>
-                <div className="rounded-xl bg-neutral-50 p-3"><p className="text-neutral-500">Check-out</p><p className="font-semibold">{formatBookingDate(selectedBooking.checkOut)}</p></div>
+                <div className="rounded-xl bg-neutral-50 p-3"><p className="text-neutral-500">{t("bookings.voucher.number")}</p><p className="font-semibold">{selectedBooking.bookingNumber}</p></div>
+                <div className="rounded-xl bg-neutral-50 p-3"><p className="text-neutral-500">{t("bookings.voucher.status")}</p><p className="font-semibold">{statusConfig[selectedBooking.status]?.label || selectedBooking.status}</p></div>
+                <div className="rounded-xl bg-neutral-50 p-3"><p className="text-neutral-500">{t("bookings.voucher.checkIn")}</p><p className="font-semibold">{formatBookingDate(selectedBooking.checkIn, locale)}</p></div>
+                <div className="rounded-xl bg-neutral-50 p-3"><p className="text-neutral-500">{t("bookings.voucher.checkOut")}</p><p className="font-semibold">{formatBookingDate(selectedBooking.checkOut, locale)}</p></div>
               </div>
               <div className="mt-5 flex items-end justify-between border-t border-neutral-200 pt-4">
-                <div><p className="text-sm text-neutral-500">Guest</p><p className="font-semibold">{selectedBooking.guestName || 'Guest'}</p></div>
+                <div><p className="text-sm text-neutral-500">{t("bookings.voucher.guest")}</p><p className="font-semibold">{selectedBooking.guestName || t('bookings.voucher.guest')}</p></div>
                 <p className="text-2xl font-bold">${selectedBooking.totalPrice.toLocaleString()} {selectedBooking.currency}</p>
               </div>
             </div>
