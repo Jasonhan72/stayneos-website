@@ -145,7 +145,7 @@ export default function BookingSidebar({
                 )}
                 <span className="font-semibold text-neutral-900">
                   {fp(tierRate)}
-                  /Mo
+                  {t("pricing.perMonth")}
                 </span>
               </span>
             </button>

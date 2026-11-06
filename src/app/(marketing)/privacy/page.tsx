@@ -1,10 +1,10 @@
+import { localizedPageMetadata } from "@/lib/i18n-server";
 import { Metadata } from 'next';
 import PrivacyContent from './PrivacyContent';
 
-export const metadata: Metadata = {
-  title: 'Privacy Policy - NEOS',
-  description: 'Learn how NEOS collects, uses, and protects your personal information.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return localizedPageMetadata("privacy");
+}
 
 export default function PrivacyPage() {
   return <PrivacyContent />;

@@ -11,12 +11,12 @@ export function CitiesSection() {
   const cityName = locale === 'zh' ? '多伦多' : locale === 'fr' ? 'Toronto' : 'Toronto';
   const [email, setEmail] = useState('');
   const neighborhoods = [
-    t('cities.areaDowntown', 'Downtown Core'),
-    t('cities.areaWaterfront', 'Waterfront'),
-    t('cities.areaFinancial', 'Financial District'),
-    t('cities.areaUniversity', 'University District'),
-    t('cities.areaYorkville', 'Yorkville'),
-    t('cities.areaMidtown', 'Midtown'),
+    { name: 'Downtown Core', label: t('cities.areaDowntown') },
+    { name: 'Waterfront', label: t('cities.areaWaterfront') },
+    { name: 'Financial District', label: t('cities.areaFinancial') },
+    { name: 'University District', label: t('cities.areaUniversity') },
+    { name: 'Yorkville', label: t('cities.areaYorkville') },
+    { name: 'Midtown', label: t('cities.areaMidtown') },
   ];
 
   const [notifyStatus, setNotifyStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
@@ -75,11 +75,11 @@ export function CitiesSection() {
               <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {neighborhoods.map((area) => (
                   <Link
-                    key={area}
-                    href={`/properties?city=toronto&area=${encodeURIComponent(area)}`}
+                    key={area.name}
+                    href={`/properties?city=toronto&area=${encodeURIComponent(area.name)}`}
                     className="border border-neutral-200 px-4 py-3 text-sm font-medium text-neutral-800 transition-colors hover:border-primary hover:text-primary"
                   >
-                    {area}
+                    {area.label}
                   </Link>
                 ))}
               </div>
@@ -102,7 +102,7 @@ export function CitiesSection() {
                   disabled={notifyStatus === 'sending' || notifyStatus === 'done'}
                   className="min-h-11 bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-700 disabled:opacity-60"
                 >
-                  {notifyStatus === 'sending' ? 'Sending...' : notifyStatus === 'done' ? t('cities.done', 'Done') : t('cities.notifyMe', 'Notify me')}
+                  {notifyStatus === 'sending' ? t('cities.sending') : notifyStatus === 'done' ? t('cities.done', 'Done') : t('cities.notifyMe', 'Notify me')}
                 </button>
               </form>
             </div>

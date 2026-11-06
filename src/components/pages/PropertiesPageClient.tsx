@@ -41,18 +41,23 @@ import { useWishlist } from '@/lib/context/WishlistContext';
 import { useCurrency } from '@/hooks/useCurrency';
 import { getPropertyLocation, resolvePropertyPricingTiers } from '@/lib/utils/property-transform';
 import { getTierDiscountPercent, type PricingTier } from '@/lib/property-pricing-discounts';
+import { getLocalizedTitle } from '@/components/property/PropertyCard';
 import FilterChips, { type FilterChip } from '@/components/property/FilterChips';
 import FilterModal, { PROPERTY_TYPES } from '@/components/property/FilterModal';
 import dynamic from 'next/dynamic';
 
-// 动态导入地图组件
+function MapLoading() {
+  const { t } = useI18n();
+  return (
+    <div className="w-full h-full bg-neutral-100 flex items-center justify-center">
+      <div className="text-neutral-400">{t("property.loadingMap")}</div>
+    </div>
+  );
+}
+
 const GooglePropertyMap = dynamic(() => import('@/components/property/GooglePropertyMap'), {
   ssr: false,
-  loading: () => (
-    <div className="w-full h-full bg-neutral-100 flex items-center justify-center">
-      <div className="text-neutral-400">Loading map...</div>
-    </div>
-  ),
+  loading: MapLoading,
 });
 
 const AirbnbCalendar = dynamic(() => import('@/components/booking').then((mod) => mod.AirbnbCalendar), {
@@ -154,7 +159,10 @@ export default function PropertiesPage() {
   const { properties, pagination, isLoading, error } = useProperties();
   
   // 转换 API 数据
-  const propertyList = useMemo(() => properties, [properties]);
+  const propertyList = useMemo(
+    () => properties.map(property => ({ ...property, title: getLocalizedTitle(property, locale) })),
+    [properties, locale],
+  );
   
   // 本地筛选（价格、卧室数量、amenities）
   const filteredProperties = useMemo(() => {

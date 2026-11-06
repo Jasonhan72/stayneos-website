@@ -1,10 +1,10 @@
+import { localizedPageMetadata } from "@/lib/i18n-server";
 import { Metadata } from 'next';
 import ServiceAnimalsContent from './ServiceAnimalsContent';
 
-export const metadata: Metadata = {
-  title: 'Service Animals Policy | NEOS',
-  description: 'NEOS policy on service animals and assistance animals.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return localizedPageMetadata("service-animals");
+}
 
 export const revalidate = 3600;
 

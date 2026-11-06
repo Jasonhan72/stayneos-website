@@ -1,10 +1,10 @@
+import { localizedPageMetadata } from "@/lib/i18n-server";
 import { Metadata } from "next";
 import ForStudentsPageContent from "./ForStudentsPageContent";
 
-export const metadata: Metadata = {
-  title: "Furnished Housing for Visiting Scholars & Medical Professionals | Toronto | NEOS",
-  description: "Premium furnished apartments near UofT, Toronto General, Mt. Sinai, SickKids. Ideal for visiting academics, medical fellows, and conference attendees.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return localizedPageMetadata("for-students");
+}
 
 export default function ForStudentsPage() {
   return <ForStudentsPageContent />;

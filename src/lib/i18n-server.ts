@@ -59,3 +59,11 @@ export function getHtmlLang(locale: ServerLocale): string {
   if (locale === "fr") return "fr-CA";
   return "en";
 }
+
+export async function localizedPageMetadata(page: string) {
+  const locale = await resolveRequestLocale();
+  return {
+    title: getServerTranslation(locale, `metadata.pages.${page}.title`),
+    description: getServerTranslation(locale, `metadata.pages.${page}.description`),
+  };
+}

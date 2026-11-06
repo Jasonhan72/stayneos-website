@@ -84,7 +84,9 @@
       "child": "位儿童",
       "infants": "婴幼儿",
       "infantsDescription": "2岁以下",
-      "infant": "位婴幼儿"
+      "infant": "位婴幼儿",
+      "pets": "宠物",
+      "petsDescription": "服务性动物不计入宠物数量"
     },
     "priceBreakdown": "费用明细",
     "totalPrice": "总价",
@@ -125,7 +127,9 @@
     "noExtraFees": "无额外费用",
     "fullPolicy": "完整政策",
     "payPartNowPartLater": "先付部分，后付余款",
-    "taxesWithRate": "税费 (13%)"
+    "taxesWithRate": "税费 (13%)",
+    "petSingular": "只宠物",
+    "petsPlural": "只宠物"
   },
   "bookings": {
     "title": "我的预订",
@@ -236,7 +240,8 @@
       "loadFailed": "加载预订失败",
       "cancelFailed": "取消预订失败",
       "cancelAlert": "取消失败，请重试"
-    }
+    },
+    "fetchFailed": "无法加载预订"
   },
   "bookingDetail": {
     "loading": "加载中...",

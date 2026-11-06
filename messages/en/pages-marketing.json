@@ -92,7 +92,25 @@
       "saved": "saved",
       "challengeLabel": "Challenge:",
       "solutionLabel": "Solution:",
-      "resultLabel": "Result:"
+      "resultLabel": "Result:",
+      "projectTeam": {
+        "company": "Project Team Housing",
+        "challenge": "Furnished apartments for teams on 3-12 month assignments.",
+        "solution": "Centralized billing and flexible headcount support for changing team sizes.",
+        "result": "A reliable setup for project teams that need consistent housing and one point of coordination."
+      },
+      "executive": {
+        "company": "Executive Relocation",
+        "challenge": "Move-in ready homes for executives and families transitioning to Toronto.",
+        "solution": "Local orientation and handoff support to simplify arrival and settling in.",
+        "result": "A smoother relocation experience with consistent standards across every stay."
+      },
+      "insurance": {
+        "company": "Insurance & Emergency Housing",
+        "challenge": "Immediate-availability units for insurance claims, renovation displacement, and urgent corporate needs.",
+        "solution": "Fast placement into furnished homes with responsive coordination from our team.",
+        "result": "Rapid-response housing that works when timing, flexibility, and reliability matter most."
+      }
     },
     "features": {
       "title": "Business-First Features",
@@ -118,7 +136,8 @@
       "companies": "Operational Support",
       "stays": "Flexible Portfolio",
       "savings": "Average Savings vs Hotels",
-      "satisfaction": "Dedicated Account Support"
+      "satisfaction": "Dedicated Account Support",
+      "clear": "Clear"
     },
     "form": {
       "title": "Request a Custom Quote",
@@ -257,23 +276,127 @@
     "pricing": {
       "title": "Choose Your Savings Level",
       "subtitle": "The longer you stay, the more you save. All options include the same premium amenities and services.",
-      "select": "Select This Plan"
+      "select": "Select This Plan",
+      "popular": "Most Popular",
+      "perMonth": "per month",
+      "total": "Total Savings",
+      "estimate": "Your Estimated Savings:",
+      "duration": "{months} months",
+      "discount": "{percent} off",
+      "saved": "Saved {amount}",
+      "discountedRate": "Monthly rate with {percent} discount",
+      "periodSavings": "Total savings ({duration})",
+      "custom": "Custom pricing",
+      "features": {
+        "monthlyDiscount": "{percent} discount on monthly rate",
+        "notice": "Flexible move-out with 30 days notice",
+        "shortProjects": "Perfect for short assignments",
+        "utilities": "All utilities included",
+        "midLease": "Mid-lease modification options",
+        "projects": "Ideal for project assignments",
+        "priority": "Priority customer support",
+        "stability": "Maximum savings & stability",
+        "renew": "Annual lease renewal options",
+        "manager": "Dedicated account manager"
+      }
     },
     "advantages": {
       "title": "Why Choose Long-Term with NEOS",
-      "subtitle": "Beyond just savings, long-term stays offer stability, convenience, and a true home-away-from-home experience."
+      "subtitle": "Beyond just savings, long-term stays offer stability, convenience, and a true home-away-from-home experience.",
+      "support": {
+        "benefit": "VIP customer service",
+        "description": "Dedicated account management and priority support for all long-term residents.",
+        "title": "Premium Support"
+      },
+      "flexibility": {
+        "benefit": "Easy lease modifications",
+        "description": "Choose 3, 6, or 12-month terms with options to extend or modify based on your evolving needs.",
+        "title": "Flexible Terms"
+      },
+      "stability": {
+        "benefit": "Rate protection guaranteed",
+        "description": "Secure your housing for months ahead with locked-in rates and guaranteed availability.",
+        "title": "Housing Stability"
+      },
+      "savings": {
+        "benefit": "Up to $12,600 annual savings",
+        "description": "Save up to 30% on monthly rates compared to short-term stays. The longer you stay, the more you save.",
+        "title": "Significant Savings"
+      }
     },
     "usecases": {
       "title": "Perfect For Your Situation",
-      "subtitle": "Long-term rentals work for a variety of life and business situations requiring extended Toronto stays."
+      "subtitle": "Long-term rentals work for a variety of life and business situations requiring extended Toronto stays.",
+      "transitions": {
+        "duration": "3-6 months typical",
+        "description": "Temporary housing during divorce, job changes, or other major life transitions.",
+        "title": "Life Transitions"
+      },
+      "remote": {
+        "duration": "6-12 months typical",
+        "description": "Flexible living for digital nomads, remote workers, and location-independent professionals.",
+        "title": "Remote Work"
+      },
+      "relocation": {
+        "duration": "3-6 months typical",
+        "description": "Temporary housing while searching for permanent residence or awaiting property purchase.",
+        "title": "Relocation Bridge"
+      },
+      "projects": {
+        "duration": "3-12 months typical",
+        "description": "Perfect for extended business assignments, project teams, and temporary office setups.",
+        "title": "Corporate Projects"
+      }
     },
     "benefits": {
       "title": "Everything Included",
-      "subtitle": "All long-term rentals include premium amenities and services at no additional cost."
+      "subtitle": "All long-term rentals include premium amenities and services at no additional cost.",
+      "location": {
+        "description": "Central Toronto locations with transit access",
+        "title": "Prime Locations"
+      },
+      "cleaning": {
+        "description": "Weekly or bi-weekly cleaning service available",
+        "title": "Regular Cleaning"
+      },
+      "concierge": {
+        "description": "Personal assistance with local services and needs",
+        "title": "Concierge Service"
+      },
+      "maintenance": {
+        "description": "Rapid response for any issues or repairs needed",
+        "title": "24/7 Maintenance"
+      },
+      "furnished": {
+        "description": "Quality furniture, appliances, and housewares included",
+        "title": "Fully Furnished"
+      },
+      "utilities": {
+        "description": "Electricity, water, gas, internet - everything covered",
+        "title": "All Bills Included"
+      }
     },
     "testimonials": {
       "title": "Long-Term Resident Stories",
-      "subtitle": "See how our long-term residents have saved money and enjoyed their extended Toronto stays."
+      "subtitle": "See how our long-term residents have saved money and enjoyed their extended Toronto stays.",
+      "remote": {
+        "quote": "Working remotely from Toronto for 6 months was amazing. The long-term rate made it affordable and the apartment had everything I needed.",
+        "duration": "6-month lease",
+        "company": "Remote Worker",
+        "role": "Software Engineer"
+      },
+      "marketing": {
+        "quote": "Perfect solution for our Toronto expansion. The flexibility to extend and modify the lease was exactly what we needed.",
+        "duration": "6-month lease",
+        "company": "Financial Services",
+        "role": "Marketing Director"
+      },
+      "project": {
+        "quote": "The 12-month lease saved our company over $10,000 compared to hotels. The dedicated account manager made everything seamless.",
+        "duration": "12-month lease",
+        "company": "Tech Consulting Firm",
+        "role": "Project Manager"
+      }
     },
     "form": {
       "title": "Get Your Long-Term Rental Quote",
@@ -317,22 +440,71 @@
     },
     "advantages": {
       "title": "Why Choose NEOS",
-      "subtitle": "Join hundreds of property owners who've transformed their real estate investments into hassle-free income streams."
+      "subtitle": "Join hundreds of property owners who've transformed their real estate investments into hassle-free income streams.",
+      "zeroVacancy": {
+        "description": "We handle all bookings and marketing. Your property stays occupied with premium business travelers.",
+        "title": "Zero Vacancy Risk"
+      },
+      "professionalMgmt": {
+        "description": "Full-service property management including maintenance, cleaning, guest services, and 24/7 support.",
+        "title": "Professional Management"
+      },
+      "steadyIncome": {
+        "description": "Guaranteed rent payments every month, regardless of occupancy. No more chasing tenants for payments.",
+        "title": "Steady Monthly Income"
+      }
     },
     "calculator": {
       "title": "Calculate Your Potential Earnings",
       "subtitle": "See how much more you could earn with NEOS compared to traditional rentals.",
       "currentRent": "Current Monthly Rent",
       "occupancyRate": "Current Occupancy Rate",
-      "guarantee": "Monthly payments regardless of occupancy, plus professional management included."
+      "guarantee": "Monthly payments regardless of occupancy, plus professional management included.",
+      "earnings": "Your Earnings Potential",
+      "traditional": "Traditional Rental (Annual):",
+      "withNeos": "With NEOS (Annual):",
+      "additional": "Additional Annual Income:",
+      "guaranteed": "Guaranteed:"
     },
     "process": {
       "title": "How It Works",
-      "subtitle": "Get started in four simple steps and begin earning guaranteed income from your property."
+      "subtitle": "Get started in four simple steps and begin earning guaranteed income from your property.",
+      "earning": {
+        "description": "Your property goes live on our platform and you start receiving guaranteed monthly payments.",
+        "title": "Start Earning"
+      },
+      "setup": {
+        "description": "We handle professional photography, listing creation, and any necessary staging or improvements.",
+        "title": "Setup & Staging"
+      },
+      "evaluate": {
+        "description": "Our team visits your property to assess suitability and suggest any improvements needed.",
+        "title": "Property Evaluation"
+      },
+      "apply": {
+        "description": "Complete our simple application form with your property details and contact information.",
+        "title": "Submit Application"
+      }
     },
     "benefits": {
       "title": "Additional Benefits",
-      "subtitle": "More reasons why property owners choose NEOS for their investment properties."
+      "subtitle": "More reasons why property owners choose NEOS for their investment properties.",
+      "flexible": {
+        "description": "Month-to-month agreements with no long-term commitment",
+        "title": "Flexible Terms"
+      },
+      "guaranteed": {
+        "description": "Monthly payments guaranteed, even during vacant periods",
+        "title": "Payment Guarantee"
+      },
+      "premiumGuests": {
+        "description": "Vetted business professionals and corporate clients",
+        "title": "Quality Guests Only"
+      },
+      "noMaintenance": {
+        "description": "We handle all maintenance, repairs, and guest issues",
+        "title": "Hands-Off Management"
+      }
     },
     "form": {
       "title": "List Your Property Today",

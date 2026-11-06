@@ -1,10 +1,10 @@
+import { localizedPageMetadata } from "@/lib/i18n-server";
 import { Metadata } from "next";
 import ResetPasswordForm from "./ResetPasswordForm";
 
-export const metadata: Metadata = {
-  title: "Reset Password - NEOS",
-  description: "Set your new password",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return localizedPageMetadata("reset-password");
+}
 
 export default async function ResetPasswordPage({
   searchParams,

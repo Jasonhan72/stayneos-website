@@ -30,7 +30,26 @@
     "or": "或",
     "month": "月",
     "off": "折扣",
-    "moreInfo": "更多信息"
+    "moreInfo": "更多信息",
+    "prev": "上一页",
+    "clear": "清除",
+    "remove": "移除",
+    "chatOnWhatsApp": "通过 WhatsApp 联系",
+    "inquiry": {
+      "firstName": "请输入名字",
+      "lastName": "请输入姓氏",
+      "email": "请输入有效的电子邮箱",
+      "phone": "请输入有效的电话号码",
+      "address": "请输入房源地址",
+      "beds": "请选择卧室数量",
+      "property": "请介绍您的房源",
+      "moveIn": "请选择入住日期",
+      "needs": "请描述您的住房需求",
+      "company": "请输入公司名称",
+      "contact": "请输入联系人姓名",
+      "request": "请说明您的需求",
+      "submitFailed": "发送失败，请重试。"
+    }
   },
   "nav": {
     "openMenu": "打开菜单",
@@ -58,7 +77,8 @@
     "switchToTravelling": "切换到租客模式",
     "becomeAHost": "成为房东",
     "hostingMode": "当前：房东模式",
-    "listYourProperty": "在 Neos 发布您的房源"
+    "listYourProperty": "在 Neos 发布您的房源",
+    "home": "首页"
   },
   "footer": {
     "about": "关于我们",
@@ -154,7 +174,81 @@
   },
   "metadata": {
     "title": "NEOS | 高端行政公寓出租平台",
-    "description": "NEOS是专为商务人士打造的高端行政公寓平台，提供优质房源、灵活租期、24小时管家服务。"
+    "description": "NEOS是专为商务人士打造的高端行政公寓平台，提供优质房源、灵活租期、24小时管家服务。",
+    "pages": {
+      "cancellation-policy": {
+        "title": "取消和退款政策",
+        "description": "了解 NEOS 公寓预订的取消与退款规则。"
+      },
+      "corporate": {
+        "title": "企业住宿",
+        "description": "为商务旅客、搬迁员工和项目团队提供租期灵活的精装公寓。"
+      },
+      "for-business": {
+        "title": "多伦多企业住房与员工安置",
+        "description": "为商务出差、人员安置与保险理赔提供市中心精装公寓，支持 30 天账期。"
+      },
+      "for-hosts": {
+        "title": "业主合作与房源登记",
+        "description": "登记精装房源，了解 NEOS 的专业托管、租金保障与住客服务。"
+      },
+      "for-students": {
+        "title": "多伦多访学与医疗人员住宿",
+        "description": "探索多伦多大学及主要医院附近的精装公寓，适合访学、医学进修和参会住宿。"
+      },
+      "help": {
+        "title": "帮助中心",
+        "description": "查找有关预订、付款、入住和其他常见问题的解答。"
+      },
+      "landlords": {
+        "title": "业主服务",
+        "description": "了解 NEOS 为业主提供的专业房源管理和出租服务。"
+      },
+      "long-term": {
+        "title": "多伦多长租公寓与租期优惠",
+        "description": "选择 3、6 或 12 个月的灵活租期，了解精装公寓的长租价格。"
+      },
+      "market-insights": {
+        "title": "多伦多市场洞察与报告",
+        "description": "了解多伦多房地产市场、租金趋势、交易数据与投资动态。"
+      },
+      "neighborhoods": {
+        "title": "多伦多社区指南",
+        "description": "探索 NEOS 房源所在的湖滨区、市中心医院区和北约克。"
+      },
+      "privacy": {
+        "title": "隐私政策",
+        "description": "了解 NEOS 如何收集、使用和保护您的个人信息。"
+      },
+      "service-animals": {
+        "title": "服务性动物政策",
+        "description": "了解 NEOS 对服务性动物和辅助动物的政策。"
+      },
+      "services": {
+        "title": "我们的服务",
+        "description": "了解企业住房、短租、物业管理、礼宾服务和灵活租约。"
+      },
+      "terms": {
+        "title": "服务条款",
+        "description": "使用 NEOS 网站和服务前，请阅读本服务条款。"
+      },
+      "403": {
+        "title": "403 · 访问受限",
+        "description": "您没有访问此页面的权限。"
+      },
+      "forgot-password": {
+        "title": "忘记密码",
+        "description": "重设您的 NEOS 账户密码。"
+      },
+      "reset-password": {
+        "title": "重设密码",
+        "description": "设置您的新密码。"
+      },
+      "login": {
+        "title": "登录",
+        "description": "登录 NEOS 账户，管理预订并浏览精装公寓。"
+      }
+    }
   },
   "pagination": {
     "previous": "上一页",

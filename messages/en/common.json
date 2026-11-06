@@ -30,7 +30,26 @@
     "or": "or",
     "month": "Mo",
     "off": "off",
-    "moreInfo": "More info"
+    "moreInfo": "More info",
+    "prev": "Previous",
+    "clear": "Clear",
+    "remove": "Remove",
+    "chatOnWhatsApp": "Chat on WhatsApp",
+    "inquiry": {
+      "firstName": "First name is required",
+      "lastName": "Last name is required",
+      "email": "Please enter a valid email",
+      "phone": "Please enter a valid phone number",
+      "address": "Please enter property address",
+      "beds": "Please specify number of bedrooms",
+      "property": "Please tell us about your property",
+      "moveIn": "Move-in date is required",
+      "needs": "Please tell us about your requirements",
+      "company": "Company name is required",
+      "contact": "Contact name is required",
+      "request": "Please tell us what you need",
+      "submitFailed": "Could not send your request. Please try again."
+    }
   },
   "nav": {
     "openMenu": "Open menu",
@@ -58,7 +77,8 @@
     "switchToTravelling": "Switch to travelling",
     "becomeAHost": "Become a host",
     "hostingMode": "Currently in Hosting mode",
-    "listYourProperty": "List your property on Neos"
+    "listYourProperty": "List your property on Neos",
+    "home": "Home"
   },
   "footer": {
     "about": "About Us",
@@ -154,7 +174,81 @@
   },
   "metadata": {
     "title": "NEOS | Premium Executive Apartment Rentals",
-    "description": "NEOS is a premium executive apartment platform for business professionals, offering quality properties, flexible leases, and 24/7 concierge service."
+    "description": "NEOS is a premium executive apartment platform for business professionals, offering quality properties, flexible leases, and 24/7 concierge service.",
+    "pages": {
+      "cancellation-policy": {
+        "title": "Cancellation Policy",
+        "description": "NEOS cancellation and refund policy for apartment bookings."
+      },
+      "corporate": {
+        "title": "For Business",
+        "description": "Corporate housing solutions for business travelers, relocating employees, and project teams. Flexible, fully-furnished apartments in major cities."
+      },
+      "for-business": {
+        "title": "Corporate Housing Toronto | Business Relocation",
+        "description": "Corporate furnished apartments for business travel, employee relocation, and insurance housing in downtown Toronto. Net-30 invoicing available."
+      },
+      "for-hosts": {
+        "title": "List Your Property - For Hosts",
+        "description": "List your furnished property on NEOS and earn steady income with zero vacancy. Professional property management, guaranteed rent, and hassle-free hosting."
+      },
+      "for-students": {
+        "title": "Furnished Housing for Visiting Scholars & Medical Professionals | Toronto",
+        "description": "Premium furnished apartments near UofT, Toronto General, Mt. Sinai, SickKids. Ideal for visiting academics, medical fellows, and conference attendees."
+      },
+      "help": {
+        "title": "Help Center",
+        "description": "Find answers to common questions about booking, payments, check-in, and more."
+      },
+      "landlords": {
+        "title": "For Landlords",
+        "description": "Partner with NEOS to maximize your rental income. Professional property management services for landlords."
+      },
+      "long-term": {
+        "title": "Long-Term Rentals Toronto | Extended Stay Discounts",
+        "description": "Save more with long-term rentals in Toronto. Flexible 3, 6, and 12-month leases with significant discounts. Premium furnished apartments for extended stays."
+      },
+      "market-insights": {
+        "title": "Toronto Market Insights & Reports | NEOS Knowledge Hub",
+        "description": "Toronto real estate market reports, TRREB data analysis, rental trends, and investment insights. Updated regularly with the latest data."
+      },
+      "neighborhoods": {
+        "title": "Toronto Neighborhoods Guide | Waterfront, Downtown Core, North York",
+        "description": "Explore Toronto's premium neighborhoods where NEOS properties are located. Sugar Wharf waterfront, downtown hospital district, and North York."
+      },
+      "privacy": {
+        "title": "Privacy Policy",
+        "description": "Learn how NEOS collects, uses, and protects your personal information."
+      },
+      "service-animals": {
+        "title": "Service Animals Policy",
+        "description": "NEOS policy on service animals and assistance animals."
+      },
+      "services": {
+        "title": "Our Services",
+        "description": "Discover NEOS services: corporate housing, short-term rentals, property management, concierge services, and flexible leasing options."
+      },
+      "terms": {
+        "title": "Terms of Service",
+        "description": "Please read these Terms of Service carefully before using NEOS website and services."
+      },
+      "403": {
+        "title": "403 - Access Forbidden",
+        "description": "You do not have permission to access this page."
+      },
+      "forgot-password": {
+        "title": "Forgot Password",
+        "description": "Reset your NEOS account password"
+      },
+      "reset-password": {
+        "title": "Reset Password",
+        "description": "Set your new password"
+      },
+      "login": {
+        "title": "Log in",
+        "description": "Log in to your NEOS account to manage bookings and access furnished apartments."
+      }
+    }
   },
   "pagination": {
     "previous": "Previous",

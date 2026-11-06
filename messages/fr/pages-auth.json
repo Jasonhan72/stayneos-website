@@ -66,7 +66,13 @@
       "wishlistTitle": "Connectez-vous pour enregistrer ce logement",
       "messageTitle": "Connectez-vous pour contacter NEOS",
       "signupTitle": "Créer votre compte NEOS"
-    }
+    },
+    "firstName": "Prénom",
+    "lastName": "Nom de famille",
+    "email": "Courriel",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "createAccount": "Créer un compte"
   },
   "login": "Connexion",
   "register": "S'inscrire",

@@ -30,13 +30,32 @@
       "saved": "节省",
       "challengeLabel": "挑战：",
       "solutionLabel": "方案：",
-      "resultLabel": "结果："
+      "resultLabel": "结果：",
+      "projectTeam": {
+        "company": "项目团队住房",
+        "challenge": "为外派 3 至 12 个月的项目团队安排精装公寓。",
+        "solution": "统一结算，并根据团队人数灵活调整住宿安排。",
+        "result": "项目团队拥有稳定的住处，并由一位联系人统筹协调。"
+      },
+      "executive": {
+        "company": "高管异地安置",
+        "challenge": "为迁往多伦多的高管及其家人提供可直接入住的住房。",
+        "solution": "提供社区介绍和入住交接，帮助住客尽快安顿下来。",
+        "result": "各处房源采用统一服务标准，让搬迁过程更顺利。"
+      },
+      "insurance": {
+        "company": "保险理赔与应急住宿",
+        "challenge": "为保险理赔、装修过渡或企业紧急需求寻找可立即入住的房源。",
+        "solution": "团队迅速协调入住手续，安排配备齐全的公寓。",
+        "result": "在时间紧迫时也能灵活安排可靠的住处。"
+      }
     },
     "stats": {
       "companies": "运营支持",
       "stays": "灵活房源组合",
       "satisfaction": "专属客户支持",
-      "savings": "相较酒店的平均节省"
+      "savings": "相较酒店的平均节省",
+      "clear": "清晰透明"
     },
     "trust": {
       "insured": "全面承保 — 200万加元商业综合责任险",
@@ -264,7 +283,27 @@
     },
     "advantages": {
       "title": "为什么选择 NEOS 长租",
-      "subtitle": "除了节省费用，长期入住还能带来稳定性、便利性和真正的家外之家体验。"
+      "subtitle": "除了节省费用，长期入住还能带来稳定性、便利性和真正的家外之家体验。",
+      "support": {
+        "benefit": "优先客户服务",
+        "description": "长租住客享有专属客户经理和优先支持。",
+        "title": "专属支持"
+      },
+      "flexibility": {
+        "benefit": "租约易于调整",
+        "description": "可选 3、6 或 12 个月租期，按需要申请延期或调整。",
+        "title": "灵活租期"
+      },
+      "stability": {
+        "benefit": "租金锁定",
+        "description": "提前锁定租金和房源，安心安排未来几个月的住宿。",
+        "title": "安心长住"
+      },
+      "savings": {
+        "benefit": "每年最多节省 12,600 元",
+        "description": "与短租相比，月租最多可省 30%。租期越长，优惠越多。",
+        "title": "节省租金"
+      }
     },
     "form": {
       "submit": "获取报价和优惠",
@@ -300,20 +339,104 @@
     },
     "testimonials": {
       "title": "长租住客的故事",
-      "subtitle": "看看住客如何节省租金，在多伦多安心长住。"
+      "subtitle": "看看住客如何节省租金，在多伦多安心长住。",
+      "remote": {
+        "quote": "在多伦多远程工作的六个月非常愉快。长租价格合适，公寓里也备齐了我需要的一切。",
+        "duration": "6 个月租期",
+        "company": "远程工作者",
+        "role": "软件工程师"
+      },
+      "marketing": {
+        "quote": "这个方案很适合我们拓展多伦多业务。租约可以延长或调整，正好符合我们的需求。",
+        "duration": "6 个月租期",
+        "company": "金融服务业",
+        "role": "市场总监"
+      },
+      "project": {
+        "quote": "与住酒店相比，12 个月的租约为公司节省了超过 10,000 元。专属客户经理让整个过程十分顺利。",
+        "duration": "12 个月租期",
+        "company": "技术咨询公司",
+        "role": "项目经理"
+      }
     },
     "usecases": {
       "title": "适合您的场景",
-      "subtitle": "无论因工作还是生活需要在多伦多停留一段时间，您都可以选择长租。"
+      "subtitle": "无论因工作还是生活需要在多伦多停留一段时间，您都可以选择长租。",
+      "transitions": {
+        "duration": "通常为 3 至 6 个月",
+        "description": "在离婚、换工作等重大生活变动期间提供临时住所。",
+        "title": "生活过渡期"
+      },
+      "remote": {
+        "duration": "通常为 6 至 12 个月",
+        "description": "为远程工作人员及可自由选择工作地点的人士提供灵活住房。",
+        "title": "远程办公"
+      },
+      "relocation": {
+        "duration": "通常为 3 至 6 个月",
+        "description": "寻找长期住处或等待购房交割期间，可先入住临时住房。",
+        "title": "搬迁过渡"
+      },
+      "projects": {
+        "duration": "通常为 3 至 12 个月",
+        "description": "适合长期出差、项目团队和临时办公安排。",
+        "title": "企业项目"
+      }
     },
     "pricing": {
       "select": "选择此方案",
       "title": "选择您的优惠等级",
-      "subtitle": "住得越久，省得越多。所有选项均包含相同的高端设施和服务。"
+      "subtitle": "住得越久，省得越多。所有选项均包含相同的高端设施和服务。",
+      "popular": "最受欢迎",
+      "perMonth": "每月",
+      "total": "总计节省",
+      "estimate": "预计节省金额",
+      "duration": "{months} 个月",
+      "discount": "优惠 {percent}",
+      "saved": "节省 {amount}",
+      "discountedRate": "优惠 {percent} 后的月租",
+      "periodSavings": "总计节省（{duration}）",
+      "custom": "定制报价",
+      "features": {
+        "monthlyDiscount": "月租优惠 {percent}",
+        "notice": "提前 30 天通知即可灵活退租",
+        "shortProjects": "适合短期外派",
+        "utilities": "包含所有水电费用",
+        "midLease": "租期内可申请调整",
+        "projects": "适合项目外派",
+        "priority": "优先客户支持",
+        "stability": "优惠最多，居住稳定",
+        "renew": "可按年续租",
+        "manager": "专属客户经理"
+      }
     },
     "benefits": {
       "title": "全部包含",
-      "subtitle": "所有长期租赁均包含高端设施和服务，无额外费用。"
+      "subtitle": "所有长期租赁均包含高端设施和服务，无额外费用。",
+      "location": {
+        "description": "位于多伦多中心区域，方便乘坐公共交通。",
+        "title": "交通便利"
+      },
+      "cleaning": {
+        "description": "可选择每周或每两周一次的保洁服务。",
+        "title": "定期保洁"
+      },
+      "concierge": {
+        "description": "提供本地服务信息，并协助处理日常需求。",
+        "title": "礼宾服务"
+      },
+      "maintenance": {
+        "description": "遇到故障或需要维修时，团队会迅速响应。",
+        "title": "全天候维修"
+      },
+      "furnished": {
+        "description": "配备优质家具、家电和日常家居用品。",
+        "title": "家具齐全"
+      },
+      "utilities": {
+        "description": "水、电、燃气和网络费用均已包含。",
+        "title": "费用全包"
+      }
     }
   },
   "hosts": {
@@ -355,11 +478,32 @@
       "guarantee": "无论入住率如何，您都能每月收取租金并享受专业管理服务。",
       "subtitle": "了解与传统租赁相比，NEOS 能为您带来多少额外收入。",
       "currentRent": "当前月租",
-      "occupancyRate": "当前入住率"
+      "occupancyRate": "当前入住率",
+      "earnings": "您的预计收益",
+      "traditional": "传统出租年收入",
+      "withNeos": "与 NEOS 合作的年收入",
+      "additional": "每年可增加的收入",
+      "guaranteed": "租金保障"
     },
     "process": {
       "subtitle": "四个简单步骤即可开始，为您的房产赚取稳定收入。",
-      "title": "如何运作"
+      "title": "如何运作",
+      "earning": {
+        "description": "房源上线后，您即可按月收取有保障的租金。",
+        "title": "开始收取租金"
+      },
+      "setup": {
+        "description": "我们负责专业摄影、创建房源页面，以及必要的布置或改进。",
+        "title": "布置并发布房源"
+      },
+      "evaluate": {
+        "description": "我们的团队实地评估房源，并提出必要的改进建议。",
+        "title": "评估房源"
+      },
+      "apply": {
+        "description": "填写房源资料和联系方式，即可提交申请。",
+        "title": "提交申请"
+      }
     },
     "hero": {
       "cta": "立即开始",
@@ -369,11 +513,39 @@
     },
     "advantages": {
       "title": "为什么选择 NEOS",
-      "subtitle": "加入数百位通过 NEOS 将房产投资转化为省心收入的业主行列。"
+      "subtitle": "加入数百位通过 NEOS 将房产投资转化为省心收入的业主行列。",
+      "zeroVacancy": {
+        "description": "我们负责预订与推广，为您的房源寻找商务住客。",
+        "title": "免除空置风险"
+      },
+      "professionalMgmt": {
+        "description": "我们负责维护、保洁和住客服务，并提供全天候支持。",
+        "title": "专业物业管理"
+      },
+      "steadyIncome": {
+        "description": "无论房源是否入住，每月都能按时收到租金，无需催缴。",
+        "title": "稳定的月租收入"
+      }
     },
     "benefits": {
       "subtitle": "更多业主选择 NEOS 管理投资物业的理由。",
-      "title": "其他优势"
+      "title": "其他优势",
+      "flexible": {
+        "description": "按月签约，无需长期承诺。",
+        "title": "灵活合约"
+      },
+      "guaranteed": {
+        "description": "即使房源空置，您也能按月收取租金。",
+        "title": "租金保障"
+      },
+      "premiumGuests": {
+        "description": "商务旅客和企业客户均经过审核。",
+        "title": "严选住客"
+      },
+      "noMaintenance": {
+        "description": "我们处理保养、维修和住客提出的问题。",
+        "title": "省心托管"
+      }
     }
   },
   "landlords": {

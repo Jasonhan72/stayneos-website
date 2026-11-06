@@ -57,15 +57,14 @@ export function readPreferredCurrency(): Currency {
   return DEFAULT_CURRENCY;
 }
 
-export function persistLocale(locale: Locale) {
+export function persistLocale(locale: Locale, { notify = true } = {}) {
   if (typeof window === 'undefined') return;
-
-  localStorage.setItem(PREFERRED_LOCALE_KEY, locale);
 
   const expires = new Date(Date.now() + 365 * 864e5).toUTCString();
   document.cookie = `${LOCALE_COOKIE_KEY}=${locale}; expires=${expires}; path=/; SameSite=Lax`;
 
   try {
+    localStorage.setItem(PREFERRED_LOCALE_KEY, locale);
     const userData = localStorage.getItem(USER_KEY);
     if (userData) {
       const user = JSON.parse(userData);
@@ -74,8 +73,10 @@ export function persistLocale(locale: Locale) {
     }
   } catch {}
 
-  window.dispatchEvent(new CustomEvent('localeChange', { detail: { locale } }));
-  window.dispatchEvent(new CustomEvent('localStorageChange'));
+  if (notify) {
+    window.dispatchEvent(new CustomEvent('localeChange', { detail: { locale } }));
+    window.dispatchEvent(new CustomEvent('localStorageChange'));
+  }
 }
 
 export function persistCurrency(currency: Currency) {

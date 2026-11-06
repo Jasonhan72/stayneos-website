@@ -10,7 +10,7 @@ import { getTierDiscountPercent, type PricingTiers } from '@/lib/property-pricin
 
 interface FeaturedProperty {
   id: string;
-  title: string;
+  titleKey: string;
   location: string;
   monthlyPrice: number;
   quarterlyPrice: number;
@@ -27,7 +27,7 @@ interface FeaturedProperty {
 const featuredProperties: FeaturedProperty[] = [
   {
     id: '1',
-    title: '55 Cooper St (Sugar Wharf) · Premium 3BR Sky Suite',
+    titleKey: 'properties.featuredTitles.cooper',
     location: '55 Cooper St, Toronto, ON M5E 0G1',
     monthlyPrice: 12000,
     quarterlyPrice: 10800,
@@ -46,7 +46,7 @@ const featuredProperties: FeaturedProperty[] = [
   },
   {
     id: '2',
-    title: '238 Simcoe St (Grange Park) · Executive 3BR Suite',
+    titleKey: 'properties.featuredTitles.simcoe',
     location: '238 Simcoe St, Toronto, ON M5T 0A2',
     monthlyPrice: 8000,
     quarterlyPrice: 7200,
@@ -65,7 +65,7 @@ const featuredProperties: FeaturedProperty[] = [
   },
   {
     id: '3',
-    title: '22 Wellesley St E · Modern 1BR City View',
+    titleKey: 'properties.featuredTitles.wellesley',
     location: '22 Wellesley St E, Toronto, ON',
     monthlyPrice: 4000,
     quarterlyPrice: 3600,
@@ -123,6 +123,7 @@ function PricingRows({ property }: { property: FeaturedProperty }) {
 }
 
 function FavoriteButton({ propertyId }: { propertyId: string }) {
+  const { t } = useI18n();
   const [isFav, setIsFav] = useState(() => {
     if (typeof window === 'undefined') return false;
     try {
@@ -149,7 +150,7 @@ function FavoriteButton({ propertyId }: { propertyId: string }) {
     <button
       onClick={toggle}
       className="absolute top-4 right-4 p-2 bg-white/90 hover:bg-white transition-colors z-10"
-      aria-label={isFav ? 'Remove from favorites' : 'Add to favorites'}
+      aria-label={isFav ? t('property.removeFavorite') : t('property.addFavorite')}
     >
       <Heart size={18} className={isFav ? 'text-red-500 fill-red-500' : 'text-neutral-400'} />
     </button>
@@ -195,7 +196,7 @@ export function FeaturedPropertiesSection() {
                       <div className="aspect-[4/3] overflow-hidden relative">
                         <ResponsiveImage
                           src={property.images[0] || '/images/placeholder-property.jpg'}
-                          alt={property.title}
+                          alt={t(property.titleKey)}
                           fill
                           className="object-cover transition-transform duration-500 group-hover:scale-105"
                         />
@@ -204,7 +205,7 @@ export function FeaturedPropertiesSection() {
                       <div className="p-5">
                         <div className="flex items-start justify-between mb-2 gap-2">
                           <h3 className="text-base font-semibold text-neutral-900 group-hover:text-primary transition-colors line-clamp-2">
-                            {property.title}
+                            {t(property.titleKey)}
                           </h3>
                           {property.reviewCount > 0 && (
                             <div className="flex items-center gap-1 shrink-0">
@@ -247,7 +248,7 @@ export function FeaturedPropertiesSection() {
                   <div className="aspect-[4/3] overflow-hidden relative">
                     <ResponsiveImage
                       src={property.images[0] || '/images/placeholder-property.jpg'}
-                      alt={property.title}
+                      alt={t(property.titleKey)}
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
@@ -258,7 +259,7 @@ export function FeaturedPropertiesSection() {
                   <div className="p-6">
                     <div className="flex items-start justify-between mb-2 gap-2">
                       <h3 className="text-lg font-semibold text-neutral-900 group-hover:text-primary transition-colors line-clamp-1">
-                        {property.title}
+                        {t(property.titleKey)}
                       </h3>
                       {property.reviewCount > 0 && (
                         <div className="flex items-center gap-1 shrink-0">

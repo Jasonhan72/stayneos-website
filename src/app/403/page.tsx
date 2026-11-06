@@ -1,10 +1,10 @@
+import { localizedPageMetadata } from "@/lib/i18n-server";
 import { Metadata } from 'next';
 import ForbiddenContent from './ForbiddenContent';
 
-export const metadata: Metadata = {
-  title: '403 - Access Forbidden | NEOS',
-  description: 'You do not have permission to access this page.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return localizedPageMetadata("403");
+}
 
 export default function ForbiddenPage() {
   return <ForbiddenContent />;

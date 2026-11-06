@@ -84,7 +84,9 @@
       "child": "child",
       "infants": "Infants",
       "infantsDescription": "Under 2",
-      "infant": "infant"
+      "infant": "infant",
+      "pets": "Pets",
+      "petsDescription": "Service animals don't count"
     },
     "priceBreakdown": "Price Breakdown",
     "totalPrice": "Total Price",
@@ -125,7 +127,9 @@
     "noExtraFees": "No extra fees",
     "fullPolicy": "Full policy",
     "payPartNowPartLater": "Pay part now, part later",
-    "taxesWithRate": "Taxes (13%)"
+    "taxesWithRate": "Taxes (13%)",
+    "petSingular": "pet",
+    "petsPlural": "pets"
   },
   "bookings": {
     "title": "My Bookings",
@@ -236,7 +240,8 @@
       "loadFailed": "Failed to load bookings",
       "cancelFailed": "Failed to cancel booking",
       "cancelAlert": "Cancellation failed. Please try again."
-    }
+    },
+    "fetchFailed": "Failed to fetch bookings"
   },
   "bookingDetail": {
     "loading": "Loading...",

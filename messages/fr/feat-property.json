@@ -109,7 +109,7 @@
     "addDates": "Ajouter des dates",
     "selectDatesError": "Veuillez sélectionner des dates",
     "similarProperties": "Propriétés similaires",
-    "notFound": "Propriété non trouvée",
+    "notFound": "Logement introuvable",
     "defaultDescription": "Bel appartement de {bedrooms} ch/{bathrooms} sdB à {location}, {area} pi², accueille {maxGuests} invités",
     "inLocation": "{propertyType} à {location}",
     "featured": "En vedette",
@@ -141,7 +141,7 @@
       "modifyReservationHelp": "Changez les dates, prolongez votre séjour ou effacez cette sélection."
     },
     "showMore": "Afficher plus",
-    "loadingMap": "Chargement de la carte...",
+    "loadingMap": "Chargement de la carte…",
     "reserve": "Réserver",
     "totalBeforeTaxes": "Total avant taxes",
     "photos": "photos",
@@ -205,7 +205,39 @@
     "review3Text": "Le pied-à-terre idéal pour notre séjour d’un mois à Toronto. Près des transports et des restaurants, l’appartement avait vraiment l’atmosphère d’un vrai chez-soi, pas d’une simple location.",
     "review4Name": "Michael T.",
     "review4Date": "Décembre 2024",
-    "review4Text": "Qualité exceptionnelle de bout en bout. Des finitions haut de gamme aux équipements bien pensés, tout dépassait nos attentes. L’équipe NEOS a rendu la réservation parfaitement fluide."
+    "review4Text": "Qualité exceptionnelle de bout en bout. Des finitions haut de gamme aux équipements bien pensés, tout dépassait nos attentes. L’équipe NEOS a rendu la réservation parfaitement fluide.",
+    "from": "À partir de",
+    "showLess": "Afficher moins",
+    "locationChecked": "Emplacement vérifié",
+    "openMaps": "Ouvrir dans Google Maps",
+    "mapNoProperties": "Aucun logement à afficher sur la carte",
+    "mapFullscreen": "Plein écran",
+    "mapExitFullscreen": "Quitter le plein écran",
+    "mapTitle": "Carte des logements",
+    "addFavorite": "Ajouter aux favoris",
+    "removeFavorite": "Retirer des favoris",
+    "mapCount": "Carte · {count} logements meublés",
+    "mapCluster": "{count} logements",
+    "mapSelect": "Sélectionner {title} sur la carte",
+    "preview": {
+      "title": "Aperçu de conception AB-001",
+      "comparison": "Comparez les fiches originales et actuelles. La nouvelle fiche utilise une image au format 20:19, sans bordure, avec les détails sous la photo.",
+      "brand": "Couleurs de la marque : #003B5C et #C9A962.",
+      "newCard": "Nouvelle fiche de logement (AB-001)",
+      "oldCard": "Fiche de logement originale",
+      "filters": "Boutons de filtre",
+      "price": "Tous les prix",
+      "short": "Court séjour",
+      "monthly": "Location mensuelle",
+      "pet": "Animaux acceptés",
+      "view": "Vue sur le lac",
+      "badges": "Badges de confiance",
+      "verified": "✓ Emplacement vérifié",
+      "superhost": "⭐ Superhôte",
+      "self": "Arrivée autonome",
+      "gallery": "Galerie de photos du logement",
+      "photos": "Afficher toutes les photos"
+    }
   },
   "properties": {
     "title": "Propriétés en Vedette",
@@ -282,6 +314,11 @@
       "pool": "Piscine",
       "parking": "Stationnement",
       "concierge": "Conciergerie"
+    },
+    "featuredTitles": {
+      "cooper": "55 Cooper St (Sugar Wharf) · Suite haut de gamme de trois chambres en étage élevé",
+      "simcoe": "238 Simcoe St (Grange Park) · Suite affaires de trois chambres",
+      "wellesley": "22 Wellesley St E · Appartement moderne d’une chambre avec vue sur la ville"
     }
   },
   "propertiesCount": "100+ Appartements sélectionnés",
@@ -396,7 +433,8 @@
     "Swimming pool": "Piscine",
     "Washer/Dryer": "Lave-linge / sèche-linge",
     "Heating": "Chauffage",
-    "Concierge": "Concierge"
+    "Concierge": "Concierge",
+    "Linens and towels": "Draps et serviettes"
   },
   "amenitiesCategories": {
     "kitchen": "Cuisine Équipée",

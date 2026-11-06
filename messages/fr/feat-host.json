@@ -222,7 +222,9 @@
         "errors": {
           "titleFailed": "Échec de la génération des titres",
           "descriptionFailed": "Échec de la génération de la description"
-        }
+        },
+        "localizedDescriptions": "Descriptions traduites (facultatif)",
+        "frDescription": "Description en français (facultatif)"
       },
       "pricing": {
         "title": "Définissez votre prix",

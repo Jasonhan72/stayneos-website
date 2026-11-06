@@ -1,10 +1,10 @@
+import { localizedPageMetadata } from "@/lib/i18n-server";
 import { Metadata } from "next";
 import CorporatePageContent from "./CorporatePageContent";
 
-export const metadata: Metadata = {
-  title: "For Business - NEOS",
-  description: "Corporate housing solutions for business travelers, relocating employees, and project teams. Flexible, fully-furnished apartments in major cities.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return localizedPageMetadata("corporate");
+}
 
 // Static data for solutions - just keys
 const solutions = [

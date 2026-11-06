@@ -241,7 +241,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
                 <span className="text-xl font-bold text-neutral-900">
                   From ${getPropertyPrice(property).toLocaleString()}
                 </span>
-                <span className="text-sm text-neutral-500">/Mo</span>
+                <span className="text-sm text-neutral-500">{t("pricing.perMonth")}</span>
               </div>
               {property.reviewCount > 0 && (
                 <span 

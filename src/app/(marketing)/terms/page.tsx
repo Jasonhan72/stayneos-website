@@ -1,10 +1,10 @@
+import { localizedPageMetadata } from "@/lib/i18n-server";
 import { Metadata } from 'next';
 import TermsContent from './TermsContent';
 
-export const metadata: Metadata = {
-  title: 'Terms of Service - NEOS',
-  description: 'Please read these Terms of Service carefully before using NEOS website and services.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return localizedPageMetadata("terms");
+}
 
 export default function TermsPage() {
   return <TermsContent />;

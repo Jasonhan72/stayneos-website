@@ -109,7 +109,7 @@
     "addDates": "添加日期",
     "selectDatesError": "请选择日期",
     "similarProperties": "相似房源",
-    "notFound": "未找到房源",
+    "notFound": "找不到此房源",
     "defaultDescription": "位于 {location} 的 {bedrooms}室{bathrooms}卫公寓，{area} 平方英尺，可入住 {maxGuests} 人",
     "inLocation": "位于 {location} 的 {propertyType}",
     "featured": "精选",
@@ -141,7 +141,7 @@
       "modifyReservationHelp": "更改日期、延长入住，或清除此选择。"
     },
     "showMore": "展开更多",
-    "loadingMap": "地图加载中...",
+    "loadingMap": "正在加载地图…",
     "reserve": "预订",
     "totalBeforeTaxes": "税前总计",
     "photos": "张照片",
@@ -205,7 +205,39 @@
     "review3Text": "一个月的多伦多行，这套公寓是最完美的落脚点。交通便利，餐饮齐全，公寓真的像家一样，而不只是出租房。",
     "review4Name": "Michael T.",
     "review4Date": "2024 年 12 月",
-    "review4Text": "从高端装修到贴心配套，处处超出预期。NEOS 团队让整个预订流程非常顺畅。"
+    "review4Text": "从高端装修到贴心配套，处处超出预期。NEOS 团队让整个预订流程非常顺畅。",
+    "from": "起租价",
+    "showLess": "收起",
+    "locationChecked": "位置已核实",
+    "openMaps": "在谷歌地图中打开",
+    "mapNoProperties": "地图上暂无房源",
+    "mapFullscreen": "全屏显示",
+    "mapExitFullscreen": "退出全屏",
+    "mapTitle": "房源地图",
+    "addFavorite": "加入收藏",
+    "removeFavorite": "移出收藏",
+    "mapCount": "地图 · {count} 套精装房源",
+    "mapCluster": "{count} 套房源",
+    "mapSelect": "在地图上选择{title}",
+    "preview": {
+      "title": "AB-001 设计预览",
+      "comparison": "对比原版与新版房源卡片。新版采用 20:19 图片、无边框设计，房源信息位于图片下方。",
+      "brand": "品牌色为 #003B5C 和 #C9A962。",
+      "newCard": "新版房源卡片（AB-001）",
+      "oldCard": "原版房源卡片",
+      "filters": "筛选按钮",
+      "price": "不限价格",
+      "short": "短租",
+      "monthly": "月租",
+      "pet": "允许携带宠物",
+      "view": "湖景",
+      "badges": "认证标签",
+      "verified": "✓ 位置已核实",
+      "superhost": "⭐ 超赞房东",
+      "self": "自助入住",
+      "gallery": "房源照片展示",
+      "photos": "查看全部照片"
+    }
   },
   "properties": {
     "title": "精选房源",
@@ -282,6 +314,11 @@
       "pool": "游泳池",
       "parking": "停车位",
       "concierge": "礼宾服务"
+    },
+    "featuredTitles": {
+      "cooper": "库珀街 55 号 · 湖滨高层三居套房",
+      "simcoe": "辛科街 238 号 · 格兰奇公园三居行政套房",
+      "wellesley": "韦尔斯利东街 22 号 · 现代城景一居公寓"
     }
   },
   "propertiesCount": "100+ 精选公寓",
@@ -396,7 +433,8 @@
     "Swimming pool": "游泳池",
     "Washer/Dryer": "洗衣烘干机",
     "Heating": "暖气",
-    "Concierge": "礼宾服务"
+    "Concierge": "礼宾服务",
+    "Linens and towels": "床品和毛巾"
   },
   "amenitiesCategories": {
     "kitchen": "全套厨房",
