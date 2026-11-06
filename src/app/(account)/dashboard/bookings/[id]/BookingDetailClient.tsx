@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button, Modal } from '@/components/ui';
+import { getLocalizedTitle } from '@/components/property/PropertyCard';
 import { useI18n } from '@/lib/i18n';
 import { csrfFetch } from '@/lib/security/csrf-client';
 import { 
@@ -49,6 +50,8 @@ interface BookingDetail {
   property: {
     id: string;
     title: string;
+    titleZh?: string;
+    titleFr?: string;
     address: string;
     city: string;
     description: string;
@@ -229,6 +232,7 @@ export default function BookingDetailClient() {
     );
   }
 
+  const propertyTitle = getLocalizedTitle(booking.property, locale);
   const statusConfig = getStatusConfig(t);
   const StatusIcon = statusConfig[booking.status]?.icon || Clock;
   const statusConfigItem = statusConfig[booking.status] || statusConfig.PENDING;
@@ -278,7 +282,7 @@ export default function BookingDetailClient() {
                   <div className="relative aspect-video rounded-lg overflow-hidden mb-4">
                     <Image
                       src={booking.property.images[0]?.url || '/images/placeholder.jpg'}
-                      alt={booking.property.title}
+                      alt={propertyTitle}
                       fill
                       className="object-cover"
                     />
@@ -287,7 +291,7 @@ export default function BookingDetailClient() {
                     href={`/property/${booking.property.id}`}
                     className="text-lg font-semibold text-gray-900 hover:text-amber-600 transition-colors"
                   >
-                    {booking.property.title}
+                    {propertyTitle}
                   </Link>
                   <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
                     <MapPin size={14} />

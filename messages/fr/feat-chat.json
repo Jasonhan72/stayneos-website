@@ -18,7 +18,13 @@
       "1": "Pour les demandes de réservation, veuillez visiter notre page de propriétés ou utiliser le concierge IA ci-dessus.",
       "2": "Pour les questions urgentes, veuillez nous contacter par email à hello@stayneos.com.",
       "3": "Notre équipe répond généralement dans les 2 heures pendant les heures ouvrables (9h-18h HNE)."
-    }
+    },
+    "inputLabel": "Poser une question à Aria sur les appartements",
+    "studio": "Studio",
+    "priceUnavailable": "Voir l’annonce",
+    "greeting": "Bonjour, je suis Aria, votre conseillère en hébergement. Indiquez votre budget, le quartier souhaité et le nombre de chambres pour trouver un logement qui vous convient.",
+    "perMonth": "/mois",
+    "bedroomsValue": "{count} ch."
   },
   "ai": {
     "assistant": {

@@ -141,7 +141,7 @@
       "modifyReservationHelp": "Change dates, extend your stay, or clear this selection."
     },
     "showMore": "Show more",
-    "loadingMap": "Loading map...",
+    "loadingMap": "Loading map…",
     "reserve": "Reserve",
     "totalBeforeTaxes": "Total before taxes",
     "photos": "photos",
@@ -205,7 +205,45 @@
     "review3Text": "This was the perfect home base for our month-long stay in Toronto. Close to transit, restaurants, and everything we needed. The apartment felt like a real home, not just a rental.",
     "review4Name": "Michael T.",
     "review4Date": "December 2024",
-    "review4Text": "Exceptional quality throughout. From the high-end finishes to the thoughtful amenities, everything exceeded expectations. The NEOS team made the booking process seamless."
+    "review4Text": "Exceptional quality throughout. From the high-end finishes to the thoughtful amenities, everything exceeded expectations. The NEOS team made the booking process seamless.",
+    "from": "From",
+    "showLess": "Show less",
+    "locationChecked": "Location checked",
+    "openMaps": "Open in Google Maps",
+    "mapNoProperties": "No properties to show on map",
+    "mapFullscreen": "Fullscreen",
+    "mapExitFullscreen": "Exit fullscreen",
+    "mapTitle": "Properties map",
+    "addFavorite": "Add to favorites",
+    "removeFavorite": "Remove from favorites",
+    "mapCount": "Map · {count} furnished stays",
+    "mapCluster": "{count} stays",
+    "mapSelect": "Select {title} on map",
+    "preview": {
+      "title": "AB-001 Design Preview",
+      "comparison": "Compare the original and updated listing cards. The new card uses a 20:19 image, no border and details below the image.",
+      "brand": "Brand colors: #003B5C and #C9A962.",
+      "newCard": "Updated listing card (AB-001)",
+      "oldCard": "Original listing card",
+      "filters": "Filter buttons",
+      "price": "Any price",
+      "short": "Short stay",
+      "monthly": "Monthly",
+      "pet": "Pet-friendly",
+      "view": "Lake view",
+      "badges": "Trust badges",
+      "verified": "✓ Location verified",
+      "superhost": "⭐ Superhost",
+      "self": "Self check-in",
+      "gallery": "Property photo gallery",
+      "photos": "Show all photos"
+    },
+    "mapFallback": "Google Maps is unavailable. Select a property pin below to see the listing.",
+    "clusterOne": "{count} stay in this area",
+    "clusterMany": "{count} stays in this area",
+    "closeCluster": "Close cluster cards",
+    "scrollLeft": "Scroll left",
+    "scrollRight": "Scroll right"
   },
   "properties": {
     "title": "Featured Properties",
@@ -282,6 +320,11 @@
       "pool": "Pool",
       "parking": "Parking",
       "concierge": "Concierge"
+    },
+    "featuredTitles": {
+      "cooper": "55 Cooper St (Sugar Wharf) · Premium 3BR Sky Suite",
+      "simcoe": "238 Simcoe St (Grange Park) · Executive 3BR Suite",
+      "wellesley": "22 Wellesley St E · Modern 1BR City View"
     }
   },
   "propertiesCount": "100+ Curated Apartments",
@@ -313,7 +356,8 @@
     "title": "Amenity Recommendations",
     "placeholder": "Recommend amenities based on description...",
     "button": "Recommend",
-    "tip": "AI will analyze your description and recommend suitable amenities"
+    "tip": "AI will analyze your description and recommend suitable amenities",
+    "Linens and towels": "Linens and towels"
   },
   "amenitiesCategories": {
     "kitchen": "Fully-equipped Kitchen",

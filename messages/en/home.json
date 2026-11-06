@@ -106,6 +106,10 @@
     "support": {
       "title": "Responsive support",
       "description": "Our team stays available before arrival, during the stay, and whenever plans need to change."
+    },
+    "owner": {
+      "title": "Owner-Operated",
+      "description": "We don't just list properties — we own and manage every home in our collection. No middlemen, no surprises."
     }
   },
   "features": {

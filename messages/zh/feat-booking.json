@@ -84,7 +84,9 @@
       "child": "位儿童",
       "infants": "婴幼儿",
       "infantsDescription": "2岁以下",
-      "infant": "位婴幼儿"
+      "infant": "位婴幼儿",
+      "pets": "宠物",
+      "petsDescription": "服务性动物不计入宠物数量"
     },
     "priceBreakdown": "费用明细",
     "totalPrice": "总价",
@@ -125,7 +127,9 @@
     "noExtraFees": "无额外费用",
     "fullPolicy": "完整政策",
     "payPartNowPartLater": "先付部分，后付余款",
-    "taxesWithRate": "税费 (13%)"
+    "taxesWithRate": "税费 (13%)",
+    "petSingular": "只宠物",
+    "petsPlural": "只宠物"
   },
   "bookings": {
     "title": "我的预订",
@@ -236,7 +240,28 @@
       "loadFailed": "加载预订失败",
       "cancelFailed": "取消预订失败",
       "cancelAlert": "取消失败，请重试"
-    }
+    },
+    "fetchFailed": "无法加载预订",
+    "stay": "NEOS 住宿",
+    "hostNote": "给房东留言",
+    "messageSent": "消息已发送。您可以在消息中心继续沟通。",
+    "messageFailed": "消息发送失败，请重试或打开消息中心。",
+    "openMessages": "打开消息中心",
+    "sending": "正在发送…",
+    "send": "发送消息",
+    "voucher": {
+      "title": "NEOS 预订凭证",
+      "number": "预订编号",
+      "status": "状态",
+      "checkIn": "入住",
+      "checkOut": "退房",
+      "guest": "住客",
+      "stay": "住客与晚数",
+      "counts": "{guests} 位住客 · {nights} 晚",
+      "payment": "付款",
+      "issued": "本凭证由 NEOS 签发。请保存以便入住及联系客服。"
+    },
+    "contactDraft": "您好，我想咨询预订 {number}，房源为{title}，住宿日期为 {dates}。"
   },
   "bookingDetail": {
     "loading": "加载中...",

@@ -1,3 +1,4 @@
+import { resolveRequestLocale, getServerTranslation } from "@/lib/i18n-server";
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import PropertyDetailClient from './PropertyDetailClient';
@@ -34,11 +35,15 @@ async function getProperty(idOrSlug: string): Promise<PropertyCardData | null> {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const property = await getProperty(id);
-  if (!property) return { title: 'Property Not Found | NEOS' };
+  const locale = await resolveRequestLocale();
+  if (!property) return { title: getServerTranslation(locale, 'property.notFound') };
+
+  const title = (locale === 'zh' ? property.titleZh : locale === 'fr' ? property.titleFr : null) || property.title;
+  const description = (locale === 'zh' ? property.descriptionZh : locale === 'fr' ? property.descriptionFr : null) || property.description;
 
   return {
-    title: `${property.title} | NEOS`,
-    description: property.description?.slice(0, 160) || '',
+    title,
+    description: description?.slice(0, 160) || '',
   };
 }
 

@@ -1,10 +1,10 @@
+import { localizedPageMetadata } from "@/lib/i18n-server";
 import { Metadata } from "next";
 import NeighborhoodsPageContent from "./NeighborhoodsPageContent";
 
-export const metadata: Metadata = {
-  title: "Toronto Neighborhoods Guide | Waterfront, Downtown Core, North York | NEOS",
-  description: "Explore Toronto's premium neighborhoods where NEOS properties are located. Sugar Wharf waterfront, downtown hospital district, and North York.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return localizedPageMetadata("neighborhoods");
+}
 
 export default function NeighborhoodsPage() {
   return <NeighborhoodsPageContent />;

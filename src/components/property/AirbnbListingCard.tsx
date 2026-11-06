@@ -28,6 +28,14 @@ interface AirbnbListingCardProps {
   priority?: boolean;
 }
 
+function priceSuffix(unit: string, t: (key: string) => string) {
+  switch (unit.toLowerCase()) {
+    case "month": return t("pricing.perMonth");
+    case "night": return t("property.perNight");
+    default: return "/ " + unit;
+  }
+}
+
 export default function AirbnbListingCard({ property, priority }: AirbnbListingCardProps) {
   const { locale, t } = useI18n();
   const { isWishlisted, toggleWishlist } = useWishlist();
@@ -100,8 +108,8 @@ export default function AirbnbListingCard({ property, priority }: AirbnbListingC
 
           {property.bedrooms != null && (
             <p className="ab-listing-card__meta">
-              {property.bedrooms} {property.bedrooms === 1 ? "bed" : "beds"}
-              {property.area ? ` · ${property.area.toLocaleString()} sqft` : ""}
+              {property.bedrooms} {t(property.bedrooms === 1 ? "bed" : "beds")}
+              {property.area ? ` · ${property.area.toLocaleString()} ${t("property.sqft")}` : ""}
             </p>
           )}
 
@@ -111,7 +119,7 @@ export default function AirbnbListingCard({ property, priority }: AirbnbListingC
             </span>
             <span className="ab-listing-card__price-suffix">
               {" "}
-              / {property.priceUnit || "night"}
+              {priceSuffix(property.priceUnit || "night", t)}
             </span>
           </p>
         </div>

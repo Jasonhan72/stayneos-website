@@ -84,7 +84,9 @@
       "child": "enfant",
       "infants": "Bébés",
       "infantsDescription": "Moins de 2 ans",
-      "infant": "bébé"
+      "infant": "bébé",
+      "pets": "Animaux de compagnie",
+      "petsDescription": "Les animaux d’assistance ne sont pas comptés"
     },
     "priceBreakdown": "Détail des prix",
     "totalPrice": "Prix total",
@@ -125,7 +127,9 @@
     "noExtraFees": "Aucun frais supplémentaire",
     "fullPolicy": "Politique complète",
     "payPartNowPartLater": "Payer une partie maintenant, le reste plus tard",
-    "taxesWithRate": "Taxes (13%)"
+    "taxesWithRate": "Taxes (13%)",
+    "petSingular": "animal",
+    "petsPlural": "animaux"
   },
   "bookings": {
     "title": "Mes Réservations",
@@ -236,7 +240,28 @@
       "loadFailed": "Échec du chargement des réservations",
       "cancelFailed": "Échec de l'annulation",
       "cancelAlert": "L'annulation a échoué. Veuillez réessayer."
-    }
+    },
+    "fetchFailed": "Impossible de charger les réservations",
+    "stay": "Séjour NEOS",
+    "hostNote": "Message à l’hôte",
+    "messageSent": "Message envoyé. Vous pouvez poursuivre la conversation dans la messagerie.",
+    "messageFailed": "Impossible d’envoyer ce message. Réessayez ou ouvrez la messagerie.",
+    "openMessages": "Ouvrir la messagerie",
+    "sending": "Envoi en cours…",
+    "send": "Envoyer le message",
+    "voucher": {
+      "title": "Confirmation de réservation NEOS",
+      "number": "Numéro de réservation",
+      "status": "Statut",
+      "checkIn": "Arrivée",
+      "checkOut": "Départ",
+      "guest": "Voyageur",
+      "stay": "Voyageurs et nuitées",
+      "counts": "{guests} voyageurs · {nights} nuitées",
+      "payment": "Paiement",
+      "issued": "Confirmation émise par NEOS. Conservez-la pour votre arrivée et toute demande d’assistance."
+    },
+    "contactDraft": "Bonjour, j’ai une question au sujet de la réservation {number} pour {title} ({dates})."
   },
   "bookingDetail": {
     "loading": "Chargement...",

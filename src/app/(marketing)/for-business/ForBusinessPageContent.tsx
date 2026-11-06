@@ -31,17 +31,18 @@ import { submitInquiry } from "@/lib/inquiry-client";
 
 // Form validation schema - Simplified to 5 required fields
 const businessFormSchema = z.object({
-  companyName: z.string().min(2, "Company name is required"),
-  contactName: z.string().min(2, "Contact name is required"),
-  email: z.string().email("Please enter a valid email"),
-  phone: z.string().min(10, "Please enter a valid phone number"),
-  requirements: z.string().min(20, "Please tell us what you need"),
+  companyName: z.string().min(2, "common.inquiry.company"),
+  contactName: z.string().min(2, "common.inquiry.contact"),
+  email: z.string().email("common.inquiry.email"),
+  phone: z.string().min(10, "common.inquiry.phone"),
+  requirements: z.string().min(20, "common.inquiry.request"),
 });
 
 type BusinessFormData = z.infer<typeof businessFormSchema>;
 
 export default function ForBusinessPageContent() {
   const { t } = useI18n();
+  const validationMessage = (key?: string) => t(key ?? "common.inquiry.request");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -60,7 +61,7 @@ export default function ForBusinessPageContent() {
       setIsSubmitted(true);
     } catch (error) {
       if (process.env.NODE_ENV !== 'production') console.error("Submission error:", error);
-      alert(error instanceof Error ? error.message : "Submission failed");
+      alert(t("common.inquiry.submitFailed"));
     } finally {
       setIsSubmitting(false);
     }
@@ -397,7 +398,7 @@ export default function ForBusinessPageContent() {
               <div className="text-blue-100">{t("business.stats.stays", "Flexible Portfolio") }</div>
             </div>
             <div>
-              <div className="text-4xl md:text-5xl font-bold mb-2">Clear</div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">{t("business.stats.clear")}</div>
               <div className="text-blue-100">{t("business.stats.savings", "Transparent Pricing")}</div>
             </div>
             <div>
@@ -441,7 +442,7 @@ export default function ForBusinessPageContent() {
                         placeholder={t("business.form.companyNamePlaceholder", "Your company name")}
                       />
                       {errors.companyName && (
-                        <p className="text-red-500 text-sm mt-1">{errors.companyName.message}</p>
+                        <p className="text-red-500 text-sm mt-1">{validationMessage(errors.companyName.message)}</p>
                       )}
                     </div>
 
@@ -455,7 +456,7 @@ export default function ForBusinessPageContent() {
                         placeholder={t("business.form.contactNamePlaceholder", "Your full name")}
                       />
                       {errors.contactName && (
-                        <p className="text-red-500 text-sm mt-1">{errors.contactName.message}</p>
+                        <p className="text-red-500 text-sm mt-1">{validationMessage(errors.contactName.message)}</p>
                       )}
                     </div>
                   </div>
@@ -472,7 +473,7 @@ export default function ForBusinessPageContent() {
                         placeholder={t("business.form.emailPlaceholder", "your@company.com")}
                       />
                       {errors.email && (
-                        <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                        <p className="text-red-500 text-sm mt-1">{validationMessage(errors.email.message)}</p>
                       )}
                     </div>
 
@@ -487,7 +488,7 @@ export default function ForBusinessPageContent() {
                         placeholder={t("business.form.phonePlaceholder", "+1 (555) 000-0000")}
                       />
                       {errors.phone && (
-                        <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+                        <p className="text-red-500 text-sm mt-1">{validationMessage(errors.phone.message)}</p>
                       )}
                     </div>
                   </div>
@@ -503,7 +504,7 @@ export default function ForBusinessPageContent() {
                       placeholder={t("business.form.requirementsPlaceholder", "Please describe your accommodation needs, preferred locations, special requirements, timeline, and any other details that would help us create the perfect solution for your organization...")}
                     />
                     {errors.requirements && (
-                      <p className="text-red-500 text-sm mt-1">{errors.requirements.message}</p>
+                      <p className="text-red-500 text-sm mt-1">{validationMessage(errors.requirements.message)}</p>
                     )}
                   </div>
 

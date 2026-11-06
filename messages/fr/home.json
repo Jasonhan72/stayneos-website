@@ -106,6 +106,10 @@
     "support": {
       "title": "Support réactif",
       "description": "Notre équipe reste disponible avant l'arrivée, pendant le séjour et à chaque changement de plan."
+    },
+    "owner": {
+      "title": "Gestion directe par le propriétaire",
+      "description": "Nous sommes propriétaires de tous nos appartements et les gérons nous-mêmes. Vous traitez directement avec notre équipe à chaque étape."
     }
   },
   "features": {

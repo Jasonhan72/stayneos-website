@@ -39,3 +39,18 @@ describe('i18n provider', () => {
     expect(screen.getByText('Default Text')).toBeInTheDocument();
   });
 });
+
+it('keeps an explicit Chinese document in Chinese after hydration with stale English preferences', () => {
+  window.history.replaceState(null, '', '/zh');
+  document.cookie = 'stayneos_locale=en; path=/';
+  localStorage.setItem('preferred-locale', 'en');
+  try {
+    render(<I18nProvider initialLocale="zh"><Demo /></I18nProvider>);
+    expect(screen.getByTestId('locale')).toHaveTextContent('zh');
+    expect(screen.getByTestId('translated')).toHaveTextContent('登录');
+  } finally {
+    window.history.replaceState(null, '', '/');
+    localStorage.clear();
+    document.cookie = 'stayneos_locale=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+  }
+});

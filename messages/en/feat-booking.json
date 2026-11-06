@@ -84,7 +84,9 @@
       "child": "child",
       "infants": "Infants",
       "infantsDescription": "Under 2",
-      "infant": "infant"
+      "infant": "infant",
+      "pets": "Pets",
+      "petsDescription": "Service animals don't count"
     },
     "priceBreakdown": "Price Breakdown",
     "totalPrice": "Total Price",
@@ -125,7 +127,9 @@
     "noExtraFees": "No extra fees",
     "fullPolicy": "Full policy",
     "payPartNowPartLater": "Pay part now, part later",
-    "taxesWithRate": "Taxes (13%)"
+    "taxesWithRate": "Taxes (13%)",
+    "petSingular": "pet",
+    "petsPlural": "pets"
   },
   "bookings": {
     "title": "My Bookings",
@@ -236,7 +240,28 @@
       "loadFailed": "Failed to load bookings",
       "cancelFailed": "Failed to cancel booking",
       "cancelAlert": "Cancellation failed. Please try again."
-    }
+    },
+    "fetchFailed": "Failed to fetch bookings",
+    "stay": "NEOS stay",
+    "hostNote": "Message to host",
+    "messageSent": "Message sent. You can continue the conversation in Messages.",
+    "messageFailed": "Could not send this message. Please try again or open Messages.",
+    "openMessages": "Open Messages",
+    "sending": "Sending…",
+    "send": "Send message",
+    "voucher": {
+      "title": "NEOS Booking Voucher",
+      "number": "Booking number",
+      "status": "Status",
+      "checkIn": "Check-in",
+      "checkOut": "Check-out",
+      "guest": "Guest",
+      "stay": "Guests / nights",
+      "counts": "{guests} guests · {nights} nights",
+      "payment": "Payment",
+      "issued": "Issued by NEOS. Please keep this voucher for check-in and support."
+    },
+    "contactDraft": "Hi, I have a question about booking {number} for {title} ({dates})."
   },
   "bookingDetail": {
     "loading": "Loading...",

@@ -305,8 +305,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
         
         // Trigger locale change if language was updated
         if (prefs.language) {
-          window.dispatchEvent(new CustomEvent('localeChange'));
           localStorage.setItem('preferred-locale', prefs.language);
+          window.dispatchEvent(new CustomEvent('localeChange', { detail: { locale: prefs.language } }));
         }
         
         return updated;

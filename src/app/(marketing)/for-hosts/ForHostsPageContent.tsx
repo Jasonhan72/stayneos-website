@@ -23,21 +23,22 @@ import { submitInquiry } from "@/lib/inquiry-client";
 
 // Form validation schema
 const hostFormSchema = z.object({
-  firstName: z.string().min(2, "First name is required"),
-  lastName: z.string().min(2, "Last name is required"),
-  email: z.string().email("Please enter a valid email"),
-  phone: z.string().min(10, "Please enter a valid phone number"),
-  propertyAddress: z.string().min(10, "Please enter property address"),
+  firstName: z.string().min(2, "common.inquiry.firstName"),
+  lastName: z.string().min(2, "common.inquiry.lastName"),
+  email: z.string().email("common.inquiry.email"),
+  phone: z.string().min(10, "common.inquiry.phone"),
+  propertyAddress: z.string().min(10, "common.inquiry.address"),
   propertyType: z.enum(["apartment", "condo", "house"]).optional(),
-  bedrooms: z.string().min(1, "Please specify number of bedrooms"),
+  bedrooms: z.string().min(1, "common.inquiry.beds"),
   monthlyRent: z.string().optional(),
-  message: z.string().min(10, "Please tell us about your property"),
+  message: z.string().min(10, "common.inquiry.property"),
 });
 
 type HostFormData = z.infer<typeof hostFormSchema>;
 
 export default function ForHostsPageContent() {
   const { t } = useI18n();
+  const validationMessage = (key?: string) => t(key ?? "common.inquiry.request");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [calculatorValues, setCalculatorValues] = useState({
@@ -60,7 +61,7 @@ export default function ForHostsPageContent() {
       setIsSubmitted(true);
     } catch (error) {
       if (typeof window !== 'undefined' && window.location.hostname === 'localhost') console.error("Submission error:", error);
-      alert(error instanceof Error ? error.message : "Submission failed");
+      alert(t("common.inquiry.submitFailed"));
     } finally {
       setIsSubmitting(false);
     }
@@ -70,20 +71,20 @@ export default function ForHostsPageContent() {
     {
       key: "steadyIncome",
       icon: DollarSign,
-      title: "Steady Monthly Income",
-      description: "Guaranteed rent payments every month, regardless of occupancy. No more chasing tenants for payments."
+      title: t("hosts.advantages.steadyIncome.title"),
+      description: t("hosts.advantages.steadyIncome.description")
     },
     {
       key: "professionalMgmt",
       icon: Shield,
-      title: "Professional Management",
-      description: "Full-service property management including maintenance, cleaning, guest services, and 24/7 support."
+      title: t("hosts.advantages.professionalMgmt.title"),
+      description: t("hosts.advantages.professionalMgmt.description")
     },
     {
       key: "zeroVacancy",
       icon: TrendingUp,
-      title: "Zero Vacancy Risk",
-      description: "We handle all bookings and marketing. Your property stays occupied with premium business travelers."
+      title: t("hosts.advantages.zeroVacancy.title"),
+      description: t("hosts.advantages.zeroVacancy.description")
     }
   ];
 
@@ -91,34 +92,34 @@ export default function ForHostsPageContent() {
     { 
       key: "apply", 
       step: "01",
-      title: "Submit Application",
-      description: "Complete our simple application form with your property details and contact information."
+      title: t("hosts.process.apply.title"),
+      description: t("hosts.process.apply.description")
     },
     { 
       key: "evaluate", 
       step: "02",
-      title: "Property Evaluation",
-      description: "Our team visits your property to assess suitability and suggest any improvements needed."
+      title: t("hosts.process.evaluate.title"),
+      description: t("hosts.process.evaluate.description")
     },
     { 
       key: "setup", 
       step: "03",
-      title: "Setup & Staging", 
-      description: "We handle professional photography, listing creation, and any necessary staging or improvements."
+      title: t("hosts.process.setup.title"),
+      description: t("hosts.process.setup.description")
     },
     { 
       key: "earning", 
       step: "04",
-      title: "Start Earning", 
-      description: "Your property goes live on our platform and you start receiving guaranteed monthly payments."
+      title: t("hosts.process.earning.title"),
+      description: t("hosts.process.earning.description")
     },
   ];
 
   const benefits = [
-    { key: "noMaintenance", icon: Zap, title: "Hands-Off Management", description: "We handle all maintenance, repairs, and guest issues" },
-    { key: "premiumGuests", icon: Users, title: "Quality Guests Only", description: "Vetted business professionals and corporate clients" },
-    { key: "guaranteed", icon: Award, title: "Payment Guarantee", description: "Monthly payments guaranteed, even during vacant periods" },
-    { key: "flexible", icon: Clock, title: "Flexible Terms", description: "Month-to-month agreements with no long-term commitment" },
+    { key: "noMaintenance", icon: Zap, title: t("hosts.benefits.noMaintenance.title"), description: t("hosts.benefits.noMaintenance.description") },
+    { key: "premiumGuests", icon: Users, title: t("hosts.benefits.premiumGuests.title"), description: t("hosts.benefits.premiumGuests.description") },
+    { key: "guaranteed", icon: Award, title: t("hosts.benefits.guaranteed.title"), description: t("hosts.benefits.guaranteed.description") },
+    { key: "flexible", icon: Clock, title: t("hosts.benefits.flexible.title"), description: t("hosts.benefits.flexible.description") },
   ];
 
   // Calculate potential earnings
@@ -245,26 +246,26 @@ export default function ForHostsPageContent() {
 
               {/* Results */}
               <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-8 border-l-4 border-blue-600">
-                <h3 className="text-2xl font-bold text-blue-900 mb-6">Your Earnings Potential</h3>
+                <h3 className="text-2xl font-bold text-blue-900 mb-6">{t("hosts.calculator.earnings")}</h3>
                 
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between items-center py-2 border-b border-blue-200">
-                    <span className="text-gray-700">Traditional Rental (Annual):</span>
+                    <span className="text-gray-700">{t("hosts.calculator.traditional")}</span>
                     <span className="text-lg font-semibold">${traditionalEarnings.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between items-center py-2 border-b border-blue-200">
-                    <span className="text-gray-700">With NEOS (Annual):</span>
+                    <span className="text-gray-700">{t("hosts.calculator.withNeos")}</span>
                     <span className="text-lg font-semibold text-blue-600">${annualEarnings.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between items-center py-2">
-                    <span className="text-blue-900 font-semibold">Additional Annual Income:</span>
+                    <span className="text-blue-900 font-semibold">{t("hosts.calculator.additional")}</span>
                     <span className="text-2xl font-bold text-green-600">+${additionalIncome.toLocaleString()}</span>
                   </div>
                 </div>
 
                 <div className="bg-white p-4 border-l-4 border-green-500">
                   <p className="text-sm text-gray-600">
-                    <strong className="text-green-600">Guaranteed:</strong> {t("hosts.calculator.guarantee", "Monthly payments regardless of occupancy, plus professional management included.")}
+                    <strong className="text-green-600">{t("hosts.calculator.guaranteed")}</strong> {t("hosts.calculator.guarantee", "Monthly payments regardless of occupancy, plus professional management included.")}
                   </p>
                 </div>
               </div>
@@ -367,7 +368,7 @@ export default function ForHostsPageContent() {
                         placeholder={t("hosts.form.firstNamePlaceholder", "Enter your first name")}
                       />
                       {errors.firstName && (
-                        <p className="text-red-500 text-sm mt-1">{errors.firstName.message}</p>
+                        <p className="text-red-500 text-sm mt-1">{validationMessage(errors.firstName.message)}</p>
                       )}
                     </div>
 
@@ -381,7 +382,7 @@ export default function ForHostsPageContent() {
                         placeholder={t("hosts.form.lastNamePlaceholder", "Enter your last name")}
                       />
                       {errors.lastName && (
-                        <p className="text-red-500 text-sm mt-1">{errors.lastName.message}</p>
+                        <p className="text-red-500 text-sm mt-1">{validationMessage(errors.lastName.message)}</p>
                       )}
                     </div>
                   </div>
@@ -398,7 +399,7 @@ export default function ForHostsPageContent() {
                         placeholder={t("hosts.form.emailPlaceholder", "your@email.com")}
                       />
                       {errors.email && (
-                        <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                        <p className="text-red-500 text-sm mt-1">{validationMessage(errors.email.message)}</p>
                       )}
                     </div>
 
@@ -413,7 +414,7 @@ export default function ForHostsPageContent() {
                         placeholder={t("hosts.form.phonePlaceholder", "+1 (555) 000-0000")}
                       />
                       {errors.phone && (
-                        <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+                        <p className="text-red-500 text-sm mt-1">{validationMessage(errors.phone.message)}</p>
                       )}
                     </div>
                   </div>
@@ -428,7 +429,7 @@ export default function ForHostsPageContent() {
                       placeholder={t("hosts.form.propertyAddressPlaceholder", "Enter property address")}
                     />
                     {errors.propertyAddress && (
-                      <p className="text-red-500 text-sm mt-1">{errors.propertyAddress.message}</p>
+                      <p className="text-red-500 text-sm mt-1">{validationMessage(errors.propertyAddress.message)}</p>
                     )}
                   </div>
 
@@ -464,7 +465,7 @@ export default function ForHostsPageContent() {
                         <option value="4+">4+ {t("hosts.form.bedrooms", "Bedrooms")}</option>
                       </select>
                       {errors.bedrooms && (
-                        <p className="text-red-500 text-sm mt-1">{errors.bedrooms.message}</p>
+                        <p className="text-red-500 text-sm mt-1">{validationMessage(errors.bedrooms.message)}</p>
                       )}
                     </div>
 
@@ -492,7 +493,7 @@ export default function ForHostsPageContent() {
                       placeholder={t("hosts.form.messagePlaceholder", "Describe your property, current condition, furnishing status, and any questions you have about our program...")}
                     />
                     {errors.message && (
-                      <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>
+                      <p className="text-red-500 text-sm mt-1">{validationMessage(errors.message.message)}</p>
                     )}
                   </div>
 

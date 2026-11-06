@@ -8,8 +8,8 @@ import { resolveRequestLocale, getServerTranslation, getOgLocale } from '@/lib/i
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await resolveRequestLocale();
   return {
-    title: getServerTranslation(locale, 'pagesAuth.loginPage.title', 'Log In - NEOS'),
-    description: getServerTranslation(locale, 'pagesAuth.loginPage.description', 'Log in to your NEOS account to manage bookings and access premium furnished apartments.'),
+    title: getServerTranslation(locale, 'metadata.pages.login.title', 'Log In - NEOS'),
+    description: getServerTranslation(locale, 'metadata.pages.login.description', 'Log in to your NEOS account to manage bookings and access premium furnished apartments.'),
     openGraph: { locale: getOgLocale(locale) },
   };
 }

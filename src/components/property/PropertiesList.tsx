@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
+import { getLocalizedTitle } from "./PropertyCard";
 import { useI18n } from "@/lib/i18n";
 import { ensureCsrfToken } from "@/lib/security/csrf-client";
 import Image from "next/image";
@@ -91,6 +92,8 @@ type PropertyStatus = "draft" | "pending_review" | "published" | "paused" | "arc
 interface Property {
   id: string;
   title: string;
+  titleZh?: string;
+  titleFr?: string;
   address: string;
   city: string;
   basePrice: number;
@@ -173,7 +176,7 @@ export function PropertiesList() {
   // 过滤房源
   const filteredProperties = properties.filter((prop) => {
     const matchesSearch = 
-      prop.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      getLocalizedTitle(prop, locale).toLowerCase().includes(searchQuery.toLowerCase()) ||
       prop.address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       prop.city?.toLowerCase().includes(searchQuery.toLowerCase());
     
@@ -328,7 +331,7 @@ export function PropertiesList() {
                           {property.imageUrl ? (
                             <Image
                               src={property.imageUrl}
-                              alt={property.title}
+                              alt={getLocalizedTitle(property, locale)}
                               width={48}
                               height={48}
                               className="w-full h-full object-cover"
@@ -341,7 +344,7 @@ export function PropertiesList() {
                           )}
                         </div>
                         <div className="min-w-0">
-                          <p className="truncate font-medium text-gray-900">{property.title}</p>
+                          <p className="truncate font-medium text-gray-900">{getLocalizedTitle(property, locale)}</p>
                           <p className="truncate text-sm text-gray-500">ID: {property.id}</p>
                         </div>
                       </div>
@@ -426,7 +429,7 @@ export function PropertiesList() {
                     {property.imageUrl ? (
                       <Image
                         src={property.imageUrl}
-                        alt={property.title}
+                        alt={getLocalizedTitle(property, locale)}
                         width={80}
                         height={80}
                         className="w-full h-full object-cover"
@@ -439,7 +442,7 @@ export function PropertiesList() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-gray-900 truncate">{property.title}</h3>
+                    <h3 className="font-medium text-gray-900 truncate">{getLocalizedTitle(property, locale)}</h3>
                     <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
                       <MapPin className="w-3 h-3" />
                       {property.city}
@@ -511,7 +514,7 @@ export function PropertiesList() {
                   {t("property.delete.title")}
                 </h3>
                 <p className="mt-2 text-gray-600">
-                  {t("property.delete.confirm", { title: propertyToDelete.title })}
+                  {t("property.delete.confirm", { title: getLocalizedTitle(propertyToDelete, locale) })}
                 </p>
               </div>
             </div>

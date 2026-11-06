@@ -58,17 +58,17 @@ function stripLocaleFromPath(pathname: string): string {
 
 // Detect user's preferred locale from URL, Cookie, or Accept-Language
 function detectLocale(request: NextRequest, explicitPathLocale?: Locale | null): Locale {
-  const forwardedLocale = request.headers.get('x-locale');
-  if (forwardedLocale === 'zh' || forwardedLocale === 'en' || forwardedLocale === 'fr') {
-    return forwardedLocale;
-  }
-
   // 1. Check URL path prefix first (highest priority)
   const pathLocale = explicitPathLocale || getLocaleFromPath(new URL(request.url).pathname) || getLocaleFromPath(request.nextUrl.pathname);
   if (pathLocale) {
     return pathLocale;
   }
   
+  const forwardedLocale = request.headers.get('x-locale');
+  if (forwardedLocale === 'zh' || forwardedLocale === 'en' || forwardedLocale === 'fr') {
+    return forwardedLocale;
+  }
+
   // 2. Check cookie (user's explicit preference)
   const cookieLocale = request.cookies.get('stayneos_locale')?.value;
   if (cookieLocale === 'zh' || cookieLocale === 'en' || cookieLocale === 'fr') {

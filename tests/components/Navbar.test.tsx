@@ -1,5 +1,6 @@
 import { render, screen, fireEvent, act, within } from '@testing-library/react';
 
+let mockHydrated = true;
 jest.mock('@/lib/i18n', () => ({
   useSwitchLocale: () => jest.fn(),
   useI18n: () => ({
@@ -12,6 +13,7 @@ jest.mock('@/lib/i18n', () => ({
       'nav.login': 'Log In',
     }[key] || key),
     locale: 'en' as const,
+    isHydrated: mockHydrated,
     setLocale: jest.fn(),
   }),
 }));
@@ -25,6 +27,7 @@ import Navbar from '@/components/layout/Navbar';
 
 describe('Navbar', () => {
   beforeEach(() => {
+    mockHydrated = true;
     mockAuth = { user: null, isAuthenticated: false };
   });
 
@@ -54,6 +57,15 @@ describe('Navbar', () => {
     });
     // Login/Signup should NOT be visible when authenticated
     expect(screen.queryAllByText('Log In').length).toBe(0);
+  });
+
+  it('enables the mobile menu only when it can respond to a click', () => {
+    mockHydrated = false;
+    const { rerender } = render(<Navbar />);
+    expect(screen.getByLabelText('Open menu')).toBeDisabled();
+    mockHydrated = true;
+    rerender(<Navbar />);
+    expect(screen.getByLabelText('Open menu')).toBeEnabled();
   });
 
   it('opens mobile menu on hamburger click', async () => {

@@ -199,6 +199,26 @@
     "yourCityNotify": "Soyez informé de notre expansion",
     "yourCityDesc": "Dites-nous où vous avez besoin de logements meublés premium.",
     "emailPlaceholder": "Adresse courriel",
-    "notifyMe": "Me notifier"
+    "notifyMe": "Me notifier",
+    "areaDowntown": "Centre-ville",
+    "areaWaterfront": "Bord du lac",
+    "areaFinancial": "Quartier financier",
+    "areaUniversity": "Quartier universitaire",
+    "areaYorkville": "Yorkville",
+    "areaMidtown": "Quartiers centraux",
+    "titleCurrent": "Appartements meublés à Toronto",
+    "serviceAreaLabel": "Quartiers desservis",
+    "serviceAreaTitle": "Des logements près de vos lieux de travail et d’études",
+    "done": "Inscription confirmée",
+    "sending": "Envoi en cours…",
+    "areaLiberty": "Liberty Village",
+    "areaNorthYork": "North York",
+    "names": {
+      "toronto": "Toronto",
+      "vancouver": "Vancouver",
+      "montreal": "Montréal",
+      "newYork": "New York",
+      "sanFrancisco": "San Francisco"
+    }
   }
 }

@@ -1,10 +1,10 @@
+import { localizedPageMetadata } from "@/lib/i18n-server";
 import { Metadata } from "next";
 import ForHostsPageContent from "./ForHostsPageContent";
 
-export const metadata: Metadata = {
-  title: "List Your Property - For Hosts | NEOS",
-  description: "List your furnished property on NEOS and earn steady income with zero vacancy. Professional property management, guaranteed rent, and hassle-free hosting.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return localizedPageMetadata("for-hosts");
+}
 
 export default function ForHostsPage() {
   return <ForHostsPageContent />;

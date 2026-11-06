@@ -1,10 +1,10 @@
+import { localizedPageMetadata } from "@/lib/i18n-server";
 import { Metadata } from "next";
 import LandlordsPageContent from "./LandlordsPageContent";
 
-export const metadata: Metadata = {
-  title: "For Landlords - NEOS",
-  description: "Partner with NEOS to maximize your rental income. Professional property management services for landlords.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return localizedPageMetadata("landlords");
+}
 
 // Static data for benefits - just keys, icons resolved in client component
 const benefits = [

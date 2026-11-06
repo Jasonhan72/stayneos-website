@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { useMemo, useState } from 'react';
+import { useI18n } from '@/lib/i18n';
 import { useRouter } from 'next/navigation';
 import {
   DEFAULT_PROPERTY_FORM,
@@ -141,6 +142,7 @@ function Field({
 
 export default function PropertyEditor({ initial, id, apiBase = '/api/admin/properties' }: PropertyEditorProps) {
   const router = useRouter();
+  const { t } = useI18n();
   const [form, setForm] = useState<PropertyFormState>(toPropertyFormState((initial ?? null) as Record<string, unknown> | null));
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -168,7 +170,7 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
   async function handleAiAssist(type: AiAssistType) {
     const trimmedPrompt = aiPrompt.trim();
     if (!trimmedPrompt) {
-      setAiError('请先粘贴房源描述文本');
+      setAiError(t("host.editor.pasteFirst"));
       return;
     }
 
@@ -191,13 +193,13 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
 
       const data = (await response.json()) as { data?: AiAssistResponse; error?: string };
       if (!response.ok || !data.data) {
-        throw new Error(data.error || 'AI 处理失败');
+        throw new Error(data.error || t("host.editor.aiFailed"));
       }
 
       setForm((current) => applyAiResult(current, data.data || {}));
-      setMessage(type === 'parse' ? 'AI 解析完成，已填充表单' : type === 'translate' ? 'AI 翻译完成' : 'AI SEO 已生成');
+      setMessage(type === 'parse' ? t("host.editor.parsed") : type === 'translate' ? t("host.editor.translated") : t("host.editor.seoDone"));
     } catch (err) {
-      setAiError(err instanceof Error ? err.message : 'AI 处理失败');
+      setAiError(err instanceof Error ? err.message : t("host.editor.aiFailed"));
     } finally {
       setAiLoading(null);
     }
@@ -217,16 +219,16 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
         fd.append('file', file);
         const response = await fetch('/api/admin/upload-image', { method: 'POST', body: fd });
         const data = (await response.json()) as { url?: string; error?: string };
-        if (!response.ok || !data.url) throw new Error(data.error || '上传失败');
+        if (!response.ok || !data.url) throw new Error(data.error || t("host.editor.uploadFailed"));
         uploaded.push(data.url);
       }
 
       const merged = [...imagePreviewUrls, ...uploaded];
       updateField('imagesText', merged.join('\n'));
       if (!form.heroImage && merged[0]) updateField('heroImage', merged[0]);
-      setMessage(`图片上传成功：${uploaded.length} 张`);
+      setMessage(t("host.editor.uploaded", { count: uploaded.length }));
     } catch (err) {
-      setError(err instanceof Error ? err.message : '上传失败');
+      setError(err instanceof Error ? err.message : t("host.editor.uploadFailed"));
     } finally {
       setUploading(false);
     }
@@ -242,7 +244,7 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
     });
 
     if (!payload.title || !payload.address || !payload.neighborhood) {
-      setError('请至少填写标题、地址和社区');
+      setError(t("host.editor.required"));
       return;
     }
 
@@ -258,13 +260,13 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
 
       const data = (await response.json()) as { error?: string };
       if (!response.ok) {
-        throw new Error(data.error || '保存失败');
+        throw new Error(data.error || t("host.editor.saveFailed"));
       }
 
       router.push('/admin/properties');
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : '保存失败');
+      setError(err instanceof Error ? err.message : t("host.editor.saveFailed"));
     } finally {
       setSaving(false);
     }
@@ -279,17 +281,17 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
           className="flex w-full items-center justify-between text-left"
         >
           <div>
-            <h2 className="text-lg font-semibold text-neutral-900">AI 助手</h2>
-            <p className="text-sm text-neutral-500">粘贴 listing 文案后，可自动解析字段、生成三语描述和 SEO。</p>
+            <h2 className="text-lg font-semibold text-neutral-900">{t("host.editor.assistant")}</h2>
+            <p className="text-sm text-neutral-500">{t("host.editor.intro")}</p>
           </div>
-          <span className="text-sm text-primary">{aiOpen ? '收起' : '展开'}</span>
+          <span className="text-sm text-primary">{aiOpen ? t("host.editor.collapse") : t("host.editor.expand")}</span>
         </button>
 
         {aiOpen && (
           <div className="mt-4 space-y-3">
             <textarea
               className={`${inputClassName} min-h-40 resize-y`}
-              placeholder="在这里粘贴房源描述、listing 文案或经纪备注"
+              placeholder={t("host.editor.prompt")}
               value={aiPrompt}
               onChange={(event) => setAiPrompt(event.target.value)}
             />
@@ -301,7 +303,7 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
                 disabled={aiLoading !== null}
                 className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
               >
-                {aiLoading === 'parse' ? 'AI 解析中...' : 'AI 解析'}
+                {aiLoading === 'parse' ? t("host.editor.parsing") : t("host.editor.parse")}
               </button>
               <button
                 type="button"
@@ -309,7 +311,7 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
                 disabled={aiLoading !== null}
                 className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 disabled:opacity-50"
               >
-                {aiLoading === 'translate' ? 'AI 翻译中...' : 'AI 翻译'}
+                {aiLoading === 'translate' ? t("host.editor.translating") : t("host.editor.translate")}
               </button>
               <button
                 type="button"
@@ -317,7 +319,7 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
                 disabled={aiLoading !== null}
                 className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 disabled:opacity-50"
               >
-                {aiLoading === 'seo' ? 'AI 生成中...' : 'AI SEO'}
+                {aiLoading === 'seo' ? t("host.editor.generating") : t("host.editor.seo")}
               </button>
             </div>
 
@@ -327,13 +329,13 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
       </section>
 
       <section className={sectionClassName}>
-        <h2 className="mb-4 text-lg font-semibold text-neutral-900">{isEditMode ? '编辑房源' : '新建房源'}</h2>
+        <h2 className="mb-4 text-lg font-semibold text-neutral-900">{isEditMode ? t("host.editor.edit") : t("host.editor.create")}</h2>
 
         <div className="grid gap-4 md:grid-cols-2">
-          <Field label="英文标题*">
+          <Field label={t("host.editor.titleEn")}>
             <input className={inputClassName} value={form.title} onChange={(event) => updateField('title', event.target.value)} />
           </Field>
-          <Field label="Slug">
+          <Field label={t("host.editor.slug")}>
             <input
               className={inputClassName}
               value={form.slug}
@@ -343,14 +345,14 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
               }}
             />
           </Field>
-          <Field label="中文标题">
+          <Field label={t("host.editor.titleZh")}>
             <input className={inputClassName} value={form.titleZh} onChange={(event) => updateField('titleZh', event.target.value)} />
           </Field>
-          <Field label="法文标题">
+          <Field label={t("host.editor.titleFr")}>
             <input className={inputClassName} value={form.titleFr} onChange={(event) => updateField('titleFr', event.target.value)} />
           </Field>
           <div className="block">
-            <span className={labelClassName}>房源状态</span>
+            <span className={labelClassName}>{t("host.editor.status")}</span>
             <div className="flex items-center gap-3 mt-2">
               <button
                 type="button"
@@ -368,11 +370,11 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
                 />
               </button>
               <span className={`text-sm font-medium ${form.status === 'PUBLISHED' ? 'text-green-700' : 'text-gray-500'}`}>
-                {form.status === 'PUBLISHED' ? 'Listed（已发布，对租客可见）' : 'Unlisted（已下架，对租客不可见）'}
+                {form.status === 'PUBLISHED' ? t("host.editor.listed") : t("host.editor.unlisted")}
               </span>
             </div>
           </div>
-          <Field label="房源类型">
+          <Field label={t("host.editor.type")}>
             <select
               className={inputClassName}
               value={form.propertyType}
@@ -380,7 +382,7 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
             >
               {PROPERTY_TYPE_OPTIONS.map((type) => (
                 <option key={type} value={type}>
-                  {type}
+                  {t(`host.editor.types.${type}`, type)}
                 </option>
               ))}
             </select>
@@ -389,123 +391,123 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
       </section>
 
       <section className={sectionClassName}>
-        <h2 className="mb-4 text-lg font-semibold text-neutral-900">位置与基础信息</h2>
+        <h2 className="mb-4 text-lg font-semibold text-neutral-900">{t("host.editor.location")}</h2>
         <div className="grid gap-4 md:grid-cols-2">
-          <Field label="地址*">
+          <Field label={t("host.editor.address")}>
             <input className={inputClassName} value={form.address} onChange={(event) => updateField('address', event.target.value)} />
           </Field>
-          <Field label="社区*">
+          <Field label={t("host.editor.neighborhood")}>
             <input className={inputClassName} value={form.neighborhood} onChange={(event) => updateField('neighborhood', event.target.value)} />
           </Field>
-          <Field label="城市">
+          <Field label={t("host.editor.city")}>
             <input className={inputClassName} value={form.city} onChange={(event) => updateField('city', event.target.value)} />
           </Field>
-          <Field label="朝向">
+          <Field label={t("host.editor.exposure")}>
             <input className={inputClassName} value={form.facing} onChange={(event) => updateField('facing', event.target.value)} />
           </Field>
-          <Field label="纬度">
+          <Field label={t("host.editor.latitude")}>
             <input className={inputClassName} value={form.latitude} onChange={(event) => updateField('latitude', event.target.value)} />
           </Field>
-          <Field label="经度">
+          <Field label={t("host.editor.longitude")}>
             <input className={inputClassName} value={form.longitude} onChange={(event) => updateField('longitude', event.target.value)} />
           </Field>
-          <Field label="开发商">
+          <Field label={t("host.editor.developer")}>
             <input className={inputClassName} value={form.developer} onChange={(event) => updateField('developer', event.target.value)} />
           </Field>
-          <Field label="建成年份">
+          <Field label={t("host.editor.built")}>
             <input className={inputClassName} type="number" value={form.buildingYear} onChange={(event) => updateField('buildingYear', event.target.value)} />
           </Field>
         </div>
       </section>
 
       <section className={sectionClassName}>
-        <h2 className="mb-4 text-lg font-semibold text-neutral-900">户型与价格</h2>
+        <h2 className="mb-4 text-lg font-semibold text-neutral-900">{t("host.editor.layout")}</h2>
         <div className="grid gap-4 md:grid-cols-4">
-          <Field label="卧室">
+          <Field label={t("host.editor.bedrooms")}>
             <input className={inputClassName} type="number" value={form.bedrooms} onChange={(event) => updateField('bedrooms', event.target.value)} />
           </Field>
-          <Field label="浴室">
+          <Field label={t("host.editor.bathrooms")}>
             <input className={inputClassName} type="number" step="0.5" value={form.bathrooms} onChange={(event) => updateField('bathrooms', event.target.value)} />
           </Field>
-          <Field label="面积 sqft">
+          <Field label={t("host.editor.area")}>
             <input className={inputClassName} type="number" value={form.sqft} onChange={(event) => updateField('sqft', event.target.value)} />
           </Field>
-          <Field label="楼层">
+          <Field label={t("host.editor.floor")}>
             <input className={inputClassName} type="number" value={form.floor} onChange={(event) => updateField('floor', event.target.value)} />
           </Field>
-          <Field label="阳台面积 sqft">
+          <Field label={t("host.editor.balcony")}>
             <input className={inputClassName} type="number" value={form.balconySqft} onChange={(event) => updateField('balconySqft', event.target.value)} />
           </Field>
-          <Field label="月租">
+          <Field label={t("host.editor.monthly")}>
             <input className={inputClassName} type="number" value={form.priceMonthly} onChange={(event) => updateField('priceMonthly', event.target.value)} />
           </Field>
-          <Field label="季租">
+          <Field label={t("host.editor.quarterly")}>
             <input className={inputClassName} type="number" value={form.priceQuarterly} onChange={(event) => updateField('priceQuarterly', event.target.value)} />
           </Field>
-          <Field label="年租">
+          <Field label={t("host.editor.annual")}>
             <input className={inputClassName} type="number" value={form.priceAnnual} onChange={(event) => updateField('priceAnnual', event.target.value)} />
           </Field>
-          <Field label="货币">
+          <Field label={t("host.editor.currency")}>
             <input className={inputClassName} value={form.currency} onChange={(event) => updateField('currency', event.target.value)} />
           </Field>
-          <Field label="最短入住天数">
+          <Field label={t("host.editor.minStay")}>
             <input className={inputClassName} type="number" value={form.minStayDays} onChange={(event) => updateField('minStayDays', event.target.value)} />
           </Field>
-          <Field label="入住时间">
+          <Field label={t("host.editor.checkIn")}>
             <input className={inputClassName} type="time" value={form.checkInTime} onChange={(event) => updateField('checkInTime', event.target.value)} />
           </Field>
-          <Field label="退房时间">
+          <Field label={t("host.editor.checkOut")}>
             <input className={inputClassName} type="time" value={form.checkOutTime} onChange={(event) => updateField('checkOutTime', event.target.value)} />
           </Field>
         </div>
 
         <label className="mt-4 flex items-center gap-2 text-sm text-neutral-700">
           <input type="checkbox" checked={form.selfCheckIn} onChange={(event) => updateField('selfCheckIn', event.target.checked)} />
-          支持自助入住
+          {t("host.editor.selfCheckIn")}
         </label>
       </section>
 
       <section className={sectionClassName}>
-        <h2 className="mb-4 text-lg font-semibold text-neutral-900">描述与配套</h2>
+        <h2 className="mb-4 text-lg font-semibold text-neutral-900">{t("host.editor.details")}</h2>
         <div className="space-y-4">
-          <Field label="英文描述">
+          <Field label={t("host.editor.descEn")}>
             <textarea className={`${inputClassName} min-h-28`} value={form.description} onChange={(event) => updateField('description', event.target.value)} />
           </Field>
-          <Field label="中文描述（可选，自动翻译填充）">
+          <Field label={t("host.editor.descZh")}>
             <textarea className={`${inputClassName} min-h-28`} value={form.descriptionZh} onChange={(event) => updateField('descriptionZh', event.target.value)} />
           </Field>
-          <Field label="Description en français (optionnel, traduction auto)">
+          <Field label={t("host.editor.descFr")}>
             <textarea className={`${inputClassName} min-h-28`} value={form.descriptionFr} onChange={(event) => updateField('descriptionFr', event.target.value)} />
           </Field>
-          <Field label="全包内容（逗号或换行分隔）">
+          <Field label={t("host.editor.included")}>
             <textarea className={`${inputClassName} min-h-24`} value={form.includedAmenitiesText} onChange={(event) => updateField('includedAmenitiesText', event.target.value)} />
           </Field>
-          <Field label="楼宇配套（逗号或换行分隔）">
+          <Field label={t("host.editor.building")}>
             <textarea className={`${inputClassName} min-h-24`} value={form.buildingAmenitiesText} onChange={(event) => updateField('buildingAmenitiesText', event.target.value)} />
           </Field>
           <div className="grid gap-4 md:grid-cols-2">
-            <Field label="最近地铁">
+            <Field label={t("host.editor.station")}>
               <input className={inputClassName} value={form.nearestSubway} onChange={(event) => updateField('nearestSubway', event.target.value)} />
             </Field>
-            <Field label="步行分钟">
+            <Field label={t("host.editor.walk")}>
               <input className={inputClassName} type="number" value={form.subwayWalkMinutes} onChange={(event) => updateField('subwayWalkMinutes', event.target.value)} />
             </Field>
           </div>
-          <Field label="附近地标（逗号或换行分隔）">
+          <Field label={t("host.editor.landmarks")}>
             <textarea className={`${inputClassName} min-h-24`} value={form.nearbyLandmarksText} onChange={(event) => updateField('nearbyLandmarksText', event.target.value)} />
           </Field>
-          <Field label="适合人群（逗号或换行分隔）">
+          <Field label={t("host.editor.audience")}>
             <textarea className={`${inputClassName} min-h-24`} value={form.idealForText} onChange={(event) => updateField('idealForText', event.target.value)} />
           </Field>
         </div>
       </section>
 
       <section className={sectionClassName}>
-        <h2 className="mb-4 text-lg font-semibold text-neutral-900">图片与 SEO</h2>
+        <h2 className="mb-4 text-lg font-semibold text-neutral-900">{t("host.editor.images")}</h2>
         <div className="space-y-4">
           <div className="rounded-lg border border-dashed border-neutral-300 p-4">
-            <p className="text-sm font-medium text-neutral-800">拖拽上传图片（Cloudflare Images）</p>
-            <p className="mt-1 text-xs text-neutral-500">支持多图上传；上传后会自动写入下方图片 URL 列表。</p>
+            <p className="text-sm font-medium text-neutral-800">{t("host.editor.upload")}</p>
+            <p className="mt-1 text-xs text-neutral-500">{t("host.editor.uploadHint")}</p>
             <input
               type="file"
               accept="image/*"
@@ -514,28 +516,28 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
               onChange={(event) => void handleUpload(event.target.files)}
               disabled={uploading}
             />
-            {uploading ? <p className="mt-2 text-xs text-neutral-500">上传中...</p> : null}
+            {uploading ? <p className="mt-2 text-xs text-neutral-500">{t("host.editor.uploading")}</p> : null}
           </div>
 
-          <Field label="图片 URL（支持逗号或换行分隔）">
+          <Field label={t("host.editor.imageURLs")}>
             <textarea
               className={`${inputClassName} min-h-24`}
               value={form.imagesText}
               onChange={(event) => updateField('imagesText', event.target.value)}
             />
           </Field>
-          <Field label="主图 URL">
+          <Field label={t("host.editor.heroURL")}>
             <input className={inputClassName} value={form.heroImage} onChange={(event) => updateField('heroImage', event.target.value)} />
           </Field>
           {imagePreviewUrls.length > 0 ? (
             <div className="rounded-lg bg-neutral-50 p-3 text-sm text-neutral-600">
-              已识别图片 {imagePreviewUrls.length} 张。主图将优先使用“主图 URL”，否则取第一张图片。
+              {t("host.editor.coverHint", { count: imagePreviewUrls.length })}
             </div>
           ) : null}
-          <Field label="Meta Title">
+          <Field label={t("host.editor.metaTitle")}>
             <input className={inputClassName} value={form.metaTitle} onChange={(event) => updateField('metaTitle', event.target.value)} />
           </Field>
-          <Field label="Meta Description">
+          <Field label={t("host.editor.metaDesc")}>
             <textarea className={`${inputClassName} min-h-24`} value={form.metaDescription} onChange={(event) => updateField('metaDescription', event.target.value)} />
           </Field>
         </div>
@@ -546,14 +548,14 @@ export default function PropertyEditor({ initial, id, apiBase = '/api/admin/prop
 
       <div className="flex flex-wrap gap-2">
         <button onClick={submit} disabled={saving} className="rounded-lg bg-primary px-4 py-2 text-white disabled:opacity-50">
-          {saving ? '保存中...' : '保存'}
+          {saving ? t("host.editor.saving") : t("host.editor.save")}
         </button>
         <button
           type="button"
           onClick={() => setForm({ ...DEFAULT_PROPERTY_FORM })}
           className="rounded-lg border border-neutral-300 px-4 py-2 text-neutral-700"
         >
-          清空表单
+          {t("host.editor.reset")}
         </button>
       </div>
     </div>

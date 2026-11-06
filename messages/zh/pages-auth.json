@@ -66,7 +66,13 @@
       "wishlistTitle": "登录以收藏此房源",
       "messageTitle": "登录以联系 NEOS",
       "signupTitle": "创建您的 NEOS 账户"
-    }
+    },
+    "firstName": "名",
+    "lastName": "姓",
+    "email": "电子邮箱",
+    "password": "密码",
+    "confirmPassword": "确认密码",
+    "createAccount": "创建账户"
   },
   "login": "登录",
   "register": "注册",

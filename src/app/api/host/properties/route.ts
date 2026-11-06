@@ -35,6 +35,8 @@ export async function GET(request: Request) {
       return {
         id: row.id,
         title: row.title,
+        titleZh: row.titleZh,
+        titleFr: row.titleFr,
         slug: row.slug,
         address: row.address,
         city: row.city || 'Toronto',

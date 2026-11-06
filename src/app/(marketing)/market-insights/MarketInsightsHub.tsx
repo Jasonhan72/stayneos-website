@@ -1,5 +1,7 @@
 "use client";
 
+import { marketCategories, categoryLabel } from "./categories";
+
 import { useState } from "react";
 import useSWR from "swr";
 import Link from "next/link";
@@ -42,15 +44,7 @@ interface PaginationInfo {
   totalPages: number;
 }
 
-const CATEGORIES = [
-  { key: "all", labelKey: "marketHub.catAll", default: "All" },
-  { key: "market-report", labelKey: "marketHub.catReport", default: "Market Reports" },
-  { key: "trreb", labelKey: "marketHub.catTrreb", default: "TRREB Data" },
-  { key: "rental-trends", labelKey: "marketHub.catRental", default: "Rental Trends" },
-  { key: "neighborhood", labelKey: "marketHub.catNeighborhood", default: "Neighborhoods" },
-  { key: "investment", labelKey: "marketHub.catInvestment", default: "Investment" },
-  { key: "news", labelKey: "marketHub.catNews", default: "Industry News" },
-];
+
 
 const CATEGORY_ICONS: Record<string, typeof FileText> = {
   "market-report": BarChart3,
@@ -165,7 +159,7 @@ export default function MarketInsightsHub() {
       <Section className="py-0 bg-white border-b border-gray-200 sticky top-0 z-20">
         <Container>
           <div className="flex overflow-x-auto gap-1 py-3 scrollbar-none -mx-4 px-4">
-            {CATEGORIES.map((cat) => (
+            {marketCategories.map((cat) => (
               <button
                 key={cat.key}
                 onClick={() => handleCategoryChange(cat.key)}
@@ -228,7 +222,7 @@ export default function MarketInsightsHub() {
                         {/* Category + Date */}
                         <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
                           <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded-full font-medium">
-                            {post.category.replace("-", " ")}
+                            {categoryLabel(post.category, t)}
                           </span>
                           <span className="flex items-center gap-1">
                             <Calendar size={12} />

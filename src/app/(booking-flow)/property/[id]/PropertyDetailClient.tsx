@@ -887,7 +887,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
             <div className="py-6">
               <div className="mb-4 flex items-center justify-between gap-4">
                 <h2 className="text-xl font-semibold tracking-tight">{t('property.whereYouBe')}</h2>
-                <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-3 py-1.5 text-xs font-semibold text-neutral-800"><MapPinned size={14} /> Location checked</span>
+                <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-3 py-1.5 text-xs font-semibold text-neutral-800"><MapPinned size={14} /> {t("property.locationChecked")}</span>
               </div>
               <div className="w-full h-[350px] bg-neutral-100 relative overflow-hidden rounded-2xl">
                 {canEmbedGoogleMap ? (
@@ -908,7 +908,7 @@ export default function PropertyDetailClient({ propertyId, initialProperty }: Pr
                     <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2 rounded-2xl bg-white/90 px-5 py-4 text-center shadow-lg">
                       <MapPinned className="text-primary" size={28} />
                       <p className="font-semibold text-neutral-900">{locationShort}</p>
-                      <a href={googleMapsSearchUrl(locationShort)} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-primary hover:text-primary-700">Open in Google Maps</a>
+                      <a href={googleMapsSearchUrl(locationShort)} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-primary hover:text-primary-700">{t("property.openMaps")}</a>
                     </div>
                   </div>
                 )}

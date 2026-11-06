@@ -30,13 +30,32 @@
       "saved": "économisés",
       "challengeLabel": "Défi :",
       "solutionLabel": "Solution :",
-      "resultLabel": "Résultat :"
+      "resultLabel": "Résultat :",
+      "projectTeam": {
+        "company": "Hébergement des équipes de projet",
+        "challenge": "Loger les équipes en mission de 3 à 12 mois dans des appartements meublés.",
+        "solution": "Centraliser la facturation et adapter le nombre de logements à la taille de l’équipe.",
+        "result": "Un hébergement stable et un interlocuteur unique pour toute l’équipe."
+      },
+      "executive": {
+        "company": "Relocalisation de cadres",
+        "challenge": "Offrir un logement prêt à habiter aux cadres et à leur famille à leur arrivée à Toronto.",
+        "solution": "Faciliter l’installation grâce à une présentation du quartier et à un accueil sur place.",
+        "result": "Des normes d’accueil uniformes pour faciliter chaque déménagement."
+      },
+      "insurance": {
+        "company": "Hébergement d’urgence et relogement après sinistre",
+        "challenge": "Trouver rapidement un logement après un sinistre, pendant des travaux ou pour un besoin urgent d’entreprise.",
+        "solution": "Notre équipe coordonne une installation rapide dans un logement meublé.",
+        "result": "Une solution de relogement fiable et flexible lorsque le temps presse."
+      }
     },
     "stats": {
       "companies": "Support opérationnel",
       "stays": "Portefeuille flexible",
       "satisfaction": "Support dédié",
-      "savings": "Économies moyennes vs hôtels"
+      "savings": "Économies moyennes vs hôtels",
+      "clear": "Transparent"
     },
     "trust": {
       "insured": "Entièrement assuré — 2 M$ de responsabilité civile commerciale",
@@ -264,7 +283,27 @@
     },
     "advantages": {
       "title": "Pourquoi choisir NEOS pour un séjour prolongé ?",
-      "subtitle": "Au-delà des économies, les séjours longue durée offrent stabilité, commodité et une véritable expérience de chez-soi."
+      "subtitle": "Au-delà des économies, les séjours longue durée offrent stabilité, commodité et une véritable expérience de chez-soi.",
+      "support": {
+        "benefit": "Service prioritaire",
+        "description": "Les résidents de longue durée bénéficient d’une personne-ressource attitrée et d’une assistance prioritaire.",
+        "title": "Accompagnement personnalisé"
+      },
+      "flexibility": {
+        "benefit": "Modification simplifiée du bail",
+        "description": "Choisissez une durée de 3, 6 ou 12 mois et adaptez ou prolongez votre bail selon vos besoins.",
+        "title": "Durées flexibles"
+      },
+      "stability": {
+        "benefit": "Tarif garanti",
+        "description": "Réservez plusieurs mois à l’avance avec un tarif fixe et un logement garanti.",
+        "title": "Stabilité résidentielle"
+      },
+      "savings": {
+        "benefit": "Jusqu’à 12 600 $ d’économies par an",
+        "description": "Économisez jusqu’à 30 % sur le tarif mensuel par rapport aux courts séjours. Les économies augmentent avec la durée du séjour.",
+        "title": "Économies sur le loyer"
+      }
     },
     "form": {
       "submit": "Obtenir mon devis et économies",
@@ -300,20 +339,104 @@
     },
     "testimonials": {
       "title": "Témoignages de locataires de longue durée",
-      "subtitle": "Découvrez comment nos résidents longue durée ont économisé et profité de leur séjour prolongé à Toronto."
+      "subtitle": "Découvrez comment nos résidents longue durée ont économisé et profité de leur séjour prolongé à Toronto.",
+      "remote": {
+        "quote": "J’ai adoré mes six mois de télétravail à Toronto. Le tarif longue durée était abordable et l’appartement avait tout le nécessaire.",
+        "duration": "Bail de 6 mois",
+        "company": "Télétravailleur",
+        "role": "Ingénieur logiciel"
+      },
+      "marketing": {
+        "quote": "Une solution idéale pour notre expansion à Toronto. Pouvoir prolonger ou modifier le bail répondait exactement à nos besoins.",
+        "duration": "Bail de 6 mois",
+        "company": "Services financiers",
+        "role": "Directrice du marketing"
+      },
+      "project": {
+        "quote": "Le bail de 12 mois a permis à notre entreprise d’économiser plus de 10 000 $ par rapport à l’hôtel. Notre gestionnaire de compte s’est occupé de tout.",
+        "duration": "Bail de 12 mois",
+        "company": "Cabinet de conseil en technologie",
+        "role": "Gestionnaire de projet"
+      }
     },
     "usecases": {
       "title": "Parfait pour votre situation",
-      "subtitle": "Les locations longue durée conviennent à diverses situations nécessitant un séjour prolongé à Toronto."
+      "subtitle": "Les locations longue durée conviennent à diverses situations nécessitant un séjour prolongé à Toronto.",
+      "transitions": {
+        "duration": "Habituellement de 3 à 6 mois",
+        "description": "Un logement temporaire pendant un divorce, un changement d’emploi ou une autre transition importante.",
+        "title": "Transitions de vie"
+      },
+      "remote": {
+        "duration": "Habituellement de 6 à 12 mois",
+        "description": "Un hébergement flexible pour les personnes qui travaillent à distance ou se déplacent régulièrement.",
+        "title": "Télétravail"
+      },
+      "relocation": {
+        "duration": "Habituellement de 3 à 6 mois",
+        "description": "Un logement temporaire pendant la recherche d’une résidence permanente ou en attendant de prendre possession de votre propriété.",
+        "title": "Relogement temporaire"
+      },
+      "projects": {
+        "duration": "Habituellement de 3 à 12 mois",
+        "description": "Pour les missions prolongées, les équipes de projet et les bureaux temporaires.",
+        "title": "Projets d’entreprise"
+      }
     },
     "pricing": {
       "select": "Sélectionner ce plan",
       "title": "Choisissez votre niveau d'économies",
-      "subtitle": "Plus vous restez longtemps, plus vous économisez. Toutes les options incluent les mêmes équipements et services premium."
+      "subtitle": "Plus vous restez longtemps, plus vous économisez. Toutes les options incluent les mêmes équipements et services premium.",
+      "popular": "Le plus populaire",
+      "perMonth": "par mois",
+      "total": "Économies totales",
+      "estimate": "Vos économies estimées",
+      "duration": "{months} mois",
+      "discount": "Rabais de {percent}",
+      "saved": "Économie de {amount}",
+      "discountedRate": "Loyer mensuel après un rabais de {percent}",
+      "periodSavings": "Économies totales ({duration})",
+      "custom": "Tarif personnalisé",
+      "features": {
+        "monthlyDiscount": "Rabais de {percent} sur le loyer mensuel",
+        "notice": "Départ flexible avec un préavis de 30 jours",
+        "shortProjects": "Idéal pour les missions courtes",
+        "utilities": "Toutes les charges sont comprises",
+        "midLease": "Possibilité de modifier le bail en cours de séjour",
+        "projects": "Idéal pour les missions de projet",
+        "priority": "Assistance prioritaire",
+        "stability": "Économies maximales et stabilité",
+        "renew": "Possibilité de renouvellement annuel",
+        "manager": "Gestionnaire de compte attitré"
+      }
     },
     "benefits": {
       "title": "Tout est inclus",
-      "subtitle": "Toutes les locations longue durée incluent des équipements et services premium sans frais supplémentaires."
+      "subtitle": "Toutes les locations longue durée incluent des équipements et services premium sans frais supplémentaires.",
+      "location": {
+        "description": "Des adresses centrales à Toronto, près des transports en commun.",
+        "title": "Emplacements bien desservis"
+      },
+      "cleaning": {
+        "description": "Le ménage est offert chaque semaine ou toutes les deux semaines.",
+        "title": "Ménage régulier"
+      },
+      "concierge": {
+        "description": "Une assistance personnalisée pour vos besoins et les services locaux.",
+        "title": "Conciergerie"
+      },
+      "maintenance": {
+        "description": "Notre équipe intervient rapidement en cas de panne ou de réparation.",
+        "title": "Entretien en tout temps"
+      },
+      "furnished": {
+        "description": "Le mobilier, les électroménagers et les articles ménagers sont fournis.",
+        "title": "Entièrement meublé"
+      },
+      "utilities": {
+        "description": "L’électricité, l’eau, le gaz et Internet sont compris.",
+        "title": "Charges comprises"
+      }
     }
   },
   "hosts": {
@@ -355,11 +478,32 @@
       "guarantee": "Paiements mensuels garantis indépendamment de l'occupation, gestion professionnelle incluse.",
       "subtitle": "Voyez combien vous pourriez gagner de plus avec NEOS par rapport aux locations traditionnelles.",
       "currentRent": "Loyer mensuel actuel",
-      "occupancyRate": "Taux d'occupation actuel"
+      "occupancyRate": "Taux d'occupation actuel",
+      "earnings": "Vos revenus potentiels",
+      "traditional": "Revenu annuel en location classique",
+      "withNeos": "Revenu annuel avec NEOS",
+      "additional": "Revenu annuel supplémentaire",
+      "guaranteed": "Garantie"
     },
     "process": {
       "subtitle": "Commencez en quatre étapes simples et gagnez un revenu garanti de votre propriété.",
-      "title": "Comment ça fonctionne"
+      "title": "Comment ça fonctionne",
+      "earning": {
+        "description": "Une fois le logement publié, vous commencez à recevoir les versements mensuels garantis.",
+        "title": "Percevoir les loyers"
+      },
+      "setup": {
+        "description": "Nous prenons en charge les photos, la rédaction de l’annonce et la mise en valeur du logement.",
+        "title": "Préparer et publier l’annonce"
+      },
+      "evaluate": {
+        "description": "Notre équipe visite le logement pour évaluer son admissibilité et proposer les améliorations nécessaires.",
+        "title": "Évaluer le logement"
+      },
+      "apply": {
+        "description": "Remplissez le formulaire en indiquant les caractéristiques du logement et vos coordonnées.",
+        "title": "Envoyer une demande"
+      }
     },
     "hero": {
       "cta": "Commencer",
@@ -369,11 +513,39 @@
     },
     "advantages": {
       "title": "Pourquoi choisir NEOS",
-      "subtitle": "Rejoignez des centaines de propriétaires qui ont transformé leurs investissements immobiliers en flux de revenus sans souci."
+      "subtitle": "Rejoignez des centaines de propriétaires qui ont transformé leurs investissements immobiliers en flux de revenus sans souci.",
+      "zeroVacancy": {
+        "description": "Nous gérons les réservations et la promotion de votre logement auprès des voyageurs d’affaires.",
+        "title": "Protection contre la vacance"
+      },
+      "professionalMgmt": {
+        "description": "Nous assurons l’entretien, le ménage, les services aux résidents et l’assistance en tout temps.",
+        "title": "Gestion immobilière professionnelle"
+      },
+      "steadyIncome": {
+        "description": "Le loyer est versé chaque mois, même si le logement est vacant. Vous n’avez plus à relancer les locataires.",
+        "title": "Revenus locatifs mensuels stables"
+      }
     },
     "benefits": {
       "subtitle": "Plus de raisons pour lesquelles les propriétaires choisissent NEOS.",
-      "title": "Avantages supplémentaires"
+      "title": "Avantages supplémentaires",
+      "flexible": {
+        "description": "Des contrats au mois, sans engagement de longue durée.",
+        "title": "Conditions flexibles"
+      },
+      "guaranteed": {
+        "description": "Les versements mensuels sont garantis, même pendant les périodes de vacance.",
+        "title": "Versements garantis"
+      },
+      "premiumGuests": {
+        "description": "Nous vérifions les professionnels en déplacement et les entreprises clientes.",
+        "title": "Clientèle vérifiée"
+      },
+      "noMaintenance": {
+        "description": "Nous nous occupons de l’entretien, des réparations et des demandes des résidents.",
+        "title": "Gestion clé en main"
+      }
     }
   },
   "landlords": {

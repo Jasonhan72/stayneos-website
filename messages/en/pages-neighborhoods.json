@@ -199,6 +199,26 @@
     "yourCityNotify": "Get notified when we expand",
     "yourCityDesc": "Tell us where you need premium furnished stays next.",
     "emailPlaceholder": "Email address",
-    "notifyMe": "Notify Me"
+    "notifyMe": "Notify Me",
+    "areaDowntown": "Downtown Core",
+    "areaWaterfront": "Waterfront",
+    "areaFinancial": "Financial District",
+    "areaUniversity": "University District",
+    "areaYorkville": "Yorkville",
+    "areaMidtown": "Midtown",
+    "titleCurrent": "Toronto furnished apartments",
+    "serviceAreaLabel": "Service areas",
+    "serviceAreaTitle": "Built around the places guests actually need to be",
+    "done": "Done",
+    "sending": "Sending…",
+    "areaLiberty": "Liberty Village",
+    "areaNorthYork": "North York",
+    "names": {
+      "toronto": "Toronto",
+      "vancouver": "Vancouver",
+      "montreal": "Montreal",
+      "newYork": "New York",
+      "sanFrancisco": "San Francisco"
+    }
   }
 }

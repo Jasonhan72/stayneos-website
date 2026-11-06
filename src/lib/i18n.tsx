@@ -2,7 +2,8 @@
 
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 
-import { localizePath } from './i18n-routes';
+import { isLocale, persistLocale } from './preferences';
+import { getLocalePrefix, localizePath } from './i18n-routes';
 
 export type Locale = 'en' | 'fr' | 'zh';
 
@@ -25,31 +26,6 @@ import zh from '../../messages/zh';
 
 const translations = { en, fr, zh };
 
-// User context key for language preference
-const USER_KEY = "stayneos_user_data";
-const PREFERRED_LOCALE_KEY = 'preferred-locale';
-const LOCALE_COOKIE_KEY = 'stayneos_locale';
-const debugI18n = (..._args: unknown[]) => {
-  if (process.env.NODE_ENV !== 'production') {
-  }
-};
-
-// Helper to get cookie value (works on both client and server)
-function getCookie(name: string): string | null {
-  if (typeof document === 'undefined') return null;
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
-  return null;
-}
-
-// Helper to set cookie
-function setCookie(name: string, value: string, days = 365) {
-  if (typeof document === 'undefined') return;
-  const expires = new Date(Date.now() + days * 864e5).toUTCString();
-  document.cookie = `${name}=${value}; expires=${expires}; path=/; SameSite=Lax`;
-}
-
 function getNestedValue(obj: Record<string, unknown>, path: string): string {
   const keys = path.split('.');
   let value: unknown = obj;
@@ -65,62 +41,19 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
   return typeof value === 'string' ? value : path;
 }
 
-// Client-side only function to detect real locale after hydration
-function getClientLocale(): Locale {
-  if (typeof window === 'undefined') {
-    return 'en'; // Should never be called on server
-  }
-  
-  // Client-side: Check in order of priority
-  // Priority 1: Check cookie to match SSR locale on the first hydrated render
-  const cookieLocale = getCookie(LOCALE_COOKIE_KEY);
-  if (cookieLocale === 'zh' || cookieLocale === 'en' || cookieLocale === 'fr') {
-    debugI18n('[i18n] Using cookie:', cookieLocale);
-    return cookieLocale;
-  }
-
-  // Priority 2: Check preferred locale from localStorage
-  const stored = localStorage.getItem(PREFERRED_LOCALE_KEY);
-  if (stored === 'zh' || stored === 'en' || stored === 'fr') {
-    debugI18n('[i18n] Using preferred-locale:', stored);
-    return stored;
-  }
-  
-  // Priority 3: Check user preferences from localStorage
-  try {
-    const userData = localStorage.getItem(USER_KEY);
-    if (userData) {
-      const user = JSON.parse(userData);
-      if (user.preferences?.language) {
-        const lang = user.preferences.language;
-        if (lang === 'zh' || lang === 'en' || lang === 'fr') {
-          debugI18n('[i18n] Using user preferences:', lang);
-          return lang;
-        }
-      }
-    }
-  } catch {}
-  
-  // Default to English (do NOT use browser language to avoid unexpected language switches)
-  debugI18n('[i18n] Defaulting to en');
-  return 'en';
-}
-
 export function I18nProvider({ children, initialLocale = 'en' }: { children: React.ReactNode; initialLocale?: Locale }) {
   // Use server-detected locale to avoid SSR/client mismatch flash
   const [locale, setLocaleState] = useState<Locale>(initialLocale);
   const [isHydrated, setIsHydrated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // After hydration, detect real locale
+  // Keep the first client render aligned with the document, including after a
+  // locale-prefixed link opens with an older preference in another tab.
   useEffect(() => {
-    const detectedLocale = getClientLocale();
-    if (detectedLocale !== locale) {
-      setLocaleState(detectedLocale);
-    }
+    setLocaleState(getLocalePrefix(window.location.pathname) ?? initialLocale);
     setIsHydrated(true);
     setIsLoading(false);
-  }, [locale]);
+  }, [initialLocale]);
 
   useEffect(() => {
     if (typeof document !== 'undefined') {
@@ -128,56 +61,19 @@ export function I18nProvider({ children, initialLocale = 'en' }: { children: Rea
     }
   }, [locale]);
 
-  // Listen for locale changes from other components
   useEffect(() => {
-    const handleLocaleChange = () => {
-      const newLocale = getClientLocale();
-      setLocaleState(newLocale);
+    const handleLocaleChange = (event: Event) => {
+      const preferred = (event as CustomEvent<{ locale?: Locale }>).detail?.locale;
+      if (isLocale(preferred)) setLocaleState(getLocalePrefix(window.location.pathname) ?? preferred);
     };
-    
     window.addEventListener('localeChange', handleLocaleChange);
-    window.addEventListener('localStorageChange', handleLocaleChange);
-    
-    return () => {
-      window.removeEventListener('localeChange', handleLocaleChange);
-      window.removeEventListener('localStorageChange', handleLocaleChange);
-    };
+    return () => window.removeEventListener('localeChange', handleLocaleChange);
   }, []);
 
   const setLocale = useCallback((newLocale: Locale) => {
-    debugI18n('[i18n] setLocale called with:', newLocale, 'current locale:', locale);
-    
-    if (newLocale === locale) {
-      debugI18n('[i18n] Same locale, skipping update');
-      return;
-    }
-    
+    persistLocale(newLocale);
     setLocaleState(newLocale);
-    
-    // Save to cookie for SSR consistency
-    setCookie(LOCALE_COOKIE_KEY, newLocale);
-    
-    // Save to localStorage
-    localStorage.setItem(PREFERRED_LOCALE_KEY, newLocale);
-    
-    // Also update user preferences if user is logged in
-    try {
-      const userData = localStorage.getItem(USER_KEY);
-      if (userData) {
-        const user = JSON.parse(userData);
-        user.preferences = { ...user.preferences, language: newLocale };
-        localStorage.setItem(USER_KEY, JSON.stringify(user));
-      }
-    } catch {}
-    
-    // Dispatch custom event to notify all components
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('localeChange', { detail: { locale: newLocale } }));
-      debugI18n('[i18n] localeChange event dispatched');
-    }
-    
-    debugI18n('[i18n] Locale updated to:', newLocale);
-  }, [locale]);
+  }, []);
 
   const t = useCallback(
     (key: string, defaultValue?: string | Record<string, string | number>, params?: Record<string, string | number>): string => {
@@ -233,9 +129,14 @@ export function useI18n() {
 export function useSwitchLocale() {
   const { setLocale } = useI18n();
   return (locale: Locale) => {
-    setLocale(locale);
     const destination = new URL(window.location.href);
     destination.pathname = localizePath(destination.pathname, locale);
-    if (destination.href !== window.location.href) window.location.assign(destination.href);
+    if (destination.href === window.location.href) {
+      setLocale(locale);
+      return;
+    }
+    // Keep the current document in one language until the next one arrives.
+    persistLocale(locale, { notify: false });
+    window.location.assign(destination.href);
   };
 }

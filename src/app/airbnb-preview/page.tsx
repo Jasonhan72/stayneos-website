@@ -9,6 +9,7 @@
 
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import PropertyCard, { Property } from "@/components/property/PropertyCard";
 import AirbnbListingCard from "@/components/property/AirbnbListingCard";
 import ResponsiveImage from "@/components/ui/ResponsiveImage";
@@ -17,7 +18,8 @@ const DEMO: Property[] = [
   {
     id: "1",
     title: "Cooper at 55 — Penthouse Condo with Lake Views",
-    titleZh: "Cooper at 55 — 湖景顶层公寓",
+    titleZh: "库珀街 55 号湖景顶层公寓",
+    titleFr: "Appartement-terrasse avec vue sur le lac au 55 Cooper",
     location: "CityPlace, Toronto",
     price: 12500,
     priceUnit: "Month",
@@ -34,6 +36,8 @@ const DEMO: Property[] = [
   {
     id: "2",
     title: "ICE Condo with King-size Bed & CN Tower View",
+    titleZh: "配备特大床的公寓，可望加拿大国家电视塔",
+    titleFr: "Appartement ICE avec très grand lit et vue sur la tour CN",
     location: "Downtown, Toronto",
     price: 8200,
     priceUnit: "Month",
@@ -49,6 +53,8 @@ const DEMO: Property[] = [
   {
     id: "3",
     title: "Yorkville Boutique Suite — Designer Furnishings",
+    titleZh: "约克维尔精品套房，配备设计师家具",
+    titleFr: "Suite à Yorkville avec mobilier de designer",
     location: "Yorkville, Toronto",
     price: 6500,
     priceUnit: "Month",
@@ -64,6 +70,8 @@ const DEMO: Property[] = [
   {
     id: "4",
     title: "Lakeshore Loft with Floor-to-Ceiling Windows",
+    titleZh: "湖滨阁楼公寓，配备落地窗",
+    titleFr: "Loft du bord du lac avec fenêtres pleine hauteur",
     location: "Harbourfront, Toronto",
     price: 7400,
     priceUnit: "Month",
@@ -79,22 +87,22 @@ const DEMO: Property[] = [
 ];
 
 export default function AirbnbPreviewPage() {
+  const { t } = useI18n();
   return (
     <main className="container-custom py-12">
       <div className="mb-10">
-        <h1 className="text-3xl font-bold text-neutral-900">AB-001 Design Preview</h1>
+        <h1 className="text-3xl font-bold text-neutral-900">{t("property.preview.title")}</h1>
         <p className="mt-2 text-neutral-600">
-          对比旧 PropertyCard 与新 AirbnbListingCard。新卡片采用 Airbnb DLS 风格：留白、无 border、20:19 比例、左下信息层级。
+          {t("property.preview.comparison")}
         </p>
         <p className="mt-2 text-sm text-neutral-500">
-          品牌色保留 #003B5C / #C9A962。详情见{" "}
-          <code>agents/neos/memory/2026-05-17-stayneos-airbnb-plan.md</code>
+          {t("property.preview.brand")}
         </p>
       </div>
 
       <section className="mb-16">
         <h2 className="mb-6 text-xl font-semibold text-neutral-900">
-          新 · AirbnbListingCard (AB-001)
+          {t("property.preview.newCard")}
         </h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {DEMO.map((p, i) => (
@@ -105,7 +113,7 @@ export default function AirbnbPreviewPage() {
 
       <section className="mb-16">
         <h2 className="mb-6 text-xl font-semibold text-neutral-900">
-          旧 · PropertyCard (current production)
+          {t("property.preview.oldCard")}
         </h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {DEMO.slice(0, 3).map((p) => (
@@ -115,38 +123,38 @@ export default function AirbnbPreviewPage() {
       </section>
 
       <section className="mb-16">
-        <h2 className="mb-6 text-xl font-semibold text-neutral-900">Pills (筛选 chip)</h2>
+        <h2 className="mb-6 text-xl font-semibold text-neutral-900">{t("property.preview.filters")}</h2>
         <div className="flex flex-wrap gap-3">
           <button className="ab-pill" type="button">
-            Any price
+            {t("property.preview.price")}
           </button>
           <button className="ab-pill ab-pill--active" type="button">
-            Short stay
+            {t("property.preview.short")}
           </button>
           <button className="ab-pill" type="button">
-            Monthly
+            {t("property.preview.monthly")}
           </button>
           <button className="ab-pill" type="button">
-            Pet-friendly
+            {t("property.preview.pet")}
           </button>
           <button className="ab-pill" type="button">
-            Lake view
+            {t("property.preview.view")}
           </button>
         </div>
       </section>
 
       <section className="mb-16">
-        <h2 className="mb-6 text-xl font-semibold text-neutral-900">Trust badges</h2>
+        <h2 className="mb-6 text-xl font-semibold text-neutral-900">{t("property.preview.badges")}</h2>
         <div className="flex flex-wrap gap-3">
-          <span className="ab-trust-badge ab-trust-badge--verified">✓ Location verified</span>
-          <span className="ab-trust-badge ab-trust-badge--superhost">⭐ Superhost</span>
-          <span className="ab-trust-badge">Self check-in</span>
+          <span className="ab-trust-badge ab-trust-badge--verified">{t("property.preview.verified")}</span>
+          <span className="ab-trust-badge ab-trust-badge--superhost">{t("property.preview.superhost")}</span>
+          <span className="ab-trust-badge">{t("property.preview.self")}</span>
         </div>
       </section>
 
       <section className="mb-16">
         <h2 className="mb-6 text-xl font-semibold text-neutral-900">
-          Image grid (房源详情页 hero)
+          {t("property.preview.gallery")}
         </h2>
         <div className="ab-image-grid">
           <div className="ab-image-grid__hero">
@@ -165,7 +173,7 @@ export default function AirbnbPreviewPage() {
             <ResponsiveImage src="/images/simcoe-238-bath1.jpg" alt="t4" fill />
           </div>
           <button type="button" className="ab-image-grid__show-all">
-            Show all photos
+            {t("property.preview.photos")}
           </button>
         </div>
       </section>

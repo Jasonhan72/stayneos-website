@@ -39,7 +39,7 @@
     },
     "data": {
       "downtown": {
-        "name": "Downtown Core / Grange Park（238 Simcoe St）",
+        "name": "市中心 · 格兰奇公园（238 Simcoe St）",
         "tagline": "多伦多文化心脏地带",
         "features": {
           "1": "紧邻 AGO、OCAD、UofT St. George",
@@ -152,18 +152,18 @@
         }
       },
       "north-york": {
-        "name": "North York / Yonge-Sheppard（28 Avondale Ave）",
+        "name": "北约克 · 央街与谢泼德大道（28 Avondale Ave）",
         "tagline": "成熟城市副中心",
         "features": {
           "1": "步行可达 Sheppard 地铁站",
-          "2": "约20分钟到 downtown",
+          "2": "约 20 分钟可到市中心",
           "3": "适合家庭与通勤专业人士",
           "4": "Yonge街沿线餐饮购物丰富",
           "5": "生活便利，社区成熟稳定"
         }
       },
       "waterfront": {
-        "name": "Waterfront / Sugar Wharf（55 Cooper St）",
+        "name": "湖滨区 · 糖码头（55 Cooper St）",
         "tagline": "多伦多最新湖滨社区",
         "features": {
           "1": "Menkes 开发的滨水社区",
@@ -199,6 +199,26 @@
     "yourCityNotify": "扩展时通知您",
     "yourCityDesc": "告诉我们您下一步需要在哪里获得高端精装住房。",
     "emailPlaceholder": "电子邮箱地址",
-    "notifyMe": "通知我"
+    "notifyMe": "通知我",
+    "areaDowntown": "市中心",
+    "areaWaterfront": "湖滨区",
+    "areaFinancial": "金融区",
+    "areaUniversity": "大学区",
+    "areaYorkville": "约克维尔",
+    "areaMidtown": "中城区",
+    "titleCurrent": "多伦多精装公寓",
+    "serviceAreaLabel": "服务区域",
+    "serviceAreaTitle": "住在工作、学习和生活所需的社区",
+    "done": "已登记",
+    "sending": "正在提交…",
+    "areaLiberty": "自由村",
+    "areaNorthYork": "北约克",
+    "names": {
+      "toronto": "多伦多",
+      "vancouver": "温哥华",
+      "montreal": "蒙特利尔",
+      "newYork": "纽约",
+      "sanFrancisco": "旧金山"
+    }
   }
 }

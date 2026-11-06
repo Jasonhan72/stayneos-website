@@ -1,5 +1,7 @@
 "use client";
 
+import { categoryLabel } from "../categories";
+
 import { Fragment, type ReactNode, useState, useEffect } from "react";
 import Link from "next/link";
 import { Container, Section } from "@/components/ui";
@@ -272,7 +274,7 @@ export default function MarketPostPage({ slug }: { slug: string }) {
 
             <div className="flex items-center gap-2 text-sm text-blue-200 mb-4">
               <span className="px-2.5 py-1 bg-white/15 rounded-full font-medium">
-                {post.category.replace("-", " ")}
+                {categoryLabel(post.category, t)}
               </span>
               <span className="flex items-center gap-1">
                 <Calendar size={14} />

@@ -40,19 +40,24 @@ import { useI18n } from '@/lib/i18n';
 import { useWishlist } from '@/lib/context/WishlistContext';
 import { useCurrency } from '@/hooks/useCurrency';
 import { getPropertyLocation, resolvePropertyPricingTiers } from '@/lib/utils/property-transform';
-import { getTierDiscountPercent, type PricingTier } from '@/lib/property-pricing-discounts';
+import { hotelComparisonLabel, getTierDiscountPercent, type PricingTier } from '@/lib/property-pricing-discounts';
+import { getLocalizedTitle } from '@/components/property/PropertyCard';
 import FilterChips, { type FilterChip } from '@/components/property/FilterChips';
 import FilterModal, { PROPERTY_TYPES } from '@/components/property/FilterModal';
 import dynamic from 'next/dynamic';
 
-// 动态导入地图组件
+function MapLoading() {
+  const { t } = useI18n();
+  return (
+    <div className="w-full h-full bg-neutral-100 flex items-center justify-center">
+      <div className="text-neutral-400">{t("property.loadingMap")}</div>
+    </div>
+  );
+}
+
 const GooglePropertyMap = dynamic(() => import('@/components/property/GooglePropertyMap'), {
   ssr: false,
-  loading: () => (
-    <div className="w-full h-full bg-neutral-100 flex items-center justify-center">
-      <div className="text-neutral-400">Loading map...</div>
-    </div>
-  ),
+  loading: MapLoading,
 });
 
 const AirbnbCalendar = dynamic(() => import('@/components/booking').then((mod) => mod.AirbnbCalendar), {
@@ -154,7 +159,10 @@ export default function PropertiesPage() {
   const { properties, pagination, isLoading, error } = useProperties();
   
   // 转换 API 数据
-  const propertyList = useMemo(() => properties, [properties]);
+  const propertyList = useMemo(
+    () => properties.map(property => ({ ...property, title: getLocalizedTitle(property, locale) })),
+    [properties, locale],
+  );
   
   // 本地筛选（价格、卧室数量、amenities）
   const filteredProperties = useMemo(() => {
@@ -773,7 +781,7 @@ function PropertyGridCard({
             <span>·</span>
             <span>{property.bathrooms} {t('property.bathroomsShort')}</span>
             <span>·</span>
-            <span>{property.area} sqft</span>
+            <span>{property.area} {t("property.sqft")}</span>
             <span>·</span>
             <span>{t('property.max')} {property.maxGuests} {t('property.guests')}</span>
           </div>
@@ -787,7 +795,7 @@ function PropertyGridCard({
             <span className="text-xs text-neutral-500">
               {t('property.hotelEquivalent', 'Hotel equivalent:')}{' '}
               <span className="text-neutral-400 line-through">
-                {property.id === '1' ? '~$18,000/mo' : property.id === '2' ? '~$10,500/mo' : property.id === '3' ? '~$7,500/mo' : ''}
+                {hotelComparisonLabel(property.id, t("pricing.perMonth"))}
               </span>
             </span>
           </div>
@@ -893,7 +901,7 @@ function PropertyListCard({ property, isSelected, onClick, onHover, cardRef }: P
               </div>
               <div className="flex items-center gap-1">
                 <Maximize size={14} />
-                <span>{property.area} sqft</span>
+                <span>{property.area} {t("property.sqft")}</span>
               </div>
               <div className="flex items-center gap-1">
                 <Users size={14} />
@@ -920,7 +928,7 @@ function PropertyListCard({ property, isSelected, onClick, onHover, cardRef }: P
               <span className="text-sm text-neutral-500">
                 {t('property.hotelEquivalent', 'Hotel equivalent:')}{' '}
                 <span className="text-neutral-400 line-through">
-                  {property.id === '1' ? '~$18,000/mo' : property.id === '2' ? '~$10,500/mo' : property.id === '3' ? '~$7,500/mo' : ''}
+                  {hotelComparisonLabel(property.id, t("pricing.perMonth"))}
                 </span>
               </span>
             </div>

@@ -30,7 +30,26 @@
     "or": "ou",
     "month": "mois",
     "off": "de réduction",
-    "moreInfo": "Plus d'infos"
+    "moreInfo": "Plus d'infos",
+    "prev": "Précédent",
+    "clear": "Effacer",
+    "remove": "Retirer",
+    "chatOnWhatsApp": "Discuter sur WhatsApp",
+    "inquiry": {
+      "firstName": "Indiquez votre prénom",
+      "lastName": "Indiquez votre nom de famille",
+      "email": "Saisissez une adresse courriel valide",
+      "phone": "Saisissez un numéro de téléphone valide",
+      "address": "Indiquez l’adresse du logement",
+      "beds": "Indiquez le nombre de chambres",
+      "property": "Décrivez votre logement",
+      "moveIn": "Indiquez la date d’arrivée",
+      "needs": "Décrivez vos besoins en hébergement",
+      "company": "Indiquez le nom de votre entreprise",
+      "contact": "Indiquez le nom de la personne à contacter",
+      "request": "Précisez votre demande",
+      "submitFailed": "Impossible d’envoyer votre demande. Veuillez réessayer."
+    }
   },
   "nav": {
     "openMenu": "Ouvrir le menu",
@@ -57,8 +76,9 @@
     "switchToHosting": "Passer en mode hôte",
     "switchToTravelling": "Passer en mode voyageur",
     "becomeAHost": "Devenir hôte",
-    "hostingMode": "Mode hôte actif",
-    "listYourProperty": "Publiez votre bien sur Neos"
+    "hostingMode": "Mode hôte",
+    "listYourProperty": "Publiez votre bien sur Neos",
+    "home": "Accueil"
   },
   "footer": {
     "about": "À Propos",
@@ -154,7 +174,81 @@
   },
   "metadata": {
     "title": "NEOS | Locations d'Appartements Exécutifs Premium",
-    "description": "NEOS est une plateforme d'appartements exécutifs premium pour professionnels, offrant des propriétés de qualité, des baux flexibles et un service de conciergerie 24h/24."
+    "description": "NEOS est une plateforme d'appartements exécutifs premium pour professionnels, offrant des propriétés de qualité, des baux flexibles et un service de conciergerie 24h/24.",
+    "pages": {
+      "cancellation-policy": {
+        "title": "Politique d’annulation et de remboursement",
+        "description": "Consultez les conditions d’annulation et de remboursement des réservations NEOS."
+      },
+      "corporate": {
+        "title": "Logements d’entreprise",
+        "description": "Des appartements meublés pour les déplacements professionnels, les mutations et les équipes de projet."
+      },
+      "for-business": {
+        "title": "Logements d’entreprise et relocalisation à Toronto",
+        "description": "Des logements meublés au centre-ville pour les voyages, les mutations et le relogement après sinistre, avec facturation à 30 jours."
+      },
+      "for-hosts": {
+        "title": "Proposer un logement à NEOS",
+        "description": "Découvrez la gestion immobilière de NEOS, les versements garantis et les services aux résidents."
+      },
+      "for-students": {
+        "title": "Logements à Toronto pour universitaires et professionnels de la santé",
+        "description": "Des appartements meublés près de l’Université de Toronto et des grands hôpitaux pour les universitaires, les médecins et les congressistes."
+      },
+      "help": {
+        "title": "Centre d’aide",
+        "description": "Trouvez des réponses sur les réservations, les paiements et l’arrivée."
+      },
+      "landlords": {
+        "title": "Services aux propriétaires",
+        "description": "Découvrez les services de gestion locative de NEOS pour les propriétaires."
+      },
+      "long-term": {
+        "title": "Locations longue durée et rabais à Toronto",
+        "description": "Découvrez les tarifs des appartements meublés pour des baux flexibles de 3, 6 ou 12 mois."
+      },
+      "market-insights": {
+        "title": "Analyses et rapports sur le marché de Toronto",
+        "description": "Consultez les rapports immobiliers, les tendances locatives et les données du marché de Toronto."
+      },
+      "neighborhoods": {
+        "title": "Guide des quartiers de Toronto",
+        "description": "Explorez les quartiers desservis par NEOS, du bord du lac à North York en passant par le centre-ville."
+      },
+      "privacy": {
+        "title": "Politique de confidentialité",
+        "description": "Découvrez comment NEOS recueille, utilise et protège vos renseignements personnels."
+      },
+      "service-animals": {
+        "title": "Politique sur les animaux d’assistance",
+        "description": "Consultez la politique de NEOS sur les animaux d’assistance."
+      },
+      "services": {
+        "title": "Nos services",
+        "description": "Découvrez nos services de logement d’entreprise, de location, de gestion immobilière et de conciergerie."
+      },
+      "terms": {
+        "title": "Conditions d’utilisation",
+        "description": "Consultez les conditions d’utilisation du site Web et des services de NEOS."
+      },
+      "403": {
+        "title": "403 · Accès interdit",
+        "description": "Vous ne disposez pas des autorisations requises pour consulter cette page."
+      },
+      "forgot-password": {
+        "title": "Mot de passe oublié",
+        "description": "Réinitialisez le mot de passe de votre compte NEOS."
+      },
+      "reset-password": {
+        "title": "Réinitialiser le mot de passe",
+        "description": "Définissez votre nouveau mot de passe."
+      },
+      "login": {
+        "title": "Connexion",
+        "description": "Connectez-vous à votre compte NEOS pour gérer vos réservations et trouver un logement meublé."
+      }
+    }
   },
   "pagination": {
     "previous": "Précédent",

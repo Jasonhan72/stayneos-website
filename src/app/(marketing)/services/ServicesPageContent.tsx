@@ -76,7 +76,13 @@ export default function ServicesPageContent() {
       iconKey: "Globe",
       titleKey: "services.globalNetwork.title",
       descKey: "services.globalNetwork.desc",
-      features: ["Toronto", "Vancouver", "Montreal", "New York", "San Francisco"],
+      features: [
+        t("cities.names.toronto"),
+        t("cities.names.vancouver"),
+        t("cities.names.montreal"),
+        t("cities.names.newYork"),
+        t("cities.names.sanFrancisco"),
+      ],
     },
   ];
 

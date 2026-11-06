@@ -146,7 +146,7 @@ function escapeHtml(text: string): string {
   return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
-function propertyCardHTML(property: Property): string {
+function propertyCardHTML(property: Property, perMonth: string): string {
   const imageUrl = property.images?.[0] || '/images/cooper-55-c5e8357d.jpg';
   const location = escapeHtml(property.location || property.address || '');
   const title = escapeHtml(property.title || '');
@@ -159,7 +159,7 @@ function propertyCardHTML(property: Property): string {
       <div style="min-width:0;flex:1;">
         <p style="margin:0;font-size:13px;font-weight:600;line-height:1.3;color:#171717;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${title}</p>
         <p style="margin:4px 0 0;font-size:11px;color:#737373;display:flex;align-items:center;gap:4px;">📍 ${location}</p>
-        <p style="margin:6px 0 0;font-size:13px;font-weight:700;color:#171717;">$${price.toLocaleString()} / month</p>
+        <p style="margin:6px 0 0;font-size:13px;font-weight:700;color:#171717;">$${price.toLocaleString()} ${escapeHtml(perMonth)}</p>
       </div>
     </div>`;
 }
@@ -263,7 +263,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
               const marker = new google.Marker({
                 position: { lat: cluster.lat, lng: cluster.lng },
                 map: mapInstance,
-                title: `${cluster.count} stays`,
+                title: t("property.mapCluster", { count: cluster.count }),
                 icon: clusterMarkerIcon(win, cluster.count),
                 optimized: false,
                 zIndex: 1000 + cluster.count,
@@ -336,7 +336,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
       markersRef.current = [];
       clusterMarkersRef.current = [];
     };
-  }, [properties, onPropertySelect]);
+  }, [properties, onPropertySelect, t]);
 
   // Keep marker icons in sync with selection / hover state (no rebuild → no flicker on hover).
   useEffect(() => {
@@ -449,7 +449,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
         border: 1px solid rgba(0,0,0,0.08);
         pointer-events: auto;
       `;
-      card.innerHTML = propertyCardHTML(activeCardProperty);
+      card.innerHTML = propertyCardHTML(activeCardProperty, t("pricing.perMonth"));
       const host = containerRef.current || map.getDiv();
       host.appendChild(card);
 
@@ -500,7 +500,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
     } catch {
       // Silently fail — avoids crashing the page if map projection isn't ready
     }
-  }, [activeCardId, activeCardProperty]);
+  }, [activeCardId, activeCardProperty, t]);
 
   if (properties.length === 0) {
     return (
@@ -521,7 +521,7 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
     >
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute left-4 top-4 z-20 rounded-full bg-white px-4 py-2 text-sm font-semibold text-neutral-900 shadow-lg">
-          Map · {properties.length} furnished stays
+          {t("property.mapCount", { count: properties.length })}
         </div>
 
         <button
@@ -552,14 +552,14 @@ export default function GooglePropertyMap({ properties, selectedPropertyId, hove
                     selected ? 'bg-[#991B1B] text-white' : 'bg-[#DC2626] text-white'
                   )}
                   style={{ top: `${top}%`, left: `${left}%` }}
-                  aria-label={`Select ${property.title} on map`}
+                  aria-label={t("property.mapSelect", { title: property.title })}
                 >
                   ${Math.round(priceFor(property) / 1000)}k
                 </button>
               );
             })}
             <div className="absolute left-4 right-4 top-16 rounded-xl bg-white/90 p-3 text-sm text-neutral-600 shadow">
-              Google Maps could not load ({mapError}); showing fallback property pins.
+              {t("property.mapFallback")}
             </div>
           </div>
         )}

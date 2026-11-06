@@ -25,22 +25,23 @@ import { submitInquiry } from "@/lib/inquiry-client";
 
 // Form validation schema
 const longTermFormSchema = z.object({
-  firstName: z.string().min(2, "First name is required"),
-  lastName: z.string().min(2, "Last name is required"),
-  email: z.string().email("Please enter a valid email"),
-  phone: z.string().min(10, "Please enter a valid phone number"),
-  moveInDate: z.string().min(1, "Move-in date is required"),
+  firstName: z.string().min(2, "common.inquiry.firstName"),
+  lastName: z.string().min(2, "common.inquiry.lastName"),
+  email: z.string().email("common.inquiry.email"),
+  phone: z.string().min(10, "common.inquiry.phone"),
+  moveInDate: z.string().min(1, "common.inquiry.moveIn"),
   leaseDuration: z.enum(["3months", "6months", "12months", "18months"]).optional(),
   propertyType: z.enum(["studio", "1bed", "2bed", "3bed"]).optional(),
   budget: z.string().optional(),
   location: z.string().optional(),
-  message: z.string().min(10, "Please tell us about your requirements"),
+  message: z.string().min(10, "common.inquiry.needs"),
 });
 
 type LongTermFormData = z.infer<typeof longTermFormSchema>;
 
 export default function LongTermPageContent() {
   const { t } = useI18n();
+  const validationMessage = (key?: string) => t(key ?? "common.inquiry.request");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedDuration, setSelectedDuration] = useState<string>("6months");
@@ -60,7 +61,7 @@ export default function LongTermPageContent() {
       setIsSubmitted(true);
     } catch (error) {
       if (process.env.NODE_ENV !== 'production') console.error("Submission error:", error);
-      alert(error instanceof Error ? error.message : "Submission failed");
+      alert(t("common.inquiry.submitFailed"));
     } finally {
       setIsSubmitting(false);
     }
@@ -68,47 +69,47 @@ export default function LongTermPageContent() {
 
   const pricingTiers = [
     {
-      duration: "3 Months",
+      duration: t("longterm.pricing.duration", { months: 3 }),
       key: "3months",
       discount: "10%",
       monthlyPrice: 3150,
       originalPrice: 3500,
       totalSavings: 1050,
       features: [
-        "10% discount on monthly rate",
-        "Flexible move-out with 30 days notice",
-        "Perfect for short assignments",
-        "All utilities included"
+        t("longterm.pricing.features.monthlyDiscount", { percent: "10%" }),
+        t("longterm.pricing.features.notice"),
+        t("longterm.pricing.features.shortProjects"),
+        t("longterm.pricing.features.utilities")
       ],
       popular: false
     },
     {
-      duration: "6 Months",
+      duration: t("longterm.pricing.duration", { months: 6 }),
       key: "6months", 
       discount: "20%",
       monthlyPrice: 2800,
       originalPrice: 3500,
       totalSavings: 4200,
       features: [
-        "20% discount on monthly rate",
-        "Mid-lease modification options",
-        "Ideal for project assignments",
-        "Priority customer support"
+        t("longterm.pricing.features.monthlyDiscount", { percent: "20%" }),
+        t("longterm.pricing.features.midLease"),
+        t("longterm.pricing.features.projects"),
+        t("longterm.pricing.features.priority")
       ],
       popular: true
     },
     {
-      duration: "12 Months",
+      duration: t("longterm.pricing.duration", { months: 12 }),
       key: "12months",
       discount: "30%",
       monthlyPrice: 2450,
       originalPrice: 3500,
       totalSavings: 12600,
       features: [
-        "30% discount on monthly rate",
-        "Maximum savings & stability",
-        "Annual lease renewal options",
-        "Dedicated account manager"
+        t("longterm.pricing.features.monthlyDiscount", { percent: "30%" }),
+        t("longterm.pricing.features.stability"),
+        t("longterm.pricing.features.renew"),
+        t("longterm.pricing.features.manager")
       ],
       popular: false
     }
@@ -118,96 +119,96 @@ export default function LongTermPageContent() {
     {
       key: "savings",
       icon: TrendingDown,
-      title: "Significant Savings",
-      description: "Save up to 30% on monthly rates compared to short-term stays. The longer you stay, the more you save.",
-      benefit: "Up to $12,600 annual savings"
+      title: t("longterm.advantages.savings.title"),
+      description: t("longterm.advantages.savings.description"),
+      benefit: t("longterm.advantages.savings.benefit")
     },
     {
       key: "stability",
       icon: Home,
-      title: "Housing Stability",
-      description: "Secure your housing for months ahead with locked-in rates and guaranteed availability.",
-      benefit: "Rate protection guaranteed"
+      title: t("longterm.advantages.stability.title"),
+      description: t("longterm.advantages.stability.description"),
+      benefit: t("longterm.advantages.stability.benefit")
     },
     {
       key: "flexibility",
       icon: Calendar,
-      title: "Flexible Terms",
-      description: "Choose 3, 6, or 12-month terms with options to extend or modify based on your evolving needs.",
-      benefit: "Easy lease modifications"
+      title: t("longterm.advantages.flexibility.title"),
+      description: t("longterm.advantages.flexibility.description"),
+      benefit: t("longterm.advantages.flexibility.benefit")
     },
     {
       key: "support",
       icon: Shield,
-      title: "Premium Support",
-      description: "Dedicated account management and priority support for all long-term residents.",
-      benefit: "VIP customer service"
+      title: t("longterm.advantages.support.title"),
+      description: t("longterm.advantages.support.description"),
+      benefit: t("longterm.advantages.support.benefit")
     }
   ];
 
   const testimonials = [
     {
       name: "David Kim",
-      role: "Project Manager",
-      company: "Tech Consulting Firm",
-      duration: "12-month lease",
-      quote: "The 12-month lease saved our company over $10,000 compared to hotels. The dedicated account manager made everything seamless.",
+      role: t("longterm.testimonials.project.role"),
+      company: t("longterm.testimonials.project.company"),
+      duration: t("longterm.testimonials.project.duration"),
+      quote: t("longterm.testimonials.project.quote"),
       savings: "$10,000+",
       rating: 5
     },
     {
       name: "Sarah Thompson",
-      role: "Marketing Director", 
-      company: "Financial Services",
-      duration: "6-month lease",
-      quote: "Perfect solution for our Toronto expansion. The flexibility to extend and modify the lease was exactly what we needed.",
+      role: t("longterm.testimonials.marketing.role"),
+      company: t("longterm.testimonials.marketing.company"),
+      duration: t("longterm.testimonials.marketing.duration"),
+      quote: t("longterm.testimonials.marketing.quote"),
       savings: "$4,200",
       rating: 5
     },
     {
       name: "Michael Chen",
-      role: "Software Engineer",
-      company: "Remote Worker",
-      duration: "6-month lease",
-      quote: "Working remotely from Toronto for 6 months was amazing. The long-term rate made it affordable and the apartment had everything I needed.",
+      role: t("longterm.testimonials.remote.role"),
+      company: t("longterm.testimonials.remote.company"),
+      duration: t("longterm.testimonials.remote.duration"),
+      quote: t("longterm.testimonials.remote.quote"),
       savings: "$3,600",
       rating: 5
     }
   ];
 
   const benefits = [
-    { key: "utilities", icon: Zap, title: "All Bills Included", description: "Electricity, water, gas, internet - everything covered" },
-    { key: "furnished", icon: Home, title: "Fully Furnished", description: "Quality furniture, appliances, and housewares included" },
-    { key: "maintenance", icon: Shield, title: "24/7 Maintenance", description: "Rapid response for any issues or repairs needed" },
-    { key: "concierge", icon: Users, title: "Concierge Service", description: "Personal assistance with local services and needs" },
-    { key: "cleaning", icon: Star, title: "Regular Cleaning", description: "Weekly or bi-weekly cleaning service available" },
-    { key: "location", icon: MapPin, title: "Prime Locations", description: "Central Toronto locations with transit access" }
+    { key: "utilities", icon: Zap, title: t("longterm.benefits.utilities.title"), description: t("longterm.benefits.utilities.description") },
+    { key: "furnished", icon: Home, title: t("longterm.benefits.furnished.title"), description: t("longterm.benefits.furnished.description") },
+    { key: "maintenance", icon: Shield, title: t("longterm.benefits.maintenance.title"), description: t("longterm.benefits.maintenance.description") },
+    { key: "concierge", icon: Users, title: t("longterm.benefits.concierge.title"), description: t("longterm.benefits.concierge.description") },
+    { key: "cleaning", icon: Star, title: t("longterm.benefits.cleaning.title"), description: t("longterm.benefits.cleaning.description") },
+    { key: "location", icon: MapPin, title: t("longterm.benefits.location.title"), description: t("longterm.benefits.location.description") }
   ];
 
   const useCases = [
     {
-      title: "Corporate Projects",
-      description: "Perfect for extended business assignments, project teams, and temporary office setups.",
+      title: t("longterm.usecases.projects.title"),
+      description: t("longterm.usecases.projects.description"),
       icon: Building2,
-      duration: "3-12 months typical"
+      duration: t("longterm.usecases.projects.duration")
     },
     {
-      title: "Relocation Bridge",
-      description: "Temporary housing while searching for permanent residence or awaiting property purchase.",
+      title: t("longterm.usecases.relocation.title"),
+      description: t("longterm.usecases.relocation.description"),
       icon: Home,
-      duration: "3-6 months typical"
+      duration: t("longterm.usecases.relocation.duration")
     },
     {
-      title: "Remote Work",
-      description: "Flexible living for digital nomads, remote workers, and location-independent professionals.",
+      title: t("longterm.usecases.remote.title"),
+      description: t("longterm.usecases.remote.description"),
       icon: Users,
-      duration: "6-12 months typical"
+      duration: t("longterm.usecases.remote.duration")
     },
     {
-      title: "Life Transitions",
-      description: "Temporary housing during divorce, job changes, or other major life transitions.",
+      title: t("longterm.usecases.transitions.title"),
+      description: t("longterm.usecases.transitions.description"),
       icon: Heart,
-      duration: "3-6 months typical"
+      duration: t("longterm.usecases.transitions.duration")
     }
   ];
 
@@ -269,7 +270,7 @@ export default function LongTermPageContent() {
                 {tier.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                     <span className="bg-green-500 text-white px-6 py-2 font-semibold text-sm">
-                      Most Popular
+                      {t("longterm.pricing.popular")}
                     </span>
                   </div>
                 )}
@@ -281,7 +282,7 @@ export default function LongTermPageContent() {
                     </h3>
                     <div className="flex items-center justify-center gap-2 mb-4">
                       <span className="bg-green-100 text-green-800 px-3 py-1 font-bold text-lg">
-                        {tier.discount} OFF
+                        {t("longterm.pricing.discount", { percent: tier.discount })}
                       </span>
                     </div>
                     <div className="mb-4">
@@ -293,10 +294,10 @@ export default function LongTermPageContent() {
                           ${tier.monthlyPrice.toLocaleString()}
                         </span>
                       </div>
-                      <div className="text-gray-600">per month</div>
+                      <div className="text-gray-600">{t("longterm.pricing.perMonth")}</div>
                     </div>
                     <div className="bg-green-50 p-3 border-l-4 border-green-500">
-                      <div className="font-semibold text-green-800">Total Savings</div>
+                      <div className="font-semibold text-green-800">{t("longterm.pricing.total")}</div>
                       <div className="text-2xl font-bold text-green-600">
                         ${tier.totalSavings.toLocaleString()}
                       </div>
@@ -456,7 +457,7 @@ export default function LongTermPageContent() {
                     ))}
                   </div>
                   <span className="bg-green-100 text-green-800 px-3 py-1 text-sm font-bold">
-                    Saved {testimonial.savings}
+                    {t("longterm.pricing.saved", { amount: testimonial.savings })}
                   </span>
                 </div>
                 
@@ -503,7 +504,7 @@ export default function LongTermPageContent() {
                         placeholder={t("longterm.form.firstNamePlaceholder", "Enter your first name")}
                       />
                       {errors.firstName && (
-                        <p className="text-red-500 text-sm mt-1">{errors.firstName.message}</p>
+                        <p className="text-red-500 text-sm mt-1">{validationMessage(errors.firstName.message)}</p>
                       )}
                     </div>
 
@@ -517,7 +518,7 @@ export default function LongTermPageContent() {
                         placeholder={t("longterm.form.lastNamePlaceholder", "Enter your last name")}
                       />
                       {errors.lastName && (
-                        <p className="text-red-500 text-sm mt-1">{errors.lastName.message}</p>
+                        <p className="text-red-500 text-sm mt-1">{validationMessage(errors.lastName.message)}</p>
                       )}
                     </div>
                   </div>
@@ -534,7 +535,7 @@ export default function LongTermPageContent() {
                         placeholder={t("longterm.form.emailPlaceholder", "your@email.com")}
                       />
                       {errors.email && (
-                        <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                        <p className="text-red-500 text-sm mt-1">{validationMessage(errors.email.message)}</p>
                       )}
                     </div>
 
@@ -549,7 +550,7 @@ export default function LongTermPageContent() {
                         placeholder={t("longterm.form.phonePlaceholder", "+1 (555) 000-0000")}
                       />
                       {errors.phone && (
-                        <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+                        <p className="text-red-500 text-sm mt-1">{validationMessage(errors.phone.message)}</p>
                       )}
                     </div>
                   </div>
@@ -565,7 +566,7 @@ export default function LongTermPageContent() {
                         className="w-full px-4 py-3 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                       />
                       {errors.moveInDate && (
-                        <p className="text-red-500 text-sm mt-1">{errors.moveInDate.message}</p>
+                        <p className="text-red-500 text-sm mt-1">{validationMessage(errors.moveInDate.message)}</p>
                       )}
                     </div>
 
@@ -579,10 +580,10 @@ export default function LongTermPageContent() {
                         onChange={(e) => setSelectedDuration(e.target.value)}
                         className="w-full px-4 py-3 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                       >
-                        <option value="3months">3 {t("longterm.form.months", "Months")} (10% off)</option>
-                        <option value="6months">6 {t("longterm.form.months", "Months")} (20% off)</option>
-                        <option value="12months">12 {t("longterm.form.months", "Months")} (30% off)</option>
-                        <option value="18months">18+ {t("longterm.form.months", "Months")} (Custom pricing)</option>
+                        <option value="3months">{t("longterm.pricing.duration", { months: 3 })} ({t("longterm.pricing.discount", { percent: "10%" })})</option>
+                        <option value="6months">{t("longterm.pricing.duration", { months: 6 })} ({t("longterm.pricing.discount", { percent: "20%" })})</option>
+                        <option value="12months">{t("longterm.pricing.duration", { months: 12 })} ({t("longterm.pricing.discount", { percent: "30%" })})</option>
+                        <option value="18months">{t("longterm.pricing.duration", { months: "18+" })} ({t("longterm.pricing.custom")})</option>
                       </select>
                     </div>
                   </div>
@@ -630,12 +631,12 @@ export default function LongTermPageContent() {
                         className="w-full px-4 py-3 border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                       >
                         <option value="">{t("longterm.form.selectLocation", "Select area")}</option>
-                        <option value="downtown">Downtown Core</option>
-                        <option value="yorkville">Yorkville</option>
-                        <option value="liberty-village">Liberty Village</option>
-                        <option value="midtown">Midtown</option>
-                        <option value="north-york">North York</option>
-                        <option value="waterfront">Waterfront</option>
+                        <option value="downtown">{t("cities.areaDowntown")}</option>
+                        <option value="yorkville">{t("cities.areaYorkville")}</option>
+                        <option value="liberty-village">{t("cities.areaLiberty")}</option>
+                        <option value="midtown">{t("cities.areaMidtown")}</option>
+                        <option value="north-york">{t("cities.areaNorthYork")}</option>
+                        <option value="waterfront">{t("cities.areaWaterfront")}</option>
                       </select>
                     </div>
                   </div>
@@ -651,20 +652,20 @@ export default function LongTermPageContent() {
                       placeholder={t("longterm.form.messagePlaceholder", "Please describe your long-term housing needs, any specific requirements, reasons for extended stay, and any questions about our long-term rental program...")}
                     />
                     {errors.message && (
-                      <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>
+                      <p className="text-red-500 text-sm mt-1">{validationMessage(errors.message.message)}</p>
                     )}
                   </div>
 
                   {/* Pricing Preview */}
                   <div className="bg-green-50 p-6 mb-8 border-l-4 border-green-500">
-                    <h3 className="font-bold text-green-800 mb-3">Your Estimated Savings:</h3>
+                    <h3 className="font-bold text-green-800 mb-3">{t("longterm.pricing.estimate")}</h3>
                     <div className="grid md:grid-cols-2 gap-4 text-sm">
                       <div>
-                        <div className="text-gray-600">Monthly Rate (with {currentTier.discount} discount):</div>
+                        <div className="text-gray-600">{t("longterm.pricing.discountedRate", { percent: currentTier.discount })}</div>
                         <div className="text-2xl font-bold text-green-600">${currentTier.monthlyPrice.toLocaleString()}</div>
                       </div>
                       <div>
-                        <div className="text-gray-600">Total Savings ({currentTier.duration.toLowerCase()}):</div>
+                        <div className="text-gray-600">{t("longterm.pricing.periodSavings", { duration: currentTier.duration })}</div>
                         <div className="text-2xl font-bold text-green-600">${currentTier.totalSavings.toLocaleString()}</div>
                       </div>
                     </div>

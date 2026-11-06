@@ -419,7 +419,7 @@ export function MapSection() {
           <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2 rounded-2xl bg-white/90 px-5 py-4 text-center shadow-lg">
             <MapPin className="text-primary" size={28} />
             <p className="font-semibold text-neutral-900">NEOS office</p>
-            <a href={googleMapsSearchUrl(officeAddress)} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-primary hover:text-primary-700">Open in Google Maps</a>
+            <a href={googleMapsSearchUrl(officeAddress)} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-primary hover:text-primary-700">{t("property.openMaps")}</a>
           </div>
         </div>
       )}
